@@ -1,0 +1,44 @@
+{
+    
+   
+    "uuid" : "9e3df2f4-02fb-11e7-93ae-92361f002671",
+    "version" : "1488801521",
+    "name" : "last_day(string date)",
+    "desc" : "Returns the last day of the month which the date belongs to (as of Hive 1.1.0). date is a string in the format 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd'. The time part of date is ignored.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "date",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "inputReq" : "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+ "functionInfo" : "last_day",
+    "funcType" : "hive",
+"category":"date"
+}

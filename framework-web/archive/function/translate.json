@@ -1,0 +1,34 @@
+{
+    "uuid" : "1b26fe89-b681-4eff-b82b-25845d79c021",
+    "version" : "1488801521",
+    "name" : "translate(string|char|varchar input, string|char|varchar from, string|char|varchar to)",
+    "desc" : "Translates the input string by replacing the characters present in the from string with the corresponding characters in the to string. This is similar to the translate function in PostgreSQL. If any of the parameters to this UDF are NULL, the result is NULL as well. (Available as of Hive 0.10.0, for string types)",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq": "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  
+    "functionInfo" : "translate",
+    "funcType" : "hive",
+   "category":"string"
+}

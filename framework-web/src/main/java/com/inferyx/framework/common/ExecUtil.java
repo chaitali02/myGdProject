@@ -1,0 +1,23 @@
+package com.inferyx.framework.common;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.inferyx.framework.domain.Status;
+
+public class ExecUtil {
+	
+	public static List<Status> createStatus (List<Status> statusList, Status.Stage status) {
+		if (statusList == null) {
+			statusList = new ArrayList<>();
+		}
+		
+		if (statusList.contains(Status.Stage.Failed)) {
+			return statusList;
+		}
+		statusList.add(new Status(status, new Date()));
+		return statusList;
+	}
+
+}

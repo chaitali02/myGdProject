@@ -1,0 +1,43 @@
+{
+    "uuid" : "16633d2f-8fad-49f0-bb21-b92359392d27",
+    "version" : "1488801521",
+    "name" : "space(int n)",
+    "desc" : "Returns a string of n spaces",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+       {
+           "paramId" : "0",
+           "paramName" : "n",
+           "paramType" : "integer",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       }
+   ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq": "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  
+    "functionInfo" : "space",
+    "funcType" : "hive",
+    "category":"string"
+}

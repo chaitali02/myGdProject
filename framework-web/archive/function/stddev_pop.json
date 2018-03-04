@@ -1,0 +1,44 @@
+
+
+{
+    "uuid" : "9e3e2ecc-02fb-11e7-93ae-92361f002671",
+    "version" : "1488801521",
+    "name" : "stddev_pop(col)",
+    "desc" : "Returns the aggregate that is num_months after start_aggregate (as of Hive 1.1.0). start_aggregate is a string, aggregate or timestamp. num_months is an integer. The time part of start_aggregate is ignored. If start_aggregate is the last day of the month or if the resulting month has fewer days than the day component of start_aggregate, then the result is the last day of the resulting month. Otherwise, the result has the same day component as start_aggregate.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	 "paramInfo" : [ 
+       {
+           "paramId" : "0",
+           "paramName" : "col",
+           "paramType" : "",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       }
+   ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "inputReq": "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+    "functionInfo" : "stddev_pop",
+    "funcType" : "hive",
+    "category":"aggregate"
+}

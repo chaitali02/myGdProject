@@ -1,0 +1,54 @@
+{
+	"id": "28e6c135-42d9-8f93-f58e-3b4ce6368852",
+	"name": "framework",
+	"description": "",
+	"order": [
+		"d82cb5c7-182d-e8ef-51c2-cfd1084c65cf",
+		"e407b572-a74e-a96f-7b50-c7c68b659ff2"
+	],
+	"folders": [],
+	"timestamp": 1462854126440,
+	"owner": 0,
+	"remoteLink": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "d82cb5c7-182d-e8ef-51c2-cfd1084c65cf",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://localhost:8080/framework/dag/",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1462864220800,
+			"name": "DAG Execution",
+			"description": "",
+			"collectionId": "28e6c135-42d9-8f93-f58e-3b4ce6368852",
+			"responses": [],
+			"rawModeData": " {\n  \"uuid\": \"3ffc3d54-fee7-11e5-86aa-5e5517507445\",\n  \"name\": \"populate_company\",\n  \"version\": \"1460270902\",\n  \"createdBy\": \"admin\",\n  \"createdOn\": \"Sun, 10 Apr 2016 06:48:08 GMT\",\n  \"active\": \"Y\",\n  \"desc\": \"DAG to populate company datapod\",\n  \"stages\":\n  [\n    {\n      \"id\": \"0\",\n      \"depdendsOn\": [],\n      \"tasks\":\n      [\n        {\n        \"id\": \"0\",\n        \"depdendsOn\": [],\n        \"name\": \"Load Datapod\",\n        \"operators\":\n          [\n            {\n              \"id\": \"0\",\n              \"depdendsOn\": [],\n              \"meta\": {\"type\":\"map\", \"key\": {\"uuid\": \"2b7640f9-90bf-43da-9c05-a348de7517dc\", \"name\": \"map_company\"} },\n              \"filter\":\n               [\n                  {\"uuid\": \"1824ce62-fee8-11e5-86aa-5e5517507c66\",\"name\": \"sector_eo\",\"version\": \"1460270889\"}\n               ]\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+		},
+		{
+			"id": "e407b572-a74e-a96f-7b50-c7c68b659ff2",
+			"headers": "",
+			"url": "http://localhost:8080/framework/dagexec/85271352-7534-4cf9-afad-5e6cde3bf3a0/1462865870",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1462865990921,
+			"name": "Get DagExec",
+			"description": "",
+			"collectionId": "28e6c135-42d9-8f93-f58e-3b4ce6368852",
+			"responses": []
+		}
+	]
+}

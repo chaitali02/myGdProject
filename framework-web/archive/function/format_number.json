@@ -1,0 +1,50 @@
+{
+    "uuid" : "79d15395-a11c-47fb-9a80-4c8e43f2c97f",
+    "version" : "1488801521",
+    "name" : "format_number(number x, integer d)",
+    "desc" : "Formats the number X to a format like '#,###,###.##', rounded to D decimal places, and returns the result as a string. If D is 0, the result has no decimal pointeger or fractional part. (As of Hive 0.10.0; bug with float types fixed in Hive 0.14.0, decimal type support added in Hive 0.14.0)",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+    "paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "x",
+            "paramType" : "number",
+            "paramReq" : "",
+            "paramDefVal":""
+        },
+        {
+            "paramId" : "1",
+            "paramName" : "d",
+            "paramType" : "integer",
+            "paramReq" : "",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+ 
+    "functionInfo" : "format_number",
+    "funcType" : "hive",
+    "category":"string"
+}

@@ -1,0 +1,50 @@
+{
+    "uuid" : "50db934c-c0d2-4afc-ba21-1d4a89b60e8e",
+    "version" : "1488801521",
+    "name" : "parse_url(string urlString, string partToExtract [, string keyToExtract])",
+    "desc" : "Returns the specified part from the URL. Valid values for partToExtract include HOST, PATH, QUERY, REF, PROTOCOL, AUTHORITY, FILE, and USERINFO. For example, parse_url('http://facebook.com/path1/p.php?k1=v1&k2=v2#Ref1', 'HOST') returns 'facebook.com'. Also a value of a particular key in QUERY can be extracted by providing the key as the third argument, for example, parse_url('http://facebook.com/path1/p.php?k1=v1&k2=v2#Ref1', 'QUERY', 'k1') returns 'v1'",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+       {
+           "paramId" : "0",
+           "paramName" : "urlString",
+           "paramType" : "string",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       },
+	   {
+           "paramId" : "1",
+           "paramName" : "partToExtract",
+           "paramType" : "string",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       }
+   ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq": "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  
+    "functionInfo" : "parse_url",
+    "funcType" : "hive",
+    "category":"string"
+}

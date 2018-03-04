@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright (C) GridEdge Consulting LLC, 2016 All rights reserved. This 
+	 unpublished material is proprietary to GridEdge Consulting LLC. The methods 
+	 and techniques described herein are considered trade secrets and/or confidential. 
+	 Reproduction or distribution, in whole or in part, is forbidden. Written 
+	 by Yogesh Palrecha <ypalrecha@gridedge.com> -->
+
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd      
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<security:http pattern="/metadata/getAllLatest"
+		security="none" />
+	<security:http pattern="/metadata/getAll"
+		security="none" />
+	<security:http pattern="/metadata/getAllLatestActive"
+		security="none" />
+	<security:http pattern="/graph/getGraphResults"
+		security="none" />
+	<security:http pattern="/security/listLoggedInUsers"
+		security="none" />
+	<security:http pattern="/security/getSessionContext"
+		security="none" />
+	<security:http pattern="/security/logoutSession"
+		security="none" />
+	<security:http pattern="/common/getMetaStats"
+		security="none" />
+		<security:http pattern="/metadata/getExecStats"
+		security="none" />
+		
+	<!-- Rest authentication entry point configuration -->
+
+	<security:http use-expressions="true" auto-config="false"
+		create-session="ifRequired" pattern="/metadata/validateUser"
+		entry-point-ref="restAuthenticationEntryPoint">
+		<security:csrf disabled="true" />
+		<security:custom-filter ref="authenticationTokenProcessingFilter"
+			position="BASIC_AUTH_FILTER" />
+		   <!--  <security:custom-filter ref="privilegeProcessingFilter"
+			after="BASIC_AUTH_FILTER" /> -->
+ 	</security:http>
+	
+	<security:http use-expressions="true" auto-config="false"
+		create-session="never" pattern="/metadata/**"
+		entry-point-ref="restAuthenticationEntryPoint">
+		<security:csrf disabled="true" />
+		<security:custom-filter ref="activityPrivilegeFilter"
+			position="BASIC_AUTH_FILTER" />
+	</security:http>
+	
+	<security:http use-expressions="true" auto-config="false"
+		create-session="never" pattern="/common/**"
+		entry-point-ref="restAuthenticationEntryPoint">
+		<security:csrf disabled="true" />
+		<security:custom-filter ref="activityPrivilegeFilter"
+			position="BASIC_AUTH_FILTER" />
+	</security:http>
+	
+	<security:http use-expressions="true" auto-config="false"
+		create-session="never" pattern="/*"
+		entry-point-ref="restAuthenticationEntryPoint">
+		<security:csrf disabled="true" />
+		<security:custom-filter ref="apiLogFilter"
+		after="FIRST"/>
+	</security:http>
+	
+ 
+	<!-- <security:http use-expressions="true" auto-config="false"
+		create-session="stateless" pattern="/metadata/**"
+		entry-point-ref="restAuthenticationEntryPoint">
+		<security:csrf disabled="true" />
+		<security:custom-filter ref="privilegeProcessingFilter"
+			position="BASIC_AUTH_FILTER" />
+		    </security:http> -->
+
+	<beans:bean id="restAuthenticationEntryPoint"
+		class="com.inferyx.framework.security.RestAuthenticationEntryPoint">
+	</beans:bean>
+
+	<!-- Auth Manager -->
+
+	<beans:bean id="authMgr"
+		class="org.springframework.security.authentication.ProviderManager">
+		<beans:constructor-arg>
+			<beans:list>
+				<beans:bean id="customAuthenticationProvider"
+					class="com.inferyx.framework.security.CustomAuthenticationProvider">
+				</beans:bean>
+			</beans:list>
+		</beans:constructor-arg>
+	</beans:bean>
+	
+	<beans:bean class="com.inferyx.framework.security.AuthenticationLoginProcessingFilter"
+		id="authenticationTokenProcessingFilter">
+		<beans:constructor-arg name="authManager" ref="authMgr" />
+	</beans:bean>
+
+	<!-- <security:authentication-manager id="authMgr">
+		<security:authentication-provider
+			ref="customAuthenticationProvider" />
+	</security:authentication-manager>
+	<beans:bean id="customAuthenticationProvider"
+		class="com.inferyx.framework.security.CustomAuthenticationProvider" />
+	<beans:bean id="authenticationTokenProcessingFilter"
+		class="com.inferyx.framework.security.AuthenticationLoginProcessingFilter">
+		<beans:constructor-arg name="authManager" ref="authMgr" />
+	</beans:bean> -->
+
+	<!-- PreAuth starts here -->
+
+	<security:http use-expressions="true" auto-config="false"
+		entry-point-ref="http403EntryPoint" pattern="/framework/**"
+		create-session="always">
+		<security:csrf disabled="true" />
+		<security:custom-filter position="PRE_AUTH_FILTER"
+			ref="siteminderFilter" />
+  		<security:session-management
+        	invalid-session-url="/login">
+	        <security:concurrency-control	        
+	            error-if-maximum-exceeded="true" max-sessions="100" expired-url="/login"/>
+    	</security:session-management>			
+	</security:http>
+
+	<beans:bean id="siteminderFilter"
+		class="org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter">
+		<beans:property name="principalRequestHeader" value="sessionId" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
+
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider
+			ref="preauthAuthProvider" />
+	</security:authentication-manager>
+
+	<beans:bean id="preauthAuthProvider"
+		class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+		<beans:property name="preAuthenticatedUserDetailsService">
+			<beans:bean id="userDetailsServiceWrapper"
+				class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+				<beans:property name="userDetailsService" ref="customUserDetailsService" />
+			</beans:bean>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="customUserDetailsService"
+		class="com.inferyx.framework.security.CustomUserDetailsService"></beans:bean>
+
+	<beans:bean id="http403EntryPoint"
+		class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint">
+	</beans:bean>
+	
+	<beans:bean id="privilegeProcessingFilter"
+		class="com.inferyx.framework.security.PrivilegeProcessingFilter">
+	</beans:bean>
+
+	<!-- PreAuth ends here -->
+
+	<beans:bean id="customSuccessHandler"
+		class="com.inferyx.framework.security.CustomSuccessHandler">
+	</beans:bean>
+
+ 	<beans:bean id="activityPrivilegeFilter"
+		class="com.inferyx.framework.security.UserActivityPrivilegeFilter">
+	</beans:bean>
+	
+	 <beans:bean id="apiLogFilter"
+		class="com.inferyx.framework.security.ApiLogFilter">
+	</beans:bean>
+	
+	<beans:bean
+        class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <beans:property name="targetClass"
+            value="org.springframework.security.core.context.SecurityContextHolder" />
+        <beans:property name="targetMethod" value="setStrategyName" />
+        <beans:property name="arguments" value="MODE_INHERITABLETHREADLOCAL" />
+    </beans:bean>
+	
+	<!-- <beans:bean id="activityPrivilegeFilter"
+		class="com.inferyx.framework.security.PrivilegeProcessingFilter">
+	</beans:bean> -->
+	
+</beans:beans>

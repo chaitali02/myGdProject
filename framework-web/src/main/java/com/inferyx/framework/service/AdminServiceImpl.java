@@ -1,0 +1,104 @@
+package com.inferyx.framework.service;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.Export;
+import com.inferyx.framework.domain.Property;
+
+@Service
+public class AdminServiceImpl {	
+	@Resource(name="taskThreadMap")
+	ConcurrentHashMap taskThreadMap;	
+	
+	static final Logger logger = Logger.getLogger(AdminServiceImpl.class);
+
+	public ConcurrentHashMap getTaskThreadMap() {
+		logger.info(" taskThreadMap in AdminService : " + taskThreadMap);
+		return taskThreadMap;
+	}
+
+	public void setTaskThreadMap(ConcurrentHashMap taskThreadMap) {
+		this.taskThreadMap = taskThreadMap;
+	} 
+	
+	public String getSettings() throws FileNotFoundException, IOException{
+		com.inferyx.framework.domain.Settings setting =new com.inferyx.framework.domain.Settings();
+		ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		List<Property> metaEngine=new ArrayList<>();
+		List<Property> generalSetting=new ArrayList<>();
+		List<Property> ruleEngine=new ArrayList<>();
+		for (Entry<Object, Object> e : Helper.getPropertiesList()) {
+		    if (e.getKey().toString().startsWith("framework.mongo")){
+		    	Property property=new Property();
+		    	property.setPropertyName(e.getKey().toString());
+		    	property.setPropertyValue(e.getValue().toString());
+		    	metaEngine.add(property);
+		    }
+		    else if(e.getKey().toString().matches("framework.*")){
+		    	Property property=new Property();
+		    	property.setPropertyName(e.getKey().toString());
+		    	property.setPropertyValue(e.getValue().toString());
+		    	generalSetting.add(property);
+		    }
+		    else if(e.getKey().toString().matches("spark.*") || e.getKey().toString().matches("hive.*")){
+		    	Property property=new Property();
+		    	property.setPropertyName(e.getKey().toString());
+		    	property.setPropertyValue(e.getValue().toString());
+		    	ruleEngine.add(property);
+		    }
+		    
+		}
+		setting.setMetaEngine(metaEngine);
+		setting.setGeneralSetting(generalSetting);
+		setting.setRuleEngine(ruleEngine);
+		return objectWriter.writeValueAsString(setting);
+	}
+	public void setSettings(Map<String, Object>object) throws IOException, URISyntaxException{
+		ObjectMapper mapper = new ObjectMapper();
+		Properties prop = new Properties();
+		OutputStream output = null;
+		String filePath="framework.properties_"+Helper.getVersion();
+		String path=this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+		File oldfile =new File(path+"framework.properties");
+		File newfile =new File(path+filePath);
+		oldfile.renameTo(newfile);
+		
+		com.inferyx.framework.domain.Settings setting = mapper.convertValue(object,com.inferyx.framework.domain.Settings.class);
+		for(Property property : setting.getGeneralSetting()){
+			prop.setProperty(property.getPropertyName(),property.getPropertyValue());
+		}
+		for(Property property : setting.getMetaEngine()){
+			prop.setProperty(property.getPropertyName(),property.getPropertyValue());
+		}
+		for(Property property : setting.getRuleEngine()){
+			prop.setProperty(property.getPropertyName(),property.getPropertyValue());
+		}
+		output = new FileOutputStream(createPropertiesFile("framework.properties"));
+		prop.store(output, null);		
+	}
+	private File createPropertiesFile(String relativeFilePath) throws URISyntaxException {
+	    return new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()), relativeFilePath);
+	}
+}

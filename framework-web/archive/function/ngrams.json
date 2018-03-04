@@ -1,0 +1,44 @@
+{
+    "uuid" : "1b7be80c-91a8-4008-8c06-7853d963e437",
+    "version" : "1488801521",
+    "name" : "ngrams()",
+    "desc" : "Returns the top-k N-grams from a set of tokenized sentences, such as those returned by the sentences() UDAF. See StatisticsAndDataMining for more information",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+    "paramInfo" : [ 
+       {
+           "paramId" : "",
+           "paramName" : "",
+           "paramType" : "",
+           "paramReq" : "",
+           "paramDefVal":""
+       }
+   ],
+
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq": "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  
+    "functionInfo" : "ngrams",
+    "funcType" : "hive",
+    "category":"string"
+}

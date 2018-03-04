@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="56" lt="56" ts="1502274881953" s="true" lb="rulegroup" rc="200" rm="OK" tn="getRuleGroupExecByRuleGroup 7-1" dt="text" by="3890"/>
+<httpSample t="76" lt="76" ts="1502274882011" s="true" lb="rulegroup" rc="200" rm="OK" tn="getRuleGroupExecByRuleGroup 7-1" dt="text" by="3890"/>
+<httpSample t="69" lt="69" ts="1502274882088" s="true" lb="rulegroup" rc="200" rm="OK" tn="getRuleGroupExecByRuleGroup 7-1" dt="text" by="3890"/>
+<httpSample t="43" lt="43" ts="1502274882158" s="true" lb="rulegroup" rc="200" rm="OK" tn="getRuleGroupExecByRuleGroup 7-1" dt="text" by="3890"/>
+<httpSample t="58" lt="58" ts="1502274882202" s="true" lb="rulegroup" rc="200" rm="OK" tn="getRuleGroupExecByRuleGroup 7-1" dt="text" by="3890"/>
+
+</testResults>

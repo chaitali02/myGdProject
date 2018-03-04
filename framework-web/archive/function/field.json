@@ -1,0 +1,43 @@
+{
+    
+    "uuid" : "171925dd-09e5-4f80-bb00-7867d4fc1f73",
+    "version" : "1488801521",
+    "name" : "field(val T,val1 T,val2 T,val3 T,...)",
+    "desc" : "Returns the index of val in the val1,val2,val3,... list or 0 if not found. For example field('world','say','hello','world') returns 3",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "val",
+            "paramType" : "T",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  "functionInfo" : "field",
+  "funcType" : "hive",
+  "category":"string"
+}

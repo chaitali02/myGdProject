@@ -1,0 +1,50 @@
+{
+    
+   
+    "uuid" : "9e3df52e-02fb-11e7-93ae-92361f002671",
+    "version" : "1488801521",
+    "name" : "months_between(date1, date2)",
+    "desc" : "Returns number of months between dates date1 and date2 (as of Hive 1.2.0). If date1 is later than date2, then the result is positive. If date1 is earlier than date2, then the result is negative. If date1 and date2 are either the same days of the month or both last days of months, then the result is always an integer. Otherwise the UDF calculates the fractional portion of the result based on a 31-day month and considers the difference in time components date1 and date2. date1 and date2 type can be date, timestamp or string in the format 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm:ss'. The result is rounded to 8 decimal places. Example: months_between('1997-02-28 10:30:00', '1996-10-30') = 3.94959677",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+       {
+           "paramId" : "0",
+           "paramName" : "date1",
+           "paramType" : "",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       },
+	   {
+           "paramId" : "1",
+           "paramName" : "date2",
+           "paramType" : "",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       }
+   ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "inputReq": "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ], "functionInfo" : "months_between",
+    "funcType" : "hive",
+"category":"date"
+}

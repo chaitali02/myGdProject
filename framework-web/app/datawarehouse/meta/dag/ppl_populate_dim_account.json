@@ -1,0 +1,59 @@
+{
+	"xPos": 140,
+	"yPos": 90,
+	"templateFlg" : "N",
+	"stages": [
+		{
+			"stageId": "9aedbb73-a31d-4b2d-ad6a-6c7253e9529d",
+			"xPos": 510,
+			"yPos": 90,
+			"dependsOn": [],
+			"name": "Populate dim_account",
+			"tasks": [
+				{
+					"taskId": "40fbc6f0-e05c-4e7c-ab59-f32f1a53b272",
+					"xPos": 860,
+					"yPos": 90,
+					"dependsOn": [],
+					"name": "map_dim_account",
+					"operators": [
+						{
+							"operatorId": "fab9d252-92dc-427e-b358-eeed716b1df7",
+							"dependsOn": [],
+							"operatorInfo": {
+								"ref": {
+									"type": "map",
+									"uuid": "ec398401-8495-419f-bde7-76db137f3088"
+								}
+							},
+							"operatorParams": {
+								
+							},
+							"filterInfo": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"uuid": "10e3a29b-5f61-4f18-9903-145dad37304c",
+	"version": "1488620442",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"name": "ppl_populate_dim_account"
+}

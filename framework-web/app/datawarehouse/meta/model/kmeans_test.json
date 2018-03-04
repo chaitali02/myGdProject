@@ -1,0 +1,67 @@
+{
+	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235",
+	"version": "1464977196",
+	"name": "kmeans_test",
+	"desc": "K-means Test Model",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"source": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+		}
+	},
+	"features": [
+		{
+			"ref": {
+				"type": "datapod",
+				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			},
+			"attrId": "0"
+		},
+		{
+			"ref": {
+				"type": "datapod",
+				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			},
+			"attrId": "1"
+		},
+		{
+			"ref": {
+				"type": "datapod",
+				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			},
+			"attrId": "2"
+		},
+		{
+			"ref": {
+				"type": "datapod",
+				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			},
+			"attrId": "10"
+		}
+	],
+	"algorithm": {
+		"ref": {
+			"type": "algorithm",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b71234"
+		}
+	},
+	"type" : "SPARK",
+ 	"scriptName" : ""
+}

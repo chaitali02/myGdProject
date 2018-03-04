@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="82" lt="82" ts="1503064202215" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="36" lt="36" ts="1503064202301" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="46" lt="46" ts="1503064202341" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="22" lt="22" ts="1503064202391" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="12" lt="12" ts="1503064202415" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+
+<httpSample t="17" lt="17" ts="1503064276861" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="30" lt="30" ts="1503064276881" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="128" lt="122" ts="1503064276912" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="70" lt="70" ts="1503064277058" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="30" lt="30" ts="1503064277129" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+
+<httpSample t="58" lt="58" ts="1503064288520" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="75" lt="75" ts="1503064288595" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="35" lt="34" ts="1503064288697" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="31" lt="31" ts="1503064288748" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="21" lt="21" ts="1503064288819" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+
+<httpSample t="69" lt="69" ts="1503391101669" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="92" lt="92" ts="1503391101743" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="42" lt="42" ts="1503391101848" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="36" lt="32" ts="1503391101893" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="60" lt="60" ts="1503391101930" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+
+<httpSample t="105" lt="105" ts="1503393526184" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="130" lt="130" ts="1503393526291" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="42" lt="41" ts="1503393526429" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="83" lt="58" ts="1503393526472" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+<httpSample t="94" lt="94" ts="1503393526556" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="694"/>
+
+<httpSample t="140" lt="140" ts="1503393827587" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="699"/>
+<httpSample t="146" lt="146" ts="1503393827729" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="698"/>
+<httpSample t="88" lt="88" ts="1503393827876" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="698"/>
+<httpSample t="77" lt="74" ts="1503393827965" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="699"/>
+<httpSample t="38" lt="38" ts="1503393828044" s="true" lb="relation" rc="200" rm="OK" tn="getAttributesByRelation 3-1" dt="text" by="697"/>
+
+</testResults>

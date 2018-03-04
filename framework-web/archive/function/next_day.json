@@ -1,0 +1,51 @@
+{
+    
+   
+    "uuid" : "9e3df5f6-02fb-11e7-93ae-92361f002671",
+    "version" : "1488801521",
+    "name" : "next_day(string start_date, string day_of_week)",
+    "desc" : "Returns the first date which is later than start_date and named as day_of_week (as of Hive 1.2.0). start_date is a string/date/timestamp. day_of_week is 2 letters, 3 letters or full name of the day of the week (e.g. Mo, tue, FRIDAY). The time part of start_date is ignored. Example: next_day('2015-01-14', 'TU') = 2015-01-20.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+       {
+           "paramId" : "0",
+           "paramName" : "start_date",
+           "paramType" : "string",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       },
+	   {
+           "paramId" : "1",
+           "paramName" : "day_of_week",
+           "paramType" : "string",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       }
+   ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "inputReq": "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+ "functionInfo" : "next_day",
+    "funcType" : "hive",
+"category":"date"
+}

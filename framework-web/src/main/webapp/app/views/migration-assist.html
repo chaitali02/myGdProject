@@ -1,0 +1,121 @@
+<style type="text/css">
+  .adminPage   .tab-pane {
+    margin: 20px 20px;
+    }
+    .nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.adminPage .tab-content { border-left: 1px solid #ddd; border-right: 1px solid #ddd; padding: 10px; border-bottom: 1px solid #ddd;}
+.adminPage .nav-tabs, .adminPage .nav-pills{
+   margin-bottom: 0px !important;
+}
+
+.adminPage .nav-tabs>li.active>a, .adminPage .nav-tabs>li.active>a:focus, .adminPage .nav-tabs>li.active>a:hover {
+    color: #555;
+    background-color: #fff;
+    border:none;
+    border-bottom: 4px solid  #9fe4ea;
+    cursor: default;
+  }
+</style>
+<div class="row adminPage" data-ng-controller="MigrationAssistController">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+      <ul class="page-breadcrumb">
+        <li>
+          <a ui-sref="home">Home</a>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <span>{{$state.current.data.pageTitle}}</span>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <span>Migration Assist</span>
+        </li>
+      </ul>
+      <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+      </div>
+    </div>
+    <br>
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div class="modal fade in" id="filemodal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+      <div class="modal-dialog">
+        <div class="modal-content rulemodel">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">Confirm</h4>
+          </div>
+          <div class="modal-body"> Save File ?</div>
+          <div class="modal-footer">
+            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn green" ng-click="okFile()">Ok</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <uib-tabset active="activeForm" >
+      <uib-tab index="0" heading="Export" select="select(0)">
+        <search-criteria  module-type="'export'" no-exec="false" ng-if="activeForm==0"  on-submit="getExport" ></search-criteria>
+        <div class="portlet box green">
+          <div class="portlet-title">
+            <div class="caption">
+              <i class="fa fa-cogs"></i>{{pageheading}} Details
+            </div>
+            <div class="actions">
+              <a ng-disabled="privileges.indexOf('Add') == -1" ui-sref="detaitexport" class="btn btn-default btn-sm">
+                <i class="fa fa-plus"></i> Add </a>
+            </div>
+          </div>
+
+          <div class="portlet-body"><div class="row">
+
+            <div class="col-md-12 col-sm-12">
+              <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                <label>Search:</label>
+                <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataExport(searchtextExport)" ng-model="searchtextExport" aria-controls="datastoredatatable">
+              </div>
+            </div>
+          </div>
+            <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
+              <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div>
+            </div>
+          </div>
+        </div>
+      </uib-tab>
+      <uib-tab index="1" heading="Import" select="select(1)">
+        <search-criteria loading="loading" module-type="'import'" no-exec="false" ng-if="activeForm==1" on-submit="getImport" ></search-criteria>
+        <div class="portlet box green">
+          <div class="portlet-title">
+            <div class="caption">
+              <i class="fa fa-cogs"></i>{{pageheading}} Details
+            </div>
+            <div class="actions">
+              <a ng-disabled="privileges.indexOf('Add') == -1" ui-sref="detaitimport" class="btn btn-default btn-sm">
+                <i class="fa fa-plus"></i> Add </a>
+            </div>
+          </div>
+
+          <div class="portlet-body"><div class="row">
+
+            <div class="col-md-12 col-sm-12">
+              <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                <label>Search:</label>
+                <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataImport(searchtext)" ng-model="searchtext" aria-controls="datastoredatatable">
+              </div>
+            </div>
+          </div>
+            <div ui-grid="gridOptionsImport" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleImport()">
+              <div class="nodatawatermark_results" ng-show="!gridOptionsImport.data.length">No data available</div>
+            </div>
+          </div>
+      </uib-tab>

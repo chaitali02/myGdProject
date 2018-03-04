@@ -1,0 +1,50 @@
+{
+    "uuid" : "f682388d-b38a-4114-8314-562e7bb70785",
+    "version" : "1488801521",
+    "name" : "nullif( a, b )",
+    "desc" : "Returns NULL if a=b; otherwise returns a (as of Hive 2.2.0)",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+       {
+           "paramId" : "0",
+           "paramName" : "a",
+           "paramType" : "",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       },
+	   {
+           "paramId" : "1",
+           "paramName" : "b",
+           "paramType" : "",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       }
+   ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq": "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+    
+    "functionInfo" : "nullif",
+    "funcType" : "hive",
+    "category":"conditional"
+}

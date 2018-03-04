@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="3778" lt="3713" ts="1502176431145" s="true" lb="privilege" rc="200" rm="OK" tn="getList 7-1" dt="text" by="272675"/>
+<httpSample t="2135" lt="2113" ts="1502176434926" s="true" lb="privilege" rc="200" rm="OK" tn="getList 7-1" dt="text" by="272675"/>
+<httpSample t="1079" lt="1047" ts="1502176437062" s="true" lb="privilege" rc="200" rm="OK" tn="getList 7-1" dt="text" by="272675"/>
+<httpSample t="962" lt="948" ts="1502176438142" s="true" lb="privilege" rc="200" rm="OK" tn="getList 7-1" dt="text" by="272674"/>
+<httpSample t="833" lt="823" ts="1502176439106" s="true" lb="privilege" rc="200" rm="OK" tn="getList 7-1" dt="text" by="272675"/>
+
+</testResults>

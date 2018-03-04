@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="38" lt="38" ts="1503064202216" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="44" lt="44" ts="1503064202257" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="27" lt="27" ts="1503064202303" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="36" lt="36" ts="1503064202331" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="16" lt="16" ts="1503064202375" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+
+<httpSample t="30" lt="30" ts="1503064276892" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="31" lt="31" ts="1503064276924" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="46" lt="46" ts="1503064276971" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="33" lt="33" ts="1503064277036" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="36" lt="36" ts="1503064277073" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+
+<httpSample t="43" lt="43" ts="1503064288550" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="18" lt="18" ts="1503064288641" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="44" lt="44" ts="1503064288698" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="13" lt="13" ts="1503064288791" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="17" lt="17" ts="1503064288848" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+
+<httpSample t="83" lt="83" ts="1503391101677" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="59" lt="59" ts="1503391101763" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="84" lt="84" ts="1503391101823" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="37" lt="37" ts="1503391101908" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="39" lt="39" ts="1503391101947" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+
+<httpSample t="216" lt="216" ts="1503393526188" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="152" lt="152" ts="1503393526407" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="48" lt="48" ts="1503393526560" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="132" lt="132" ts="1503393526610" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+<httpSample t="27" lt="27" ts="1503393526744" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2409"/>
+
+<httpSample t="181" lt="181" ts="1503393827624" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2413"/>
+<httpSample t="124" lt="124" ts="1503393827807" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2412"/>
+<httpSample t="86" lt="86" ts="1503393827932" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2412"/>
+<httpSample t="119" lt="119" ts="1503393828019" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2412"/>
+<httpSample t="61" lt="61" ts="1503393828139" s="true" lb="algorithm" rc="200" rm="OK" tn="getParamSetByAlgorithm 10-1" dt="text" by="2413"/>
+
+</testResults>

@@ -1,0 +1,67 @@
+{
+	"uuid": "59d41ea3-b929-48c4-b339-d951bf983894",
+	"version": "1488801521",
+	"name": "lower(string A)",
+	"desc": "Returns the string resulting from converting all characters of B to lower case. For example, lower('fOoBaR') results in 'foobar'",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"paramInfo": [
+		{
+			"paramId": "0",
+			"paramName": "A",
+			"paramType": "string",
+			"paramReq": "Y",
+			"paramDefVal": ""
+		}
+	],
+	"tags": [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active": "Y",
+	"published": "N",
+	"inputReq": "Y",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"funcType": "hive",
+	"category": "string",
+	"functionInfo" : [ 
+        {
+            "type" : "file",
+            "name" : "lower",
+            "paramInfoHolder" : []
+        },
+        {
+            "type" : "mysql",
+            "name" : "lower",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "hive",
+            "name" : "lower",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "impala",
+            "name" : "lower",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "oracle",
+            "name" : "lower",
+            "paramInfoHolder" : []
+        }
+    ]
+}

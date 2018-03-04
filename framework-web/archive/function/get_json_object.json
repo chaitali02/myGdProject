@@ -1,0 +1,50 @@
+{
+    
+    "uuid" : "6693bbb2-56ee-4c2c-9584-52cfa4954794",
+    "version" : "1488801521",
+    "name" : "get_json_object(string json_string, string path)",
+    "desc" : "Extracts json object from a json string based on json path specified, and returns json string of the extracted json object. It will return null if the input json string is invalid. NOTE: The json path can only have the characters [0-9a-z_], i.e., no upper-case or special characters. Also, the keys *cannot start with numbers.* This is due to restrictions on Hive column names",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+    "paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "json_string",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        },
+        {
+            "paramId" : "1",
+            "paramName" : "path",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  "functionInfo" : "get_json_object",
+  "funcType" : "hive",
+  "category":"string"
+}

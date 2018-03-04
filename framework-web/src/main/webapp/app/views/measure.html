@@ -1,0 +1,222 @@
+    <!-- BEGIN PAGE HEADER-->
+    <div  data-ng-controller="MetadataMeasureController">
+<div class="page-bar">
+   <ul class="page-breadcrumb">
+        <li>
+            <a ui-sref="home">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a  ui-sref="metadata({type:'measure'})">Meta Data</a>
+             <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <a  ui-sref="metadata({type:'measure'})">Measure</a>
+             <i class="fa fa-circle"></i>
+        </li>
+        <li><span>{{measureName}}</span></li>
+    </ul>
+    <div class="page-toolbar">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <i class="icon-calendar"></i>&nbsp;
+        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+      </div>
+    </div>
+    <!-- <div class="page-toolbar">
+    <div class="btn-group pull-right">
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" dropdown-menu-hover data-delay="1000" data-close-others="true"> Actions
+            <i class="fa fa-angle-down"></i>
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+            <li>
+                <a href="#">
+                    <i class="icon-user"></i> New User </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="icon-present"></i> New Event
+                    <span class="badge badge-success">4</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="icon-basket"></i> New order </a>
+            </li>
+            <li class="divider"> </li>
+            <li>
+                <a href="#">
+                    <i class="icon-flag"></i> Pending Orders
+                    <span class="badge badge-danger">4</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="icon-users"></i> Pending Users
+                    <span class="badge badge-warning">12</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div> -->
+</div>
+<!-- <h3 class="page-title">Measure
+
+</h3> -->
+
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+<div class="col-md-12">
+        <!-- BEGIN: ACCORDION DEMO -->
+          <div class="portlet box green">
+             <div class="portlet-title">
+                <div class="caption">
+                  <i class="fa fa-gift"></i>{{measureName}}</div>
+
+      			  <div class="tools">
+		         	<a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip data-ng-show="!showmeasure"  data-ng-click="showMeasurePage()"><span class="glyphicon glyphicon-file" style="color:white;"></span></a>
+                    <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip data-ng-show="showmeasure" data-ng-click="showMeasureGraph(measuredata.uuid,measuredata.version)"><img src="lib/images/check.png"  style="margin: 2px auto;display: block;"></img></a>
+                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;"    class="reload" ng-click="broadcastRefreshData()"> </a>
+                    <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="metadata({type:'measure'})" class="remove"></a>
+       			  </div>
+	   		 </div>
+
+     <div class="portlet-body form">
+
+  <!-- BEGIN FORM-->
+    <div class="form-body graph-body" ng-if="showgraphdiv">
+     <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader"></i>
+     <div class="form-body show-graph-body" graph-directive uuid="measuredata.uuid" version="measure.defaultVersion.version"></div>
+     </div>
+
+    <div class="form-body"  ng-show="showmeasure" style="padding-top:50px;">
+      <span us-spinner="{radius:30, width:8, length: 16}"></span>
+    <form action="#" class="form-horizontal">
+       <div class="form-body">
+        <div class="form-group">
+          <label class="col-md-3 control-label">UUID</label>
+           <div class="col-md-6">
+           <input type="text" class="form-control" ng-disabled="true"  ng-model="measuredata.uuid"  disabled="disabled">
+           </div>
+
+        </div>
+          <div class="form-group">
+           <label class="col-md-3 control-label">Name*</label>
+              <div class="col-md-6">
+                <input type="text" class="form-control"  ng-disabled="{{mode}}"  ng-model="measuredata.name"  disabled="disabled">
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label class="col-md-3 control-label">Version</label>
+              <div class="col-md-6">
+                 <select class="form-control" select2 name="version"
+                                ng-change="selectVersion()" data-ng-model="measure.defaultVersion.version" ng-options="c.version as c.version for c in measure.versions">
+                                    <option>-select-</option>
+                                </select>
+              </div>
+          </div>
+
+        <div class="form-group">
+              <label class="col-md-3 control-label">CreatedBy</label>
+              <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="true"  ng-model="measuredata.createdBy.ref.name"  disabled="disabled">
+              </div>
+          </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">CreatedOn</label>
+                 <div class="col-md-6">
+               <input type="text"  ng-model="measuredata.createdOn"  ng-disabled="true"  class="form-control  disabled="disabled">
+          		</div>
+           </div>
+
+
+		     <div class="form-group">
+                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                <div class="col-md-6">
+                 <input type="text"  ng-model="measuredata.desc" class="form-control"   ng-disabled="{{mode}}">
+                </div>
+           </div>
+                 <!--     {{measuredata.measureInfo.ref.name}} -->
+               <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">MeasureInfo</label>
+                <div class="col-md-2 col-sm-2 col-xs-12">
+            <!--     <select class="form-control" select2 name="" ng-change="changeDatapod()" data-ng-model="measuredata.measureInfo.ref.name"
+                               ng-options="r.name as r.name for r in measureDatapod.options track by uuid" ng-disabled="{{mode}}">
+                        </select> -->
+                        <select
+                                                       class="form-control"
+                                                       select2
+                                                       name=""
+                                                       ng-change="OnChangeDependsOn()"
+                                                       data-ng-model="measureRelation.defaultoption"
+                                                       ng-options="r as r.name for r in measureRelation.options track by r.uuid" ng-disabled="{{mode}}">
+                                                      </select>
+                      <!--  <input type="text"  ng-model="measuredata.measureInfo.ref.name"  ng-disabled="true"  class="form-control  disabled="disabled">             -->
+               </div>
+
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name</label>
+                <div class="col-md-3 col-sm-3 col-xs-12">
+                   <!--   <select class="form-control"
+                                 select2
+                                 name=""
+                                  ng-change="Datapod()"
+                                 data-ng-model="DatapodAttr.defaultoption"
+                                 ng-options="r.attributeName as r.attributeName for r in DatapodAttr track by uuid"  ng-disabled="{{mode}}">
+                                </select>  -->
+                        <!-- <select title="Type"  class="form-control" ng-disabled="{{mode}}">
+                     <option value="" ng-model="measuredata.measureInfo.attrName">{{measuredata.measureInfo.attrName}}</option>
+                    </select>  -->
+                     <select
+                                                       class="form-control"
+                                                       select2
+                                                       name=""
+                                                       ng-change="selectRelation()"
+                                                       data-ng-model="defaultmeasureInfo"
+                                                       ng-options="r as r.name for r in measureDatapod track by r.attributeId" ng-disabled="{{mode}}">
+                                                      </select>
+
+                  <!--    <input type="text"  ng-model="measuredata.measureInfo.attrName"  ng-disabled="true"  class="form-control  disabled="disabled">        -->
+                 </div>
+                 </div>  <!-- {{measureDatapodAttr}} -->
+
+
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div class="btn-group" >
+        			<label class="btn btn-default" ng-model="measuredata.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+        			<label class="btn btn-default" ng-model="measuredata.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+			     </div>
+                        </div>
+                    </div>
+
+
+         <div class="form-group"  style="padding-top: 10px;">
+             <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                 <a ui-sref="metadata({type:'measure'})"  class="btn btn-primary">Cancel</a>
+                  <input type="submit" class="btn btn-success" value="Submit" ng-disabled="{{mode}}" ng-click="submitMeasure()" name="submit">
+                 <span id="correctSign" style="vertical-align: middle;"></span>
+             </div>
+         </div>
+
+              <!-- <a ui-sref="metadata({type:'datapod'})" class="btn btn-primary" href="#/metaList?type=datapod">Cancel</a> -->
+
+
+
+                </div>
+      </form>
+   </div>
+</div>
+    </div>
+</div>
+</div>
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS-->
+<script>
+// call any jquery or angularjs code ehre
+</script>
+<!-- BEGIN MAIN JS -->

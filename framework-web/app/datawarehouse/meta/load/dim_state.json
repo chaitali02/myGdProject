@@ -1,0 +1,36 @@
+{
+	"header": "Y",
+	"append": "Y",
+	"source": {
+		"ref": {
+			"type": "datasource",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+		},
+		"value": "/user/hive/warehouse/framework/upload/dim_state.csv"
+	},
+	"target": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d"
+		}
+	},
+	"uuid": "a18f4cf7-9cca-4eee-8b70-065cfee84588",
+	"version": "1502631072",
+	"name": "dim_state",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-08-29T03:34:58.613Z"),
+	"active": "Y",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	]
+}

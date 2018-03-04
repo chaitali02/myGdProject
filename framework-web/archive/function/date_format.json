@@ -1,0 +1,51 @@
+{
+    
+   
+    "uuid" : "9e3de520-02fb-11e7-93ae-92361f002671",
+    "version" : "1488801521",
+    "name" : "date_format(date/timestamp/string ts, string fmt)",
+    "desc" : "Converts a date/timestamp/string to a value of string in the format specified by the date format fmt (as of Hive 1.2.0). Supported formats are Java SimpleDateFormat formats – https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html. The second argument fmt should be constant. Example: date_format('2015-04-08', 'y') = '2015'.date_format can be used to implement other UDFs, e.g.:dayname(date) is date_format(date, 'EEEE')dayofyear(date) is date_format(date, 'D')",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "ts",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        },
+		{
+            "paramId" : "1",
+            "paramName" : "fmt",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "inputReq" : "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+"functionInfo" : "date_format",
+    "funcType" : "hive",
+"category":"date"
+}

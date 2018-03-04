@@ -1,0 +1,158 @@
+{
+	"datasource": {
+		"ref": {
+			"type": "datasource",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+		}
+	},
+	"cache": "Y",
+	"published": "N",
+	"attributes": [
+		{
+			"attributeId": 0,
+			"name": "DatapodUUID",
+			"type": "string",
+			"desc": "DatapodUUID",
+			"dispName": "DatapodUUID",
+			"key": 0,
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 1,
+			"name": "DatapodVersion",
+			"type": "string",
+			"desc": "DatapodVersion",
+			"dispName": "DatapodVersion",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 2,
+			"name": "AttributeId",
+			"type": "string",
+			"desc": "AttributeId",
+			"dispName": "AttributeId",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 3,
+			"name": "minVal",
+			"type": "Double",
+			"desc": "Minimum value in data",
+			"dispName": "minVal",
+			"partition": "Y",
+			"active": "Y"
+		},
+		{
+			"attributeId": 4,
+			"name": "maxVal",
+			"type": "Double",
+			"desc": "Maximum value in data",
+			"dispName": "maxVal",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 5,
+			"name": "avgVal",
+			"type": "Double",
+			"desc": "Average value in data",
+			"dispName": "avgVal",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 6,
+			"name": "medianVal",
+			"type": "Double",
+			"desc": "Median value in data",
+			"dispName": "medianVal",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 7,
+			"name": "stdDev",
+			"type": "Double",
+			"desc": "Standard deviation in data",
+			"dispName": "stdDev",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 8,
+			"name": "numDistinct",
+			"type": "Integer",
+			"desc": "No of distinct values",
+			"dispName": "numDistinct",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 9,
+			"name": "perDistinct",
+			"type": "Double",
+			"desc": "Percentage distinct values",
+			"dispName": "perDistinct",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 10,
+			"name": "numNull",
+			"type": "Integer",
+			"desc": "No of null values",
+			"dispName": "numNull",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 11,
+			"name": "perNull",
+			"type": "Double",
+			"desc": "Percentage null values",
+			"dispName": "perNull",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 12,
+			"name": "sixSigma",
+			"type": "double",
+			"desc": "Null Values to the total row count",
+			"dispName": "sixSigma",
+			"partition": "N",
+			"active": "Y"
+		},
+		{
+			"attributeId": 13,
+			"name": "version",
+			"type": "Integer",
+			"desc": "version",
+			"dispName": "version",
+			"partition": "N",
+			"active": "Y"
+		}
+	],
+	"uuid": "77aefb4c-191c-11e7-93ae-92361f002671",
+	"version": "1488620350",
+	"name": "profile_rule_results",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	]
+}

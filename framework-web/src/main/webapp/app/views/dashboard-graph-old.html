@@ -1,0 +1,217 @@
+<style>
+
+.select2-container--open{
+
+  z-index: 10060;
+}
+</style>
+<!-- BEGIN PAGE HEADER-->
+<div ng-controller="ShowDashboradController">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a ui-sref="home">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+              <span>{{$state.current.data.pageTitle}}</span>
+              <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a ui-sref="dashboard">Dashboard</a>
+                <i class="fa fa-circle"></i>
+            </li>
+             <li>
+                <a ui-sref="blank">{{dashboarddata.dashboarddata.name | strReplace:'_':' '|capitalize}}</a>
+            </li>
+        </ul>
+        <div class="page-toolbar">
+          <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+          </div>
+        </div>
+    </div><!-- END PAGE HEADER-->
+    <br>
+
+    <!-- BEGIN MAIN CONTENT -->
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 col-sm-12">
+        <div class="portlet light bordered">
+          <div class="portlet-title">
+            <div class="caption">
+              <i class=" icon-layers "></i>
+                <span class="caption-subject bold">{{dashboarddata.dashboarddata.name | strReplace:'_':' '|capitalize}}</span>
+            </div>
+            <div class="actions">
+              <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless"  ui-sref="metaListdashboard({'id':dashboarddata.dashboarddata.uuid,'mode':'false'})" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit" ng-show="hideIcon" >
+                <i class="fa fa-pencil-square-o" style="display: block;margin:2px 0px 0px 1px;color:white;"></i>
+               </a>
+              <a style="border:0px solid transparent !important;" style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default fullscreen bg-blue bg-hover-grey-salsa font-white borderless" tooltip-placement="{{showtooltip}}" uib-tooltip="{{showtooltiptitle}}" ng-click="fullscreen()" style="color:white;"></a>
+
+              <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" tooltip-placement="{{showtooltip}}" uib-tooltip="Show Dependencies"  data-ng-click="showDashboardGraph(dashboarddata.dashboarddata.uuid,dashboarddata.dashboarddata.version)" data-ng-show="showdashboard" >
+                <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white;"></i>
+              </a>
+              <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default" href="javascript:;" tooltip-placement="{{showtooltip}}" uib-tooltip="Show Details" data-ng-show="!showdashboard" data-ng-click="showDashboardPage()">
+                <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:gray;"></i>
+              </a>
+              <a style="border:0px solid transparent !important;" href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white borderless" ng-click="callGraph()" data-original-title="" title="">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+              </a>
+              <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-red bg-hover-grey-salsa font-white borderless" ui-sref="dashboard" tooltip-placement="{{showtooltip}}" uib-tooltip="Close"  ng-show="hideIcon">
+                <i class="fa fa-times" style="display: block;margin:2px auto;color:white;"></i>
+              </a>
+
+            </div>
+          </div>
+          <div class="portlet-body" style="margin-bottom:-15px;">
+            <div class="form-body graph-body" ng-if="showgraphdiv">
+              <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader"></i> -->
+              <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+<div class="spinner" id="graphloader">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+              <div class="form-body show-graph-body" graph-directive uuid="uuid" version="version">
+              </div>
+            </div>
+            <div class="row" data-ng-show="showdashboard">
+              <div class="col-lg-12 col-xs-12 col-sm-12">
+                <div class="portlet box green" style="border:1px solid #e7ecf1!important">
+                  <div class="portlet-title">
+                    <div class="caption">Filter
+                    </div>
+                    <div class="tools">
+                      <a uib-tooltip="Refresh" tooltip-placement="{{showtooltip}}" href="javascript:;"  ng-click="refreshDashboard(filterAttribureIdValues.length)" style="height:14px;" ng-click="refreshDashboard(filterAttribureIdValues.length)">
+                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                       </a>
+                    </div>
+                  </div>
+                  <div class="portlet-body">
+                    <div class="row" style="margin-top: 15px;">
+                      <div class="col-lg-4 col-xs-12 col-sm-12" ng-repeat="data in filterAttribureIdValues" style="margin-bottom:25px;">
+                        <label><b>{{data.dname}}</b></label>
+                        <select  title="{{dname}}" class="form-control" select2  ng-model="selectedAttributeValue[$index]" ng-change="onFilterChange($index)" ng-options="c as c.value for c in data.values" track by c.id>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div><!--End portlet box green 2-->
+              </div>
+              <div class=" col-lg-12 col-xs-12 col-sm-12 centercontent" ng-show="isUserNotification">
+                <div class="spinner" ng-show="inprogressdata">
+                  <div class="bounce1"></div>
+                  <div class="bounce2"></div>
+                  <div class="bounce3"></div>
+                </div>
+                <div ng-show="isDataError">
+                    <h3 style="font-size:14px;color:red;" >{{datamessage}}</h3>
+                  </div>
+              </div>
+              <!-- <div class="col-lg-6 col-xs-12 col-sm-12" ng-repeat="data in inprogressarray track by $index"  ng-show="data == true">
+                <div class="portlet light bordered">
+                  <div class="portlet-title">
+                    <div class="caption">
+                      <i class=" icon-layers"></i>
+                        <span class="caption-subject bold">{{vizpoddetail[$index].name}}</span>
+                    </div>
+                    <div class="actions">
+                      <a class="btn btn-circle btn-icon-only btn-default fullscreen" tooltip-placement="{{showtooltip}}" uib-tooltip="{{showtooltiptitle}}" ng-click="fullscreen()"></a>
+                    </div>
+                  </div>
+                  <div class="portlet-body">
+                    <h1>progesss---</h1>
+                  </div>
+                </div>
+              </div>      -->
+              <div class="col-lg-6 col-xs-12 col-sm-12 {{vizpoddetail[$index].class}}" ng-repeat="data in datapoints"  ng-if="vizpoddetail[$index].type !='data-grid'" ng-show="{{vizpoddetail[$index].show}} && !inprogressdata">
+                <div class="portlet light bordered">
+                  <div class="portlet-title">
+                    <div class="caption">
+                      <!-- <i class=" icon-layers"></i> -->
+                        <span class="caption-subject font-dark bold uppercase">{{vizpoddetail[$index].name}}</span>
+                    </div>
+                    <div class="actions">
+                      <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless"  ui-sref="dvvizpod({'id':vizpoddetail[$index].uuid,'version':vizpoddetail[$index].version,'mode':'false'})" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit" ng-show="hideIcon" >
+                     <i class="fa fa-pencil-square-o" style="display: block;margin:2px 0px 0px 1px;color:white;"></i>
+                     </a>
+                     <!--   <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="top" uib-tooltip="Download" check>
+                       <i class="fa fa-download" aria-hidden="true" style="display: block;margin:2px 0px 0px 1px;color:gray;"></i>
+                     </a> -->
+                      <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless" tooltip-placement="top" uib-tooltip="{{showtooltiptitle}}" ng-click="fullScreenVizpod($index,'data-chart')" style="color:white;">
+                        <i class="{{vizpoddetail[$index].iconclass}}" aria-hidden="true"></i>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="portlet-body">
+
+                    <div ng-if="datapoints[$index].length !=0">
+                    <div ng-if="vizpoddetail[$index].type !='data-grid' && vizpoddetail[$index].type !='bubble-chart'">
+                      <c3chart  chartGroup="chart" bindto-id="chartGroupDataPoints{{$index}}" chart-data="datapoints[$index]" chart-columns="datacolumns[$index]" chart-x="datax[$index]" enable-zoom="true" callback-function="handleCallbackGroup">
+                        <chart-bar ratio="0.5"/>
+                          <!--<chart-legend show-legend="true"/>
+                          <chart-donut expand="true" width="30" show-label="false" title="Donut Title"/> -->
+                        <chart-axes values-x=""/>
+                        <!-- <chart-size chart-height="33%" chart-width=""/> -->
+
+                        <chart-axis>
+                          <chart-axis-x axis-position="outer-center" axis-height="50px"  axis-type="category" axis-label="{{datax[$index].id}}">
+                            <chart-axis-x-tick  tick-rotate="10" tick-multiline="false" tick-culling-max="5"/>
+                          </chart-axis-x>
+                        </chart-axis>
+                        <!-- <chart-group group-values="data 1,data 2"/> -->
+                        <!--  <chart-legend show-legend="false" legend-position="right"/> -->
+                      </c3chart>
+                    </div>
+                    <div class="{{vizpoddetail[$index].id}}" ng-if="vizpoddetail[$index].type !='data-grid' && vizpoddetail[$index].type =='bubble-chart'" bubble-chart data="datapoints[$index]" column="dashboarddata.vizpod[$index]" chartid="vizpoddetail[$index].id"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-xs-12 col-sm-12 {{vizpoddetailgride[$index].class}}" ng-repeat="data in tabledata" ng-if="tabledata.length !=0"  ng-show="{{vizpoddetailgride[$index].show}}">
+                <div class="portlet light bordered" style="min-height:328px;">
+                  <div class="portlet-title">
+                    <div class="caption">
+                      <!-- <i class=" icon-layers"></i> -->
+                        <span class="caption-subject font-dark bold uppercase">{{vizpoddetailgride[$index].name}}</span>
+                    </div>
+                    <div class="actions">
+                       <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white"  ui-sref="metaListvizpod({'id':vizpoddetail[$index].uuid,'version':vizpoddetail[$index].version,'mode':'false'})" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit" ng-show="hideIcon">
+                         <i class="fa fa-pencil-square-o" style="display:block;margin:2px 0px 0px 1px;color:white;"></i>
+                     </a>
+                      <!-- <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="top" uib-tooltip="Download">
+                       <i class="fa fa-download"  style="display: block;margin:2px 0px 0px 1px;color:gray;" aria-hidden="true"></i>
+                     </a> -->
+                      <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white" tooltip-placement="top" uib-tooltip="{{showtooltiptitle}}" ng-click="fullScreenVizpod($index,'data-grid')" style="color:white;">
+                       <i class="{{vizpoddetailgride[$index].iconclass}}" aria-hidden="true"></i>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="portlet-body" style="min-height:328px;padding-top: 1%;">
+                    <div class="row">
+             <div class="col-md-12 col-sm-12"><div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;margin-bottom:20px">
+             <label>Search:</label>
+             <input type="search" class="form-control input-sm input-small input-inline" placeholder=""  ng-model="searchtext" aria-controls="datastoredatatable">
+             </div></div>
+             </div>
+                    <div style="display:block;overflow-x:auto;">
+                    <table ng-table-dynamic="data.tableParams with data.cols" class="row-border hover table table-striped table-bordered">
+                      <tr ng-repeat="row in $data | filter:searchtext">
+                        <td ng-repeat="col in $columns"  sortable="'col.field'"  style="width:120px" class="text-center" header-class="'text-center'" >{{row[col.field]}}</td>
+                      </tr>
+                    </table>
+                    </div>
+                  </div>
+                  </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- END MAIN CONTENT -->

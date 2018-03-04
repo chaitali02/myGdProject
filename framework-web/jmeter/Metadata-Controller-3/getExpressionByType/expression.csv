@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="123" lt="123" ts="1502448554068" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="6" lt="6" ts="1502448554223" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="10" lt="10" ts="1502448554272" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="5" lt="5" ts="1502448554330" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="6" lt="6" ts="1502448554390" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+
+<httpSample t="161" lt="161" ts="1502448776521" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2803"/>
+<httpSample t="203" lt="202" ts="1502448776687" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="115" lt="115" ts="1502448776895" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="127" lt="127" ts="1502448777015" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="48" lt="48" ts="1502448777144" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2805"/>
+
+<httpSample t="270" lt="270" ts="1502451034806" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="231" lt="231" ts="1502451035079" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2805"/>
+<httpSample t="109" lt="109" ts="1502451035312" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2805"/>
+<httpSample t="81" lt="81" ts="1502451035422" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2805"/>
+<httpSample t="63" lt="63" ts="1502451035505" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2802"/>
+
+<httpSample t="50" lt="49" ts="1502451173631" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="52" lt="52" ts="1502451173682" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="34" lt="34" ts="1502451173745" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="11" lt="11" ts="1502451173800" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="8" lt="8" ts="1502451173850" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+
+<httpSample t="24" lt="24" ts="1503064133707" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2800"/>
+<httpSample t="32" lt="32" ts="1503064133808" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2800"/>
+<httpSample t="15" lt="15" ts="1503064133915" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2800"/>
+<httpSample t="23" lt="23" ts="1503064134011" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2800"/>
+<httpSample t="25" lt="25" ts="1503064134095" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2800"/>
+
+<httpSample t="160" lt="160" ts="1503394008572" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="92" lt="92" ts="1503394008738" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2803"/>
+<httpSample t="147" lt="147" ts="1503394008840" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2803"/>
+<httpSample t="34" lt="34" ts="1503394008988" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="16" lt="16" ts="1503394009059" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+
+<httpSample t="15" lt="15" ts="1503394222403" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="11" lt="11" ts="1503394222425" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="8" lt="8" ts="1503394222439" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="9" lt="9" ts="1503394222461" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="4" lt="4" ts="1503394222493" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+
+<httpSample t="488" lt="488" ts="1503396128491" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="202" lt="202" ts="1503396129008" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="90" lt="90" ts="1503396129218" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="158" lt="158" ts="1503396129338" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="115" lt="115" ts="1503396129573" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2803"/>
+
+<httpSample t="161" lt="161" ts="1503396423543" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="19" lt="19" ts="1503396423711" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="38" lt="38" ts="1503396423762" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="34" lt="34" ts="1503396423877" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="9" lt="9" ts="1503396423949" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+
+<httpSample t="9" lt="9" ts="1503396481846" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="11" lt="11" ts="1503396481909" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="4" lt="4" ts="1503396481965" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="5" lt="5" ts="1503396482001" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="9" lt="9" ts="1503396482066" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+
+<httpSample t="137" lt="137" ts="1503396635632" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2805"/>
+<httpSample t="254" lt="254" ts="1503396635771" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="121" lt="121" ts="1503396636027" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2805"/>
+<httpSample t="124" lt="124" ts="1503396636150" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="127" lt="127" ts="1503396636276" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2803"/>
+
+<httpSample t="161" lt="160" ts="1503401648888" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2804"/>
+<httpSample t="188" lt="188" ts="1503401649057" s="true" lb="expression" rc="200" rm="OK" tn="getExpressionByType 14-1" dt="text" by="2803"/>
+<httpSample t="52" lt="52" ts="1503401649252" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="11" lt="11" ts="1503401649362" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+<httpSample t="6" lt="6" ts="1503401649381" s="false" lb="expression" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getExpressionByType 14-1" dt="text" by="1917"/>
+
+</testResults>

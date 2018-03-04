@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="341" lt="341" ts="1502345383086" s="true" lb="status" rc="200" rm="OK" tn="getBaseEntityStatusByCriteria 15-1" dt="text" by="361"/>
+<httpSample t="89" lt="89" ts="1502345383624" s="true" lb="status" rc="200" rm="OK" tn="getBaseEntityStatusByCriteria 15-1" dt="text" by="361"/>
+<httpSample t="42" lt="42" ts="1502345383747" s="true" lb="status" rc="200" rm="OK" tn="getBaseEntityStatusByCriteria 15-1" dt="text" by="361"/>
+<httpSample t="93" lt="93" ts="1502345383799" s="true" lb="status" rc="200" rm="OK" tn="getBaseEntityStatusByCriteria 15-1" dt="text" by="362"/>
+<httpSample t="92" lt="92" ts="1502345383902" s="true" lb="status" rc="200" rm="OK" tn="getBaseEntityStatusByCriteria 15-1" dt="text" by="362"/>
+
+</testResults>

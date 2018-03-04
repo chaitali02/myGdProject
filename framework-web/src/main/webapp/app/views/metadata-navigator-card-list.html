@@ -1,0 +1,115 @@
+
+<div ng-controller="MetadataNavigatorController">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a ui-sref="home">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <span>{{$state.current.data.pageTitle}}</span>
+            </li>
+        </ul>
+        <div class="page-toolbar">
+          <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+          </div>
+        </div>
+    </div><!--END PAGE HEADER-->
+    <br>
+    <!--BEGIN MAIN CONTENT-->
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div class="row">
+
+        <div class="col-md-12">
+          <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="actions">
+                    </div>
+                    <div class="row">
+                        <label class="col-md-1" style="margin-top:6px;">Search:</label>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <input type="text" class="form-control" ng-model="searchmeta">
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2"style="float:right;">
+                            <select class="form-control" ng-change="selectOption()"
+                            data-ng-model="optiondata" ng-options="r as r.caption for r in optionsort track by r.caption">
+                            </select >
+                        </div>
+                        <label class="col-md-1" style="margin-top:6px;float:right">Sort By:</label>
+                    </div>
+
+                </div>
+
+                <div class="portlet-body">
+
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12"ng-repeat="datadiscovry in allMetaCount |filter:{type: searchmeta} | orderBy:optiondata.name">
+                            <div class="cardshadow" style="height:152px;">
+                                <a ng-click="selectState(datadiscovry.state,datadiscovry.param)">
+                                <div class="dashboard-stat2" style="height:150px;">
+                                  <!-- ui-sref="{{datadiscovry.state}}"-->
+                                    <div class="display">                                         <div class="number" style="margin-top:-4px;">
+                                            <h3  style="text-align:left !important;"class="font-{{datadiscovry.class}}">
+                                                <span data-counter="counterup" data-value="{{datadiscovry.count}}">{{datadiscovry.count}}</span>
+                                                <small class="{{datadiscovry.class}}"></small>
+                                            </h3>
+                                            <small>{{datadiscovry.caption}}</small>
+                                        </div>
+                                        <div class="icon">
+                                            <i  class=" font-{{datadiscovry.class}} {{datadiscovry.icon}}"></i>
+                                        </div>
+                                    </div>
+                                    <div class="progress-info">
+                                        <div class="progress">
+                                            <span style="width: 100%;" class="progress-bar progress-bar-success {{datadiscovry.class}}">
+                                                <!-- <span class="sr-only">76% progress</span> -->
+                                            </span>
+                                        </div>
+                                        <div class="status" style="padding-top:5px;">
+                                            <div class="status-title" style="text-transform:capitalize;padding-right: 4px;">Last Updated By: </div>
+                                            <div title="Last Update By" class="status-number"style="float:left;text-transform: lowercase;">{{datadiscovry.lastUpdatedBy}}</div>
+                                        </div>
+                                        <div class="status" style="padding-top:15px;">
+                                            <span class="status-title" style="text-transform:capitalize;padding-right: 4px;">Last Updated On:</span>
+                                            <div title="Last Update On" class="status-number" style="float:left;">{{datadiscovry.lastUpdatedOn | date :'MM-dd-yyyy'}}</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </a>
+                            </div>
+                            </div>
+                        <!-- <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 " ng-repeat="datadiscovry in allMetaCount |filter:{type: searchmeta}">
+                            <div class="cardshadow">
+                                <a class="dashboard-stat dashboard-stat-v2 {{datadiscovry.class}}" style="margin-bottom:25px;color:red;" ui-sref="{{datadiscovry.state}}">
+
+                                    <div class="row">
+                                        <span title="{{datadiscovry.type}}" style="float:left;margin:5px 0px 0px 20px;color:white;height: 19px;"><!-- {{datadiscovry.caption}} -->
+                                      <!--   </span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="visual" style="width:10%;">
+                                            <i class="fa fa-globe"></i>
+                                        </div>
+                                        <div class="details" style="">
+                                           <div class="number" style="padding-top:21px;">
+                                                <span data-counter="counterup"> {{datadiscovry.count}}
+                                                </span>
+                                            </div>
+                                            <div class="desc">{{datadiscovry.caption}}</div>
+                                                <!-- <span style="float:right;0px;color:white;">{{dashboarddata.count}}
+                                        </span> -->
+                                        <!-- </div>
+                                     </div>
+                                    </a>
+                                </div>
+                            </div> -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--END MAIN CONTENT-->
+</div>

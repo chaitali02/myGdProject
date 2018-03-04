@@ -1,0 +1,6 @@
+product_type_id,product_type_code,product_type_desc,load_date
+101,HL09,Home Loan,2017-03-01
+102,AL12,Auto Loan,2017-03-01
+103,CC56,Credit Card,2017-03-01
+104,DC32,Debit card,2017-03-01
+105,PL07,Personal Loan,2017-03-01

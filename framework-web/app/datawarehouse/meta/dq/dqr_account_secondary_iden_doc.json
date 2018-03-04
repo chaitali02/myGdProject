@@ -1,0 +1,57 @@
+{
+	"attribute": {
+		"attrId": "0",
+		"ref": {
+			"type": "datapod",
+			"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+		}
+	},
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+		}
+	},
+	"duplicateKeyCheck": "N",
+	"nullCheck": "Y",
+	"valueCheck": [],
+	"rangeCheck": {
+		
+	},
+	"lengthCheck": {
+		
+	},
+	"refIntegrityCheck": {
+		"attrId": "10",
+		"ref": {
+			"type": "datapod",
+			"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+		}
+	},
+	"uuid": "d4b95865-4ff7-4776-8c63-d36e7eff46c3",
+	"version": "1490074107",
+	"name": "dqr_account_secondary_iden_doc",
+	"desc": "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the source data model",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	]
+}

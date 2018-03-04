@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="13850" lt="13850" ts="1502182108644" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+<httpSample t="8485" lt="8485" ts="1502182122495" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="481"/>
+<httpSample t="7941" lt="7941" ts="1502182130980" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="481"/>
+<httpSample t="7288" lt="7288" ts="1502182138923" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="481"/>
+<httpSample t="5702" lt="5702" ts="1502182146213" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="481"/>
+
+<httpSample t="7737" lt="7736" ts="1502182535447" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="479"/>
+<httpSample t="6001" lt="5999" ts="1502182543185" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="481"/>
+<httpSample t="5635" lt="5635" ts="1502182549187" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+<httpSample t="5343" lt="5343" ts="1502182554824" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+<httpSample t="6358" lt="6358" ts="1502182560168" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+
+<httpSample t="119" lt="119" ts="1502184026592" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1834"/>
+<httpSample t="10" lt="10" ts="1502184026742" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="6" lt="6" ts="1502184026772" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="8" lt="8" ts="1502184026782" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="8" lt="8" ts="1502184026812" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+
+<httpSample t="175" lt="175" ts="1502184215276" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+<httpSample t="134" lt="134" ts="1502184215452" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+<httpSample t="31" lt="31" ts="1502184215588" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1834"/>
+<httpSample t="13" lt="13" ts="1502184215621" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1835"/>
+<httpSample t="14" lt="14" ts="1502184215635" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1835"/>
+
+<httpSample t="38" lt="38" ts="1502184345165" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+<httpSample t="54" lt="54" ts="1502184345209" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1834"/>
+<httpSample t="52" lt="52" ts="1502184345274" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+<httpSample t="13" lt="13" ts="1502184345327" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1834"/>
+<httpSample t="85" lt="85" ts="1502184345341" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1834"/>
+
+<httpSample t="25" lt="25" ts="1502184453746" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1835"/>
+<httpSample t="48" lt="48" ts="1502184453772" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1834"/>
+<httpSample t="36" lt="36" ts="1502184453821" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+<httpSample t="28" lt="28" ts="1502184453859" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+<httpSample t="33" lt="33" ts="1502184453889" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+
+<httpSample t="14" lt="14" ts="1502184895381" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+<httpSample t="22" lt="22" ts="1502184895396" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1834"/>
+<httpSample t="22" lt="22" ts="1502184895418" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="7" lt="7" ts="1502184895445" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="7" lt="7" ts="1502184895457" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+
+<httpSample t="137" lt="137" ts="1502185711945" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1834"/>
+<httpSample t="21" lt="21" ts="1502185712083" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1834"/>
+<httpSample t="15" lt="15" ts="1502185712106" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+<httpSample t="38" lt="38" ts="1502185712122" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1835"/>
+<httpSample t="16" lt="16" ts="1502185712161" s="false" lb="dag" rc="415" rm="Unsupported Media Type" tn="dagWithParams 6-1" dt="text" by="1833"/>
+
+<httpSample t="15363" lt="15363" ts="1502186245531" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+<httpSample t="9130" lt="9130" ts="1502186260895" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="481"/>
+<httpSample t="7382" lt="7382" ts="1502186270024" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+<httpSample t="6611" lt="6611" ts="1502186277407" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="481"/>
+<httpSample t="6550" lt="6550" ts="1502186284020" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+
+<httpSample t="8469" lt="8469" ts="1502186353878" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="481"/>
+<httpSample t="20" lt="20" ts="1502186362348" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="6" lt="6" ts="1502186362369" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="5" lt="5" ts="1502186362379" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="4" lt="4" ts="1502186362385" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+
+<httpSample t="15545" lt="15545" ts="1502186548689" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+<httpSample t="7844" lt="7844" ts="1502186564235" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+<httpSample t="8076" lt="8076" ts="1502186572080" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+<httpSample t="7815" lt="7815" ts="1502186580157" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="480"/>
+<httpSample t="6964" lt="6964" ts="1502186587973" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="479"/>
+
+<httpSample t="8665" lt="8665" ts="1502187034863" s="true" lb="dag" rc="200" rm="OK" tn="dagWithParams 6-1" dt="text" by="481"/>
+<httpSample t="26" lt="26" ts="1502187043528" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="5" lt="5" ts="1502187043555" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="7" lt="7" ts="1502187043561" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+<httpSample t="4" lt="4" ts="1502187043569" s="false" lb="dag" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="dagWithParams 6-1" dt="text" by="1951"/>
+
+</testResults>

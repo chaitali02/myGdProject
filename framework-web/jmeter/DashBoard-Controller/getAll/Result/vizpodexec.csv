@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="13" lt="12" ts="1502187706850" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="2738"/>
+<httpSample t="13" lt="12" ts="1502187706865" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="2740"/>
+<httpSample t="11" lt="9" ts="1502187706878" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="2738"/>
+<httpSample t="13" lt="13" ts="1502187706890" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="2739"/>
+<httpSample t="6" lt="6" ts="1502187706904" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="2738"/>
+
+<httpSample t="75" lt="75" ts="1502281527470" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4108"/>
+<httpSample t="9" lt="9" ts="1502281527547" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4108"/>
+<httpSample t="15" lt="11" ts="1502281527557" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4108"/>
+<httpSample t="21" lt="16" ts="1502281527573" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4109"/>
+<httpSample t="15" lt="15" ts="1502281527595" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4108"/>
+
+<httpSample t="9" lt="9" ts="1502281554389" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4108"/>
+<httpSample t="8" lt="8" ts="1502281554402" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4108"/>
+<httpSample t="8" lt="8" ts="1502281554414" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4108"/>
+<httpSample t="6" lt="6" ts="1502281554425" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4107"/>
+<httpSample t="8" lt="7" ts="1502281554432" s="true" lb="vizpodexec" rc="200" rm="OK" tn="getAll 1-1" dt="text" by="4107"/>
+
+</testResults>

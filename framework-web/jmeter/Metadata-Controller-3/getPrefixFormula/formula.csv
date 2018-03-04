@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="807" lt="806" ts="1503064202216" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="8" lt="8" ts="1503064203024" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="8" lt="8" ts="1503064203033" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="10" lt="10" ts="1503064203042" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="10" lt="10" ts="1503064203053" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+
+<httpSample t="91" lt="91" ts="1503064276900" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="41" lt="38" ts="1503064277009" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="31" lt="30" ts="1503064277059" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="21" lt="21" ts="1503064277092" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="24" lt="24" ts="1503064277116" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+
+<httpSample t="27" lt="27" ts="1503064288516" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="35" lt="35" ts="1503064288547" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="54" lt="54" ts="1503064288601" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="29" lt="29" ts="1503064288695" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="24" lt="24" ts="1503064288747" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+
+<httpSample t="916" lt="916" ts="1503391101665" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="13" lt="13" ts="1503391102585" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="18" lt="18" ts="1503391102601" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="12" lt="12" ts="1503391102620" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+<httpSample t="11" lt="11" ts="1503391102633" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="586"/>
+
+<httpSample t="658" lt="657" ts="1503393526181" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="587"/>
+<httpSample t="26" lt="15" ts="1503393526840" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="587"/>
+<httpSample t="18" lt="17" ts="1503393526867" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="587"/>
+<httpSample t="17" lt="16" ts="1503393526886" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="587"/>
+<httpSample t="17" lt="16" ts="1503393526904" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="587"/>
+
+<httpSample t="728" lt="720" ts="1503393827589" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="591"/>
+<httpSample t="58" lt="58" ts="1503393828318" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="590"/>
+<httpSample t="32" lt="31" ts="1503393828378" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="590"/>
+<httpSample t="49" lt="49" ts="1503393828412" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="591"/>
+<httpSample t="29" lt="29" ts="1503393828462" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="591"/>
+
+</testResults>

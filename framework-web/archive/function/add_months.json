@@ -1,0 +1,51 @@
+
+{
+    "uuid" : "9e3e0a46-02fb-11e7-93ae-92361f002671",
+    "version" : "1488801521",
+    "name" : "add_months(string start_date, integer num_months)",
+    "desc" : "Returns the date that is num_months after start_date (as of Hive 1.1.0). start_date is a string, date or timestamp. num_months is an integereger. The time part of start_date is ignored. If start_date is the last day of the month or if the resulting month has fewer days than the day component of start_date, then the result is the last day of the resulting month. Otherwise, the result has the same day component as start_date.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "start_date",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "num_months",
+            "paramType" : "integer",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "inputReq" : "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],  
+         
+	"functionInfo" : "add_months",
+    "funcType" : "hive",
+	"category":"math"
+}

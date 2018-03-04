@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="360" lt="360" ts="1502345383086" s="true" lb="model" rc="200" rm="OK" tn="getParamSetByModel 11-1" dt="text" by="2440"/>
+<httpSample t="215" lt="215" ts="1502345383609" s="true" lb="model" rc="200" rm="OK" tn="getParamSetByModel 11-1" dt="text" by="2440"/>
+<httpSample t="158" lt="158" ts="1502345383829" s="true" lb="model" rc="200" rm="OK" tn="getParamSetByModel 11-1" dt="text" by="2439"/>
+<httpSample t="56" lt="56" ts="1502345384019" s="true" lb="model" rc="200" rm="OK" tn="getParamSetByModel 11-1" dt="text" by="2441"/>
+<httpSample t="57" lt="57" ts="1502345384077" s="true" lb="model" rc="200" rm="OK" tn="getParamSetByModel 11-1" dt="text" by="2439"/>
+
+</testResults>

@@ -1,0 +1,11 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,Latency,IdleTime,Connect
+1505907194898,52,session,200,OK,getSessionCountByUser 7-1,text,true,,169,197,1,8,52,0,1
+1505907194950,53,session,200,OK,getSessionCountByUser 7-1,text,true,,169,197,1,6,53,0,0
+1505907195004,29,session,200,OK,getSessionCountByUser 7-1,text,true,,169,197,1,6,29,0,0
+1505907195034,22,session,200,OK,getSessionCountByUser 7-1,text,true,,169,197,1,6,22,0,0
+1505907195057,53,session,200,OK,getSessionCountByUser 7-1,text,true,,169,197,1,6,53,0,0
+1505907194895,288,getJobCountByUser,200,OK,getJobCountByUser 6-1,text,true,,170,180,1,4,287,0,1
+1505907195183,136,getJobCountByUser,200,OK,getJobCountByUser 6-1,text,true,,170,180,1,3,136,0,0
+1505907195320,145,getJobCountByUser,200,OK,getJobCountByUser 6-1,text,true,,170,180,1,3,145,0,0
+1505907195465,122,getJobCountByUser,200,OK,getJobCountByUser 6-1,text,true,,170,180,1,3,122,0,0
+1505907195587,157,getJobCountByUser,200,OK,getJobCountByUser 6-1,text,true,,170,180,1,2,157,0,0

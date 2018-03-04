@@ -1,0 +1,59 @@
+{
+	"xPos": 140,
+	"yPos": 90,
+	"templateFlg" : "N",
+	"stages": [
+		{
+			"stageId": "30935f74-d416-45b5-ab4d-e105b0c02286",
+			"xPos": 510,
+			"yPos": 90,
+			"dependsOn": [],
+			"name": "Populate Summary Facts",
+			"tasks": [
+				{
+					"taskId": "6d1f9d69-282f-4356-9f01-b672ef427a30",
+					"xPos": 860,
+					"yPos": 90,
+					"dependsOn": [],
+					"name": "map_fact_account_summary_monthly",
+					"operators": [
+						{
+							"operatorId": "28d01a97-bcae-4b4f-b015-daa61c3351df",
+							"dependsOn": [],
+							"operatorInfo": {
+								"ref": {
+									"type": "map",
+									"uuid": "ada38baf-1be2-4579-94b4-4b7722c50622"
+								}
+							},
+							"operatorParams": {
+								
+							},
+							"filterInfo": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"uuid": "f3dfa1a3-835d-4ff6-83f2-63db0ebc7a0e",
+	"version": "1488620440",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"name": "ppl_populate_fact_account_summary_monthly"
+}

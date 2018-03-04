@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="96" lt="96" ts="1502176431122" s="true" lb="datapod" rc="200" rm="OK" tn="getAllVersionByUuid 3-1" dt="text" by="996"/>
+<httpSample t="161" lt="161" ts="1502176431221" s="true" lb="datapod" rc="200" rm="OK" tn="getAllVersionByUuid 3-1" dt="text" by="996"/>
+<httpSample t="80" lt="80" ts="1502176431384" s="true" lb="datapod" rc="200" rm="OK" tn="getAllVersionByUuid 3-1" dt="text" by="995"/>
+<httpSample t="84" lt="84" ts="1502176431470" s="true" lb="datapod" rc="200" rm="OK" tn="getAllVersionByUuid 3-1" dt="text" by="994"/>
+<httpSample t="94" lt="94" ts="1502176431561" s="true" lb="datapod" rc="200" rm="OK" tn="getAllVersionByUuid 3-1" dt="text" by="994"/>
+
+</testResults>

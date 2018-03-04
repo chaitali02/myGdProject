@@ -1,0 +1,43 @@
+{
+    "uuid" : "30dbf5ba-83c1-4ec2-993b-b166ad021bbb",
+    "version" : "1488801521",
+    "name" : "hex(BIGinteger a)",
+    "desc" : "If the argument is an integer or binary, hex returns the number as a STRING in hexadecimal format. Otherwise if the number is a STRING, it converts each character integero its hexadecimal representation and returns the resulting STRING. (See http://dev.mysql.com/doc/refman/5.0/en/string-functions.html#function_hex, BINARY version as of Hive 0.12.0.)",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "a",
+            "paramType" : "bigint",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+   
+    "functionInfo" : "hex",
+    "funcType" : "hive",
+    "category": "math"
+}

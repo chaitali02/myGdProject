@@ -1,0 +1,32 @@
+{
+  "uuid": "7dfc3d54-fee7-11e5-86aa-5e5517507445",
+  "name": "populate_company_summary",
+  "version": "1460270902",
+  "createdBy": {
+        "ref": {
+            "type": "user",
+            "uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+  "createdOn": "Sun, 10 Apr 2016 06:48:08 GMT",
+  "active": "Y",
+  "tags":["A", "B"],
+  "desc": "DAG to populate company summary datapod",
+    "expressionInfo":[
+        {"ref":{"type":"expression","uuid":"1824d204-fee8-11e5-86aa-5e5517507c66"},"condition": {}}
+        ],
+    "relation":
+                {
+                    "type" : "relation",
+                    "uuid" : "9e9e2818-fee7-11e5-86aa-5e5517507c66"
+                },
+    "filterInfo":[ 
+            {"ref": {"type":"filter", "uuid": "1824ce62-fee8-11e5-86aa-5e5517507c66"} }
+                ],
+    "attributeList":[
+            {"ref":{"type":"datapod","uuid":"7d289218-fee7-11e5-86aa-5e5517507c66"},"attributeId": "2","condition": {}}
+            
+        ]
+    
+}
+

@@ -1,0 +1,57 @@
+{
+    "uuid" : "f2afdb09-5a0d-43b5-a755-aa7cf1425f8b",
+    "version" : "1488801605",
+    "name" : "conv(BIGinteger num, integer from_base, integer to_base)",
+    "desc" : "Converts a number from a given base to another (see http://dev.mysql.com/doc/refman/5.0/en/mathematical-functions.html#function_conv)",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "num",
+            "paramType" : "bigint",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        },
+		{
+            "paramId" : "1",
+            "paramName" : "from_base",
+            "paramType" : "integer",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        },
+		{
+            "paramId" : "2",
+            "paramName" : "to_base",
+            "paramType" : "integer",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+   
+    "functionInfo" : "conv",
+    "funcType" : "hive",
+    "category": "math"
+}

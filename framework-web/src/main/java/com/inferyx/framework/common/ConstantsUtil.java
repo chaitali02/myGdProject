@@ -1,0 +1,38 @@
+package com.inferyx.framework.common;
+
+public class ConstantsUtil {
+	
+	public static final String BLANK = " ";
+	public static final String CASE_WHEN = " CASE WHEN ";
+	public static final String THEN = " THEN 'Y' ELSE 'N' END as ";
+	public static final String SELECT = " SELECT ";
+	public static final String FROM = " FROM ";
+	public static final String GROUP_BY = " GROUP BY ";
+	public static final String DOT = ".";
+	public static final String IS_NOT_NULL = " IS NOT NULL ";
+	public static final String NULL_CHECK_PASS = "nullCheck_pass";
+	public static final String VALUE_CHECK_PASS = "valueCheck_pass";
+	public static final String RANGE_CHECK_PASS = "rangeCheck_pass";
+	public static final String DATATYPE_CHECK_PASS = "dataTypeCheck_pass";
+	public static final String DATEFORMAT_CHECK_PASS = "dataFormatCheck_pass";
+	public static final String LENGTH_CHECK_PASS = "lengthCheck_pass";
+	public static final String STDDEV_CHECK_PASS = "stdDevCheck_pass";
+	public static final String UNDERSCORE = "_";
+	public static final String COMMA = ", ";
+	public static final String BETWEEN = " BETWEEN ";
+	public static final String AND = " AND ";
+	public static final String GREATER_THAN = " > ";
+	public static final String LESS_THAN = " < ";
+	public static final String SINGLE_QUOTE = "'";
+	public static final String AS = " AS ";
+	public static final String WHERE_1_1 = " WHERE (1=1) ";
+	public static final String DATAPODUUID = "DatapodUUID";
+	public static final String DATAPODVERSION = "DatapodVersion";
+	public static final String ATTRIBUTE_ID = "AttributeId";
+	public static final String ATTRIBUTE_VAL = "AttributeValue";
+	public static final String ROWNUM = "RowNumber";
+	// Datastore
+	public static final String PERSIST_MODE_MEMORY_ONLY = "MEMORY_ONLY";
+	public static final String PERSIST_MODE_DISK_ONLY = "DISK_ONLY";
+
+}

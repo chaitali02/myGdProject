@@ -1,0 +1,43 @@
+{
+    "uuid" : "25c10f16-b267-4a55-b302-d0e8110f2c3a",
+    "version" : "1488801521",
+    "name" : "floor(DOUBLE a)",
+    "desc" : "Returns the maximum BIGinteger value that is equal to or less than a",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "a",
+            "paramType" : "double",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+   
+    "functionInfo" : "floor",
+    "funcType" : "hive",
+   "category": "math"
+}

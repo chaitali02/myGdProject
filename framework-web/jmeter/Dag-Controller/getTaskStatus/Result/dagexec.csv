@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="110" lt="110" ts="1502182108635" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="13" lt="13" ts="1502182108749" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="369"/>
+<httpSample t="11" lt="11" ts="1502182108763" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="55" lt="52" ts="1502182108776" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="12" lt="11" ts="1502182108832" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+
+<httpSample t="25" lt="25" ts="1502182535445" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="30" lt="28" ts="1502182535472" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="23" lt="16" ts="1502182535503" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="16" lt="13" ts="1502182535526" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="33" lt="25" ts="1502182535543" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+
+<httpSample t="12" lt="12" ts="1502184026587" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="24" lt="22" ts="1502184026606" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="51" lt="50" ts="1502184026632" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="36" lt="36" ts="1502184026699" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getTaskStatus 5-1" dt="text" by="1906"/>
+<httpSample t="4" lt="4" ts="1502184026758" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getTaskStatus 5-1" dt="text" by="1906"/>
+
+<httpSample t="95" lt="94" ts="1502184215273" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="32" lt="32" ts="1502184215369" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="15" lt="15" ts="1502184215402" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="29" lt="29" ts="1502184215419" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="49" lt="43" ts="1502184215449" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+
+<httpSample t="19" lt="19" ts="1502184345162" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="72" lt="68" ts="1502184345183" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="81" lt="50" ts="1502184345256" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="63" lt="62" ts="1502184345338" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="26" lt="26" ts="1502184345403" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+
+<httpSample t="26" lt="26" ts="1502184453739" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="37" lt="37" ts="1502184453766" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="19" lt="19" ts="1502184453805" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="18" lt="18" ts="1502184453825" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="33" lt="32" ts="1502184453845" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+
+<httpSample t="45" lt="45" ts="1502184895395" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getTaskStatus 5-1" dt="text" by="1906"/>
+<httpSample t="6" lt="6" ts="1502184895442" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getTaskStatus 5-1" dt="text" by="1906"/>
+<httpSample t="23" lt="23" ts="1502184895453" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getTaskStatus 5-1" dt="text" by="1906"/>
+<httpSample t="10" lt="10" ts="1502184895485" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getTaskStatus 5-1" dt="text" by="1906"/>
+<httpSample t="5" lt="4" ts="1502184895510" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getTaskStatus 5-1" dt="text" by="1906"/>
+
+<httpSample t="47" lt="47" ts="1502185711948" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="31" lt="31" ts="1502185711996" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="41" lt="41" ts="1502185712028" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="37" lt="29" ts="1502185712070" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="16" lt="13" ts="1502185712109" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+
+<httpSample t="77" lt="75" ts="1502186245521" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="56" lt="56" ts="1502186245599" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="48" lt="48" ts="1502186245656" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="64" lt="57" ts="1502186245705" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="16" lt="16" ts="1502186245770" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+
+<httpSample t="35" lt="35" ts="1502186353860" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="105" lt="102" ts="1502186353897" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="52" lt="52" ts="1502186354003" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="26" lt="25" ts="1502186354057" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="17" lt="17" ts="1502186354087" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+
+<httpSample t="70" lt="70" ts="1502186548665" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="90" lt="81" ts="1502186548736" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="73" lt="72" ts="1502186548827" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="46" lt="44" ts="1502186548902" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+<httpSample t="22" lt="21" ts="1502186548949" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+
+<httpSample t="42" lt="42" ts="1502187034864" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="55" lt="54" ts="1502187034907" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="372"/>
+<httpSample t="40" lt="39" ts="1502187034963" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="26" lt="25" ts="1502187035008" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="371"/>
+<httpSample t="26" lt="26" ts="1502187035035" s="true" lb="dagexec" rc="200" rm="OK" tn="getTaskStatus 5-1" dt="text" by="370"/>
+
+</testResults>

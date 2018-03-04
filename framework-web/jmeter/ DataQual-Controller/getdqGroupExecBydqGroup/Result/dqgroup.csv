@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="19" lt="19" ts="1502190597841" s="true" lb="dataqualgroup" rc="200" rm="OK" tn="getdqGroupExecBydqGroup 4-1" dt="text" by="2442"/>
+<httpSample t="10" lt="10" ts="1502190597863" s="true" lb="dataqualgroup" rc="200" rm="OK" tn="getdqGroupExecBydqGroup 4-1" dt="text" by="2442"/>
+<httpSample t="11" lt="11" ts="1502190597874" s="true" lb="dataqualgroup" rc="200" rm="OK" tn="getdqGroupExecBydqGroup 4-1" dt="text" by="2441"/>
+<httpSample t="17" lt="17" ts="1502190597887" s="true" lb="dataqualgroup" rc="200" rm="OK" tn="getdqGroupExecBydqGroup 4-1" dt="text" by="2441"/>
+<httpSample t="16" lt="16" ts="1502190597914" s="true" lb="dataqualgroup" rc="200" rm="OK" tn="getdqGroupExecBydqGroup 4-1" dt="text" by="2441"/>
+
+</testResults>

@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Mar 04 18:41:06 IST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0161-f123-1ce0-0000176abcd8 
+on database directory /home/joy/git/framework-app/framework-web/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@35840ecc 
+Loaded from file:/home/joy/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_101-b13
+user.dir=/home/joy/git/framework-app/framework-web
+os.name=Linux
+os.arch=amd64
+os.version=3.13.0-92-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

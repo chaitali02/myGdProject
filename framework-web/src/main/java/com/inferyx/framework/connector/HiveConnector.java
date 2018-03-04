@@ -1,0 +1,50 @@
+package com.inferyx.framework.connector;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.executor.ExecContext;
+import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.SecurityServiceImpl;
+
+@Component
+public class HiveConnector implements IConnector {
+	@Autowired
+	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	SecurityServiceImpl securityServiceImpl;
+
+	@Override
+	public ConnectionHolder getConnection() {
+		ConnectionHolder conholder = new ConnectionHolder();
+		try {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			Class.forName(datasource.getDriver());
+			Connection con = null;
+			try {
+				con = DriverManager.getConnection("jdbc:hive2://" + datasource.getHost() + ":" + datasource.getPort()
+						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			Statement stmt = con.createStatement();
+			conholder.setType(ExecContext.HIVE.toString());
+			conholder.setStmtObject(stmt);
+		} catch (ClassNotFoundException | SQLException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
+				| ParseException | IOException e) {
+			e.printStackTrace();
+		}
+		return conholder;
+	}
+}

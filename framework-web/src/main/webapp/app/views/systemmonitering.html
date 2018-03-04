@@ -1,0 +1,142 @@
+<style type="text/css">
+  .adminPage   .tab-pane {
+    margin: 20px 20px;
+    }
+    .nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.adminPage .tab-content { border-left: 1px solid #ddd; border-right: 1px solid #ddd; padding: 10px; border-bottom: 1px solid #ddd;}
+.adminPage .nav-tabs, .adminPage .nav-pills{
+   margin-bottom: 0px !important;
+}
+
+.adminPage .nav-tabs>li.active>a, .adminPage .nav-tabs>li.active>a:focus, .adminPage .nav-tabs>li.active>a:hover {
+    color: #555;
+    background-color: #fff;
+    border:none;
+    border-bottom: 4px solid  #9fe4ea;
+    cursor: default;
+  }
+</style>
+<div class="adminPage" ng-controller="systemMonitoringController">
+  <div class="page-bar">
+      <ul class="page-breadcrumb">
+          <li>
+              <a ui-sref="home">Home</a>
+              <i class="fa fa-circle"></i>
+          </li>
+          <li>
+              <span>{{$state.current.data.pageTitle}}</span>
+          </li>
+      </ul>
+      <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+      </div>
+  </div>
+  <div notifybar style="position:fixed;top:40px;right:0; z-index:1000"></div>
+
+<uib-tabset active="tabActive">
+  <uib-tab index="$index" ng-repeat="tab in tabs" heading="{{tab.caption}}" select="select(tab.type)">
+    <!-- <search-criteria  module-type="tab.type" no-exec="false"  on-submit="getdata" ng-if="tabActive==$index" ></search-criteria> -->
+    <search-criteria-monitoring  module-type="tab.type" on-submit="getdata" ng-if="tabActive==$index" mode="showDiv==true?'graph':'all'"></search-criteria-monitoring>
+    <div class="portlet box green">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-cogs"></i>{{tab.caption}} Details
+        </div>
+        <div class="tools">
+          <a title="View Graph" data-toggle="tooltip" ng-show="(tab.type=='jobs' || tab.type=='session') && !showDiv " ng-click="getGraphResult('graph');showDiv = !showDiv">
+            <span class="fa fa-bar-chart" style="color:white;"></span>
+          </a>
+          <a title="View List" data-toggle="tooltip" ng-show="(tab.type=='jobs' || tab.type=='session') && showDiv" ng-click="getGraphResult('all');showDiv = !showDiv">
+            <span class="fa fa-table" style="color:white;"></span>
+          </a>
+          <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click="refreshSearchMon()">
+            <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
+            </i>
+          </a>
+          <a href="javascript:;"  class="collapse aSize" style="height:14px;">
+          </a>
+
+
+        </div>
+      </div>
+
+      <div class="portlet-body" ng-if="!showDiv" >
+        <div class="row">
+          <div class="col-md-6 col-sm-6" >
+            <div id="datastoredatatable_filter" class="dataTables_filter" ng-show="selectType=='jobs' ||selectType=='threads'" >
+              <input style="width:15px !important;height:15px;margin:0 0 0;"  class="form-control input-sm input-small input-inline"  type="checkbox" ng-model="autorefreshmon" ng-change="autoRefreshOnChange(autorefreshmon)"/>
+              <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
+              <input style="width:55px !important;"  min="5" max="99"type="number"  class="form-control input-sm input-small input-inline"  ng-model="autorefreshcounter" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
+            </div>
+          </div>
+        <div class="col-md-6 col-sm-6">
+          <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+            <label>Search:</label>
+            <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshData(searchtextExport)" ng-model="searchtextExport" aria-controls="datastoredatatable">
+          </div>
+        </div>
+      </div>
+        <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
+          <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div>
+        </div>
+      </div>
+       <div class="portlet-body" ng-if="showDiv">
+        <div class="row">
+          <div class="col-md-6" style="width:{{data.width}};" ng-show="data.show" ng-repeat=" data in graphData">
+            <div class="portlet light bordered" style="max-height:415px;">
+              <div class="portlet-title">
+                <div class="caption">
+                  <span class="caption-subject font-dark">{{data.title}}</span>
+                </div>
+                <div class="actions">
+                  <a title="Download" class="btn btn-circle btn-icon-only btn-default" data-toggle="tooltip" data-placement="top" tooltip ng-click="savePng($index)">
+                    <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
+                    </i>
+                  </a>
+                <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="top" uib-tooltip="{{data.showtooltiptitle}}" ng-click="fullScreen($index)">
+                  <i class="{{data.iconClass}}" aria-hidden="true"></i>
+                </a>
+                <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" ng-click="collapseExpend($index)">
+                   <span ng-class="data.colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'" aria-hidden="true"></span>
+                </a>
+
+                </div>
+              </div>
+              <div class="portlet-body" ng-if="data.colExp">
+                <div  ng-if="data.datapoints.length == 0" class="centercontent" style="min-height:320px;">
+                  <h3 style="font-size:14px;color:blue;">No Data Found</h3>
+                </div>
+                <div ng-if="data.type=='pie' || data.type=='bar'">
+                <div id="{{data.id}}" system-mon-pie-chart chartid="data.id" data="data.datapoints" columns="data.datacolumns" type="data.type">
+                </div>
+              </div>
+                <div ng-if="data.type=='donut'">
+                <div id="{{data.id}}" system-mon-donut-chart chartid="data.id" data="data.datapoints" columns="data.datacolumns" type="data.type">
+                </div>
+              </div>
+                    <!-- <c3chart chartGroup="chart" bindto-id="{{data.id}}" chart-data="data.datapoints" chart-columns="data.datacolumns" chart-x="data.datax" enable-zoom="true">
+                  <chart-bar ratio="0.5" />
+                  <chart-axes values-x="" />
+                  <chart-axis>
+                  </chart-axis>
+                </c3chart> -->
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </uib-tab>
+
+</uib-tabset>
+<!-- <button type="button" id="save-to-pdf" ng-click="save()">
+  Save as PDF
+</button> -->
+</div>

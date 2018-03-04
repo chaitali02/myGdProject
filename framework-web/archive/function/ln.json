@@ -1,0 +1,43 @@
+{
+    "uuid" : "79e41252-a7ef-4449-b49d-7225087f5488",
+    "version" : "1488801521",
+    "name" : "ln(DOUBLE a)",
+    "desc" : "Returns the natural logarithm of the argument a. Decimal version added in Hive 0.13.0",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "a",
+            "paramType" : "double",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+   
+    "functionInfo" : "ln",
+    "funcType" : "hive",
+     "category": "math"
+}

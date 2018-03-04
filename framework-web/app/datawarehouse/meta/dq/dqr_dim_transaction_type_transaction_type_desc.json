@@ -1,0 +1,57 @@
+{
+	"attribute": {
+		"attrId": "3",
+		"ref": {
+			"type": "datapod",
+			"uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+		}
+	},
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+		}
+	},
+	"duplicateKeyCheck": "N",
+	"nullCheck": "Y",
+	"valueCheck": [],
+	"rangeCheck": {
+		
+	},
+	"lengthCheck": {
+		
+	},
+	"refIntegrityCheck": {
+		"attrId": "0",
+		"ref": {
+			"type": "datapod",
+			"uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+		}
+	},
+	"uuid": "a5a9b8b9-52f2-4c75-9b82-f802fe223170",
+	"version": "1490090080",
+	"name": "dqr_dim_transaction_type_transaction_type_desc",
+	"desc": "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the target data model",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	]
+}

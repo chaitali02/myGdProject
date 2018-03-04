@@ -1,0 +1,34 @@
+{
+	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678",
+	"version": "1464977196",
+	"name": "Decision Tree Classifier",
+	"desc": "Decision Tree Classifier",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"type": "classification",
+	"library": "sparkML",
+	"trainName": "org.apache.spark.ml.classification.DecisionTreeClassifier",
+	"modelName": "org.apache.spark.ml.classification.DecisionTreeClassificationModel",
+	"labelRequired": "Y",
+	"paramList": {
+		"ref": {
+			"type": "paramlist",
+			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84"
+		}
+	}
+}

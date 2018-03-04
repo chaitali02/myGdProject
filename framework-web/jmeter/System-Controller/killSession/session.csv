@@ -1,0 +1,6 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,Latency,IdleTime,Connect
+1505907194870,7,session,200,OK,killSession 1-1,text,true,,178,210,1,2,7,0,1
+1505907194885,8,session,200,OK,killSession 1-1,text,true,,178,210,1,5,7,0,0
+1505907194893,32,session,200,OK,killSession 1-1,text,true,,178,210,1,8,32,0,0
+1505907194926,48,session,200,OK,killSession 1-1,text,true,,178,210,1,8,45,0,0
+1505907194975,20,session,200,OK,killSession 1-1,text,true,,178,210,1,7,20,0,0

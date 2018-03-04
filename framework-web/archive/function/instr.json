@@ -1,0 +1,49 @@
+{
+    "uuid" : "55a009c6-f674-42d0-a541-54fe222e3b15",
+    "version" : "1488801521",
+    "name" : "instr(string str, string substr)",
+    "desc" : "Returns the position of the first occurrence of substr in str. Returns null if either of the arguments are null and returns 0 if substr could not be found in str. Be aware that this is not zero based. The first character in str has index 1",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "str",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        },
+        {
+            "paramId" : "1",
+            "paramName" : "substr",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+   "functionInfo" : "instr",
+   "funcType" : "hive",
+   "category":"string"
+}

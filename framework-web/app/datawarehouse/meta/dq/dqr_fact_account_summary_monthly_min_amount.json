@@ -1,0 +1,58 @@
+{
+	"attribute": {
+		"attrId": "5",
+		"ref": {
+			"type": "datapod",
+			"uuid": "3cdb9b07-d449-4dfc-af2f-3b1245eb30e5"
+		}
+	},
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "3cdb9b07-d449-4dfc-af2f-3b1245eb30e5"
+		}
+	},
+	"duplicateKeyCheck": "N",
+	"nullCheck": "Y",
+	"valueCheck": [],
+	"rangeCheck": {
+		
+	},
+	"dataTypeCheck": "",
+	"lengthCheck": {
+		
+	},
+	"refIntegrityCheck": {
+		"attrId": "0",
+		"ref": {
+			"type": "datapod",
+			"uuid": "3cdb9b07-d449-4dfc-af2f-3b1245eb30e5"
+		}
+	},
+	"uuid": "ca6cde86-e08c-4f81-b823-f0d3b9854ca2",
+	"version": "1491628473",
+	"name": "dqr_fact_account_summary_monthly_min_amount",
+	"desc": "Dq rule check for null values and foreign key comparison against primary key for aggregation datapods",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	]
+}

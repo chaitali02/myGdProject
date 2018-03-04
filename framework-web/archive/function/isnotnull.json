@@ -1,0 +1,43 @@
+{
+    "uuid" : "8c4decc8-7be6-485a-8291-71bf0e2469bb",
+    "version" : "1488801521",
+    "name" : "isnotnull(a)",
+    "desc" : "Returns true if a is not NULL and false otherwise",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "a",
+            "paramType" : "",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  
+    "functionInfo" : "isnotnull",
+    "funcType" : "hive",
+    "category":"conditional"
+}

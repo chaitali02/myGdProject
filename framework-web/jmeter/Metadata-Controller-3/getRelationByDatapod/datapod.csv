@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="79" lt="79" ts="1502448554060" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="48" lt="48" ts="1502448554144" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="20" lt="20" ts="1502448554236" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="9" lt="9" ts="1502448554299" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="5" lt="5" ts="1502448554368" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+
+<httpSample t="270" lt="270" ts="1502448776464" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9304"/>
+<httpSample t="220" lt="220" ts="1502448776736" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="146" lt="146" ts="1502448776958" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="91" lt="91" ts="1502448777106" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="103" lt="103" ts="1502448777199" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9302"/>
+
+<httpSample t="203" lt="203" ts="1502451034801" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9302"/>
+<httpSample t="187" lt="187" ts="1502451035009" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9304"/>
+<httpSample t="146" lt="146" ts="1502451035199" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9304"/>
+<httpSample t="283" lt="283" ts="1502451035347" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9304"/>
+<httpSample t="37" lt="37" ts="1502451035636" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+
+<httpSample t="85" lt="85" ts="1502451173599" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="60" lt="60" ts="1502451173695" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="18" lt="17" ts="1502451173757" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="21" lt="21" ts="1502451173790" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="18" lt="18" ts="1502451173844" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+
+<httpSample t="40" lt="40" ts="1503064133680" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9299"/>
+<httpSample t="52" lt="52" ts="1503064133727" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9299"/>
+<httpSample t="13" lt="13" ts="1503064133870" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9299"/>
+<httpSample t="13" lt="13" ts="1503064133957" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9299"/>
+<httpSample t="10" lt="10" ts="1503064134039" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9299"/>
+
+<httpSample t="186" lt="186" ts="1503394008572" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="229" lt="229" ts="1503394008760" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="36" lt="36" ts="1503394008990" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="15" lt="15" ts="1503394009059" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="5" lt="5" ts="1503394009084" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+
+<httpSample t="29" lt="29" ts="1503394222410" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="10" lt="9" ts="1503394222449" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="11" lt="11" ts="1503394222473" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="10" lt="10" ts="1503394222501" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="17" lt="17" ts="1503394222556" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+
+<httpSample t="478" lt="478" ts="1503396128492" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="258" lt="258" ts="1503396129002" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="201" lt="201" ts="1503396129314" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="144" lt="144" ts="1503396129573" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="121" lt="121" ts="1503396129722" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+
+<httpSample t="88" lt="88" ts="1503396423520" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="38" lt="38" ts="1503396423621" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="29" lt="29" ts="1503396423662" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="32" lt="32" ts="1503396423700" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="9" lt="9" ts="1503396423777" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+
+<httpSample t="5" lt="5" ts="1503396481805" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="14" lt="14" ts="1503396481811" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="12" lt="12" ts="1503396481830" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="10" lt="10" ts="1503396481893" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="9" lt="9" ts="1503396481948" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+
+<httpSample t="225" lt="225" ts="1503396635645" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9302"/>
+<httpSample t="101" lt="101" ts="1503396635872" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="265" lt="265" ts="1503396635975" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9304"/>
+<httpSample t="144" lt="144" ts="1503396636245" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+<httpSample t="130" lt="130" ts="1503396636391" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9303"/>
+
+<httpSample t="94" lt="94" ts="1503401648816" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9304"/>
+<httpSample t="265" lt="265" ts="1503401648912" s="true" lb="datapod" rc="200" rm="OK" tn="getRelationByDatapod 6-1" dt="text" by="9302"/>
+<httpSample t="115" lt="115" ts="1503401649182" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="33" lt="33" ts="1503401649348" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+<httpSample t="37" lt="37" ts="1503401649412" s="false" lb="datapod" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getRelationByDatapod 6-1" dt="text" by="1918"/>
+
+</testResults>

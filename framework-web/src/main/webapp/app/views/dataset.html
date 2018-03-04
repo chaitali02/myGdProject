@@ -1,0 +1,385 @@
+<!--  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css"> -->
+ <style>
+ .changefirstoption{
+   font-style: italic;
+  }
+  .customcolor{
+   color:green;
+  }
+ </style>
+
+ <!-- BEGIN PAGE HEADER-->
+ <div data-ng-controller="MetadataDatasetController">
+   <div class="page-bar">
+     <ul class="page-breadcrumb">
+       <li>
+         <a ui-sref="home">Home</a>
+         <i class="fa fa-circle"></i>
+       </li>
+       <li>
+         <a  ui-sref="metadata({type:'dataset'})">{{$state.current.data.pageTitle}}</a>
+         <i class="fa fa-circle"></i>
+       </li>
+        <li>
+         <a  ui-sref="metadata({type:'dataset'})">Dataset</a>
+         <i class="fa fa-circle"></i>
+       </li>
+       <li>
+       <a  ui-sref="metadata({type:'dataset'})">{{dataset.name}}</a>
+       </li>
+     </ul>
+     <div class="page-toolbar">
+       <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+         <i class="icon-calendar"></i>&nbsp;
+         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+       </div>
+     </div>
+   </div><!-- END PAGE HEADER-->
+   <br>
+   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+   <!-- BEGIN MAIN CONTENT -->
+   <div class="row">
+     <div class="col-md-12">
+       <form  class="form-horizontal"  name="myform" novalidate="novalidate" ng-submit="submitDataset()" form-on-change="datasetFormChange()">
+         <div class="portlet box green">
+           <div class="portlet-title">
+             <div class="caption">
+               <i class="fa fa-gift"></i>{{dataset.name}}
+              </div>
+              <div class="tools">
+
+                 <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip  data-ng-click="showDatasetSampleTable(dataset)"style="height:16px;" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
+                     <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                     </a>
+                     <a title="Edit" ng-disabled="isPrivlage" ng-class="(showdatapod==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"  data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(dataset.uuid,dataset.version)" ng-hide="isAdd" style="height:16px;">
+                       <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                     </a>
+                   <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdatapod==true && isShowSimpleData==false && isEdit==false)? 'currentpage':'notcurrentpage'" ng-click="showview(dataset.uuid,dataset.version)" ng-hide="isAdd" style="height:16px;">
+                     <span class="glyphicon glyphicon-file" style="color:white;"></span>
+                   </a>
+                   <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showdatapod==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" data-ng-click="showDatapodGraph(dataset.uuid,dataset.version)" style="height:14px;">
+                      <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                   </a>
+                   <a  title="Refresh" ng-click="isShowSimpleData ? showDatasetSampleTable(dataset) : broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                         </a>
+                   <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="genericClose($event,'dataset')" data-ui-sref="metadata({type:'dataset'})" class="remove" style="height:14px;">
+                     <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+                   </a>
+                </div>
+           </div><!--End Protlet-title-->
+
+           <div class="portlet-body form">
+            <!-- BEGIN FORM-->
+             <div class="form-body {{tableclass}}" ng-show="isShowSimpleData">
+                <div class="spinner" ng-show="spinner">
+                     <div class="bounce1"></div>
+                     <div class="bounce2"></div>
+                     <div class="bounce3"></div>
+                   </div>
+                   <div ng-show="isDataError">
+                     <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
+                   </div>
+
+                   <div ng-show="!isDataInpogress ">
+                     <div class="row">
+                       <div class="col-md-6 col-sm-6">
+                         <div class="dataTables_length" id="sample_1_length">
+                           <label>Show
+                             <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+                             </select>
+                           </label>
+                         </div>
+                       </div>
+                       <div class="col-md-6 col-sm-6">
+                         <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                           <label>Search:</label>
+                           <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext" aria-controls="datastoredatatable">
+                         </div>
+                       </div>
+                     </div>
+                       <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
+                       <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div>
+                       </div>
+                       <div class="row">
+                         <div class="col-md-6" style="margin-top:17px">
+                           Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
+                         </div>
+                         <div class="col-md-6">
+                           <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage" ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize" class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" ></ul>
+                         </div>
+                       </div>
+                   </div>
+                </div>
+             <div class="form-body graph-body" ng-if="showgraphdiv">
+              <!--  <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader"></i> -->
+               <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                 <div class="spinner" id="graphloader">
+                     <div class="bounce1"></div>
+                     <div class="bounce2"></div>
+                     <div class="bounce3"></div>
+                   </div>
+               <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="dataset.uuid" version="datasetversion.defaultVersion.version">
+               </div>
+             </div>
+             <div class="form-body"  data-ng-show="showdatapod">
+               <div class="form-body">
+                <div class="form-group" ng-show="dataset.uuid">
+                   <label class="col-md-3 control-label">UUID</label>
+                   <div class="col-md-6">
+                     <input type="text" class="form-control" ng-disabled="true" ng-model="dataset.uuid" placeholder="" disabled="disabled">
+                   </div>
+                 </div>
+                 <div class="form-group">
+                   <label class="col-md-3 control-label">Name
+                   <span class="required" aria-required="true"> * </span>
+                   </label>
+                   <div class="col-md-6">
+                     <input type="text" class="form-control"  name="name"  ng-class="" ng-disabled="{{mode}}"  ng-model="dataset.name"  placeholder="" disabled="disabled" required="">
+                   </div>
+                 </div>
+
+                 <div class="form-group" ng-show="dataset.uuid">
+                   <label class="col-md-3 control-label">Version</label>
+                   <div class="col-md-6">
+                     <select class="form-control" select2 name="version"  ng-disabled="{{isversionEnable}}"
+                     ng-change="selectVersion()" data-ng-model="datasetversion.defaultVersion.version" ng-options="c.version as c.version for c in datasetversion.versions">
+                     </select>
+                   </div>
+                 </div>
+
+                 <div class="form-group" ng-show="dataset.uuid">
+                   <label class="col-md-3 control-label">CreatedBy</label>
+                   <div class="col-md-6">
+                     <input type="text" class="form-control" ng-disabled="true"   placeholder="" disabled="disabled" ng-model="dataset.createdBy.ref.name" >
+                   </div>
+                 </div>
+
+                 <div class="form-group" ng-show="dataset.uuid">
+                   <label class="col-md-3 control-label">CreatedOn</label>
+                   <div class="col-md-6">
+                     <input type="text"ng-disabled="true" class="form-control" placeholder="" disabled="disabled"  ng-model="dataset.createdOn">
+                   </div>
+                 </div>
+
+                 <div class="form-group" >
+                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                   <div class="col-md-6">
+                     <tags-input name="tag" ng-model="tags" ng-disabled="{{mode}}" min-length="0" ></tags-input>
+                   </div>
+
+                 </div>
+
+                 <div class="form-group">
+                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                   <div class="col-md-6">
+                      <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="dataset.desc" rows="2"  style="resize:none;"></textarea>
+                   </div>
+                 </div>
+
+                 <div class="form-group">
+                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Source
+                     <span class="required" aria-required="true"> * </span>
+                   </label>
+                   <div class="col-md-2 col-sm-2 col-xs-12">
+                     <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes" ng-change="selectType()" required>
+                     </select>
+                   </div>
+                   <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                     <span class="required" aria-required="true"> * </span>
+                   </label>
+                   <div class="col-md-3 col-sm-3 col-xs-12">
+                     <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="selectOption()" data-ng-model="datasetRelation.defaultoption"
+                     ng-options="r as r.name for r in datasetRelation.options  track by r.uuid ">
+                     </select>
+                   </div>
+                 </div>
+
+                 <div class="form-group">
+                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                   <div class="col-md-6 col-sm-6 col-xs-12">
+                     <div class="btn-group" ng-init="dataset.active='Y'" >
+                       <label class="btn btn-default" ng-model="dataset.active" ng-disabled="{{showactive}}"  uib-btn-radio="'Y'" >Yes</label>
+                       <label class="btn btn-default" ng-model="dataset.active"  ng-disabled="{{showactive}}" uib-btn-radio="'N'" uncheckable>No</label>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="form-group">
+                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                   <div class="col-md-6 col-sm-6 col-xs-12">
+                     <div class="btn-group" ng-init="dataset.published='N'">
+                       <label class="btn btn-default" ng-model="dataset.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                       <label class="btn btn-default" ng-model="dataset.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                     </div>
+                   </div>
+                 </div>
+                  <div class="form-group"  style="padding-top:10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                     <a ui-sref="metadata({type:'dataset'})"  class="btn btn-primary">Cancel</a><!-- datasetHasChanged == false || !iSSubmitEnable == false||  -->
+                     <input type="submit" class="btn btn-success" value="Submit"   name="submit" ng-disabled="(!iSSubmitEnable == false || mode == false || myform.$dirty == true)?false:true">
+                      <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                         <div class="bounce1"></div>
+                         <div class="bounce2"></div>
+                         <div class="bounce3"></div>
+                     </span>
+                   </div>
+                 </div>
+
+                 <!-- <div class="modal fade in" id="datasetsave" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+                   <div class="modal-dialog">
+                     <div class="modal-content rulemodel">
+                       <div class="modal-header">
+                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                         <h4 class="modal-title">Info</h4>
+                       </div>
+                       <div class="modal-body">Dataset Saved Successfully</div>
+                       <div class="modal-footer">
+                         <button type="button" class="btn green" data-dismiss="modal"  ng-disabled="{{mode}}" ng-click="okdatasetsave()">OK</button>
+                       </div>
+                     </div>
+                   </div>
+                 </div><!--End Model-->
+               </div><!--End formBody-->
+             </div>
+           </div>
+         </div><!--End portlet box green 1-->
+
+         <div class="portlet box green" data-ng-show="showdatapod">
+           <div class="portlet-title">
+             <div class="caption">
+               <i class="fa fa-gift"></i>Filter
+             </div>
+             <div class="tools">
+             <!--  <a href="javascript:;" class="collapse"> </a>
+               <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip data-ng-show="!showcondition"  data-ng-click="showConditionPage()"><span class="glyphicon glyphicon-file" style="color:white;"></span></a>
+               <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip data-ng-show="showcondition" data-ng-click="showConditionGraph(conditiondata.uuid)"><img src="lib/images/check.png"  style="margin: 2px auto;display: block;"></img>
+               </a>
+               <a title="Reload" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;"    class="reload" ng-click="broadcastRefreshData()"> </a>
+               <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="metadata({type:'condition'})" class="remove"></a> -->
+             </div>
+           </div>
+           <div class="portlet-body form">
+             <!-- BEGIN FORM-->
+             <div class="x_title" style="padding:10px;" >
+               <button type="Button" class="clickRemoveCondition btn btn-danger fa fa-minus pull-right" ng-click="removeRowFitler()" ng-disabled="{{mode}}"></button>
+               <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right"  ng-click="addRowFilter();" ng-disabled="{{mode}}"></button>
+             </div>
+             <div class="form-body" style="padding-top:50px;">
+               <table  class=" row-border hover table  table-striped table-bordered">
+                 <thead>
+                   <tr>
+                     <th style="width:5%;text-align: center; Vertical-align: middle;"><input ng-disabled="{{mode}}"   style="width: 16px;height:16px;"  type="checkbox" ng-model="checkAll" ng-click="checkAllFilterRow()" /></th>
+                     <th style="text-align: center; Vertical-align: middle;width:15%;">Logical Operator</th>
+                     <th style="text-align: center;width:35%;">LHS Attribute</th>
+                     <th style="text-align: center;width:15%;">Operator</th>
+                     <th style="text-align: center;width:30%;">RHS Attribute</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr ng-repeat="data in filterTableArray">
+                     <td style="text-align:center;Vertical-align:middle;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"  />
+                     </td>
+                     <td><select  ng-model="data.logicalOperator"  ng-options="x for x in logicalOperator"  ng-disabled=" $first ||{{mode}}" class="form-control"></select></td>
+                     <td>
+                       <select select2 ng-model="data.lhsFilter"  ng-disabled="{{mode}}" class="form-control"  ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                       </select>
+                     </td>
+                     <td><select ng-init="data.operator"  ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator" ng-disabled="{{mode}}" class="form-control"></select>
+                     </td>
+                     <td>
+                       <input type="text" class="form-control" ng-model="data.filtervalue" title="{{data.filtervalue}}" ng-disabled="{{mode}}">
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+         </div>  <!--End portlet box green 2-->
+
+         <div class="portlet box green" data-ng-show="showdatapod">
+           <div class="portlet-title">
+             <div class="caption">
+              <i class="fa fa-gift"></i>Source Attribute
+             </div>
+             <div class="tools">
+            <!-- <a href="javascript:;" class="collapse"> </a>
+             <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip data-ng-show="!showcondition"  data-ng-click="showConditionPage()"><span class="glyphicon glyphicon-file" style="color:white;"></span></a>
+             <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip data-ng-show="showcondition" data-ng-click="showConditionGraph(conditiondata.uuid)"><img src="lib/images/check.png"  style="margin: 2px auto;display: block;"></img>
+             </a>
+             <a title="Reload" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;"    class="reload" ng-click="broadcastRefreshData()"> </a>
+             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="metadata({type:'condition'})" class="remove"></a> -->
+             </div>
+           </div>
+           <div class="portlet-body form">
+             <div class="x_title" style="padding:10px;" >
+               <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeAttribute()" ng-disabled="{{mode}}"></button>
+               <button type="Button" class=" btn btn-success fa fa-plus pull-right"  ng-click="addAttribute()" ng-disabled="{{mode}}"></button>
+             </div>
+             <div class="form-body" style="padding-top:50px;">
+               <div>
+                 <div class="">
+                   <table  class=" row-border hover table  table-striped table-bordered">
+                     <thead>
+                       <tr>
+                         <th style="text-align: center; Vertical-align: middle;width:5%;"><input   style="width: 16px;height:16px;"  type="checkbox"  ng-model="selectAllAttributeRow" ng-change="checkAllAttributeRow()" ng-disabled="{{mode}}" /></th>
+                         <th style="width:6%; text-align:center">ID</th>
+                         <th style="width:30%;text-align: center">Name</th>
+                         <th style="width:20%;text-align: center">Source Type</th>
+                         <th style="width:46%;text-align: center">Source Name</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <tr ng-repeat="data in attributeTableArray">
+                         <td style="text-align: center; Vertical-align: middle;width:5%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" /></td>
+                         <td><input type="text" class="form-control" ng-model="$index" ng-value="$index+1" ng-disabled="true"></td>
+                         <td><input type="text" class="form-control" ng-model="data.name" title="{{data.name}}" ng-disabled="{{mode}}"></td>
+                         <td><select  ng-model="data.sourceAttributeType"  ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}" class="form-control"></select></td>
+                         <td>
+                           <input type="text" class="form-control" ng-model="data.sourcesimple" ng-show="data.isSourceAtributeSimple" ng-disabled="{{mode}}">
+                          <div ng-show="data.isSourceAtributeDatapod"><select select2 ng-model="data.sourcedatapod"  ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}" class="form-control"  ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute track by c.uuid+c.attributeId" ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"></select></div>
+                           <div  ng-show="data.isSourceAtributeFormula" >
+                             <ui-select ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}"><!-- selectize -->
+                               <ui-select-match>
+                                 <span title="{{data.sourceformula.name}}">{{data.sourceformula.name}}</span>
+                               </ui-select-match>
+                               <ui-select-choices repeat="x in (datasetLodeFormula | filter: $select.search) track by x.uuid" position='up'>
+                                 <div ng-click="routeForFormula(x,data.id)">
+                                   <span class="{{x.iconclass}}"></span>
+                                   <span class="{{x.class}}"  ng-bind-html="x.name | highlight: $select.search"></span>
+                                 </div>
+                               </ui-select-choices>
+                             </ui-select>
+                               <!--  <select select2 ng-model="data.sourceformula"  ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in datasetLodeFormula track by c.uuid" style="font-family: 'FontAwesome', Helvetica;"><option value="" ng-click="routeForFormula(x)"class="check"> &#xf067; Create New</option></select> -->
+
+                           </div>
+                           <div ng-show="data.isSourceAtributeExpression">
+                             <ui-select ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index)"><!-- selectize -->
+                               <ui-select-match>
+                                 <span title="{{data.soureexpression.name}}">{{data.sourceexpression.name}}</span>
+                               </ui-select-match>
+                               <ui-select-choices repeat="x in (datasetLodeExpression | filter: $select.search) track by x.uuid" position='up'>
+                                 <div ng-click="routeForExpression(x,data.id)">
+                                 <span class="{{x.iconclass}}" ></span>
+                                 <span class="{{x.class}}"  ng-bind-html="x.name | highlight: $select.search"></span>
+                                 </div>
+                               </ui-select-choices>
+                             </ui-select>
+
+                              <!-- <select select2 ng-model="data.sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in datasetLodeExpression track by c.uuid" ng-change="onChangeExpression(data.sourceexpression,$index)"></select> -->
+                           </div>
+                           <div ng-show="data.isSourceAtributeFunction">
+                             <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid" ng-change="onChangeFunction(data.sourcefunction,$index)"></select>
+                           </div>
+                         </td>
+                       </tr>
+                     </tbody>
+                   </table>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div> <!--End portlet box green 3-->
+       </form>
+     </div>
+   </div> <!-- End MAIN CONTENT -->
+ </div>

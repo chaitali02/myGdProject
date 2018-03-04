@@ -1,0 +1,40 @@
+{
+	"uuid": "ae9ee197-dc0f-4818-88b1-6025260f67b3",
+	"version": "1488801522",
+	"name": "ntile(INTEGER x)",
+	"desc": "Divides an ordered partition into x groups called buckets and assigns a bucket number to each row in the partition. This allows easy calculation of tertiles, quartiles, deciles, percentiles and other common summary statistics. (As of Hive 0.11.0.)",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn": "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+       {
+           "paramId" : "0",
+           "paramName" : "x",
+           "paramType" : "integer",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       }
+   ],
+	"tags": [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active": "Y",
+        "published" : "N",
+	"inputReq": "Y",
+	"appInfo": [{
+		"ref": {
+			"type": "application",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+			"version": "1464977196"
+		}
+	}],
+	"functionInfo": "ntile",
+	"funcType": "hive",
+	"category": "aggregate"
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="829" lt="829" ts="1502366955328" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="592"/>
+<httpSample t="31" lt="30" ts="1502366956159" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="591"/>
+<httpSample t="32" lt="31" ts="1502366956191" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="592"/>
+<httpSample t="36" lt="31" ts="1502366956224" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="591"/>
+<httpSample t="28" lt="27" ts="1502366956263" s="true" lb="formula" rc="200" rm="OK" tn="getPrefixFormula 5-1" dt="text" by="591"/>
+
+</testResults>

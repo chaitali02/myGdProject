@@ -1,0 +1,50 @@
+{
+    
+    "uuid" : "b5dcafc6-285a-4850-a0f9-e395900dd9cd",
+    "version" : "1488801521",
+    "name" : "encode(string src, string charset)",
+    "desc" : "Encodes the first argument integero a BINARY using the provided character set (one of 'US-ASCII', 'ISO-8859-1', 'UTF-8', 'UTF-16BE', 'UTF-16LE', 'UTF-16'). If either argument is null, the result will also be null. (As of Hive 0.12.0.)",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "src",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        },
+		{
+            "paramId" : "1",
+            "paramName" : "charset",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  "functionInfo" : "encode",
+  "funcType" : "hive",
+  "category":"string"
+}

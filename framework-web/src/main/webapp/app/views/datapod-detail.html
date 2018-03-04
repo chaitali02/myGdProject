@@ -1,0 +1,304 @@
+<!-- BEGIN PAGE HEADER-->
+
+  <script src="assets/jquery-filestyle/js/jquery-filestyle.js"></script>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a ui-sref="dashboard">Home</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="blank">DataPod</a>
+        </li>
+    </ul>
+    <div class="page-toolbar">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <i class="icon-calendar"></i>&nbsp;
+        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+      </div>
+    </div>
+   <!--  <div class="page-toolbar">
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" dropdown-menu-hover data-delay="1000" data-close-others="true"> Actions
+                <i class="fa fa-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                <li>
+                    <a href="#">
+                        <i class="icon-user"></i> New User </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-present"></i> New Event
+                        <span class="badge badge-success">4</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-basket"></i> New order </a>
+                </li>
+                <li class="divider"> </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-flag"></i> Pending Orders
+                        <span class="badge badge-danger">4</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-users"></i> Pending Users
+                        <span class="badge badge-warning">12</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div> -->
+</div>
+<h3 class="page-title" data-ng-controller="lhscontroller" style="float:left">{{datapodName}}
+
+</h3>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+
+
+<div class="row" >
+
+    <div class="col-md-12" data-ng-controller="datapodController">
+         <div class="portlet box green">
+       <div class="portlet-title">
+         <div class="caption">
+          <i class="fa fa-gift"></i>Populate Datapod </div>
+          <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config"> </a>
+            <a href="javascript:;" class="reload" ng-click="broadcastRefreshData()"> </a>
+            <a href="javascript:;" class="remove"> </a>
+          </div>
+
+
+      </div>
+      <div class="portlet-body" style="padding: 38px 15px 15px 15px;">
+
+        <div class="row">
+        <div class="col-xs-1" style="margin-top:10px;width:6%;">
+               <lable style="margin-left:4px;">Select</lable>
+        </div>
+        <div class="col-xs-6">
+             <input type="file" file-model="myFile"  id="csv_file" class="jfilestyle" accept=".csv" data-buttonText="<span class='glyphicon glyphicon-folder-open'style='color:#94A0B2;'></span>" style="float:left;margin-left:4px;">
+            	<button type="submit" id="executeAndSave"  ng-disabled="uplodbutton" ng-click="uploadFile()" class="btn btn-success" style="margin-left:10px;margin-top:2px;"> Upload</button>
+               <span class="{{showClass}}" ng-show="fileUplodStatus" style="color:{{color}};margin-left: 10px;vertical-align: middle;font-size: 23px;"></span>
+             <!--  <span class="fa fa-spinner fa-spin" ng-show="fileUplodStatus" ></span> -->
+        </div>
+    </div>
+
+
+
+
+
+
+
+       </div>
+      </div>
+    </div>
+</div>
+<div data-ng-controller="datapodController" >
+<!-- <div class="row" >
+
+    <div class="col-md-12" >
+         <div class="portlet box green">
+       <div class="portlet-title">
+         <div class="caption">
+          <i class="fa fa-gift"></i>DataStore </div>
+          <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config"> </a>
+            <a href="javascript:;" class="reload" ng-click="broadcastRefreshData()"> </a>
+            <a href="javascript:;" class="remove"> </a>
+          </div>
+
+
+      </div>
+      <div class="portlet-body">
+
+            <table  id ="datastoredatatable" style="width:100%;"  datatable-Directive1 class=" row-border hover table  table-striped table-bordered">
+              <thead>
+              	<tr>
+
+              	   <th>Uuid</th>
+              	   <th>Version</th>
+              	   <th>Name</th>
+              	   <th>CreatedBy</th>
+              	   <th>CreatedOn</th>
+              	   <th>Action</th>
+              	</tr>
+              </thead>
+              <tbody>
+                <tr data-ng-repeat="d in data1">
+                  <td style="width:30%;">{{d.uuid}}</td>
+                  <td>{{d.version}}</td>
+                  <td>{{d.name}}</td>
+                  <td>{{d.createdBy}}</td>
+                  <td>{{d.createdOn}}</td>
+                  <td> <input type="radio" name="datastore" ng-click="check(d.metaid,d.uuid,d.version)" class="btn btn-default "></td>
+                </tr>
+              </tbody>
+            </table>
+
+       </div>
+      </div>
+    </div>
+</div> -->
+<div class="row" >
+
+    <div class="col-md-12" >
+         <div class="portlet box green">
+       <div class="portlet-title">
+         <div class="caption">
+          <i class="fa fa-gift"></i>DataStore </div>
+          <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config"> </a>
+            <a href="javascript:;" class="reload" ng-click="broadcastRefreshData()"> </a>
+            <a href="javascript:;" class="remove"> </a>
+          </div>
+
+
+      </div>
+      <div class="portlet-body">
+
+            <table  id ="datastoredatatable" style="width:100%;" name="data" hcolumns="columns" datatable-directive class=" row-border hover table  table-striped table-bordered">
+
+
+            </table>
+
+
+
+       </div>
+      </div>
+    </div>
+</div>
+<!-- <div class="row">
+                            <div class="col-lg-6 col-xs-12 col-sm-12">
+                                BEGIN PORTLET
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+
+
+                                    </div>
+                                    <div class="portlet-body">
+
+                                    </div>
+                                </div>
+                                END PORTLET
+                            </div>
+                            <div class="col-lg-6 col-xs-12 col-sm-12">
+                                BEGIN PORTLET
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+
+
+                                    </div>
+                                    <div class="portlet-body">
+
+
+
+                                    </div>
+                                </div>
+                                END PORTLET
+                            </div>
+                        </div> -->
+
+ <div class="row"  >
+
+    <div class="col-md-12" >
+
+
+         <div class="portlet box green">
+       <div class="portlet-title">
+         <div class="caption">
+          <i class="fa fa-gift"></i>Details </div>
+          <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config"> </a>
+            <a href="javascript:;" class="reload" ng-click="broadcastRefreshData()"> </a>
+            <a href="javascript:;" class="remove"> </a>
+          </div>
+
+
+      </div>
+      <div class="portlet-body" style="min-heigth:100px;">
+             <div class="row">
+             <div class="col-md-12 col-sm-12"><div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;"><label>Search:
+             </label>
+             <input type="search" class="form-control input-sm input-small input-inline" placeholder=""  ng-model="searchtext" aria-controls="datastoredatatable">
+             </div></div>
+             </div>
+              <div class="form-body centercontent" ng-show="showprogress">
+               <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw" style="display:block;margin:23px auto;"></i> -->
+               <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+             </div>
+
+              <div class="" style="margin-top:10px;display:block;overflow-x:auto;" ng-show="!showprogress">
+			  <table ng-table-dynamic="tableParams with cols" class="row-border hover table  table-striped table-bordered" ><!-- show-filter="true" -->
+        <tr ng-repeat="row in $data | filter:searchtext"> <!-- filter="col.filter" -->
+          <td ng-repeat="col in $columns"  sortable="'col.field'"  style="width:120px" class="text-center" header-class="'text-center'" >{{row[col.field]}}</td>
+        </tr>
+      </table>
+      </div>
+
+       </div>
+      </div>
+    </div>
+</div>
+<!-- <div class="row"  >
+
+    <div class="col-md-12" >
+
+      <buton ng-click="check()" class="btn btn-default ">click</buton>
+         <div class="portlet box green">
+       <div class="portlet-title">
+         <div class="caption">
+          <i class="fa fa-gift"></i>Details </div>
+          <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config"> </a>
+            <a href="javascript:;" class="reload" ng-click="broadcastRefreshData()"> </a>
+            <a href="javascript:;" class="remove"> </a>
+          </div>
+
+
+      </div>
+      <div class="portlet-body">
+
+            <table ng-if="datapodDetaildColumn.length !=0" style="width:100%;" name="datapodDetaildData" hcolumns="datapodDetaildColumn" datatable-Detail-Directive class=" row-border hover table  table-striped table-bordered">
+            </table>
+
+       </div>
+      </div>
+    </div>
+</div> -->
+</div>
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS-->
+
+<style>
+
+  table#datastoredatatable{ table-layout: fixed;
+  word-wrap:break-word;}
+   table#datastoredatatable tr th:nth-child(2),th:nth-child(3),th:nth-child(4),th:nth-child(5),th:nth-child(6){
+ 		text-align: center;
+ 	}
+ 	table#datastoredatatable tr td:nth-child(3){
+ 	text-align:left;
+ 	}
+	table#datastoredatatable tr td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(6){
+ 		text-align: center;
+ 	}
+
+
+</style>
+<!-- BEGIN MAIN JS -->

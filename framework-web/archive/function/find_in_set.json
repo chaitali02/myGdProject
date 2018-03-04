@@ -1,0 +1,50 @@
+{
+    
+    "uuid" : "715637ba-d342-4b6a-957b-985372839a9d",
+    "version" : "1488801521",
+    "name" : "find_in_set(string str, string strList)",
+    "desc" : "Returns the first occurance of str in strList where strList is a comma-delimited string. Returns null if either argument is null. Returns 0 if the first argument contains any commas. For example, find_in_set('ab', 'abc,b,ab,c,def') returns 3",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "str",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        },
+        {
+            "paramId" : "1",
+            "paramName" : "strList",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+ "functionInfo" : "find_in_set",
+ "funcType" : "hive",
+ "category":"string"
+}

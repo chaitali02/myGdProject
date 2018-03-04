@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Fri Oct 21 12:21:01 IST 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0157-e601-cfff-0000fc149748 
+on database directory /home/mowgli/install_scripts/bin/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@72549f21 
+Loaded from file:/opt/tomcat8/webapps/framework/WEB-INF/lib/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_91-b14
+user.dir=/home/mowgli/install_scripts/bin
+os.name=Linux
+os.arch=amd64
+os.version=4.2.0-36-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="111" lt="110" ts="1502182108636" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="17" lt="16" ts="1502182108750" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="21" lt="19" ts="1502182108768" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="13" lt="13" ts="1502182108790" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+<httpSample t="10" lt="10" ts="1502182108804" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+
+<httpSample t="23" lt="22" ts="1502182535444" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="25" lt="19" ts="1502182535468" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="29" lt="28" ts="1502182535496" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="44" lt="38" ts="1502182535526" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+<httpSample t="10" lt="10" ts="1502182535571" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+
+<httpSample t="35" lt="35" ts="1502184026587" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="27" lt="25" ts="1502184026624" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="64" lt="64" ts="1502184026652" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="10" lt="10" ts="1502184026742" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getStageStatus 4-1" dt="text" by="1907"/>
+<httpSample t="14" lt="14" ts="1502184026772" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getStageStatus 4-1" dt="text" by="1907"/>
+
+<httpSample t="90" lt="87" ts="1502184215272" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="42" lt="41" ts="1502184215363" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="16" lt="16" ts="1502184215406" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="62" lt="62" ts="1502184215423" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="32" lt="32" ts="1502184215486" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+
+<httpSample t="34" lt="34" ts="1502184345167" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="45" lt="41" ts="1502184345208" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="99" lt="95" ts="1502184345254" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="369"/>
+<httpSample t="40" lt="40" ts="1502184345354" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+<httpSample t="13" lt="12" ts="1502184345396" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+
+<httpSample t="37" lt="37" ts="1502184453740" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="28" lt="28" ts="1502184453778" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="36" lt="36" ts="1502184453807" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="13" lt="13" ts="1502184453844" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="10" lt="10" ts="1502184453859" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+
+<httpSample t="63" lt="63" ts="1502184895381" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getStageStatus 4-1" dt="text" by="1907"/>
+<httpSample t="11" lt="11" ts="1502184895446" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getStageStatus 4-1" dt="text" by="1907"/>
+<httpSample t="7" lt="7" ts="1502184895460" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getStageStatus 4-1" dt="text" by="1907"/>
+<httpSample t="10" lt="10" ts="1502184895480" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getStageStatus 4-1" dt="text" by="1907"/>
+<httpSample t="11" lt="11" ts="1502184895493" s="false" lb="dagexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getStageStatus 4-1" dt="text" by="1907"/>
+
+<httpSample t="52" lt="52" ts="1502185711945" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="26" lt="26" ts="1502185711998" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="369"/>
+<httpSample t="28" lt="28" ts="1502185712025" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="50" lt="50" ts="1502185712055" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="27" lt="26" ts="1502185712106" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+
+<httpSample t="76" lt="75" ts="1502186245515" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+<httpSample t="60" lt="60" ts="1502186245592" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+<httpSample t="41" lt="41" ts="1502186245653" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="72" lt="57" ts="1502186245695" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+<httpSample t="52" lt="52" ts="1502186245768" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+
+<httpSample t="34" lt="33" ts="1502186353860" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="62" lt="62" ts="1502186353897" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="61" lt="52" ts="1502186353960" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+<httpSample t="59" lt="40" ts="1502186354022" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="32" lt="32" ts="1502186354085" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+
+<httpSample t="68" lt="68" ts="1502186548659" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="14" lt="14" ts="1502186548729" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="74" lt="74" ts="1502186548744" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="369"/>
+<httpSample t="54" lt="53" ts="1502186548825" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="44" lt="43" ts="1502186548880" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+
+<httpSample t="49" lt="49" ts="1502187034868" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+<httpSample t="41" lt="41" ts="1502187034918" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="38" lt="38" ts="1502187034960" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="371"/>
+<httpSample t="37" lt="36" ts="1502187035005" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="370"/>
+<httpSample t="19" lt="17" ts="1502187035043" s="true" lb="dagexec" rc="200" rm="OK" tn="getStageStatus 4-1" dt="text" by="372"/>
+
+</testResults>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="56" lt="56" ts="1502448554062" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+<httpSample t="77" lt="77" ts="1502448554125" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="17" lt="17" ts="1502448554244" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="9" lt="9" ts="1502448554299" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="10" lt="10" ts="1502448554368" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+
+<httpSample t="225" lt="225" ts="1502448776529" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2088"/>
+<httpSample t="125" lt="125" ts="1502448776756" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2086"/>
+<httpSample t="167" lt="167" ts="1502448776882" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2088"/>
+<httpSample t="95" lt="94" ts="1502448777052" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+<httpSample t="37" lt="37" ts="1502448777148" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2086"/>
+
+<httpSample t="137" lt="137" ts="1502451034800" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2088"/>
+<httpSample t="159" lt="159" ts="1502451034939" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+<httpSample t="179" lt="179" ts="1502451035101" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+<httpSample t="90" lt="90" ts="1502451035282" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+<httpSample t="230" lt="230" ts="1502451035373" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+
+<httpSample t="92" lt="92" ts="1502451173615" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="54" lt="54" ts="1502451173715" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="18" lt="18" ts="1502451173777" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="7" lt="7" ts="1502451173838" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="9" lt="9" ts="1502451173877" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+
+<httpSample t="18" lt="18" ts="1503064133700" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2083"/>
+<httpSample t="24" lt="24" ts="1503064133722" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2083"/>
+<httpSample t="9" lt="9" ts="1503064133812" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2083"/>
+<httpSample t="25" lt="25" ts="1503064133907" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2083"/>
+<httpSample t="20" lt="19" ts="1503064134011" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2083"/>
+
+<httpSample t="165" lt="165" ts="1503394008571" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2088"/>
+<httpSample t="107" lt="107" ts="1503394008739" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+<httpSample t="149" lt="149" ts="1503394008847" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2088"/>
+<httpSample t="21" lt="21" ts="1503394008997" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="24" lt="24" ts="1503394009034" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+
+<httpSample t="18" lt="18" ts="1503394222401" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="11" lt="11" ts="1503394222426" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="11" lt="11" ts="1503394222448" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="13" lt="13" ts="1503394222471" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="5" lt="5" ts="1503394222497" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+
+<httpSample t="356" lt="356" ts="1503396128491" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2086"/>
+<httpSample t="283" lt="283" ts="1503396128940" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2088"/>
+<httpSample t="205" lt="205" ts="1503396129265" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2086"/>
+<httpSample t="70" lt="70" ts="1503396129512" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2086"/>
+<httpSample t="72" lt="72" ts="1503396129584" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+
+<httpSample t="48" lt="48" ts="1503396423533" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="58" lt="58" ts="1503396423585" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="16" lt="16" ts="1503396423645" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="17" lt="17" ts="1503396423665" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="19" lt="19" ts="1503396423686" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+
+<httpSample t="15" lt="15" ts="1503396481846" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="10" lt="10" ts="1503396481913" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="6" lt="6" ts="1503396481971" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="11" lt="11" ts="1503396482029" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="29" lt="29" ts="1503396482079" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+
+<httpSample t="245" lt="245" ts="1503396635636" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2086"/>
+<httpSample t="147" lt="147" ts="1503396635882" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2086"/>
+<httpSample t="154" lt="154" ts="1503396636030" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+<httpSample t="195" lt="195" ts="1503396636185" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2088"/>
+<httpSample t="112" lt="112" ts="1503396636382" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2086"/>
+
+<httpSample t="245" lt="245" ts="1503401648878" s="true" lb="formula" rc="200" rm="OK" tn="getFormulaByType 12-1" dt="text" by="2087"/>
+<httpSample t="92" lt="92" ts="1503401649128" s="false" lb="formula" rc="500" rm="Server Error" tn="getFormulaByType 12-1" dt="text" by="7768"/>
+<httpSample t="63" lt="63" ts="1503401649233" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="5" lt="5" ts="1503401649341" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+<httpSample t="5" lt="5" ts="1503401649366" s="false" lb="formula" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getFormulaByType 12-1" dt="text" by="1914"/>
+
+</testResults>

@@ -1,0 +1,155 @@
+{
+    "xPos" : 120.0,
+    "yPos" : 250.0,
+    "templateFlg" : "N",
+    "stages" : [ 
+        {
+            "stageId" : "stage_0",
+            "dependsOn" : [],
+            "tasks" : [ 
+                {
+                    "taskId" : "2513784b-4125-41d5-a255-3adf5d03792e",
+                    "dependsOn" : [],
+                    "name" : "DQ Bank",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : {
+                                "ref" : {
+                                    "type" : "dqgroup",
+                                    "uuid" : "be1ee064-1699-4ddc-bdf8-b1aa46a9bd7c",
+                                    "name" : "dqg_bank"
+                                }
+                            },
+                            "operatorParams" : {}
+                        }
+                    ],
+                    "xPos" : 630.0,
+                    "yPos" : 100.0,
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "a5077271-5ea6-448a-bb38-c694d1062d68",
+                    "dependsOn" : [],
+                    "name" : "Profile Bank",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : {
+                                "ref" : {
+                                    "type" : "profile",
+                                    "uuid" : "e8935d31-f5e5-467a-a634-276c82a766b4",
+                                    "name" : "profile_bank"
+                                }
+                            },
+                            "operatorParams" : {}
+                        }
+                    ],
+                    "xPos" : 620.0,
+                    "yPos" : 390.0,
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "645cabe6-b6d4-4923-8d48-a2c8ee078445",
+                    "dependsOn" : [ 
+                        "2513784b-4125-41d5-a255-3adf5d03792e", 
+                        "a5077271-5ea6-448a-bb38-c694d1062d68"
+                    ],
+                    "name" : "Populate Dim Bank",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : {
+                                "ref" : {
+                                    "type" : "map",
+                                    "uuid" : "6356a9f8-f5c5-454b-9cbe-0d6ecc452b1a",
+                                    "name" : "map_dim_bank"
+                                }
+                            },
+                            "operatorParams" : {}
+                        }
+                    ],
+                    "xPos" : 840.0,
+                    "yPos" : 240.0,
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "db46951c-61c4-4521-afe7-1142c86f9fd2",
+                    "dependsOn" : [ 
+                        "645cabe6-b6d4-4923-8d48-a2c8ee078445"
+                    ],
+                    "name" : "DQ Dim Bank",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : {
+                                "ref" : {
+                                    "type" : "dqgroup",
+                                    "uuid" : "f2d79ecf-f357-444b-8e85-4221cd9ffe33",
+                                    "name" : "dqg_dim_bank"
+                                }
+                            },
+                            "operatorParams" : {}
+                        }
+                    ],
+                    "xPos" : 1090.0,
+                    "yPos" : 110.0,
+                    "statusList" : []
+                }, 
+                {
+                    "taskId" : "40e28fe9-4f8e-4065-986b-e12a0217866e",
+                    "dependsOn" : [ 
+                        "645cabe6-b6d4-4923-8d48-a2c8ee078445"
+                    ],
+                    "name" : "Profile Dim Bank",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : {
+                                "ref" : {
+                                    "type" : "profile",
+                                    "uuid" : "55a0f643-9b79-4a2f-bff6-1a0003a9c51e",
+                                    "name" : "profile_dim_bank"
+                                }
+                            },
+                            "operatorParams" : {}
+                        }
+                    ],
+                    "xPos" : 1090.0,
+                    "yPos" : 390.0,
+                    "statusList" : []
+                }
+            ],
+            "name" : "new stage",
+            "xPos" : 330.0,
+            "yPos" : 250.0,
+            "statusList" : []
+        }
+    ],
+    "statusList" : [],
+    "uuid" : "844fba0f-6119-4319-bcb6-e862c74d926c",
+    "version" : "1510442981",
+    "name" : "ppl_e2e_test",
+    "desc" : "Pipeline for E2E testing",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-02-09T12:35:53.646Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

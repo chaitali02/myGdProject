@@ -1,0 +1,44 @@
+
+{
+    "uuid" : "9e3e0d8e-02fb-11e7-93ae-92361f002671",
+    "version" : "1488801521",
+    "name" : "atan(DOUBLE a)",
+    "desc" : "Returns the arctangent of a. Decimal version added in Hive 0.13.0.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "a",
+            "paramType" : "double",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "inputReq" : "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],  
+    "functionInfo" : "atan",
+    "funcType" : "hive",
+	"category":"math"
+
+}

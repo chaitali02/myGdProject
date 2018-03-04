@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="385" lt="384" ts="1502199107189" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41815"/>
+<httpSample t="45" lt="39" ts="1502199107685" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41815"/>
+<httpSample t="52" lt="52" ts="1502199107742" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41815"/>
+<httpSample t="38" lt="36" ts="1502199107797" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41815"/>
+<httpSample t="24" lt="19" ts="1502199107838" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41815"/>
+
+<httpSample t="33" lt="30" ts="1502199223598" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41815"/>
+<httpSample t="22" lt="20" ts="1502199223644" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41814"/>
+<httpSample t="36" lt="35" ts="1502199223670" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41815"/>
+<httpSample t="16" lt="16" ts="1502199223708" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41815"/>
+<httpSample t="32" lt="32" ts="1502199223727" s="true" lb="map" rc="200" rm="OK" tn="findAll 1-1" dt="text" by="41815"/>
+
+</testResults>

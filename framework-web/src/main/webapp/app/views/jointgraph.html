@@ -1,0 +1,144 @@
+<div class="tooltipcustom" id="divtoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;
+        font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
+
+  <div style="margin-top: 5px;margin-right: 15px">
+    <div class="row">
+      <div class="col-md-1">
+        <div class="one" id="dagcolorID" style="margin-left:5px;margin-bottom: 10px"></div>
+      </div>
+      <div class="col-md-5" id="elementTypeText"></div>
+    </div>
+
+    <div class="row" style="margin-top: 5px">
+      <span style="margin-left:20px;">Id</span><span id="task_Id" style="margin-left:60px"></span>
+    </div>
+    <div class="row" style="margin-top: 5px">
+      <span style="margin-left:20px">Name</span><span id="task_Name" style="margin-left:36px"></span>
+    </div>
+    <div class="row" style="margin-top: 5px">
+      <span id="task_Version_label" style="margin-left:20px">Version</span> <span id="task_Version" style="margin-left:23px"></span>
+    </div>
+    <div class="row" style="margin-top: 5px" ng-if="popoverData.startTime !='-'">
+      <span style="margin-left:20px">Start Time</span> <span id="startTime" style="margin-left:4px">{{popoverData.startTime | date:'EEE, dd MMM yyyy HH:mm:ss'}}</span>
+    </div>
+    <div class="row" style="margin-top: 5px" ng-if="popoverData.endTime !='-'">
+      <span style="margin-left:20px">End Time</span> <span id="endTime" style="margin-left:8px">{{popoverData.endTime |date:'EEE, dd MMM yyyy HH:mm:ss'}}</span>
+    </div>
+    <div class="row" style="margin-top: 5px" ng-if="popoverData.endTime !='-'">
+             <span style="margin-left:20px">Total Time</span> <span id="endTime" style="margin-left:8px">{{popoverData.timeDiff}}</span>
+           </div>
+    <!-- <button id="close" class="btn btn-xs btn-danger pull-right">Close</button> -->
+  </div>
+</div>
+<!-- <div id="divtoedit" style="position: fixed;display:none;z-index:9999;background-color: #2b3643;height: 160px;color: white;border-radius:4px 4px 4px 4px;padding :5px; opacity: 0.8;
+font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
+
+    <div class="col-md-12" style="margin-top: -24px;margin-left: 17px;margin-bottom: 10px;">
+        <a class="btn btn-circle btn-icon-only btn-default"title="" data-toggle="tooltip" data-placement="top" tooltip="" data-original-title="Close" id="savePop" style="float: right;height: 20px !important;width: 20px !important;">
+        <i class="fa fa-times" style="display: block;margin: 2px auto;color:gray;margin-top:-4px;"></i></a>
+    </div>
+    <div class="form-group row">
+        <label for="example-text-input" class="col-md-2" style="    padding-left: 22px; padding-top: 7px;">Name</label>
+        <div class="col-md-10">
+          <input class="form-control" type="text" value="" id="namepop">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-2" id="typeOprator" style="padding-left: 22px; padding-top: 7px;">Type</label>
+        <div class="col-md-10">
+            <select select2 class="form-control" id="droppop" style="z-index:9999">
+                <option ng-repeat="option in operatorinfoMapInfo" value="{{option.uuid}}|{{option.name}}">{{option.name}}</option>
+            </select>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div id="right-side-test" style="position: fixed;z-index:9999;background-color: #2b3643; width: 350px;height: 180px;color: white;border-radius:4px 4px 4px 4px;padding :5px; opacity: 0.8;display: none;margin-left: 1070px;margin-top: 150px;">
+    <div class="form-group">
+      <label for="usr">Name:</label>
+      <input type="text" class="form-control" id="namepop">
+    </div>
+         <select class="form-control" id="droppop">
+            <option ng-repeat="option in operatorinfoMapInfo" value="{{option.uuid}}">{{option.name}}</option>
+
+          </select>
+          <div style="margin-top: 10px">
+          <button type="button" class="btn btn-info" id="savePop">Save</button>
+          <button type="button" id = "closeBtn" class="btn btn-info">Close</button>
+    </div>
+</div> -->
+<div class="tooltipcustom" id="right-side-test" style="pointer-events: auto;position: fixed;z-index:999; width: 400px;color: white;opacity: 0.8;display: none;font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
+  <div class="row">
+    <div class="col-md-1">
+      <div style="margin-left: 8px;width:16px;height:16px" ng-style="{'background-color' : popupModel.headers.color || ''}"></div>
+    </div>
+    <div class="col-md-5" style="padding-left:15px">
+      {{popupModel.headers.title || ''}}
+    </div>
+    <div class="col-md-6">
+      <!-- style="margin-bottom: 10px;" -->
+
+      <a class="btn btn-circle btn-icon-only btn-default" title="" data-toggle="tooltip" data-placement="top" tooltip="" data-original-title="Close" id="savePop" style="margin-bottom: 15px;background:transparent; border-color:white;float: right;height: 20px !important;width: 20px !important;"
+        ng-click="savePop(popupModel)">
+          <i class="fa fa-times" style="display: block;margin: 2px auto;color:white;margin-top:-4px;"></i></a>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="example-text-input" class="col-md-3" style="    padding-left: 22px; padding-top: 7px;">Name</label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" value="" id="namepop" ng-model="popupModel.modelData.name">
+    </div>
+  </div>
+  <!-- <div class="form-group row">
+        <label for="example-text-input" class="col-md-3" style="    padding-left: 22px; padding-top: 7px;">Operator Name</label>
+        <div class="col-md-9">
+          <input class="form-control" type="text" value="" id="nameOprator" ng-model="popupModel.modelData.operators[0].operatorInfo.ref.name">
+        </div>
+    </div> -->
+  <div class="form-group row">
+    <label class="col-md-3" id="typeOprator" style="padding-left: 22px; padding-top: 7px;">{{popupModel.operatorTypeText || 'Type'}}</label>
+    <div class="col-md-9">
+      <select select2 class="form-control" id="droppop" ng-model="popupModel.selectedType" ng-options="option.uuid+'|'+option.name as option.name for option in operatorinfoMapInfo">
+                <!-- <option ng-repeat="option in operatorinfoMapInfo" value="{{option.uuid}}">{{option.name}}</option> -->
+            </select>
+    </div>
+  </div>
+  <!-- <div style="float: right">
+          <button type="button" class="btn btn-info" id="savePop">Save</button>
+          <button type="button" id = "closeBtn" class="btn btn-info">Close</button>
+    </div> -->
+</div>
+<div id="joint-graph-panel" style="max-height:500px; overflow:auto" ng-hide="showResults || showGroupGraph">
+  <div class="joint-graph-zoom-slider col-md-1 col-md-offset-11">
+    <div class="pull-right" style="height:120px;width:25px;margin-right:25px">
+      <a ng-click="changeSliderForward()"><i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
+      <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:1,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
+      <a ng-click="changeSliderBack()"><i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
+    </div>
+  </div>
+  <div id="paper"></div>
+</div>
+<div ng-if="execMode">
+  <div ng-show="showResults" id="resultDiv">
+    <div class="form-body text-center" id="errorMsg" style="color:red;"></div>
+    <div class="spinner text-center" id="resultsloader">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+    <div id="resultswrapper">
+      <!-- <table id="profileresults" params="resultParams" datatable-results-directive class="table table-striped table-bordered table-hover table-checkable order-column">
+        </table> -->
+      <div id="profileresults" grid-results-directive></div>
+    </div>
+  </div>
+  <div ng-show="showGroupGraph && !showResults" id="groupGraphDiv">
+    <div class="form-body text-center" id="groupErrorMsg" style="color:red;"></div>
+    <div class="spinner text-center" id="grouploader">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+    <div id="showgrouppaper" render-group-directive></div>
+  </div>
+</div>

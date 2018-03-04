@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="2445" lt="2445" ts="1503064202215" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1789" lt="1789" ts="1503064204662" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1714" lt="1714" ts="1503064206452" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1687" lt="1687" ts="1503064208167" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1829" lt="1829" ts="1503064209858" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+
+<httpSample t="2040" lt="2040" ts="1503064276887" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1736" lt="1736" ts="1503064278928" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1683" lt="1683" ts="1503064280665" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1683" lt="1683" ts="1503064282349" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1749" lt="1749" ts="1503064284033" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+
+<httpSample t="2097" lt="2097" ts="1503064288523" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1677" lt="1677" ts="1503064290620" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1720" lt="1720" ts="1503064292297" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1725" lt="1725" ts="1503064294018" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1721" lt="1721" ts="1503064295744" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+
+<httpSample t="2417" lt="2417" ts="1503391101667" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1610" lt="1610" ts="1503391104085" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1589" lt="1589" ts="1503391105696" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1634" lt="1634" ts="1503391107286" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1637" lt="1637" ts="1503391108921" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+
+<httpSample t="3582" lt="3582" ts="1503393526189" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="2906" lt="2906" ts="1503393529773" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="2143" lt="2142" ts="1503393532680" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1803" lt="1803" ts="1503393534823" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+<httpSample t="1639" lt="1639" ts="1503393536627" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5101"/>
+
+<httpSample t="5550" lt="5547" ts="1503393827645" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5105"/>
+<httpSample t="3204" lt="3204" ts="1503393833200" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5105"/>
+<httpSample t="2784" lt="2784" ts="1503393836405" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5105"/>
+<httpSample t="1971" lt="1971" ts="1503393839190" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5106"/>
+<httpSample t="1645" lt="1645" ts="1503393841162" s="true" lb="role" rc="200" rm="OK" tn="getRolePriv 8-1" dt="text" by="5106"/>
+
+</testResults>

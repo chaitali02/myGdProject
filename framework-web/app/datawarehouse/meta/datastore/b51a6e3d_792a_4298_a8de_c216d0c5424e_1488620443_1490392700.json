@@ -1,0 +1,42 @@
+{
+	"metaId": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "b51a6e3d-792a-4298-a8de-c216d0c5424e",
+			"version": "1488620443"
+		}
+	},
+	"execId": {
+		"ref": {
+			"type": "loadExec",
+			"uuid": "9c5426e1-8b8b-4f86-a475-4aeb716967a3",
+			"version": "1490392700"
+		}
+	},
+	"location": "/b51a6e3d-792a-4298-a8de-c216d0c5424e/1488620443/1490392700",
+	"numRows": {
+		"$numberLong": "2"
+	},
+	"uuid": "a30f8cdb-081a-42aa-90b2-31e3991dac70",
+	"version": "1490392701",
+	"name": "b51a6e3d_792a_4298_a8de_c216d0c5424e_1488620443_1490392700",
+	"desc": "Creating datastore for b51a6e3d_792a_4298_a8de_c216d0c5424e_1488620443_1490392700",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
+			}
+		}
+	]
+}

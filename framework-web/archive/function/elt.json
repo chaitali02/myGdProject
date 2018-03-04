@@ -1,0 +1,50 @@
+{
+    
+    "uuid" : "0ad1abc8-d5d9-4555-b8eb-80fbec20cfcc",
+    "version" : "1488801521",
+    "name" : "elt(N integer,str1 string,str2 string,str3 string,...)",
+    "desc" : "Return string at index number. For example elt(2,'hello','world') returns 'world'. Returns NULL if N is less than 1 or greater than the number of arguments",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "N",
+            "paramType" : "integer",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+        ,{
+            "paramId" : "1",
+            "paramName" : "str1",
+            "paramType" : "string",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  "functionInfo" : "elt",
+  "funcType" : "hive",
+  "category":"string"
+}

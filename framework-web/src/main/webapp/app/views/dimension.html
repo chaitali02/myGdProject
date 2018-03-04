@@ -1,0 +1,274 @@
+
+<div data-ng-controller="MetadataDimensionController">
+	<!-- BEGIN PAGE HEADER-->
+	<div class="page-bar">
+		<ul class="page-breadcrumb">
+			<li><a ui-sref="home">Home</a> <i class="fa fa-circle"></i></li>
+			<li><a ui-sref="metadata({type:'dimension'})">Meta Data</a> <i
+				class="fa fa-circle"></i></li>
+			<li><a ui-sref="metadata({type:'dimension'})">Dimension</a> <i
+				class="fa fa-circle"></i></li>
+			<li><span>{{dimensionName}}</span></li>
+		</ul>
+		<div class="page-toolbar">
+		  <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+		    <i class="icon-calendar"></i>&nbsp;
+		    <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+		  </div>
+		</div>
+		<!-- <div class="page-toolbar">
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" dropdown-menu-hover data-delay="1000" data-close-others="true"> Actions
+                <i class="fa fa-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                <li>
+                    <a href="#">
+                        <i class="icon-user"></i> New User </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-present"></i> New Event
+                        <span class="badge badge-success">4</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-basket"></i> New order </a>
+                </li>
+                <li class="divider"> </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-flag"></i> Pending Orders
+                        <span class="badge badge-danger">4</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-users"></i> Pending Users
+                        <span class="badge badge-warning">12</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div> -->
+	</div>
+
+	<br>
+	<!-- END PAGE HEADER-->
+
+	<!-- BEGIN MAIN CONTENT -->
+	<div class="row">
+		<div class="col-md-12">
+			<!-- BEGIN: ACCORDION DEMO -->
+			<div class="portlet box green">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="fa fa-gift"></i>{{dimensionName}}
+					</div>
+
+					<div class="tools">
+						<a title="Show Details" data-toggle="tooltip" data-placement="top"
+							tooltip data-ng-show="!showdimension"
+							data-ng-click="showDimensionPage()"> <span
+							class="glyphicon glyphicon-file" style="color: white;"></span>
+						</a> <a title="Show Dependencies" data-toggle="tooltip"
+							data-placement="top" tooltip data-ng-show="showdimension"
+							data-ng-click="showDimensionGraph(dimensiondata.uuid,dimensiondata.version)">
+							<img src="lib/images/check.png"
+							style="margin: 2px auto; display: block;"></img>
+						</a> <a title="Refresh" data-toggle="tooltip" data-placement="top"
+							tooltip href="javascript:;" class="reload" ng-click="broadcastRefreshData()"> </a> <a title="Close"
+							data-toggle="tooltip" data-placement="top" tooltip
+							data-ui-sref="metadata({type:'dimension'})" class="remove"></a>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<!-- BEGIN FORM-->
+					<!-- ng-if="data !=null" -->
+					<div class="form-body graph-body" ng-if="showgraphdiv">
+						<i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding"
+							id="graphloader"></i>
+						<div class="form-body show-graph-body" graph-directive
+							uuid="dimensiondata.uuid" version="dimension.defaultVersion.version">
+						</div>
+					</div>
+
+					<!-- <div class="form-body"  ng-show="value == 'off'"> -->
+					<div class="form-body" data-ng-show="showdimension"
+						style="padding-top: 50px;">
+						<span us-spinner="{radius:30, width:8, length: 16}"></span>
+						<form action="#" class="form-horizontal">
+
+							<div class="form-group">
+								<label class="col-md-3 control-label">UUID</label>
+								<div class="col-md-6">
+									<input type="text" class="form-control" data-ng-disabled="true"
+										ng-model="dimensiondata.uuid" placeholder="Enter text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label">Name*</label>
+								<div class="col-md-6">
+									<input type="text" class="form-control" ng-disabled="{{mode}}"
+										ng-model="dimensiondata.name" placeholder="Enter text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label">Version</label>
+								<div class="col-md-6">
+									<select class="form-control" select2 name="version"
+										ng-change="selectVersion()"
+										data-ng-model="dimension.defaultVersion.version"
+										ng-options="c.version as c.version for c in dimension.versions">
+										<option>-select-</option>
+									</select>
+									<!-- <input type="text" class="form-control"  ng-disabled="true"  ng-model="dimensiondata.version"placeholder="Enter text"> -->
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label">CreatedBy</label>
+								<div class="col-md-6">
+									<input type="text" class="form-control" ng-disabled="true"
+										ng-model="dimensiondata.createdBy.ref.name"
+										placeholder="Enter text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-3 control-label">CreatedOn</label>
+								<div class="col-md-6">
+									<input type="text" ng-model="dimensiondata.createdOn"
+										ng-disabled="true" class="form-control"
+										placeholder="Enter text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="middle-name"
+									class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+								<div class="col-md-6">
+									<input type="text" ng-model="dimensiondata.desc"
+										class="form-control placeholder=" Enter
+										text" ng-disabled="{{mode}}">
+								</div>
+							</div>
+
+
+							<div class="form-group">
+								<label class="control-label col-md-3 col-sm-3 col-xs-12">DimInfo</label>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+
+									<!-- <select title="Type" id="dimensiondependsontype" class="form-control" ng-disabled="{{mode}}">
+			                     <option value="" selected="selected">{{dimensiondata.CreatedBy.ref.type}}</option>
+			                     <option value="" ng-model="dimensiondata.dimInfo.ref.type">{{dimensiondata.dimInfo.ref.type}}</option>
+
+			                    </select> -->
+									<select class="form-control" select2 name=""
+										ng-change="OnChangeDependsOn()"
+										data-ng-model="dimensionRelation.defaultoption"
+										ng-options="r as r.name for r in dimensionRelation.options track by r.uuid"
+										ng-disabled="{{mode}}">
+									</select>
+
+								</div>
+
+								<label class="control-label col-md-3 col-sm-3 col-xs-12"
+									style="width: 8.5%;">Name</label>
+								<div class="col-md-3 col-sm-3 col-xs-12">
+
+									<select class="form-control" select2 name=""
+										ng-change="selectRelation()" data-ng-model="defaultdimInfo"
+										ng-options="r as r.name for r in dimensionDatapod track by r.attributeId"
+										ng-disabled="{{mode}}">
+									</select>
+
+									<!--    <select title="Type"  class="form-control" ng-disabled="{{mode}}">
+                     <option value="" ng-model="dimensiondata.attrName">{{dimensiondata.dimInfo.attrName}}</option>
+                    </select>  -->
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+								<div class="col-md-6 col-sm-6 col-xs-12">
+									<div class="btn-group">
+										<label class="btn btn-default" ng-model="dimensiondata.active"
+											uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+										<label class="btn btn-default" ng-model="dimensiondata.active"
+											uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+									</div>
+								</div>
+							</div>
+
+							<!--  <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Cache</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div id="activeStatus" class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-default dimensionActiveYes" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default" style="font-size: 11px;">
+                                    <input type="radio" name="active" value="Y" class="active" checked> YES
+                                </label>
+                                <label class="btn btn-default active dimensionActiveNo" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default" style="font-size: 11px;">
+                                     <input type="radio" name="active" value="N"  class="active"> NO &nbsp;
+                                </label>
+                            </div>
+                        </div>
+                    </div>      -->
+							<div class="form-group" style="padding-top: 10px;">
+								<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+									<a ui-sref="metadata({type:'dimension'})"
+										class="btn btn-primary">Cancel</a> <input type="button"
+										class="btn btn-success" value="Submit" ng-disabled="{{mode}}"
+										ng-click="submitDimension()" name="submit"> <span
+										id="correctSign" style="vertical-align: middle;"></span>
+								</div>
+							</div>
+
+
+
+							<!--  <div class="x_title">
+		                <button type="Button" class="clickRemoveCondition btn btn-danger fa fa-minus pull-right" ng-disabled="true"></button>
+		                <button type="Button" class="clickAddCondition btn btn-success fa fa-plus pull-right"  ng-disabled="true"></button>
+		                <h4 style="float:left"><b>Detail<hr width="1779%" size="20">
+		                </b></h4>
+
+                	</div>
+               	 <br/>
+                  -->
+							<!-- <div>
+                        <table id="addConditionAttributeTable" class=" row-border hover table  table-striped table-bordered">
+                         <thead>
+                            <tr>
+                              <th ng-hide="true">Id</th>
+                              <th>Name</th>
+                              <th>Type</th>
+                              <th>Desc</th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                          <tr ng-repeat="tabledata in datapoddata.attributes">
+                           <td ng-hide="true"><input type="text"  ng-model="tabledata.attributeId" ng-disabled="{{mode}}"class="form-control">
+                            </td>
+                            <td><input type="text"  ng-model="tabledata.name" ng-disabled="{{mode}}"class="form-control">
+                            </td>
+                            <td><input type="text"  ng-model="tabledata.type" ng-disabled="{{mode}}" class="form-control">
+                            <select ng-model="tabledata.type" ng-options="x for x in type"  ng-disabled="{{mode}}" class="form-control"></select>
+                            </td>
+                            <td><input type="text"  ng-model="tabledata.desc" ng-disabled="{{mode}}" class="form-control">
+                            </td>
+                          </tr>
+                        </tbody>
+                       </table>
+                    </div> -->
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END MAIN CONTENT -->
+	<!-- BEGIN MAIN JS-->
+</div>

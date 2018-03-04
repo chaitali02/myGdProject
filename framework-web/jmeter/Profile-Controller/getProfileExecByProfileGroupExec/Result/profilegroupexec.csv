@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="15" lt="15" ts="1502263050247" s="false" lb="profilegroupexec" rc="500" rm="Server Error" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="6252"/>
+<httpSample t="28" lt="28" ts="1502263050275" s="false" lb="profilegroupexec" rc="500" rm="Server Error" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="6252"/>
+<httpSample t="22" lt="21" ts="1502263050306" s="false" lb="profilegroupexec" rc="500" rm="Server Error" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="6252"/>
+<httpSample t="5" lt="5" ts="1502263050334" s="false" lb="profilegroupexec" rc="500" rm="Server Error" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="6252"/>
+<httpSample t="4" lt="4" ts="1502263050341" s="false" lb="profilegroupexec" rc="500" rm="Server Error" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="6252"/>
+
+<httpSample t="21" lt="21" ts="1502263096714" s="false" lb="profilegroupexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="1929"/>
+<httpSample t="13" lt="13" ts="1502263096744" s="false" lb="profilegroupexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="1929"/>
+<httpSample t="6" lt="6" ts="1502263096772" s="false" lb="profilegroupexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="1929"/>
+<httpSample t="4" lt="4" ts="1502263096793" s="false" lb="profilegroupexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="1929"/>
+<httpSample t="5" lt="5" ts="1502263096813" s="false" lb="profilegroupexec" rc="401" rm="Authentication Failed: Maximum sessions of 100 for this principal exceeded" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="1929"/>
+
+<httpSample t="362" lt="350" ts="1502263260580" s="true" lb="profilegroupexec" rc="200" rm="OK" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="54142"/>
+<httpSample t="243" lt="236" ts="1502263260943" s="true" lb="profilegroupexec" rc="200" rm="OK" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="54140"/>
+<httpSample t="179" lt="177" ts="1502263261187" s="true" lb="profilegroupexec" rc="200" rm="OK" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="54141"/>
+<httpSample t="307" lt="295" ts="1502263261368" s="true" lb="profilegroupexec" rc="200" rm="OK" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="54142"/>
+<httpSample t="185" lt="182" ts="1502263261681" s="true" lb="profilegroupexec" rc="200" rm="OK" tn="getProfileExecByProfileGroupExec 5-1" dt="text" by="54141"/>
+
+</testResults>

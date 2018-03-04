@@ -1,0 +1,271 @@
+ <div data-ng-controller="MetadataFilterController">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a ui-sref="home">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a  ui-sref="metadata({type:'filter'})">{{$state.current.data.pageTitle}}</a>
+                 <i class="fa fa-circle"></i>
+            </li>
+            <li>
+            <a  ui-sref="metadata({type:'filter'})">Filter</a>
+                 <i class="fa fa-circle"></i>
+            </li>
+            <li>
+             <span>{{filterdata.name}}</span>
+            </li>
+        </ul>
+        <div class="page-toolbar">
+          <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+          </div>
+        </div>
+    </div><!-- END PAGE HEADER-->
+    <br>
+<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <!-- BEGIN MAIN CONTENT -->
+    <div class="row" >
+        <div class="col-md-12">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-gift"></i>{{filterdata.name}}
+                    </div>
+
+                    <div class="tools">
+                      <a title="Edit" ng-disabled="isPrivlage" ng-class="(showfilter==true && isEdit==true)? 'currentpage':'notcurrentpage'"  data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(filterdata.uuid,filterdata.version)" ng-hide="isAdd" style="height:16px;">
+                        <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                      </a>
+                        <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showfilter==true && isEdit==false)? 'currentpage':'notcurrentpage'"  ng-click="showview(filterdata.uuid,filterdata.version)" ng-hide="isAdd" style="height:16px;" >
+                            <span class="glyphicon glyphicon-file" style="color:white;">
+                            </span>
+                        </a>
+
+                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showfilter==false )? 'currentpage':'notcurrentpage'" data-ng-click="showFilterGraph(filterdata.uuid,filterdata.version)" style="height:14px;">
+                          <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                        </a>
+
+                        <a  title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+
+                        <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="metadata({type:'filter'})" style="height:14px;">
+                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="portlet-body form" >
+                   <!-- BEGIN FORM-->
+                    <div class="form-body graph-body" ng-if="showgraphdiv">
+                        <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+<div class="spinner" id="graphloader">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                        </div>
+                        <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader">
+                        </i> -->
+                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="filterdata.uuid" version="filter.defaultVersion.version">
+                        </div>
+                    </div>
+
+
+                    <div class="form-body"  data-ng-show="showfilter" style="padding-top:50px;">
+
+                        <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitFilter()" form-on-change="filterFormChange()">
+
+                            <div class="form-group" ng-show="filterdata.uuid">
+                                <label class="col-md-3 control-label">UUID</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" data-ng-disabled="true"  ng-model="filterdata.uuid">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Name
+                                <span class="required" aria-required="true"> * </span></label>
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control"  ng-disabled="{{mode}}"  ng-model="filterdata.name" required="">
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-show="filterdata.uuid">
+                                <label class="col-md-3 control-label">Version</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" select2  ng-change="selectVersion()" data-ng-model="filter.defaultVersion.version" ng-options="c.version as c.version for c in filter.versions"  ng-disabled="{{isversionEnable}}">
+                                        </select>
+                                    </div>
+                            </div>
+
+                            <div class="form-group" ng-show="filterdata.uuid">
+                                <label class="col-md-3 control-label">CreatedBy</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" ng-disabled="true"  ng-model="filterdata.createdBy.ref.name" >
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-show="filterdata.uuid">
+                                <label class="col-md-3 control-label">CreatedOn</label>
+                                <div class="col-md-6">
+                                <input type="text"  ng-model="filterdata.createdOn"  ng-disabled="true"  class="form-control" >
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+          					    <div class="col-md-6">
+                         	        <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                        	    </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                                <div class="col-md-6">
+                                    <!-- <input type="text"  ng-model="filterdata.desc" class="form-control" ng-disabled="{{mode}}"> -->
+                                      <textarea class="form-control" ng-disabled="{{mode}}" ng-model="filterdata.desc" rows="2"  style="resize:none;"></textarea>
+                               </div>
+                            </div>
+
+
+        			        <div class="form-group">
+        			            <label class="control-label col-md-3 col-sm-3 col-xs-12">DependsOn
+                                                            <span class="required" aria-required="true"> * </span>
+                          </label>
+        			            <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <select title="Type"  ng-model="selectRelation" ng-options="x for x in relation" ng-change="dependsOndd()" class="form-control" ng-disabled="{{mode}}" required="">
+                                    </select>
+        			            </div>
+
+        			            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name</label>
+        			            <div class="col-md-3 col-sm-3 col-xs-12">
+        			                <select class="form-control" select2 ng-change="changeRelation()"
+                                    data-ng-model="filterRelation.defaultoption" ng-options="r as r.name for r in filterRelation.options track by r.uuid"  ng-disabled="{{mode}}">
+                              </select>
+                                </div>
+        			         </div>
+
+                            <div class="form-group">
+           			            <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+           			            <div class="col-md-6 col-sm-6 col-xs-12">
+               			            <div class="btn-group" ng-init="filterdata.active='Y'" >
+                    		  	        <label class="btn btn-default" ng-model="filterdata.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                    			        <label class="btn btn-default" ng-model="filterdata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+            			            </div>
+            		            </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                              <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="btn-group" ng-init="filterdata.published='N'">
+                                  <label class="btn btn-default" ng-model="filterdata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                  <label class="btn btn-default" ng-model="filterdata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group"  style="padding-top: 10px;">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                   <a ui-sref="metadata({type:'filter'})"  class="btn btn-primary">Cancel</a><!-- filterHasChanged == false ||  -->
+                                    <input type="submit" class="btn btn-success" value="Submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
+                                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                                        <div class="bounce1"></div>
+                                        <div class="bounce2"></div>
+                                        <div class="bounce3"></div>
+                                        <!--<img src="lib/images/lodingsquare.gif" style="padding-left:15px;font-size:23px;vertical-align:middle;"></img>-->
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="modal fade in" id="filtersave" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+                                <!-- <div class="modal-dialog">
+                                    <div class="modal-content rulemodel">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                        <h4 class="modal-title">Info</h4>
+                                      </div>
+                                      <div class="modal-body">Filter Saved Successfully</div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn green" data-dismiss="modal"  ng-disabled="{{mode}}" ng-click="okfiltersave()">OK</button>
+                                      </div>
+                                    </div>
+                                  </div> -->
+                             </div>
+                            <div class="x_title">
+        		                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRow()" ng-disabled="{{mode}}"></button>
+        		                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRow()"  ng-disabled="{{mode}}"></button>
+        		                <h4><strong>Details</strong></h4>
+        		                <hr>
+                        	</div>
+                       	    <br/>
+
+                            <div>
+                                <table  class=" row-border hover table  table-striped table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th style="width:5%;text-align: center; Vertical-align: middle;"><input ng-disabled="{{mode}}"   style="width: 16px;height:16px;"  type="checkbox" ng-model="checkAll" ng-click="checkAllFilterRow()" /></th>
+                                    <th style="text-align: center; Vertical-align: middle;width:15%;">Logical Operator</th>
+                                    <th style="text-align: center;width:35%;">LHS Attribute</th>
+                                    <th style="text-align: center;width:15%;">Operator</th>
+                                    <th style="text-align: center;width:30%;">RHS Attribute</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr ng-repeat="data in filterTableArray">
+                                    <td style="text-align:center;Vertical-align:middle;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"  />
+                                    </td>
+                                    <td><select  ng-model="data.logicalOperator"  ng-options="x for x in logicalOperator"  ng-disabled=" $first ||{{mode}}" class="form-control"></select></td>
+                                    <td>
+                                      <select select2 ng-model="data.lhsFilter"  ng-disabled="{{mode}}" class="form-control"  ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                      </select>
+                                    </td>
+                                    <td><select ng-init="data.operator"  ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator" ng-disabled="{{mode}}" class="form-control"></select>
+                                    </td>
+                                    <td>
+                                      <input type="text" class="form-control" ng-model="data.filtervalue" title="{{data.filtervalue}}" ng-disabled="{{mode}}">
+                                    </td>
+                                  </tr>
+                                </tbody>
+                            </table>
+                                <!-- <table id="addFilterAttributeTable" class=" row-border hover table  table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Logical Operator</th>
+                                            <th>LHS Attribute Name</th>
+                                            <th>Operator</th>
+                                            <th>RHS Attribute Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+        					            <tr ng-repeat="tabledata in filterdata.filterInfo">
+                           				   <td>
+                                                <select  ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="$first || {{mode}}" class="form-control"></select>
+                                                </td>
+            								<td style="width:40%;">
+            									<select select2 name="" ng-disabled="{{mode}}"
+            					                ng-model="tabledata.lhsoperand"
+            					                ng-options="r as (r.datapodname + '.' + r.name) for r in filterDatapod track by r.uuid+r.attributeId"
+            					                ng-disabled="" class="form-control">
+            					         		</select>
+            				         		</td>
+                           					<td>
+                                                <select ng-init="tabledata.operator.options[0]"  ng-model="tabledata.operator" ng-options="x for x in operator" ng-disabled="{{mode}}" class="form-control"></select>
+                                            </td>
+
+            							    <td><input type="text"  ng-model="tabledata.operand[1].value" ng-disabled="{{mode}}" class="form-control">
+                                            </td>
+        					            </tr>
+        					        </tbody>
+                                </table> -->
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END MAIN CONTENT -->
+</div>

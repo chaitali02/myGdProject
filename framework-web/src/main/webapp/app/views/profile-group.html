@@ -1,0 +1,234 @@
+<div class="row" ng-controller="DetailProfileGroupController">
+  <div class="col-md-12">
+
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+      <ul class="page-breadcrumb">
+        <li>
+          <a ui-sref="home">Home</a>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <a ui-sref="viewprofilegroup">{{$state.current.data.pageTitle}}</a>
+          <!--  <span>{{$state.current.data.pageTitle}}</span> -->
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <span>{{select}}</span>
+
+        </li>
+      </ul>
+      <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+      </div>
+    </div>
+    <br>
+    <!-- END PAGE HEADER-->
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div class="portlet light bordered" id="form_wizard_1">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class=" icon-layers "></i>
+          <span class="caption-subject  bold "> Rule Group
+
+                    </span>
+        </div>
+        <div class="actions">
+          <!-- <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showProfileGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+            ng-hide="isAdd" data-ng-click="enableEdit(profileGroupDetail.uuid,profileGroupDetail.version)">
+            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showProfileGroup==true && isEdit==false)? 'currentpage':'notcurrentpage'"
+            ng-hide="isAdd" data-ng-click="showview(profileGroupDetail.uuid,profileGroupDetail.version)">
+            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showProfileGroup==false? 'currentpage':'notcurrentpage'"
+            data-ng-click="showProfileGroupGraph(profileGroupDetail.uuid,profileGroupDetail.version)" style="border:0px solid transparent !important;">
+                        <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white;"></i>
+                    </a>
+          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white borderless" ng-click="broadcastRefreshData()" data-original-title="" title="" style="border:0px solid transparent !important;">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+          <a class="btn btn-circle btn-icon-only btn-default bg-red bg-hover-grey-salsa font-white borderless" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top" tooltip style="border:0px solid transparent !important;">
+                       <i class="fa fa-times" style="display: block;margin: 2px auto;color:white;"></i>
+
+                    </a> -->
+          <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showProfileGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+            ng-hide="isAdd" data-ng-click="enableEdit(profileGroupDetail.uuid,profileGroupDetail.version)">
+              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+          </a>
+          <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showProfileGroup==true && isEdit==false)? 'currentpage':'notcurrentpage'"
+            ng-hide="isAdd" data-ng-click="showview(profileGroupDetail.uuid,profileGroupDetail.version)">
+            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+          </a>
+          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showProfileGroup==false? 'currentpage':'notcurrentpage'"
+            data-ng-click="showProfileGroupGraph(profileGroupDetail.uuid,profileGroupDetail.version)" >
+              <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0;"></i>
+          </a>
+          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title="" title="">
+            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+          </a>
+          <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top" tooltip >
+            <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+          </a>
+            
+        </div>
+      </div>
+
+      <div class="portlet-body form">
+        <div class="form-body graph-body" ng-if="showgraphdiv">
+          <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader"></i> -->
+          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+          <div class="spinner" id="graphloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="profileGroupDetail.uuid" version="profilegroup.defaultVersion.version"></div>
+        </div>
+        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()" ng-show="showProfileGroupForm">
+          <div class="form-wizard">
+            <div class="form-body">
+
+              <div class="form-group" ng-show="profileGroupDetail.uuid">
+                <label class="control-label col-md-3">UUID</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-model="profileGroupDetail.uuid" ng-disabled="true">
+
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3">Name
+                                                        <span class="required" aria-required="true"> * </span>
+                                                    </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="profileGroupDetail.name" required="">
+
+                </div>
+              </div>
+              <div class="form-group" ng-show="profileGroupDetail.uuid">
+                <label class="col-md-3 control-label">Version</label>
+                <div class="col-md-6">
+                  <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()" data-ng-model="profilegroup.defaultVersion.version" ng-options="c.version as c.version for c in profilegroup.versions">
+											               <option>-select-</option>
+											           </select>
+                </div>
+              </div>
+              <div class="form-group" ng-show="profileGroupDetail.uuid">
+                <label class="control-label col-md-3">Created By
+                                                     <!--    <span class="required" aria-required="true"> * </span> -->
+                                                    </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-model="profileGroupDetail.createdBy.ref.name" ng-disabled="true">
+
+                </div>
+              </div>
+              <div class="form-group" ng-show="profileGroupDetail.uuid">
+                <label class="control-label col-md-3">Created On
+                                                        <!-- <span class="required" aria-required="true" > * </span> -->
+                                                    </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-model="profileGroupDetail.createdOn" ng-disabled="true">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3">Tag
+                                                      <!--   <span class="required" aria-required="true"> * </span> -->
+                                                    </label>
+                <div class="col-md-6">
+                  <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3">Desc
+                </label>
+                <div class="col-md-6">
+                  <!-- <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="profileGroupDetail.desc" > -->
+                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="profileGroupDetail.desc" rows="2" style="resize:none;"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6">
+                  <div class="btn-group" ng-init="profileGroupDetail.active='Y'">
+                    <label class="btn btn-default" ng-model="profileGroupDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'Y'">Yes</label>
+                    <label class="btn btn-default" ng-model="profileGroupDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'N'" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="profileGroupDetail.published='N'">
+                    <label class="btn btn-default" ng-model="profileGroupDetail.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="profileGroupDetail.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?</label>
+                <div class="col-md-6">
+                  <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;">
+                    <label class="mt-checkbox " style="margin-bottom:-1px;">
+                      <input type="checkbox"  ng-model="checkboxModelparallel" ng-disabled="{{mode}}" ng-true-value="'true'" ng-false-value="'false'" ng-change="changeCheckboxExecution()">
+                      <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}}"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Profile
+                	<span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <tags-input class="tag-scroll" ng-model="profileTags" ng-disabled="{{mode}}" display-property="name" key-property="id" add-from-autocomplete-only="true" ng-focus="onTagFocuse()" required="">
+                    <auto-complete source="loadProfiles($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true" load-on-empty="true" required="">
+                    </auto-complete>
+                  </tags-input>
+                </div>
+                <div class="col-md-1">
+                  <!-- class="glyphicon glyphicon-trash" -->
+                  <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Run Immediately ?</label>
+                <div class="col-md-9">
+                  <div class="mt-checkbox-list" style="margin-top:-7px">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                      <input  ng-disabled="{{mode}}" type="checkbox"  ng-model="checkboxModelexecution" ng-true-value="'YES'" ng-false-value="'NO'" ng-change="changeCheckboxExecution()">
+                      <span  ng-disabled="{{mode}}"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--End form-body-->
+            <div class="form-actions">
+              <div class="row">
+                <label class="control-label col-md-3"></label>
+                <div class="col-md-4">
+                  <a ui-sref="viewprofilegroup" class="btn btn-primary">Cancel</a>
+                  <button type="submit" class="btn green" ng-disabled="(mode == false || myform.$dirty == true)?false:true">Submit</button>
+                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--End form-wizard-->
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+<!--End Row-->

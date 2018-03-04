@@ -1,0 +1,23 @@
+<div>
+  <div class="modal-header">
+      <h4 class="modal-title">Upload Avatar</h4>
+  </div>
+  <div class="modal-body">
+    <div id="avatar-preview-wrapper">
+      <img width="200px" height="200px" id="avatar-preview" ng-src="avatars/{{setUseruuid}}?{{dummyArg}}" onerror="this.src='avatars/default.png';" src="" alt="your image"/>
+      <div class="input-group" id="avatar-change-btn">
+          <label class="input-group-btn" style="width:auto">
+              <span class="btn btn-outline">
+                  Change &hellip; <input id="avatar" onchange="readURL(this);" type="file" ng-model="file" accept="image/jpeg,image/x-png" style="display:none">
+              </span>
+          </label>
+          <!-- <input type="text" class="form-control" readonly> -->
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+      <button class="btn dark btn-outline" type="button" ng-click="cancel()">Cancel</button>
+      <button class="btn green" type="button" ng-click="upload(file)">Submit</button>
+  </div>
+</div>

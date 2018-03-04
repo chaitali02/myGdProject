@@ -1,0 +1,59 @@
+{
+	"_id": ObjectId("59bb7aff81d082efbbffa751"),
+	"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+	"version": "1464977196",
+	"name": "ypalrecha",
+	"desc": "User info for yp26273 ",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-09-16T08:02:12.987Z"),
+	"tags": [
+		"DEMO"
+	],
+	"active": "Y",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"firstName": "Yogesh",
+	"middleName": "T",
+	"lastName": "Palrecha",
+	"emailId": "ypalrecha@inferyx.com",
+	"password": "ypalrecha",
+	"groupInfo": [
+		{
+			"ref": {
+				"type": "group",
+				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
+			}
+		},
+		{
+			"ref": {
+				"type": "group",
+				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
+			}
+		}
+	],
+	"roleInfo": [
+		{
+			"ref": {
+				"type": "role",
+				"uuid": "d04716df-e96a-419f-9118-c81342b47f87"
+			}
+		},
+		{
+			"ref": {
+				"type": "role",
+				"uuid": "d04716df-e96a-419f-9118-c81342b47f88"
+			}
+		}
+	]
+}

@@ -1,0 +1,68 @@
+{
+	"source": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+		}
+	},
+	"label": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+		},
+		"attrId": "1"
+	},
+	"features": [
+		{
+			"attrId": "19",
+			"ref": {
+				"type": "datapod",
+				"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			}
+		},
+		{
+			"attrId": "1",
+			"ref": {
+				"type": "datapod",
+				"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			}
+		},
+		{
+			"attrId": "2",
+			"ref": {
+				"type": "datapod",
+				"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			}
+		}
+	],
+	"algorithm": {
+		"ref": {
+			"type": "algorithm",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+		}
+	},
+	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+	"version": "1496290481",
+	"name": "linear_regression_test",
+	"desc": "LinearRegression Test Model",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [],
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"type" : "SPARK",
+ 	"scriptName" : ""
+}

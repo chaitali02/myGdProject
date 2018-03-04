@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="55" lt="55" ts="1503064202216" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="37" lt="37" ts="1503064202273" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="42" lt="42" ts="1503064202312" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="11" lt="11" ts="1503064202355" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="14" lt="14" ts="1503064202375" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+
+<httpSample t="13" lt="13" ts="1503064276887" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="51" lt="51" ts="1503064276902" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="39" lt="39" ts="1503064276957" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="73" lt="73" ts="1503064277009" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="22" lt="22" ts="1503064277091" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+
+<httpSample t="38" lt="38" ts="1503064288528" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="10" lt="10" ts="1503064288627" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="19" lt="19" ts="1503064288693" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="22" lt="22" ts="1503064288745" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="14" lt="14" ts="1503064288817" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+
+<httpSample t="83" lt="83" ts="1503391101667" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="76" lt="76" ts="1503391101751" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="52" lt="51" ts="1503391101836" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="24" lt="24" ts="1503391101893" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="20" lt="20" ts="1503391101918" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+
+<httpSample t="93" lt="93" ts="1503393526183" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="192" lt="192" ts="1503393526277" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="94" lt="94" ts="1503393526470" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="41" lt="41" ts="1503393526569" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+<httpSample t="52" lt="52" ts="1503393526612" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2436"/>
+
+<httpSample t="193" lt="193" ts="1503393827641" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2440"/>
+<httpSample t="192" lt="192" ts="1503393827835" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2440"/>
+<httpSample t="76" lt="76" ts="1503393828028" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2440"/>
+<httpSample t="114" lt="114" ts="1503393828104" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2439"/>
+<httpSample t="38" lt="38" ts="1503393828219" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2441"/>
+
+</testResults>

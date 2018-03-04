@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<httpSample t="18" lt="15" ts="1502187034865" s="true" lb="dag" rc="200" rm="OK" tn="fetchAllTaskThread 7-1" dt="text" by="5108"/>
+<httpSample t="38" lt="38" ts="1502187034888" s="true" lb="dag" rc="200" rm="OK" tn="fetchAllTaskThread 7-1" dt="text" by="5110"/>
+<httpSample t="15" lt="15" ts="1502187034928" s="true" lb="dag" rc="200" rm="OK" tn="fetchAllTaskThread 7-1" dt="text" by="5110"/>
+<httpSample t="27" lt="27" ts="1502187034945" s="true" lb="dag" rc="200" rm="OK" tn="fetchAllTaskThread 7-1" dt="text" by="5108"/>
+<httpSample t="19" lt="19" ts="1502187034977" s="true" lb="dag" rc="200" rm="OK" tn="fetchAllTaskThread 7-1" dt="text" by="5109"/>
+
+</testResults>

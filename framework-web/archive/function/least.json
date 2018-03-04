@@ -1,0 +1,43 @@
+{
+    "uuid" : "d1a4084f-c0c7-437e-9c5e-db7c1cff1295",
+    "version" : "1488801521",
+    "name" : "least(T v1, T v2, ...)",
+    "desc" : "Returns the least value of the list of values (as of Hive 1.1.0). Fixed to return NULL when one or more arguments are NULL, and strict type restriction relaxed, consistent with < operator (as of Hive 2.0.0)",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+    "paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "v1",
+            "paramType" : "T",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+   
+    "functionInfo" : "least",
+    "funcType" : "hive",
+    "category": "math"
+}

@@ -1,0 +1,309 @@
+<style type="text/css">
+.centercontent{
+  min-height:200px;display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;"
+}
+.customPadding{
+  padding: 5px;
+}
+div.ui-grid-cell input{
+  padding:9px;
+}
+</style>
+<div data-ng-controller="MetadataDatapodController">
+  <!-- BEGIN PAGE HEADER-->
+  <div class="page-bar">
+    <ul class="page-breadcrumb">
+      <li>
+        <a ui-sref="home">Home</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a  ui-sref="metadata({type:'datapod'})">{{$state.current.data.pageTitle}}</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a  ui-sref="metadata({type:'datapod'})">Datapod</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <span>{{datapoddata.name }}</span><!-- | strReplace:'_':' '|capitalize -->
+      </ul>
+      <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+      </div>
+    </div><!-- END PAGE HEADER-->
+    <br>
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <!-- BEGIN MAIN CONTENT -->
+    <div class="row" >
+      <div class="col-md-12">
+        <!-- BEGIN: ACCORDION DEMO -->
+        <div class="portlet box green">
+          <div class="portlet-title">
+            <div class="caption">
+              <i class="fa fa-gift"></i>{{datapoddata.name}}
+            </div>
+            <div class="tools">
+              <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip  ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'"ng-hide="isAdd" data-ng-click="showDatapodSampleTable(datapoddata)" style="height:16px;">
+                <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+              <a  ng-click="downloadFile(datapoddata)" tooltip-placement="top" uib-tooltip="Download" ng-show="isShowSimpleData">
+                  <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+              <a title="Edit" ng-disabled="isPrivlage" ng-class="(showdatapod==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"  data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(datapoddata.uuid,datapoddata.version)" ng-hide="isAdd" style="height:16px;">
+                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+              <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdatapod==true && isShowSimpleData==false && isEdit==false)? 'currentpage':'notcurrentpage'" ng-click="showview(datapoddata.uuid,datapoddata.version)" ng-hide="isAdd" style="height:16px;">
+                <span class="glyphicon glyphicon-file" style="color:white;"></span>
+              </a>
+
+              <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showdatapod==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" data-ng-click="showDatapodGraph(datapoddata.uuid,datapoddata.version)" style="height:14px;">
+                <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+              </a>
+              <a  title="Refresh" ng-click="isShowSimpleData ? showDatapodSampleTable(datapoddata) : broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+              </a>
+              <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="genericClose($event,'datapod')" data-ui-sref="{{StateName}}" style="height:14px;">
+                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+              </a>
+            </div>
+          </div>
+          <div class="portlet-body form" >
+            <div class="form-body {{tableclass}}" ng-show="isShowSimpleData">
+              <div class="spinner" ng-show="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+              <div ng-if="isDataError">
+                <h3 style="font-size:14px;color:red">{{datamessage}}</h3>
+              </div>
+
+              <div ng-show="!isDataInpogress ">
+                <div class="row">
+                  <div class="col-md-6 col-sm-6">
+                    <div class="dataTables_length" id="sample_1_length">
+                      <label>Show
+                        <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+                        </select>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-6">
+                    <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                      <label>Search:</label>
+                      <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext" aria-controls="datastoredatatable">
+                    </div>
+                  </div>
+                </div>
+                  <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
+                   <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6" style="margin-top:17px">
+                      Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
+                    </div>
+                    <div class="col-md-6">
+                      <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage" ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize" class="pagination-md" boundary-link="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="form-body graph-body" ng-if="showgraphdiv">
+              <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+              <div class="spinner" id="graphloader">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+              <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="datapoddata.uuid" version="datapod.defaultVersion.version">
+              </div>
+            </div>
+            <div class="form-body" data-ng-show="showdatapod" style="padding-top:50px;">
+              <form  class="form-horizontal"  name="myform" novalidate="novalidate" ng-submit="submitDatapod()" form-on-change="datapodFormChange()">
+
+                <div class="form-group" ng-show="datapoddata.uuid">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true"  ng-model="datapoddata.uuid" placeholder="">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control"  ng-disabled="{{mode}}"  ng-Change="onChangeName(datapoddata.name)" ng-model="datapoddata.name" placeholder="" required="">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="datapoddata.uuid">
+                  <label class="col-md-3 control-label">Version </label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 name="version"  ng-disabled="{{isversionEnable}}"
+                      ng-change="selectVersion()" data-ng-model="datapod.defaultVersion.version" ng-options="c.version as c.version for c in datapod.versions">
+                    <option>-select-</option>
+                  </select>
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="datapoddata.uuid">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true"  ng-model="datapoddata.createdBy.ref.name">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="algorithmdata.uuid">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text"  ng-model="datapoddata.createdOn"  ng-disabled="true"  class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group taginput">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tags-input ng-model="tags"  ng-disabled="{{mode}}" min-length="0"></tags-input>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="datapoddata.desc" rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                <div class="col-md-6 form-group">
+                  <label class="control-label col-md-6 col-sm-6 col-xs-12">Data Source
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes" ng-change="selectType()" required>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6 form-group">
+                  <label class="control-label col-md-2 col-sm-6 col-xs-12" style="float:left;margin-left: -3%;padding-right: 0px;">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select class="form-control" ng-disabled="{{mode}}" ng-change="selectOption()" data-ng-model="selectDataSource"
+                    ng-options="r as r.name for r in alldatasource  track by r.uuid " required>
+                  </select>
+                </div>
+              </div>
+            </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="datapoddata.active='Y'">
+                    <label class="btn btn-default" ng-model="datapoddata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="datapoddata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="datapoddata.published='N'">
+                    <label class="btn btn-default" ng-model="datapoddata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="datapoddata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Cache</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="datapoddata.cache='Y'" >
+                    <label class="btn btn-default" ng-model="datapoddata.cache" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="datapoddata.cache" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" style="padding-top: 10px;">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                  <a ui-sref="metadata({type:'datapod'})"  class="btn btn-primary">Cancel</a>
+                  <input type="submit" class="btn btn-success" value="Submit"   name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true">
+                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                  </span>
+                </div>
+              </div>
+              <!-- <div class="modal fade in" id="datapodsave" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+                <div class="modal-dialog">
+                  <div class="modal-content rulemodel">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                      <h4 class="modal-title">Info</h4>
+                    </div>
+                    <div class="modal-body">Datapod Saved Successfully</div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn green" data-dismiss="modal" ng-disabled="{{mode}}" ng-click="okdatapodsave()">OK</button>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              <div class="x_title">
+                <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeRow()"></button>
+                <button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addRow()"></button>
+                <h4><strong>Details</strong></h4>
+                <hr>
+              </div>
+              <br/>
+              <div>
+                  <div ui-grid="gridOptionsDatapod" ui-grid-selection ui-grid-resize-columns ui-grid-auto-resize ui-grid-edit ui-grid-row-edit ui-grid-cellNav class="grid" ng-style="getGridStyle()" ></div>
+                 <!-- <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div> -->
+                </div>
+                <!-- <table  class=" row-border hover table  table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"/></th>
+                      <th  style="width:6%;text-align:center">ID</th>
+                      <th  style="width:6%;"class="text-center">Key</th>
+                      <th  style="width:6%;" class="text-center">Partition</th>
+                      <th  style="width:6%;" class="text-center">Active</th>
+                      <th  class="text-center">Display Name</th>
+                      <th  class="text-center">Name</th>
+                      <th  class="text-center" style="width:14%;">Type</th>
+                      <th  class="text-center">Desc</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="tabledata in attributetable">
+                      <td style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}"/></td>
+                      <td ><input type="text" ng-model="$index" ng-disabled="true"class="form-control"></td>
+                      <td style="text-align: center; Vertical-align: middle;"> <input type="checkbox"  style="width: 16px;height:16px;"  ng-model="tabledata.key"  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'"></td>
+                      <td style="text-align: center; Vertical-align: middle;"> <input type="checkbox"  style="width: 16px;height:16px;"  ng-model="tabledata.partition"  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'"></td>
+                      <td style="text-align: center; Vertical-align: middle;"> <input type="checkbox"  style="width: 16px;height:16px;"  ng-model="tabledata.active"  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'"></td>
+                      <td><input type="text"  ng-model="tabledata.dispName" title="{{tabledata.dispName}}" ng-disabled="{{mode}}"class="form-control">
+                        <td><input type="text"ng-model="tabledata.name"  title="{{tabledata.name}}" ng-disabled="tabledata.isAttributeEnable ||{{mode}}"class="form-control">
+                        </td>
+                        <td><select ng-model="tabledata.type" ng-options="x for x in type"  ng-disabled="{{mode}}" class="form-control"></select>
+                        </td>
+                        <td><input type="text"  ng-model="tabledata.desc" title="{{tabledata.desc}}" ng-disabled="{{mode}}" class="form-control">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table> -->
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

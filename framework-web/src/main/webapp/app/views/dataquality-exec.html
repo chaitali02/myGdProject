@@ -1,0 +1,193 @@
+ <div data-ng-controller="DetailDqExecController">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a ui-sref="home">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a  ui-sref="jobexecutor">{{$state.current.data.pageTitle}}</a>
+                 <i class="fa fa-circle"></i>
+            </li>
+            <li>
+            <a  ui-sref="{{state}}">{{selectTitle}}</a>
+                 <i class="fa fa-circle"></i>
+            </li>
+            <li>
+             <span>{{dqexecdata.name}}</span>
+            </li>
+        </ul>
+        <div class="page-toolbar">
+          <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+          </div>
+        </div>
+    </div><!-- END PAGE HEADER-->
+    <br>
+    <!-- BEGIN MAIN CONTENT -->
+    <div class="row" >
+        <div class="col-md-12">
+           <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-gift"></i>{{dqexecdata.name}}
+                    </div>
+
+                    <div class="tools">
+
+    		         	<a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showdqexec==true? 'currentpage':'notcurrentpage'" data-ng-click="showDqExecPage()"style="height:16px;">
+                            <span class="glyphicon glyphicon-file" style="color:white;"></span>
+                        </a>
+                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showdqexec==false? 'currentpage':'notcurrentpage'" data-ng-click="showLoadGraph(dqexecdata.uuid,dqexecdata.version)" style="height:14px;">
+                            <!-- <img src="lib/images/check.png" style="margin:2px auto;display:block;"></img> -->
+                            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                        </a>
+                        <a  title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                       <a  title="Close" ng-click="close()" data-toggle="tooltip" data-placement="top" tooltip>
+                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                      </a>
+    	   		    </div>
+                </div>
+                <div class="portlet-body form" >
+                   <!-- BEGIN FORM-->
+                    <div class="form-body graph-body" ng-if="showgraphdiv">
+                        <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader">
+                        </i> -->
+                        <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+<div class="spinner" id="graphloader">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                        </div>
+                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="dqexecdata.uuid" version="dqexecdata.version">
+                        </div>
+                    </div>
+
+                    <div class="form-body"  style="padding-top:50px;">
+                        <form class="form-horizontal"  ng-show="showdqexec" name="myform" ng-submit="submitLoad()" form-on-change="loadFormChange()">
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">UUID</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" data-ng-disabled="true"  ng-model="dqexecdata.uuid">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Name</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" data-ng-disabled="true"  ng-model="dqexecdata.name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Version</label>
+                                <div class="col-md-6">
+                                  <!--   <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}"
+                                    ng-change="selectVersion()" data-ng-model="loadexecdata.defaultVersion.version" ng-options="c.version as c.version for c in load.versions"> -->
+                                    <input type="text" class="form-control" ng-disabled="true"  ng-model="dqexecdata.version">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">CreatedBy</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" ng-disabled="true"  ng-model="dqexecdata.createdBy.ref.name">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">CreatedOn</label>
+                                <div class="col-md-6">
+                                    <input type="text" ng-model="dqexecdata.createdOn" ng-disabled="true" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group taginput">
+                                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <tags-input ng-model="dqexecdata.tags"  ng-disabled="{{mode}}" min-length="0"></tags-input>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc
+                                 </label>
+                                <div class="col-md-6">
+                                    <!-- <input type="text" ng-model="loaddata.desc" class="form-control" ng-disabled="{{mode}}"> -->
+                                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="dqexecdata.desc" rows="2"  style="resize:none;"></textarea>
+                                    </div>
+                                </div>
+
+    			            <div class="form-group">
+    			   			    <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+    			   			    <div class="col-md-6 col-sm-6 col-xs-12">
+    			   			        <div class="btn-group" >
+    			        			    <label class="btn btn-default" ng-model="dqexecdata.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+    			        			    <label class="btn btn-default" ng-model="dqexecdata.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+    						        </div>
+    			    		    </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                              <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="btn-group" ng-init="dqexecdata.published='N'">
+                                  <label class="btn btn-default" ng-model="dqexecdata.published" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                  <label class="btn btn-default" ng-model="dqexecdata.published" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                </div>
+                              </div>
+                            </div>
+                             <div class="form-group">
+                                <label class="col-md-3 control-label">Status</label>
+                                <div class="col-md-6">
+                                    <!-- <input type="text" ng-model="status" ng-disabled="true" class="form-control"> -->
+
+                                    <tags-input class="cross tag-scroll" ng-model="statusList"  ng-disabled="{{mode}}" min-length="0" ></tags-input>
+
+                                </div>
+                            </div>
+
+                             <div class="form-group">
+                                <label class="col-md-3 control-label">Depends On</label>
+                                <div class="col-md-6">
+                                    <input type="text" ng-model="dqexecdata.dependsOn.ref.name" ng-disabled="true" class="form-control">
+                                </div>
+                            </div>
+
+                             <div class="form-group">
+                                <label class="col-md-3 control-label">Ref Key List</label>
+                                <div class="col-md-6">
+                                    <tags-input class="cross tag-scroll" ng-model="refkeylist"  ng-disabled="{{mode}}" min-length="0"></tags-input>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Exec
+                                 </label>
+                                <div class="col-md-6">
+                                    <!-- <input type="text" ng-model="loaddata.desc" class="form-control" ng-disabled="{{mode}}"> -->
+                                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="dqexecdata.exec" rows="4"  style="resize:none;"></textarea>
+                                    </div>
+                                </div>
+
+                            <div class="form-group" style="padding-top:10px;">
+                               <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                    <a href="javascript:;" ng-click="close()" class="btn btn-primary">Cancel</a>
+                                    <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true" value="Submit" name="submit">
+                                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                                        <div class="bounce1"></div>
+                                        <div class="bounce2"></div>
+                                        <div class="bounce3"></div>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END MAIN CONTENT -->
+</div>

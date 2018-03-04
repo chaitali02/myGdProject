@@ -1,0 +1,99 @@
+package com.inferyx.framework.domain;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "vertex")
+public class Vertex {
+	
+	String uuid;
+	String version;
+	String name;
+	String nodeType;
+	String dataType;
+	String desc;
+	String createdOn;
+	String active;
+
+	
+	public String getNodeType() {
+		return nodeType;
+	}
+
+	public void setNodeType(String nodeType) {
+		this.nodeType = nodeType;
+	}
+
+	public String getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public Vertex (String uuid, String version, String name, String nodeType, String dataType, String desc, String createdOn, String active) {
+		this.uuid = uuid;
+		this.version = version;
+		this.name = name;
+		this.nodeType = nodeType;
+		this.dataType = dataType;
+		this.desc = desc;
+		this.createdOn = createdOn;
+		this.active = active;
+	}
+
+	@Override
+	public String toString() {
+		return "Vertex [uuid=" + uuid + ", version=" + version + ", name=" + name + ", nodeType=" + nodeType
+				+ ", dataType=" + dataType + ", desc=" + desc + ", createdOn=" + createdOn + ", active=" + active + "]";
+	}
+
+}

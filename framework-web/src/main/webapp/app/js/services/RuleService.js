@@ -1,0 +1,1149 @@
+/**
+ *
+ */
+RuleModule=angular.module('RuleModule');
+
+RuleModule.factory('RuleFactory',function($http,$location){
+         var factory={};
+    	 /* factory.findAllLatest=function(metavalue) {
+    		  var url=$location.absUrl().split("app")[0]
+             return $http({
+				        method: 'GET',
+				        url:url+"common/getAllLatest?action=view&type="+metavalue,
+				    }).
+				    then(function (response,status,headers) {
+			           return response;
+			        })
+        }*/
+    	 factory.findAllLatestActive=function(metavalue) {
+    		 var url=$location.absUrl().split("app")[0]
+             return $http({
+				    method: 'GET',
+				    url:url+"common/getAllLatest?action=view&active=Y&type="+metavalue,
+
+				    }).
+				    then(function (response,status,headers) {
+			           return response;
+			        })
+       }
+
+       factory.findByUuid=function(uuid,type){
+        	  var url=$location.absUrl().split("app")[0]
+    		  return $http({
+    			        url:url+"common/getLatestByUuid?action=view&uuid="+uuid+"&type="+type,
+    			        method: "GET",
+    	          }).then(function(response){ return  response})
+
+
+    	}
+       factory.executeRule=function(uuid,version) {
+           var url=$location.absUrl().split("app")[0]
+           return $http({
+                    method: 'POST',
+                    url:url+"rule/executeRule?action=execute&ruleUUID="+uuid+"&ruleVersion="+version,
+                    headers: {
+                        'Accept':'*/*',
+                        'content-Type' : "application/json",
+                         },
+                     }).
+                    then(function (response,status,headers) {
+                        return response;
+                    })
+      }
+
+      factory.findRuleResults=function(uuid,version) {
+           var url=$location.absUrl().split("app")[0]
+           return $http({
+                  method: 'GET',
+                  url:url+"rule/getResults?action=view&uuid="+uuid+"&version="+version,
+
+                  }).
+                  then(function (response,status,headers) {
+                     return response;
+                  })
+       }
+       factory.findRuleExecByRule=function(uuid) {
+           var url=$location.absUrl().split("app")[0]
+           return $http({
+                    method: 'GET',
+                    url:url+"rule/getRuleExecByRule?action=view&ruleUuid="+uuid,
+                     }).
+                    then(function (response,status,headers) {
+                        return response;
+                    })
+      }
+
+       factory.findDatapodByRelation=function(uuid,type) {
+           var url=$location.absUrl().split("app")[0]
+           return $http({
+                  method: 'GET',
+                  url:url+"metadata/getDatapodByRelation?action=view&relationUuid="+uuid+"&type=datapod",
+
+                  }).
+                  then(function (response,status,headers) {
+                     return response;
+                  })
+       }
+       factory.findAllVersionByUuid=function(uuid,type) {
+           var url=$location.absUrl().split("app")[0]
+           return $http({
+                  method: 'GET',
+                  url:url+"common/getAllVersionByUuid?action=view&uuid="+uuid+"&type="+type,
+
+                  }).
+                  then(function (response,status,headers) {
+                     return response;
+                  })
+       }
+       factory.findOneByUuidAndVersion=function(uuid,version,type) {
+           var url=$location.absUrl().split("app")[0]
+           return $http({
+                  method: 'GET',
+                  url:url+"common/getOneByUuidAndVersion?action=view&uuid="+uuid+"&version="+version+"&type="+type,
+
+                  }).
+                  then(function (response,status,headers) {
+                     return response;
+                  })
+       }
+
+       factory.findOneById=function(id,type){
+       	var url=$location.absUrl().split("app")[0]
+           return $http({
+   			    method: 'GET',
+   			    url:url+"common/getOneById?action=view&id="+id+"&type="+type,
+
+   			    }).
+   			    then(function (response,status,headers) {
+   		           return response;
+   		        })
+
+       }
+       factory.findByUuid=function(uuid,type){
+     	  var url=$location.absUrl().split("app")[0]
+ 		  return $http({
+ 			        url:url+"common/getLatestByUuid?action=view&uuid="+uuid+"&type="+type,
+ 			        method: "GET",
+ 	          }).then(function(response){ return  response})
+
+
+ 	  }
+       factory.findDatapodByDataset=function(uuid,type) {
+           var url=$location.absUrl().split("app")[0]
+           return $http({
+                  method: 'GET',
+                  url:url+"metadata/getAttributesByDataset?action=view&uuid="+uuid+"&type="+type,
+
+                  }).
+                  then(function (response,status,headers) {
+                     return response;
+                  })
+       }
+       factory.findDatapodByDatapod=function(uuid,type) {
+           var url=$location.absUrl().split("app")[0]
+           return $http({
+                  method: 'GET',
+                  url:url+"metadata/getAttributesByDatapod?action=view&uuid="+uuid+"&type="+type,
+
+                  }).
+                  then(function (response,status,headers) {
+                     return response;
+                  })
+       }
+       factory.findAttributesByRule=function(uuid,type) {
+           var url=$location.absUrl().split("app")[0]
+           return $http({
+                  method: 'GET',
+                  url:url+"metadata/getAttributesByRule?action=view&uuid="+uuid+"&type="+type,
+
+                  }).
+                  then(function (response,status,headers) {
+                     return response;
+                  })
+       }
+      factory.findAllLatest=function(type,inputFlag) {
+             var url=$location.absUrl().split("app")[0]
+             return $http({
+                    method: 'GET',
+                    url:url+"common/getAllLatest?action=view&type="+type+"&inputFlag="+inputFlag,
+
+                    }).
+                    then(function (response,status,headers) {
+                       return response;
+                    })
+       }
+      factory.ruleSubmit=function(data,type){
+      	var url=$location.absUrl().split("app")[0]
+          return $http({
+               url:url+"common/submit?action=edit&type="+type,
+
+                 headers: {
+                  'Accept':'*/*',
+                  'content-Type' : "application/json",
+                   },
+              method:"POST",
+              data:JSON.stringify(data),
+          }).success(function(response){return response})
+       }
+      factory.findRuleExecByRule=function(uuid) {
+          var url=$location.absUrl().split("app")[0]
+          return $http({
+                   method: 'GET',
+                   url:url+"rule/getRuleExecByRule?action=view&ruleUuid="+uuid
+                    }).
+                   then(function (response,status,headers) {
+                       return response;
+                   })
+     }
+      factory.findFormulaByType=function(uuid,type) {
+          var url=$location.absUrl().split("app")[0]
+          return $http({
+                   method: 'GET',
+                   url:url+"metadata/getFormulaByType?action=view&uuid="+uuid+"&type="+type
+                    }).
+                   then(function (response,status,headers) {
+                       return response;
+                   })
+     }
+      factory.findExpressionByType=function(uuid,type) {
+          var url=$location.absUrl().split("app")[0]
+          return $http({
+                   method: 'GET',
+                   url:url+"metadata/getExpressionByType?action=view&uuid="+uuid+"&type="+type
+                    }).
+                   then(function (response,status,headers) {
+                       return response;
+                   })
+     }
+
+ 	  factory.findGraphData=function(uuid,version,degree){
+ 		  var url=$location.absUrl().split("app")[0]
+ 		   return $http({
+ 		                url:url+"graph/getGraphResults?action=view&uuid="+uuid+"&version="+version+"&degree="+degree,
+ 		                method: "GET"
+ 		          }).then(function(response){ return  response})
+ 	   };
+
+ 	  factory.findSaveAs=function(uuid,version,type){
+    	  var url=$location.absUrl().split("app")[0]
+		  return $http({
+			        url:url+"common/saveAs?action=clone&uuid="+uuid+"&version="+version+"&type="+type,
+			        method: "GET",
+	          }).then(function(response){ return  response})
+	  }
+
+    factory.findParamSetByParamList=function(uuid,version){
+      var url=$location.absUrl().split("app")[0]
+      return $http({
+        url:url+"metadata/getParamSetByParamList?action=view&paramListUuid="+uuid+"&type=rule",
+        method: "GET"
+        }).then(function(response){ return  response})
+    };
+    factory.findParamSetByRule=function(uuid,version){
+      var url=$location.absUrl().split("app")[0]
+      return $http({
+        url:url+"metadata/getParamSetByRule?action=view&ruleUuid="+uuid,
+        method: "GET"
+        }).then(function(response){ return  response})
+    };
+    factory.findexecuteRuleWithParams=function(uuid,version,data){
+      var url=$location.absUrl().split("app")[0]
+      return $http({
+        url:url+"rule/execute/?action=execute&uuid="+uuid+"&version="+version,
+        method: "POST",
+        headers: {
+          'Accept':'*/*',
+          'content-Type' : "application/json",
+          },
+        method:"POST",
+        }).then(function(response){ return  response})
+    };
+    factory.findexecuteRuleWithParamsBody=function(uuid,version,data){
+      var url=$location.absUrl().split("app")[0]
+      return $http({
+        url:url+"rule/execute/?action=execute&uuid="+uuid+"&version="+version,
+        method: "POST",
+        headers: {
+          'Accept':'*/*',
+          'content-Type' : "application/json",
+          },
+        method:"POST",
+        data:JSON.stringify(data),
+        }).then(function(response){ return  response})
+    };
+    return factory;
+})
+
+
+RuleModule.factory("RuleService",function($q,RuleFactory,sortFactory){
+	var factory = {};
+  factory.executeRuleWithParams=function(uuid,version,data){
+    var deferred = $q.defer();
+    if(data !=null){
+      RuleFactory.findexecuteRuleWithParamsBody(uuid,version,data).then(function(response){onSuccess(response.data)});
+      var onSuccess=function(response){
+        deferred.resolve({
+          data:response
+        });
+      }
+    }
+    else{
+      RuleFactory.findexecuteRuleWithParams(uuid,version).then(function(response){onSuccess(response.data)});
+      var onSuccess=function(response){
+        deferred.resolve({
+          data:response
+        });
+      }
+    }
+    return deferred.promise;
+  }
+  factory.getParamSetByRule=function(uuid,version){
+    var deferred = $q.defer();
+    RuleFactory.findParamSetByRule(uuid,version).then(function(response){onSuccess(response.data)});
+    var onSuccess=function(response){
+      deferred.resolve({
+        data:response
+      });
+    }
+    return deferred.promise;
+  }
+	factory.getParamSetByParamList=function(uuid,version){
+    var deferred = $q.defer();
+    RuleFactory.findParamSetByParamList(uuid,version).then(function(response){onSuccess(response.data)});
+    var onSuccess=function(response){
+      deferred.resolve({
+        data:response
+      });
+    }
+    return deferred.promise;
+  }
+  factory.saveAs=function(uuid,version,type){
+
+		 var deferred = $q.defer();
+		 RuleFactory.findSaveAs(uuid,version,type).then(function(response){onSuccess(response.data)});
+	     var onSuccess=function(response){
+	    	  deferred.resolve({
+	              data:response
+	          });
+	     }
+	     return deferred.promise;
+	 }
+	factory.getAllLatestRule=function(metavalue) {
+    	var deferred = $q.defer();
+    	RuleFactory.findAllLatest(metavalue).then(function(response){onSuccess(response.data)});
+        var onSuccess=function(response){
+
+        	var rowDataSet = [];
+            var headerColumns=['id','uuid','version','name','createdBy','createdOn']
+            for(var i=0;i<response.length;i++){
+         	   var rowData = [];
+
+         	   for(var j=0;j<headerColumns.length;j++){
+         		   var columnname=headerColumns[j]
+         		   if(columnname == "createdBy"){
+
+         			   rowData[j]=response[i].createdBy.ref.name;
+         		   }
+
+         		   else{
+
+         			   rowData[j]=response[i][columnname];
+         		   }
+         	   }
+         	   rowDataSet[i]=rowData;
+
+            }
+
+             deferred.resolve({
+            	 data:rowDataSet
+             })
+        }
+        return deferred.promise;
+    }
+	 factory.getAll=function(type){
+		   var deferred=$q.defer();
+		   RuleFactory.findAll(type).then(function(response){onSuccess(response)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+	    }
+	factory.getRuleExecByRule=function(uuid){
+
+		   var deferred=$q.defer();
+		   RuleFactory.findRuleExecByRule(uuid).then(function(response){onSuccess(response.data)});
+		     var onSuccess=function(response){
+
+		    	 var rowDataSet = [];
+		            var headerColumns=['id','uuid','version','name','createdBy','createdOn','status']
+		            for(var i=0;i<response.length;i++){
+		         	   var rowData = [];
+		         	    if(response[i].status !=null){
+		                var len=response[i].status.length-1;
+		         	    }
+		         	   for(var j=0;j<headerColumns.length;j++){
+		         		   var columnname=headerColumns[j]
+		         		   if(columnname == "createdBy"){
+
+		         			   rowData[j]=response[i].createdBy.ref.name;
+		         		   }
+
+		         		   else if(columnname == "status"){
+		         			  if(response[i].status !=null){
+		         			  rowData[j]=response[i].status[len].stage;
+		         			  }
+		         			  else{
+
+		         				 rowData[j]=" ";
+		         			  }
+		         		   }
+
+		         		   else{
+
+		         			   rowData[j]=response[i][columnname];
+		         		   }
+
+		         	   }
+		         	   rowDataSet[i]=rowData;
+
+		            }
+
+		      deferred.resolve({
+		                  data:rowDataSet
+		              })
+		     }
+
+		  return deferred.promise;
+		}
+
+
+	factory.getOneByUuid=function(id,type){
+		   var deferred=$q.defer();
+		   RuleFactory.findByUuid(id,type).then(function(response){onSuccess(response.data)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+		}
+	   factory.executeRule=function(uuid,version){
+		   var deferred=$q.defer();
+		   RuleFactory.executeRule(uuid,version).then(function(response){onSuccess(response)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+	    }
+	   this.getAll=function(metavalue,sessionid) {
+       	var deferred = $q.defer();
+       	RuleFactory.findAll(metavalue).then(function(response){onSuccess(response.data)});
+           var onSuccess=function(response){
+
+           	var rowDataSet = [];
+               var headerColumns=['id','uuid','version','name','createdBy','createdOn']
+               for(var i=0;i<response.length;i++){
+            	   var rowData = [];
+
+            	   for(var j=0;j<headerColumns.length;j++){
+            		   var columnname=headerColumns[j]
+            		   if(columnname == "createdBy"){
+
+            			   rowData[j]=response[i].createdBy.ref.name;
+            		   }
+
+            		   else{
+
+            			   rowData[j]=response[i][columnname];
+            		   }
+            	   }
+            	   rowDataSet[i]=rowData;
+
+               }
+
+                deferred.resolve({
+               	 data:rowDataSet
+                })
+           }
+           return deferred.promise;
+       }
+       factory.getAttributesByDatapod=function(uuid,type){
+ 		   var deferred=$q.defer();
+ 		  RuleFactory.findDatapodByDatapod(uuid,type).then(function(response){onSuccess(response.data)});
+ 		    var onSuccess=function(response){
+ 		   	var attributes=[];
+			   for(var j=0;j<response.length;j++){
+						  var attributedetail={};
+						  attributedetail.uuid=response[j].datapodRef.uuid;
+						  attributedetail.datapodname=response[j].datapodRef.name;
+						  attributedetail.name=response[j].attributeName;
+						  attributedetail.dname=response[j].datapodRef.name+"."+response[j].attributeName;
+						  attributedetail.attributeId=response[j].attributeId;
+						  attributes.push(attributedetail)
+						}
+ 		      deferred.resolve({
+ 		                  data:attributes
+ 		              })
+ 		     }
+
+ 		  return deferred.promise;
+ 	    }
+	factory.getGraphData=function(uuid,version,degree){
+		//  alert(degree)
+		   var deferred=$q.defer();
+		   RuleFactory.findGraphData(uuid,version,degree).then(function(response){onSuccess(response)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+	    }
+	 factory.getFormulaByType=function(uuid,type){
+		   var deferred=$q.defer();
+		   RuleFactory.findFormulaByType(uuid,type).then(function(response){onSuccess(response)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+	    }
+	 factory.getExpressionByType=function(uuid,type){
+		   var deferred=$q.defer();
+		   RuleFactory.findExpressionByType(uuid,type).then(function(response){onSuccess(response.data)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+	    }
+	 factory.getAllVersionByUuid=function(uuid,type){
+		   var deferred=$q.defer();
+		   RuleFactory.findAllVersionByUuid(uuid,type).then(function(response){onSuccess(response.data)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+	    }
+	 factory.getOneByUuidAndVersion=function(uuid,version,type){
+		   var deferred=$q.defer();
+		   RuleFactory.findOneByUuidAndVersion(uuid,version,type).then(function(response){onSuccess(response.data)});
+		   var onSuccess=function(response){
+             var ruleJSOn={};
+             ruleJSOn.ruledata=response;
+             var filterInfoArray=[];
+             if(response.filter !=null){
+             for(var i=0;i<response.filter.filterInfo.length;i++){
+              var filterInfo={};
+              var lhsFilter={}
+              filterInfo.logicalOperator=response.filter.filterInfo[i].logicalOperator
+              filterInfo.operator=response.filter.filterInfo[i].operator;
+              lhsFilter.uuid=response.filter.filterInfo[i].operand[0].ref.uuid;
+              lhsFilter.datapodname=response.filter.filterInfo[i].operand[0].ref.name;
+              lhsFilter.name=response.filter.filterInfo[i].operand[0].attributeName;
+              lhsFilter.attributeId=response.filter.filterInfo[i].operand[0].attributeId;
+              filterInfo.lhsFilter=lhsFilter;
+              filterInfo.filtervalue=response.filter.filterInfo[i].operand[1].value;
+              filterInfoArray[i]=filterInfo
+             }
+             }
+            ruleJSOn.filterInfo=filterInfoArray;
+
+
+            var sourceAttributesArray=[];
+            for(var n=0;n<response.attributeInfo.length;n++){
+              var attributeInfo={};
+              attributeInfo.name=response.attributeInfo[n].attrSourceName
+              if(response.attributeInfo[n].sourceAttr.ref.type == "simple"){
+                var obj={}
+                obj.text="string"
+                obj.caption="string"
+                attributeInfo.sourceAttributeType=obj;
+                attributeInfo.isSourceAtributeSimple=true;
+                attributeInfo.sourcesimple=response.attributeInfo[n].sourceAttr.value
+                attributeInfo.isSourceAtributeDatapod=false;
+                attributeInfo.isSourceAtributeFormula=false;
+                attributeInfo.isSourceAtributeExpression=false;
+                attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=false;
+
+              }
+              if(response.attributeInfo[n].sourceAttr.ref.type == "datapod" ||  response.attributeInfo[n].sourceAttr.ref.type == "dataset" || response.attributeInfo[n].sourceAttr.ref.type == "rule" ){
+                var sourcedatapod={};
+                sourcedatapod.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+                sourcedatapod.attributeId=response.attributeInfo[n].sourceAttr.attrId
+                sourcedatapod.name="";
+                var obj={}
+                obj.text="datapod"
+                obj.caption="attribute"
+                attributeInfo.sourceAttributeType=obj;
+                attributeInfo.sourcedatapod=sourcedatapod;
+                attributeInfo.isSourceAtributeSimple=false;
+                attributeInfo.isSourceAtributeDatapod=true;
+                attributeInfo.isSourceAtributeFormula=false;
+                attributeInfo.isSourceAtributeExpression=false;
+                attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=false;
+              }
+              if(response.attributeInfo[n].sourceAttr.ref.type == "expression"){
+                var sourceexpression={};
+                sourceexpression.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+                sourceexpression.name="";
+                var obj={}
+                obj.text="expression"
+                obj.caption="expression"
+                attributeInfo.sourceAttributeType=obj;
+                attributeInfo.sourceexpression=sourceexpression;
+                attributeInfo.isSourceAtributeSimple=false;
+                attributeInfo.isSourceAtributeDatapod=false;
+                attributeInfo.isSourceAtributeFormula=false;
+                attributeInfo.isSourceAtributeExpression=true;
+                attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=false;
+              }
+              if(response.attributeInfo[n].sourceAttr.ref.type == "formula"){
+                var sourceformula={};
+                sourceformula.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+                sourceformula.name="";
+                var obj={}
+                obj.text="formula"
+                obj.caption="formula"
+                attributeInfo.sourceAttributeType=obj;
+                attributeInfo.sourceformula=sourceformula;
+                attributeInfo.isSourceAtributeSimple=false;
+                attributeInfo.isSourceAtributeExpression=false;
+                attributeInfo.isSourceAtributeDatapod=false;
+                attributeInfo.isSourceAtributeFormula=true;
+                attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=false;
+              }
+              if(response.attributeInfo[n].sourceAttr.ref.type == "function"){
+                var sourcefunction={};
+                sourcefunction.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+                sourcefunction.name="";
+                var obj={}
+                obj.text="function"
+                obj.caption="function"
+                attributeInfo.sourceAttributeType=obj;
+                attributeInfo.sourcefunction=sourcefunction;
+                attributeInfo.isSourceAtributeSimple=false;
+                attributeInfo.isSourceAtributeExpression=false;
+                attributeInfo.isSourceAtributeDatapod=false;
+                attributeInfo.isSourceAtributeFormula=false;
+                attributeInfo.isSourceAtributeFunction=true;
+                attributeInfo.isSourceAtributeParamList=false;
+              }
+              if(response.attributeInfo[n].sourceAttr.ref.type == "paramlist"){
+                var sourceparamlist={};
+                sourceparamlist.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+                sourceparamlist.attrId=response.attributeInfo[n].sourceAttr.attrId
+                sourceparamlist.name="";
+                var obj={}
+                obj.text="paramlist"
+                obj.caption="paramlist"
+                attributeInfo.sourceAttributeType=obj;
+                attributeInfo.sourceparamlist=sourceparamlist;
+                attributeInfo.isSourceAtributeSimple=false;
+                attributeInfo.isSourceAtributeExpression=false;
+                attributeInfo.isSourceAtributeDatapod=false;
+                attributeInfo.isSourceAtributeFormula=false;
+                attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=true;
+              }
+              sourceAttributesArray[n]=attributeInfo
+            }
+            ruleJSOn.sourceAttributes=sourceAttributesArray
+            deferred.resolve({
+                        data:ruleJSOn
+                    })
+           }
+
+		  return deferred.promise;
+	    }
+	factory.getRuleExecByRule=function(id){
+
+		   var deferred=$q.defer();
+		   RuleFactory.findRuleExecByRule(id).then(function(response){onSuccess(response.data)});
+		     var onSuccess=function(response){
+
+		    	 var rowDataSet = [];
+		            var headerColumns=['id','uuid','version','name','createdBy','createdOn','status']
+		            for(var i=0;i<response.length;i++){
+		         	   var rowData = [];
+		         	    if(response[i].status !=null){
+		                var len=response[i].status.length-1;
+		         	    }
+		         	   for(var j=0;j<headerColumns.length;j++){
+		         		   var columnname=headerColumns[j]
+		         		   if(columnname == "createdBy"){
+
+		         			   rowData[j]=response[i].createdBy.ref.name;
+		         		   }
+
+		         		   else if(columnname == "status"){
+		         			  if(response[i].status !=null){
+		         			  rowData[j]=response[i].status[len].stage;
+		         			  }
+		         			  else{
+
+		         				 rowData[j]=" ";
+		         			  }
+		         		   }
+
+		         		   else{
+
+		         			   rowData[j]=response[i][columnname];
+		         		   }
+
+		         	   }
+		         	   rowDataSet[i]=rowData;
+
+		            }
+
+		             deferred.resolve({
+		            	 data:rowDataSet
+		             })
+
+		     }
+
+		  return deferred.promise;
+		}
+	   factory.executeRule=function(uuid,version){
+		   var deferred=$q.defer();
+		   RuleFactory.executeRule(uuid,version).then(function(response){onSuccess(response)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+	    }
+	   factory.getRuleResults=function(uuid,version){
+		   var deferred=$q.defer();
+		   RuleFactory.findRuleResults(uuid,version).then(function(response){onSuccess(response)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+	    }
+	    factory.getOneById=function(id,type){
+		   var deferred=$q.defer();
+		   RuleFactory.findOneById(id,type).then(function(response){onSuccess(response)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+
+		  return deferred.promise;
+	   }
+
+	    factory.getByUuid=function(id,type){
+			   var deferred=$q.defer();
+			   RuleFactory.findByUuid(id,type).then(function(response){onSuccess(response.data)});
+			     var onSuccess=function(response){
+			       var ruleJSOn={};
+			       ruleJSOn.ruledata=response;
+			       var filterInfoArray=[];
+			       if(response.filter !=null){
+			       for(var i=0;i<response.filter.filterInfo.length;i++){
+			    	  var filterInfo={};
+			    	  var lhsFilter={}
+			    	  filterInfo.logicalOperator=response.filter.filterInfo[i].logicalOperator
+			    	  filterInfo.operator=response.filter.filterInfo[i].operator;
+			    	  lhsFilter.uuid=response.filter.filterInfo[i].operand[0].ref.uuid;
+			    	  lhsFilter.datapodname=response.filter.filterInfo[i].operand[0].ref.name;
+			    	  lhsFilter.name=response.filter.filterInfo[i].operand[0].attributeName;
+			    	  lhsFilter.attributeId=response.filter.filterInfo[i].operand[0].attributeId;
+			    	  filterInfo.lhsFilter=lhsFilter;
+			    	  filterInfo.filtervalue=response.filter.filterInfo[i].operand[1].value;
+			    	  filterInfoArray[i]=filterInfo
+			       }
+			       }
+			      ruleJSOn.filterInfo=filterInfoArray;
+
+
+			      var sourceAttributesArray=[];
+			      for(var n=0;n<response.attributeInfo.length;n++){
+			    	  var attributeInfo={};
+			    	  attributeInfo.name=response.attributeInfo[n].attrSourceName
+			    	  if(response.attributeInfo[n].sourceAttr.ref.type == "simple"){
+			    		  var obj={}
+			    		  obj.text="string"
+			    		  obj.caption="string"
+			    		  attributeInfo.sourceAttributeType=obj;
+			    		  attributeInfo.isSourceAtributeSimple=true;
+			    		  attributeInfo.sourcesimple=response.attributeInfo[n].sourceAttr.value
+			    		  attributeInfo.isSourceAtributeDatapod=false;
+			    		  attributeInfo.isSourceAtributeFormula=false;
+			    		  attributeInfo.isSourceAtributeExpression=false;
+			    		  attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=false;
+
+			    	  }
+			    	  if(response.attributeInfo[n].sourceAttr.ref.type == "datapod" ||  response.attributeInfo[n].sourceAttr.ref.type == "dataset" || response.attributeInfo[n].sourceAttr.ref.type == "rule" ){
+			    		  var sourcedatapod={};
+			    		  sourcedatapod.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+			    		  sourcedatapod.attributeId=response.attributeInfo[n].sourceAttr.attrId
+
+			    		  sourcedatapod.name="";
+			    		  var obj={}
+			    		  obj.text="datapod"
+				    	  obj.caption="attribute"
+			    		  attributeInfo.sourceAttributeType=obj;
+			    		  attributeInfo.sourcedatapod=sourcedatapod;
+			    		  attributeInfo.isSourceAtributeSimple=false;
+			    		  attributeInfo.isSourceAtributeDatapod=true;
+			    		  attributeInfo.isSourceAtributeFormula=false;
+			    		  attributeInfo.isSourceAtributeExpression=false;
+			    		  attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=false;
+			    	  }
+			    	  if(response.attributeInfo[n].sourceAttr.ref.type == "expression"){
+			    		  var sourceexpression={};
+			    		  sourceexpression.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+			    		  sourceexpression.name="";
+			    		  var obj={}
+			    		  obj.text="expression"
+					      obj.caption="expression"
+			    		  attributeInfo.sourceAttributeType=obj;
+			    		  attributeInfo.sourceexpression=sourceexpression;
+			    		  attributeInfo.isSourceAtributeSimple=false;
+			    		  attributeInfo.isSourceAtributeDatapod=false;
+			    		  attributeInfo.isSourceAtributeFormula=false;
+			    		  attributeInfo.isSourceAtributeExpression=true;
+			    		  attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=false;
+			    	  }
+			    	  if(response.attributeInfo[n].sourceAttr.ref.type == "formula"){
+			    		  var sourceformula={};
+			    		  sourceformula.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+			    		  sourceformula.name="";
+			    		  var obj={}
+			    		  obj.text="formula"
+						    obj.caption="formula"
+			    		  attributeInfo.sourceAttributeType=obj;
+			    		  attributeInfo.sourceformula=sourceformula;
+			    		  attributeInfo.isSourceAtributeSimple=false;
+			    		  attributeInfo.isSourceAtributeExpression=false;
+			    		  attributeInfo.isSourceAtributeDatapod=false;
+			    		  attributeInfo.isSourceAtributeFormula=true;
+			    		  attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=false;
+			    	  }
+			    	  if(response.attributeInfo[n].sourceAttr.ref.type == "function"){
+			    		  var sourcefunction={};
+			    		  sourcefunction.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+			    		  sourcefunction.name="";
+			    		  var obj={}
+			    		  obj.text="function"
+						    obj.caption="function"
+			    		  attributeInfo.sourceAttributeType=obj;
+			    		  attributeInfo.sourcefunction=sourcefunction;
+			    		  attributeInfo.isSourceAtributeSimple=false;
+			    		  attributeInfo.isSourceAtributeExpression=false;
+			    		  attributeInfo.isSourceAtributeDatapod=false;
+			    		  attributeInfo.isSourceAtributeFormula=false;
+			    		  attributeInfo.isSourceAtributeFunction=true;
+                attributeInfo.isSourceAtributeParamList=false;
+			    	  }
+              if(response.attributeInfo[n].sourceAttr.ref.type == "paramlist"){
+                var sourceparamlist={};
+                sourceparamlist.uuid=response.attributeInfo[n].sourceAttr.ref.uuid;
+                sourceparamlist.attrId=response.attributeInfo[n].sourceAttr.attrId
+                sourceparamlist.name="";
+                var obj={}
+                obj.text="paramlist"
+                obj.caption="paramlist"
+                attributeInfo.sourceAttributeType=obj;
+                attributeInfo.sourceparamlist=sourceparamlist;
+                attributeInfo.isSourceAtributeSimple=false;
+                attributeInfo.isSourceAtributeExpression=false;
+                attributeInfo.isSourceAtributeDatapod=false;
+                attributeInfo.isSourceAtributeFormula=false;
+                attributeInfo.isSourceAtributeFunction=false;
+                attributeInfo.isSourceAtributeParamList=true;
+              }
+			    	  sourceAttributesArray[n]=attributeInfo
+			      }
+			      ruleJSOn.sourceAttributes=sourceAttributesArray
+			      deferred.resolve({
+			                  data:ruleJSOn
+			              })
+			     }
+
+			  return deferred.promise;
+			}
+       factory.submit=function(data,type){
+		   var deferred=$q.defer();
+		   RuleFactory.ruleSubmit(data,type).then(function(response){onSuccess(response)},function(response){onError(response.data)});
+		     var onSuccess=function(response){
+
+		      deferred.resolve({
+		                  data:response
+		              })
+		     }
+         var onError=function(response){
+         deferred.reject({
+           data:response
+         })
+       }
+		  return deferred.promise;
+	  }
+       factory.getAllLatestFunction=function(metavalue,inputFlag) {
+       	var deferred = $q.defer();
+       	RuleFactory.findAllLatest(metavalue,inputFlag).then(function(response){onSuccess(response.data)});
+           var onSuccess=function(response){
+                deferred.resolve({
+               	 data:response
+                })
+           }
+           return deferred.promise;
+        }
+	  factory.getAllLatestRullExec=function(metavalue,sessionid) {
+    	var deferred = $q.defer();
+    	RuleFactory.findAllLatest(metavalue).then(function(response){onSuccess(response.data)});
+        var onSuccess=function(response){
+
+        	var rowDataSet = [];
+            var headerColumns=['id','uuid','version','name','createdBy','createdOn','status']
+            for(var i=0;i<response.length;i++){
+         	   var rowData = [];
+         	    if(response[i].status !=null){
+                var len=response[i].status.length-1;
+         	    }
+         	   for(var j=0;j<headerColumns.length;j++){
+         		   var columnname=headerColumns[j]
+         		   if(columnname == "createdBy"){
+
+         			   rowData[j]=response[i].createdBy.ref.name;
+         		   }
+
+         		   else if(columnname == "status"){
+         			  if(response[i].status !=null){
+         			  rowData[j]=response[i].status[len].stage;
+         			  }
+         			  else{
+
+         				 rowData[j]=" ";
+         			  }
+         		   }
+
+         		   else{
+
+         			   rowData[j]=response[i][columnname];
+         		   }
+
+         	   }
+         	   rowDataSet[i]=rowData;
+
+            }
+
+             deferred.resolve({
+            	 data:rowDataSet
+             })
+        }
+        return deferred.promise;
+     }
+	factory.getAllAttributeBySource=function(uuid,type){
+		 var deferred = $q.defer();
+
+		 if(type == "relation"){
+			 RuleFactory.findDatapodByRelation(uuid,type).then(function(response){onSuccess(response.data)});
+		        var onSuccess=function(response){
+		        	 var attributes=[];
+				   	  for(var j=0;j<response.length;j++){
+							for(var i=0;i<response[j].attributes.length;i++){
+							  var attributedetail={};
+							  attributedetail.uuid=response[j].uuid;
+							  attributedetail.datapodname=response[j].name;
+							  attributedetail.name=response[j].attributes[i].name;
+							  attributedetail.dname=response[j].name+"."+response[j].attributes[i].name;
+							  attributedetail.attributeId=response[j].attributes[i].attributeId;
+							  attributes.push(attributedetail)
+							}
+				   	  }
+
+				   	  console.log(JSON.stringify(attributes))
+		        	  deferred.resolve({
+		                     data:attributes
+		                 })
+		        }
+		 }
+		 if(type == "dataset"){
+			 RuleFactory.findDatapodByDataset(uuid,type).then(function(response){onSuccess(response.data)});
+		        var onSuccess=function(response){
+		        		var attributes=[];
+					   	  for(var j=0;j<response.length;j++){
+								  var attributedetail={};
+								  attributedetail.uuid=response[j].ref.uuid;
+								  attributedetail.datapodname=response[j].ref.name;
+								  attributedetail.name=response[j].attrName;
+								  attributedetail.attributeId=response[j].attrId;
+								  attributedetail.dname=response[j].ref.name+"."+response[j].attrName;
+								  attributes.push(attributedetail)
+								}
+		        	  deferred.resolve({
+		                     data:attributes
+		                 })
+		        }
+
+
+		 }
+     if(type == "rule"){
+       RuleFactory.findAttributesByRule(uuid,type).then(function(response){onSuccess(response.data)});
+            var onSuccess=function(response){
+                var attributes=[];
+                for(var j=0;j<response.length;j++){
+                  var attributedetail={};
+                  attributedetail.uuid=response[j].ref.uuid;
+                  attributedetail.datapodname=response[j].ref.name;
+                  attributedetail.name=response[j].attrName;
+                  attributedetail.attributeId=response[j].attrId;
+                  attributedetail.dname=response[j].ref.name+"."+response[j].attrName;
+                  attributes.push(attributedetail)
+                }
+                deferred.resolve({
+                         data:attributes
+                     })
+            }
+
+
+     }
+		 if(type == "datapod"){
+			 RuleFactory.findDatapodByDatapod(uuid,type).then(function(response){onSuccess(response.data)});
+		        var onSuccess=function(response){
+		        		var attributes=[];
+					   for(var j=0;j<response.length;j++){
+								  var attributedetail={};
+								  attributedetail.uuid=response[j].ref.uuid;
+								  attributedetail.datapodname=response[j].ref.name;
+								  attributedetail.name=response[j].attrName;
+								  attributedetail.dname=response[j].ref.name+"."+response[j].attrName;
+								  attributedetail.attributeId=response[j].attrId;
+								  attributes.push(attributedetail)
+								}
+		        	  deferred.resolve({
+		                     data:attributes
+		                 })
+		        }
+
+		 }
+
+	        return deferred.promise;
+	}
+
+	factory.getAllLatest=function(type) {
+        var deferred = $q.defer();
+        RuleFactory.findAllLatest(type).then(function(response){onSuccessRelation(response.data)});
+        var onSuccessRelation=function(response){
+        var data={};
+        data.options=[];
+        var defaultoption={};
+        if(response.length >0){
+        response.sort(sortFactory.sortByProperty("name"));
+        defaultoption.name=response[0].name;
+        defaultoption.uuid=response[0].uuid;
+        defaultoption.version=response[0].version;
+        data.defaultoption=defaultoption;
+        for(var i=0;i<response.length;i++){
+         var datajosn={}
+         datajosn.name=response[i].name;
+         datajosn.uuid=response[i].uuid;
+         datajosn.version=response[i].version;
+         data.options[i]=datajosn
+        }
+        }
+        else{
+        	data=null;
+
+        }
+         deferred.resolve({
+                     data:data
+                 })
+        }
+    return deferred.promise;
+    }
+
+	factory.getAllLatestActive=function(type) {
+        var deferred = $q.defer();
+        RuleFactory.findAllLatestActive(type).then(function(response){onSuccessRelation(response.data)});
+        var onSuccessRelation=function(response){
+        var data={};
+        data.options=[];
+        var defaultoption={};
+        if(response.length >0){
+        response.sort(sortFactory.sortByProperty("name"));
+        defaultoption.name=response[0].name;
+        defaultoption.uuid=response[0].uuid;
+        defaultoption.version=response[0].version;
+        data.defaultoption=defaultoption;
+        for(var i=0;i<response.length;i++){
+         var datajosn={}
+         datajosn.name=response[i].name;
+         datajosn.uuid=response[i].uuid;
+         datajosn.version=response[i].version;
+         data.options[i]=datajosn
+        }
+        }
+        else{
+        	data=null;
+
+        }
+         deferred.resolve({
+                     data:data
+                 })
+        }
+    return deferred.promise;
+    }
+	factory.getAllLatestFormulaTag=function(type) {
+        var deferred = $q.defer();
+        RuleFactory.findAllLatest(type).then(function(response){onSuccessRelation(response.data)});
+        var onSuccessRelation=function(response){
+        var expressionTag=[];
+        response.sort(sortFactory.sortByProperty("name"));
+        for(var i=0;i< response.length;i++){
+        var tag={}
+        tag.name=response[i].name;
+        tag.uuid=response[i].uuid;
+        tag.version=response[i].version
+        expressionTag[i]=tag;
+
+        }
+         deferred.resolve({
+                     data:expressionTag
+                 })
+        }
+    return deferred.promise;
+    }
+	  return factory;
+});

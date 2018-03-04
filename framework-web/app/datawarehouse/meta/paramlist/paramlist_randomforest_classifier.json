@@ -1,0 +1,62 @@
+{
+  "uuid": "2b6f8552-f5ce-428b-b7eb-32b05a589729",
+  "version": "1519980881",
+  "name": "paramlist_randomforest_classifier",
+  "desc": "RandomForestClassifier Param LIst",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Mar 02 14:24:41 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "maxBins",
+      "paramType": "INTEGER",
+      "paramValue": "10"
+    },
+    {
+      "paramId": "1",
+      "paramName": "maxDepth",
+      "paramType": "INTEGER",
+      "paramValue": "10"
+    },
+    {
+      "paramId": "2",
+      "paramName": "predictionCol",
+      "paramType": "STRING",
+      "paramValue": "Col1"
+    },
+    {
+      "paramId": "3",
+      "paramName": "featuresCol",
+      "paramType": "STRING",
+      "paramValue": "Col2"
+    },
+    {
+      "paramId": "4",
+      "paramName": "maxMemoryInMB",
+      "paramType": "INTEGER",
+      "paramValue": "100"
+    }
+  ]
+}

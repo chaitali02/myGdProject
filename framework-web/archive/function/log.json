@@ -1,0 +1,50 @@
+{
+    "uuid" : "b6b3e6f3-dc03-443e-afb2-03a8f1b78963",
+    "version" : "1488801521",
+    "name" : "log(DECIMAL base, DECIMAL a)",
+    "desc" : "Returns the base-base logarithm of the argument a. Decimal versions added in Hive 0.13.0",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "base",
+            "paramType" : "decimal",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        },
+         {
+            "paramId" : "1",
+            "paramName" : "a",
+            "paramType" : "decimal",
+            "paramReq" : "Y",
+            "paramDefVal":""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+   
+    "functionInfo" : "log",
+    "funcType" : "hive",
+     "category": "math"
+}

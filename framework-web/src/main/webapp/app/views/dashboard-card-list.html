@@ -1,0 +1,225 @@
+<!-- BEGIN PAGE HEADER-->
+<div ng-controller="DashboradMenuController2">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a ui-sref="home">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <span>{{$state.current.data.pageTitle}}</span>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a ui-sref="blank">Dashboard</a>
+            </li>
+        </ul>
+        <div class="page-toolbar">
+          <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+          </div>
+        </div>
+    </div><!-- END PAGE HEADER-->
+    <div class="modal fade in" id="DeleteConfModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+      <div class="modal-dialog">
+        <div class="modal-content rulemodel">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+         </button>
+            <h4 class="modal-title">Confirm</h4>
+          </div>
+          <div class="modal-body">{{deletemsg}}<span style="text-transform: capitalize">{{caption}}</span> ?</div>
+          <div class="modal-footer">
+            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn green" ng-click="okDelete()">Ok</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div class="row">
+        <div class="col-md-2 pull-right" style="margin-top:10px;margin-bottom:10px;" ng-init="htmlSwitchStatus = true">
+        <div toggle-switch class="switch-primary switch-small" html="htmlSwitchStatus" knob-label='{{isListCard==true?"Tile":"List"}}' on-label='<i class="fa fa-th"></i>' off-label='<i class="fa fa-bars"></i>' ng-model="switchStatus" style="float:right;"></div>
+     <!-- <i ng-class="isListCard==true?'fa fa-bars':'fa fa-th'" aria-hidden="true" style="float: right;padding:5px;border: 1px solid #e7ecf1!important;color: #999;" ng-click="listAndCardShow()"></i> -->
+   </div>
+ </div>
+
+ <div class="row" ng-if="!isListCard">
+    <div class="col-md-12">
+ <search-criteria module-type="'dashboard'"  no-exec="true" on-submit="selectdashboard" data="data"></search-criteria>
+ <div class="portlet box green">
+   <div class="portlet-title">
+     <div class="caption">
+       <i class="fa fa-cogs"></i>Dashboard
+     </div>
+     <div class="tools tool-custom">
+       <a title="Refresh" ng-click="refreshSearchResults()" data-toggle="tooltip" data-placement="top" tooltip>
+         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+       </a>
+       <a href="javascript:;" class="collapse" data-original-title="" style="height: 14px;" title=""> </a>
+     </div>
+   </div>
+   <div class="portlet-body">
+     <div class="row">
+       <div class="col-md-6 col-sm-6">
+         <div class="dataTables_length" id="sample_1_length">
+           <!-- <label>Show
+             <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+             </select>
+           </label> -->
+         </div>
+       </div>
+       <div class="col-md-6 col-sm-6">
+         <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+           <label>Search:</label>
+           <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext" aria-controls="datastoredatatable">
+         </div>
+       </div>
+     </div>
+     <div>
+       <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns  ui-grid-auto-resize ng-style="getGridStyle()">
+        <div class="nodatawatermark" ng-show="!gridOptions.data.length">No data available</div>
+       </div>
+       <!-- <div class="row">
+         <div class="col-md-6" style="margin-top:17px">
+           Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
+         </div>
+         <div class="col-md-6">
+           <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage" ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="maxSize" class="pagination-md" boundary-link-numbers="true" rotate="false"></ul>
+         </div>
+       </div> -->
+     </div>
+   </div>
+ </div>
+ </div>
+ </div>
+ <!-- END SAMPLE TABLE PORTLET-->
+    <!-- BEGIN MAIN CONTENT -->
+    <div class="row"  ng-show="isListCard">
+        <div class="col-md-12">
+            <!-- BEGIN: ACCORDION DEMO -->
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                <!-- <div class="caption">
+                    <i class=" icon-layers "></i>
+                    <span class="caption-subject bold">Dashboard</span>
+                </div> -->
+                    <div class="row">
+                        <label class="col-md-1" style="margin-top:6px;">Search:</label>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <input type="text" class="form-control"ng-model="searchdashboard">
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2"style="float:right;">
+                            <select class="form-control" ng-change="selectOption()"
+                            data-ng-model="optiondata" ng-options="r as r.caption for r in optionsort track by r.caption">
+                            </select >
+                        </div>
+                        <label class="col-md-1" style="margin-top:6px;float:right">Sort By:</label>
+                    </div>
+                    <div class="actions">
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row" style="margin-top:10px;margin-bottom:-10px;">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="cardshadow" style="background-color:lightgrey;opacity: 0.4;">
+                                <a class="dashboard-stat dashboard-stat-v2" ui-sref="metaListdashboard" style="margin-bottom:25px;height: 144px;">
+                                    <div class="row">
+                                        <span style="float:left;margin:5px 0px 0px 20px;color:black;">Create Dashboard
+                                        </span>
+
+                                    </div>
+                                    <div class=" dashbaord-icon">
+                                        <div class="btn btn-circle btn-icon-only btn-default btn-circle" style="background-color: transparent;border-color:black;width:30px;height:30px;">
+                                        <i class="fa fa-plus icon-create" aria-hidden="true" style="color:black;height:30px;vertical-align:middle;"></i>
+                                    </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 " ng-repeat="dashboarddata in alldashboard |filter:{name: searchdashboard} | orderBy:optiondata.name| limitTo:10" ng-mouseenter="showIcon($index)" ng-mouseleave="hideIcon($index)">
+                            <div class="cardshadow" ng-click="show_dashboard(dashboarddata)">
+                                <a class="dashboard-stat dashboard-stat-v2 {{dashboarddata.class}}" style="margin-bottom:25px;height: 144px;">
+
+                                    <div class="row">
+                                        <span title="{{dashboarddata.title}}" style="float:left;margin:5px 0px 0px 20px;color:white;">{{dashboarddata.name}}
+                                        </span>
+                                        <span class="btn btn-circle btn-icon-only btn-default btn-circle" style="float:right;margin:5px 20px 0px 0px;color:white;background-color:transparent;width:30px;height:30px;"  >
+                                            <i ng-class="dashboarddata.active=='Y' ? 'fa fa-trash':'fa fa-retweet'"  aria-hidden="true" style="margin:0px auto;color:white;height:30px;vertical-align:middle;color:white;" ng-click="metadashboard($event,$index,dashboarddata)">
+                                            </i>
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="visual" style="width:10%;"><!-- padding-top:45px;margin-bottom: 40px; -->
+                                            <i class="{{dashboarddata.chartclass}}"></i>
+                                        </div>
+                                       <!--  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="text-align:center;padding-top:37px;color:grey;width:80%;">
+                                            <span class="btn btn-circle btn-icon-only btn-default btn-circle" ng-show="dashboarddata.isIconShow" style="background-color: transparent;width:25px;height:25px;">
+                                                <i class="fa fa-times" aria-hidden="true" style="color:white;display:block;margin:-2px 0px 0px -1px;"></i>
+                                            </span>
+
+
+                                            <span class="btn btn-circle btn-icon-only btn-default btn-circle" ng-show="dashboarddata.isIconShow"  style="background-color:transparent;width:25px;height:25px;">
+                                                <i class="fa fa-pencil-square-o" ng-click="metadashboard($event,dashboarddata.uuid)" aria-hidden="true" style="display:block;margin:-1px 0px 0px 1px;color:white;">
+                                                </i>
+                                            </span>
+                                        </div> -->
+                                        <div class="details" style="width:23%;"><!-- padding-top:35px;margin-bottom: 40px;" -->
+                                            <div class="number" style="padding-top:21px;">
+                                                <span data-counter="counterup"> {{dashboarddata.sectionInfo.length}}
+                                                </span>
+                                            </div>
+                                            <div class="desc" >Vizpod</div>
+                                                <span title="Last Updated On " style="float:right;margin:8px -7px 0px 0px;color:white;">{{dashboarddata.createdOn}}
+                                        </span>
+                                        </div>
+                                     </div>
+                                    </a>
+                                </div>
+                            </div>
+                        <!-- <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 " ng-repeat="dashboarddata in alldashboard |filter:{name: searchdashboard} | orderBy:optiondata.name| limitTo:10" ng-mouseenter="showIcon($index)" ng-mouseleave="hideIcon($index)">
+                            <div class="cardshadow" ng-click="show_dashboard(dashboarddata.uuid)">
+                                <a class="dashboard-stat dashboard-stat-v2 {{dashboarddata.class}}" style="margin-bottom:25px;">
+
+                                    <div class="row">
+                                        <span title="{{dashboarddata.title}}" style="float:left;margin:5px 0px 0px 20px;color:white;">{{dashboarddata.name}}
+                                        </span>
+                                        <span style="float:right;margin:5px 20px 0px 0px;color:white;">{{dashboarddata.createdOn}}
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="visual" style="width:10%">
+                                            <i class="{{dashboarddata.chartclass}}"></i>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="text-align:center;padding-top:30px;color:grey;width:80%;">
+                                            <span class="btn btn-circle btn-icon-only btn-default btn-circle" ng-show="dashboarddata.isIconShow" style="background-color: transparent;">
+                                                <i class="fa fa-times" aria-hidden="true" style="color:white;"></i>
+                                            </span>
+
+
+                                            <span class="btn btn-circle btn-icon-only btn-default btn-circle" ng-show="dashboarddata.isIconShow"  style="background-color: transparent;">
+                                                <i class="fa fa-pencil-square-o" ng-click="metadashboard($event,dashboarddata.uuid)" aria-hidden="true" style="margin: 3px 0px 0px 3px;color:white;">
+                                                </i>
+                                            </span>
+                                        </div>
+                                        <div class="details" style="width:20%">
+                                            <div class="number">
+                                                <span data-counter="counterup"> {{dashboarddata.sectionInfo.length}}
+                                                </span>
+                                            </div>
+                                            <div class="desc">Vizpod</div>
+                                        </div>
+                                     </div>
+                                    </a>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- END MAIN CONTENT -->
+</div>

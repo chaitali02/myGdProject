@@ -1,0 +1,35 @@
+{
+    "uuid" : "3d8bd3bf-5a20-48d5-ace9-c134281b2543",
+    "version" : "1488801604",
+    "name" : "context_ngrams()",
+    "desc" : "Returns the top-k contextual N-grams from a set of tokenized sentences, given a string of context. See StatisticsAndDataMining for more information",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq":"N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+  "functionInfo" : "context_ngrams",
+  "funcType" : "hive",
+  "category":"string"
+
+}

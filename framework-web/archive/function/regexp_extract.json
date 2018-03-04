@@ -1,0 +1,57 @@
+{
+    "uuid" : "cc42190b-fb0c-4bcd-b3da-d80f8893ef1a",
+    "version" : "1488801521",
+    "name" : "regexp_extract(string subject, string pattern, int index)",
+    "desc" : "Returns the string extracted using the pattern. For example, regexp_extract('foothebar', 'foo(.*?)(bar)', 2) returns 'bar.' Note that some care is necessary in using predefined character classes: using 's' as the second argument will match the letter s; '\\s' is necessary to match whitespace, etc. The 'index' parameter is the Java regex Matcher group() method index. See docs/api/java/util/regex/Matcher.html for more information on the 'index' or Java regex group() method",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+       {
+           "paramId" : "0",
+           "paramName" : "subject",
+           "paramType" : "string",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       },
+	   {
+           "paramId" : "1",
+           "paramName" : "pattern",
+           "paramType" : "string",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       },
+	   {
+           "paramId" : "2",
+           "paramName" : "index",
+           "paramType" : "string",
+           "paramReq" : "Y",
+           "paramDefVal":""
+       }
+   ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+	"inputReq": "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                
+            }
+        }
+    ],
+
+    "functionInfo" : "regexp_extract",
+    "funcType" : "hive",
+    "category":"string"
+}

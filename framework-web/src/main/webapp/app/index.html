@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<screenshot is-open="appCtrl.isBasicOpen">
+<!--
+	Copyright (C) GridEdge Consulting LLC, 2016 All rights reserved.
+    This unpublished material is proprietary to GridEdge Consulting LLC.
+    The methods and techniques described herein are considered  trade
+    secrets and/or confidential. Reproduction or distribution, in whole or
+    in part, is forbidden.
+    Written by Yogesh Palrecha <ypalrecha@gridedge.com>
+
+-->
+
+<!--[if IE 8]> <html lang="en" class="ie8 no-js" data-ng-app="InferyxApp"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js" data-ng-app="InferyxApp"> <![endif]-->
+<!--[if !IE]>-->
+
+<html lang="en" data-ng-app="InferyxApp" ng-cloak>
+    <!--<![endif]-->
+    <!-- BEGIN HEAD -->
+
+    <head>
+        <title data-ng-bind="'Inferyx | ' + $state.current.data.pageTitle"></title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->
+        <link rel="stylesheet" type="text/css" href="assets/trix.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="assets/global/plugins/angularjs/plugins/angular-notify/css/angular-notify-texture.css" id="notifyTheme">
+        <link href="bower_components/c3/c3.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css" />
+        <link href="assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+         <!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet"> -->
+        <link href="assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- END GLOBAL MANDATORY STYLES -->
+
+        <link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/angular-screenshot/angular-screenshot.css" rel="stylesheet" type="text/css" />
+
+        <!-- BEGIN DYMANICLY LOADED CSS FILES(all plugin and page related styles must be loaded between GLOBAL and THEME css files ) -->
+        <link id="ng_load_plugins_before" />
+        <!-- END DYMANICLY LOADED CSS FILES -->
+
+        <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+
+        <!-- BEGIN THEME STYLES -->
+        <!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
+        <link href="assets/global/css/components-rounded.css" rel="stylesheet" id="style_components" type="text/css" />
+        <link href="assets/global/css/plugins.css" rel="stylesheet" type="text/css" />
+        <link href="assets/layouts/layout/css/layout.css" rel="stylesheet" type="text/css" />
+        <link href="assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
+        <link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- END THEME STYLES -->
+        <link href="assets/pages/css/modelwindow.css" rel="stylesheet" type="text/css" />
+       <link href="assets/global/plugins/angularjs/angular-toggle-switch-bootstrap-3.css" rel="stylesheet" type="text/css" />
+       <link href="assets/ng-tags-input/ng-tags-input.css" rel="stylesheet" type="text/css" />
+       <link href="assets/global/plugins/angularjs/plugins/ui-select/select.min.css" rel="stylesheet" type="text/css" />
+       <link href="assets/global/plugins/angularjs-slider/dist/rzslider.min.css" rel="stylesheet" type="text/css" />
+       <link href="assets/angular-ui-grid/ui-grid.min.css" rel="stylesheet" type="text/css" />
+       <link rel="stylesheet" href="assets/global/plugins/angularjs/plugins/angular-ngtable/ng-table.css">
+       <link rel="stylesheet" type="text/css" href="bower_components/joint/dist/joint.css">
+       <!-- graph -->
+       <link href="bower_components/jquery-filestyle/src/jquery-filestyle.css" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="stylesheet" href="assets/angularjs-right-click/css/ng-right-click.css">
+        <link href="bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/bootstrap-timepicker/css/timepicker.less" rel="stylesheet" type="text/css" />
+      <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/clockface/css/clockface.css" rel="stylesheet" type="text/css"/>
+         <link href="lib/css/projectx.css" rel="stylesheet" type="text/css" />
+          <link href="assets/global/plugins/angularjs/plugins/angular-bootstrap-datetimepicker/datetimepicker.css" rel="stylesheet" type="text/css" />
+            </head>
+    <!-- END HEAD -->
+
+    <!-- BEGIN BODY -->
+    <!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
+    <!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
+    <!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
+    <!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
+    <!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
+    <!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
+    <!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
+    <!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
+    <!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
+
+    <body ng-controller="AppController" class="page-header-fixed page-sidebar-closed-hide-logo page-on-load" ng-class="{'page-content-white': settings.layout.pageContentWhite,'page-container-bg-solid': settings.layout.pageBodySolid, 'page-sidebar-closed': settings.layout.pageSidebarClosed}">
+
+        <!-- BEGIN PAGE SPINNER -->
+        <div ng-spinner-bar class="" ng-controller="lhscontroller">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+        <!-- END PAGE SPINNER -->
+
+        <!-- BEGIN HEADER -->
+   		<div data-ng-include="'tpl/header.html'" data-ng-controller="HeaderController" class="page-header navbar navbar-fixed-top"> </div>
+        <!-- END HEADER -->
+        <div class="clearfix"> </div>
+        <!-- BEGIN CONTAINER -->
+        <div class="page-container">
+            <!-- BEGIN SIDEBAR -->
+          <div data-ng-include="'tpl/sidebar.html'" data-ng-controller="SidebarController" class="page-sidebar-wrapper"> </div>
+            <!-- END SIDEBAR -->
+            <!-- BEGIN CONTENT -->
+            <div class="page-content-wrapper">
+                <div class="page-content" >
+
+                    <!-- BEGIN STYLE CUSTOMIZER(optional) -->
+                   <!--  <div data-ng-include="'tpl/theme-panel.html'" data-ng-controller="ThemePanelController" class="theme-panel hidden-xs hidden-sm"> </div> -->
+                    <!-- END STYLE CUSTOMIZER -->
+                    <!-- BEGIN ACTUAL CONTENT -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog" data-ng-controller="AppRoleController" ng-init="open()" style="display:none;">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="">
+        <div class="modal-body content" style="min-height:300px;height:auto;width:60%;padding:7px;">
+          <!--  <button type="button" class="close">&times;</button>
+         -->
+            <form  class="form-horizontal">
+                  <div class="col-md-12">
+                  <h3 class=" form-title font-green modeltitle" style="padding-top:16px;margin-bottom:26px; text-align:center !important;">Welcome {{username}}</h3>
+                  </div>
+                  <!-- {{username}} -->
+                    <div class="form-group" style="padding-top:10px;">
+                        <label class="col-md-3 control-label">App
+                         <span class="required" aria-required="true"> * </span>
+                        </label>
+                        <div class="col-md-8"style="margin-left:-21px;widht:60%">
+                            <select class="form-control model-select " ng-model="selectedApp" ng-options="app.appId.ref.name for app in AppData track by app.appId.ref.uuid"  ng-change="getselectApp()">
+                     <!--  <option value="">Choose App</option> -->
+                    </select>
+                        </div>
+                    </div>
+                      <div class="form-group" style="padding-top:10px;">
+                        <label class="col-md-3 control-label">Role
+                         <span class="required" aria-required="true"> * </span>
+                        </label>
+                        <div class="col-md-8" style="margin-left:-21px;widht:60%">
+                         <select class="form-control model-select" ng-model="selectedRole" ng-options="app.ref.name for app in RoleData track by app.ref.uuid"   ng-change="getselectRole()">
+
+                     </select>
+                        </div>
+                    </div>
+                    <div class="form-group"  style="padding-top:24px;">
+                  <div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-3">
+                    <a  class="btn btn-primary" ng-click="cancelLogut()">Cancel</a>
+                    <button type="button" class="btn green uppercase " ng-click="ok($event)">Submit</button>
+                  </div>
+                </div>
+                <div id="hideshow" class="alert alert-danger display-hide " style="margin-top:10px;">
+                    <button class="close" data-close="alert"></button>
+                    <span>Select App and Role. </span>
+                </div>
+                    </form>
+
+        </div>
+      </div>
+    </div>
+</div>
+
+ <div class="modal fade" id="unlockmodel" role="dialog" style="display:none; background-color: #465568!important;" data-ng-controller="UnloadController">
+
+    <div class="modal-dialog">
+     <div class="logo-default" style="margin: 0 auto;width: 80%;text-align: center; font-family: timeburnernormal; color:white;font-size:26px;padding-bottom:3%">INFER<span style="color:#007DC9;font-family:timeburnerbold;">YX</span>
+      </div>
+
+      <div class="">
+        <div class="modal-header lock-head font-green"> Locked </div>
+        <div class="modal-body content content_custom">
+        <form class="login-form" name="form"  role="form"  ng-submit="close()" >
+               <!-- <h3 class="form-title font-green">Unlock </h3> -->
+                <div class="col-md-12">
+                <div class="col-md-4 lock-avatar-block">
+                  <img ng-src="avatars/{{setUseruuid}}?{{dummyArg}}" class="lock-avatar">
+                </div>
+                <div class="col-md-8">
+                <div class="form-group">
+                    <!-- <label class="control-label visible-ie8 visible-ie9">Username</label> -->
+                    <!-- <label class="control-label">{{setUserName}}</label> -->
+                    <h4 style="text-transform: capitalize;margin-top: 0;color: #dbe2ea;font-size: 18px;font-weight: 400;display: inline-block;">{{setUserName}}</h4>
+                    <!-- <input class="form-control form-control-solid placeholder-no-fix" autocomplete="off" placeholder="Username"  ng-model="unlockusername"/> -->
+                </div>
+                <div class="form-group">
+                    <label class="control-label visible-ie8 visible-ie9">Password</label>
+                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password"   name="password" ng-model="unlockpassword" ng-change="hideErrorMessage()"/>
+                </div>
+                <div class="form-actions">
+                   <button type="submit" class="btn green uppercase center-btn" style="margin-left: 0px;" >Submit</button>
+                </div><br>
+              </div>
+              </div>
+            </form>
+        </div>
+        <div class="modal-footer lock-bottom">
+          <a ng-click="notYpalrecha()" >Not <span style="text-transform: capitalize;font-weight: 400;padding-left: 2px;">{{setUserName}}?</span></a>
+        </div>
+      </div>
+      <div ng-show="isErrorShow" class="alert alert-danger" style="width: 80%;margin: 0 auto;margin-top: 20px;">
+        <button class="close" data-close="alert"></button>
+          <span>{{error}}</span>
+      </div>
+      <div class="copyright" style="margin: 0 auto;width: 80%;text-align: center; padding-top:3%;color:#7a8ca5"> 2017 &copy; Copyright
+        <a target="_blank" href="http://inferyx.com">Inferyx, Inc</a> </div>
+    </div>
+</div>
+<div ng-hide="tabs.length<2" ng-controller="TabController" style="margin-bottom:25px;margin-top:-10px;">
+
+<uib-tabset active="activeTabIndex" ng-if="showTabs && tabs.length >0">
+  <uib-tab  ng-repeat="t in tabs" select="go(t)" active="t.active" index="$index">
+  <uib-tab-heading >
+    <div>
+      <span >{{t.heading}}</span>
+      <span ng-hide="$index == 0">
+      <i class="glyphicon glyphicon-remove-sign" ng-click="removeTab($index);$event.preventDefault();"></i>
+      </span>
+   </div>
+    </uib-tab-heading>
+
+  </uib-tab>
+</uib-tabset>
+</div>
+         <div ui-view class="fade-in-up"> </div>
+                    <!-- END ACTUAL CONTENT -->
+
+                </div>
+            </div>
+            <!-- END CONTENT -->
+            <!-- BEGIN QUICK SIDEBAR -->
+            <a href="javascript:;" class="page-quick-sidebar-toggler">
+                <i class="icon-login"></i>
+            </a>
+        <div data-ng-include="'tpl/quick-sidebar.html'" data-ng-controller="QuickSidebarController" class="page-quick-sidebar-wrapper"></div>
+            <!-- END QUICK SIDEBAR -->
+        </div>
+        <!-- END CONTAINER -->
+        <!-- BEGIN FOOTER -->
+
+    <div data-ng-include="'tpl/footer.html'" data-ng-controller="FooterController" class="page-footer" style="padding:4px 11px 6px !important;"> </div>
+    <nav class="quick-nav">
+        <a class="quick-nav-trigger" href="#">
+            <span aria-hidden="true"></span>
+        </a>
+        <ul>
+            <li>
+                <a ng-click="appCtrl.isBasicOpen = !appCtrl.isBasicOpen" class="active" style="background-color: #36c6d3;border-radius: 30px;">
+                  <!-- <screenshot-toolbox>
+                    <div class="btn-group-sm">
+                      <button class="btn btn-default btn-fab" ng-click="appCtrl.cancel()">
+                        <i class="material-icons">close</i>
+                      </button>
+                      <button class="btn btn-success btn-fab" ng-click="download()">
+                        <i class="material-icons">check</i>
+                      </button>
+                    </div>
+                  </screenshot-toolbox> -->
+                  </screenshot>
+                    <span style="color:white">Screenshot</span>
+                    <i class="fa fa-camera" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+        <span aria-hidden="true" class="quick-nav-bg"></span>
+    </nav>
+
+    <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="assets/pages/scripts/ui-modals.min.js" type="text/javascript"></script>
+    <script src="bower_components/jquery.cookie/jquery.cookie.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/bootstrap-tabdrop/js/bootstrap-tabdrop.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+        <script src="bower_components/js-cookie/src/js.cookie.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+        <!-- END CORE JQUERY PLUGINS -->
+
+        <script src="assets/pages/scripts/components-bootstrap-switch.min.js" type="text/javascript"></script>
+ <script src="assets/global/plugins/select2/js/select2.full.js" type="text/javascript"></script>
+
+        <script src="assets/global/plugins/moment.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+       <script src="bower_components/clockface/js/clockface.js" type="text/javascript"></script>
+
+        <!-- BEGIN CORE ANGULARJS PLUGINS -->
+        <script src="assets/global/plugins/angularjs/angular.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/angularjs/angular-cookies.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/angularjs/angular-sanitize.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/angularjs/angular-toggle-switch.js" type="text/javascript"></script>
+        <script type="text/javascript" src="bower_components/ng-storage/ngStorage.min.js"></script>
+        <script  src="assets/global/plugins/angularjs/plugins/anguar-idle/angular-idle.js"></script>
+        <script  src="assets/global/plugins/angularjs/plugins/angular-data-grid/pagination.js"></script>
+        <script  src="assets/global/plugins/angularjs/plugins/angular-data-grid/dataGrid.js"></script>
+        <script  src="assets/global/plugins/angularjs/plugins/angular-file-saver/angular-file-saver.bundle.js"></script>
+        <script src="assets/global/plugins/angularjs/plugins/angular-ngtable/ng-table.js"></script>
+        <script src="assets/global/plugins/angularjs/plugins/angular-uuid/angular-uuid2.js"></script>
+        <script src="assets/global/plugins/angularjs/angular-touch.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>
+        <script src="bower_components/ocLazyLoad/dist/ocLazyLoad.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/angularjs/plugins/angular-resource/angular-resource.js"></script>
+        <script src="assets/global/plugins/angularjs/plugins/ui-bootstrap-tpls.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/angularjs/plugins/ui-select/select.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/angularjs/plugins/angular-drag-drop/angular-dragdrop.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/angularjs-slider/dist/rzslider.min.js" type="text/javascript"></script>
+        <script src="assets/ngconfirm.js" type="text/javascript"></script>
+        <script src="assets/angular-ui-grid/ui-grid.js" type="text/javascript"></script>
+        <!-- END CORE ANGULARJS PLUGINS -->
+         <script src="assets/ng-tags-input/ng-tags-input.js" type="text/javascript"></script>
+         <script type="text/javascript" src="bower_components/spin.js/spin.js"></script>
+         <script type="text/javascript" src="assets/angular-spinner.min.js"></script>
+         <script type="text/javascript" src="assets/angular-loading-spinner.js"></script>
+         <script type="text/javascript" src="bower_components/underscore/underscore-min.js"></script>
+         <script type="text/javascript" src="assets/global/plugins/angularjs/plugins/angular-bootstrap-datetimepicker/moment.js"></script>
+         <script type="text/javascript" src="assets/global/plugins/angularjs/plugins/angular-bootstrap-datetimepicker/datetimepicker.js"></script>
+         <script type="text/javascript" src="assets/global/plugins/angularjs/plugins/angular-bootstrap-datetimepicker/datetimepicker.templates.js"></script>
+
+        <!--  BEGIN APP LEVEL ANGULARJS SCRIPTS -->
+        <script src='assets/angularjs-right-click/ng-right-click.js'></script>
+<!-- <script src="https://rawgithub.com/angular-ui/ui-sortable/master/src/sortable.js"></script> -->
+<script src="bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js"></script>
+<script src="bower_components/sortable.js/Sortable.min.js"></script>
+  <script src="assets/angular-screenshot/angular-screenshot.js" type="text/javascript"></script>
+        <script src="js/Main.js" type="text/javascript"></script>
+        <script src="js/Directives.js" type="text/javascript"></script>
+        <script src="js/MainService.js" type="text/javascript"></script>
+        <script src="js/module/CommonModule.js"></script>
+        <script src="js/services/CommonService.js"></script>
+        <script src="js/module/DatapodModule.js"></script>
+        <script src="js/module/DataPreparationModule.js"></script>
+        <script src="js/module/VizpodModule.js"></script>
+        <script src="js/module/AdminModule.js"></script>
+        <script src="js/module/BusinessRulesModule.js"></script>
+        <script src="js/module/DataProfiling.js"></script>
+        <script src="js/module/DataPipelineModule.js"></script>
+        <script src="js/module/DataQualityModule.js"></script>
+        <script src="js/module/DashboardModule.js"></script>
+        <script src="js/module/DataVisualizationModule.js"></script>
+        <script src="js/module/DataDiscoveryModule.js"></script>
+         <script src="js/module/MetadataNavigator.js"></script>
+        <script src="js/module/DataScienceModule.js"></script>
+        <script src="js/module/JobMonitoringModule.js"></script>
+        <script src="js/module/SystemMonitoringModule.js"></script>
+        <script src="js/controllers/DatapodController.js" type="text/javascript"></script>
+        <script src="js/controllers/CommonListController.js" type="text/javascript"></script>
+
+        <!-- END APP LEVEL ANGULARJS SCRIPTS -->
+
+        <!-- BEGIN APP LEVEL JQUERY SCRIPTS -->
+        <script src="assets/global/scripts/app.js" type="text/javascript"></script>
+        <script src="assets/layouts/layout/scripts/layout.js" type="text/javascript"></script>
+        <script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+        <script src="assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
+        <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
+        <!-- END APP LEVEL JQUERY SCRIPTS -->
+        <!-- END JAVASCRIPTS -->
+
+        <!--  <script src="assets/global/scripts/datatable.js" type="text/javascript"></script> -->
+        <script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+        <script src="bower_components/d3/d3.min.js"></script>
+        <script src="assets/datamap/topojson.min.js"></script>
+       <script src="assets/datamap/datamaps.all.hires.js"></script>
+      <!--  <script src="assets/js/d3/d3.js" charset="utf-8"></script> -->
+       <script src="bower_components/c3/c3.js"></script>
+
+       <script src="assets/c3/c3-angular/c3-angular.js"></script>
+       <script src="assets/c3/c3-core/saveSvgAsPng.js"></script>
+
+
+       <script src="bower_components/lodash/lodash.min.js"></script>
+       <script src="bower_components/backbone/backbone-min.js"></script>
+       <script src="bower_components/joint/dist/joint.min.js"></script>
+
+      <script src="js/controllers/GraphController.js" type="text/javascript"></script>
+
+      <script src="js/services/DagMetaDataService.js" type="text/javascript"></script>
+      <script src="js/services/DagValidationSvc.js" type="text/javascript"></script>
+      <script src="js/services/GraphService.js" type="text/javascript"></script>
+      <script src="js/directives/JointJsDirective.js" type="text/javascript"></script>
+      <script src="assets/global/plugins/angularjs/plugins/angular-notify/js/angular-notify.js"></script>
+      <script src="assets/angular-autovalidate/jcs-auto-validate.min.js"></script>
+    
+      <script src="assets/trix.js"></script>
+      <script src="assets/angular-trix.js"></script> 
+      <script src="assets/democtrl.js"></script>
+    </body>
+    <!-- END BODY -->
+
+</html>

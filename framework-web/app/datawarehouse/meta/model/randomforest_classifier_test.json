@@ -1,0 +1,110 @@
+{
+  "uuid": "2054aca1-22a5-4488-9b8e-833f73b02fe8",
+  "version": "1519982009",
+  "name": "randomforest_classifier_test",
+  "desc": "Random Forest Classifier Test Model",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Mar 02 14:43:29 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+      "version": null,
+      "name": "customer"
+    },
+    "value": null
+  },
+  "features": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+        "version": null,
+        "name": "customer"
+      },
+      "value": null,
+      "attrId": "0",
+      "attrName": "customer_id"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+        "version": null,
+        "name": "customer"
+      },
+      "value": null,
+      "attrId": "1",
+      "attrName": "address_id"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+        "version": null,
+        "name": "customer"
+      },
+      "value": null,
+      "attrId": "2",
+      "attrName": "branch_id"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+        "version": null,
+        "name": "customer"
+      },
+      "value": null,
+      "attrId": "10",
+      "attrName": "commute_distance_miles"
+    }
+  ],
+  "label": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+      "version": null,
+      "name": "customer"
+    },
+    "value": null,
+    "attrId": "0",
+    "attrName": "customer_id"
+  },
+  "algorithm": {
+    "ref": {
+      "type": "algorithm",
+      "uuid": "27350544-dd58-4d22-a14f-5789ca9c55ca",
+      "version": null,
+      "name": "Random Forest Classifier"
+    },
+    "value": null
+  },
+  "paramList": null,
+  "labelRequired": null,
+  "type": "SPARK",
+  "customScript": null,
+  "scriptName": null
+}

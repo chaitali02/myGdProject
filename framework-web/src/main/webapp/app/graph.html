@@ -1,0 +1,626 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<style>
+  
+  .link line {
+    stroke: #696969;
+  }
+  .link line.separator {
+    stroke: #fff;
+    stroke-width: 2px;
+  }
+  .node circle {
+    stroke: #000;
+    stroke-width: 1.5px;
+  }
+  .node text {
+    font: 10px sans-serif;
+    pointer-events: none;
+  }
+  div.tooltipFocus { 
+    position: absolute;     
+    text-align: center;     
+    width: 60px;          
+    height: 28px;         
+    padding: 2px;       
+    font: 12px sans-serif;    
+    background: lightsteelblue; 
+    border: 0px;    
+    border-radius: 8px;     
+    pointer-events: none;     
+  }
+  div.tooltip {
+    position: absolute;
+    text-align: left;
+    pointer-events: none;
+    width: 400px;
+    padding: 10px;
+    border: 1px solid #D5D5D5;
+    font-family: arial,helvetica,sans-serif;
+    font-size: 1.1em;
+    color: #333;
+    padding: 10px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.9);
+    color: #000;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    border:1px solid rgba(200,200,200,0.85);
+  }
+  .header-rule{
+    height:1px;
+    margin:1px auto 3px;
+    margin-top:7px;
+    margin-bottom:7px;
+    background:#ddd;
+    width:125px;
+  }
+  .header1{
+    color:#000;
+    text-transform:uppercase;
+    font-size: 12px;
+    margin-bottom: 2px;
+    text-align:center;
+  }
+  .header2 {
+    text-transform: uppercase;
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 2px;
+    color:#666;
+    text-align:center;
+  }
+  .header3 {
+    color:#333;
+    text-align: left;
+    font-size: 15px;
+    font-style: italic;
+    font-family: Georgia;
+    /*  width:170px;*/
+    text-align:center;
+  }
+  div.show-image {
+    position: relative;
+    float:left;
+    margin:5px;
+}
+div.show-image:hover img{
+    opacity:0.5;
+}
+div.show-image:hover input {
+    display: block;
+}
+div.show-image input {
+    position:absolute;
+    display:none;
+}
+div.show-image input.update {
+    top:0;
+    left:0;
+}
+div.show-image input.delete {
+    top:0;
+    left:79%;
+}
+button {
+    height: 30px;
+    width: 30px;
+    border-radius: 30px;
+      border: 0.5px solid #2A2728;
+  background-color:#6f79ff;
+}
+</style>
+<body>
+
+
+<!-- 
+ <img id="left" src="lib/images/ArrowLeft.png" width="40" height="40">
+  <img id="right" src="lib/images/rightarrow.png" width="40" height="40"> -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	
+  <script type="text/javascript" src="assets/js/jquery-1.12.3.js"></script>
+  <script type="text/javascript" src="assets/js/jquery.cookie.js"></script>
+  <script src="assets/js/d3/d3.v3.min.js"></script>
+  
+  <!-- <div id ="meta">
+<input type ="submit" name="MetaData" id= "metaData" onclick="execute()"/>
+
+</div>
+<div id ="allMeta"  style="display:none;">
+<Button type ="button"  name="mapMeta" id= "mapMeta">Map</Button>
+<Button type ="button"  name="datapodMeta" id= "datapodMeta">Datapod</Button>
+<Button type ="button" name="metaData" id= "metaData" onclick="execute()">MetaData</Button>
+</div>
+<div class="result" onclick="datasend()"></div -->
+  
+ <div id="images" >
+</div>
+    
+  <script> 
+  
+  /* function execute(){
+		document.getElementById('allMeta').style.display ="block";
+	} */
+  
+  
+  /*   $(document).ready(function() {
+    	$("button").click(function(){
+	var sessionid="5829fd9def40c51e0a4b9501";
+  $.ajax({
+    url : 'http://localhost:8087/framework/metadata/graph/getMetaDataDetails',
+    beforeSend: function(xhr){xhr.setRequestHeader('sessionId',sessionid);}, 
+    success : function(response){
+      console.log(response);
+      alert(response[0]);
+       $(".result").html(response[0]);
+       //$("result").datasend(response);
+      //var myArr = JSON.parse(this.response);
+     //datasend(response);
+    },
+    error : function(){
+    }
+  })
+	 })
+    }) */
+	
+    $(document).ready(function(){
+    	//alert(response);
+	// var sessionid="5833d317ef40c57f62126ab1";
+      $.ajax({
+    	  url : 'http://localhost:8080/graph/getGraphResults',
+ 	     
+	       data: {uuid:'a18f4cf7-9cca-4eee-8b70-065cfee84588',version:'1502631072',degree:'1'},//dimention
+
+	        beforeSend: function(xhr){xhr.setRequestHeader('sessionId',$.cookie("_frameworkSession"));}, 
+	        success : function(response){
+	          console.log(response);
+	          generateGraph($.parseJSON(response));
+	        },
+	        error : function(){
+	        }
+      }) 
+})	
+	
+    var width,height,color,svg,div,force,link,linkText,node;
+    function generateGraph(graphResponse){
+      width = 1560,
+      height = 1000;
+      color = d3.scale.category20();
+      radius = d3.scale.sqrt()
+      .range([0, 6]);
+      svg = d3.select("body").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .on('click',function(e){
+        d3.selectAll(".vz-weighted_tree-tip").remove()
+      });
+      var div = d3.select("body").append("div")
+      .attr("class", "tooltipFocus")       
+      .style("opacity", 0);    
+      var force = d3.layout.force()
+      .size([width, height])
+      .charge(-400)
+      .linkDistance(function(d) { return radius(d.src.size) + radius(d.dst.size) + 20; });
+      var graph=graphResponse;
+      var edges=[];
+      graph.links.forEach(function(e) { 
+    // Get the source and target nodes
+    var sourceNode = graph.nodes.filter(function(n) { return n.id === e.src; })[0],
+    targetNode = graph.nodes.filter(function(n) { return n.id === e.dst; })[0];
+    // Add the edge to the array
+    //console.log(sourceNode);
+    edges.push({source: sourceNode, target: targetNode, relationType :"AAAAAS"});
+  });
+      force
+      .nodes(graph.nodes)
+      .links(edges)
+      .linkDistance(200)
+      .on("tick", tick)
+      .start();
+      link = svg.selectAll(".link")
+      .data(edges)
+      .enter().append("g")
+      .attr("class", "link")
+      linkText = svg.selectAll(".link")
+      .append("text")
+      .attr("class", "link-label")
+      .attr("font-family", "Arial, Helvetica, sans-serif")
+      .attr("fill", "red")
+      .style("font", "normal 12px Arial")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(function(d) {
+        return d.relationType;
+      });    
+      link.append("line")
+      .style("stroke-width", function(d) { return (d.bond * 2 - 1) * 2 + "px"; })
+      node = svg.selectAll(".node5837fd0e27505225aa48bc3b")
+      .data(graph.nodes)
+      .enter().append("g")
+      .attr("class", "node")
+      .call(force.drag);
+      node.append("circle")
+      .attr("r", function(d) { return d.nodeType == "datapod" ? radius(15): radius(8); })
+    .style("stroke-width",1)    // set the stroke width //jitender
+              .style("stroke", "73879C") //jitender 73879C
+              .style('fill',function(d){
+		     if(d.nodeType=="application")
+                        return "#E6B0AA"; 
+              	   else if(d.nodeType=="AppInfo")
+                         return "#F9EBEA"; 
+              	
+              	
+              	 else if(d.nodeType=="condition")
+                       return "#48C9B0";
+              	  else if(d.nodeType=="ConditionValue")
+                        return "#E8F8F5";
+              	  else if(d.nodeType=="Conditioninfo")
+                        return "#A3E4D7";
+              	
+              	
+              	   else if(d.nodeType=="Dag")
+                         return "#9B59B6";
+              	   else if(d.nodeType=="DagStage")
+                         return "#D2B4DE";
+                 else if(d.nodeType=="DagTask")
+                         return "#EBDEF0";
+              	
+              	
+              	
+              	  else if(d.nodeType=="DagExec")
+                        return "#e59866"; 
+              	  else if(d.nodeType=="Stage")
+                        return "#F5CBA7";
+                else if(d.nodeType=="Task")
+                        return "#FDEBD0";
+              	
+              	
+              	
+                else if(d.nodeType=="dashboard")
+                    return "#AFFF75"; 
+          	  else if(d.nodeType=="sectioninfo")
+                    return "#c4ff9a";
+          	  else if(d.nodeType=="MetaId")
+                    return "#D7FFBA";
+             	
+              	
+              	
+              	  else  if(d.nodeType=="Datapod")
+                        return "#5DADE2";
+                  else if(d.nodeType=="Attribute")
+                        return "#D6EAF8";
+              	
+                  else if(d.nodeType=="Dataset")
+                      return "#e5ff7e";
+                  else if(d.nodeType=="DatasetFilterInfo")
+                      return "#fbffab";
+              	  else if(d.nodeType=="datasource")
+                    //  return "#EC7063"; 
+              	      return "#efefef";  
+              	  else if(d.nodeType=="Dimension")
+                      return "#85ff7e";
+              	
+               
+              	
+              	
+                  else if(d.nodeType=="expression")
+                      return "#76D7C4";
+                  else if(d.nodeType=="ExpressionInfo")
+                      return "#A3E4D7"; 
+                  else if(d.nodeType=="ExpValue")
+                          return "#D1F2EB";
+              	
+              	
+              	
+                  else if(d.nodeType=="Filter")
+                          return "#F7DC6F";
+                  else if(d.nodeType=="filterValue")
+                      return "#fcff85"; 
+                  else if(d.nodeType=="filterinfoObj")
+                          return "#faffc0";
+              	
+              	
+              	
+              	
+                  else if(d.nodeType=="Formula")
+                      return "#ff9dae";
+                  else if(d.nodeType=="SubExpression")
+                      return "#ffa2b9";
+              	
+              	
+              	
+                  else if(d.nodeType=="Group")
+                      return "#fce5cd";
+              	
+              	
+                  else if(d.nodeType=="Load")
+                      return "#d5a6bd"; 
+                  else if(d.nodeType=="loadsource")
+                      return "#d5c2d2"; 
+                  else if(d.nodeType=="loadtarget")
+                      return "#f0daec";
+              	
+              	
+           
+              	
+                  else if(d.nodeType=="Map")
+                      return "#a2f967";
+                  else if(d.nodeType=="Mapping")
+                      return "#d7fcc0";
+              	
+              	
+              	
+
+              else if(d.nodeType=="Measure")
+                  	return "#ffe599";
+             
+              	
+              	
+              else if(d.nodeType=="Meta")
+              	return "#fcff85";
+         	
+              	
+              	
+              	
+
+              else if(d.nodeType=="Privilege")
+                  return "#cfe2f3"; 
+              		
+                 
+                
+                  else if(d.nodeType=="Relation")
+                          return "#f6b26b";
+                  else if(d.nodeType=="Join")
+                          return "#e5ff7e";
+                  else if(d.nodeType=="joinkey")
+                          return "#ffb87f";
+                  else if(d.nodeType=="RelationValue")
+                      return "#fffdd0";
+                 
+                 
+                 
+                  else if(d.nodeType=="Role")
+                      return "#ebdef0";
+              	
+              	
+              	
+              	
+                  else if(d.nodeType=="Rule")
+                      return "#ddff99";
+                 
+                
+              	
+              	
+                  else if(d.nodeType=="Session")
+                      return "#d7fcc0"; 
+              	
+              	
+                  else if(d.nodeType=="user")
+                      return "#b7b7b7"; 
+
+                  else if(d.nodeType=="userGroup")
+                      return "#d7fcc0"; 
+		     
+              	
+                  else if(d.nodeType=="VizpodExec")
+                      return "#fff8dc";  
+              	
+                  else if(d.nodeType=="vizpod")
+                      return "#41E0F5";  
+                  else if(d.nodeType=="vizpodKeys")
+                      return "#FFDAB9";
+                  else if(d.nodeType=="vizpodGroups")
+                          return "#f4cccc"; 
+                  else if(d.nodeType=="vizpodValues")
+                              return "#fce5cd";
+                  else if(d.nodeType=="vizpodFilterInfo")
+                      return "#fff2cc";
+                  else if(d.nodeType=="vizpoddimensions")
+                      return "#fff8dc";
+		     
+		     
+                  else if(d.nodeType=="DQ")
+                      return "#42FFB5"; 
+              else if(d.nodeType=="DQExec")
+                          return "#9dcbff";
+              else if(d.nodeType=="DQGroup")
+                  return "#bdeac0";
+              else if(d.nodeType=="DQInfo")
+                  return "#cceacf";
+              else if(d.nodeType=="DQGroupExec")
+                  return "#dceaab"; 
+              else if(d.nodeType=="dataQualgroupExec")
+                  return "#e5ead5"; 
+          else if(d.nodeType=="ruleExec")
+                      return "#e4ff9d";
+          else if(d.nodeType=="rule")
+              return "#ffbb90";
+          else if(d.nodeType=="ExpressionInfo1")
+              return "#ffd9b5";
+          else if(d.nodeType=="FilterInfo")
+              return "#fff0e0";
+		     
+          else if(d.nodeType=="activity")
+              return "#ffe6e6";
+		     
+    	  
+      })
+      .on("click",function(d){
+        div.transition()    
+        .duration(500)    
+        .style("opacity", 0);
+         
+        myFunction(d3.event.pageX,d3.event.pageY,d.uuid,d.version);
+       
+      createDataTip(d3.event.pageX,d3.event.pageY, d.nodeType, d.name,d.id,d.version,d.desc,d.createdOn,d.createdBy,d.active);
+      })
+      .on("mouseover", function(d) {   
+        div.transition()    
+        .duration(200)    
+        .style("opacity", .9);  
+       // myFunction(d3.event.pageX,d3.event.pageY,d.uuid,d.version);
+   
+      })          
+      .on("mouseout", function(d) {   
+        div.transition()    
+        .duration(200)   
+        .style("opacity", 0);
+      });
+      // .style("fill", function(d) { return color(d.title); });
+      node.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .attr('class','abe')
+      .style('fill',function(d){return (d.nodeType == 'datapod' ? 'white':'#4a6c8c')})
+      .text(function(d) { return d.name })
+      .style('font-size',function(d){return (d.nodeType == 'datapod' ? 'larger':'')});
+    }      
+    function tick() {
+      link.selectAll("line")
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+      linkText
+      .attr("x", function(d) {
+        return ((d.source.x + d.target.x)/2);
+      })
+      .attr("y", function(d) {
+        return ((d.source.y + d.target.y)/2);
+      });    
+      node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    }
+  
+  var datatip='<div class="tooltip" style="width: 250px; background-opacity:.5">' +
+  '<div class="header1">HEADER1</div>' +
+  '<div class="header-rule"></div>' +
+  '<div class="header2"> HEADER2 </div>' +
+  '<div class="header-rule"></div>' +
+  '<div class="header3"> HEADER3 </div>' +
+  '<div class="header-rule"></div>' +
+  '<div class="header3"> HEADER4 </div>'+
+  '<div class="header-rule"></div>' +
+  '<div class="header3"> HEADER5 </div>' +
+  '<div class="header-rule"></div>' +
+  '<div class="header3"> HEADER6 </div>' +
+  '<div class="header-rule"></div>' +
+  '<div class="header3"> HEADER7 </div>' +
+  '<div class="header-rule"></div>' +
+  '<div class="header3"> HEADER8 </div>' 
+  '</div>';
+  function createDataTip(x,y,h1,h2,h3,h4,h5,h6,h7,h8) {
+    html = datatip.replace("HEADER1", h1);
+    html = html.replace("HEADER2", h2);
+    html = html.replace("HEADER3", h3);
+    html = html.replace("HEADER4", h4);
+    html = html.replace("HEADER5", h5);
+    html = html.replace("HEADER6", h6);
+    html = html.replace("HEADER7", h7);
+    html = html.replace("HEADER8", h8);
+    setTimeout(function(){
+      d3.select("body")
+      .append("div")
+      .attr("class", "vz-weighted_tree-tip")
+      .style("position", "absolute")
+      .style("left", (x) + "px")  
+      .style("top", (y - 28) + "px")
+      .style("opacity",0)
+      .html(html)
+      .transition().style("opacity",1);
+    },100);
+  }
+ 
+
+  function myFunction(x,y,uuid,version) {
+	
+	 //   var btn =document.getElementById("right");
+	   // document.getElementById("myImg").src = "hackanm.gif";
+	    var btn = document.createElement('img');
+    btn.setAttribute('src', 'lib/images/right3.png');
+    btn.setAttribute('width', '22');
+    btn.setAttribute('height', '22');
+    document.getElementById("images").appendChild(btn);
+
+
+	   
+	    var btn1 =  document.createElement('img');
+	    btn1.setAttribute('src', 'lib/images/left3.png');
+	    btn1.setAttribute('width', '22');
+	    btn1.setAttribute('height', '22');
+	    document.getElementById("images").appendChild(btn1);
+	  // btn1.setAttribute("id", "b");
+	    //btn1.setAttribute("class", "backword"); 
+	//  var t = document.createTextNode("►");
+	 //   var t1 = document.createTextNode("◄");
+	   // btn1.appendChild(t1);
+	   // btn.appendChild(t);
+	  
+
+	    
+	  /*  document.body.appendChild(btn1);
+	   document.body.appendChild(btn);
+	   */  btn1.onclick = function(d) {
+	     	var Uuid=d.uuid;
+	    	var Version=d.version; 
+	    	var newUuid=uuid+"_"+version;
+	        alert(newUuid);
+	    	 $.ajax({
+	    	        url : 'localhost:8080/graph/getGraphResults',
+	    	     
+	    	       data: {uuid:newUuid,version:Version,degree:'-1'},//dimention
+
+	    	        beforeSend: function(xhr){xhr.setRequestHeader('sessionId',$.cookie("_frameworkSession"));}, 
+	    	        success : function(response){
+	    	          console.log(response);
+	    	          generateGraph($.parseJSON(response));
+	    	        },
+	    	        error : function(){
+	    	        }
+	    	      }) 
+        }
+	    btn.onclick = function() {
+	    	/* var uuid="298f8f83-d575-4007-9485-c6402c99ef82";
+	    	var version="1485857360"; 
+	    	var type="datapod"; */
+	    	alert("assssss")
+	    	 $.ajax({
+	    	        url : 'localhost:8080/graph/getGraphResults',
+	    	     
+	    	       data: {uuid:'a18f4cf7-9cca-4eee-8b70-065cfee84588',version:'1502631072',degree:'1'},//dimention
+
+	    	        beforeSend: function(xhr){xhr.setRequestHeader('sessionId',$.cookie("_frameworkSession"));}, 
+	    	        success : function(response){
+	    	          console.log(response);
+	    	          generateGraph($.parseJSON(response));
+	    	        },
+	    	        error : function(){
+	    	        }
+	    	      })        }
+	   // document.getElementById(btn).onclick = function() {myFunction1()};
+	    
+	    setTimeout(function(){
+	        d3.select(btn1)
+	       
+	        .attr("class", "vz-weighted_tree-tip")
+	        .style("position", "absolute")
+	        .style("left", (x-28) + "px")  
+	        .style("top", (y - 40) + "px")
+	        .style("opacity",0)
+	        .transition().style("opacity",1);
+	       }
+	    ,100);
+	    setTimeout(function(){
+	        d3.select(btn)
+	       
+	        .attr("class", "vz-weighted_tree-tip")
+	        .style("position", "absolute")
+	        .style("left", (x) + "px")  
+	        .style("top", (y - 40) + "px")
+	        .style("opacity",0)
+	        .transition().style("opacity",1);
+	       }
+	    ,100);
+	}
+</script>

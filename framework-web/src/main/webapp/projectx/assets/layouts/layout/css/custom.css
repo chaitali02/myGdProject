@@ -1,0 +1,223 @@
+/* here you can put your own css to customize and override the theme */
+.for_select {
+	border: 1px solid #D7DBDD;
+	width: 250px;
+	padding: 5px;
+	font-size: 15px;
+	font-family: cursive;
+	line-height: 1;
+	height: 34px;
+	background: url(br_down.png) no-repeat right white;
+	-webkit-appearance: none;
+	background-position-x: 218px;
+	margin: 8px -47px 2px 0px;
+}
+
+.rel_select {
+	border: 1px solid #D7DBDD;
+	width: 237px;
+	padding: 5px;
+	font-size: 15px;
+	font-family: cursive;
+	line-height: 1;
+	height: 34px;
+	background: url(br_down.png) no-repeat right white;
+	-webkit-appearance: none;
+	background-position-x: 207px;
+	margin: 13px 2px 0px 0px;
+}
+
+md-card {
+	background-color: #F8F9F9;
+	border: 5px solid;
+	width: 65%;
+}
+
+.header {
+	font-family: cursive;
+	border: 7px solid black;
+	padding: 4px 0 4px 0;
+	border: 2px radius;
+	text-color: white;
+	background-color: black;
+	margin: -18px -18px 8px -16px;
+	color: white;
+}
+
+.btn1 {
+	font-family: cursive;
+    padding: 0 3px 0 3px;
+	margin: 13px 3px 0px 0px;
+	min-width: 88px;
+	font-size: 14px;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	border: none;
+	outline: none;
+	width: 35px;
+	background-color: gray;
+	min-width: auto;
+	text-transform: capitalize;
+	background-color: white;
+	color: #D7DBDD;
+	border: 1px solid;
+}
+
+.btn2 {
+	padding: 0 6px 0 6px;
+	margin: 13px 3px 0px 0px;
+	min-width: 88px;
+	font-size: 14px;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	border: none;
+	outline: none;
+	width: 45px;
+	min-width: auto;
+	text-transform: capitalize;
+	background-color: white;
+	color: #D7DBDD;
+	border: 1px solid;
+	font-family: cursive;
+}
+
+.btw_undo {
+	padding: 0 6px 0 6px;
+	min-width: 88px;
+	margin: -7px 2px 9px 0;
+	float: right;
+	font-size: 14px;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	outline: none;
+	color: green;
+	background-color: white;
+	border: 1px solid #D7DBDD;
+	text-transform: capitalize;
+}
+
+.btw_clear {
+	padding: 0 6px 0 6px;
+	margin: -7px 2px 9px 0;
+	float: right;
+	min-width: 88px;
+	font-size: 14px;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	background-color: white;
+	outline: none;
+	border: 1px solid #D7DBDD;
+	color: red;
+	text-transform: capitalize;
+}
+
+.btw_cancel {
+	padding: 0 6px 0 6px;
+	float: right;
+	min-width: 88px;
+	font-size: 14px;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	background-color: white;
+	outline: none;
+	border: 1px solid #D7DBDD;
+	color: #D7DBDD;
+	text-transform: capitalize;
+}
+
+.btw_save {
+	padding: 0 6px 0 6px;
+	margin: 6px 0 0 0;
+	min-width: 88px;
+	font-size: 14px;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	background-color: #0BACFC;
+	outline: none;
+	border: 1px solid #D7DBDD;
+	color: #D7DBDD;
+	text-transform: capitalize;
+}
+
+.btw_validate {
+	padding: 0 6px 0 6px;
+	margin: 5px 0 0 0;
+	float: left;
+	min-width: 88px;
+	font-size: 14px;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	background-color: #0BACFC;
+	outline: none;
+	border: 1px solid #D7DBDD;
+	color: #D7DBDD;
+	text-transform: capitalize;
+}
+
+#textarea {
+	-moz-appearance: textfield-multiline;
+	-webkit-appearance: textarea;
+	
+	font: medium -moz-fixed;
+	font: -webkit-small-control;
+	height: 28px;
+	overflow: auto;
+	padding: 2px;
+	resize: both;
+	width: 98%;
+	height: 15%;
+	background-color:white;
+    border-style: solid;
+}
+
+.cal-field, .for-field {
+	border: 1px solid #D7DBDD;
+	width: 124%;
+	height: 5%;
+}
+
+.btw_input {
+	width: 201px;
+	height: 35px;
+	margin: 0 3px 0 0px;
+	border: 1px solid #D7DBDD;
+}
+
+.cal_field {
+	margin: 0px 51px 7px 0px;
+}
+
+.sub_field {
+	margin: 0px -6px 0px 6px;
+}
+
+.cal_name span {
+	color: #BBBFC1;
+}
+
+.functionDiv {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	border: none;
+	overflow: hidden;
+	width: auto;
+	background-color: #MaxF8F9F9;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0; 
+    width:100%;
+}

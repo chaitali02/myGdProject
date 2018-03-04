@@ -1,0 +1,60 @@
+{
+	"params": [
+		{
+			"paramId": 0,
+			"paramName": "threshold",
+			"paramType": "double",
+			"paramValue": "2"
+		},
+		{
+			"paramId": 1,
+			"paramName": "maxIter",
+			"paramType": "integer",
+			"paramValue": "10"
+		},
+		{
+			"paramId": 2,
+			"paramName": "predictionCol",
+			"paramType": "string",
+			"paramValue": "Col1"
+		},
+		{
+			"paramId": 3,
+			"paramName": "featuresCol",
+			"paramType": "string",
+			"paramValue": "Col2"
+		},
+		{
+			"paramId": 4,
+			"paramName": "tol",
+			"paramType": "double",
+			"paramValue": "10"
+		}
+	],
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80",
+	"version": "1495146809",
+	"name": "paramlist_logisticregression",
+	"desc": "LogisticRegression Param List",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
+		"DEV",
+		"0.1.0"
+	],
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
+			}
+		}
+	]
+}

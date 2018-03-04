@@ -1,0 +1,40 @@
+{
+	"uuid": "ae9ee197-dc0f-48a7-88b1-6025260f67b3",
+	"version": "1488801522",
+	"name": "abs(DOUBLE a)",
+	"desc": "Returns the absolute value",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn": "Mon, 06 Mar 2017 05:28:41 IST",
+	"paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "a",
+            "paramType" : "double",
+            "paramReq" : "Y",
+            "paramDefVal":""
+             
+        }
+    ],
+	"tags": [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active": "Y",
+        "published" : "N",
+	"inputReq": "Y",
+	"appInfo": [{
+		"ref": {
+			"type": "application",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+		}
+	}],
+	"functionInfo": "abs",
+	"funcType": "hive",
+	"category": "math"
+}
