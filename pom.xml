@@ -484,6 +484,7 @@
 	<modules>
 		<module>framework-livy</module>
 		<module>framework-web</module>
+		<module>framework-service</module>
 		<module>framework-batch</module>
 	</modules>
 

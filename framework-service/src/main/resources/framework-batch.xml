@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) GridEdge Consulting LLC, 2016 All rights reserved. This 
+	unpublished material is proprietary to GridEdge Consulting LLC. The methods 
+	and techniques described herein are considered trade secrets and/or confidential. 
+	Reproduction or distribution, in whole or in part, is forbidden. Written 
+	by Yogesh Palrecha <ypalrecha@gridedge.com> -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/aop
+				http://www.springframework.org/schema/aop/spring-aop.xsd
+				http://www.springframework.org/schema/context
+				http://www.springframework.org/schema/context/spring-context.xsd
+				http://www.springframework.org/schema/jee
+				http://www.springframework.org/schema/jee/spring-jee.xsd
+				http://www.springframework.org/schema/lang
+				http://www.springframework.org/schema/lang/spring-lang.xsd
+				http://www.springframework.org/schema/tx
+				http://www.springframework.org/schema/tx/spring-tx.xsd
+				http://www.springframework.org/schema/util
+				http://www.springframework.org/schema/util/spring-util.xsd
+				http://www.springframework.org/schema/mvc
+				http://www.springframework.org/schema/mvc/spring-mvc.xsd
+				http://www.springframework.org/schema/data/mongo
+				http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+				http://www.springframework.org/schema/aop 
+				http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+   <context:component-scan base-package="com.inferyx.framework" />
+	
+	<!-- Enable AspectJ style of Spring AOP -->
+	<!-- <aop:aspectj-autoproxy /> -->
+	
+	<!-- <import resource="spring-security.xml" /> -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<!-- p:location="classpath://framework.properties"> -->
+		<property name="locations">
+			<list>
+				<value>classpath*:**/*framework.properties</value>
+				<value>classpath*:**/*log4j.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- <util:properties id="properties" location="classpath://framework.properties"/> -->
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="queueCapacity" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	</bean>
+	
+	<bean id="stageExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- <property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" /> -->
+		<property name="queueCapacity" value="3" />
+		<property name="maxPoolSize" value="100" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	</bean>
+	
+	<bean id="dagExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- <property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" /> -->
+		<property name="queueCapacity" value="3" />
+		<property name="maxPoolSize" value="100" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	</bean>
+	
+	
+	<bean id="metaExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- <property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" /> -->
+		<property name="queueCapacity" value="3" />
+		<property name="maxPoolSize" value="100" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	</bean>
+	
+	<bean id="metaGroupExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="queueCapacity" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	</bean>
+	
+	<bean id="taskThreadMap" name="taskThreadList" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="livyClientMap" name="livyClientMap" class="java.util.concurrent.ConcurrentHashMap" />
+	
+	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
+		<property name="sparkInfo" ref="sparkInfo" />
+		<property name="livyClientMap" ref="livyClientMap" />
+		<property name="url" value="${framework.livy.spark.url}" />
+	</bean>
+	
+	<!-- <bean id="metaExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" />
+		<property name="queueCapacity" value="3" />
+		<property name="maxPoolSize" value="100" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	</bean> -->
+
+	<bean id="mappingContext"
+		class="org.springframework.data.mongodb.core.mapping.MongoMappingContext" />
+
+	<bean id="defaultMongoTypeMapper"
+		class="org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper">
+		<constructor-arg name="typeKey">
+			<null />
+		</constructor-arg>
+	</bean>
+
+	<mongo:mongo-client id="mongoClient" host="${framework.mongo.host}"
+		port="${framework.mongo.port}">
+		<mongo:client-options connections-per-host="${framework.mongo.connectionsPerHost}"
+			connect-timeout="${framework.mongo.connectTimeout}" max-wait-time="${framework.mongo.maxWaitTime}" />
+	</mongo:mongo-client>
+
+	<bean id="simpleMongoDbFactory"
+		class="org.springframework.data.mongodb.core.SimpleMongoDbFactory">
+		<constructor-arg ref="mongoClient" />
+		<constructor-arg name="databaseName" value="${framework.mongo.database}" />
+	</bean>
+
+	<bean id="mappingMongoConverter"
+		class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">
+		<constructor-arg name="mongoDbFactory" ref="simpleMongoDbFactory" />
+		<constructor-arg name="mappingContext" ref="mappingContext" />
+		<property name="typeMapper" ref="defaultMongoTypeMapper" />
+	</bean>
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="simpleMongoDbFactory" />
+		<constructor-arg name="mongoConverter" ref="mappingMongoConverter" />
+	</bean>
+	<mongo:repositories base-package="com.inferyx.framework.dao"
+		mongo-template-ref="mongoTemplate" />
+
+	<!-- Initialize spark context -->
+	<bean id="sparkContext" class="org.apache.spark.SparkContext">
+		<constructor-arg value="#{sparkInfo.getSparkConfiguration()}" />
+	</bean>
+
+	<bean id="dbConfiguration"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="location" value="classpath:framework.properties" />
+	</bean>
+
+	<!-- Initialize SQL Context scope="request" <bean id="sqlContext" class="org.apache.spark.sql.SQLContext"> 
+		<constructor-arg ref="sparkContext"/> </bean> -->
+
+	<bean id="executorService" class="java.util.concurrent.Executors"
+		factory-method="newFixedThreadPool" destroy-method="shutdownNow">
+		<constructor-arg value="${framework.executor.threadsize}"></constructor-arg>
+	</bean>
+
+	<!-- Initialize Hive Context scope="request" -->
+	<bean id="hiveContext" class="org.apache.spark.sql.hive.HiveContext">
+		<constructor-arg ref="sparkContext" />
+	</bean>
+	
+	<!-- Initialize Spark Session scope="request" -->
+	<bean id="sparkSession" class="org.apache.spark.sql.SparkSession">
+		<constructor-arg ref="sparkContext" />
+	</bean>
+	
+	<!-- Initialize SQL Context scope="request" -->
+	<bean id="sqlContext" class="org.apache.spark.sql.SQLContext">
+		<constructor-arg ref="sparkContext" />
+	</bean>
+	
+	<bean id="parser" class="com.inferyx.framework.parser.DagParser">
+	</bean>
+
+	<bean id="sparkInfo" class="com.inferyx.framework.common.SparkInfo">
+		<property name="prop" ref="dbConfiguration"></property>
+	</bean>
+
+	<bean id="miUtil" class="com.inferyx.framework.common.MetadataUtil">
+	</bean>
+
+	<bean id="dataSourceFactory" class="com.inferyx.framework.factory.DataSourceFactory">
+	</bean>
+
+	<bean id="connFactory" class="com.inferyx.framework.factory.ConnectionFactory">
+	</bean>
+
+	<bean id="formulaParser" class="com.inferyx.framework.parser.FormulaParser">
+	</bean>
+
+	<bean id="hdfsInfo" class="com.inferyx.framework.common.HDFSInfo">
+		<property name="hdfsURL" value="${framework.hdfs.URI}"></property>
+		<property name="schemaPath" value="${framework.schema.Path}"></property>
+	</bean>
+	
+	<bean id="engine" class="com.inferyx.framework.common.Engine">
+		<property name="execEngine" value="${framework.execution.engine}"></property>
+	</bean>
+
+	<bean id="dqInfo" class="com.inferyx.framework.common.DQInfo">
+		<property name="dqTargetUUID" value="${framework.dataqual.datapod.uuid}"></property>
+	</bean>
+	
+	<bean id="profileInfo" class="com.inferyx.framework.common.ProfileInfo">
+		<property name="profileTargetUUID" value="${framework.profile.datapod.uuid}"></property>
+	</bean>
+
+	<bean id="registerDataPod" class="com.inferyx.framework.register.DatapodRegister">
+		<!-- <constructor-arg ref="miUtil"/> <constructor-arg ref="dataSourceFactory"/> 
+			<constructor-arg ref="connFactory"/> <constructor-arg ref="hdfsInfo" /> -->
+	</bean>
+
+	<bean id="registerUDF" class="com.inferyx.framework.register.UDFRegister">
+		<constructor-arg ref="sparkSession" />
+	</bean>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	</bean>
+	
+	<bean id="javaSparkContext" class="org.apache.spark.api.java.JavaSparkContext">
+		<constructor-arg ref="sparkContext" />
+	</bean>
+
+	<bean id="graphFlag" class="com.inferyx.framework.common.GraphInfo">
+		<property name="mode" value="${framework.graph.enabled}"></property>
+	</bean>
+
+	<bean id="datapodServiceImpl" class="com.inferyx.framework.service.DatapodServiceImpl"></bean>
+	<bean id="relationServiceImpl" class="com.inferyx.framework.service.RelationServiceImpl"></bean>
+	<bean id="mapServiceImpl" class="com.inferyx.framework.service.MapServiceImpl"></bean>
+	<bean id="filterServiceImpl" class="com.inferyx.framework.service.FilterServiceImpl"></bean>
+	<bean id="formulaServiceImpl" class="com.inferyx.framework.service.FormulaServiceImpl"></bean>
+	<bean id="expressionServiceImpl" class="com.inferyx.framework.service.ExpressionServiceImpl"></bean>
+	<bean id="groupServiceImpl" class="com.inferyx.framework.service.GroupServiceImpl"></bean>
+	<bean id="applicationServiceImpl" class="com.inferyx.framework.service.ApplicationServiceImpl"></bean>
+	<bean id="privilegeServiceImpl" class="com.inferyx.framework.service.PrivilegeServiceImpl"></bean>
+	<bean id="roleServiceImpl" class="com.inferyx.framework.service.RoleServiceImpl"></bean>
+	<bean id="userServiceImpl" class="com.inferyx.framework.service.UserServiceImpl"></bean>
+	<bean id="metaDataServiceImpl" class="com.inferyx.framework.service.MetadataServiceImpl"></bean>
+	<bean id="sessionServiceImpl" class="com.inferyx.framework.service.SessionServiceImpl"></bean>
+	<bean id="dagExecServiceImpl" class="com.inferyx.framework.service.DagExecServiceImpl"></bean>
+	<bean id="vizexecServiceImpl" class="com.inferyx.framework.service.VizExecServiceImpl"></bean>
+	<bean id="vizpodServiceImpl" class="com.inferyx.framework.service.VizpodServiceImpl"></bean>
+	<bean id="datasetServiceImpl" class="com.inferyx.framework.service.DatasetServiceImpl"></bean>
+	<bean id="dimensionServiceImpl" class="com.inferyx.framework.service.DimensionServiceImpl"></bean>
+	<bean id="dagServiceImpl" class="com.inferyx.framework.service.DagServiceImpl"></bean>
+	<!-- <bean id="securityServiceImpl" class="com.inferyx.framework.service.SecurityServiceImpl"></bean> -->
+	<bean id="conditionServiceImpl" class="com.inferyx.framework.service.ConditionServiceImpl"></bean>
+	<bean id="dataStoreServiceImpl" class="com.inferyx.framework.service.DataStoreServiceImpl"></bean>
+	<bean id="datasetViewServiceImpl" class="com.inferyx.framework.service.DatasetViewServiceImpl"></bean>
+	<bean id="dashboardViewServiceImpl" class="com.inferyx.framework.service.DashboardViewServiceImpl"></bean>
+	<bean id="loadServiceImpl" class="com.inferyx.framework.service.LoadServiceImpl"></bean>
+	<bean id="dashboardServiceImpl" class="com.inferyx.framework.service.DashboardServiceImpl"></bean>
+	<bean id="dataQualServiceImpl" class="com.inferyx.framework.service.DataQualServiceImpl"></bean>
+	<bean id="dataQualGroupServiceImpl" class="com.inferyx.framework.service.DataQualGroupServiceImpl"></bean>
+	<bean id="dataQualExecServiceImpl" class="com.inferyx.framework.service.DataQualExecServiceImpl"></bean>
+	<bean id="dataQualGroupExecServiceImpl" class="com.inferyx.framework.service.DataQualGroupExecServiceImpl"></bean>
+	<bean id="dqViewServiceImpl" class="com.inferyx.framework.service.DQViewServiceImpl"></bean>
+	<bean id="ruleServiceImpl" class="com.inferyx.framework.service.RuleServiceImpl"></bean>
+	<bean id="ruleGroupServiceImpl" class="com.inferyx.framework.service.RuleGroupServiceImpl"></bean>
+	<bean id="functionServiceImpl" class="com.inferyx.framework.service.FunctionServiceImpl"></bean>
+	<bean id="mapExecServiceImpl" class="com.inferyx.framework.service.MapExecServiceImpl"></bean>
+	<bean id="loadExecServiceImpl" class="com.inferyx.framework.service.LoadExecServiceImpl"></bean>
+	<bean id="datasourceServiceImpl" class="com.inferyx.framework.service.DatasourceServiceImpl"></bean>
+	<bean id="ruleExecServiceImpl" class="com.inferyx.framework.service.RuleExecServiceImpl"></bean>
+	<bean id="profileServiceImpl" class="com.inferyx.framework.service.ProfileServiceImpl"></bean>
+	<bean id="profileGroupServiceImpl" class="com.inferyx.framework.service.ProfileGroupServiceImpl"></bean>
+	<bean id="profileExecServiceImpl" class="com.inferyx.framework.service.ProfileExecServiceImpl"></bean>
+	<bean id="algorithmServiceImpl" class="com.inferyx.framework.service.AlgorithmServiceImpl"></bean>
+	<bean id="modelServiceImpl" class="com.inferyx.framework.service.ModelServiceImpl"></bean>
+	<bean id="commonServiceImpl" class="com.inferyx.framework.service.CommonServiceImpl"/>
+	<bean id="exportServiceImpl" class="com.inferyx.framework.service.ExportServiceImpl"/>
+	<bean id="importServiceImpl" class="com.inferyx.framework.service.ImportServiceImpl"/>
+	<bean id="messageServiceImpl" class="com.inferyx.framework.service.MessageServiceImpl"/>
+	<bean id="sessionContext" class="com.inferyx.framework.domain.SessionContext"/>
+	<bean id="logServiceImpl" class="com.inferyx.framework.service.LogServiceImpl"/>
+	<bean id="systemServiceImpl" class="com.inferyx.framework.service.SystemServiceImpl"/>
+	<bean id="dataFrameService" class="com.inferyx.framework.service.DataFrameService"/>
+	<bean id="downloadExec" class="com.inferyx.framework.domain.DownloadExec"/>
+	<bean id="uploadExec" class="com.inferyx.framework.domain.UploadExec"/>
+	
+	
+	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
+	<bean id="impalaExecutor" class="com.inferyx.framework.executor.ImpalaExecutor"/>
+	<bean id="impalaRegister" class="com.inferyx.framework.register.ImpalaRegister"/>
+	<bean id="impalaWriter" class="com.inferyx.framework.writer.ImpalaWriter"/>
+	<bean id="impalaReader" class="com.inferyx.framework.reader.ImpalaReader"/>
+	
+	<bean id="oracleConnector" class="com.inferyx.framework.connector.OracleConnector"/>
+	<bean id="oracleExecutor" class="com.inferyx.framework.executor.OracleExecutor"/>
+	<bean id="oracleWriter" class="com.inferyx.framework.writer.OracleWriter"/>
+	<bean id="oracleReader" class="com.inferyx.framework.reader.OracleReader"/>
+	<bean id="oracleRegister" class="com.inferyx.framework.register.OracleRegister"/>
+	
+	<bean id="mySqlConnector" class="com.inferyx.framework.connector.MySqlConnector"/>
+	<bean id="mySqlExecutor" class="com.inferyx.framework.executor.MySqlExecutor"/>
+	<bean id="mySqlWriter" class="com.inferyx.framework.writer.MySqlWriter"/>
+	<bean id="mySqlReader" class="com.inferyx.framework.reader.MySqlReader"/>
+	<bean id="mySqlRegister" class="com.inferyx.framework.register.MySqlRegister"/>
+	
+	<bean id="hiveConnector" class="com.inferyx.framework.connector.HiveConnector"/>
+	<bean id="hiveExecutor" class="com.inferyx.framework.executor.HiveExecutor"/>
+	<bean id="hiveWriter" class="com.inferyx.framework.writer.HiveWriter"/>
+	<bean id="hiveReader" class="com.inferyx.framework.reader.HiveReader"/>
+	<bean id="hiveRegister" class="com.inferyx.framework.register.HiveRegister"/> 
+	
+	<bean id="sparkExecutor" class="com.inferyx.framework.executor.SparkExecutor"/>
+	
+	<bean id="rConnector" class="com.inferyx.framework.connector.RConnector"/>
+	<bean id="rExecutor" class="com.inferyx.framework.executor.RExecutor"/>
+	
+	<bean id="pythonConnector" class="com.inferyx.framework.connector.PythonConnector"/>
+	<bean id="pythonExecutor" class="com.inferyx.framework.executor.PythonExecutor"/>
+	
+	<!-- AOP beans mapping -->	
+	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>
+	<!--<bean id="exceptionHandlingAspect" class="com.inferyx.framework.aspect.ControllerValidation"/> -->
+	<bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator"/> 
+	
+	<bean id="runBaseRuleService" class="com.inferyx.framework.service.RunBaseRuleService"/>
+	
+	<bean id="graphController" class="com.inferyx.framework.controller.GraphController">
+		<property name="graphRegister" ref="registerGraph"></property>
+	</bean>
+
+	<bean id="registerGraph" class="com.inferyx.framework.register.GraphRegister">
+		<property name="graphFlag" ref="graphFlag" />
+		<property name="javaSparkContext" ref="javaSparkContext" />
+		<!-- <property name="hiveContext" ref="hiveContext" /> -->
+	</bean>
+</beans>
