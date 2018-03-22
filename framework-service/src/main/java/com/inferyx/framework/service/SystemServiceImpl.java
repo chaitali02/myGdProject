@@ -4,18 +4,15 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,12 +26,10 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Role;
-import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Thread;
 import com.inferyx.framework.domain.User;
-import com.inferyx.framework.security.SessionCounter;
 
 import shaded.parquet.org.codehaus.jackson.JsonGenerationException;
 import shaded.parquet.org.codehaus.jackson.map.JsonMappingException;
@@ -112,7 +107,7 @@ public class SystemServiceImpl {
 		}else
 			return new ArrayList<>();
 	}
-	public boolean killSession(String sessionId) throws JsonProcessingException, JSONException, ParseException {
+	/*public boolean killSession(String sessionId) throws JsonProcessingException, JSONException, ParseException {
 		//boolean isInvalidated = SessionCounter.invalidateSession(sessionId);
 		if(!StringUtils.isBlank(sessionId) && sessionId != null) {
 			boolean isUpdated = expireSession(sessionId);
@@ -143,7 +138,7 @@ public class SystemServiceImpl {
 				logger.info("Session already invalidated......."); return false;
 		}else
 			logger.info("Meta type \"Session\" instance is null......."); return false;
-	}
+	}*/
 	public String getRole() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String role = null;
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -498,4 +493,5 @@ public class SystemServiceImpl {
 		}
 		return count;
 	}
+	
 }

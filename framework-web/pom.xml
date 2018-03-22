@@ -8,11 +8,16 @@
   <artifactId>framework-web</artifactId>
   <packaging>war</packaging>
   <dependencies>
-  	<dependency>
+  <dependency>
+  		<groupId>com.inferyx</groupId>
+  		<artifactId>framework-service</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<!-- <dependency>
   		<groupId>com.inferyx</groupId>
   		<artifactId>framework-livy</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
+  	</dependency> -->
   </dependencies>
   <build>
   <finalName>framework</finalName>

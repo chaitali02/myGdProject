@@ -67,7 +67,7 @@ public class ParquetReader implements IReader
 			dfmh.setDataframe(df);
 			dfmh.setTableName(tableName);
 		}catch (Exception e) {
-			//e.printStackTrace();
+//			e.printStackTrace();
 			String errorMessage = e.getMessage();
 			if(errorMessage.contains("Path does not exist:")) {
 				ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
@@ -107,7 +107,7 @@ public class ParquetReader implements IReader
 				} else
 					logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
 				throw new IOException("File path does not exist.");
-			}
+			} 
 			}
 		
 		return dfmh;

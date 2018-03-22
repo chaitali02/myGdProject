@@ -167,9 +167,9 @@
 	</bean>
 
 	<!-- Initialize Hive Context scope="request" -->
-	<bean id="hiveContext" class="org.apache.spark.sql.hive.HiveContext">
+	<!-- <bean id="hiveContext" class="org.apache.spark.sql.hive.HiveContext">
 		<constructor-arg ref="sparkContext" />
-	</bean>
+	</bean> -->
 	
 	<!-- Initialize Spark Session scope="request" -->
 	<bean id="sparkSession" class="org.apache.spark.sql.SparkSession">

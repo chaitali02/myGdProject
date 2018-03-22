@@ -246,11 +246,6 @@ public class CommonController<T> {
 		return objectWriter.writeValueAsString(object);
 	}
 	
-	@RequestMapping(value="session/invalidate", method = RequestMethod.GET)
-    public @ResponseBody String invalidateSession(){
-		return commonServiceImpl.invalidateSession();
-    }
-	
 	@RequestMapping(value = "/upload", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
 	public @ResponseBody String upload(@RequestParam("file") MultipartFile file,
 									   @RequestParam(value = "extension") String extension,
