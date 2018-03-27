@@ -2,6 +2,7 @@ package com.inferyx.framework.batch;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
@@ -11,9 +12,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.DagStatusHolder;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DagServiceImpl;
 import com.inferyx.framework.service.FrameworkThreadServiceImpl;
 import com.inferyx.framework.service.RegisterService;
@@ -33,6 +36,8 @@ public class DagRunner {
 		DagStatusHolder dagStatusHolder = null;
 		RegisterService registerService = batchContext.getBean(RegisterService.class);
 		FrameworkThreadServiceImpl frameworkThreadServiceImpl = batchContext.getBean(FrameworkThreadServiceImpl.class);
+		List<BaseEntity> objectList = null;
+		CommonServiceImpl commonServiceImpl = batchContext.getBean(CommonServiceImpl.class);
 		if (args == null || args.length == 0) {
 			return;
 		}
@@ -41,13 +46,67 @@ public class DagRunner {
 						  writeSDOutput(metaIdentifierHolder);
 						  break;
 		case "--STATUS" : dagStatusHolder = getStatus(args, registerService, frameworkThreadServiceImpl, dagStatusHolder);
-		  				writeSDOutput(dagStatusHolder);
-						break;
+		  			      writeSDOutput(dagStatusHolder);
+						  break;
+		case "--LIST"   : objectList = list(args, commonServiceImpl, frameworkThreadServiceImpl);
+						  writeSDOutput(objectList);
+						  break;
 		default : logger.info(usageInfo());
 		}
 		
 	}
 	
+	
+	private static List<BaseEntity> list(String args[], 
+										CommonServiceImpl commonServiceImpl, 
+										FrameworkThreadServiceImpl frameworkThreadServiceImpl ) throws JSONException, ParseException, IOException {
+		
+		String userName = null;
+		String type = null;
+		List<BaseEntity> objectList = null;
+		for (int i = 0; i < args.length; i++) {
+			switch (args[i]) {
+			case "--USER_NAME" : 
+				if (args.length < i) {
+					logger.info(dagSubmitUsageInfo());
+					return null;
+				}
+				userName = args[i+1];
+				frameworkThreadServiceImpl.setSession(userName);
+				i++;
+				break;
+			case "--TYPE" : 
+				if (args.length < i) {
+					logger.info(dagSubmitUsageInfo());
+					return null;
+				}
+				type = args[i+1];
+				i++;
+				break;
+			default : 
+				break; 
+			}
+		}
+		try {
+			objectList = commonServiceImpl.getAllLatest(type, "Y");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return objectList;
+	}
+	
+	/**
+	 * Status API. To be accessed with --STATUS option
+	 * @param args
+	 * @param registerService
+	 * @param frameworkThreadServiceImpl
+	 * @param dagStatusHolder
+	 * @return
+	 * @throws JSONException
+	 * @throws ParseException
+	 * @throws IOException
+	 */
 	private static DagStatusHolder getStatus(String args[], 
 											RegisterService registerService, 
 											FrameworkThreadServiceImpl frameworkThreadServiceImpl, 
@@ -107,6 +166,34 @@ public class DagRunner {
 		mapper.writeValue(System.out, dagStatusHolder);
 	}
 	
+	private static void writeSDOutput(List<BaseEntity> objectList) throws JsonGenerationException, JsonMappingException, IOException {
+		/*ObjectMapper mapper = new ObjectMapper();
+		mapper.writeValue(System.out, objectList);*/
+		if (objectList == null || objectList.isEmpty()) {
+			return;
+		}
+		logger.info("\n\n\n\n");
+		logger.info(new String(new char[120]).replace("\0", "-"));
+		logger.info(String.format(" | %30s | %30s | %30s | %15s |", " ID ", " NAME ", " UUID ", " VERSION "));
+		logger.info(new String(new char[120]).replace("\0", "-"));
+		for (BaseEntity baseEntity : objectList) {
+			logger.info(String.format(" | %30s | %30s | %30s | %15s |", baseEntity.getId(), baseEntity.getName(), baseEntity.getUuid(), baseEntity.getVersion()));
+		}
+		logger.info(new String(new char[120]).replace("\0", "-"));
+		logger.info("\n\n\n\n");
+	}
+	
+	/**
+	 * Submit API. To be accessed with --SUBMIT option
+	 * @param args
+	 * @param dagServiceImpl
+	 * @param frameworkThreadServiceImpl
+	 * @param metaIdentifierHolder
+	 * @return
+	 * @throws JSONException
+	 * @throws ParseException
+	 * @throws IOException
+	 */
 	private static MetaIdentifierHolder submitDag(String args[], 
 													DagServiceImpl dagServiceImpl, 
 													FrameworkThreadServiceImpl frameworkThreadServiceImpl, 
@@ -179,6 +266,10 @@ public class DagRunner {
 	
 	private static String dagSubmitUsageInfo() {
 		return "Usage: --SUBMIT --UUID <uuid> --VERSION <version> [--EXECPARAMS <execParams>] --METATYPE <metaType> --RUNMODE <runMode> [--APP_UUID <app uuid>] --USER_NAME <user name> ";
+	}
+	
+	private static String dagListUsageInfo() {
+		return "Usage: --LIST --TYPE <type> --USER_NAME <user name> ";
 	}
 
 	private static String usageInfo() {
