@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -38,18 +39,23 @@ public class DagRunner {
 		FrameworkThreadServiceImpl frameworkThreadServiceImpl = batchContext.getBean(FrameworkThreadServiceImpl.class);
 		List<BaseEntity> objectList = null;
 		CommonServiceImpl commonServiceImpl = batchContext.getBean(CommonServiceImpl.class);
+		DagVisitorFactory dagVisitorFactory = batchContext.getBean(DagVisitorFactory.class);
+		DagVisitor dagVisitor =  dagVisitorFactory.getInstance("PRETTY");
 		if (args == null || args.length == 0) {
 			return;
 		}
 		switch(args[0]) {
 		case "--SUBMIT" : metaIdentifierHolder = submitDag(args, dagServiceImpl, frameworkThreadServiceImpl, metaIdentifierHolder);
-						  writeSDOutput(metaIdentifierHolder);
+//						  writeSDOutput(metaIdentifierHolder);
+						  dagVisitor.visit(metaIdentifierHolder);
 						  break;
 		case "--STATUS" : dagStatusHolder = getStatus(args, registerService, frameworkThreadServiceImpl, dagStatusHolder);
-		  			      writeSDOutput(dagStatusHolder);
+//		  			      writeSDOutput(dagStatusHolder);
+						  dagVisitor.visit(dagStatusHolder);
 						  break;
 		case "--LIST"   : objectList = list(args, commonServiceImpl, frameworkThreadServiceImpl);
-						  writeSDOutput(objectList);
+//						  writeSDOutput(objectList);
+						  dagVisitor.visit(objectList);
 						  break;
 		default : logger.info(usageInfo());
 		}
@@ -156,7 +162,7 @@ public class DagRunner {
 	}
 	
 	
-	private static void writeSDOutput(MetaIdentifierHolder metaIdentifierHolder) throws JsonGenerationException, JsonMappingException, IOException {
+	/*private static void writeSDOutput(MetaIdentifierHolder metaIdentifierHolder) throws JsonGenerationException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(System.out, metaIdentifierHolder);
 	}
@@ -167,8 +173,8 @@ public class DagRunner {
 	}
 	
 	private static void writeSDOutput(List<BaseEntity> objectList) throws JsonGenerationException, JsonMappingException, IOException {
-		/*ObjectMapper mapper = new ObjectMapper();
-		mapper.writeValue(System.out, objectList);*/
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.writeValue(System.out, objectList);
 		if (objectList == null || objectList.isEmpty()) {
 			return;
 		}
@@ -181,7 +187,7 @@ public class DagRunner {
 		}
 		logger.info(new String(new char[120]).replace("\0", "-"));
 		logger.info("\n\n\n\n");
-	}
+	}*/
 	
 	/**
 	 * Submit API. To be accessed with --SUBMIT option
