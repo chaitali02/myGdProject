@@ -6,11 +6,15 @@ package com.inferyx.framework.batch;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.DagStatusHolder;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.StageStatusHolder;
+import com.inferyx.framework.domain.TaskStatusHolder;
 
 /**
  * @author joy
@@ -33,7 +37,13 @@ public class PrettyPrintVisitor implements DagVisitor {
 	 */
 	@Override
 	public String visit(MetaIdentifierHolder metaIdentifierHolder) {
-		// TODO Auto-generated method stub
+		if (metaIdentifierHolder == null ) {
+			return "No data to write";
+		}
+		logger.info("\n\n\n\n");
+		logger.info("UUID    : " + metaIdentifierHolder.getRef().getUuid());
+		logger.info("VERSION : " + metaIdentifierHolder.getRef().getVersion());
+		logger.info("TYPE : " + metaIdentifierHolder.getRef().getType());
 		return null;
 	}
 
@@ -56,14 +66,32 @@ public class PrettyPrintVisitor implements DagVisitor {
 		logger.info("\n\n\n\n");
 		return "Data Written";
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.batch.DagVisitor#visit(com.inferyx.framework.domain.DagStatusHolder)
 	 */
 	@Override
 	public String visit(DagStatusHolder dagStatusHolder) {
-		// TODO Auto-generated method stub
-		return null;
+		if (dagStatusHolder == null) {
+			return "No data to write";
+		}
+		logger.info("\n\n\n\n");
+		logger.info(new String(new char[120]).replace("\0", "-"));
+		logger.info(String.format(" | %30s | %30s | %30s | ", " TYPE ", " ID ", " STATUS "));
+		logger.info(new String(new char[120]).replace("\0", "-"));
+		logger.info(String.format(" | %30s | %30s | %30s | ", "DAG", dagStatusHolder.getDependsOn().getRef().getUuid(), Helper.getLatestStatus(dagStatusHolder.getStatus()).getStage().displayName()));
+		// Log status for stages and tasks
+		for (String stage : dagStatusHolder.getStages().keySet()) {
+			StageStatusHolder stageStatusHolder = dagStatusHolder.getStages().get(stage);
+			logger.info(String.format(" | %30s | %30s | %30s | ", "STAGE", stageStatusHolder.getStageId(), Helper.getLatestStatus(stageStatusHolder.getStatus()).getStage().displayName()));
+			for (String task : stageStatusHolder.getTasks().keySet()) {
+				TaskStatusHolder taskStatusHolder = stageStatusHolder.getTasks().get(task);
+				logger.info(String.format(" | %30s | %30s | %30s | ", "TASK", taskStatusHolder.getTaskId(), Helper.getLatestStatus(taskStatusHolder.getStatus()).getStage().displayName()));
+			}
+		}
+		logger.info(new String(new char[120]).replace("\0", "-"));
+		logger.info("\n\n\n\n");
+		return "Data Written";
 	}
 
 }

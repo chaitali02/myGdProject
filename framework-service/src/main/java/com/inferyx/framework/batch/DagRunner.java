@@ -40,10 +40,20 @@ public class DagRunner {
 		List<BaseEntity> objectList = null;
 		CommonServiceImpl commonServiceImpl = batchContext.getBean(CommonServiceImpl.class);
 		DagVisitorFactory dagVisitorFactory = batchContext.getBean(DagVisitorFactory.class);
-		DagVisitor dagVisitor =  dagVisitorFactory.getInstance("PRETTY");
+		DagVisitor dagVisitor =  null;
 		if (args == null || args.length == 0) {
 			return;
 		}
+		
+		switch(args[1]) {
+		case "--PRETTY" : dagVisitor = dagVisitorFactory.getInstance("PRETTY");
+							break;
+		case "--JSON"   : dagVisitor = dagVisitorFactory.getInstance("JSON");
+							break;
+		default         : dagVisitor = dagVisitorFactory.getInstance("JSON");
+							break;
+		}
+		
 		switch(args[0]) {
 		case "--SUBMIT" : metaIdentifierHolder = submitDag(args, dagServiceImpl, frameworkThreadServiceImpl, metaIdentifierHolder);
 //						  writeSDOutput(metaIdentifierHolder);
@@ -266,20 +276,21 @@ public class DagRunner {
 		return metaIdentifierHolder;
 	}
 	
-	private static String dagStatusUsageInfo() {
-		return "Usage: --STATUS --UUID <uuid> [--APP_UUID <app uuid>] --USER_NAME <user name> ";
-	}
 	
 	private static String dagSubmitUsageInfo() {
-		return "Usage: --SUBMIT --UUID <uuid> --VERSION <version> [--EXECPARAMS <execParams>] --METATYPE <metaType> --RUNMODE <runMode> [--APP_UUID <app uuid>] --USER_NAME <user name> ";
+		return "Usage: --SUBMIT --JSON/--PRETTY --UUID <uuid> --VERSION <version> [--EXECPARAMS <execParams>] --METATYPE <metaType> --RUNMODE <runMode> [--APP_UUID <app uuid>] --USER_NAME <user name> ";
+	}
+	
+	private static String dagStatusUsageInfo() {
+		return "Usage: --STATUS --JSON/--PRETTY --UUID <uuid> [--APP_UUID <app uuid>] --USER_NAME <user name> ";
 	}
 	
 	private static String dagListUsageInfo() {
-		return "Usage: --LIST --TYPE <type> --USER_NAME <user name> ";
+		return "Usage: --LIST --JSON/--PRETTY --TYPE <type> --USER_NAME <user name> ";
 	}
 
 	private static String usageInfo() {
-		return "Usage: --SUBMIT/--LIST/--STATUS [options] ";
+		return "Usage: --SUBMIT/--LIST/--STATUS --JSON/--PRETTY [options] ";
 	}
 	
 }
