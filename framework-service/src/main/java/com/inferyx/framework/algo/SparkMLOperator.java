@@ -12,6 +12,8 @@ import org.apache.spark.ml.clustering.KMeansModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.ExecParams;
@@ -21,6 +23,7 @@ import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.service.ParamListServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
+@Service
 public class SparkMLOperator implements IAlgorithm {
 	
 	private ParamSetServiceImpl paramSetServiceImpl;
