@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
@@ -26,6 +27,7 @@ import com.inferyx.framework.domain.User;
  * @author Ganesh
  *
  */
+@Service
 public class ReconExecServiceImpl extends BaseRuleExecTemplate {
 	
 	@Autowired

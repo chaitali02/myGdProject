@@ -5,33 +5,24 @@
  */
 package com.inferyx.framework.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroup;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
-import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconGroupExec;
-import com.inferyx.framework.domain.RuleGroupExec;
-import com.inferyx.framework.domain.Status;
 
 /**
  * @author Ganesh
  *
  */
+@Service
 public class ReconGroupServiceImpl extends RuleGroupTemplate {
 
 	public Object getMetaIdByExecId(String execUuid, String execVersion) throws JsonProcessingException {

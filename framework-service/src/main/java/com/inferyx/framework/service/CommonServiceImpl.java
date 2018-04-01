@@ -336,8 +336,6 @@ public class CommonServiceImpl <T> {
 	DataFrameService dataFrameService;
 	CustomLogger customLogger = new CustomLogger();
 	@Autowired
-	ServletContext context;
-	@Autowired
 	DownloadExec downloadExec;
 	@Autowired
 	UploadExec uploadExec;
@@ -348,8 +346,6 @@ public class CommonServiceImpl <T> {
 	IUploadDao iUploadDao;
 	@Autowired
 	protected ExecutorFactory execFactory;
-	@Autowired
-	PredictExec predictExec;
 	@Autowired
 	IPredictDao iPredictDao;
 	@Autowired
@@ -508,24 +504,6 @@ public class CommonServiceImpl <T> {
 	 */
 	public void setiPredictExecDao(IPredictExecDao iPredictExecDao) {
 		this.iPredictExecDao = iPredictExecDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the predictExec
-	 */
-	public PredictExec getPredictExec() {
-		return predictExec;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param predictExec the predictExec to set
-	 */
-	public void setPredictExec(PredictExec predictExec) {
-		this.predictExec = predictExec;
 	}
 
 	public IUploadDao getiUploadDao() {
@@ -2764,7 +2742,7 @@ public class CommonServiceImpl <T> {
             
             if (file.exists()) {
             	logger.info("File found.");
-                String mimeType = context.getMimeType(file.getPath());
+                String mimeType = null;//context.getMimeType(file.getPath());
  
                 if (mimeType == null) {
                     mimeType = "application/octet-stream";

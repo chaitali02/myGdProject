@@ -16,13 +16,8 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,15 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -71,8 +61,6 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Recon;
-import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -155,8 +143,6 @@ public class DataStoreServiceImpl {
 	Engine engine;
 	@Autowired
 	Helper helper;
-	@Autowired
-	ServletContext context;
 	@Autowired
 	private MessageServiceImpl messageServiceImpl;
 	

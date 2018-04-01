@@ -336,8 +336,6 @@ public class GraphRegister<T> {
 	@Autowired
 	IUploadDao iUploadDao;
 	@Autowired
-	PredictExec predictExec;
-	@Autowired
 	IPredictDao iPredictDao;
 	@Autowired
 	IPredictExecDao iPredictExecDao;
@@ -437,24 +435,6 @@ public class GraphRegister<T> {
 		this.iPredictExecDao = iPredictExecDao;
 	}
 
-	/**
-	 * @Ganesh
-	 *
-	 * @return the predictExec
-	 */
-	public PredictExec getPredictExec() {
-		return predictExec;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param predictExec the predictExec to set
-	 */
-	public void setPredictExec(PredictExec predictExec) {
-		this.predictExec = predictExec;
-	}	
-	
 	/**
 	 * @Ganesh
 	 *
