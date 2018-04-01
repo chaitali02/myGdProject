@@ -27,15 +27,15 @@ import com.inferyx.framework.service.SecurityServiceImpl;
 @Component
 public class HiveReader implements IReader
 {
-	Logger logger=Logger.getLogger(HiveReader.class);
+	static final Logger logger=Logger.getLogger(HiveReader.class);
+	
 	@Autowired
 	protected MetadataUtil daoRegister;
 	@Autowired
 	protected ExecutorFactory execFactory;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private SecurityServiceImpl securityServiceImpl;
+
 	@Override
 	public DataFrameHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource) throws IOException {
 		Dataset<Row> dataFrame = null;
@@ -46,7 +46,7 @@ public class HiveReader implements IReader
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			String filepath = datastore.getLocation();
 			String dbName = dataSource.getDbname();		
-			ResultSetHolder rsHolder = exec.executeSql("select * from "+dbName+"."+datapod.getName());
+			ResultSetHolder rsHolder = exec.executeSql("SELECT * FROM "+dbName+"."+datapod.getName());
 			dataFrame = rsHolder.getDataFrame();
 			
 			tableName = Helper.genTableName(filepath);		
@@ -54,7 +54,6 @@ public class HiveReader implements IReader
 			dataFrameHolder.setTableName(tableName);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | NullPointerException | ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 		return dataFrameHolder;		

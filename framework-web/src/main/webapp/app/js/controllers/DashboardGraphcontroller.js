@@ -173,8 +173,8 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 
   }
 
-	DahsboardSerivce.getAllLatest("dashboard").then(function(response){onSuccessGetAllLatest(response.data)});
-	var onSuccessGetAllLatest=function(response){
+	DahsboardSerivce.getAllLatestCompleteObjects("dashboard").then(function(response){onSuccessGetAllLatestCompleteObjects(response.data)});
+	var onSuccessGetAllLatestCompleteObjects=function(response){
 		if(response.length >0){
 			var dashbardarray=[];
 			var colorarray=["blue","green","purple"];
@@ -226,6 +226,7 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 //Start ShowDashboradController
 DatavisualizationModule.controller('ShowDashboradController2',function($location,$http,$filter,dagMetaDataService,$window,$timeout,$rootScope,$scope,$state,$stateParams,$q,NgTableParams,$sessionStorage,DahsboardSerivce) {
   $scope.showmap=true;
+  $scope.isApplyFilter=true
   $scope.datax=[];
   $scope.datacolumns=[];
   $scope.datapoints=[];
@@ -438,6 +439,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
 
   $scope.refreshDashboard=function(length){
     $scope.callGraph();
+    $scope.isApplyFilter=true;
     $scope.selectedAttributeValue=[]
     for(var i=0;i<length;i++){
       var defaultvalue={}
@@ -450,10 +452,13 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
 
 
   }
-
+  
+  $scope.onChange=function(){
+    $scope.isApplyFilter=false;
+  }
   $scope.onFilterChange=function(index){
-    console.log(JSON.stringify($scope.filterAttribureIdValues[index].dname))
-    console.log(JSON.stringify($scope.selectedAttributeValue))
+    // console.log(JSON.stringify($scope.filterAttribureIdValues[index].dname))
+    // console.log(JSON.stringify($scope.selectedAttributeValue))
     var count=0;
     $scope.filterListarray=[];
      for(var i=0;i<$scope.selectedAttributeValue.length;i++){
@@ -851,7 +856,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       var url = window.URL.createObjectURL(blob);
     
       linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download", uuid+".xlsx");
+      linkElement.setAttribute("download", uuid+".xls");
     
       var clickEvent = new MouseEvent("click", {
         "view": window,

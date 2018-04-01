@@ -1,23 +1,22 @@
-
 <div data-ng-controller="CreateAlgorithmController">
   <!-- BEGIN PAGE HEADER-->
   <div class="page-bar">
     <ul class="page-breadcrumb">
       <li>
-          <a ui-sref="home">Home</a>
-          <i class="fa fa-circle"></i>
-        </li>
-        <li>
-          <a  ui-sref="algorithm">{{$state.current.data.pageTitle}}</a>
-          <i class="fa fa-circle"></i>
-        </li>
-        <li>
-          <a ui-sref="algorithm">Algorithm</a>
-          <i class="fa fa-circle"></i>
-        </li>
-        <li>
-          <span>{{algorithmdata.name | strReplace:'_':' '|capitalize}}</span>
-        </li>
+        <a ui-sref="home">Home</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a ui-sref="algorithm">{{$state.current.data.pageTitle}}</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a ui-sref="algorithm">Algorithm</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <span>{{algorithmdata.name | strReplace:'_':' '|capitalize}}</span>
+      </li>
     </ul>
     <div class="page-toolbar">
       <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
@@ -25,203 +24,213 @@
         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
       </div>
     </div>
-  </div> <!-- END PAGE HEADER-->
+  </div><!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <!-- BEGIN MAIN CONTENT -->
-  <div class="row" >
+  
+  <div class="row">
     <div class="col-md-12">
-      <!-- BEGIN: ACCORDION DEMO -->
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{algorithmdata.name  | strReplace:'_':' '|capitalize}}
-            </div>
-            <div class="tools">
-              <a title="Edit" ng-disabled="isPrivlage" ng-class="(showalgorithm==true && isEdit==true)? 'currentpage':'notcurrentpage'"  data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(algorithmdata.uuid,algorithmdata.version)" ng-hide="isAdd" style="height:16px;">
-                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-              </a>
-                 <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showalgorithm==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-click="showview(algorithmdata.uuid,algorithmdata.version)" ng-hide="isAdd" style="height:16px;">
-                     <span class="glyphicon glyphicon-file" style="color:white;"></span>
-                 </a>
-              <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showalgorithm==false? 'currentpage':'notcurrentpage'" data-ng-click="showAlgorithmGraph(algorithmdata.uuid,algorithmdata.version)" style="height:14px;">
+            <i class="fa fa-gift"></i>{{algorithmdata.name | strReplace:'_':' '|capitalize}}
+          </div>
+          <div class="tools">
+            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showalgorithm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(algorithmdata.uuid,algorithmdata.version)"
+              ng-hide="isAdd" style="height:16px;">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showalgorithm==true && isEdit==false)? 'currentpage':'notcurrentpage'"
+              ng-click="showview(algorithmdata.uuid,algorithmdata.version)" ng-hide="isAdd" style="height:16px;">
+              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            </a>
+            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showalgorithm==false? 'currentpage':'notcurrentpage'"
+              data-ng-click="showAlgorithmGraph(algorithmdata.uuid,algorithmdata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
-              </a>
-              <a  title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
-                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                        </a>
-              <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="algorithm" style="height:14px;">
-                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-              </a>
+            </a>
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="algorithm" style="height:14px;">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+            </a>
+          </div>
+        </div>
+        <div class="portlet-body form">
+          <div class="form-body graph-body" ng-if="showgraphdiv">
+            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="algorithmdata.uuid" version="algorithm.defaultVersion.version">
             </div>
           </div>
-          <div class="portlet-body form">
-            <!-- BEGIN FORM-->
-            <div class="form-body graph-body" ng-if="showgraphdiv">
-              <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader"></i> -->
-              <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-<div class="spinner" id="graphloader">
+
+          <div class="form-body" data-ng-show="showalgorithm" style="padding-top:50px;">
+            <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitAlgorithm()">
+              
+              <div class="form-group" ng-show="algorithmdata.uuid">
+                <label class="col-md-3 control-label">UUID</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="algorithmdata.uuid">
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-md-3 control-label">Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="algorithmdata.name" required="">
+                </div>
+              </div>
+              
+              <div class="form-group" ng-show="algorithmdata.uuid">
+                <label class="col-md-3 control-label">Version</label>
+                <div class="col-md-6">
+                  <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion(algorithm.defaultVersion.uuid,algorithm.defaultVersion.version)"
+                    data-ng-model="algorithm.defaultVersion.version" ng-options="c.version as c.version for c in algorithm.versions">
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-group" ng-show="algorithmdata.uuid">
+                <label class="col-md-3 control-label">CreatedBy</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="true" ng-model="algorithmdata.createdBy.ref.name">
+                </div>
+              </div>
+
+              <div class="form-group" ng-show="algorithmdata.uuid">
+                <label class="col-md-3 control-label">CreatedOn</label>
+                <div class="col-md-6">
+                  <input type="text" ng-model="algorithmdata.createdOn" ng-disabled="true" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group taginput">
+                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                <div class="col-md-6">
+                  <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="algorithmdata.desc" rows="2" style="resize:none;"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="algorithmdata.active='Y'">
+                    <label class="btn btn-default" ng-model="algorithmdata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="algorithmdata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Save PMML</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="algorithmdata.savePmml='N'">
+                      <label class="btn btn-default" ng-model="algorithmdata.savePmml" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="algorithmdata.savePmml" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                    </div>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="algorithmdata.published='N'">
+                    <label class="btn btn-default" ng-model="algorithmdata.published" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                      uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="algorithmdata.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                      uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-md-3 control-label">Type
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selecttype" ng-options="r for r in types" required="">
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-md-3 control-label">Library
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectlibrary" ng-options="r for r in librarytypes" required="">
+                  </select>
+
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-md-3 control-label">Train Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" required="" ng-disabled="{{mode}}" ng-model="algorithmdata.trainName">
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-md-3 control-label">Model Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" required="" ng-disabled="{{mode}}" ng-model="algorithmdata.modelName">
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Label Required</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="algorithmdata.labelRequired='Y'">
+                    <label class="btn btn-default" ng-model="algorithmdata.labelRequired" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="algorithmdata.labelRequired" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-md-3 control-label">Parameter List
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <select class="form-control" required="" select2 name="version" ng-disabled="{{mode}}" data-ng-model="selectparamlist" ng-options="r as r.name for r in allparamlist | orderBy:'name' track by r.uuid ">
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-group" style="padding-top:10px;">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                  <a ui-sref="algorithm" class="btn btn-primary">Cancel</a>
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty ==true)?false:true">
+                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
                     <div class="bounce3"></div>
+                  </span>
                 </div>
-              <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="algorithmdata.uuid" version="algorithm.defaultVersion.version">
               </div>
-            </div>
 
-            <div class="form-body" data-ng-show="showalgorithm" style="padding-top:50px;">
-              <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitAlgorithm()">
-                <div class="form-group"  ng-show="algorithmdata.uuid">
-                  <label class="col-md-3 control-label">UUID</label>
-                  <div class="col-md-6">
-                    <input type="text" class="form-control" data-ng-disabled="true"  ng-model="algorithmdata.uuid" >
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-md-3 control-label">Name
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-6">
-                    <input type="text" class="form-control"  ng-disabled="{{mode}}"  ng-model="algorithmdata.name" required="">
-                  </div>
-                </div>
-                <div class="form-group"  ng-show="algorithmdata.uuid">
-                  <label class="col-md-3 control-label">Version</label>
-                  <div class="col-md-6">
-                    <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion(algorithm.defaultVersion.uuid,algorithm.defaultVersion.version)" data-ng-model="algorithm.defaultVersion.version" ng-options="c.version as c.version for c in algorithm.versions">
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group"  ng-show="algorithmdata.uuid">
-                  <label class="col-md-3 control-label">CreatedBy</label>
-                  <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="true"  ng-model="algorithmdata.createdBy.ref.name">
-                  </div>
-                </div>
-
-                <div class="form-group"  ng-show="algorithmdata.uuid">
-                  <label class="col-md-3 control-label">CreatedOn</label>
-                  <div class="col-md-6">
-                    <input type="text" ng-model="algorithmdata.createdOn"  ng-disabled="true" class="form-control">
-                  </div>
-                </div>
-
-                <div class="form-group taginput">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input>
-                  </div>
-                </div>
-
-
-                <div class="form-group">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                  <div class="col-md-6">
-                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="algorithmdata.desc" rows="2"  style="resize:none;"></textarea>
-                  </div>
-                </div>
-
-                <div class="form-group">
-			   			    <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-			   			    <div class="col-md-6 col-sm-6 col-xs-12">
-			   			      <div class="btn-group" ng-init="algorithmdata.active='Y'">
-			        			  <label class="btn btn-default" ng-model="algorithmdata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-			        			  <label class="btn btn-default" ng-model="algorithmdata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
-						        </div>
-			    		    </div>
-			          </div>
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="btn-group" ng-init="algorithmdata.published='N'">
-                      <label class="btn btn-default" ng-model="algorithmdata.published" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="algorithmdata.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 control-label">Type
-                      <span class="required" aria-required="true"> * </span>
-                    </label>
-                    <div class="col-md-6">
-                      <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selecttype" ng-options="r for r in types" required="">
-                      </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 control-label">Library
-                      <span class="required" aria-required="true"> * </span>
-                    </label>
-                    <div class="col-md-6">
-                       <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectlibrary" ng-options="r for r in librarytypes" required="">
-                      </select>
-
-                    </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-md-3 control-label">Train Name
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-6">
-                    <input type="text" class="form-control" required="" ng-disabled="{{mode}}" ng-model="algorithmdata.trainName">
-                  </div>
-                </div>
-                 <div class="form-group">
-                  <label class="col-md-3 control-label">Model Name
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-6">
-                    <input type="text" class="form-control" required="" ng-disabled="{{mode}}" ng-model="algorithmdata.modelName">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Label Required</label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="btn-group" ng-init="algorithmdata.labelRequired='Y'">
-                      <label class="btn btn-default" ng-model="algorithmdata.labelRequired" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="algorithmdata.labelRequired" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
-                    </div>
-                  </div>
-                </div>
-                 <div class="form-group">
-                  <label class="col-md-3 control-label">Parameter List
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-6">
-                    <select class="form-control" required="" select2 name="version"  ng-disabled="{{mode}}" data-ng-model="selectparamlist" ng-options="r as r.name for r in allparamlist | orderBy:'name' track by r.uuid ">
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group" style="padding-top:10px;">
-                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                    <a ui-sref="algorithm"class="btn btn-primary">Cancel</a>
-                    <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty ==true)?false:true">
-                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                      <div class="bounce1"></div>
-                      <div class="bounce2"></div>
-                      <div class="bounce3"></div>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- <div class="modal fade in" id="algorithmsave" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
-                    <div class="modal-dialog">
-                      <div class="modal-content rulemodel">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                          <h4 class="modal-title">Info</h4>
-                        </div>
-                        <div class="modal-body">Algorithm Saved Successfully</div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn green" data-dismiss="modal"  ng-disabled="{{mode}}" ng-click="okalgorithmsave()">OK</button>
-                        </div>
-                      </div>
-                  </div>
-                </div> -->
-              </form>
-            </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

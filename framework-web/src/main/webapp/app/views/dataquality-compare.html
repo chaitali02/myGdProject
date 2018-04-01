@@ -1,0 +1,267 @@
+<div class="dqcomparepage">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a ui-sref="home">Home</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a ui-sref="metadata({type:'map'})">{{$state.current.data.pageTitle}}</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a ui-sref="metadata({type:'map'})">Compare Results</a>
+            </li>
+        </ul>
+        <div class="page-toolbar">
+            <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                <i class="icon-calendar"></i>&nbsp;
+                <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+            </div>
+        </div>
+    </div>
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div data-ng-controller="DataQualityCompareController">
+        <br>
+        <div class="row" style="padding-top: 10px">
+            <div class="col-md-12">
+                <div class="portlet box green">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-magnifier"></i>Search Criteria</div>
+                        <div class="tools">
+                            <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refreshSearchCriteria(false)" data-original-title=""
+                                title="">
+                                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                            </a>
+                            <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                        </div>
+                    </div> <!--End portlet-title -->
+                    <div class="portlet-body">
+                        <form class="form-horizontal">
+
+                            <div class="row" style="padding-top:10px">
+                                <div class="col-md-12 col-lg-12" style="padding-left:5%;padding-right:0%;">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-6">Type</label>
+                                            <div class="col-md-9 col-sm-9 col-xs-6">
+                                                <label class="control-label" style="padding-right: 5%;">
+                                                    <input type="radio" data-ng-model="searchForm.type" ng-change="onChangeType(types[0].text)" value="{{types[0].text}}"> {{types[0].caption}}
+                                                </label>
+                                                <label class="control-label">
+                                                    <input type="radio" data-ng-model="searchForm.type" ng-change="onChangeType(types[1].text)" value="{{types[1].text}}"> {{types[1].caption}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-3 ">Start Date</label>
+                                            <div class="col-md-9 col-sm-9 col-xs-9  col-lg-7">
+                                                <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                                    <div class="input-group date">
+                                                        <span class="form-control">{{searchForm.startdate | date :'EEE MMM dd HH:mm:ss yyyy'}}</span>
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-calendar" style="color: #666;"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="searchForm.startdate" data-datetimepicker-config="{ dropdownSelector: '#start_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
+                                                    data-on-set-time="startDateOnSetTime();onChangeDate()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12" style="padding-left:5%;padding-right:0%;">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">Name</label>
+                                            <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
+                                                <select title="Name" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.selectedobj"
+                                                    ng-options="r as r.name for r in allname track by r.uuid" select2 ng-change="onChangeRule()">
+                                                    <option value="">-Select-</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">End Date</label>
+                                            <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
+                                                <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                                    <div class="input-group date">
+                                                        <span class="form-control">{{searchForm.enddate | date :'EEE MMM dd HH:mm:ss yyyy'}}</span>
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-calendar" style="color: #666;"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" appendTo="body">
+                                                    <datetimepicker data-ng-model="searchForm.enddate" data-datetimepicker-config="{ dropdownSelector: '#end_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
+                                                        data-on-set-time="startDateOnSetTime();onChangeDate()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12" style="padding-left:5%;padding-right:0%;">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-3"></label>
+                                            <div class="col-md-9 col-sm-9 col-xs-6">
+                                                <input type="submit" class="btn btn-success" value="Search" name="submit" ng-disabled="isSelect" ng-click="searchCriteria(true)">
+                                                <sapn class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-show="isInProgress">
+                                                    <div class="bounce1"></div>
+                                                    <div class="bounce2"></div>
+                                                    <div class="bounce3"></div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div><!--End portlet-body -->
+                </div><!--End portlet box green -->
+            </div><!--End Col-md-12-->
+        </div> <!--End row-->
+
+        <div class="row" style="padding-top: 10px">
+            <div class="col-md-12">
+                <div class="portlet box green">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class=""></i>Compare Results
+                        </div>
+                        <div class="tools">
+                            <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refreshCompareResult(false)" data-original-title=""
+                                title="">
+                                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                            </a>
+                            <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                        </div>
+                    </div>
+
+                    <div class="portlet-body">
+                        <div class="row form-horizontal" style="padding-top:10px">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="border-right: 1px solid #d4d4d4;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-2 col-sm-2 col-xs-2 col-lg-2" style="text-align:start">Source</label>
+                                                <div class="col-md-7 col-sm-7 col-xs-6 col-lg-7">
+                                                    <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectSoureDqexec"
+                                                        ng-options="r as (r.createdOn) for r in allSourceDqexec track by r.uuid"
+                                                        select2 ng-change="onChangeSourceDQexec()">
+                                                        <option value="">-Select-</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12" style="min-height:300px;">
+                                            <div ng-if="isSourceTableShow">
+                                                <div ui-grid="sourceGridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getSourceGridStyle()">
+                                                    <div class="nodatawatermark_results" ng-show="!sourceGridOptions.data.length" style="top:52%;">No data available</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6" style="margin-top:17px">
+                                                        Showing {{sourcePagination.to}} to {{sourcePagination.from}} of {{sourcePagination.totalItems}} records
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <ul uib-pagination items-per-page="sourcePagination.pageSize" total-items="sourcePagination.totalItems" ng-model="sourcePagination.currentPage"
+                                                            ng-change="onSourcepageChanged()" style="float:right;overflow:hidden;z-index:1;"
+                                                            max-size="sourcePagination.maxSize" class="pagination-md" boundary-links="true"
+                                                            previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                                            last-text="&raquo;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="spinner centercontent" ng-show="sourceShowProgress">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </div>
+                                            <div class="centercontent" style="color:blue;" ng-show="isSourceDataError">{{sourceDataMessage}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-2 col-sm-2 col-xs-2 col-lg-2" style="text-align:start">Target</label>
+                                                <div class="col-md-7 col-sm-7 col-xs-6 col-lg-7">
+                                                    <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectTargetDqexec"
+                                                        ng-options="r as (r.createdOn) for r in allTargetDqexec" select2 ng-change="onChangeTargetDqExec()">
+                                                        <option value="">-Select-</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12" style="min-height:200px;">
+                                            <div ng-if="isTargetTableShow">
+                                                <div ui-grid="targetGridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getTargetGridStyle()">
+                                                    <div class="nodatawatermark_results" ng-show="!targetGridOptions.data.length" style="top:52%;">No data available</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6" style="margin-top:17px">
+                                                        Showing {{targetPagination.to}} to {{targetPagination.from}} of {{targetPagination.totalItems}} records
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <ul uib-pagination items-per-page="targetPagination.pageSize" total-items="targetPagination.totalItems" ng-model="targetPagination.currentPage"
+                                                            ng-change="onTargetpageChanged()" style="float:right;overflow:hidden;z-index:1;"
+                                                            max-size="targetPagination.maxSize" class="pagination-md" boundary-links="true"
+                                                            previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                                            last-text="&raquo;">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="spinner centercontent" ng-show="targetShowProgress">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </div>
+                                            <div class="centercontent" style="color:blue;" ng-show="isTargetDataError">{{targetDataMessage}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+                    </div>
+                    <!--End portlet-body -->
+                </div>
+                <!--End portlet box green -->
+            </div>
+                <!--End Col-md-12-->
+            </div>
+            <!--End row-->
+
+
+
+
+    </div><!--End data-ng-controller-->
+</div><!--End dqcomparepage-->

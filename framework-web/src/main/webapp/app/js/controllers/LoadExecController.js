@@ -3,7 +3,7 @@
   JobMonitoringModule.controller('DetailLoadExecController', function($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService) {
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
-    $scope.showloadexec = true;
+    $scope.showExec = true;
 
     $scope.selectTitle = dagMetaDataService.elementDefs['loadexec'].caption;
     $scope.state = dagMetaDataService.elementDefs['loadexec'].listState + "({type:'" + dagMetaDataService.elementDefs['loadexec'].execType + "'})"
@@ -19,11 +19,10 @@
         $state.go($scope.statedetail.name, $scope.statedetail.params)
       }
     }
-    JobMonitoringService.getLatestByUuid($scope.uuid, "loadexec").then(function(response) {
-      onSuccess(response.data)
-    });
+
+    JobMonitoringService.getLatestByUuid($scope.uuid, "loadexec").then(function(response) {onSuccess(response.data) });
     var onSuccess = function(response) {
-      $scope.loadexecdata = response;
+      $scope.execData = response;
       var statusList = [];
       for (i = 0; i < response.statusList.length; i++) {
         d = $filter('date')(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
@@ -32,19 +31,15 @@
       }
       $scope.statusList = statusList
     }
-    $scope.showLoadGraph = function(uuid, version) {
-      $scope.showloadexec = false;
-      $scope.showgraph = false
-      $scope.graphDatastatusList = true
-      $scope.showgraphdiv = true;
 
+    $scope.showGraph = function(uuid, version) {
+      $scope.showExec = false;
+      $scope.showGraphDiv = true;
     }
 
-    $scope.showLoadExecPage = function() {
-      $scope.showloadexec = true
-      $scope.showgraph = false
-      $scope.graphDatastatusList = false
-      $scope.showgraphdiv = false;
+    $scope.showExecPage = function() {
+      $scope.showExec = true
+      $scope.showGraphDiv = false;
     }
 
 

@@ -9,12 +9,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -131,7 +133,7 @@ public class SecurityController {
 		MetaIdentifierHolder mih = securityServiceImpl.getRoleInfo();
 		String roleUuid = mih.getRef().getUuid();
 		List<RolePriv> rolePriveList = null;
-		if (StringUtils.isNotBlank(roleUuid))
+		if (!StringUtils.isBlank(roleUuid))
 			rolePriveList = privilegeServiceImpl.getRolePriv(roleUuid);
 		else {
 			logger.info("roleInfo not found. Using default value of analyst.");													

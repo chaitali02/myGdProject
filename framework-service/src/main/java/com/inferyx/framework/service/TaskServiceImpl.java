@@ -42,17 +42,26 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.Predict;
+import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.domain.ReconExec;
+import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.SessionContext;
+import com.inferyx.framework.domain.Simulate;
+import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 
@@ -117,9 +126,47 @@ public class TaskServiceImpl implements Callable<String> {
 	private String name;
 	private Mode runMode;
 	private SessionContext sessionContext;
+	private ReconServiceImpl reconServiceImpl;
+	private ReconGroupServiceImpl reconGroupServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(TaskServiceImpl.class);
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the reconServiceImpl
+	 */
+	public ReconServiceImpl getReconServiceImpl() {
+		return reconServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param reconServiceImpl the reconServiceImpl to set
+	 */
+	public void setReconServiceImpl(ReconServiceImpl reconServiceImpl) {
+		this.reconServiceImpl = reconServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the reconGroupServiceImpl
+	 */
+	public ReconGroupServiceImpl getReconGroupServiceImpl() {
+		return reconGroupServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param reconGroupServiceImpl the reconGroupServiceImpl to set
+	 */
+	public void setReconGroupServiceImpl(ReconGroupServiceImpl reconGroupServiceImpl) {
+		this.reconGroupServiceImpl = reconGroupServiceImpl;
+	}
+
 	/**
 	 * @Ganesh
 	 *
@@ -659,18 +706,75 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.model)) {
+		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.train)) {
 			try {
 				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
-				ModelExec modelExec = (ModelExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.modelExec.toString());
-				ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, modelExec.getDependsOn().getRef().getUuid(), modelExec.getDependsOn().getRef().getVersion());
-				modelServiceImpl.train(modelExec.getDependsOn().getRef().getUuid(), modelExec.getDependsOn().getRef().getVersion(), modelExec,execParams,paramMap);
+				TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.trainExec.toString());
+				Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
+				Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+				ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
+				modelServiceImpl.train(train, model, trainExec, execParams, paramMap);
+				if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+					throw new Exception();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;
 			}
-		}// End else
+		}else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.simulate)) {
+			try {
+				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
+				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
+				SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.simulateExec.toString());
+				Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateExec.getDependsOn().getRef().getUuid(), simulateExec.getDependsOn().getRef().getVersion(), MetaType.simulate.toString());
+				//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(), simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+				//ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
+				modelServiceImpl.simulate(simulate, execParams, simulateExec);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.predict)) {
+			try {
+				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
+				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
+				PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.predictExec.toString());
+				Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictExec.getDependsOn().getRef().getUuid(), predictExec.getDependsOn().getRef().getVersion(), MetaType.predict.toString());
+				//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+				//ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
+				modelServiceImpl.predict(predict, execParams, predictExec);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.recon)) {
+			logger.info("Going to reconServiceImpl.execute");
+			try {
+				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
+				ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.reconExec.toString());
+				reconServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, reconExec, null, null, runMode);
+				
+				if (Helper.getLatestStatus(reconExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.recongroup)) {
+			try {
+				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
+				ReconGroupExec reconGroupExec = (ReconGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.recongroupExec.toString());
+				reconGroupServiceImpl.execute(reconGroupExec.getDependsOn().getRef().getUuid(), reconGroupExec.getDependsOn().getRef().getVersion(), execParams, reconGroupExec, runMode);
+				if (Helper.getLatestStatus(reconGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		} 	// End else
 		return datapodTableName;
 	}// End executeTask
 

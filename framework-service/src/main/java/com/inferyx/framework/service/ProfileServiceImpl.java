@@ -580,7 +580,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 				MetaType.datapod.toString());
 		String attributeName = datapod.getAttributeName(Integer.parseInt(attributeId));
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 
 		Query query = new Query();
 		query.fields().include("uuid");
@@ -644,7 +644,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 					e.printStackTrace();
 				}
 
-				query2.addCriteria(Criteria.where("statusList.stage").in("Completed"));
+				query2.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
 				query2.addCriteria(Criteria.where("dependsOn.ref.uuid").is(profile.getUuid()));
 			} catch (NullPointerException e) {
 				e.printStackTrace();

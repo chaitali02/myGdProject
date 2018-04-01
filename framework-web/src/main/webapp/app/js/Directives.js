@@ -474,6 +474,7 @@ InferyxApp.directive('graphDirective', function(CommonService, dagMetaDataServic
 
         function getColorCode(d) {
            try {
+        	  
             var color=dagMetaDataService.elementDefs[d.nodeType.toLowerCase()].color
            } catch (e) {
         	 if(d.nodeType.toLowerCase().indexOf("from_base")!=-1){
@@ -1230,6 +1231,7 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
       $rootScope.refreshRowData = function() {
         $scope.searchCriteria();
       }
+      
       $scope.searchForm.newType = $scope.moduleType;
       if ($scope.noExec) {
         $scope.select = $scope.searchForm.newType;
@@ -1253,7 +1255,6 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
           "caption": "Rule Group"
         }];
         $scope.onChangeType = function(newType) {
-
           $scope.searchForm.newType = newType //dagMetaDataService.elementDefs[newType].name.replace(/\s/g, "") ;//newType
           if ($scope.noExec) {
 
@@ -1271,9 +1272,12 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
         }
       } else {
 
-        if($scope.moduleType !='vizexec'){
+        if($scope.moduleType !='vizexec' &&  $scope.moduleType !='downloadexec' && $scope.moduleType !='uploadexec'){
           $scope.temp = $scope.moduleType.split('exec')[0];
           $scope.searchForm.newType = $scope.temp;
+        }
+        else if($scope.moduleType =='downloadexec' || $scope.moduleType =='uploadexec'){
+          $scope.searchForm.newType= $scope.moduleType;
         }
         else{
           $scope.searchForm.newType="vizpod"
@@ -1416,7 +1420,7 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
         // console.log(startdate)
         // console.log(enddate)
         $scope.loading = true;
-        CommonService[$scope.noExec ? 'getBaseEntityByCriteria' : 'getBaseEntityStatusByCriteria']($scope.select, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '',$scope.searchForm.published || '', $scope.searchForm.status).then(function(response) {
+        CommonService[$scope.noExec ? 'getBaseEntityByCriteria' : 'getBaseEntityStatusByCriteria']($scope.select, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '',$scope.searchForm.published || '', $scope.searchForm.status || '').then(function(response) {
           onSuccess(response.data)
         },function error() {
           $scope.loading = false;
@@ -1519,3 +1523,15 @@ InferyxApp.directive('notification', function($timeout){
     }
   }
 });
+
+InferyxApp.directive("limitTo", [function() {
+  return {
+    restrict: "A",
+    link: function(scope, elem, attrs) {
+      var limit = parseInt(attrs.limitTo);
+      angular.element(elem).on("keypress", function(e) {
+        if (this.value.length == limit) e.preventDefault();
+      });
+    }
+  }
+}]);

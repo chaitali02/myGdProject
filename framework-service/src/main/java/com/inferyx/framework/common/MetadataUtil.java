@@ -98,6 +98,8 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroup;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.domain.Recon;
+import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
@@ -1148,6 +1150,25 @@ public class MetadataUtil {
 			}
 		}
 		
+		if(ref.getType() == MetaType.recon) {
+			if (key.getVersion() != null ) {
+				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.recon.toString());
+			} else {
+				Recon recon = (Recon) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.recon.toString());
+				ref.setVersion(recon.getVersion());
+				return recon;
+			}
+		}
+		
+		if(ref.getType() == MetaType.reconExec) {
+			if (key.getVersion() != null ) {
+				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.reconExec.toString());
+			} else {
+				ReconExec reconExec = (ReconExec) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.reconExec.toString());
+				ref.setVersion(reconExec.getVersion());
+				return reconExec;
+			}
+		}
 	//	logger.error("Meta not found");
 		return null;
 	}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -26,6 +28,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Role;
+import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Thread;
@@ -123,7 +126,7 @@ public class SystemServiceImpl {
 				logger.info("Unable to update Session object, aborting invalidated operation......."); return false;
 		}else
 			logger.info("Session ID is null, Session not invalidated......."); return false;
-	}
+	}*/
 	public boolean expireSession(String sessionId) throws JsonProcessingException, JSONException, ParseException {
 		Session session = sessionServiceImpl.findSessionBySessionId(sessionId);
 		if(session != null) {
@@ -138,7 +141,7 @@ public class SystemServiceImpl {
 				logger.info("Session already invalidated......."); return false;
 		}else
 			logger.info("Meta type \"Session\" instance is null......."); return false;
-	}*/
+	}
 	public String getRole() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String role = null;
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -493,5 +496,4 @@ public class SystemServiceImpl {
 		}
 		return count;
 	}
-	
 }

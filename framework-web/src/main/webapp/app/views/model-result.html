@@ -1,6 +1,26 @@
+<style>
+  .showClips .copyClip::after {
+    font-family: FontAwesome;
+    font-size: x-large;
+    content: "\f0c5";
+    right:35px;
+    position: absolute; 
+    top: 4px;
+    opacity:0;
+}
+
+.showClips .copyClip:hover:after{
+ opacity:1;
+}
+
+.showClips{
+padding: 20px 0 0;}
+
+
+</style>
 <div class="row" ng-controller="ResultModelController">
   <div class="col-md-12">
-    <!-- BEGIN PAGE HEADER-->
+  
     <div class="page-bar">
       <ul class="page-breadcrumb">
         <li>
@@ -8,153 +28,143 @@
           <i class="fa fa-circle"></i>
         </li>
         <li>
-
           <span>{{$state.current.data.pageTitle}}</span>
-
           <i class="fa fa-circle"></i>
         </li>
         <li>
-
           <span>Model Results</span>
-
         </li>
       </ul>
       <div class="page-toolbar">
         <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+       
           <i class="icon-calendar"></i>&nbsp;
           <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
         </div>
       </div>
     </div>
-    <!-- END PAGE HEADER-->
     <br>
 
-    <search-criteria module-type="'modelexec'" no-exec="false" ng-show="isMoldeSelect" on-submit="selectModel" data="data"></search-criteria>
-
-    <div class="portlet box green" ng-show="model">
+    <div class="portlet box green" ng-show="!isShowPMML">
       <div class="portlet-title">
         <div class="caption">
-          <i class="fa fa-cogs"></i>Model Exec
-        </div>
-        <div class="tools tool-custom">
-          <a title="Refresh" ng-click="refreshSearchResults()" data-toggle="tooltip" data-placement="top" tooltip>
-            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-          </a>
-          <a href="javascript:;" class="collapse" data-original-title="" style="height: 14px;" title=""> </a>
-        </div>
-      </div>
-      <div class="portlet-body">
-        <div class="row">
-          <div class="col-md-6 col-sm-6" >
-            <div id="datastoredatatable_filter" class="dataTables_filter">
-              <input style="width:15px !important;height:15px;margin:0 0 0;"  class="form-control input-sm input-small input-inline"  type="checkbox" ng-model="autorefresh" ng-change="autoRefreshOnChange()"/>
-              <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
-              <input style="width:55px !important;"  min="5" max="99"type="number"  class="form-control input-sm input-small input-inline"  ng-model="autorefreshcounter" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
-            </div>
-          </div>
-          <!-- <div class="col-md-6 col-sm-6">
-            <div class="dataTables_length" id="sample_1_length">
-               <label>Show
-                <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
-                </select>
-              </label>
-            </div>
-          </div> -->
-          <div class="col-md-6 col-sm-6">
-            <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
-              <label>Search:</label>
-              <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext" aria-controls="datastoredatatable">
-            </div>
-          </div>
-        </div>
-        <div>
-          <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns  ui-grid-auto-resize ng-style="getGridStyle()">
-           <div class="nodatawatermark" ng-show="!gridOptions.data.length">No data available</div>
-          </div>
-          <!-- <div class="row">
-            <div class="col-md-6" style="margin-top:17px">
-              Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
-            </div>
-            <div class="col-md-6">
-              <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage" ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="maxSize" class="pagination-md" boundary-link-numbers="true" rotate="false"></ul>
-            </div>
-          </div> -->
-        </div>
-      </div>
-    </div>
-    <!-- END SAMPLE TABLE PORTLET-->
-
-    <div class="portlet box green" ng-show="selectedmodelExecdata">
-      <div class="portlet-title">
-        <div class="caption">
-          <i class="fa fa-cogs"></i>Model Result
+          <i class="fa fa-cogs"></i>{{caption}} Result
         </div>
         <div class="tools">
-          <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="showModel()">
-                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-              </a>
-          <!-- <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip class="reload" ng-click="broadcastRefreshData()"  data-original-title="" title=""> </a>
-              <a href="javascript:;" class="collapse" data-original-title="" title=""> </a> -->
+         <a title="Download PMML" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
+            <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a title="Download" ng-click="downloadMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='predict'|| type=='simulate'">
+              <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+          <a title="Show PMML" ng-click="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
+            <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+          </a>     
+          <a  title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
+            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+          </a>
+          <!--<a href="javascript:;" class="collapse" data-original-title="" title=""> </a> -->
         </div>
       </div>
       <div class="portlet-body" style="min-heigth:100px;">
-        <div class="row">
-          <pre ng-bind="modelresult" style="margin:20px;min-height: 100px;white-space: pre-wrap"></pre>
-
-          <!-- <div class="col-md-12 col-sm-12">
-             			<div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
-             				<label>Search:</label>
-            		 		<input type="search" class="form-control input-sm input-small input-inline" placeholder="" ng-model="searchtext" aria-controls="datastoredatatable">
-             			</div>
-             		</div> -->
+        <div ng-if="type =='train'">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+              <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                <input style="width:15px !important;height:15px;margin:0 0 0;"  class="form-control input-sm input-small input-inline"  type="checkbox" ng-model="autoRefreshResult" ng-change="autoRefreshResultOnChange()"/>
+                <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
+                <input style="width:55px !important;"  min="5" max="99"type="number"  class="form-control input-sm input-small input-inline"  ng-model="autoRefreshCounterResult" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+              <pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>
+            </div>        
+          </div>
+       </div><!--End Train result-->
+       <div ng-if="type =='predict' || type == 'simulate'">
+          <div class="row" >
+            <div class="col-md-12 col-sm-12" ng-if="isTableShow">
+                <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                  <label>Search:</label>
+                  <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext" aria-controls="datastoredatatable">
+                </div>
+            </div>
+          
+            <div class="col-md-12" ng-if="isTableShow">
+              <div class="row">
+                <div class="col-md-12">
+                  <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">
+                    <div class="nodatawatermark_results" ng-show="!gridOptions.data.length" style="top:52%;">No data available</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:17px">
+                  Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
+                </div>
+                <div class="col-md-6">
+                  <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
+                    ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;"
+                    max-size="pagination.maxSize" class="pagination-md" boundary-links="true"
+                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class=" col-md-12">
+            <div class="spinner centercontent" ng-show="showProgress">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+            </div>
+            <div class="centercontent" style="color:blue;" ng-show="isDataError">{{dataMessage}}</div>
+          </div>
+          </div>
         </div>
-        <!-- <div ng-show="isData">
-         			<h3 style="font-size:20px;" >No Results Found</h3>
-      			</div> -->
-        <!-- <div class="form-body" ng-show="showprogress">
-               		<i class="fa fa-spinner fa-spin fa-3x fa-fw" style="display:block;margin:23px auto;"></i>
-
-      				<div style="margin-top:10px;display:block;overflow-x:auto;" ng-show="!showprogress">
-						<table ng-table-dynamic="tableParams with cols" class="row-border hover table table-striped table-bordered">
-        					<tr ng-repeat="row in $data | filter:searchtext">
-          						<td ng-repeat="col in $columns" sortable="'col.field'" style="width:120px" class="text-center" header-class="'text-center'">{{row[col.field]}}
-          						</td>
-        					</tr>
-      					</table>
-      				</div>
-    			</div> -->
       </div>
     </div>
-    <!-- END SAMPLE TABLE PORTLET-->
+
+    <div class="portlet box green" ng-show="isShowPMML">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="fa fa-cogs"></i>PMML Result
+          </div>
+          <div class="tools">  
+           <a title="Download PMML" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload">
+              <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+             
+            <a  title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="isShowPMML=false">
+                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+            </a>
+            <!--<a href="javascript:;" class="collapse" data-original-title="" title=""> </a> -->
+          </div>
+        </div>
+        <div class="portlet-body" style="min-heigth:100px;">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+              <div>
+                <div class="showClips" >
+                  <div id="" style="height:500px;overflow: auto;">
+                    <div class ="copyClip pull-right" title="copy" ngclipboard data-clipboard-text="{{pMMLResult}}"> </div>
+                    <div id="showPMML" style="height:500px;overflow: auto;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   </div>
 </div>
-<style>
-  .modeldatatable tr th:nth-child(2),
-  th:nth-child(3),
-  th:nth-child(4),
-  th:nth-child(5),
-  th:nth-child(6) {
-    text-align: center;
-  }
 
-  .modeldatatable tr td {
-    text-align: center;
-    vertical-align: middle;
-  }
 
-  .modeldatatable tr td:nth-child(3) {
-    text-align: left;
-    vertical-align: middle;
-  }
-
-  .modeldatatabletr td:nth-child(1) {
-    text-align: left;
-    padding-left: 10px;
-    vertical-align: middle;
-  }
-
-  .tags {
-    height: 40px !important;
-    overflow-y: scroll !important;
-  }
-</style>

@@ -103,7 +103,42 @@
             metajson.icon = "fa fa-flask"
             metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'loadExec'})";
             break;
-
+            case "downloadExec":
+            metajson.caption = dagMetaDataService.elementDefs[type].caption;
+            metajson.icon = "fa fa-download"
+            metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'loadExec'})";
+            break;
+            case "uploadExec":
+            metajson.caption = dagMetaDataService.elementDefs[type].caption;
+            metajson.icon = "fa fa-upload"
+            metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'loadExec'})";
+            break;
+            case "predictExec":
+            metajson.caption = dagMetaDataService.elementDefs[type].caption;
+            metajson.icon = "fa fa-flask"
+            metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'predictExec'})";
+            break;
+            case "simulateExec":
+          	metajson.caption = dagMetaDataService.elementDefs[type].caption;
+            metajson.icon = "fa fa-flask"
+            metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'simulateExec'})";
+            break;
+            case "trainExec":
+        	  metajson.caption = dagMetaDataService.elementDefs[type].caption;
+            metajson.icon = "fa fa-flask"
+            metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
+            break;
+            case "reconExec":
+        	  metajson.caption = dagMetaDataService.elementDefs[type].caption;
+            metajson.icon = "fa fa-compress"
+            metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
+            break;
+            case "recongroupExec":
+        	  metajson.caption = dagMetaDataService.elementDefs[type].caption;
+            metajson.icon = "fa fa-compress"
+            metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
+            break;
+            
         }
         metaarray[i] = metajson
       }//End For Loop

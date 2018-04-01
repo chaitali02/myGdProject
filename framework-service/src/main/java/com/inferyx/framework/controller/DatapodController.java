@@ -52,7 +52,7 @@ public class DatapodController {
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action,
 				@RequestParam(value="requestId") String requestId, 
-				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException
+				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
 	    		{
 			Mode runMode = Helper.getExecutionMode(mode);
 	    	return datastoreServiceImpl.getDatapodResults(dataStoreUUID, dataStoreVersion,format,offset,limit,response,rows,sortBy,order,requestId, runMode);

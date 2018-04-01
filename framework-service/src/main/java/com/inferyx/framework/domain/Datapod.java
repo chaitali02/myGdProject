@@ -15,13 +15,14 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="datapod")
-public class Datapod extends BaseEntity{
-	
-	//private String name;
-	
-	
+@Document(collection = "datapod")
+public class Datapod extends BaseEntity {
+
+	// private String name;
 	private MetaIdentifierHolder datasource;
+	private String cache;
+	private List<Attribute> attributes = new ArrayList<Attribute>();
+
 	public MetaIdentifierHolder getDatasource() {
 		return datasource;
 	}
@@ -30,26 +31,20 @@ public class Datapod extends BaseEntity{
 		this.datasource = datasource;
 	}
 
-	private String cache;
-	private List<Attribute> attributes = new ArrayList<Attribute>();
-	
-	/*public String getName() {
-	return name;
-	}
-	
-	public void setName(String name) {
-	this.name = name;
-	}*/
+	/*
+	 * public String getName() { return name; }
+	 * 
+	 * public void setName(String name) { this.name = name; }
+	 */
 
 	public List<Attribute> getAttributes() {
-	return attributes;
+		return attributes;
 	}
 
 	public void setAttributes(List<Attribute> attributes) {
-	this.attributes = attributes;
+		this.attributes = attributes;
 	}
 
-	
 	public String getCache() {
 		return cache;
 	}
@@ -60,19 +55,19 @@ public class Datapod extends BaseEntity{
 
 	public Attribute getAttribute(Integer attributeId) {
 
-		for(Attribute attr : getAttributes()) {
-			if(attr.getAttributeId().equals(attributeId)) {
+		for (Attribute attr : getAttributes()) {
+			if (attr.getAttributeId().equals(attributeId)) {
 				return attr;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public String getAttributeName(Integer attrId) {
 		return getAttribute(attrId).getName();
 	}
-	
+
 	public String sql(Integer attributeId) {
 		Attribute attr = getAttribute(attributeId);
 		return String.format("%s.%s", getName(), attr.getName());

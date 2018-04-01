@@ -84,19 +84,16 @@ AdminModule.controller('AdminSessionController', function($state,$stateParams,$r
 		var onGetLatestByUuid =function(response){
 			$scope.sessiondata=response;
 			var defaultversion={};
-
 			defaultversion.version=response.version;
     	   	defaultversion.uuid=response.uuid;
     	    $scope.session.defaultVersion=defaultversion;
     	    $scope.selectsessionType=response.type
-
-    	    	var status=[];
-    	    for(var j=0;j<response.status.length;j++)
-    	    	{
-    	    	status[j]=response.status[j].stage
+    	    var status=[];
+    	    for(var j=0;j<response.statusList.length;j++){
+    	    	status[j]=response.statusList[j].stage
     	        $scope.statussession=status;
 
-    	    	}
+    	    }
 			var tags=[];
 			if(response.tags!=null){
 			  	for(var i=0;i<response.tags.length;i++){

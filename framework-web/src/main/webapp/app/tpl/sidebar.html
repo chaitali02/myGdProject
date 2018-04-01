@@ -66,12 +66,19 @@
                 <span class="arrow"></span>
             </a>
             <ul class="sub-menu">
-                <li class="nav-item" data-ng-repeat="profiledatasubmenu in Profiledata.submenu | orderBy:'caption'" ng-click="deInitTabs()">
-                    <a ui-sref="{{profiledatasubmenu.name}}({type:profiledatasubmenu.type})" class="nav-link">
+                <li class="nav-item"  data-ng-repeat="profiledatasubmenu in Profiledata.submenu | orderBy:'caption'" ng-click="deInitTabs()">
+                    <a  ui-sref="{{profiledatasubmenu.name}}({type:profiledatasubmenu.type})" class="nav-link">
                         <span class="title">{{profiledatasubmenu.caption}}</span>
                          <span class="badge badge-success">{{metaStats[profiledatasubmenu.type].count}}</span>
                     </a>
                 </li>
+                <li class="nav-item" ng-click="deInitTabs()">
+                    <a  ui-sref="profilecompare({type:profileexec})" class="nav-link">
+                        <span class="title">Compare Results</span>
+                         <span class="badge badge-success"></span>
+                    </a>
+                </li>
+      
             </ul>
         </li>
 
@@ -88,6 +95,12 @@
                         <span class="title">{{dataqualitydatasubmenu.caption}}</span>
                         <span class="badge badge-success">{{metaStats[dataqualitydatasubmenu.type].count}}</span>
                      </a>
+                </li>
+                <li class="nav-item" ng-click="deInitTabs()">
+                    <a  ui-sref="dataqualitycompare({type:dqexec})" class="nav-link">
+                        <span class="title">Compare Results</span>
+                         <span class="badge badge-success"></span>
+                    </a>
                 </li>
             </ul>
         </li>
@@ -107,8 +120,24 @@
                      </a>
                 </li>
             </ul>
-
         </li>
+         <!--Data Reconcilation-->
+         <li class="nav-item">
+            <a href="#" class="nav-link nav-toggle">
+                <i class="{{Recondata.class}}"></i>
+                <span class="title">{{Recondata.caption}}</span>
+                <span class="arrow"></span>
+            </a>
+            <ul class="sub-menu">
+                <li class="nav-item"data-ng-repeat="ruledatasubmenu in Recondata.submenu | orderBy" ng-click="deInitTabs()">
+                    <a ui-sref="{{ruledatasubmenu.name}}" class="nav-link">
+                        <span class="title">{{ruledatasubmenu.caption}}</span>
+                        <span class="badge badge-success">{{metaStats[ruledatasubmenu.type].count}}</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        
        <!--BusinessRule Menu-->
         <li class="nav-item">
           <a href="#" class="nav-link nav-toggle">
@@ -123,10 +152,16 @@
                          <span class="badge badge-success">{{metaStats[ruledatasubmenu.type].count}}</span>
                     </a>
                 </li>
+                <li class="nav-item" ng-click="deInitTabs()">
+                    <a  ui-sref="rulecompare({type:ruleexec})" class="nav-link">
+                        <span class="title">Compare Results</span>
+                         <span class="badge badge-success"></span>
+                    </a>
+                </li>
             </ul>
 
         </li>
-
+       
         <!--DataScience Menu-->
         <li class="nav-item">
           <a href="#" class="nav-link nav-toggle">
@@ -135,7 +170,7 @@
                 <span class="arrow"></span>
             </a>
             <ul class="sub-menu">
-                <li class="nav-item" data-ng-repeat="datasciencesubmenu in Datascience.submenu | orderBy:'caption' | filter:searchtext"  ng-click="deInitTabs()"  >
+                <li class="nav-item" data-ng-repeat="datasciencesubmenu in Datascience.submenu | filter:searchtext"  ng-click="deInitTabs()"  >
                     <a ui-sref="{{datasciencesubmenu.name}}({type:datasciencesubmenu.type})" class="nav-link">
                         <span class="title">{{datasciencesubmenu.caption}}</span>
                          <span class="badge badge-success">{{metaStats[datasciencesubmenu.type].count}}</span>

@@ -1,0 +1,167 @@
+<div class="row" ng-controller="ResultReconController">
+  <div class="col-md-12">
+    <div class="page-bar">
+      <ul class="page-breadcrumb">
+        <li>
+          <a ui-sref="home">Home</a>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <a ui-sref="viewreconresults">
+            <span>{{$state.current.data.pageTitle}}</span>
+          </a>
+          <i class="fa fa-circle"></i>
+
+        </li>
+        <li>
+          <a ui-sref="viewreconresults">Rule Results</a>
+
+        </li>
+        <li ng-if="daggroupExecName">
+          <i class="fa fa-circle"></i>
+          <a ng-click="onClickRuleResult()">{{daggroupExecName}}</a>
+        </li>
+        <li ng-if="resultExecName">
+          <i class="fa fa-circle"></i>
+          <span>{{resultExecName}}</span>
+        </li>
+      </ul>
+      <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+      </div>
+    </div>
+    <br>
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+
+    <div class="portlet box green" ng-show="isRuleExec" id="groupGraphDiv">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-cogs"></i>Rule Exec
+        </div>
+        <div class="tools">
+          <a style="margin:2px auto;color:white;" ng-disabled="!allowReGroupExecution" ng-class="{'currentpage':!allowReGroupExecution}"
+            title="Restart Profile Group" data-toggle="tooltip" data-placement="top" tooltip="" ng-click="reGroupExecute()">
+            <i class="fa fa-repeat" area-hidden="true"></i>
+          </a>
+          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RGEexecGraphShow==false? 'currentpage':'notcurrentpage'"
+            data-ng-click="refreshRuleGroupExecFunction()" style="height:16px;">
+            <span class="glyphicon glyphicon-file" style="color:white;"></span>
+          </a>
+          <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="rGExecshowGraph()" ng-class="isD3RGEexecGraphShow==true? 'currentpage':'notcurrentpage'">
+            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+          </a>
+          <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click=" isProfileGroupExec? refreshRuleGroupExecFunction() :isD3RGEexecGraphShow ? broadcastRefreshData(): refreshSearchResults()">
+            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin:2px auto;color:white;"></i>
+          </a>
+          <a href="javascript:;" class="collapse" ng-show="!isProfileGroupExec && !isD3RGEexecGraphShow" style="height:14px;"></a>
+          <a title="Close" ui-sref="datareconrulerestult" ng-show="isProfileGroupExec || isD3RGEexecGraphShow" data-toggle="tooltip"
+            data-placement="top" tooltip style="height:14px;">
+            <i class="fa fa-times" style="display:block;margin:0px 2px 0px 0px;color:white;transform: scale(1,1.2);"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="portlet-body" style="overflow:auto">
+        <div ng-if="isD3RGEexecGraphShow" class="form-body graph-body">
+          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+          <div class="spinner text-center" id="graphloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div id="graphWrapper" class="form-body show-graph-body" graph-directive uuid="rGExecUuid" version="rGExecVersion">
+          </div>
+        </div>
+        <div class="form-body text-center" id="groupErrorMsg" style="color:blue;"></div>
+        <div class="spinner text-center" id="grouploader">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+        <div id="showgrouppaper" render-group-directive ng-show="isProfileGroupExec"></div>
+      </div>
+    </div>
+    <!-- END SAMPLE TABLE PORTLET-->
+
+    <div class="portlet box green" ng-show="isRuleResult">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-cogs"></i>Rule Result
+        </div>
+        <div class="tools">
+          <a ng-click="downloadFile({uuid:ruleExecUuid,version:ruleExecVersion})" tooltip-placement="{{showtooltip}}" uib-tooltip="Download"  ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'">
+            <i class=" fa fa-download" aria-hidden="true" style="display:block;margin:2px auto;color:white;"></i>
+          </a>
+          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RuleEexecGraphShow==false? 'currentpage':'notcurrentpage'"
+            onClick="refreshResultfunction()" style="height:16px;">
+            <span class="glyphicon glyphicon-file" style="color:white;"></span>
+          </a>
+          <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="ruleExecshowGraph()" ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'">
+            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+          </a>
+          <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshResultfunction()" ng-show="!isD3RuleEexecGraphShow">
+            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a title="Refresh" href="javasculript:;" ng-show="isD3RuleEexecGraphShow" ng-click=" broadcastRefreshData()" data-toggle="tooltip"
+            data-placement="top">
+            <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a title="Close" ng-if="type.text == 'recongroup'" href="javascript:;" ng-click="onClickRuleResult()" data-toggle="tooltip"
+            data-placement="top" tooltip style="height:14px;">
+            <i class="fa fa-times" style="display:block;margin:0px 2px 0px 0px;color:white;transform: scale(1,1.2);"></i>
+          </a>
+          <a title="Close" ng-if="type.text == 'recon'" ui-sref="datareconrulerestult" data-toggle="tooltip" data-placement="top" tooltip
+            style="height:14px;">
+            <i class="fa fa-times" style="display:block;margin:0px 2px 0px 0px;color:white;transform: scale(1,1.2);"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="portlet-body" style="min-height:100px;">
+        <div ng-if="isD3RuleEexecGraphShow" class="form-body graph-body">
+          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+          <div class="spinner text-center" id="graphloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div id="graphWrapper" class="form-body show-graph-body" graph-directive uuid="ruleExecUuid" version="ruleExecVersion">
+          </div>
+        </div>
+        <div ng-hide="isD3RuleEexecGraphShow">
+          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+          <div class="spinner centercontent" id="resultsloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div id="resultswrapper">
+            <div id="profileresults" grid-results-directive></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade in" id="reExModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+      <div class="modal-dialog">
+        <div class="modal-content rulemodel">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            </button>
+            <h4 class="modal-title">Confirm</h4>
+          </div>
+          <div class="modal-body">Restart
+            <span style="text-transform: capitalize">Recon Group</span> ?</div>
+          <div class="modal-footer">
+            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+            <budivtton type="button" class="btn green" ng-click="okReGroupExecute()">Ok</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+  </div>
+</div>

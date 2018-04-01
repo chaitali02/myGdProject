@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Simulate extends BaseEntity {
 
 	private MetaIdentifierHolder dependsOn;
-	private MetaIdentifierHolder source;
 	private MetaIdentifierHolder target;
     private int numIterations;
 	private List<FeatureRefHolder> featureInfo  = new ArrayList<FeatureRefHolder>(); ;
@@ -31,15 +30,6 @@ public class Simulate extends BaseEntity {
 
 	public void setNumIterations(int numIterations) {
 		this.numIterations = numIterations;
-	}
-
-	
-	public MetaIdentifierHolder getSource() {
-		return source;
-	}
-
-	public void setSource(MetaIdentifierHolder source) {
-		this.source = source;
 	}
 
 	public MetaIdentifierHolder getTarget() {

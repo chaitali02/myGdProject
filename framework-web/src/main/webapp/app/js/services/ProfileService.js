@@ -1,42 +1,35 @@
 /**
  *
  */
-
 ProfileModule= angular.module('ProfileModule');
 ProfileModule.factory('ProfileFactory',function($http,$location){
     var factory ={};
     factory.findAll=function(type) {
         var url=$location.absUrl().split("app")[0]
         return $http({
-               method: 'GET',
-               url:url+"common/getAllLatest?action=view&type="+type,
-
-               }).
-               then(function (response,status,headers) {
-                  return response;
-               })
+            method: 'GET',
+            url:url+"common/getAllLatest?action=view&type="+type}).
+            then(function (response,status,headers) {
+                return response;
+            })
     }
     factory.findAllLatest=function(type) {
         var url=$location.absUrl().split("app")[0]
         return $http({
-               method: 'GET',
-               url:url+"common/getAllLatest?action=view&type="+type,
-
-               }).
-               then(function (response,status,headers) {
-                  return response;
-               })
+            method: 'GET',
+            url:url+"common/getAllLatest?action=view&type="+type,}).
+            then(function (response,status,headers) {
+                return response;
+            })
     }
     factory.findAllLatestActive=function(type) {
         var url=$location.absUrl().split("app")[0]
         return $http({
-               method: 'GET',
-               url:url+"common/getAllLatest?action=view&active=Y&type="+type,
-
-               }).
-               then(function (response,status,headers) {
-                  return response;
-               })
+            method: 'GET',
+            url:url+"common/getAllLatest?action=view&active=Y&type="+type,}).
+            then(function (response,status,headers) {
+                return response;
+            })
     }
     factory.findAllVersionByUuid=function(uuid,type) {
         var url=$location.absUrl().split("app")[0]
@@ -160,11 +153,11 @@ ProfileModule.factory('ProfileFactory',function($http,$location){
                   return response;
                })
     }
-    factory.findProfileResults=function(uuid,version) {
+    factory.findResults=function(uuid,version,mode) {
         var url=$location.absUrl().split("app")[0]
         return $http({
                method: 'GET',
-               url:url+"profile/getResults?action=view&uuid="+uuid+"&version="+version,
+               url:url+"profile/getResults?action=view&uuid="+uuid+"&version="+version+"&mode="+mode,
 
                }).
                then(function (response,status,headers) {
@@ -200,18 +193,74 @@ ProfileModule.factory('ProfileFactory',function($http,$location){
 		                method: "GET"
 		          }).then(function(response){ return  response})
 	   };
-	 factory.findSaveAs=function(uuid,version,type){
+	factory.findSaveAs=function(uuid,version,type){
      	  var url=$location.absUrl().split("app")[0]
  		  return $http({
  			        url:url+"common/saveAs?action=clone&uuid="+uuid+"&version="+version+"&type="+type,
  			        method: "GET",
  	          }).then(function(response){ return  response})
- 	  }
-  return factory;
+	}
+	factory.findProfileExecByDatapod=function(uuid,startDate,endDate,type){
+		var url=$location.absUrl().split("app")[0]
+		return $http({
+				  url:url+"profile/getProfileExecByDatapod?datapodUUID="+uuid+"&action=view&type=profileexec"+"&startDate="+startDate+"&endDate="+endDate,
+				  method: "GET",
+			}).then(function(response){ return  response})
+	}
+	factory.findNumRowsbyExec=function(uuid,version,type){
+		var url=$location.absUrl().split("app")[0]
+		return $http({
+			url:url+"metadata/getNumRowsbyExec?action=view&execUuid="+uuid+"&execVersion="+version+"&type="+type,
+			method: "GET",
+		}).then(function(response){ return  response})
+	}
+
+	factory.findProfileResults=function(datapodUuid,datapodVersion,attributeId,numDays,profileAttrType){
+		var url=$location.absUrl().split("app")[0]
+		return $http({
+			url:url+"profile/getProfileResults?action=view&type=profileexec&datapodUuid="+datapodUuid+"&datapodVersion="+datapodVersion+"&attributeId="+attributeId+"&numDays="+numDays+"&profileAttrType="+profileAttrType,
+			method: "GET",
+		}).then(function(response){ return  response})
+	}
+
+	return factory;
 });
 
 
-ProfileModule.service("ProfileService",function($q,ProfileFactory,sortFactory){
+ProfileModule.service("ProfileService",function($q,ProfileFactory,sortFactory,CommonFactory){
+
+	this.getProfileResults=function(datapodUuid,datapodVersion,attributeId,numDays,profileAttrType){
+		var deferred = $q.defer();
+		ProfileFactory.findProfileResults(datapodUuid,datapodVersion,attributeId,numDays,profileAttrType).then(function(response){onSuccess(response.data)});
+		var onSuccess=function(response){
+			 deferred.resolve({
+				 data:response
+			 });
+		}
+		return deferred.promise;
+	}
+
+	this.getNumRowsbyExec=function(uuid,version,type){
+		var deferred = $q.defer();
+		ProfileFactory.findNumRowsbyExec(uuid,version,type).then(function(response){onSuccess(response.data)});
+		var onSuccess=function(response){
+			 deferred.resolve({
+				 data:response
+			 });
+		}
+		return deferred.promise;
+	}
+	this.getProfileExecByDatapod=function(uuid,startDate,endDate,type){
+		var deferred = $q.defer();
+		ProfileFactory.findProfileExecByDatapod(uuid,startDate,endDate,type).then(function(response){onSuccess(response.data)});
+		var onSuccess=function(response){
+			response.sort(sortFactory.sortByProperty("version","desc"));
+			 deferred.resolve({
+				 data:response
+			 });
+		}
+		return deferred.promise;
+	}
 	this.saveAs=function(uuid,version,type){
 		 var deferred = $q.defer();
 		 ProfileFactory.findSaveAs(uuid,version,type).then(function(response){onSuccess(response.data)});
@@ -408,9 +457,9 @@ ProfileModule.service("ProfileService",function($q,ProfileFactory,sortFactory){
 
 		  return deferred.promise;
 	  }
-	  this.getProfileResults=function(uuid,version){
+	  this.getResults=function(uuid,version,mode){
 		    var deferred=$q.defer();
-		    ProfileFactory.findProfileResults(uuid,version).then(function(response){onSuccess(response)},function(response){onError(response.data)});
+		    ProfileFactory.findResults(uuid,version,mode).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
 		    var onSuccess=function(response){
 		      deferred.resolve({
 		                  data:response
@@ -785,5 +834,30 @@ ProfileModule.service("ProfileService",function($q,ProfileFactory,sortFactory){
 		     }
 
 		  return deferred.promise;
-	    }
+		}
+		
+
+	this.getAttrProfileResults=function(attrSourceSearchForm,attrTargetSearchForm){
+			var chartcolor=["#c9c9ff","#ffbdbd","#f1cbff","#95af5c","#b6ccb1","#c0cfaf","#a3d0b5","#31402f","#7dcea0","#82e0aa","#f7dc6f","#f8c471","#f0b27a","#e59866"]//["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
+			var deferred=$q.defer();
+			console.log(attrTargetSearchForm)
+			console.log(attrSourceSearchForm)
+			//var baseUrl=$location.absUrl().split("app")[0]
+			var promises =[];
+			var apiParmList = ["profile/getProfileResults?action=view&type=profileexec&datapodUuid="+attrSourceSearchForm.sourceDatapod.uuid+"&datapodVersion="+attrSourceSearchForm.sourceDatapod.version+"&attributeId="+attrSourceSearchForm.sourceAttribute.attributeId+"&numDays="+attrSourceSearchForm.selectSourceProfilePriode+"&profileAttrType="+attrSourceSearchForm.selectSourceProfileAttr,"profile/getProfileResults?action=view&type=profileexec&datapodUuid="+attrTargetSearchForm.targetDatapod.uuid+"&datapodVersion="+attrTargetSearchForm.targetDatapod.version+"&attributeId="+attrTargetSearchForm.targetAttribute.attributeId+"&numDays="+attrTargetSearchForm.selectTargetProfilePriode+"&profileAttrType="+attrTargetSearchForm.selectTargetProfileAttr];
+			 for(var i=0;i<apiParmList.length;i++){
+			  var url =apiParmList[i]
+			  var promise =  CommonFactory.httpGet(url)
+			  promises.push(promise)
+			 }
+			 var jobArray=[]
+			 $q.all(promises).then(function(result){
+			 
+			 deferred.resolve({
+					 data:result
+				})
+			});
+		
+		return deferred.promise;
+	}
 });

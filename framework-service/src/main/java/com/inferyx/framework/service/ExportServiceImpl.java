@@ -74,8 +74,8 @@ public class ExportServiceImpl implements Serializable {
 	IExportDao iExportDao;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	/*@Autowired
-	ServletContext context;*/
+	@Autowired
+	ServletContext context;
 	
 	static final Logger logger = Logger.getLogger(ExportServiceImpl.class);
 	private static final String GET = "get";
@@ -355,8 +355,7 @@ public class ExportServiceImpl implements Serializable {
 	 
 	            if (file.exists()) {
 	            	logger.info("File found.");
-	            	String mimeType = null;
-//	                mimeType = context.getMimeType(file.getPath());
+	                String mimeType = context.getMimeType(file.getPath());
 	 
 	                if (mimeType == null) {
 	                    mimeType = "application/octet-stream";

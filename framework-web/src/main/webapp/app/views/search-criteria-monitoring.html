@@ -61,9 +61,9 @@
             </span -->
           </div>
         </div>
-        <div class="col-md-3 col-sm-6 col-xs-12 custpadding" >
+        <div class="col-md-3 col-sm-6 col-xs-12" >
             <div class="form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-6">Tags</label>
+              <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Tags</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
               <tags-input data-ng-model="searchForm.tags"
                   min-length="0"></tags-input>
@@ -106,29 +106,27 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3 col-sm-6 col-xs-12 custpadding" ng-hide="moduleType!='session'">
-          <!-- <div class="form-group" ng-hide="noExec">
-            <label class="control-label col-md-3 col-sm-3 col-xs-6">Status</label>
-            <div class="col-md-9 col-sm-6 col-xs-12">
-               <select class="form-control" select2 data-ng-model="searchForm.status" ng-options="r.name as r.caption for r in allStatus">
-                <option value="">-Select-</option>
-            </select >
-            </div>
-          </div> -->
+        <!-- <div class="col-md-3 col-sm-6 col-xs-12 custpadding" ng-hide="moduleType!='session'">
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
-            <div class="col-md-9 col-sm-6 col-xs-12">
-                <!-- <label class="btn btn-default" ng-model="searchForm.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                <label class="btn btn-default" ng-model="searchForm.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label> -->
+            <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Status</label>
+            <div class="col-md-9 col-sm-9 col-xs-6">
                 <select class="form-control" select2 data-ng-model="searchForm.active" ng-options="r.name as r.caption for r in allActive">
-                 <!-- <option value="">All</option> -->
              </select >
+            </div>
+          </div>
+        </div> -->
+        <div class="col-md-3 col-sm-6 col-xs-12 custpadding" ng-hide="moduleType !='session'">
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Status</label>
+            <div class="col-md-9 col-sm-9 col-xs-6">
+              <select class="form-control" select2 data-ng-model="searchForm.active" ng-options="r.name as r.caption for r in allActive">
+              </select >
             </div>
           </div>
         </div>
         <div class="col-md-3 col-sm-6 col-xs-12 custpadding" ng-hide="moduleType=='session'">
           <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-6">Meta</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Meta</label>
             <div class="col-md-9 col-sm-9 col-xs-6">
               <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.type" ng-options="r.name   as r.name for r in Alltypes" select2>
                 <option value="">-Select-</option>

@@ -223,7 +223,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       ].join('')
     }
   )//ng-disabled="{{['Completed','In Progress'].indexOf(row.entity.status)==-1}}"
-
+  // ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"
   obj.gridOptionsJobExec = angular.copy(obj.gridOptionsDefault);
   obj.gridOptionsJobExec.columnDefs.push(
     {
@@ -303,7 +303,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       execType:'dqgroupExec',
       metaType:'dqgroup',
       iconPath : 'assets/layouts/layout/img/dq.svg',
-      iconPathInactive:'assets/layouts/layout/img/dqinactive.svg',
+      iconPathInactive:'assets/layouts/layout/img/dqgroupinactive.svg',
       allowInMenu : true,
       listState:'viewdataqualitygroup',
       detailState:'createdataqualitygroup',
@@ -369,10 +369,11 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       execType:'modelExec',
       metaType:'model',
       iconPath : 'assets/layouts/layout/img/model.svg',
-      allowInMenu : true,
+      allowInMenu : false,
       state: 'createmodel',
       detailState: 'createmodel'
     },
+    
     'rulegroup':{
       name : 'rulegroup',
       caption : 'Rule Group',
@@ -381,7 +382,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       execType:'rulegroupExec',
       metaType:'rulegroup',
       iconPath : 'assets/layouts/layout/img/rulegroup.svg',
-      allowInMenu : true,
+      allowInMenu : false,
       listState:'rulesgroup',
       detailState: 'createrulesgroup',
       state: 'createrulesgroup'
@@ -394,11 +395,62 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       execType:'ruleExec',
       metaType:'rule',
       iconPath : 'assets/layouts/layout/img/rule.svg',
-      allowInMenu : true,
+      allowInMenu : false,
       listState:'viewrule',
       detailState: 'createrules',
       state: 'createrules'
 
+    },
+    'recon':{
+      name : 'recon',
+      caption : 'Rule',
+      color : '#2489D1',
+      icon : 'rule.svg',
+      execType:'reconExec',
+      metaType:'recon',
+      iconPath : 'assets/layouts/layout/img/recon.svg',
+      iconPathInactive:'assets/layouts/layout/img/reconinactive.svg',
+      allowInMenu : true,
+      listState:'datareconrule',
+      detailState: 'createreconerule',
+      state: 'createreconerule'
+    },
+
+    'recongroup':{
+      name : 'recongroup',
+      caption : 'Rule Group',
+      color : '#2489D1',
+      icon : 'rule.svg',
+      execType:'recongroupExec',
+      metaType:'recongroup',
+      iconPath : 'assets/layouts/layout/img/recongroup.svg',
+      iconPathInactive:'assets/layouts/layout/img/recongroupinactive.svg',
+      allowInMenu : true,
+      listState:'datareconrulegroup',
+      detailState: 'createreconerulegroup',
+      state: 'createreconerulegroup'
+    },
+
+    'reconexec':{
+      name : 'recon',
+      caption :'Recon Exec',
+      execType:'reconExec',
+      metaType:'reconExec',
+      color : '#EB54C3',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistreconexec',
+      resultState:'viewdrresultspage'
+    },
+    'recongroupexec':{
+      name : 'recongroup',
+      caption :'Recon Group Exec',
+      execType:'recongroupExec',
+      metaType:'recongroupExec',
+      color : '#EB54C3',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistrecongroupexec'
     },
     'loadexec':{
       name : 'load',
@@ -485,6 +537,28 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       detailState :'jobexecutorlistdagexec',
       resultState :'resultgraphwf'
     },
+    'downloadexec':{
+      name : 'download',
+      caption : 'download Exec',
+      execType:'downloadExec',
+      metaType:'downloadExec',
+      color : '#33691E',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistdownloadexec',
+      resultState :'resultgraphwf'
+    },
+    'uploadexec':{
+      name : 'download',
+      caption : 'upload Exec',
+      execType:'uploadExec',
+      metaType:'uploadExec',
+      color : '#33691E',
+      allowInMenu : false,
+      listState   : 'jobmonitoringlist',
+      detailState :'jobexecutorlistuploadexec',
+      resultState :'resultgraphwf'
+    },
     'pipelineexec':{
       name : 'pipeline',
       caption : 'Pipeline Exec',
@@ -546,7 +620,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       color : '#EB54C3',
       allowInMenu : false,
       listState : 'jobmonitoringlist',
-      detailState :'jobexecutorlistmodelexec'
+      detailState :'jobexecutorlistmodelexec',
+      resultState:'modelrestultpage'
     },
 
     'datapod':{
@@ -1094,9 +1169,87 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
 	   color : '#80CBC4',
 	   allowInMenu :false,
 	   listState : '',
-}
+},
+'predict':{
+  name : 'predict',
+  caption : 'Prediction',
+  color : '#1DE9B6',
+  icon : 'model.svg',
+  execType:'predictExec',
+  metaType:'predict',
+  iconPath : 'assets/layouts/layout/img/predict.svg',
+  allowInMenu : true,
+  state: 'createpredict',
+  detailState: 'createpredict'
+},
+'predictexec':{
+  name : 'predictexec',
+  caption : 'Prediction Exec',
+  execType:'predictExec',
+  metaType:'predictExec',
+  color : '#EB54C3',
+  allowInMenu : false,
+  listState : 'jobmonitoringlist',
+  detailState :'jobexecutorlistpredictexec',
+  resultState:'modelrestultpage'
+},
+'simulate':{
+  name : 'simulate',
+  caption : 'Simulation',
+  color : '#1DE9B6',
+  icon : 'model.svg',
+  execType:'simulateExec',
+  metaType:'simulate',
+  iconPath : 'assets/layouts/layout/img/simulate.svg',
+  allowInMenu : true,
+  state: 'createsimulate',
+  detailState: 'createsimulate'
+},
+'simulateexec':{
+  name : 'simulateexec',
+  caption : 'Silulation Exec',
+  execType:'simulateExec',
+  metaType:'simulateExec',
+  color : '#EB54C3',
+  allowInMenu : false,
+  listState : 'jobmonitoringlist',
+  detailState :'jobexecutorlistsimulateexec',
+  resultState:'modelrestultpage'
+},
 
 
+'train':{
+  name : 'train',
+  caption : 'Training',
+  color : '#1DE9B6',
+  icon : 'model.svg',
+  execType:'trainExec',
+  metaType:'simulate',
+  iconPath : 'assets/layouts/layout/img/train.svg',
+  allowInMenu : true,
+  state: 'createtrain',
+  detailState: 'createtrain'
+},
+'trainexec':{
+  name : 'trainexec',
+  caption : 'train Exec',
+  execType:'trainexec',
+  metaType:'trainexec',
+  color : '#EB54C3',
+  allowInMenu : false,
+  listState : 'jobmonitoringlist',
+  detailState :'jobexecutorlisttarinexec',
+  resultState:'modelrestultpage'
+},
+'featureattrmap':{
+   name : 'featureattrmap',
+   caption :'Feature Attr Map',
+   execType:'', 
+   metaType:'',
+   color : '#c6ff00',
+   allowInMenu :false,
+   listState : '',
+	}
 
   };
 
@@ -1106,8 +1259,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   //   dagExecTypes[type+'Exec'].allowInMenu = false;
   // });
   // angular.merge(obj.elementDefs,dagExecTypes);
-  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup'];
-  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup'];
+  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup'];
+  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup'];
   var defaultElement = {
       markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /><g class="inPorts"/><g class="outPorts"/></g>',
       size: { width: 50, height: 50 },
@@ -1235,12 +1388,57 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           }
         }
     }),
+    'recon' : angular.merge({},defaultElement,{
+      elementType:'recon',
+      attrs: {
+          '.body': {
+              elementType : 'recon',
+              "xlink:href": obj.elementDefs['recon'].iconPath
+          }
+        }
+    }),
+    'recongroup' : angular.merge({},defaultElement,{
+      elementType:'recongroup',
+      attrs: {
+          '.body': {
+              elementType : 'recongroup',
+              "xlink:href": obj.elementDefs['recongroup'].iconPath
+          }
+        }
+    }),
     'model' : angular.merge({},defaultElement,{
       elementType:'model',
       attrs: {
           '.body': {
               elementType : 'model',
               "xlink:href": obj.elementDefs['model'].iconPath
+          }
+        }
+    }),
+    'train' : angular.merge({},defaultElement,{
+      elementType:'train',
+      attrs: {
+          '.body': {
+              elementType : 'train',
+              "xlink:href": obj.elementDefs['train'].iconPath
+          }
+        }
+    }),
+    'predict' : angular.merge({},defaultElement,{
+      elementType:'predict',
+      attrs: {
+          '.body': {
+              elementType : 'predict',
+              "xlink:href": obj.elementDefs['predict'].iconPath
+          }
+        }
+    }),
+    'simulate' : angular.merge({},defaultElement,{
+      elementType:'simulate',
+      attrs: {
+          '.body': {
+              elementType : 'simulate',
+              "xlink:href": obj.elementDefs['simulate'].iconPath
           }
         }
     }),
@@ -1358,14 +1556,15 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   var defaultLink = {
       attrs: { '.connection': { stroke: 'gray' },'.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z',fill:'gray',stroke:'gray' } }
   };
-  obj.getCustomElement = function (type,isTemplate) {
+  obj.getCustomElement = function (type,isTemplate,addMode) {
     if(type.slice(-4) == 'Exec'){
       type = type.slice(0,-4);
     }
     if(validElementTypes.indexOf(type) == -1){
       return console.error('invalid element type');
     }
-    if(isTemplate == true && type !='dag'){
+  //  alert(editMode)
+    if(isTemplate == true &&  addMode && type !='dag'){
       type=type+"Inactive";
     }
     return customElements[type];

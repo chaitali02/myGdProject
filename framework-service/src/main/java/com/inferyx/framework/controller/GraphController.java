@@ -24,10 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.service.MessageServiceImpl;
-import com.inferyx.framework.service.MessageStatus;
 import com.inferyx.framework.service.RegisterService;
 
 

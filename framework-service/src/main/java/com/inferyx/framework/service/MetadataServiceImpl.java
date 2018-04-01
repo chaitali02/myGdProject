@@ -51,22 +51,29 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
+import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.domain.ReconExec;
+import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
+import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.StatusHolder;
+import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
 
 
@@ -416,11 +423,11 @@ public class MetadataServiceImpl {
 				execObject = (LoadExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
 			}
-			else if(type.equalsIgnoreCase(MetaType.modelExec.toString())){
+			/*else if(type.equalsIgnoreCase(MetaType.modelExec.toString())){
 				ModelExec execObject = new ModelExec();
 				execObject = (ModelExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
-			}
+			}*/
 			else if(type.equalsIgnoreCase(MetaType.mapExec.toString())){
 				MapExec execObject = new MapExec();
 				execObject = (MapExec) metaObject;
@@ -429,6 +436,31 @@ public class MetadataServiceImpl {
 				Session sessionObject = new Session();
 				sessionObject = (Session) metaObject;
 				execStatus = (List<Status>) sessionObject.getStatusList();	
+			}
+			else if(type.equalsIgnoreCase(MetaType.trainExec.toString())){
+				TrainExec execObject = new TrainExec();
+				execObject = (TrainExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			}
+			else if(type.equalsIgnoreCase(MetaType.predictExec.toString())){
+				PredictExec execObject = new PredictExec();
+				execObject = (PredictExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			}
+			else if(type.equalsIgnoreCase(MetaType.simulateExec.toString())){
+				SimulateExec execObject = new SimulateExec();
+				execObject = (SimulateExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			}
+			else if(type.equalsIgnoreCase(MetaType.reconExec.toString())){
+				ReconExec execObject = new ReconExec();
+				execObject = (ReconExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			}
+			else if(type.equalsIgnoreCase(MetaType.recongroupExec.toString())){
+				ReconGroupExec execObject = new ReconGroupExec();
+				execObject = (ReconGroupExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
 			}
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
@@ -553,16 +585,19 @@ public class MetadataServiceImpl {
 	public List<BaseEntity> getBaseEntityByCriteria(String type, String name, String userName, String startDate,
 			String endDate, String tags, String active, String uuid, String version, String published)
 			throws ParseException, JsonProcessingException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		MetaType metaType = Helper.getMetaType(type);
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {		MetaType metaType = Helper.getMetaType(type);
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 		// Apply filter
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
 		// to find
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
+		//String appUuid = null ;
+		String appUuid =commonServiceImpl.findAppId(type);
+
+//		appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+//				? securityServiceImpl.getAppInfo().getRef().getUuid()
+//				: null;
+		
 
 		try {
 			if (appUuid != null)
@@ -624,7 +659,13 @@ public class MetadataServiceImpl {
 		}
 
 		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
-		Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
+		Aggregation ruleExecAggr;
+		if (criteriaList.size() > 0) {
+			ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
+		} else {
+			ruleExecAggr = newAggregation(group("uuid").max("version").as("version"));
+		}
+
 		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, type, className);
 		metaObjectList = ruleExecResults.getMappedResults();
 
@@ -803,6 +844,8 @@ public class MetadataServiceImpl {
 		} else if (type.equals(MetaType.profilegroupExec.toString())) {
 			//groupExecClass = "com.inferyx.framework.metadata.ProfileGroupExec";
 			execListName = "execList";
+		} else if (type.equals(MetaType.recongroupExec.toString())) {
+			execListName = "execList";
 		}
 				
 		//Create query
@@ -893,9 +936,14 @@ public class MetadataServiceImpl {
 			statusHolder.setMetaRef(mih);
 			statusHolder.setStatus(profileGroupExec.getStatus());
 			statusHolderList.add(statusHolder);	*/
-			
 			statusHolderList = getStatusHolderList(profileGroupExec.getExecList(), Helper.getMetaType(reftype), ref, profileGroupExec.getName(), profileGroupExec.getStatusList());
 			
+		} else if (metaObjectList.get(0) instanceof ReconGroupExec) {
+			ReconGroupExec reconGroupExec = (ReconGroupExec) metaObjectList.get(0);
+			if (reconGroupExec.getExecList() == null || reconGroupExec.getExecList().isEmpty()) {
+				return null;
+			}
+			statusHolderList = getStatusHolderList(reconGroupExec.getExecList(), Helper.getMetaType(reftype), ref, reconGroupExec.getName(), reconGroupExec.getStatusList());
 		} // End-If 
 		return statusHolderList;
 	}	
@@ -986,4 +1034,36 @@ public class MetadataServiceImpl {
 		}
 		return null;
 	}	
+	
+	
+	
+	
+	
+	public List<Function> getFunctionByType(String category){
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+		query.fields().include("active");
+		query.fields().include("desc");
+		query.fields().include("published");
+		query.fields().include("inputReq");
+		query.fields().include("funcType");
+		query.fields().include("functionInfo");
+		query.fields().include("category");
+		
+
+		query.addCriteria(Criteria.where("category").is(category));
+
+		List<Function> function = new ArrayList<>();
+		function = (List<Function>) mongoTemplate.find(query, Function.class);
+		return function;
+		
+	}
+	
+	
+	
 }

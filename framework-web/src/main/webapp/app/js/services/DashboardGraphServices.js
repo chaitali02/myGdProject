@@ -67,6 +67,17 @@ DatavisualizationModule.factory('DahsboardFactory',function($http,$location){
                then(function (response,status,headers) {
                   return response;
                })
+	}
+	factory.findAllLatestCompleteObjects=function(type) {
+        var url=$location.absUrl().split("app")[0]
+        return $http({
+               method: 'GET',
+               url:url+"common/getAllLatestCompleteObjects?action=view&type="+type,
+
+               }).
+               then(function (response,status,headers) {
+                  return response;
+               })
     }
     factory.findVizpodByType=function(uuid) {
         var url=$location.absUrl().split("app")[0]
@@ -387,7 +398,18 @@ DatavisualizationModule.service('DahsboardSerivce',function($q,sortFactory,Dahsb
 
 		  return deferred.promise;
 	}
+    this.getAllLatestCompleteObjects=function(type) {
+		var deferred = $q.defer();
 
+		DahsboardFactory.findAllLatestCompleteObjects(type).then(function(response){onSuccess(response.data)});
+			var onSuccess=function(response){
+			
+		 deferred.resolve({
+					 data:response
+				 })
+		}
+	return deferred.promise;
+	}
 	this.getAllLatest=function(type) {
 	     var deferred = $q.defer();
 	     DahsboardFactory.findAllLatest(type).then(function(response){onSuccess(response.data)});

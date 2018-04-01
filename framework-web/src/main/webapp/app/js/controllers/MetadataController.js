@@ -708,7 +708,7 @@
 		ref.type="datasource";
 		ref.uuid=$scope.selectDataSource.uuid;
 		datasource.ref=ref;
-		datapodJson.datasource=datasource
+		datapodJson.datasource=datasource;
 		var attributesarray=[];
 		var count=0;
 		// for(var datapodattr=0;datapodattr<$scope.attributetable.length;datapodattr++){
@@ -841,7 +841,7 @@ $scope.downloadFile = function(data) {
 		var url = window.URL.createObjectURL(blob);
   
 		linkElement.setAttribute('href', url);
-		linkElement.setAttribute("download", uuid+".xlsx");
+		linkElement.setAttribute("download", uuid+".xls");
   
 		var clickEvent = new MouseEvent("click", {
 		  "view": window,

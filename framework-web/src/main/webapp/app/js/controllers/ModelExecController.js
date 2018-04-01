@@ -26,10 +26,10 @@
     var onSuccess = function(response) {
       $scope.modelexecdata = response;
       var status = [];
-      for (i = 0; i < response.status.length; i++) {
-        d = $filter('date')(new Date(response.status[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
+      for (i = 0; i < response.statusList.length; i++) {
+        d = $filter('date')(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
         d = d.toString().replace("+0530", "IST");
-        status[i] = response.status[i].stage + "-" + d;
+        status[i] = response.statusList[i].stage + "-" + d;
       }
       $scope.status = status
       var refkeylist = [];

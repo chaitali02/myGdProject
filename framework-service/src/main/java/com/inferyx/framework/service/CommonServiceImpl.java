@@ -32,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -99,6 +100,10 @@ import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
+import com.inferyx.framework.dao.IReconDao;
+import com.inferyx.framework.dao.IReconExecDao;
+import com.inferyx.framework.dao.IReconGroupDao;
+import com.inferyx.framework.dao.IReconGroupExecDao;
 import com.inferyx.framework.dao.IRelationDao;
 import com.inferyx.framework.dao.IRoleDao;
 import com.inferyx.framework.dao.IRuleDao;
@@ -108,6 +113,8 @@ import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.ISimulateDao;
 import com.inferyx.framework.dao.ISimulateExecDao;
+import com.inferyx.framework.dao.ITrainDao;
+import com.inferyx.framework.dao.ITrainExecDao;
 import com.inferyx.framework.dao.IUploadDao;
 import com.inferyx.framework.dao.IUserDao;
 import com.inferyx.framework.dao.IVertexDao;
@@ -328,8 +335,8 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	DataFrameService dataFrameService;
 	CustomLogger customLogger = new CustomLogger();
-	/*@Autowired
-	ServletContext context;*/
+	@Autowired
+	ServletContext context;
 	@Autowired
 	DownloadExec downloadExec;
 	@Autowired
@@ -351,8 +358,106 @@ public class CommonServiceImpl <T> {
 	ISimulateDao iSimulateDao;
 	@Autowired
 	ISimulateExecDao iSimulateExecDao;
-	
-	
+	@Autowired
+	ITrainDao iTrainDao;
+	@Autowired
+	ITrainExecDao iTrainExecDao;
+	@Autowired
+	IReconExecDao iReconExecDao;
+	@Autowired
+	IReconDao iReconDao;
+	@Autowired
+	IReconGroupDao iReconGroupDao;
+	@Autowired
+	IReconGroupExecDao iReconGroupExecDao;	
+	@Autowired
+	ReconServiceImpl reconServiceImpl;
+	@Autowired
+	ReconExecServiceImpl reconExecServiceImpl;
+	@Autowired
+	ReconGroupServiceImpl reconGroupServiceImpl;
+	@Autowired
+	ReconGroupExecServiceImpl reconGroupExecServiceImpl;
+
+	public ReconServiceImpl getReconServiceImpl() {
+		return reconServiceImpl;
+	}
+
+	public void setReconServiceImpl(ReconServiceImpl reconServiceImpl) {
+		this.reconServiceImpl = reconServiceImpl;
+	}
+
+	public ReconExecServiceImpl getReconExecServiceImpl() {
+		return reconExecServiceImpl;
+	}
+
+	public void setReconExecServiceImpl(ReconExecServiceImpl reconExecServiceImpl) {
+		this.reconExecServiceImpl = reconExecServiceImpl;
+	}
+
+	public ReconGroupServiceImpl getReconGroupServiceImpl() {
+		return reconGroupServiceImpl;
+	}
+
+	public void setReconGroupServiceImpl(ReconGroupServiceImpl reconGroupServiceImpl) {
+		this.reconGroupServiceImpl = reconGroupServiceImpl;
+	}
+
+	public ReconGroupExecServiceImpl getReconGroupExecServiceImpl() {
+		return reconGroupExecServiceImpl;
+	}
+
+	public void setReconGroupExecServiceImpl(ReconGroupExecServiceImpl reconGroupExecServiceImpl) {
+		this.reconGroupExecServiceImpl = reconGroupExecServiceImpl;
+	}
+	public IReconGroupDao getiReconGroupDao() {
+		return iReconGroupDao;
+	}
+
+	public void setiReconGroupDao(IReconGroupDao iReconGroupDao) {
+		this.iReconGroupDao = iReconGroupDao;
+	}
+
+	public IReconGroupExecDao getiReconGroupExecDao() {
+		return iReconGroupExecDao;
+	}
+
+	public void setiReconGroupExecDao(IReconGroupExecDao iReconGroupExecDao) {
+		this.iReconGroupExecDao = iReconGroupExecDao;
+	}
+
+	public IReconExecDao getiReconExecDao() {
+		return iReconExecDao;
+	}
+
+	public void setiReconExecDao(IReconExecDao iReconExecDao) {
+		this.iReconExecDao = iReconExecDao;
+	}
+
+	public IReconDao getiReconDao() {
+		return iReconDao;
+	}
+
+	public void setiReconDao(IReconDao iReconDao) {
+		this.iReconDao = iReconDao;
+	}
+
+	public ITrainExecDao getiTrainExecDao() {
+		return iTrainExecDao;
+	}
+
+	public void setiTrainExecDao(ITrainExecDao iTrainExecDao) {
+		this.iTrainExecDao = iTrainExecDao;
+	}
+
+	public ITrainDao getiTrainDao() {
+		return iTrainDao;
+	}
+
+	public void setiTrainDao(ITrainDao iTrainDao) {
+		this.iTrainDao = iTrainDao;
+	}
+
 	public ISimulateDao getiSimulateDao() {
 		return iSimulateDao;
 	}
@@ -1156,13 +1261,16 @@ public class CommonServiceImpl <T> {
 		}
 		return null;
 	}
-		
+		  
+
+	
+	
 	@SuppressWarnings({ "unchecked" })
 	public List<T> findAll(MetaType type) {
 		String appUuid = null;						
 		if (!type.equals(MetaType.user) && !type.equals(MetaType.group)
 			&& !type.equals(MetaType.role) && !type.equals(MetaType.privilege)
-			&& !type.equals(MetaType.application)) {
+			&& !type.equals(MetaType.application) && !type.equals(MetaType.meta)) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
 		}
@@ -1899,12 +2007,12 @@ public class CommonServiceImpl <T> {
 	@SuppressWarnings("unused")
 	public List<MetaStatsHolder> getMetaStats(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, JsonProcessingException {
 		String appUuid = null;
-		if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString()))) {
+//		if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+//			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
+//			&& !type.equalsIgnoreCase(MetaType.application.toString()))) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-		}
+//		}
 		List<MetaStatsHolder> countHolder = new ArrayList<>();
 		List<MetaType> metaTypes = MetaType.getMetaList();
 		if(type == null){
@@ -1912,13 +2020,15 @@ public class CommonServiceImpl <T> {
 				long count = 0;
 				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase()))).invoke(this);
 				if (appUuid == null) {
-					count = (long) iDao.getClass().getMethod("count").invoke(iDao);
+					//count = (long) iDao.getClass().getMethod("count").invoke(iDao);
+					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
+
 				}else{
 					/*Query query = new Query();
 					query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));    
 					count = mongoTemplate.count(query, Helper.getDomainClass(Helper.getMetaType(mType.toString().toLowerCase())));*/
-					//count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
-					count = getAllLatest(mType.toString(), "Y").size();
+					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
+					//count = getAllLatest(mType.toString(), "Y").size();
 				}
 				if(count > 0){
 					Object metaObj = iDao.getClass().getMethod("findLatest", Sort.class).invoke(iDao, new Sort(Sort.Direction.DESC, "version"));
@@ -2342,6 +2452,21 @@ public class CommonServiceImpl <T> {
 		}
 	}
 	
+	/*public String invalidateSession() {
+		String message = null;
+		try{
+			SessionCounter.invalidateSessions();
+			message = "Session(s) destroyed successfully.";
+		}catch (NullPointerException e) {
+			e.printStackTrace();
+			return "Can not destroy session(s).";
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "Can not destroy session(s).";
+		}
+		return message;
+	}*/
+	
 	public boolean nonBlockingCompleteTaskThread(List<FutureTask<String>> taskList) {
 		String outputThreadName = null;
 		boolean isComplete = true;
@@ -2639,8 +2764,7 @@ public class CommonServiceImpl <T> {
             
             if (file.exists()) {
             	logger.info("File found.");
-            	String mimeType = null;
-//                mimeType = context.getMimeType(file.getPath());
+                String mimeType = context.getMimeType(file.getPath());
  
                 if (mimeType == null) {
                     mimeType = "application/octet-stream";
@@ -2808,4 +2932,21 @@ public class CommonServiceImpl <T> {
 			}
 			return null;
 		}
+		
+		@SuppressWarnings("unlikely-arg-type")
+		public String findAppId(String type)
+		{
+			String appUuid=null;
+			if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
+					&& !type.equalsIgnoreCase(MetaType.application.toString()) && !type.equalsIgnoreCase(MetaType.meta.toString())) {
+					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+				}
+			return appUuid;
+			
+		}
+		
+		
+		
 }

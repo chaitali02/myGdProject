@@ -47,6 +47,7 @@ import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -315,6 +316,23 @@ public class ParamSetServiceImpl {
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID,modelVersion, MetaType.model.toString());
 		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getAlgorithm().getRef().getUuid(), MetaType.algorithm.toString());
 		//ParamList paramList = paramListServiceImpl.findLatestByUuid(algo.getParamList().getRef().getUuid());
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
+		MetaIdentifier dependsOnRef = new MetaIdentifier();
+		dependsOnRef.setType(MetaType.paramlist);
+		dependsOnRef.setUuid(paramList.getUuid());
+		dependsOnRef.setVersion(paramList.getVersion());		
+		MetaIdentifierHolder dependsOnRefHolder = new MetaIdentifierHolder();
+		dependsOnRefHolder.setRef(dependsOnRef);
+		List<ParamSet> paramSetList = findLatestByDependsOn(dependsOnRefHolder);
+		paramSetList = resolveName(paramSetList);
+		return paramSetList;		
+	}
+	
+	public List<ParamSet> getParamSetByTrain (String trainUUID, String trainVersion) throws JsonProcessingException {		
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUUID,trainVersion, MetaType.train.toString());
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(),train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+
+		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getAlgorithm().getRef().getUuid(), MetaType.algorithm.toString());
 		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
 		MetaIdentifier dependsOnRef = new MetaIdentifier();
 		dependsOnRef.setType(MetaType.paramlist);

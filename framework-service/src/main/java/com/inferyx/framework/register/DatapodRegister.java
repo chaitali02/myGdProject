@@ -129,7 +129,7 @@ public class DatapodRegister {
 				hiveContext.registerDataFrameAsTable(df, tableName);
 				logger.info("datapodRegister: Registering datapod " + tableName);
 				//hiveContext.registerDataFrameAsTable(df, tableName);
-				df.printSchemowgli.gridedge.comma();
+				df.printSchemowgli.inferyx.comma();
 				}
 				}// End for dataStore
 
@@ -162,7 +162,7 @@ public class DatapodRegister {
 				 * System.out.println("datapodRegister: Registering datapod "+
 				 * tableName); sqlContext.registerDataFrameAsTable(df,
 				 * tableName);
-				 mowgli.gridedge.com
+				 mowgli.inferyx.com
 				/// df.printSchema();
 				// }
 				// System.out.println("datapodRegister: Count "+df.count());
@@ -179,7 +179,7 @@ public class DatapodRegister {
 		}// End for all datapods
 		// }
 		// }
-	}mowgli.gridedge.com
+	}mowgli.inferyx.com
 */	
 	/********************** UNUSED **********************/
 	/*public void registerDatapod (String tableName, Datapod dp) {

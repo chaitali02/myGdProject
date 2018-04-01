@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.hive.conf.HiveConf;
@@ -48,15 +47,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IFunctionDao;
-import com.inferyx.framework.dao.IRuleExecDao;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
-import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.Condition;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DagStatusHolder;
@@ -65,11 +61,10 @@ import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroup;
 import com.inferyx.framework.domain.DataQualGroupExec;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Dimension;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Filter;
@@ -79,14 +74,11 @@ import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.MapExec;
-import com.inferyx.framework.domain.Measure;
-import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.PredictExec;
@@ -95,6 +87,8 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroup;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.domain.ReconExec;
+import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Role;
@@ -103,6 +97,9 @@ import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroup;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
+import com.inferyx.framework.domain.SimulateExec;
+import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
@@ -118,6 +115,7 @@ import com.inferyx.framework.register.OracleRegister;
 import com.inferyx.framework.view.metadata.DQView;
 import com.inferyx.framework.view.metadata.DashboardView;
 import com.inferyx.framework.view.metadata.DatasetView;
+import com.inferyx.framework.view.metadata.ReconView;
 import com.inferyx.framework.view.metadata.RuleView;
 
 @Service
@@ -255,6 +253,14 @@ public class RegisterService {
     private MongoGraphServiceImpl mongoGraphServiceImpl;
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private ReconViewServiceImpl reconViewServiceImpl;
+	@Autowired
+	private ReconServiceImpl reconServiceImpl;
+	@Autowired
+	private ReconGroupServiceImpl reconGroupServiceImpl;
+	@Autowired
+	private ReconExecServiceImpl reconExecServiceImpl;
 
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
@@ -1023,6 +1029,10 @@ public class RegisterService {
 				ParamSet paramSet = mapper.convertValue(operator, ParamSet.class);
 				Id = paramSetServiceImpl.save(paramSet).getId();
 				break;*/
+			case "reconview":
+				ReconView reconViewOptr = mapper.convertValue(operator, ReconView.class);
+				Id = reconViewServiceImpl.save(reconViewOptr).getId();
+				break;
 			}
 		}
 		return Id;
@@ -1761,6 +1771,9 @@ public class RegisterService {
 				break;
 			case "ruleview":
 				result = ow.writeValueAsString(ruleViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
+			case "reconview":
+				result = ow.writeValueAsString(reconViewServiceImpl.findOneByUuidAndVersion(uuid, version));
 				break;
 			/*case "rule":
 				Rule rule = ruleServiceImpl.findOneByUuidAndVersion(uuid, version);
@@ -3770,6 +3783,13 @@ public class RegisterService {
 		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByModel(modelUuid, modelVersion));
 		return result;
 	}
+	
+	public String getParamSetByTrain(String trainUuid, String trainVersion) throws JsonProcessingException {
+		String result = null;
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByTrain(trainUuid, trainVersion));
+		return result;
+	}
 
 	public String getParamSetByRule(String ruleUuid, String ruleVersion) throws JsonProcessingException {
 		String result = null;
@@ -3822,9 +3842,21 @@ public class RegisterService {
 			case "profilegroupexec":
 				result = ow.writeValueAsString(profileGroupExecServiceImpl.getMetaIdByExecId(execUuid, execVersion));
 				break;
-			case "modelexec":
-				result = ow.writeValueAsString(modelExecServiceImpl.getMetaIdByExecId(execUuid, execVersion));
+			case "trainexec":
+				result = ow.writeValueAsString(modelExecServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
 				break;
+			case "predictexec":
+				result = ow.writeValueAsString(modelExecServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
+				break;
+			case "simulateexec":
+				result = ow.writeValueAsString(modelExecServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
+				break;
+			case "reconexec":
+				result = ow.writeValueAsString(reconServiceImpl.getMetaIdByExecId(execUuid, execVersion));
+				break;
+			case "recongroupexec":
+				result = ow.writeValueAsString(reconGroupServiceImpl.getMetaIdByExecId(execUuid, execVersion));
+				break;				
 			}
 		}
 		return result;
@@ -3909,12 +3941,12 @@ public class RegisterService {
 					dataQualGroupExec.getCreatedBy().getRef().getName(), dataQualGroupExec.getCreatedOn()));
 		}
 
-		int modelExecCount = commonServiceImpl.findAllLatest(MetaType.modelExec).size();
+		/*int modelExecCount = commonServiceImpl.findAllLatest(MetaType.modelExec).size();
 		ModelExec modelExec = (ModelExec) commonServiceImpl.getLatest(MetaType.modelExec.toString());
 		if (modelExec != null) {
 			countHolder.add(addToCount(MetaType.modelExec.toString(), modelExecCount,
 					modelExec.getCreatedBy().getRef().getName(), modelExec.getCreatedOn()));
-		}
+		}*/
 		
 		int uploadExecCount = commonServiceImpl.findAllLatest(MetaType.uploadExec).size();
 		UploadExec uploadExec = (UploadExec) commonServiceImpl.getLatest(MetaType.uploadExec.toString());
@@ -3928,13 +3960,43 @@ public class RegisterService {
 			countHolder.add(addToCount(MetaType.downloadExec.toString(), downloadExecCount, downloadloadExec.getCreatedBy().getRef().getName(), downloadloadExec.getCreatedOn()));
 		}
 		
-		
 		int predictExecCount = commonServiceImpl.findAllLatest(MetaType.predictExec).size();
 		PredictExec predictExec = (PredictExec) commonServiceImpl.getLatest(MetaType.predictExec.toString());
 		if(predictExec != null) {
 			countHolder.add(addToCount(MetaType.predictExec.toString(), predictExecCount, predictExec.getCreatedBy().getRef().getName(), predictExec.getCreatedOn()));
 		}
+
+		int simulateExecCount = commonServiceImpl.findAllLatest(MetaType.simulateExec).size();
+		SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getLatest(MetaType.simulateExec.toString());
+		if (simulateExec != null) {
+			countHolder.add(addToCount(MetaType.simulateExec.toString(), simulateExecCount,
+					simulateExec.getCreatedBy().getRef().getName(), simulateExec.getCreatedOn()));
+		}
+		
+		int trainExecCount = commonServiceImpl.findAllLatest(MetaType.trainExec).size();
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getLatest(MetaType.trainExec.toString());
+		if (trainExec != null) {
+			countHolder.add(addToCount(MetaType.trainExec.toString(), trainExecCount,
+					trainExec.getCreatedBy().getRef().getName(), trainExec.getCreatedOn()));
+		}
+		int reconExecCount = commonServiceImpl.findAllLatest(MetaType.reconExec).size();
+		ReconExec reconExec = (ReconExec) commonServiceImpl.getLatest(MetaType.reconExec.toString());
+		if (reconExec != null) {
+			countHolder.add(addToCount(MetaType.reconExec.toString(), reconExecCount,
+					reconExec.getCreatedBy().getRef().getName(), reconExec.getCreatedOn()));
+		}
+		
+		int reconGroupExecCount = commonServiceImpl.findAllLatest(MetaType.recongroupExec).size();
+		ReconGroupExec reconGroupExec = (ReconGroupExec) commonServiceImpl.getLatest(MetaType.recongroupExec.toString());
+		if (reconGroupExec != null) {
+			countHolder.add(addToCount(MetaType.recongroupExec.toString(), reconGroupExecCount,
+					reconGroupExec.getCreatedBy().getRef().getName(), reconGroupExec.getCreatedOn()));
+		}
+
+
 		return countHolder;
+		
+		
 	}
 
 	public long getMetaStatsByType() {
@@ -4209,6 +4271,18 @@ public class RegisterService {
 			case "profileexec":
 				result = ow.writeValueAsString(profileExecServiceImpl.getNumRowsbyExec(execUuid, execVersion));
 				break;
+			case "trainexec":
+				result = ow.writeValueAsString(modelExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
+			case "predictexec":
+				result = ow.writeValueAsString(modelExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
+			case "simulateexec":
+				result = ow.writeValueAsString(modelExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
+			case "reconexec":
+				result = ow.writeValueAsString(reconExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
 			}
 		}
 		return result;
@@ -4237,7 +4311,7 @@ public class RegisterService {
 			query.addCriteria(Criteria.where("createdOn").gt(simpleDateFormat.parse(startDate))
 						.lte(simpleDateFormat.parse(endDate)));
 			
-			query.addCriteria(Criteria.where("statusList.stage").in("Completed"));
+			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
 			System.out.println(query);
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(ruleUuid));
 			System.out.println(query);

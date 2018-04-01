@@ -34,7 +34,7 @@ DatascienceModule.factory('ModelFactory',function($http,$location){
     factory.findExecuteModel=function(uuid,version){
       var url=$location.absUrl().split("app")[0]
       return $http({
-              url:url+"model/execute?action=execute&uuid="+uuid+"&version="+version,
+              url:url+"model/train/execute?action=execute&uuid="+uuid+"&version="+version,
               headers: {
                 'Accept':'*/*',
                 'content-Type' : "application/json",
@@ -46,7 +46,7 @@ DatascienceModule.factory('ModelFactory',function($http,$location){
     factory.findExecuteModelWithBody=function(uuid,version,data){
       var url=$location.absUrl().split("app")[0]
       return $http({
-              url:url+"model/train1?action=execute&modelUUID="+uuid+"&modelVersion="+version,
+              url:url+"model/train/execute?action=execute&uuid="+uuid+"&version="+version,
               headers: {
                 'Accept':'*/*',
                 'content-Type' : "application/json",
@@ -151,7 +151,21 @@ DatascienceModule.factory('ModelFactory',function($http,$location){
       var url=$location.absUrl().split("app")[0]
       return $http({
         method: 'GET',
-        url:url+"model/getResults?action=view&uuid="+uuid+"&version="+version,
+        url:url+"model/train/getResults?action=view&uuid="+uuid+"&version="+version,
+        }).then(function (response,status,headers) {return response;})
+    }
+    factory.findPredictResult=function(uuid,version) {
+      var url=$location.absUrl().split("app")[0]
+      return $http({
+        method: 'GET',
+        url:url+"model/predict/getResults?action=view&uuid="+uuid+"&version="+version,
+        }).then(function (response,status,headers) {return response;})
+    }
+    factory.findSimulateResult=function(uuid,version) {
+      var url=$location.absUrl().split("app")[0]
+      return $http({
+        method: 'GET',
+        url:url+"model/simulate/getResults?action=view&uuid="+uuid+"&version="+version,
         }).then(function (response,status,headers) {return response;})
     }
     factory.findModelScript=function(uuid,version) {
@@ -178,11 +192,30 @@ DatascienceModule.factory('ModelFactory',function($http,$location){
         data:data,
         }).success(function(response){return response})
     }
+    factory.findAlgorithumByTrainExec=function(uuid,version,type){
+    	  var url=$location.absUrl().split("app")[0]
+  		  return $http({
+  			        url:url+"model/getAlgorithmByTrainExec?action=view&trainExecUUID="+uuid+"&trainExecVersion="+version+"&type="+type,
+  			        method: "GET",
+  	          }).then(function(response){ return  response})
+  	  }
   return factory;
 })
 
 DatascienceModule.service("ModelService", function ($http,ModelFactory,$q,sortFactory) {
 
+	this.getAlgorithmByTrainExec=function(uuid,version,type){
+	    var deferred = $q.defer();
+	    ModelFactory.findAlgorithumByTrainExec(uuid,version,type).then(function(response){onSuccess(response.data)});
+	    var onSuccess=function(response){
+	      deferred.resolve({
+	        data:response
+	      });
+	    }
+	    return deferred.promise;
+	  }
+	
+	
   this.getOneById=function(uuid,type){
     var deferred = $q.defer();
     ModelFactory.findOneById(uuid,type).then(function(response){onSuccess(response.data)});
@@ -206,6 +239,26 @@ DatascienceModule.service("ModelService", function ($http,ModelFactory,$q,sortFa
   this.getModelResult=function(uuid,version){
     var deferred = $q.defer();
     ModelFactory.findModelResult(uuid,version).then(function(response){onSuccess(response.data)});
+    var onSuccess=function(response){
+      deferred.resolve({
+        data:response
+      });
+    }
+    return deferred.promise;
+  }
+  this.getPredictResult=function(uuid,version){
+    var deferred = $q.defer();
+    ModelFactory.findPredictResult(uuid,version).then(function(response){onSuccess(response.data)});
+    var onSuccess=function(response){
+      deferred.resolve({
+        data:response
+      });
+    }
+    return deferred.promise;
+  }
+  this.getSimulateResult=function(uuid,version){
+    var deferred = $q.defer();
+    ModelFactory.findSimulateResult(uuid,version).then(function(response){onSuccess(response.data)});
     var onSuccess=function(response){
       deferred.resolve({
         data:response

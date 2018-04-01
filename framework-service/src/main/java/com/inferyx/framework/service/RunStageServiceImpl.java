@@ -22,6 +22,8 @@ import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.common.ProfileInfo;
+import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
@@ -38,6 +40,7 @@ import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
+import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RunStatusHolder;
 import com.inferyx.framework.domain.SessionContext;
@@ -101,6 +104,83 @@ public class RunStageServiceImpl implements Callable<String> {
 	Stage stage;
 	private Mode runMode;
 	private SessionContext sessionContext;
+	private ReconServiceImpl reconServiceImpl;
+	private ReconGroupServiceImpl reconGroupServiceImpl;
+	ProfileInfo profileInfo;
+	ReconInfo reconInfo;
+	
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the profileInfo
+	 */
+	public ProfileInfo getProfileInfo() {
+		return profileInfo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param profileInfo the profileInfo to set
+	 */
+	public void setProfileInfo(ProfileInfo profileInfo) {
+		this.profileInfo = profileInfo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the reconInfo
+	 */
+	public ReconInfo getReconInfo() {
+		return reconInfo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param reconInfo the reconInfo to set
+	 */
+	public void setReconInfo(ReconInfo reconInfo) {
+		this.reconInfo = reconInfo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the reconServiceImpl
+	 */
+	public ReconServiceImpl getReconServiceImpl() {
+		return reconServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param reconServiceImpl the reconServiceImpl to set
+	 */
+	public void setReconServiceImpl(ReconServiceImpl reconServiceImpl) {
+		this.reconServiceImpl = reconServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the reconGroupServiceImpl
+	 */
+	public ReconGroupServiceImpl getReconGroupServiceImpl() {
+		return reconGroupServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param reconGroupServiceImpl the reconGroupServiceImpl to set
+	 */
+	public void setReconGroupServiceImpl(ReconGroupServiceImpl reconGroupServiceImpl) {
+		this.reconGroupServiceImpl = reconGroupServiceImpl;
+	}
 	
 	/**
 	 * @return the sessionContext
@@ -610,8 +690,12 @@ public class RunStageServiceImpl implements Callable<String> {
 							|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.model) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.rule))) {
+							|| operationInfoHolder.getRef().getType().equals(MetaType.rule) 
+							|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
+							|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
+							|| operationInfoHolder.getRef().getType().equals(MetaType.simulate) 
+							|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
+							|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup))) {
 					continue;
 					}
 				}
@@ -728,8 +812,12 @@ public class RunStageServiceImpl implements Callable<String> {
 							&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.model))) {
+								|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup)
+								|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.simulate)
+								|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup))) {
 						continue;
 						}
 					}
@@ -948,8 +1036,20 @@ public class RunStageServiceImpl implements Callable<String> {
 			MetaIdentifier mapRef = operationInfoHolder.getRef();
 			//Profile profile = profileServiceImpl.findLatestByUuid(mapRef.getUuid());
 			Profile profile = (Profile) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.profile.toString());
+			/*Datapod targetDatapod = (Datapod) daoRegister
+					.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002671", null));*/
 			Datapod targetDatapod = (Datapod) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002671", null));
+					.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
+			return new OrderKey(targetDatapod.getUuid(),
+					targetDatapod.getVersion());
+		}  else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+				&& operationInfoHolder.getRef().getType().equals(MetaType.recon)) {
+			MetaIdentifier mapRef = operationInfoHolder.getRef();
+			Recon recon = (Recon) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.recon.toString());
+			/*Datapod targetDatapod = (Datapod) daoRegister
+					.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002699", null));*/
+			Datapod targetDatapod = (Datapod) daoRegister
+					.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));
 			return new OrderKey(targetDatapod.getUuid(),
 					targetDatapod.getVersion());
 		}  
@@ -986,7 +1086,8 @@ public class RunStageServiceImpl implements Callable<String> {
 				&& (operationInfoHolder.getRef().getType().equals(MetaType.map) 
 					|| operationInfoHolder.getRef().getType().equals(MetaType.load)
 					|| operationInfoHolder.getRef().getType().equals(MetaType.profile)
-					|| operationInfoHolder.getRef().getType().equals(MetaType.dq))) {
+					|| operationInfoHolder.getRef().getType().equals(MetaType.dq)
+					|| operationInfoHolder.getRef().getType().equals(MetaType.recon))) {
 			filePath = String.format("/%s/%s/%s", 
 					datapodKey.getUUID(), datapodKey.getVersion(), dagExec.getVersion());
 		}
@@ -1039,6 +1140,8 @@ public class RunStageServiceImpl implements Callable<String> {
 		indivTaskExe.setSessionContext(sessionContext);
 		indivTaskExe.setParamSetServiceImpl(paramSetServiceImpl);
 		FutureTask<String> futureTask = new FutureTask<String>(indivTaskExe);
+		indivTaskExe.setReconServiceImpl(reconServiceImpl);
+		indivTaskExe.setReconGroupServiceImpl(reconGroupServiceImpl);
 		taskExecutor.execute(futureTask);
 		taskList.add(futureTask);
 		taskThreadMap.put("Task_" + dagExec.getUuid() + "_" + indvTaskExec.getTaskId(), futureTask);

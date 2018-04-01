@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,6 +40,7 @@ import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ImportServiceImpl;
 import com.inferyx.framework.service.MessageServiceImpl;
@@ -77,7 +79,7 @@ public class CommonController<T> {
 	public Object getOneByUuidAndVersion(@RequestParam("uuid") String uuid,
 			@RequestParam("version") String version, @RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()) || type.equalsIgnoreCase(MetaType.ruleview.toString()) || type.equalsIgnoreCase(MetaType.dashboardview.toString()))
+		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()) || type.equalsIgnoreCase(MetaType.ruleview.toString()) || type.equalsIgnoreCase(MetaType.dashboardview.toString())|| type.equalsIgnoreCase(MetaType.reconview.toString()))
 			if(StringUtils.isBlank(version))
 				return (T) registerService.getLatestByUuid(uuid, type);
 			else
@@ -163,7 +165,7 @@ public class CommonController<T> {
 	public String save(@RequestBody Object metaObject, @RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action, HttpServletRequest request)
 	throws Exception {
-		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()) || type.equalsIgnoreCase(MetaType.ruleview.toString()) || type.equalsIgnoreCase(MetaType.dashboardview.toString())){
+		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()) || type.equalsIgnoreCase(MetaType.ruleview.toString()) || type.equalsIgnoreCase(MetaType.dashboardview.toString()) || type.equalsIgnoreCase(MetaType.reconview.toString())   ){
 			ObjectMapper mapper = new ObjectMapper();
 			java.util.Map<String, Object> operator = mapper.convertValue(metaObject, java.util.Map.class);
 			return registerService.save(operator, type);
@@ -245,6 +247,11 @@ public class CommonController<T> {
 		T object = (T) commonServiceImpl.resolveName(uuid, type);
 		return objectWriter.writeValueAsString(object);
 	}
+	
+	/*@RequestMapping(value="session/invalidate", method = RequestMethod.GET)
+    public @ResponseBody String invalidateSession(){
+		return commonServiceImpl.invalidateSession();
+    }*/
 	
 	@RequestMapping(value = "/upload", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
 	public @ResponseBody String upload(@RequestParam("file") MultipartFile file,

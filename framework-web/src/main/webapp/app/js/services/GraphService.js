@@ -5,11 +5,11 @@ InferyxApp=angular.module('InferyxApp');
 InferyxApp.factory('graphService',function(dagMetaDataService){
 
     var factory={}
-    factory.convertDagToGraph=function(dag,isTemplate){
+    factory.convertDagToGraph=function(dag,isTemplate,addMode){
       var cells = [];
       var links = [];
       cells.push( new joint.shapes.devs.Model(
-        angular.merge({},dagMetaDataService.getCustomElement('dag',isTemplate),{
+        angular.merge({},dagMetaDataService.getCustomElement('dag',isTemplate,addMode),{
           id: "dag_0",
           position: { x: dag.xPos || 30, y : dag.yPos || 250 },
           attrs: {
@@ -30,7 +30,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
       
       if(!dag.stages){
         cells.push( new joint.shapes.devs.Model(
-          angular.merge({},dagMetaDataService.getCustomElement('stage',false),{
+          angular.merge({},dagMetaDataService.getCustomElement('stage',false,addMode),{
             id: "stage_0",
             elementType : 'stage',
             "model-data": {
@@ -90,7 +90,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
         if(stagecount == 0 && isTemplate == true){
           stagecount=1;
           cells.push( new joint.shapes.devs.Model(
-            angular.merge({},dagMetaDataService.getCustomElement('stage',false),{
+            angular.merge({},dagMetaDataService.getCustomElement('stage',false,addMode),{
               id: stage.stageId,
               elementType : 'stage',
               "model-data": stage,
@@ -109,7 +109,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
           ));
         }else{
           cells.push( new joint.shapes.devs.Model(
-            angular.merge({},dagMetaDataService.getCustomElement('stage',isTemplate),{
+            angular.merge({},dagMetaDataService.getCustomElement('stage',isTemplate,addMode),{
               id: stage.stageId,
               elementType : 'stage',
               "model-data": stage,
@@ -146,7 +146,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
             taskYPos = taskYPos + 80;
             task.taskId = task.taskId.length > 3 ? task.taskId : stage.stageId+'_'+"task_"+task.taskId
             cells.push( new joint.shapes.devs.Model(
-              angular.merge({},dagMetaDataService.getCustomElement(type,isTemplate),{
+              angular.merge({},dagMetaDataService.getCustomElement(type,isTemplate,addMode),{
                   id: task.taskId,
                   elementType : type,
                   "model-data": task,
@@ -224,6 +224,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
           stages[val.id] ={
             "stageId" : val.attributes.actualId || val.id,
             "dependsOn" : [],
+            "active":val.attributes.attrs[".body"].active ==true?"Y":"N",
             "name" : val.attributes['model-data'].name,
             "xPos" : val.attributes.position.x,
             "yPos" : val.attributes.position.y,
@@ -239,6 +240,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
             "taskId":val.attributes.actualId || val.id,
             "dependsOn" : [],
             "name" : val.attributes['model-data'].name,
+            "active":val.attributes.attrs[".body"].active ==true?"Y":"N",
             "xPos" : val.attributes.position.x,
             "yPos" : val.attributes.position.y,
             "operators" : val.attributes['model-data'].operators || {}

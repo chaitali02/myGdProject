@@ -49,13 +49,19 @@ import com.inferyx.framework.service.TaskHolder;
 @RequestMapping(value = "/dataqual")
 public class DataQualController {
 
-	@Autowired DQOperator dataQualOperator;
-	@Autowired DataQualServiceImpl dataQualServiceImpl;
-	@Autowired DataQualGroupServiceImpl dataQualGroupServiceImpl;
-	@Autowired RegisterService registerService;
-	@Autowired DataQualExecServiceImpl dataQualExecServiceImpl;
-	@Autowired DataQualGroupExecServiceImpl dataQualGroupExecServiceImpl;
-	@Autowired 
+	@Autowired
+	DQOperator dataQualOperator;
+	@Autowired
+	DataQualServiceImpl dataQualServiceImpl;
+	@Autowired
+	DataQualGroupServiceImpl dataQualGroupServiceImpl;
+	@Autowired
+	RegisterService registerService;
+	@Autowired
+	DataQualExecServiceImpl dataQualExecServiceImpl;
+	@Autowired
+	DataQualGroupExecServiceImpl dataQualGroupExecServiceImpl;
+	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;

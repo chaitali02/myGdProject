@@ -5,18 +5,28 @@
  */
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Ganesh
  *
  */
-@Component
 @Document(collection = "predictexec")
 public class PredictExec extends BaseEntity {
 	private MetaIdentifierHolder dependsOn;
 	private String location;
+	private MetaIdentifierHolder result; // Datastore info
+	private List<Status> statusList;
+
+	
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
 	/**
 	 * @Ganesh
 	 *
@@ -48,5 +58,12 @@ public class PredictExec extends BaseEntity {
 	 */
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	
+	public MetaIdentifierHolder getResult() {
+		return result;
+	}
+	public void setResult(MetaIdentifierHolder result) {
+		this.result = result;
 	}
 }

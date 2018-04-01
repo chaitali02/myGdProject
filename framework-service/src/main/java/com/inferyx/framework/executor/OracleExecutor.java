@@ -31,8 +31,11 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
+import com.inferyx.framework.domain.Simulate;
+import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.reader.IReader;
@@ -172,8 +175,8 @@ public class OracleExecutor implements IExecutor {
 	}
 
 	@Override
-	public Object fetchAndTrainModel(Model model, String[] fieldArray, Algorithm algorithm, String modelName,
-			String filePath, ParamMap paramMap, String clientContext) throws Exception {
+	public Object fetchAndTrainModel(Train train, Model model, String[] fieldArray, Algorithm algorithm,
+			String modelName, String filePath, ParamMap paramMap, String clientContext) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -214,6 +217,27 @@ public class OracleExecutor implements IExecutor {
 	@Override
 	public List<Object> submitQuery(String sql, int rowLimit, String format, String header, String clientContext)
 			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object predictModel(Predict predict, String[] fieldArray, Algorithm algorithm, String filePath,
+			String tableName, String clientContext) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object simulateModel(Simulate simulate, String[] fieldArray, Algorithm algorithm, String filePath,
+			String tableName, String clientContext) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, String clientContext)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

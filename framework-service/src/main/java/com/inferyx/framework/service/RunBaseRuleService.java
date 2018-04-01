@@ -449,7 +449,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	
 	public TaskHolder execute() {
 		// Set status to In Progress
-		logger.info("Inside RunBaseRuleService.execute for rule : " + baseRule.getUuid() + " : " + baseRule.getName());
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		long countRows = -1L;
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
@@ -531,7 +530,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			synchronized (baseRuleExec.getUuid()) {
 				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.Completed);
 			}
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			// Set status to Failed
 			try {

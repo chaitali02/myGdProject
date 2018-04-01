@@ -20,7 +20,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.FutureTask;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,6 +34,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -38,9 +42,12 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
@@ -56,10 +63,13 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FeatureRefHolder;
+import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -71,6 +81,8 @@ import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -126,6 +138,13 @@ public class ModelServiceImpl {
 	SessionHelper sessionHelper;
 	@Autowired
 	private ExecutorFactory execFactory;
+	@Autowired
+	private MessageServiceImpl messageServiceImpl;
+	@Resource(name="taskThreadMap")
+	protected ConcurrentHashMap taskThreadMap;
+	
+	//private ParamMap paramMap;
+
 	
 	static final Logger logger = Logger.getLogger(ModelServiceImpl.class);
 	CustomLogger customLogger = new CustomLogger();
@@ -332,6 +351,114 @@ public class ModelServiceImpl {
 		}*/
 		return predict;
 	}	
+	
+	
+	
+	
+	public Simulate resolveName(Simulate simulate) throws JsonProcessingException {
+		if (simulate.getCreatedBy() != null) {
+			String createdByRefUuid = simulate.getCreatedBy().getRef().getUuid();
+			//User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
+			User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
+			simulate.getCreatedBy().getRef().setName(user.getName());
+		}
+		if (simulate.getAppInfo() != null) {
+			for (int i = 0; i < simulate.getAppInfo().size(); i++) {
+				String appUuid = simulate.getAppInfo().get(i).getRef().getUuid();
+				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
+				String appName = application.getName();
+				simulate.getAppInfo().get(i).getRef().setName(appName);
+			}
+		}
+		if(simulate.getFeatureInfo().size() >0){
+			for (int i = 0; i < simulate.getFeatureInfo().size(); i++) {
+				String attributeId = simulate.getFeatureInfo().get(i).getFeatureId();
+				//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(model.getFeatures().get(i).getRef().getUuid());
+					if(simulate.getFeatureInfo().get(i).getRef().getType().equals(MetaType.dataset)) {
+					DataSet datasetDO = (DataSet) commonServiceImpl.getLatestByUuid(simulate.getFeatureInfo().get(i).getRef().getUuid(), MetaType.dataset.toString());
+					String datapodName = datasetDO.getName();
+					simulate.getFeatureInfo().get(i).getRef().setName(datapodName);
+					List<AttributeSource> attributeSourceList = datasetDO.getAttributeInfo();
+					simulate.getFeatureInfo().get(i).setFeatureName(attributeSourceList.get(i).getAttrSourceName());	
+				}else if(simulate.getFeatureInfo().get(i).getRef().getType().equals(MetaType.datapod)) {					
+					Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(simulate.getFeatureInfo().get(i).getRef().getUuid(), MetaType.datapod.toString());
+					String datapodName = datapodDO.getName();
+					simulate.getFeatureInfo().get(i).getRef().setName(datapodName);
+					List<Attribute> attributeList = datapodDO.getAttributes();
+					FeatureRefHolder featureRefHolder =new FeatureRefHolder();
+					featureRefHolder.setFeatureName(attributeList.get(Integer.parseInt(attributeId)).getName());
+					simulate.getFeatureInfo().get(i).setFeatureName(featureRefHolder.getFeatureName());					
+				}
+			}
+		}
+		
+		return simulate;
+	}	
+
+	public Train resolveName(Train train) throws JsonProcessingException {
+		if (train.getCreatedBy() != null) {
+			String createdByRefUuid = train.getCreatedBy().getRef().getUuid();
+			//User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
+			User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
+			train.getCreatedBy().getRef().setName(user.getName());
+		}
+		if (train.getAppInfo() != null) {
+			for (int i = 0; i < train.getAppInfo().size(); i++) {
+				String appUuid = train.getAppInfo().get(i).getRef().getUuid();
+				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
+				String appName = application.getName();
+				train.getAppInfo().get(i).getRef().setName(appName);
+			}
+		}
+		if(train.getFeatureAttrMap().size() >0){
+			for (int i = 0; i < train.getFeatureAttrMap().size(); i++) {
+				String attributeId = train.getFeatureAttrMap().get(i).getFeatureMapId();
+				//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(model.getFeatures().get(i).getRef().getUuid());
+				if(train.getFeatureAttrMap().get(i).getFeature().getRef().getType().equals(MetaType.dataset)) {
+					DataSet datasetDO = (DataSet) commonServiceImpl.getLatestByUuid(train.getFeatureAttrMap().get(i).getFeatureMapId(), MetaType.dataset.toString());
+					String datapodName = datasetDO.getName();
+					FeatureRefHolder featureRefHolder = new FeatureRefHolder();
+					featureRefHolder.setFeatureName(datapodName);
+					train.getFeatureAttrMap().get(i).setFeature(featureRefHolder);
+					List<AttributeSource> attributeSourceList = datasetDO.getAttributeInfo();
+					featureRefHolder.setFeatureName(attributeSourceList.get(Integer.parseInt(attributeId)).getAttrSourceName());
+					train.getFeatureAttrMap().get(i).setFeature(featureRefHolder);	
+				}else if(train.getFeatureAttrMap().get(i).getFeature().getRef().getType().equals(MetaType.datapod)) {					
+					Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(train.getFeatureAttrMap().get(i).getFeatureMapId(), MetaType.datapod.toString());
+					String datapodName = datapodDO.getName();
+					FeatureRefHolder featureRefHolder = new FeatureRefHolder();
+					featureRefHolder.setFeatureName(datapodName);
+					train.getFeatureAttrMap().get(i).setFeature(featureRefHolder);
+					List<Attribute> attributeList = datapodDO.getAttributes();
+					featureRefHolder.setFeatureName(attributeList.get(Integer.parseInt(attributeId)).getName());
+					train.getFeatureAttrMap().get(i).setFeature(featureRefHolder);				
+				}
+			}
+		}
+		/*Algorithm algo= null;
+		if (train.getAlgorithm().getRef().getVersion() != null)
+			algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(train.getAlgorithm().getRef().getUuid(), train.getAlgorithm().getRef().getVersion(), MetaType.algorithm.toString());
+		else 
+			algo = (Algorithm) commonServiceImpl.getLatestByUuid(train.getAlgorithm().getRef().getUuid(), MetaType.algorithm.toString());
+				*/
+		/*if(model.getLabel() != null && algo.getLabelRequired().equalsIgnoreCase("Y")){
+			List<Attribute> attributeList = null;
+			if(model.getSource().getRef().getType().toString().equals(MetaType.datapod.toString())){
+				//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(model.getLabel().getRef().getUuid());
+				Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(model.getLabel().getRef().getUuid(), MetaType.datapod.toString());
+				model.getLabel().getRef().setName(datapodDO.getName());
+				attributeList = datapodDO.getAttributes();
+				model.getLabel().setAttrName(attributeList.get(Integer.parseInt(attributeId)).getName());
+			} else if(model.getSource().getRef().getType().toString().equals(MetaType.dataset.toString())){
+				//Dataset dataset = datasetServiceImpl.findLatestByUuid(model.getLabel().getRef().getUuid());
+				DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(model.getLabel().getRef().getUuid(), MetaType.dataset.toString());
+				model.getLabel().getRef().setName(dataset.getName());
+				List<AttributeSource> attributeSourceList = dataset.getAttributeInfo();
+				model.getLabel().setAttrName(attributeSourceList.get(Integer.parseInt(attributeId)).getAttrSourceName());
+			}
+		}*/
+		return train;
+	}
 
 	/********************** UNUSED **********************/
 	/*public List<Model> findAllByVersion(String uuid) {
@@ -424,8 +551,9 @@ public class ModelServiceImpl {
 		}
 		return baseEntityList;
 	}*/
-	
-	public ModelExec create( String modelUUID, String modelVersion, ExecParams execParams, ParamMap paramMap, ModelExec modelExec) throws Exception {
+
+	/********************** UNUSED **********************/
+	/*public ModelExec create( String modelUUID, String modelVersion, ExecParams execParams, ParamMap paramMap, ModelExec modelExec) throws Exception {
 		MetaIdentifierHolder modelRef = new MetaIdentifierHolder();
 		//Model model = null;
 
@@ -439,11 +567,12 @@ public class ModelServiceImpl {
 			modelExec.setDependsOn(modelRef);
 			modelExec.setBaseEntity();
 			
-			/*
+			
 			 * 
 			 * log file_name formation : modelexecuuid + modelexecversion + modelversion
 			 * 
-			 */
+			 
+			 
 			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + modelExec.getUuid() + "_" + modelExec.getVersion() + "_"+ model.getVersion()+".log";
 			}
@@ -512,9 +641,10 @@ public class ModelServiceImpl {
 			throw new Exception("Model creation failed");
 		}		
 		return modelExec;
-	}
-	
-	public ModelExec train(String modelUUID, String modelVersion, ModelExec modelExec, ExecParams execParams, ParamMap paramMap) throws FileNotFoundException, IOException{
+	}*/
+
+	/********************** UNUSED **********************/	
+	/*public ModelExec train(String modelUUID, String modelVersion, ModelExec modelExec, ExecParams execParams, ParamMap paramMap) throws FileNotFoundException, IOException{
 		RunModelServiceImpl runModelServiceImpl = new RunModelServiceImpl();
 		List<Status> statusList = modelExec.getStatusList();
 		if (statusList == null) {
@@ -546,13 +676,13 @@ public class ModelServiceImpl {
 		runModelServiceImpl.setCustomLogger(new CustomLogger());
 		runModelServiceImpl.setModelType(model.getType());
 		runModelServiceImpl.setModelServiceImpl(this);
-		if(model.getType().equalsIgnoreCase(ExecContext.R.toString())|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) 
+		if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) 
 			runModelServiceImpl.setLogPath(Helper.getPropertyValue("framework.model.log.path") + "/" + modelExec.getUuid() + "_" + modelExec.getVersion() + "_"+ model.getVersion()+".log");
 		runModelServiceImpl.setExecFactory(execFactory);
 		runModelServiceImpl.setSecurityServiceImpl(securityServiceImpl);
 		runModelServiceImpl.start();
 		return modelExec;
-	}
+	}*/
 
 	public String uploadScript(MultipartFile customScriptFile, Model model, String modelId, String modelUuid, String modelVersion, String scriptName) {
 		//scriptName = customScriptFile.getOriginalFilename();
@@ -599,11 +729,11 @@ public class ModelServiceImpl {
 		return exec.executeScript(scriptPath, commonServiceImpl.getApp().getUuid());
 	}
 	
-	public List<String> readLog(String filePath, String type, String modelExecUUID, String modelExecVersion) throws IOException {
+	public List<String> readLog(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException {
 		if(filePath == null) {
-			ModelExec modelExec = (ModelExec) commonServiceImpl.getOneByUuidAndVersion(modelExecUUID, modelExecVersion, type);
-			MetaIdentifierHolder dependsOn = modelExec.getDependsOn();
-			filePath = Helper.getPropertyValue("framework.model.log.path") + "/" + modelExec.getUuid() + "_" + modelExec.getVersion() + "_" + dependsOn.getRef().getVersion() + ".log";
+			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type);
+			MetaIdentifierHolder dependsOn = trainExec.getDependsOn();
+			filePath = Helper.getPropertyValue("framework.model.log.path") + "/" + trainExec.getUuid() + "_" + trainExec.getVersion() + "_" + dependsOn.getRef().getVersion() + ".log";
 		}
 		FileInputStream fstream = new FileInputStream(filePath);
 		BufferedReader buffReader = new BufferedReader(new InputStreamReader(fstream));
@@ -621,31 +751,44 @@ public class ModelServiceImpl {
 		return logList;
 	}
 	
-	public HttpServletResponse download(String modelExecUUID, String modelExecVersion, HttpServletResponse response,Mode runMode) throws Exception {
+	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,Mode runMode) throws Exception {
 		
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(modelExecUUID, modelExecVersion);
+		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(execUuid, execVersion);
 		String location = datastore.getLocation();
-		String title = StringUtils.substringBetween(location, "file:///", "/stages");
-		String temp = title;
-		String filename = temp.contains("user/hive/warehouse/framework/")
-				? temp.replaceAll("user/hive/warehouse/framework/", "").replaceAll("/", "_")
-				: temp;
+		String title = "";
+		if(location.contains(hdfsInfo.getHdfsURL()))
+			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/stages");
+		if(location.contains(hdfsInfo.getSchemaPath()))
+			location = StringUtils.substringBetween(location, hdfsInfo.getSchemaPath(), "/stages");
+		
+		if(location.startsWith("/") && location.endsWith("/"))
+			title = location.substring(1, location.length()-1);
+		else if(location.startsWith("/"))
+			title = location.substring(1);
+		else if(location.endsWith("/"))
+			title = location.replaceAll("/", "");
+		
+		String temp = title.replaceAll("_", "-");
+	    String fileName = temp.replaceAll("/", "_");
 		try {
 			response.setContentType("text/plain");
-			response.setHeader("Content-disposition", "attachment; filename=" + filename + ".pmml");
-			File file = new File("/" + title + "/" + filename + ".pmml");
+			response.setHeader("Content-disposition", "attachment");
+
+			response.setHeader("filename",""+fileName + ".pmml");
+			
+			File file = new File(hdfsInfo.getSchemaPath() +"/"+location + "/" + fileName + ".pmml");
 
 			if (file.exists()) {
 				DownloadExec downloadExec = new DownloadExec();
 
 				downloadExec.setBaseEntity();
-				downloadExec.setLocation("/" + title + "/" + filename + ".pmml");
+				downloadExec.setLocation("/" + location + "/" + fileName + ".pmml");
 				downloadExec.setDependsOn(new MetaIdentifierHolder(
-						new MetaIdentifier(MetaType.modelExec, modelExecUUID, modelExecVersion)));
+						new MetaIdentifier(MetaType.modelExec, execUuid, execVersion)));
 
 				OutputStream out = response.getOutputStream();
 				FileInputStream in = new FileInputStream(file);
-				byte[] buffer = new byte[4096];
+				byte[] buffer = new byte[Integer.parseInt(file.length()+"")];
 				int length;
 				while ((length = in.read(buffer)) > 0) {
 					out.write(buffer, 0, length);
@@ -654,12 +797,18 @@ public class ModelServiceImpl {
 				in.close();
 				out.flush();
 			} else {
-				logger.info("Requested " + "/" + title + "/" + filename + ".pmml" + " file not found!!");
+				logger.info("Requested file " + "/" + location + "/" + fileName + ".pmml" + " not found.");
 				response.setStatus(300);
 				throw new FileNotFoundException();
 			}
 		} catch (IOException e) {
-			logger.error(e.getCause().getMessage());
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			response.setStatus(500);
+			throw new IOException();
+		}catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
 			response.setStatus(500);
 			throw new IOException();
 		}
@@ -667,65 +816,358 @@ public class ModelServiceImpl {
 
 	}
 
-	public boolean predict(String predictUUID, String predictVersion, ExecParams execParams, String type, String action,
-			String mode) {		
-		
-		return false;
+	public boolean predict(Predict predict, ExecParams execParams, PredictExec predictExec) throws Exception {	
+
+		boolean isSuccess = false;
+		try {
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.InProgress);
+			
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(predict.getDependsOn().getRef().getUuid(),
+					predict.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+			
+			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
+					model.getAlgorithm().getRef().getUuid(), model.getAlgorithm().getRef().getVersion(),
+					MetaType.algorithm.toString());
+
+			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
+			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
+			String tableName = String.format("%s_%s_%s", model.getUuid(), model.getVersion(), predictExec.getVersion());
+
+			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+			Object result = null;
+			
+			String[] fieldArray = modelExecServiceImpl.getAttributeNames(predict);
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			
+			result = exec.predictModel(predict, fieldArray, algorithm, filePath, tableName, commonServiceImpl.getApp().getUuid());
+			
+			dataStoreServiceImpl.setRunMode(Mode.BATCH);
+
+			dataStoreServiceImpl.create((String) result, modelName,
+					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
+					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
+					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+
+			predictExec.setLocation((String) result);
+			predictExec.setResult(resultRef);
+			commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
+			if (result != null) {
+				isSuccess = true;
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Completed);
+			}else {
+				isSuccess = false;
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+				ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
+						.getRequestAttributes();
+				if (requestAttributes != null) {
+					HttpServletResponse response = requestAttributes.getResponse();
+					if (response != null) {
+						response.setContentType("application/json");
+						Message message = new Message("412", MessageStatus.FAIL.toString(), e.getMessage());
+						Message savedMessage = messageServiceImpl.save(message);
+						ObjectMapper mapper = new ObjectMapper();
+						String messageJson = mapper.writeValueAsString(savedMessage);
+						response.setContentType("application/json");
+						response.setStatus(412);
+						response.getOutputStream().write(messageJson.getBytes());
+						response.getOutputStream().close();
+					} else
+						logger.info("HttpServletResponse response is \"" + null + "\"");
+				} else
+					logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+		}
+		return isSuccess;
 	}
 
-	public boolean simulate(String simulateUUID, String simulateVersion, ExecParams execParams, String type,
-			String action, String mode) {
-		
-		return false;
+	public boolean simulate(Simulate simulate, ExecParams execParams, SimulateExec simulateExec) throws Exception {
+		boolean isSuccess = false;
+		try {
+			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.InProgress);
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
+					simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+
+			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
+					model.getAlgorithm().getRef().getUuid(), model.getAlgorithm().getRef().getVersion(),
+					MetaType.algorithm.toString());
+
+			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(),
+					simulateExec.getVersion());
+			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(),
+					simulateExec.getVersion());
+			String tableName = String.format("%s_%s_%s", model.getUuid(), model.getVersion(), simulateExec.getVersion());
+
+			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+
+			Object result = null;
+
+			String[] fieldArray = modelExecServiceImpl.getAttributeNames(simulate);
+
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+
+			result = exec.simulateModel(simulate, fieldArray, algorithm, filePath, tableName, commonServiceImpl.getApp().getUuid());
+
+			dataStoreServiceImpl.setRunMode(Mode.BATCH);
+
+			dataStoreServiceImpl.create((String) result, modelName,
+					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
+					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
+					simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+
+			simulateExec.setLocation((String) result);
+			simulateExec.setResult(resultRef);
+			commonServiceImpl.save(MetaType.simulateExec.toString(), simulateExec);
+			if (result != null) {
+				isSuccess = true;
+				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Completed);
+
+			}else {
+				isSuccess = false;
+				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
+					.getRequestAttributes();
+			if (requestAttributes != null) {
+				HttpServletResponse response = requestAttributes.getResponse();
+				if (response != null) {
+					response.setContentType("application/json");
+					Message message = new Message("412", MessageStatus.FAIL.toString(), e.getMessage());
+					Message savedMessage = messageServiceImpl.save(message);
+					ObjectMapper mapper = new ObjectMapper();
+					String messageJson = mapper.writeValueAsString(savedMessage);
+					response.setContentType("application/json");
+					response.setStatus(412);
+					response.getOutputStream().write(messageJson.getBytes());
+					response.getOutputStream().close();
+				} else
+					logger.info("HttpServletResponse response is \"" + null + "\"");
+			} else
+				logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+		}
+
+		return isSuccess;
 	}
 
-	public PredictExec create(String predictUUID, String predictVersion, ExecParams execParams, ParamMap paramMap,
+	public PredictExec create(Predict predict, ExecParams execParams, ParamMap paramMap,
 			PredictExec predictExec) throws Exception {
 		
-		MetaIdentifierHolder predictRef = new MetaIdentifierHolder();
-		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictUUID, predictVersion, MetaType.predict.toString());		
+		MetaIdentifierHolder predictRef = new MetaIdentifierHolder();		
 		if (predictExec == null) {
 			predictExec = new PredictExec();
-			predictRef.setRef(new MetaIdentifier(MetaType.predict, predictUUID, predictVersion));
+			predictRef.setRef(new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()));
 			predictExec.setDependsOn(predictRef);
 			predictExec.setBaseEntity();
-			
-			try {
-				predictExec.setName(predict.getName());
-				predictExec.setAppInfo(predict.getAppInfo());	
-				commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
-				
+		}
 
-			} catch (Exception e) {
-				logger.error(e);				
-				throw new Exception("Predict creation failed");
+		try {
+			predictExec.setName(predict.getName());
+			predictExec.setAppInfo(predict.getAppInfo());
+			
+			List<Status> statusList = predictExec.getStatusList();
+			if (statusList == null) 
+				statusList = new ArrayList<Status>();
+			
+			if (Helper.getLatestStatus(statusList) != null 
+					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+				return predictExec;
 			}
+
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.NotStarted);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e);				
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+			throw new Exception("Predict Exec creation failed.");
 		}
 		return predictExec;
 	}
 
-	public SimulateExec create(String simulateUUID, String simulateVersion, ExecParams execParams, ParamMap paramMap,
+	public SimulateExec create(Simulate simulate, ExecParams execParams, ParamMap paramMap,
 			SimulateExec simulateExec) throws Exception {
 
-		MetaIdentifierHolder simulateRef = new MetaIdentifierHolder();
-		Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateUUID, simulateVersion, MetaType.simulate.toString());		
+		MetaIdentifierHolder simulateRef = new MetaIdentifierHolder();	
 		if (simulateExec == null) {
 			simulateExec = new SimulateExec();
-			simulateRef.setRef(new MetaIdentifier(MetaType.simulate, simulateUUID, simulateVersion));
+			simulateRef.setRef(new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()));
 			simulateExec.setDependsOn(simulateRef);
 			simulateExec.setBaseEntity();
+		}
+		
+		try {
+			simulateExec.setName(simulate.getName());
+			simulateExec.setAppInfo(simulate.getAppInfo());	
+			commonServiceImpl.save(MetaType.simulateExec.toString(), simulateExec);
 			
-			try {
-				simulateExec.setName(simulate.getName());
-				simulateExec.setAppInfo(simulate.getAppInfo());	
-				commonServiceImpl.save(MetaType.simulateExec.toString(), simulateExec);
-
-			} catch (Exception e) {
-				logger.error(e);				
-				throw new Exception("Simulate creation failed");
+			List<Status> statusList = simulateExec.getStatusList();
+			if (statusList == null) 
+				statusList = new ArrayList<Status>();
+			
+			if (Helper.getLatestStatus(statusList) != null 
+					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+				return simulateExec;
 			}
+			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.NotStarted);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e);	
+			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+			throw new Exception("Simulate Exec creation failed.");
 		}
 		return simulateExec;
 	}
 
+	
+	public TrainExec create(Train train, Model model, ExecParams execParams, ParamMap paramMap,
+			TrainExec trainExec) throws Exception {
+		
+		MetaIdentifierHolder trainRef = new MetaIdentifierHolder();
+				
+		String logPath = null;
+		if (trainExec == null) {
+			trainExec = new TrainExec();
+			trainRef.setRef(new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()));
+			trainExec.setDependsOn(trainRef);
+			trainExec.setBaseEntity();
+			
+			/*
+			 * 
+			 * log file_name formation : modeluuid + modelversion + trainexecversion
+			 * 
+			 */
+			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+			}
+			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				customLogger.writeLog(this.getClass(),
+						"Created raw model exec, uuid: " + trainExec.getUuid(), 
+						logPath,
+						Thread.currentThread().getStackTrace()[1].getLineNumber());
+			}
+		}
+		trainExec.setExecParams(execParams);
+		try {
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+			List<Status> statusList = trainExec.getStatusList();
+			if (statusList == null) {
+				statusList = new ArrayList<Status>();
+			}
+			trainExec.setName(train.getName());
+			trainExec.setAppInfo(train.getAppInfo());	
+			//iModelExecDao.save(modelExec);
+			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				customLogger.writeLog(this.getClass(), 
+						"Saving raw modelExec, uuid: " + trainExec.getUuid(),
+						logPath, 
+						Thread.currentThread().getStackTrace()[1].getLineNumber());
+			}
+			commonServiceImpl.save(MetaType.trainExec.toString(), trainExec);
+			
+			if (Helper.getLatestStatus(statusList) != null 
+					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+					customLogger.writeLog(this.getClass(),
+							"This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun.", 
+							logPath,
+							Thread.currentThread().getStackTrace()[1].getLineNumber());
+				}
+				return trainExec;
+			}
+			
+			//modelExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet));
+			trainExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.NotStarted);
+			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				customLogger.writeLog(this.getClass(),
+						trainExec.getStatusList().size()>0 ? "Latest status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", 
+						logPath,
+						Thread.currentThread().getStackTrace()[1].getLineNumber());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e);
+			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+						logPath,
+						Thread.currentThread().getStackTrace()[1].getLineNumber());
+			
+			}
+			
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
+			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size()>0 ? "Train exec creation failed, status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+			}
+			throw new Exception("Train exec creation failed");
+		}		
+		return trainExec;
+	}
+	
+	public TrainExec train(Train train, Model model, TrainExec  trainExec, ExecParams execParams, ParamMap paramMap) throws FileNotFoundException, IOException{
+		RunModelServiceImpl runModelServiceImpl = new RunModelServiceImpl();
+		List<Status> statusList = trainExec.getStatusList();
+		if (statusList == null) {
+			statusList = new ArrayList<>();
+			trainExec.setStatusList(statusList);
+		}
+		
+		//Model model = iModelDao.findOneByUuidAndVersion(modelUUID, modelVersion);
+		//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID, modelVersion, MetaType.model.toString());
+		if(!model.getType().equalsIgnoreCase(ExecContext.R.toString()) && !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+			runModelServiceImpl.setAlgorithmUUID(model.getAlgorithm().getRef().getUuid());
+			runModelServiceImpl.setAlgorithmVersion(model.getAlgorithm().getRef().getVersion());
+		}
+		runModelServiceImpl.setAlgorithmServiceImpl(algorithmServiceImpl);
+		runModelServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
+		runModelServiceImpl.setSparkContext(sparkContext);
+		runModelServiceImpl.setModel(model);
+		runModelServiceImpl.setModelExecServiceImpl(modelExecServiceImpl);
+		runModelServiceImpl.setHdfsInfo(hdfsInfo);
+		runModelServiceImpl.setExecParams(execParams);
+		runModelServiceImpl.setParamSetServiceImpl(paramSetServiceImpl);
+		runModelServiceImpl.setParamListServiceImpl(paramListServiceImpl);
+		runModelServiceImpl.setParamMap(paramMap);
+		runModelServiceImpl.setCommonServiceImpl(commonServiceImpl);
+		runModelServiceImpl.setRunMode(runMode);
+		runModelServiceImpl.setDataFrameService(dataFrameService);
+		runModelServiceImpl.setSessionContext(sessionHelper.getSessionContext());
+		runModelServiceImpl.setCustomLogger(new CustomLogger());
+		runModelServiceImpl.setModelType(model.getType());
+		runModelServiceImpl.setModelServiceImpl(this);
+		if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) 
+			runModelServiceImpl.setLogPath(Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log");
+		runModelServiceImpl.setExecFactory(execFactory);
+		runModelServiceImpl.setSecurityServiceImpl(securityServiceImpl);
+		runModelServiceImpl.setTrainExec(trainExec);
+		runModelServiceImpl.setTrain(train);
+		runModelServiceImpl.setName(MetaType.trainExec+"_"+trainExec.getUuid()+"_"+trainExec.getVersion());
+		runModelServiceImpl.setExecType(MetaType.trainExec);
+		/*FutureTask<TaskHolder> futureTask = new FutureTask<TaskHolder>(runModelServiceImpl);
+		metaExecutor.execute(futureTask);
+		taskList.add(futureTask);
+		taskThreadMap.put(MetaType.trainExec+"_"+trainExec.getUuid()+"_"+trainExec.getVersion(), futureTask);
+		logger.info(" taskThreadMap while creating train : " + taskThreadMap);*/
+		runModelServiceImpl.call();
+		return trainExec;
+	}
 }

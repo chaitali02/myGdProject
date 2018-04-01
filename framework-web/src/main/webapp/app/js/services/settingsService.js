@@ -29,5 +29,21 @@ AdminModule.service("SettingsService",function($q,$http,$location,CommonFactory)
     }
     return deferred.promise;
   }
+  this.buildGraph = function(id, type) {
+    var deferred = $q.defer();
+    var url = "graph/buildGraph";
+    CommonFactory.httpGet(url).then(function(response){OnSuccess(response.data)},function(response){onError(response.data)});
+    var OnSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError=function(response){
+        deferred.reject({
+          data:response
+        });
+      }
+    return deferred.promise;
+  }
 
 })

@@ -91,10 +91,22 @@
                     <div class="row" style="margin-top: 15px;">
                       <div  class="col-lg-4 col-xs-12 col-sm-12" ng-repeat="data in filterAttribureIdValues" style="margin-bottom:25px;">
                         <label><b>{{data.dname}}</b></label>
-                        <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]" ng-change="onFilterChange($index)" ng-options="c as c.value for c in data.values" track by c.id>
-                          </select>
+                        <!-- <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]" ng-change="onFilterChange($index)" ng-options="c as c.value for c in data.values" track by c.id>
+                          </select> -->
+                          <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]" ng-change="onChange()" ng-options="c as c.value for c in data.values" track by c.id>
+                          </select>   
                       </div>
                     </div>
+
+                    <div class="row" style="margin-top: 15px;" ng-if="filterAttribureIdValues.length >0">
+                        
+                      <div  class="col-lg-12 col-xs-12 col-sm-12" style="margin-bottom:25px;">
+                                              
+                          <input type="button" class="btn btn-success  pull-right" value="Apply"   name="submit" ng-disabled="isApplyFilter|| inprogressdata " ng-click="onFilterChange()" style="margin-left:10px;">
+                          <a ng-click="refreshDashboard(filterAttribureIdValues.length)"  class="btn btn-primary pull-right">Clear</a>
+   
+                        </div>
+                      </div>
                   </div>
                 </div><!--End portlet box green Filter-->
               </div>
@@ -116,7 +128,7 @@
                           ng-show="hideIcon">  
                        <i class="fa fa-pencil-square-o" style="display: block;margin:2px 0px 0px 1px;"></i>
                        </a>
-                       <a ng-click="downloadFile(datacol.vizpodDetails)" class="btn btn-circle btn-icon-only btn-default"  tooltip-placement="{{showtooltip}}" uib-tooltip="Download">  
+                       <a ng-click="downloadFile(datacol.vizpodDetails)" class="btn btn-circle btn-icon-only btn-default"  tooltip-placement="{{showtooltip}}" uib-tooltip="Download Data">  
                         <i class="fa fa-download" style="display: block;margin:2px 0px 0px 1px;"></i>
                        </a>
                        

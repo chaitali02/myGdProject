@@ -56,8 +56,14 @@ public class ParquetReader implements IReader
 		try {
 			String filePath = datastore.getLocation();
 			String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
-			if (!filePath.contains(hdfsLocation)) 
+			
+			if (!filePath.contains(hdfsInfo.getHdfsURL()) && !filePath.contains(hdfsInfo.getSchemaPath())) 
 				filePath = String.format("%s%s", hdfsLocation, filePath);
+			else if(!filePath.contains(hdfsInfo.getHdfsURL()))
+				filePath = String.format("%s%s", hdfsInfo.getHdfsURL(), filePath);
+			else if(!filePath.contains(hdfsInfo.getSchemaPath()))
+				filePath = String.format("%s%s", hdfsInfo.getSchemaPath(), filePath);
+			
 			/*DataFrameHolder dfm = dataFrameService.getaDataFrameHolder(filePath, conObject);*/
 			Dataset<Row> df = null;
 			SparkSession sparkSession = (SparkSession) conObject;
@@ -67,7 +73,7 @@ public class ParquetReader implements IReader
 			dfmh.setDataframe(df);
 			dfmh.setTableName(tableName);
 		}catch (Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 			String errorMessage = e.getMessage();
 			if(errorMessage.contains("Path does not exist:")) {
 				ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
@@ -76,7 +82,7 @@ public class ParquetReader implements IReader
 					HttpServletResponse response = requestAttributes.getResponse();
 					if (response != null) {
 						response.setContentType("application/json");
-						Message message = new Message("404", MessageStatus.FAIL.toString(), "File path does not exist.");
+						Message message = new Message("404", MessageStatus.FAIL.toString(), "File path not exist.");
 						try {
 							Message savedMessage = messageServiceImpl.save(message);
 							ObjectMapper mapper = new ObjectMapper();
@@ -107,7 +113,7 @@ public class ParquetReader implements IReader
 				} else
 					logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
 				throw new IOException("File path does not exist.");
-			} 
+			}
 			}
 		
 		return dfmh;

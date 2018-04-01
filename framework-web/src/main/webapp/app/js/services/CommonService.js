@@ -342,6 +342,7 @@
     } /*End getGraphResults*/
 
     this.execute = function(type, uuid, version, data) {
+      debugger;
       var url;
       if (type.substr(-5) == 'group') {
         var plainType = type.slice(0, -5);
@@ -415,7 +416,7 @@
       if (type == "rule") {
         url = "metadata/getParamSetByRule?ruleUuid=" + uuid+"&type="+type;
       } else {
-        url = "metadata/getParamSetByModel?modelUuid=" + uuid + "&modelVersion=" + version+"&type="+type;
+        url = "metadata/getParamSetByTrain?trainUuid=" + uuid + "&trainVersion=" + version+"&type="+type;
       }
       url += '&action=view'
       CommonFactory.httpGet(url).then(function(response) {
@@ -430,7 +431,20 @@
     }
     this.executeWithParams = function(type, uuid, version, data) {
       var deferred = $q.defer();
-      var url = "" + type + "/execute/?uuid=" + uuid + "&version=" + version+ '&action=view';
+      var url
+      if(type=='model' || type== "train"){
+        url = "model/train/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+      }
+      else if(type=='predict'){
+        url = "model/predict/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+      }
+      else if(type=='simulate'){
+        url = "model/simulate/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+      }
+      else{
+        url = "" + type + "/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+      }
+     
       CommonFactory.httpPost(url, data).then(function(response) {
         onSuccess(response.data)
       });

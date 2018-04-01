@@ -18,6 +18,10 @@ import com.inferyx.framework.service.ProfileExecServiceImpl;
 import com.inferyx.framework.service.ProfileGroupExecServiceImpl;
 import com.inferyx.framework.service.ProfileGroupServiceImpl;
 import com.inferyx.framework.service.ProfileServiceImpl;
+import com.inferyx.framework.service.ReconExecServiceImpl;
+import com.inferyx.framework.service.ReconGroupExecServiceImpl;
+import com.inferyx.framework.service.ReconGroupServiceImpl;
+import com.inferyx.framework.service.ReconServiceImpl;
 import com.inferyx.framework.service.RuleExecServiceImpl;
 import com.inferyx.framework.service.RuleGroupExecServiceImpl;
 import com.inferyx.framework.service.RuleGroupServiceImpl;
@@ -56,6 +60,14 @@ public class RuleServiceFactory {
 	ProfileGroupServiceImpl profileGroupServiceImpl;
 	@Autowired
 	ProfileGroupExecServiceImpl profileGroupExecServiceImpl;
+	@Autowired
+	ReconServiceImpl reconServiceImpl;
+	@Autowired
+	ReconExecServiceImpl reconExecServiceImpl;
+	@Autowired
+	ReconGroupServiceImpl reconGroupServiceImpl;
+	@Autowired
+	ReconGroupExecServiceImpl reconGroupExecServiceImpl;
 	
 	/**
 	 * 
@@ -77,6 +89,9 @@ public class RuleServiceFactory {
 		if (type == MetaType.profile) {
 			return profileServiceImpl;
 		}
+		if (type == MetaType.recon) {
+			return reconServiceImpl;
+		}
 		return null;
 	}
 	
@@ -92,6 +107,9 @@ public class RuleServiceFactory {
 		}
 		if (type == MetaType.profileExec) {
 			return profileExecServiceImpl;
+		}
+		if (type == MetaType.reconExec) {
+			return reconExecServiceImpl;
 		}
 		return null;
 	}
@@ -109,6 +127,9 @@ public class RuleServiceFactory {
 		if (type == MetaType.profilegroup) {
 			return profileGroupServiceImpl;
 		}
+		if (type == MetaType.recongroup) {
+			return reconGroupServiceImpl;
+		}
 		
 		return null;
 	}
@@ -125,6 +146,9 @@ public class RuleServiceFactory {
 		}
 		if (type == MetaType.profilegroupExec) {
 			return profileGroupExecServiceImpl;
+		}
+		if (type == MetaType.recongroupExec) {
+			return reconGroupExecServiceImpl;
 		}
 		return null;
 	}

@@ -303,7 +303,7 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 			else if (endDate != null && !endDate.isEmpty())
 				query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
 			
-			query.addCriteria(Criteria.where("statusList.stage").in("Completed"));
+			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(dataqualUuid));
 		} catch (ParseException e) {
 			e.printStackTrace();

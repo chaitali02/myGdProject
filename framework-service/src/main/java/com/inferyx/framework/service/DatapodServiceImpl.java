@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
@@ -38,6 +39,7 @@ import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -45,9 +47,12 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -66,6 +71,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
+import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -128,6 +134,8 @@ public class DatapodServiceImpl {
 	DataFrameService dataFrameService;
 	@Autowired
 	IUploadDao iDownloadDao;
+	@Autowired
+	private MessageServiceImpl messageServiceImpl;
 //	@Autowired
 //	NewGraph newGraph;
 	
@@ -464,15 +472,17 @@ public class DatapodServiceImpl {
 		}
 
 		// Load datapod using load object
+		//String fileName = Helper.getFileName(csvFileName);
+		String uploadPath = csvFileName;
 		Load load = new Load();
-
-		AttributeRefHolder loadSourceMih = new AttributeRefHolder();
-		MetaIdentifier loadSourceMi = new MetaIdentifier();
-		loadSourceMi.setType(MetaType.datasource);
-		loadSourceMi.setUuid("d7c11fd7-ec1a-40c7-ba25-7da1e8b73020");
-		loadSourceMih.setRef(loadSourceMi);
-		loadSourceMih.setValue(csvFileName);
-		load.setSource(loadSourceMih);
+		AttributeRefHolder loadSourceMIHolder = new AttributeRefHolder();
+		MetaIdentifier loadSourceMIdentifier = new MetaIdentifier();
+		
+		loadSourceMIdentifier.setType(MetaType.datasource);
+		loadSourceMIdentifier.setUuid(dp.getDatasource().getRef().getUuid());
+		loadSourceMIHolder.setRef(loadSourceMIdentifier);
+		loadSourceMIHolder.setValue(uploadPath);
+		load.setSource(loadSourceMIHolder);
 		load.setActive("Y");
 		load.setAppend("Y");
 		load.setHeader("Y");
@@ -486,47 +496,15 @@ public class DatapodServiceImpl {
 		loadTargetMih.setRef(loadTargetMi);
 
 		load.setTarget(loadTargetMih);
-		try {
-			load = loadServiceImpl.save(load);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		// Create dag to load file
-/*		Dag dag = new Dag();
-		MetaIdentifierHolder dagMih = new MetaIdentifierHolder();
-		MetaIdentifier dagMi = new MetaIdentifier();
-		dagMi.setType(MetaType.load);
-		dagMi.setUuid(load.getUuid());
-		dagMi.setVersion(load.getVersion());
-		dagMih.setRef(dagMi);
-		Stage stage = new Stage();
-		stage.setStageId("0");
-		Task task = new Task();
-		task.setTaskId("0");
-		Operator op = new Operator();
-		op.setOperatorInfo(dagMih);
-		task.getOperators().add(op);
-
-		stage.getTasks().add(task);
-
-		dag.getStages().add(stage);
-
-		try {
-			dag = dagServiceImpl.Save(dag);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-
-		// Submit dag for execution
+		load = loadServiceImpl.save(load);
+		
+		//Create Load exec and datastore
 		LoadExec loadExec = null;
 		loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), null/*, null*/, runMode);
-		return new MetaIdentifierHolder(loadExec.getRef(MetaType.loadExec));
+		System.out.println("get");
+		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), null/*, null*/, Mode.BATCH);
 		
-//		return dagServiceImpl.submitDag(dag, Mode.BATCH);
+		return new MetaIdentifierHolder(loadExec.getRef(MetaType.loadExec));
 	}
 
 	// Generate excel file from datapod
@@ -872,11 +850,12 @@ public class DatapodServiceImpl {
 			return result;
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public void upload(MultipartFile csvFile, String datapodUuid) {		
 		String csvFileName = csvFile.getOriginalFilename();
 		String uploadPath = null;
 		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;	*/		
+				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
 		Datasource datasource = null;		
 		try {
 			//csvFileName = csvFileName.substring(StringUtils.lastIndexOf(csvFileName, "/") + 1, csvFileName.length());
@@ -884,42 +863,71 @@ public class DatapodServiceImpl {
 			// Copy file to server location
 			File file = new File(uploadPath);
 			csvFile.transferTo(file);
+		 
+			uploadPath = hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
+			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodUuid, MetaType.datapod.toString());
 			
-			//datasource = commonServiceImpl.getDatasourceByApp();
-			//String type = datasource.getType();
+			//Check datapod and csv attributes name
+			Boolean flag = true;
+			String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
+			String parquetDir = null;
+			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 			
-			//Datapod datapod1 = idatapodDao.findLatestByUuid(datapodUuid,new Sort(Sort.Direction.DESC, "version"));
-			Datapod datapod1 = (Datapod) commonServiceImpl.getLatestByUuid(datapodUuid, MetaType.datapod.toString());
-			/*DataFrame df = hiveContext.read().format("com.databricks.spark.csv").option("inferSchema", "true")
-					.option("header", "true").load("file://"+uploadPath);
-			df.printSchema();			
-			IExecutor exec = execFactory.getExecutor(type);
-			exec.persistFile(datapod1, datapodUuid, df);		*/	
+			List<Attribute> attributes = exec.fetchAttributeList(uploadPath, parquetDir, true, false, appUuid);
+			attributes.remove(attributes.size()-1);
+			ListIterator<Attribute> attributeIterator = attributes.listIterator();
 			
+			List<Attribute> dpAttrs = datapod.getAttributes();
+			int count = 0;
+			for(int i=0; i<dpAttrs.size();i++) {
+				System.out.println("index : "+i);
+				if(dpAttrs.get(i).getName().contentEquals("version")){					
+					dpAttrs.remove(dpAttrs.get(i));
+					count++;
+				}	
+				if(count>1) {
+					throw new Exception("2 Version column in datapod");
+				}
+			}
 			
-			/* Code for UploadExec*/
-			
-			
-			//MetaIdentifierHolder dependsOn=( new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,datapod1.getUuid(),datapod1.getVersion())));
-			 UploadExec uploadExec=new UploadExec();
-		       
-			   uploadExec.setBaseEntity();
-			   uploadExec.setLocation(uploadPath);
-			   uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,datapod1.getUuid(),datapod1.getVersion())));
-			   uploadExec.setFileName(csvFileName);
-			   commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
-			   
-			  
+			if(attributes.size()==dpAttrs.size())
+			{
+				for(Attribute a : dpAttrs) {					
+					if(attributeIterator.hasNext()) {
+						Attribute attribute  = attributeIterator.next();				
+						
+						String b = attribute.getName();
+						String c = a.getName();
+						
+						if(!b.equals(c)) {
+							logger.info("CSV Column not matched : "+attribute.getName());
+							throw new Exception("CSV Column not matched:<b>"+attribute.getName()+"</b> Position:<b>"+(attributeIterator.nextIndex()+"</b>")	);
+						}
+					}	
+				}
+			}
+			else {
+				throw new Exception("CSV and Datapod column not matched");
+			}
+				
+			/* Code for UploadExec*/		
+			UploadExec uploadExec=new UploadExec();			       
+			uploadExec.setBaseEntity();
+			uploadExec.setLocation(uploadPath);
+			uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,datapod.getUuid(),datapod.getVersion())));
+			uploadExec.setFileName(csvFileName);
+			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 			   
 			// Load datapod using load object
 			String fileName = Helper.getFileName(csvFileName);
 			Load load = new Load();
 			AttributeRefHolder loadSourceMIHolder = new AttributeRefHolder();
 			MetaIdentifier loadSourceMIdentifier = new MetaIdentifier();
+			
 			loadSourceMIdentifier.setType(MetaType.datasource);
-			loadSourceMIdentifier.setUuid(datapod1.getUuid());
+			loadSourceMIdentifier.setUuid(datapod.getDatasource().getRef().getUuid());
 			loadSourceMIHolder.setRef(loadSourceMIdentifier);
-			loadSourceMIHolder.setValue("file://"+uploadPath);
+			loadSourceMIHolder.setValue(uploadPath);
 			load.setSource(loadSourceMIHolder);
 			load.setActive("Y");
 			load.setAppend("Y");
@@ -930,7 +938,7 @@ public class DatapodServiceImpl {
 			MetaIdentifier loadTargetMi = new MetaIdentifier();
 			loadTargetMi.setType(MetaType.datapod);
 			loadTargetMi.setUuid(datapodUuid);
-			loadTargetMi.setVersion(datapod1.getVersion());
+			loadTargetMi.setVersion(datapod.getVersion());
 			loadTargetMih.setRef(loadTargetMi);
 
 			load.setTarget(loadTargetMih);
@@ -939,15 +947,16 @@ public class DatapodServiceImpl {
 			//Create Load exec and datastore
 			LoadExec loadExec = null;
 			loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod1.getUuid(), datapod1.getVersion()), null/*, null*/, Mode.BATCH);
+			
+			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), null/*, null*/, Mode.BATCH);
+		
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
 				| ParseException | IllegalStateException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			setResponseMsg(e.getMessage());			
 		}	
 	}
 
@@ -997,6 +1006,36 @@ public class DatapodServiceImpl {
 		}*/
 		return response;
 
+	}
+	
+	void setResponseMsg(String msg){
+		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
+				.getRequestAttributes();
+		if (requestAttributes != null) {
+			HttpServletResponse response = requestAttributes.getResponse();
+			if (response != null) {
+				response.setContentType("application/json");
+				Message message = new Message("406", MessageStatus.FAIL.toString(), msg);
+				Message savedMessage;
+					try {
+						savedMessage = messageServiceImpl.save(message);
+						ObjectMapper mapper = new ObjectMapper();
+						String messageJson = mapper.writeValueAsString(savedMessage);
+						response.setContentType("application/json");
+						response.setStatus(406);
+						response.getOutputStream().write(messageJson.getBytes());
+						response.getOutputStream().close();
+						
+					} catch (IllegalAccessException | IllegalArgumentException
+							| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
+							| JSONException | ParseException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}				
+			} else
+				logger.info("HttpServletResponse response is \"" + null + "\"");
+		} else
+			logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
 	}
 
 }

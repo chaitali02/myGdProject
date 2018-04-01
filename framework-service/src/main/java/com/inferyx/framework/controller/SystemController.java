@@ -12,24 +12,29 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.domain.BaseEntityStatus;
+import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.service.SecurityServiceImpl;
 import com.inferyx.framework.service.SystemServiceImpl;
 
 import shaded.parquet.org.codehaus.jackson.JsonGenerationException;
 import shaded.parquet.org.codehaus.jackson.map.JsonMappingException;
+
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @RestController
 @RequestMapping(value="/system")
 public class SystemController {
 	@Autowired
 	SystemServiceImpl systemServiceImpl;
+	@Autowired
+	SecurityServiceImpl securityServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(SystemController.class);
 	
@@ -73,6 +78,10 @@ public class SystemController {
 			return mapper.writeValueAsString(activeSessionList);
 		}
 	}	
+	/*@RequestMapping(value="/killSession", method=RequestMethod.GET)
+	public @ResponseBody boolean killSession(@RequestParam("sessionId") String sessionId) throws JsonProcessingException, JSONException, ParseException {
+		return systemServiceImpl.killSession(sessionId);
+	}*/	
 	
 	@RequestMapping(value="/getActiveThread", method=RequestMethod.GET)
 	public @ResponseBody List<com.inferyx.framework.domain.Thread> getActiveThread() throws JsonProcessingException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
@@ -163,5 +172,4 @@ public class SystemController {
 		return tz.getDisplayName();
 	
 	}
-	
 }

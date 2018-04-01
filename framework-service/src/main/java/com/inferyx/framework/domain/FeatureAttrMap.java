@@ -11,8 +11,8 @@ package com.inferyx.framework.domain;
  */
 public class FeatureAttrMap {
 	private String featureMapId;
-	private FeatureRefHolder feature;
-	private AttributeRefHolder attribute;
+	private FeatureRefHolder feature; //source
+	private AttributeRefHolder attribute; //target
 	/**
 	 * @Ganesh
 	 *

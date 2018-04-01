@@ -297,7 +297,7 @@ RuleModule.controller('DetailRuleController', function(privilegeSvc,$state, $coo
     });
     var onSuccessGetAllLatestParamList = function(response) {
       $scope.allparamlist = response
-
+      if(response)
       $scope.allparamlist.defaultoption = null;
       $scope.getOneByUuidParamList();
     }
@@ -673,7 +673,7 @@ RuleModule.controller('DetailRuleController', function(privilegeSvc,$state, $coo
 
   $scope.getOneByUuidParamList = function() {
 
-    if($scope.allparamlist.defaultoption !=null){
+    if($scope.allparamlist && $scope.allparamlist.defaultoption !=null){
       RuleService.getOneByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").then(function(response) {
         onSuccessParamList(response.data)
       });
@@ -809,7 +809,7 @@ RuleModule.controller('DetailRuleController', function(privilegeSvc,$state, $coo
     source.ref = ref;
     ruleJson.source = source;
     //alert(JSON.stringify($scope.allparamlist.defaultoption))
-    if ($scope.allparamlist.defaultoption != null) {
+    if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
       var paramlist = {};
       var ref = {};
       ref.type = "paramlist";
@@ -1083,7 +1083,7 @@ RuleModule.controller('DetailRuleGroupController', function($state, $timeout, $f
     for (var i = 0; i < response.data.length; i++) {
       var rulljosn = {};
       rulljosn.uuid = response.data[i].uuid;
-      rulljosn.id = response.data[i].uuid + "_" + response.data[i].version
+      rulljosn.id = response.data[i].uuid //+ "_" + response.data[i].version
       rulljosn.name = response.data[i].name;
       rulljosn.version = response.data[i].version;
       rullArray[i] = rulljosn;
@@ -1135,7 +1135,7 @@ RuleModule.controller('DetailRuleGroupController', function($state, $timeout, $f
         var ruletag = {};
         ruletag.uuid = response.ruleInfo[i].ref.uuid;
         ruletag.name = response.ruleInfo[i].ref.name;
-        ruletag.id = response.ruleInfo[i].ref.uuid + "_" + response.ruleInfo[i].ref.version;
+        ruletag.id = response.ruleInfo[i].ref.uuid //+ "_" + response.ruleInfo[i].ref.version;
         ruletag.version = response.ruleInfo[i].ref.version;
         ruleTagArray[i] = ruletag;
       }
@@ -1162,7 +1162,7 @@ RuleModule.controller('DetailRuleGroupController', function($state, $timeout, $f
         var ruletag = {};
         ruletag.uuid = response.ruleInfo[i].ref.uuid;
         ruletag.name = response.ruleInfo[i].ref.name;
-        ruletag.id = response.ruleInfo[i].ref.uuid + "_" + response.ruleInfo[i].ref.version;
+        ruletag.id = response.ruleInfo[i].ref.uuid //+ "_" + response.ruleInfo[i].ref.version;
         ruletag.version = response.ruleInfo[i].ref.version;
         ruleTagArray[i] = ruletag;
       }
@@ -1593,7 +1593,7 @@ RuleModule.controller('ResultRuleController', function($http,$log, dagMetaDataSe
       sortobj.uuid = uuid2.newuuid();
       sortobj.colname = sortColumns[0].name;
       sortobj.order = sortColumns[0].sort.direction;
-      sortobj.limit = $scope.pagination.pageSize;
+      sortobj.limit = $scope.pageSize;
       $scope.sortdetail[$scope.colcount] = sortobj;
       $scope.colcount = $scope.colcount + 1;
       result.requestId = sortobj.uuid;
@@ -1601,7 +1601,7 @@ RuleModule.controller('ResultRuleController', function($http,$log, dagMetaDataSe
     } else {
       var idpresent = "N";
       for (var i = 0; i < $scope.sortdetail.length; i++) {
-        if ($scope.sortdetail[i].colname == sortBy && $scope.sortdetail[i].order == order && $scope.sortdetail[i].limit == $scope.pagination.pageSize) {
+        if ($scope.sortdetail[i].colname == sortBy && $scope.sortdetail[i].order == order && $scope.sortdetail[i].limit == $scope.pageSize) {
           result.requestId = $scope.sortdetail[i].uuid;
           idpresent = "Y"
           break;
@@ -1613,7 +1613,7 @@ RuleModule.controller('ResultRuleController', function($http,$log, dagMetaDataSe
         result.requestId = sortobj.uuid;
         sortobj.colname = sortColumns[0].name;
         sortobj.order = sortColumns[0].sort.direction;
-        sortobj.limit = $scope.pagination.pageSize;
+        sortobj.limit = $scope.pageSize;
         $scope.sortdetail[$scope.colcount] = sortobj;
         $scope.colcount = $scope.colcount + 1;
         offset = 0;
@@ -1741,7 +1741,7 @@ RuleModule.controller('ResultRuleController', function($http,$log, dagMetaDataSe
       var url = window.URL.createObjectURL(blob);
     
       linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download", uuid+".xlsx");
+      linkElement.setAttribute("download", uuid+".xls");
     
       var clickEvent = new MouseEvent("click", {
         "view": window,

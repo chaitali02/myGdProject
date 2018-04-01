@@ -5,209 +5,256 @@
  DataPipelineModule= angular.module('DataPipelineModule');
 
  DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compile,$location,$http, $filter) {
-	    return {
-        scope : {
-	  		    name: "=",
-	  		    hcolumns:"=",
-            data: "="
-	  		},
-        link: function ($scope, element, attrs) {
-        
-          var initialised = false;
-          $scope.pagination={
-            currentPage:1,
-            pageSize:10,
-            paginationPageSizes:[10, 25, 50, 75, 100],
-            maxSize:5,
-          }
-          $scope.gridOptions = {
-            rowHeight: 40,
-            useExternalPagination: true,
-            exporterMenuPdf: false,
-            exporterPdfOrientation: 'landscape',
-            exporterPdfPageSize: 'A4',
-            exporterPdfDefaultStyle: {fontSize: 9},
-            exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
-            enableGridMenu: true,
-            rowHeight: 40,
-            onRegisterApi:  function(gridApi){
-              $scope.gridApi = gridApi;
-              $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
-            }
-          }
-          $scope.filteredRows = [];
-          $scope.getGridStyle = function() {
-            var style = {
-              'margin-top': '10px',
-              'margin-bottom': '10px',
-            }
-            if ($scope.filteredRows && $scope.filteredRows.length >0) {
-              style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 60) + 'px';
-            }
-            else{
-              style['height']="100px";
-            }
-            return style;
-          }
+	return {
+    scope : {
+	  	name: "=",
+	  	hcolumns:"=",
+      data: "="
+	  },
+    link: function ($scope, element, attrs) {   
+      var initialised = false;
+      $scope.filteredRows = [];
+      $scope.pagination={
+        currentPage:1,
+        pageSize:10,
+        paginationPageSizes:[10, 25, 50, 75, 100],
+        maxSize:5,
+      }
+      
+      $scope.gridOptions = {
+        rowHeight: 40,
+        useExternalPagination: true,
+        exporterMenuPdf: false,
+        exporterPdfOrientation: 'landscape',
+        exporterPdfPageSize: 'A4',
+        exporterPdfDefaultStyle: {fontSize: 9},
+        exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
+        enableGridMenu: true,
+        rowHeight: 40,
+        onRegisterApi:  function(gridApi){
+          $scope.gridApi = gridApi;
+          $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+        }
+      }
 
-          $scope.filterSearch =function (s) {
+          
+      $scope.getGridStyle = function() {
+        var style = {
+          'margin-top': '10px',
+          'margin-bottom': '10px',
+        }
+        if ($scope.filteredRows && $scope.filteredRows.length >0) {
+          style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 60) + 'px';
+        }
+        else{
+          style['height']="100px";
+        }
+        return style;
+      }
 
-            var data = $filter('filter')($scope.orignalData, s, undefined);
-            $scope.getResults(data)
-          }
+      $scope.filterSearch =function (s) {
+        var data = $filter('filter')($scope.orignalData, s, undefined);
+        $scope.getResults(data)
+      }
 
+      $scope.$on('generateResults',function (e,params) {
+        $rootScope.showGrid=true;
+        $rootScope.showGroupDowne=true;
+        $('#errorMsg').hide();
+        $scope.searchtext = '';
+        if(initialised){
+          $scope.gridOptions.columnDefs = [];
+          $scope.gridOptions.data = [];
+        }
+        $('#resultsloader').show();
+        $('#resultswrapper').hide();
+        var typeexec;
+        if(params.type=="dataqual"){
+          typeexec="dqexec";
+        }else{
+          typeexec=params.type+"exec";
+        }
+
+        $scope.downloadDetail={};
+        $scope.downloadDetail.uuid=params.id;
+        $scope.downloadDetail.version=params.version;
+        $scope.downloadDetail.type=params.type; 
+        var baseurl=$location.absUrl().split("app")[0];
+        $http.get(baseurl+'metadata/getNumRowsbyExec?action=view&execUuid='+params.id+'&execVersion='+params.version+'&type='+typeexec).then(function (res) {
+          var mode=res.data.runMode;
          
-          $scope.$on('generateResults',function (e,params) {
-            $rootScope.showGrid=true;
-            $rootScope.showGroupDowne=true;
-            $('#errorMsg').hide();
-            $scope.searchtext = '';
-            if(initialised){
-              $scope.gridOptions.columnDefs = [];
-              $scope.gridOptions.data = [];
-            }
-            $('#resultsloader').show();
-            $('#resultswrapper').hide();
-            var typeexec;
-            if(params.type=="dataqual"){
-            	typeexec="dqexec";
-            }else{
-            	typeexec=params.type+"exec";
-            }
-
-            $scope.downloadDetail={};
-            $scope.downloadDetail.uuid=params.id;
-            $scope.downloadDetail.version=params.version;
-            $scope.downloadDetail.type=params.type; 
-            var url=$location.absUrl().split("app")[0];
-            $http.get(url+'metadata/getNumRowsbyExec?action=view&execUuid='+params.id+'&execVersion='+params.version+'&type='+typeexec).then(function (res) {
-                var mode=res.data.runMode;
-                $http({
-                    method: 'GET',
-                    url:url+""+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=",
-
-                    }).
-                    then(function (response,status,headers) {
-                       $('#resultswrapper').show();
-                       $('#resultsloader').hide();
-                       renderTable(response.data);
-                    },function onError(err) {
-                      $('#resultsloader').hide();
-                      $('#errorMsg').show();
-                      $('#errorMsg').html('Some Error Occured');
-                    })
-                
-            });
+          var url;
+          if(params.type == "train" || params.type == "predict" || params.type == "simulate" ){
+            url=baseurl+"model/"+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
+          }else{
+            url=baseurl+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
+          }
+          $scope.type=params.type
+          $http({
+                method: 'GET',
+                url:url,
+                  }).then(function (response,status,headers) {
+                  
+                    $('#resultsloader').hide();
+                    if(response.data.length >0){
+                    	  $('#resultswrapper').show();
+                    	renderTable(response.data);}
+                    else{  $('#resultswrapper').hide();
+                    	 $('#errorMsg').show();
+                         $('#errorMsg').html('No data available.');
+                    }
+                  },function onError(err) {
+                    $('#resultsloader').hide();
+                    $('#errorMsg').show();
+                    $('#errorMsg').html('Some Error Occured');
+                  })
+          });
+        });
            
-           });
-            function renderTable(data) {
-              console.log('results table data',data);
-              $scope.orignalData = data;
-              if($scope.orignalData.length >0){
-                $scope.getResults($scope.orignalData);
-              }
-              var columns = [];
-              if(data.length && data.length > 0){
-                angular.forEach(data[0],function (val,key) {
-                  if(key!='rownum')
-                    columns.push({"name":key,"displayName":key.toLowerCase(), width: 110});
-                });
-              }
-              $scope.gridOptions.columnDefs = columns;
+        function renderTable(data) {
+          console.log('results table data',data);
+          if($scope.type !="train"){
+            $scope.orignalData = data;
+            if($scope.orignalData.length >0){
+              $scope.getResults($scope.orignalData);
+            }
+            var columns = []; 
+            if(data.length && data.length > 0){
+              angular.forEach(data[0],function (val,key) {
+                var templateWithTooltip = `<div ng-mouseover="grid.appScope.onRowHover(row.entity,$event)" ng-mouseleave="grid.appScope.leave()" > <div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>;`
+                var hiveKey=["rownum","AttributeId","DatapodUUID","DatapodVersion","datapodUUID","datapodVersion",'version','sourceDatapodId','sourceDatapodVersion','sourceAttrId','targetDatapodId','targetDatapodVersion','targetAttrId','']
+                if(hiveKey.indexOf(key) ==-1){
+                  var width = key.split('').length + 2 + "%"
 
-              //$scope.gridOptions.data = data;
-              // tableApi = table.api();
-              initialised = true;
+                  columns.push({"name":key,"displayName":key.toLowerCase(),cellTemplate: templateWithTooltip, width:width,visible: true});
+                }
+                else if(hiveKey.indexOf(key) !=-1){
+                  var width = key.split('').length + 2 + "%"
+                  columns.push({"name":key,"displayName":key.toLowerCase(),cellTemplate: templateWithTooltip, width:width,visible: false});
+                }
+              });
             }
-            $scope.selectPage = function(pageNo) {
-              $scope.pagination.currentPage = pageNo;
-            };
-            $scope.onPerPageChange = function() {
-                $scope.pagination.currentPage = 1;
-              $scope.getResults($scope.orignalData)
-            }
-            $scope.pageChanged = function() {
-              $scope.getResults($scope.orignalData)
-            };
-            $scope.getResults = function(params) {
-              $scope.pagination.totalItems=params.length;
-              if($scope.pagination.totalItems >0){
-              $scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize))+1);
-              }
-              else{
-                $scope.pagination.to=0;
-              }
-              if ($scope.pagination.totalItems < ($scope.pagination.pageSize*$scope.pagination.currentPage)) {
-                $scope.pagination.from = $scope.pagination.totalItems;
-              } else {
-                $scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
-              }
-              var limit = ($scope.pagination.pageSize*$scope.pagination.currentPage);
-              var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
-              $scope.gridOptions.data=params.slice(offset,limit);
-            }
+            $scope.gridOptions.columnDefs = columns;
+            console.log($scope.gridOptions.columnDefs)
+            initialised = true;
+          }else{
+            $scope.modelresult=data;
+          }
+        }
+            
+        $scope.onRowHover = function(row,e) {
+          $scope.mouseHowerRowValue=row;
+          $('#tabletoshow').css('display','block')
+          $('#tabletoshow').css('top',e.offsetY)
+          $('#tabletoshow').css('left',e.offsetX)
+        }
+            
+        $scope.leave = function(row){
+          $('#tabletoshow').css('display','none')
+        }
+        $scope.selectPage = function(pageNo) {
+          $scope.pagination.currentPage = pageNo;
+        };
 
-            window.downloadPiplineFile = function() {               
-              var uuid = $scope.downloadDetail.uuid;
-              var version=$scope.downloadDetail.version;
-              var baseurl=$location.absUrl().split("app")[0];
-              var typeexec;
-                if($scope.downloadDetail.type=="dataqual"){
-                  typeexec="dqexec";
-                }else{
-                  typeexec=$scope.downloadDetail.type+"exec";
-                }
-              $http.get(baseurl+'metadata/getNumRowsbyExec?action=view&execUuid='+uuid+'&execVersion='+version+'&type='+typeexec).then(function (res) {
-                var mode=res.data.runMode;
-                  var url;
-                if($scope.downloadDetail.type =="profile"){
-                  url=baseurl+"profile/download?action=view&profileExecUUID="+uuid+"&profileExecVersion="+version+"&mode="+mode;
-                }
-                else if($scope.downloadDetail.type =="dataqual"){
-                  url=baseurl+"dataqual/download?action=view&dataQualExecUUID="+uuid+"&dataQualExecVersion="+version+"&mode="+mode;
-                }
-                else if($scope.downloadDetail.type =="map"){
-                  url=baseurl+"map/download?action=view&mapExecUUID="+uuid+"&mapExecVersion="+version+"&mode="+mode;
-                }
-                $http({
-                  method: 'GET',
-                  url:url,
-                  responseType: 'arraybuffer'
-                }).success(function(data, status, headers) {
-                  headers = headers();
-                
-                  var filename = headers['x-filename'];
-                  var contentType = headers['content-type'];
-                
-                  var linkElement = document.createElement('a');
-                  try {
-                  var blob = new Blob([data], {
-                    type: contentType
-                  });
-                  var url = window.URL.createObjectURL(blob);
-                
-                  linkElement.setAttribute('href', url);
-                  linkElement.setAttribute("download", uuid+".xlsx");
-                
-                  var clickEvent = new MouseEvent("click", {
-                    "view": window,
-                    "bubbles": true,
-                    "cancelable": false
-                  });
-                  linkElement.dispatchEvent(clickEvent);
-                  } catch (ex) {
-                  console.log(ex);
-                  }
-                }).error(function(data) {
-                  console.log(data);
+        $scope.onPerPageChange = function() {
+          $scope.pagination.currentPage = 1;
+          $scope.getResults($scope.orignalData)
+        }
+
+        $scope.pageChanged = function() {
+          $scope.getResults($scope.orignalData)
+        };
+
+        $scope.getResults = function(params) {
+          $scope.pagination.totalItems=params.length;
+          if($scope.pagination.totalItems >0){
+            $scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize))+1);
+          }
+          else{
+            $scope.pagination.to=0;
+          }
+          if ($scope.pagination.totalItems < ($scope.pagination.pageSize*$scope.pagination.currentPage)) {
+            $scope.pagination.from = $scope.pagination.totalItems;
+          } else {
+            $scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
+          }
+          var limit = ($scope.pagination.pageSize*$scope.pagination.currentPage);
+          var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
+          $scope.gridOptions.data=params.slice(offset,limit);
+        }
+
+        window.downloadPiplineFile = function() {               
+          var uuid = $scope.downloadDetail.uuid;
+          var version=$scope.downloadDetail.version;
+          var baseurl=$location.absUrl().split("app")[0];
+          var typeexec;
+          if($scope.downloadDetail.type=="dataqual"){
+            typeexec="dqexec";
+          }else{
+            typeexec=$scope.downloadDetail.type+"exec";
+          }
+          $http.get(baseurl+'metadata/getNumRowsbyExec?action=view&execUuid='+uuid+'&execVersion='+version+'&type='+typeexec).then(function (res) {
+            var mode=res.data.runMode;
+            var url;
+            if($scope.downloadDetail.type =="profile"){
+              url=baseurl+"profile/download?action=view&profileExecUUID="+uuid+"&profileExecVersion="+version+"&mode="+mode;
+            }
+            else if($scope.downloadDetail.type =="dataqual"){
+              url=baseurl+"dataqual/download?action=view&dataQualExecUUID="+uuid+"&dataQualExecVersion="+version+"&mode="+mode;
+            }
+            else if($scope.downloadDetail.type =="map"){
+              url=baseurl+"map/download?action=view&mapExecUUID="+uuid+"&mapExecVersion="+version+"&mode="+mode;
+            }
+            else if($scope.downloadDetail.type =="recon"){
+              url=baseurl+"recon/download?action=view&reconExecUUID="+uuid+"&reconExecVersion="+version+"&mode="+mode;
+            }
+            else if($scope.downloadDetail.type =="predict"){
+              url=baseurl+"/model/predict/download?action=view&predictExecUUID="+uuid+"&predictExecVersion="+version+"&mode="+mode;
+            }
+            else if($scope.downloadDetail.type =="simulate"){
+              url=baseurl+"/model/simulate/download?action=view&simulateExecUUID="+uuid+"&simulateExecVersion="+version+"&mode="+mode;
+            }
+            else if($scope.downloadDetail.type =="train"){
+              url=baseurl+"/model/train/download?action=view&trainExecUUID="+uuid+"&trainExecVersion="+version+"&mode="+mode;
+            }
+            $http({
+              method: 'GET',
+              url:url,
+              responseType: 'arraybuffer'
+            }).success(function(data, status, headers) {
+              headers = headers();  
+              var filename = headers['x-filename'];
+              var contentType = headers['content-type']; 
+              var linkElement = document.createElement('a');
+              try {
+                var blob = new Blob([data], {
+                type: contentType
+              });
+              var url = window.URL.createObjectURL(blob);
+                linkElement.setAttribute('href', url);
+                linkElement.setAttribute("download", uuid+".xls");
+                var clickEvent = new MouseEvent("click", {
+                  "view": window,
+                  "bubbles": true,
+                  "cancelable": false
                 });
-                
-            });
-             
-              };
-        },
-        template: `
-          <div class="row">
+                linkElement.dispatchEvent(clickEvent);
+              } catch (ex) {
+                console.log(ex);
+              }
+            }).error(function(data) {
+              console.log(data);
+          });      
+         });
+        };
+      },
+      template: `
+        <div class="row" ng-show="type =='train'">
+          <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+            <pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>
+          </div>        
+        </div>
+        <div class="row" ng-show="type !='train'">
           <div class="col-md-6 col-sm-6">
             <div class="dataTables_length" id="sample_1_length">
               <label>Show
@@ -216,15 +263,33 @@
               </label>
             </div>
           </div>
-            <div class="col-md-6 col-sm-6">
-              <div style="float:right;">
-                <label>Search:</label>
-                <input type="search" class="form-control input-sm input-small input-inline" ng-change="filterSearch(searchtext)" ng-model="searchtext">
-              </div>
+            
+          <div class="col-md-6 col-sm-6">
+            <div style="float:right;">
+              <label>Search:</label>
+              <input type="search" class="form-control input-sm input-small input-inline" ng-change="filterSearch(searchtext)" ng-model="searchtext">
             </div>
-            <div class="col-md-12 col-sm-12">
-              <div ui-grid="gridOptions"  ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">
-                <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div>
+          </div>
+            
+          <div class="col-md-12 col-sm-12">
+            <div ui-grid="gridOptions"  ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">
+              <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div>
+                <div class="tooltipcustom" id="tabletoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.95
+                  font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">      
+                  <div style="margin-top: 5px;margin-right: 15px">
+                    <div class="row" style="padding-left:6%">
+                      <table ng-if="gridOptions.columnDefs">
+                        <tr ng-repeat="m in gridOptions.columnDefs  |  limitTo :20">
+                          <th ng-if="m.visible==true">{{m.displayName}}</th>
+                          <td style="padding-left:6%" ng-if="m.visible==true">{{mouseHowerRowValue[m.name]}}</td>                       
+                        </tr>
+                        <tr ng-show="gridOptions.columnDefs.length >20" rowspan="2" >
+                          <td colspan="2" style="text-align:right">......</td>                       
+                        </tr>                     
+                      </table>
+                    </div>           
+                  </div>
+                </div>
               </div>
               <div class="row">
                 <div class="col-md-6" style="margin-top:17px">
@@ -235,35 +300,33 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> 
         `
       };
 	});
 
  DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compile,$location,$http,dagMetaDataService,$rootScope) {
-       function setGrid(paper, gridSize, color) {
-
-           // Set grid size on the JointJS paper object (joint.dia.Paper instance)
-           paper.options.gridSize = gridSize;
-           // Draw a grid into the HTML 5 canvas and convert it to a data URI image
-           var canvas = $('<canvas/>', { width: gridSize, height: gridSize });
-           canvas[0].width = gridSize;
-           canvas[0].height = gridSize;
-           var context = canvas[0].getContext('2d');
-           context.beginPath();
-           context.rect(1, 1, 1, 1);
-           context.fillStyle = color || '#AAAAAA';
-           context.fill();
-           // Finally, set the grid background image of the paper container element.
-           var gridBackgroundImage = canvas[0].toDataURL('image/png');
-           paper.$el.css('background-image', 'url("' + gridBackgroundImage + '")');
-       }
-
-      return {
-        template: `
+    function setGrid(paper, gridSize, color) {
+      // Set grid size on the JointJS paper object (joint.dia.Paper instance)
+      paper.options.gridSize = gridSize;
+      // Draw a grid into the HTML 5 canvas and convert it to a data URI image
+      var canvas = $('<canvas/>', { width: gridSize, height: gridSize });
+      canvas[0].width = gridSize;
+      canvas[0].height = gridSize;
+      var context = canvas[0].getContext('2d');
+      context.beginPath();
+      context.rect(1, 1, 1, 1);
+      context.fillStyle = color || '#AAAAAA';
+      context.fill();
+      // Finally, set the grid background image of the paper container element.
+      var gridBackgroundImage = canvas[0].toDataURL('image/png');
+      paper.$el.css('background-image', 'url("' + gridBackgroundImage + '")');
+    }
+      
+    return {
+      template: `
         <div class="tooltipcustom" id="divtoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;
-                font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
-
+          font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
           <div style="margin-top: 5px;margin-right: 15px">
             <div class="row">
               <div class="col-md-1">
@@ -341,24 +404,13 @@
             if(!$scope.editMode){
               return false;
             }
-            // console.log(arguments);
             if(magnetT.attributes['port'].value == 'out'){
               return false
             }
-            // try{
-            //   if(linkView.model.attributes.source.id === linkView.model.attributes.target.id){
-            //     return false
-            //   }
-            // }
-            // catch(e){
-            //
-            // }
             return dagValidationSvc.validate($scope.graph,cellViewS, magnetS, cellViewT, magnetT, end, linkView);
             return true;
           },
           validateMagnet: function (cellView, magnet) {
-            // console.log(cellView);
-            // console.log(magnet);
             if(!$scope.editMode){
               return false;
             }
@@ -367,37 +419,25 @@
             }
             return true
           }
-         });
-        //  $scope.$on('zoomChange',function (e,zoomSize) {
-        //    try {
-        //      paper.scale(zoomSize/10);
-        //    } catch (e) {
-         //
-        //    } finally {
-         //
-        //    }
-        //  });
-         $scope.$watch('zoomSize',function (newSize,old) {
-           try {
-             paper.scale(newSize/10);
-           } catch (e) {
-
-           } finally {
-
-           }
-         });
-         $scope.changeSliderForward=function() {
-          //alert("before : "+$scope.zoomSize)
-          $scope.zoomSize=$scope.zoomSize+1;
-          //alert("after : "+$scope.zoomSize)
-        }
-        $scope.changeSliderBack=function() {
-          //alert("before : "+$scope.zoomSize)
-          $scope.zoomSize=$scope.zoomSize-1;
-          //alert("after : "+$scope.zoomSize)
-        }
-         $scope.zoomSize = 7;
-
+          });
+          $scope.$watch('zoomSize',function (newSize,old) {
+            try {
+              paper.scale(newSize/10);
+            } catch (e) {
+            
+            } finally {
+            }
+          });
+         
+          $scope.changeSliderForward=function() {
+            $scope.zoomSize=$scope.zoomSize+1;
+          }
+          
+          $scope.changeSliderBack=function() {
+            $scope.zoomSize=$scope.zoomSize-1;
+          }
+        
+          $scope.zoomSize = 7;
           setGrid(paper, 10, '#AAAAAA');
           var initialised = false;
           var startParams;
@@ -417,64 +457,46 @@
             });
             return latest;
           }
+          
           function startStatusUpdate(params) {
             var Fn = function () {
-              var url=$location.absUrl().split("app")[0];
-              // var actualType = params.elementType.slice(0,-5);
-
+              var url=$location.absUrl().split("app")[0];            
               var execType = dagMetaDataService.elementDefs[params.elementType].execType;
-              // var capsActualType = actualType.charAt(0).toUpperCase() + actualType.slice(1);
               $http.get(url+'metadata/getGroupExecStatus?action=view&type='+execType+'&uuid='+params.id+'&version='+params.version).then(
                 function success(response){onSuccessGetStatusByDagExec(response.data)},
                 function error(error) {
                 stopStatusUpdate();
               });
               var onSuccessGetStatusByDagExec=function(response){
-                //$scope.dagdataexec=response;
-                // if(['Completed','Failed'].indexOf(latestStatus(response.status).stage) > -1){
-                //   stopStatusUpdate();
-                // }
-
-
                 console.log(response);
                 if(!angular.equals(statusCache, response)){
                   updateGroupGraphStatus(response);
                   statusCache = response;
                 }
-                // else {
-                //   angular.forEach(response,function (task) {
-                //     var taskid = task.metaRef.ref.uuid;
-                //     if(taskid == $scope.GroupExecUuid){
-                //       var statusTask = task.status.length == 0 ? 'InProgress' : latestStatus(task.status).stage;
-                //       if(['Completed','Failed'].indexOf(statusTask)>-1){
-                //         stopStatusUpdate();
-                //       }
-                //     }
-                //   })
-                // }
               }
             }
+            
             setTimeout(function () {
               Fn();
             }, 1000);
-            intervalId = setInterval(Fn, 5000);
+              intervalId = setInterval(Fn, 5000);
           };
+
           $scope.$on('$destroy',function(){
-              stopStatusUpdate();
+            stopStatusUpdate();
           });
+          
           function stopStatusUpdate() {
-            // $scope.$broadcast('removeGraph');
             statusCache = undefined;
             if(intervalId)
-            clearInterval(intervalId);
+              clearInterval(intervalId);
           }
+          
           function updateGroupGraphStatus(data){
             angular.forEach(data,function (task) {
               var statusTask = task.statusList.length == 0 ? 'InProgress' : latestStatus(task.statusList).stage;
-              //alert(statusTask);
               var taskid = task.metaRef.ref.uuid;
               if(taskid == $scope.GroupExecUuid){
-
                 if(['Failed','Killed'].indexOf(statusTask) !=-1){
                   $rootScope.allowReGroupExecution = true;
                 }
@@ -482,10 +504,11 @@
                   $rootScope.allowReGroupExecution =false;
                 }
               }
-
+              
               if(taskid == $scope.GroupExecUuid && ['Completed','Failed','Killed'].indexOf(statusTask)>-1){
                 stopStatusUpdate();
               }
+                
               $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");
               $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
               angular.forEach(task.status,function (status) {
@@ -497,19 +520,15 @@
           $( "#group-graph-wrapper" ).on("mouseover",".joint-element .body",function(e){
             $('.joint-element').mouseout(function(e){
               var divid = 'divtoshow';
-
               $("#"+divid).hide();
-            $('.connection').removeClass('active');
+              $('.connection').removeClass('active');
             });
-            // $('.joint-element').click(function(){
-
-            // });
+            
             var jointElement = $(this).closest(".joint-element");
             var s = jointElement.attr("model-id");
             $('.connection[source-id='+s+']').addClass('active');
             var cell = graph.getCell(s);
             var elementModel = cell.attributes['model-data'];
-            // var elementModel = cell.attr("model-data") ? JSON.parse(cell.attr("model-data")) : undefined;
             try {
               var elementType = cell.attributes.elementType;
               if(elementType.slice(-4) == 'Exec'){
@@ -520,7 +539,7 @@
               if(s.substr(0,3)=='dag'){
                 var cell = $(this);
                 var elementModel = cell.attr("model-data") ? JSON.parse(cell.attr("model-data")) : undefined;
-                var elementType = 'dag';
+                  var elementType = 'dag';
               }
               else if(cell.attributes.elementType=='stage'){
                 var elementType = 'stage';
@@ -529,7 +548,6 @@
                 var elementType = undefined;
               }
             }
-            // alert($stateParams.action);
             var allowedHover = angular.copy(dagMetaDataService.validTaskTypes);
             if(!elementModel || allowedHover.indexOf(elementType) < 0){
               return false;
@@ -545,11 +563,9 @@
               var top  = e.clientY  + "px";
             }
             var div = document.getElementById(divid);
-            // $(div).html("");
             div.style.left = left;
             div.style.top = top;
             var dagtypetext = '';
-
             try {
               dagtypetext = $scope.elementDefs[elementType].caption;
               color = $scope.elementDefs[elementType].color;
@@ -561,7 +577,7 @@
             }
 
             if(!elementModel || Object.keys(elementModel).length == 0){
-                var txt1 ="", txt2 = "", txt3 = "";
+              var txt1 ="", txt2 = "", txt3 = "";
             }
             else {
               var txt1 = elementModel.uuid || '';
@@ -569,7 +585,6 @@
               var txt3 = elementModel.version || '';
             }
 
-            // $(div).append(txt1, txt2, txt3);
             $("#elementTypeText").html(dagtypetext);
             $("#task_Id").html(txt1);
             $("#task_Name").html(txt2);
@@ -586,24 +601,19 @@
             var startTime = status.attr("inprogress");
             var endTime = status.attr("completed");
             $scope.popoverData = {};
-            // if(startTime || endTime){
-              $scope.popoverData.startTime = startTime || '-';
-              $scope.popoverData.endTime = endTime || '-';
-              var intdate1= parseInt($scope.popoverData.startTime)
-              var intdate2= parseInt($scope.popoverData.endTime)
-              var date1 = new Date(intdate1)
-              var date2 = new Date(intdate2)
-              $scope.popoverData.timeDiff = moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
-            // }
-            // else {
-            //   $scope.popoverData.startTime = undefined;
-            //   $scope.popoverData.endTime = undefined;
-            // }
+            $scope.popoverData.startTime = startTime || '-';
+            $scope.popoverData.endTime = endTime || '-';
+            var intdate1= parseInt($scope.popoverData.startTime)
+            var intdate2= parseInt($scope.popoverData.endTime)
+            var date1 = new Date(intdate1)
+            var date2 = new Date(intdate2)
+            $scope.popoverData.timeDiff = moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
             $scope.$apply();//this is required
-          });
+          });//End mouseover
+          
           $scope.$on('generateGroupGraph',function (e,params) {
             $rootScope.showGroupDowne=true;
-             $scope.allowReExecution = false;
+            $scope.allowReExecution = false;
             $scope.GroupExecUuid = params.id;
             $scope.execMode = true;
             console.log('params',JSON.stringify(params));
@@ -615,452 +625,437 @@
             var url=$location.absUrl().split("app")[0];
             var actualType = params.type.slice(0,-5);
             $http({
-             method: 'GET',
-             url:url+params.url+actualType+"GroupExecUuid="+params.id+"&"+actualType+"GroupExecVersion="+params.version+'&action=view',
-             }).
-             then(function (response,status,headers) {
-                stopStatusUpdate();
-                element.show();
-                console.log(response);
-                $('#grouploader').hide();
-                $scope.$emit('daggroupExecChanged',startParams.name || startParams.id);
-                drawChildGraph(response.data);
-                startStatusUpdate(params);
-             },function onError(err) {
-               $('#grouploader').hide();
-               $('#groupErrorMsg').show();
-               $('#groupErrorMsg').html('Some Error Occured');
-             })
-           });
-           function semicirclePos(data) {
-             var length = data.length;
-             var halfLength = Math.round(length/2);
-             var posArray = [];
-             var posX = 200,posY = 100;
-             posArray[0] = {x:posX,y:posY};
-             for (var i = 1; i < length; i++) {
-               posY = posY + 100;
-               if(i <=   halfLength){
-                 posX = posX + 100;
-                 posArray[i] = {x:posX,y:posY};
-               }
-               else if(i > halfLength){
-                 posX = posX - 100;
-                 if(i == length - 1){
-                   posArray[i] = {x:200,y:posY};
-                 }
-                 else {
-                   posArray[i] = {x:posX,y:posY};
-                 }
-               }
-             }
-             return posArray;
-           }
-           function circlePos(data) {
-             var length = data.length;
-             var angle,
-             radius = length > 7 ? 30*length : 250,
-             width = (radius * 2) + 150,
-             height = (radius * 2) + 150,
-             posArray = [];
-             for (i=0; i<length; i++) {
-                angle = (i / (length/2)) * Math.PI; // Calculate the angle at which the element will be placed.
-                                                      // For a semicircle, we would use (i / numNodes) * Math.PI.
-                x = (radius * Math.cos(angle)) + (width/2); // Calculate the x position of the element.
-                y = (radius * Math.sin(angle)) + (width/2); // Calculate the y position of the element.
-                posArray[i] = {'x': x, 'y': y};
+              method: 'GET',
+              url:url+params.url+actualType+"GroupExecUuid="+params.id+"&"+actualType+"GroupExecVersion="+params.version+'&action=view',
+            }).
+            then(function (response,status,headers) {
+              stopStatusUpdate();
+              element.show();
+              console.log(response);
+              $('#grouploader').hide();
+              $scope.$emit('daggroupExecChanged',startParams.name || startParams.id);
+              drawChildGraph(response.data);
+              startStatusUpdate(params);
+            },function onError(err) {
+              $('#grouploader').hide();
+              $('#groupErrorMsg').show();
+              $('#groupErrorMsg').html('Some Error Occured');
+            })
+          });//End generateGroupGraph
+          
+          function semicirclePos(data) {
+            var length = data.length;
+            var halfLength = Math.round(length/2);
+            var posArray = [];
+            var posX = 200,posY = 100;
+            posArray[0] = {x:posX,y:posY};
+            for (var i = 1; i < length; i++) {
+              posY = posY + 100;
+              if(i <=   halfLength){
+                posX = posX + 100;
+                posArray[i] = {x:posX,y:posY};
               }
-             return posArray;
-           }
-           function drawChildGraph(data) {
-             if(!data){
-               return;
-             }
+                
+              else if(i > halfLength){
+                posX = posX - 100;
+                if(i == length - 1){
+                  posArray[i] = {x:200,y:posY};
+                }
+                else {
+                  posArray[i] = {x:posX,y:posY};
+                }
+              }
+            }
+            return posArray;
+          }//End semicirclePos
+           
+          function circlePos(data) {
+            var length = data.length;
+            var angle,
+            radius = length > 7 ? 30*length : 250,
+            width = (radius * 2) + 150,
+            height = (radius * 2) + 150,
+            posArray = [];
+            for (i=0; i<length; i++) {
+              angle = (i / (length/2)) * Math.PI; // Calculate the angle at which the element will be placed.
+              // For a semicircle, we would use (i / numNodes) * Math.PI.
+              x = (radius * Math.cos(angle)) + (width/2); // Calculate the x position of the element.
+              y = (radius * Math.sin(angle)) + (width/2); // Calculate the y position of the element.
+              posArray[i] = {'x': x, 'y': y};
+            }
+            return posArray;
+          }//End circlePos
+           
+        function drawChildGraph(data) {
+          if(!data){
+            return;
+          }
 
-             setTimeout(function () {
-               $scope.$broadcast('rzSliderForceRender');
-             }, 100);
-            //  var posArray = semicirclePos(data);
-             var posArray = circlePos(data);
-             var cells = [];
-             var links = [];
-             cells.push( new joint.shapes.devs.Model(
-               angular.merge({},dagMetaDataService.getCustomElement(startParams.elementType),{
-                 id: startParams.id,
-                 elementType : startParams.elementType,
-                 "model-data": {dependsOn:{ref : startParams.ref}, uuid  : startParams.id,name:startParams.name,version:startParams.version},
-                //  position: { x: 140 , y:100 + Math.round(data.length/2) *100 }, //semi circle
-                 position: { x: (data.length > 7 ? 30*data.length : 250) + 75, y: (data.length > 7 ? 30*data.length : 250) + 75 }, //circle
-                 attrs: {
-                     '.body': {
-                         'element-id' : startParams.id,
-                         "model-data": JSON.stringify({dependsOn:{ref : startParams.ref}}),
-                     },
-                     '.status': {
-                       'element-id' : startParams.id,
-                     },
-                     text: { text: startParams.name || startParams.id}
-                 }
-               })
-             ));
-             if(data.length > 0){
-               var taskXPos = 500;
-               var taskYPos = 100;
-               angular.forEach(data,function (task,taskKey) {
-                 var ref= task.dependsOn.ref;
-                 var type = ref.type;
-                //  taskXPos = taskXPos + 80
-                //  taskYPos = taskYPos + 80;
-                 taskXPos = posArray[taskKey].x;
-                 taskYPos = posArray[taskKey].y;
-                 task.taskId = task.uuid.length > 3 ? task.uuid : startParams.id+'_'+"task_"+task.uuid
-                 cells.push( new joint.shapes.devs.Model(
-                   angular.merge({},dagMetaDataService.getCustomElement(type),{
-                       id: task.taskId,
-                       elementType : type,
-                       "model-data": task,
-                       position: { x: task.xPos || taskXPos, y: task.yPos || taskYPos },
-                       attrs: {
-                           '.body': {
-                               'element-id' : task.taskId,
-                               "model-data": JSON.stringify(task),
-                           },
-                           '.status': {
-                               'element-id' : task.taskId,
+          setTimeout(function () {
+            $scope.$broadcast('rzSliderForceRender');
+          }, 100);
+          //  var posArray = semicirclePos(data);
+          var posArray = circlePos(data);
+          var cells = [];
+          var links = [];
+          cells.push( new joint.shapes.devs.Model(
+            angular.merge({},dagMetaDataService.getCustomElement(startParams.elementType),{
+              id: startParams.id,
+              elementType : startParams.elementType,
+              "model-data": {dependsOn:{ref : startParams.ref}, uuid  : startParams.id,name:startParams.name,version:startParams.version},
+              //position: { x: 140 , y:100 + Math.round(data.length/2) *100 }, //semi circle
+              position: { x: (data.length > 7 ? 30*data.length : 250) + 75, y: (data.length > 7 ? 30*data.length : 250) + 75 }, //circle
+              attrs: {
+                '.body': {
+                  'element-id' : startParams.id,
+                  "model-data": JSON.stringify({dependsOn:{ref : startParams.ref}}),
+                },
+                '.status': {
+                  'element-id' : startParams.id,
+                },
+                text: { text: startParams.name || startParams.id}
+              }
+            })
+          ));//End Cell
+             
+          if(data.length > 0){
+            var taskXPos = 500;
+            var taskYPos = 100;
+            angular.forEach(data,function (task,taskKey) {
+              var ref= task.dependsOn.ref;
+              var type = ref.type;
+              taskXPos = posArray[taskKey].x;
+              taskYPos = posArray[taskKey].y;
+              task.taskId = task.uuid.length > 3 ? task.uuid : startParams.id+'_'+"task_"+task.uuid
+              cells.push( new joint.shapes.devs.Model(
+                angular.merge({},dagMetaDataService.getCustomElement(type),{
+                  id: task.taskId,
+                  elementType : type,
+                  "model-data": task,
+                  position: { x: task.xPos || taskXPos, y: task.yPos || taskYPos },
+                  attrs: {
+                    '.body': {
+                      'element-id' : task.taskId,
+                      "model-data": JSON.stringify(task),
+                    },
+                    
+                    '.status': {
+                      'element-id' : task.taskId,
+                    },
+                    '.status image' : {
+                      "xlink:href":"assets/layouts/layout/img/new_status/"+task.statusList[task.statusList.length -1].stage+".svg"
+                    },
+                    text: { text: task.name}
+                  }
+                })
+              ));
+                  
+              var s = startParams.id;
+              links.push(
+                new joint.dia.Link(angular.merge({},dagMetaDataService.getDefaultLink(),{
+                  source: { id: s}, target: { id: task.taskId },
+                  attrs: {'.connection': {'source-id':s  }}
+                }))
+              )
+            });
+          }//End If
+        
+          graph.addCells(cells);
+          graph.addCells(links);
+          if($scope.execMode){
+            $('#showgrouppaper svg').addClass('exec-mode');
+          }
+             
+          d3.selectAll('#showgrouppaper .joint-element .body')
+            .on('contextmenu', function(){
+              d3.event.preventDefault();
+              d3.event.stopPropagation();
+              var vm = this;
+              var id = vm.getAttribute("element-id");
+              var cell = graph.getCell(id);
+              if(!cell){
+                return false
+              }
+              console.log(cell);
+              var parentStage = cell.attributes.parentStage;
+              var taskId = cell.attributes.id;
+              var modelData = cell.attributes['model-data'];
+              var ref = id == startParams.id ? modelData.dependsOn.ref : {uuid: modelData.uuid,name : modelData.name ,type : startParams.type.slice(0,-5)+'Exec', version: modelData.version};
+              var type = ref.type;
+              if(type.slice(-4) == 'Exec'){
+                if(type.slice(-9) == 'groupExec'){
+                  var isGroupExec = true;
+                }
+                else {
+                  var isExec = true;
+                }
+                
+                type = type.slice(0,-4);
+                if(type == 'dataQual')
+                  type = 'dq';
+                  else if (type == 'dataQualGroup')
+                    type = 'dqgroup';
+                  }
+                  var svg = document.querySelector('#showgrouppaper svg');
+                  var pt = svg.createSVGPoint();
+                  pt.x = d3.event.clientX; pt.y = d3.event.clientY;
+                  var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
+                  var state;
+                    
+                  if(isExec || isGroupExec){
+                    var iconMenuItems = [{title:'Show Details', type : 'element'}];
+                    if($scope.execMode || true){
+                      var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
+                      if(status && (status=='Completed') && isGroupExec!=true){
+                        iconMenuItems.push({title:'Show Results', type : 'results'});
+                      }
+                      else if(status && (status=='NotStarted' || status=='Resume')){
+                        iconMenuItems.push({title:'On Hold', type : 'onhold'});
+                      }
+                      else if(status && status=='InProgress'){
+                        iconMenuItems.push({title:'Kill', type : 'killexecution'});
+                      }
+                        
+                      else if(status && status=='OnHold'){
+                        iconMenuItems.push({title:'Resume', type : 'resume'});
+                      }
+                    }
+                    iconMenu.resetItems(iconMenuItems);
+                    var apis = {
+                      dq : {name:'dataqual', label: 'DataQual'},
+                      dqgroup : {name:'dataQualGroup', label: 'DataQualGroup',url :'dataqual/getdqExecBydqGroupExec?'},
+                      profile : {name:'profile', label: 'Profile'},
+                      profilegroup : {name:'profilegroup', label: 'ProfileGroup', url : 'profile/getProfileExecByProfileGroupExec?'},
+                      load : {name:'load', label: 'Load'},
+                      map : {name:'map', label: 'Map'},
+                      model : {name:'model', label: 'Model'},
+                      rule : {name:'rule', label: 'Rule'},
+                      rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
+                      recon : {name:'recon', label: 'Recon'},
+                      recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
+                    }
+                  
+                    var resultparams = {id:ref.uuid,name:modelData.name,elementType:type,version:ref.version,type: apis[type].name,typeLabel:apis[type].label,url:apis[type].url,parentStage:parentStage,taskId:taskId};
+                    if(id != startParams.id){
+                      var url=$location.absUrl().split("app")[0];
+                      $http.get(url+'common/getLatestByUuid?action=view&uuid='+modelData.dependsOn.ref.uuid+'&type='+modelData.dependsOn.ref.type).then(function (res) {
+                        state = {state : dagMetaDataService.elementDefs[modelData.dependsOn.ref.type].state, params : {id :modelData.dependsOn.ref.uuid,name:modelData.dependsOn.ref.name,version :res.data.version,type:modelData.dependsOn.ref.type,mode:true, returnBack: true}};
+                        iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
+                      });
+                    }
+                      
+                    else {
+                      var url=$location.absUrl().split("app")[0];
+                      $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
+                        state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version: res.data.version,name:res.data.name,type:res.data.type, mode:true, returnBack: true}};
+                        iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
+                      });
+                    }
+                  }
+                    
+                  else {
+                    var url=$location.absUrl().split("app")[0];
+                    $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
+                      state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type, mode:true, returnBack: true}};
+                      iconMenu(localPoint.x, localPoint.y, JSON.stringify(state));
+                    });
+                  }
+                });//End contextmenu
+              }//End drawChildGraph
 
-                           },
-                           '.status image' : {
-                             "xlink:href":"assets/layouts/layout/img/new_status/"+task.statusList[task.statusList.length -1].stage+".svg"
-                           },
-                           text: { text: task.name}
-                       }
-                   })
-                 ));
-                 var s = startParams.id;
-                 links.push(
-                   new joint.dia.Link(angular.merge({},dagMetaDataService.getDefaultLink(),{
-                       source: { id: s}, target: { id: task.taskId },
-                       attrs: {'.connection': {'source-id':s  }}
-                   }))
-                 )
-               });
-             }
-             graph.addCells(cells);
-             graph.addCells(links);
+            function iconContextMenu() {
+              var height,
+              width,
+              margin = 0.1, // fraction of width
+              items = [],
+              rescale = false,
+              style = {
+                'rect': {
+                  'mouseout': {
+                    'fill': 'rgb(0,0,0)',
+                    'opacity':'0.8',
+                    'stroke': 'white',
+                      'stroke-width': '1px'
+                  },
+                  'mouseover': {
+                    'fill': '#32c5d2'
+                  }
+                },
+                'text': {
+                  'fill': 'white',
+                  'font-size': '13',
+                  'font-family': 'Open Sans'
+                }
+              };
 
-             if($scope.execMode){
-               $('#showgrouppaper svg').addClass('exec-mode');
-             }
-            //  $('#paper svg').addClass('view-mode');
-             d3.selectAll('#showgrouppaper .joint-element .body')
-               .on('contextmenu', function(){
-                   d3.event.preventDefault();
-                   d3.event.stopPropagation();
+              function menu(x, y, url,resultParams) {
+                d3.select('.context-menu').remove();
+                scaleItems();
+                d3.select('#showgrouppaper svg')
+                .append('g').attr('class', 'context-menu')
+                .selectAll('tmp')
+                .data(items).enter()
+                .append('g').attr('class', 'menu-entry')
+                .style({'cursor': 'pointer'})
+                .on('mouseover', function(){
+                d3.select(this).select('rect').style(style.rect.mouseover) })
+                .on('mouseout', function(){
+                  d3.select(this).select('rect').style(style.rect.mouseout) });
+                  d3.selectAll('.menu-entry')
+                  .append('rect')
+                  .attr('x', x)
+                  .attr('y', function(d, i){ return y + (i * height); })
+                  .attr('onclick', function(d){
+                  if(d.type == 'results'){
+                    return 'showResult('+resultParams+')'
+                  }
+                  else if(d.type == 'onhold'){
+                    return 'setSubTaskStatus('+resultParams+',"OnHold")'
+                  }
+                  else if(d.type == 'resume'){
+                    return 'setSubTaskStatus('+resultParams+',"Resume")'
+                  }
+                  else if(d.type == 'killexecution'){
+                    return 'setSubTaskStatus('+resultParams+',"Killed")'
+                  }
+                  else
+                    return "navigateTo('"+url+"');"
+                  })
+                  .attr('width', width+50)
+                  .attr('height', height)
+                  .style(style.rect.mouseout);
+                  d3.selectAll('.menu-entry')
+                    .append('text')
+                    .text(function(d){ return d.title; })
+                    .attr('onclick', function(d){
+                    if(d.type == 'results'){
+                      return 'showResult('+resultParams+')'
+                    }
+                    else if(d.type == 'onhold'){
+                      return 'setSubTaskStatus('+resultParams+',"OnHold")'
+                    }
+                    else if(d.type == 'resume'){
+                      return 'setSubTaskStatus('+resultParams+',"Resume")'
+                    }
+                    else if(d.type == 'killexecution'){
+                      return 'setSubTaskStatus('+resultParams+',"Killed")'
+                    }
+                    else
+                      return "navigateTo('"+url+"');"
+                    })
+                    .attr('x', x+25)
+                    .attr('y', function(d, i){ return y + (i * height); })
+                    .attr('dy', height - 10 - margin / 2)
+                    .attr('dx', margin)
+                    .style(style.text);
 
-                   var vm = this;
-                   var id = vm.getAttribute("element-id");
-                   var cell = graph.getCell(id);
-                   if(!cell){
-                     return false
-                   }
-                   console.log(cell);
-                   var parentStage = cell.attributes.parentStage;
-                   var taskId = cell.attributes.id;
-                   var modelData = cell.attributes['model-data'];
+                    // Other interactions
+                    d3.select('body')
+                      .on('click', function() {
+                        d3.select('.context-menu').remove();
+                      });
+                  }//End menu
 
-                   var ref = id == startParams.id ? modelData.dependsOn.ref : {uuid: modelData.uuid,name : modelData.name ,type : startParams.type.slice(0,-5)+'Exec', version: modelData.version};
-                   var type = ref.type;
-                   if(type.slice(-4) == 'Exec'){
-                     if(type.slice(-9) == 'groupExec'){
-                       var isGroupExec = true;
-                     }
-                     else {
-                       var isExec = true;
-                     }
-                     type = type.slice(0,-4);
-                     if(type == 'dataQual')
-                      type = 'dq';
-                    else if (type == 'dataQualGroup')
-                      type = 'dqgroup';
-                   }
+                  menu.items = function(argumentItems) {
+                    if (!argumentItems.length) return items;
+                      for (i in argumentItems) items.push(argumentItems[i]);
+                        rescale = true;
+                      return menu;
+                    }
+                  menu.resetItems = function(argumentItems) {
+                    if (!argumentItems.length) return items;
+                      items = [];
+                    for (i in argumentItems) items.push(argumentItems[i]);
+                      return menu;
+                  }
 
-                   var svg = document.querySelector('#showgrouppaper svg');
-                   var pt = svg.createSVGPoint();
-                   pt.x = d3.event.clientX; pt.y = d3.event.clientY;
-                   var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
-                   // var localPoint = $scope.paper.clientToLocalPoint(d3.event.clientX, d3.event.clientY);
-                   var state;
+                  // Automatically set width, height, and margin;
+                  function scaleItems() {
+                    if (rescale) {
+                      d3.select('#showgrouppaper svg').selectAll('tmp')
+                        .data(items).enter()
+                        .append('text')
+                        .text(function(d){ return d.title; })
+                        .style(style.text)
+                        .attr('x', -1000)
+                        .attr('y', -1000)
+                        .attr('class', 'tmp');
+                        
+                      var z = d3.selectAll('.tmp')[0]
+                      .map(function(x){ return x.getBBox(); });
+                        width = d3.max(z.map(function(x){ return x.width; }));
+                        margin = margin * width;
+                        width =  width + 2 * margin;
+                        height = d3.max(z.map(function(x){ return x.height+ 15 + margin / 2; }));
 
-                   if(isExec || isGroupExec){
-                     var iconMenuItems = [{title:'Show Details', type : 'element'}];
-
-                     if($scope.execMode || true){
-                       var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
-                       if(status && (status=='Completed') && isGroupExec!=true){
-                         iconMenuItems.push({title:'Show Results', type : 'results'});
-                       }
-                       else if(status && (status=='NotStarted' || status=='Resume')){
-                         iconMenuItems.push({title:'On Hold', type : 'onhold'});
-                       }
-                       else if(status && status=='InProgress'){
-                         iconMenuItems.push({title:'Kill', type : 'killexecution'});
-                       }
-                       else if(status && status=='OnHold'){
-                         iconMenuItems.push({title:'Resume', type : 'resume'});
-                       }
-                     }
-                     iconMenu.resetItems(iconMenuItems);
-                    //  var apis = {
-                    //    dq : {name:'dataqual', label: 'DataQual'},
-                    //    dqgroup : {name:'dqgroup', label: 'DataQualGroup',url :'dataqual/getdqExecBydqGroupExec?'},
-                    //    profile : {name:'profile', label: 'Profile'},
-                    //    profilegroup : {name:'profilegroup', label: 'ProfileGroup', url : 'profile/getProfileExecByProfileGroupExec?'},
-                    //    load : {name:'load', label: 'Load'},
-                    //    map : {name:'map', label: 'Map'},
-                    //    model : {name:'model', label: 'Model'},
-                    //    rule : {name:'rule', label: 'Rule'},
-                    //  }
-                     var apis = {
-                       dq : {name:'dataqual', label: 'DataQual'},
-                       dqgroup : {name:'dataQualGroup', label: 'DataQualGroup',url :'dataqual/getdqExecBydqGroupExec?'},
-                       profile : {name:'profile', label: 'Profile'},
-                       profilegroup : {name:'profilegroup', label: 'ProfileGroup', url : 'profile/getProfileExecByProfileGroupExec?'},
-                       load : {name:'load', label: 'Load'},
-                       map : {name:'map', label: 'Map'},
-                       model : {name:'model', label: 'Model'},
-                       rule : {name:'rule', label: 'Rule'},
-                       rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
-                     }
-                     // var typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
-                    //  var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId};
-
-                     var resultparams = {id:ref.uuid,name:modelData.name,elementType:type,version:ref.version,type: apis[type].name,typeLabel:apis[type].label,url:apis[type].url,parentStage:parentStage,taskId:taskId};
-                     if(id != startParams.id){
-                       var url=$location.absUrl().split("app")[0];
-                       $http.get(url+'common/getLatestByUuid?action=view&uuid='+modelData.dependsOn.ref.uuid+'&type='+modelData.dependsOn.ref.type).then(function (res) {
-                         state = {state : dagMetaDataService.elementDefs[modelData.dependsOn.ref.type].state, params : {id :modelData.dependsOn.ref.uuid,name:modelData.dependsOn.ref.name,version :res.data.version,type:modelData.dependsOn.ref.type,mode:true, returnBack: true}};
-                         iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
-                       });
-                     }
-                     else {
-                       var url=$location.absUrl().split("app")[0];
-                       $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
-                           state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version: res.data.version,name:res.data.name,type:res.data.type, mode:true, returnBack: true}};
-                           iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
-                       });
-                     }
-                   }
-                   else {
-                     var url=$location.absUrl().split("app")[0];
-                     $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
-                       state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type, mode:true, returnBack: true}};
-                       iconMenu(localPoint.x, localPoint.y, JSON.stringify(state));
-                     });
-                   }
-               });
-           }
-           function iconContextMenu() {
-               var height,
-                   width,
-                   margin = 0.1, // fraction of width
-                   items = [],
-                   rescale = false,
-                   style = {
-                       'rect': {
-                           'mouseout': {
-                               'fill': 'rgb(0,0,0)',
-                               'opacity':'0.8',
-                               'stroke': 'white',
-                               'stroke-width': '1px'
-                           },
-                           'mouseover': {
-                               'fill': '#32c5d2'
-                           }
-                       },
-                       'text': {
-                           'fill': 'white',
-                           'font-size': '13',
-                           'font-family': 'Open Sans'
-                       }
-                   };
-
-               function menu(x, y, url,resultParams) {
-
-                   d3.select('.context-menu').remove();
-                   scaleItems();
-
-                   // Draw the menu
-                   d3.select('#showgrouppaper svg')
-                       .append('g').attr('class', 'context-menu')
-                       .selectAll('tmp')
-                       .data(items).enter()
-                       .append('g').attr('class', 'menu-entry')
-                       .style({'cursor': 'pointer'})
-                       .on('mouseover', function(){
-                           d3.select(this).select('rect').style(style.rect.mouseover) })
-                       .on('mouseout', function(){
-                           d3.select(this).select('rect').style(style.rect.mouseout) });
-
-                   d3.selectAll('.menu-entry')
-                       .append('rect')
-                       .attr('x', x)
-                       .attr('y', function(d, i){ return y + (i * height); })
-                       .attr('onclick', function(d){
-                         if(d.type == 'results'){
-                          return 'showResult('+resultParams+')'
-                         }
-                         else if(d.type == 'onhold'){
-                           return 'setSubTaskStatus('+resultParams+',"OnHold")'
-                         }
-                         else if(d.type == 'resume'){
-                           return 'setSubTaskStatus('+resultParams+',"Resume")'
-                         }
-                         else if(d.type == 'killexecution'){
-                           return 'setSubTaskStatus('+resultParams+',"Killed")'
-                         }
-                         else
-                          return "navigateTo('"+url+"');"
-                       })
-                       .attr('width', width+50)
-                       .attr('height', height)
-                       .style(style.rect.mouseout);
-
-                   d3.selectAll('.menu-entry')
-                       .append('text')
-                       .text(function(d){ return d.title; })
-                       .attr('onclick', function(d){
-                         if(d.type == 'results'){
-                          return 'showResult('+resultParams+')'
-                         }
-                         else if(d.type == 'onhold'){
-                           return 'setSubTaskStatus('+resultParams+',"OnHold")'
-                         }
-                         else if(d.type == 'resume'){
-                           return 'setSubTaskStatus('+resultParams+',"Resume")'
-                         }
-                         else if(d.type == 'killexecution'){
-                           return 'setSubTaskStatus('+resultParams+',"Killed")'
-                         }
-                         else
-                          return "navigateTo('"+url+"');"
-                        })
-                       .attr('x', x+25)
-                       .attr('y', function(d, i){ return y + (i * height); })
-                       .attr('dy', height - 10 - margin / 2)
-                       .attr('dx', margin)
-                       .style(style.text);
-
-                   // Other interactions
-                   d3.select('body')
-                       .on('click', function() {
-                           d3.select('.context-menu').remove();
-                       });
-
-               }
-
-               menu.items = function(argumentItems) {
-                   if (!argumentItems.length) return items;
-                   for (i in argumentItems) items.push(argumentItems[i]);
-                   rescale = true;
-                   return menu;
-               }
-               menu.resetItems = function(argumentItems) {
-                   if (!argumentItems.length) return items;
-                   items = [];
-                   for (i in argumentItems) items.push(argumentItems[i]);
-                  //  rescale = true;
-                   return menu;
-               }
-
-               // Automatically set width, height, and margin;
-               function scaleItems() {
-                   if (rescale) {
-                       d3.select('#showgrouppaper svg').selectAll('tmp')
-                           .data(items).enter()
-                           .append('text')
-                           .text(function(d){ return d.title; })
-                           .style(style.text)
-                           .attr('x', -1000)
-                           .attr('y', -1000)
-                           .attr('class', 'tmp');
-                       // d3.select('svg').selectAll('tmp')
-                       //     .data(items).enter()
-                       //     .append('image')
-                       //     .attr('xlink:href',(function(d){ return d.image; }))
-                       //     .attr('x', -1000)
-                       //     .attr('y', -1000)
-                       //     .attr('class', 'tmp');
-
-                       var z = d3.selectAll('.tmp')[0]
-                                 .map(function(x){ return x.getBBox(); });
-                       width = d3.max(z.map(function(x){ return x.width; }));
-                       margin = margin * width;
-                       width =  width + 2 * margin;
-                       height = d3.max(z.map(function(x){ return x.height+ 15 + margin / 2; }));
-
-                       // cleanup
-                       d3.selectAll('.tmp').remove();
-                       rescale = false;
-                   }
-               }
-
-               return menu;
-           }
-           var iconMenuItems = [{title:'Show Details', type : 'element'},{title:'Show Results', type : 'results'},{title:'On Hold', type : 'onhold'},{title:'Resume', type : 'resume'},{title:'Kill', type : 'killexecution'}];
-           var iconMenu = iconContextMenu().items(iconMenuItems);
-
-           window.setSubTaskStatus = function (row,status) {
-             $scope.setStatus(row,status);
-           }
-           $scope.setStatus = function (row,status) {
-             var api = false;
-             var execType = dagMetaDataService.elementDefs[row.elementType.toLowerCase()].execType;
-             switch (row.elementType) {
-               case 'dq':
-                 api = 'dataqual';
-                 break;
-               case 'dqgroup':
-                 api = 'dataqual';
-                 break;
-               case 'profile':
-                 api = 'profile';
-                 break;
-               case 'profilegroup':
-                 api = 'profile';
-                 break;
-               case 'rule':
-                 api = 'rule';
-                 break;
-               case 'rulegroup':
-                 api = 'rule';
-                 break;
-               case 'dagexec':
-                 api = 'dag';
-                 break;
-             }
-             if(!api){
-               return
-             }
-             var url=$location.absUrl().split("app")[0];
-             $http.put(url+''+api+'/setStatus?uuid='+row.id+'&version='+row.version+'&type='+execType+'&status='+status).then(function (response) {
-               console.log(response);
-             });
-           }
-        }
-	    };
-	});
+                        // cleanup
+                      d3.selectAll('.tmp').remove();
+                        rescale = false;
+                    }
+                  }//end  scaleItems 
+                return menu;
+              }
+              var iconMenuItems = [{title:'Show Details', type : 'element'},{title:'Show Results', type : 'results'},{title:'On Hold', type : 'onhold'},{title:'Resume', type : 'resume'},{title:'Kill', type : 'killexecution'}];
+              var iconMenu = iconContextMenu().items(iconMenuItems);
+              window.setSubTaskStatus = function (row,status) {
+                $scope.setStatus(row,status);
+              }
+              $scope.setStatus = function (row,status) {
+                var api = false;
+                var execType = dagMetaDataService.elementDefs[row.elementType.toLowerCase()].execType;
+                switch (row.elementType) {
+                  case 'dq':
+                    api = 'dataqual';
+                    break;
+                  case 'dqgroup':
+                    api = 'dataqual';
+                    break;
+                  case 'profile':
+                    api = 'profile';
+                    break;
+                  case 'profilegroup':
+                  api = 'profile';
+                  break;
+                  case 'rule':
+                    api = 'rule';
+                    break;
+                  case 'rulegroup':
+                    api = 'rule';
+                    break;
+                  case 'dagexec':
+                    api = 'dag';
+                    break;
+                  case 'recon':
+                    api = 'recon';
+                    break;
+                  case 'recongroup':
+                    api = 'recon';
+                    break;
+                }
+                if(!api){
+                  return
+                }
+                var url=$location.absUrl().split("app")[0];
+                $http.put(url+''+api+'/setStatus?uuid='+row.id+'&version='+row.version+'&type='+execType+'&status='+status).then(function (response) {
+                    console.log(response);
+                });
+              }
+            } //End Link
+	        };
+	 });
  DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,graphService,dagValidationSvc,$location,$http,dagMetaDataService, MetadataDagSerivce) {
   return {
     restrict: 'AE',
 	  scope : {
       execMode : '=',
       editMode : '=',
+      addMode:'=',
       graph : '=',
       isTemplate:'=',
 	  },
     link: function ($scope, element, attrs) {
+     // alert($scope.addMode)
       //alert($scope.isTemplate)
-     
       $rootScope.showGrid=false;
       $rootScope.showGroupDowne=false;
       $scope.elementDefs = dagMetaDataService.elementDefs;
@@ -1286,6 +1281,7 @@
         }
 
         $scope.$on('createGraph',function (e,data) {
+         // alert($scope.isTemplate)
           if(!data){
             return;
           }
@@ -1402,13 +1398,15 @@
               //   }
           // },
           defaultLink : function(cellView, magnet) {
+            console.log(cellView)
             return new joint.dia.Link(angular.merge({},dagMetaDataService.getDefaultLink(),{
               attrs: { '.connection': { 'source-id':cellView.model.id  }}
             }));
           },
           
           validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
-            if(!$scope.editMode){
+            
+            if(!$scope.editMode || $scope.isTemplate){
               return false;
             }
             if(magnetT.attributes['port'].value == 'out'){
@@ -1429,7 +1427,7 @@
         });
         $scope.paper.scale(0.7);
         setGrid($scope.paper, 10, '#AAAAAA');
-        var convertedData = graphService.convertDagToGraph(data,$scope.isTemplate);
+        var convertedData = graphService.convertDagToGraph(data,$scope.isTemplate,$scope.addMode);
         var cells = convertedData.cells;
         var links = convertedData.links;
         $scope.graph.addCells(cells);
@@ -1447,8 +1445,11 @@
         d3.selectAll('#paper')
           .on('contextmenu', function(){
             //alert($scope.isTemplate)1.jitu
-            debugger;
             if(!$scope.editMode || $scope.isTemplate){
+              return false; 
+            }
+            
+            if($scope.editMode && $scope.isTemplate){
               return false; 
             }
             d3.event.preventDefault();
@@ -1459,10 +1460,11 @@
           $('#paper svg').addClass('exec-mode');
         }
               
-        if(!$scope.editMode){
+        if(!$scope.editMode || $scope.isTemplate){
           $('#paper svg').addClass('view-mode');
           d3.selectAll('.joint-element .body')
           .on('contextmenu', function(){
+          
             d3.event.preventDefault();
             d3.event.stopPropagation();
             var vm = this;
@@ -1554,8 +1556,13 @@
                 load : { name:'load', label: 'Load'},
                 map : { name:'map', label: 'Map'},
                 model : {name:'model', label: 'Model'},
+                train : {name:'train', label: 'Train'},
+                predict : {name:'predict', label: 'Predict'},
+                simulate : {name:'simulate', label: 'Simulate'},
                 rule : {name:'rule', label: 'Rule'},
                 rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
+                recon : {name:'recon', label: 'Recon'},
+                recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
               }
 
               var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId};
@@ -1732,45 +1739,107 @@
               }
           }
         }
-        // var checkDependsOn=function(parentId,taskId){
-        //   for(var i=0;i<$scope.dagData.stages.length;i++){
-        //     if(parentId == $scope.dagData.stages[i].stageId){
-        //       for(var j=0;j<$scope.dagData.stages[i].tasks.length;j++){
-        //        if(taskId == $scope.dagData.stages[i].tasks[j].taskId){
-        //          break;
-        //        }else{
-        //         var id=$scope.dagData.stages[i].tasks[j].taskId;
-        //         var type=$(".body[element-id=" + id + "]").attr("element-type");
-        //         $(".body[element-id=" + id + "]").attr("active",true);
-        //         $(".body[element-id=" + id + "]").attr("xlink:href","assets/layouts/layout/img/"+type+".svg");
-        //         $scope.graph.getCell(id).attributes.attrs[".body"].active=true;  
-        //        }
-        //       }
-        //     }
-        //   }
-        // }  
+        var checkDependsOnInActive=function(parentId,taskId,type){
+          if(type !="stage"){
+           // debugger;
+            for(var i=0;i<$scope.dagData.stages.length;i++){
+              if(parentId == $scope.dagData.stages[i].stageId){
+                for(var j=0;j<$scope.dagData.stages[i].tasks.length;j++){
+                  var dependsOn=$scope.dagData.stages[i].tasks[j].dependsOn
+                  if(dependsOn.indexOf(taskId) != -1){
+                  var id=$scope.dagData.stages[i].tasks[j].taskId;
+                  var type=$(".body[element-id=" + id + "]").attr("element-type");
+                  $(".body[element-id=" + id + "]").attr("active",true);
+                  $(".body[element-id=" + id + "]").attr("xlink:href","assets/layouts/layout/img/"+type+"inactive.svg");
+                  $scope.graph.getCell(id).attributes.attrs[".body"].active=false;
+                  checkDependsOnInActive($scope.graph.getCell(id).attributes['parentStage'],id,type)
+                  }  
+                }
+                if($scope.dagData.stages[i].tasks.length == 1){
+                  var type=$(".body[element-id=" + parentId + "]").attr("element-type");
+                  $(".body[element-id=" + parentId + "]").attr("active",true);
+                  $(".body[element-id=" + parentId + "]").attr("xlink:href","assets/layouts/layout/img/"+type+"inactive.svg");
+                  $scope.graph.getCell(parentId).attributes.attrs[".body"].active=false;
+                }else{
+                 // debugger;
+                  var countActiveTask=0;
+                  for(var j=0;j<$scope.dagData.stages[i].tasks.length;j++){
+                    var taskId=$scope.dagData.stages[i].tasks[j].taskId
+                    if($scope.graph.getCell(taskId).attributes.attrs[".body"].active ==true){
+                      countActiveTask=countActiveTask+1;
+                    }
+                  }  
+                  if(countActiveTask ==0){
+                    var type=$(".body[element-id=" + parentId + "]").attr("element-type");
+                    $(".body[element-id=" + parentId + "]").attr("active",true);
+                    $(".body[element-id=" + parentId + "]").attr("xlink:href","assets/layouts/layout/img/"+type+"inactive.svg");
+                    $scope.graph.getCell(parentId).attributes.attrs[".body"].active=false;
+                  }
+                }
+                
+              }
+            }
+          }
+          else{
+            for(var i=0;i<$scope.dagData.stages.length;i++){
+             // debugger;
+              if(taskId == $scope.dagData.stages[i].stageId){
+                for(var j=0;j<$scope.dagData.stages[i].tasks.length;j++){
+                  var id=$scope.dagData.stages[i].tasks[j].taskId;
+                  var type=$(".body[element-id=" + id + "]").attr("element-type");
+                  $(".body[element-id=" + id + "]").attr("active",true);
+                  $(".body[element-id=" + id + "]").attr("xlink:href","assets/layouts/layout/img/"+type+"inactive.svg");
+                  $scope.graph.getCell(id).attributes.attrs[".body"].active=false;
+                 
+                 //checkDependsOnInActive($scope.graph.getCell(id).attributes['parentStage'],id,type)
+                }
+                checkDependsOn($scope.dagData.stages[i].dependsOn);
+              }
+              
+            }
+
+          }
+        }  
 
         $( "#paper" ).on("dblclick",".joint-element .body",dblClickFn);
         $( "#paper" ).on("click",".joint-element .body",function(e){
+          
           var jointElement = $(this).closest(".joint-element");
           var id = jointElement.attr("model-id");
-          var type=jointElement.attr("element-type");
+          var type=$(".body[element-id=" + id + "]").attr("element-type");
+          if(type =="dag" || !$scope.isTemplate){
+            return false;
+          }else if(!$scope.editMode){
+            return false;
+          }
           var cell = $scope.graph.getCell(id)
           console.log(cell);
-          var type=$(".body[element-id=" + id + "]").attr("element-type");
-          $(".body[element-id=" + id + "]").attr("active",true);
-          $(".body[element-id=" + id + "]").attr("xlink:href","assets/layouts/layout/img/"+type+".svg");
-          $scope.graph.getCell(id).attributes.attrs[".body"].active=true;
-          console.log( $scope.graph.getCell(id));
-          if(type !="dag"){
-            var dependsOn=cell.attributes['model-data'].dependsOn;
-          
-            if(dependsOn.length >0){
-              checkDependsOn($scope.graph.getCell(id).attributes['model-data'].dependsOn);
-            }else{
-              checkDependsOn([$scope.graph.getCell(id).attributes['parentStage']]);
+          console.log($scope.graph.getCell(id).attributes.attrs[".body"].active)
+          if($scope.graph.getCell(id).attributes.attrs[".body"].active == false){
+            var type=$(".body[element-id=" + id + "]").attr("element-type");
+            $(".body[element-id=" + id + "]").attr("active",true);
+            $(".body[element-id=" + id + "]").attr("xlink:href","assets/layouts/layout/img/"+type+".svg");
+            $scope.graph.getCell(id).attributes.attrs[".body"].active=true;
+            if(type !="dag"){
+              var dependsOn=cell.attributes['model-data'].dependsOn;
+            
+              if(dependsOn.length >0){
+                checkDependsOn($scope.graph.getCell(id).attributes['model-data'].dependsOn);
+              }else{
+                checkDependsOn([$scope.graph.getCell(id).attributes['parentStage']]);
+              }
             }
           }
+          else if($scope.graph.getCell(id).attributes.attrs[".body"].active == true){
+            var type=$(".body[element-id=" + id + "]").attr("element-type");
+            $(".body[element-id=" + id + "]").attr("active",true);
+            $(".body[element-id=" + id + "]").attr("xlink:href","assets/layouts/layout/img/"+type+"inactive.svg");
+            $scope.graph.getCell(id).attributes.attrs[".body"].active=false;
+            //console.log($scope.graph.getCells());
+            checkDependsOnInActive($scope.graph.getCell(id).attributes['parentStage'],id,type);
+          }
+          //console.log( $scope.graph.getCell(id));
+          
         });
         
         $( "#paper" ).on("click",".joint-element .remove",function(e){

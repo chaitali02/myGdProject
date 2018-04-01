@@ -47,9 +47,11 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.RolePriv;
 import com.inferyx.framework.domain.StatusHolder;
+import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.parser.DagParser;
 import com.inferyx.framework.parser.FormulaParser;
@@ -675,10 +677,23 @@ public class MetadataController {
 	public @ResponseBody String getParamSetByModel(@RequestParam("modelUuid") String modelUuid,
 			@RequestParam("modelVersion") String modelVersion,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "modelType", required = false, defaultValue = "python") String modelType,
+			@RequestParam(value = "modelType", required = false, defaultValue = "spark") String modelType,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 			if(!modelType.equalsIgnoreCase(ExecContext.R.toString()) && !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				return registerService.getParamSetByModel(modelUuid, modelVersion);
+			} else
+				return null;			
+	}
+	
+	@RequestMapping(value = "/getParamSetByTrain", method = RequestMethod.GET)
+	public @ResponseBody String getParamSetByTrain(@RequestParam("trainUuid") String trainUuid,
+			@RequestParam("trainVersion") String trainVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());
+		Model model =  (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+		if(!model.getType().equalsIgnoreCase(ExecContext.R.toString()) && !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				return registerService.getParamSetByTrain(trainUuid, trainVersion);
 			} else
 				return null;			
 	}
@@ -803,5 +818,12 @@ public class MetadataController {
 			@RequestParam(value = "action") String action ,@RequestParam(value = "type") String type ) throws Exception {
 		return datasourceServiceImpl.getDatasourceByApp();
 	}	
+	
+	@RequestMapping(value = "/getFunctionByCategory", method = RequestMethod.GET)
+	public @ResponseBody List<Function> getFunctionByType(
+			@RequestParam(value ="category" ,defaultValue="aggregate") String category,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return metadataServiceImpl.getFunctionByType(category);
+	}
 	
 }

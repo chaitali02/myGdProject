@@ -818,7 +818,7 @@ ProfileModule.controller('ResultProfileController', function( $http,dagMetaDataS
       var url = window.URL.createObjectURL(blob);
     
       linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download", uuid+".xlsx");
+      linkElement.setAttribute("download", uuid+".xls");
     
       var clickEvent = new MouseEvent("click", {
         "view": window,

@@ -49,8 +49,10 @@
         //metajson.class=colorarray[randomno];
         metajson.class = colorclassarray[randomno];
         var patt = new RegExp("exec");
+       // alert(patt)
+        
         var res = patt.exec(response[i].type);
-        if (res == null) {
+        if (response[i].type.indexOf("exec") == -1 && response[i].type !="message") {
           switch (response[i].type) {
             case "datapod":
               metajson.caption = "Datapod";
@@ -263,7 +265,6 @@
               //metajson.state="migrationassist({type:'Export'})";
               metajson.param={type:'Export'};
               metajson.state="migrationassist"
-
               break;
             case "import":
               metajson.caption="Import";
@@ -271,6 +272,24 @@
               //metajson.state="migrationassist({type:'Import'})";
               metajson.state="migrationassist"
               metajson.param={type:'Import'};
+              break;
+            case "train":
+              metajson.caption="Trainging";
+              metajson.icon='fa fa-flask';
+              metajson.state="train"
+              metajson.param={type:'train'};
+              break;
+            case "predict":
+              metajson.caption="Prediction";
+              metajson.icon='fa fa-flask';
+              metajson.state="predict"
+              metajson.param={type:'predict'};
+              break;
+            case "simulate":
+              metajson.caption="Simulation";
+              metajson.icon='fa fa-flask';
+              metajson.state="simulate"
+              metajson.param={type:'simulate'};
               break;
           }
 

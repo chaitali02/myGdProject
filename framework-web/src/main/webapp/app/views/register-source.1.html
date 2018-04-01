@@ -1,0 +1,127 @@
+<div class="row" data-ng-controller="RegisterSourceController">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+      <ul class="page-breadcrumb">
+        <li>
+          <a ui-sref="home">Home</a>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <span>{{$state.current.data.pageTitle}}</span>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <span>Register Source</span>
+
+        </li>
+      </ul>
+      <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+      </div>
+    </div>
+    <br>
+    <!-- END PAGE HEADER-->
+<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <!-- BEGIN MAIN CONTENT -->
+    <div class="portlet box green">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-cogs"></i>Select Source
+        </div>
+        <div class="tools">
+          <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click="refreshData()" data-original-title="" title="">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white; height:16px"></i>
+            </a>
+          <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"> </a>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <form class="form-horizontal">
+         <!--  <div class="form-group">
+            <label class="control-label col-md-1 col-sm-1 col-xs-12">Type</label>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+              <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="sourcetype" ng-options="r  for r in sourceTypes" ng-change="onChangeSourceType()">
+                    </select>
+            </div>
+          </div> -->
+          <div class="form-group">
+            <label class="control-label col-md-1 col-sm-1 col-xs-12" for="select">Select</label>
+            <div class="col-md-4">
+              <select class="form-control" select2 ng-change="selectDataSource()" data-ng-model="datasourcedata" ng-options="r as r.name for r in alldatasource">
+                  </select >
+                </div>
+              </div>
+             <div class="form-group">
+                   <div class="col-md-offset-1 col-md-4">
+                      <button type="button" class="btn green"  ng-disabled="isSubmitEnable" ng-click="submitRegisgterSource()">Submit</button>
+                     <!-- <span ng-if="dataLoading">
+                      <img src="lib/images/lodingsquare.gif"  style="padding-left:15px;font-size:23px;vertical-align:middle;"></img>
+                      <span class="fa fa-spinner fa-spin" style="padding-left:10px;font-size:23px;vertical-align:middle;"></span>
+                   </span> -->
+                   <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                     <div class="bounce1"></div>
+                     <div class="bounce2"></div>
+                     <div class="bounce3"></div>
+                   </span>
+             </div>
+           </div>
+		       </form>
+          </div>
+    </div><!-- END SAMPLE TABLE PORTLET-->
+    <div class="portlet box green">
+  <div class="portlet-title">
+    <div class="caption">
+      <i class="fa fa-cogs"></i> Detail
+    </div>
+    <div class="tools">
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click="selectDataSource()" data-original-title="" title="">
+       <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+     </a>
+      <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"> </a>
+
+    </div>
+
+  </div>
+  <div class="portlet-body">
+    <div class="spinner centercontent" ng-show="spinner">
+         <div class="bounce1"></div>
+         <div class="bounce2"></div>
+         <div class="bounce3"></div>
+       </div>
+       <div ng-show="isDataError">
+         <h3 style="font-size:14px;color:red" >{{datamessage}}</h3>
+       </div>
+    <div>
+      <table id="registersource" ng-show="!isDataInpogress " style="width:100% !important;" class="table table-striped table-bordered table-hover table-checkable order-column">
+        <thead>
+          <tr>
+            <th style="text-align:center; Vertical-align:middle;width:7%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="allselect" ng-change="selectAllRegisterSource()" /></th>
+            <th style="text-align:center; Vertical-align:middle;width:5%;">Id</th>
+            <th style="text-align:center; Vertical-align:middle;">Name</th>
+            <th style="text-align:center;width:25%;">Desc</th>
+            <th style="text-align:center;">RegisteredOn</th>
+            <th style="text-align:center;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat=" data in sourecedata">
+            <td style="text-align:center; Vertical-align:middle;width:10%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-change="selectRegisterSource($index,data.selected)" /></td>
+            <td style="text-align:center;" ng-bind="data.id"></td>
+            <td style="text-align:left;" ng-bind="data.name"></td>
+            <td style="text-align:center;" ng-bind="data.desc"></td>
+            <td style="text-align:center;" ng-bind="data.registeredOn"></td>
+            <td style="text-align:center;" ng-bind="data.status"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- END SAMPLE TABLE PORTLET-->
+  <!-- BEGIN MAIN JS -->
+  </div>
+</div>

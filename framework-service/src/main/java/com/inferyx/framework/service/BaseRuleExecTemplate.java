@@ -69,7 +69,7 @@ public class BaseRuleExecTemplate {
 				commonServiceImpl.setMetaStatus(baseRuleExec, execType, Status.Stage.Terminating);
 			}
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseRuleExec.getUuid()+"_"+baseRuleExec.getVersion());
-			futureTask.cancel(true);
+				futureTask.cancel(true);
 			synchronized (baseRuleExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(baseRuleExec, execType, Status.Stage.Killed);
 			}

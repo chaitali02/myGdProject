@@ -36,6 +36,8 @@ import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.common.ProfileInfo;
+import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
@@ -127,6 +129,14 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		ConcurrentHashMap taskThreadMap;
 		@Autowired
 		ParamSetServiceImpl paramSetServiceImpl;
+		@Autowired
+		private ReconServiceImpl reconServiceImpl;
+		@Autowired
+		private ReconGroupServiceImpl reconGroupServiceImpl;
+		@Autowired
+		private ProfileInfo profileInfo;
+		@Autowired
+		private ReconInfo reconInfo;
 		
 		static final Logger logger = Logger.getLogger(BatchExecServiceImpl.class);
 	
@@ -580,7 +590,11 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			indivStageExe.setDagExec(dagExec);
 			indivStageExe.setStage(stage);
 			indivStageExe.setParamSetServiceImpl(paramSetServiceImpl);
-			indivStageExe.setSessionContext(FrameworkThreadLocal.getSessionContext().get());		
+			indivStageExe.setSessionContext(FrameworkThreadLocal.getSessionContext().get());
+			indivStageExe.setReconServiceImpl(reconServiceImpl);
+			indivStageExe.setReconGroupServiceImpl(reconGroupServiceImpl);
+			indivStageExe.setProfileInfo(profileInfo);
+			indivStageExe.setReconInfo(reconInfo);
 			FutureTask<String> futureTask = new FutureTask<String>(indivStageExe);
 			stageExecutor.execute(futureTask);
 			taskList.add(futureTask);

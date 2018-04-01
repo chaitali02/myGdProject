@@ -14,7 +14,8 @@ MetadataModule.factory('MetadataDahsboardFactory',function($http,$location){
                then(function (response,status,headers) {
                   return response;
                })
-    }
+	}
+	
     factory.findVizpodByType=function(uuid,type) {
         var url=$location.absUrl().split("app")[0]
         return $http({
@@ -347,7 +348,8 @@ MetadataModule.service('MetadataDahsboardSerivce',function($q,sortFactory,Metada
        }
 		  return deferred.promise;
 	}
-
+	
+	
 	this.getAllLatest=function(type) {
 	     var deferred = $q.defer();
 

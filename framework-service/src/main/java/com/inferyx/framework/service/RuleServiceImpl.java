@@ -290,7 +290,6 @@ public class RuleServiceImpl extends RuleTemplate {
 		if (StringUtils.isNotBlank(ruleView.getDesc()))
 			rule.setDesc(ruleView.getDesc());
 		Filter filter = null;
-		Filter filterdet = null;
 		MetaIdentifierHolder source = ruleView.getSource();
 		source.getRef().setVersion(null);
 		rule.setSource(source);
@@ -303,7 +302,7 @@ public class RuleServiceImpl extends RuleTemplate {
 			if (ruleView.getFilterChg().equalsIgnoreCase("y") && filter != null) {
 				try {
 					// filterdet = filterServiceImpl.save(filter);
-					filterdet = (Filter) commonServiceImpl.save(MetaType.filter.toString(), filter);
+		         commonServiceImpl.save(MetaType.filter.toString(), filter);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -640,7 +639,7 @@ public class RuleServiceImpl extends RuleTemplate {
 					ObjectMapper mapper = new ObjectMapper();
 					String messageJson = mapper.writeValueAsString(savedMessage);
 					response.setContentType("application/json");
-					response.setStatus(401);
+					response.setStatus(404);
 					response.getOutputStream().write(messageJson.getBytes());
 					response.getOutputStream().close();
 				} else

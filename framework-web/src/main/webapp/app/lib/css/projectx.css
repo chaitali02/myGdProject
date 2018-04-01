@@ -596,7 +596,7 @@ vertical-align: middle;
 /*UI-GRID*/
 .nodatawatermark {
     position: absolute;
-    top : 75%;
+    top : 60%;
     font-size: 14px;
     width: 100%;
     text-align: center;
@@ -769,6 +769,7 @@ vertical-align: middle;
   }
   .currentpage{
   opacity:0.6  !important;
+  cursor:not-allowed !important;;
   }
   .notcurrentpage{
   opacity:1 !important;
@@ -838,6 +839,9 @@ vertical-align: middle;
   .noPaddingRightLeft{
     padding-right: 0px;
     padding-left: 0px
+  }
+  .ui-grid-row.ui-grid-row-selected>[ui-grid-row]>.ui-grid-cell{
+    background-color: #e1e3e8 !important
   }
   /*
   .dndPlaceholder {

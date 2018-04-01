@@ -160,12 +160,12 @@ public class GraphServiceImpl {
 		keywordList.add("operatorInfo");
 		keywordList.add("execList");
 		keywordList.add("keys");
-		keywordList.add("groups");
+		keywordList.add("groups");	
 		keywordList.add("values");
 		keywordList.add("groupInfo");
 		keywordList.add("refKeyList");
-
-	}
+		keywordList.add("featureAttrMap");
+		}
 
 	/*
 	 * @SuppressWarnings("unused") public String getGraphJson(String uuid,String
@@ -903,7 +903,8 @@ public class GraphServiceImpl {
 								|| key.equalsIgnoreCase("sectionInfo") || key.equalsIgnoreCase("joinKey")
 								|| key.equalsIgnoreCase("attributeMap") || key.equalsIgnoreCase("paramInfo")
 								|| key.equalsIgnoreCase("features") || key.equalsIgnoreCase("stages")
-								|| key.equalsIgnoreCase("tasks") || key.equalsIgnoreCase("operators")) {
+								|| key.equalsIgnoreCase("tasks") || key.equalsIgnoreCase("operators") 
+								|| key.equalsIgnoreCase("featureAttrMap")) {
 							String attr = "";
 							Map<String, String> map = new HashMap<String, String>();
 							map.put("attributes", "name");
@@ -923,6 +924,7 @@ public class GraphServiceImpl {
 								map.put("paramInfo", name + "_" + i);
 								map.put("features", name + "_" + i);
 								map.put("operators", name + "_" + i);
+								map.put("featureAttrMap",  name + "_" + i);
 								if (map.containsKey(key))
 									attr = map.get(key);
 							}

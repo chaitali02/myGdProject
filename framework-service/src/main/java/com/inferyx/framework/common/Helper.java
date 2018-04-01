@@ -80,6 +80,10 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroup;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.domain.Recon;
+import com.inferyx.framework.domain.ReconExec;
+import com.inferyx.framework.domain.ReconGroup;
+import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
@@ -91,6 +95,8 @@ import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
@@ -234,6 +240,13 @@ public class Helper {
 				case predictExec : return "iPredictExecDao";
 				case simulate : return "iSimulateDao";
 				case simulateExec : return "iSimulateExecDao";
+				case train : return "iTrainDao";
+				case trainExec : return "iTrainExecDao";
+				case recon : return "iReconDao";
+				case reconExec : return "iReconExecDao";
+				case recongroup : return "iReconGroupDao";
+				case recongroupExec : return "iReconGroupExecDao";
+				
 				default:
 					return null;
 			}
@@ -257,6 +270,10 @@ public class Helper {
 		case profileExec : return "ProfileExecServiceImpl";
 		case profilegroupExec : return "ProfileGroupExecServiceImpl";
 		case profilegroup : return "ProfileGroupServiceImpl";	
+		case recon : return "ReconServiceImpl";	
+		case reconExec : return "ReconExecServiceImpl";	
+		case recongroup : return "ReconGroupServiceImpl";	
+		case recongroupExec : return "ReconGroupExecServiceImpl";	
 		default:
 			return null;
 		}
@@ -324,6 +341,13 @@ public class Helper {
 		case predictExec : return PredictExec.class;
 		case simulate : return Simulate.class;
 		case simulateExec : return SimulateExec.class;
+		case train : return Train.class;
+		case trainExec : return TrainExec.class;
+		case recon : return Recon.class;
+		case reconExec : return ReconExec.class;
+		case recongroup : return ReconGroup.class;
+		case recongroupExec : return ReconGroupExec.class;
+
 		default:
 			return null;
 		}
@@ -389,6 +413,13 @@ public class Helper {
 				case "predictexec" : return MetaType.predictExec;
 				case "simulate" : return MetaType.simulate;
 				case "simulateexec" : return MetaType.simulateExec;
+				case "train" : return MetaType.train;
+				case "trainexec" : return MetaType.trainExec;
+				case "recon" : return MetaType.recon;
+				case "reconexec" : return MetaType.reconExec;
+				case "recongroup" : return MetaType.recongroup;
+				case "recongroupexec" : return MetaType.recongroupExec;
+
 				default : return null;
 			}
 		}

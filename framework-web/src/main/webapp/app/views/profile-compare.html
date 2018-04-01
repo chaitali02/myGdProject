@@ -1,0 +1,630 @@
+<style type="text/css">
+   .profilecomparepage .tab-pane {
+      margin: 20px 20px;
+      }
+      .profilecomparepage .nav>li>a {
+      position: relative;
+      display: block;
+      padding: 10px 15px;
+    }
+    .profilecomparepage .tab-content { 
+      border-left: 1px solid #ddd; 
+      border-right: 1px solid #ddd;
+      padding: 10px; 
+      border-bottom: 1px solid #ddd;
+    }
+  
+    .nav-tabs,  .profilecomparepage .nav-pills{
+      margin-bottom: 0px !important;
+    }
+  
+    .profilecomparepage .nav-tabs>li.active>a,  .profilecomparepage .nav-tabs>li.active>a:focus, .adminPage .nav-tabs>li.active>a:hover {
+      color: #555;
+      background-color: #fff;
+      border:none;
+      border-bottom: 4px solid  #9fe4ea;
+      cursor: default;
+    }
+  </style>
+<div class="profilecomparepage">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li><a ui-sref="home">Home</a> <i class="fa fa-circle"></i></li>
+            <li><a ui-sref="metadata({type:'map'})">{{$state.current.data.pageTitle}}</a> <i
+                class="fa fa-circle"></i>
+            </li>
+            <li><a ui-sref="metadata({type:'map'})">Compare Results</a> </li>
+        </ul>
+        <div class="page-toolbar">
+            <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                <i class="icon-calendar"></i>&nbsp;
+                <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+            </div>
+        </div>
+    </div>
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div> 
+    <uib-tabset active="activeForm"  >
+        <uib-tab index="0" heading="Results" select="go(0)">
+            <div data-ng-controller="ProfileComapreController">
+                <br>
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-md-12">
+                        <div class="portlet box green">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="icon-magnifier"></i>Search Criteria
+                                </div>
+                                <div class="tools">
+                                    <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="resultSearchCriteriaRefresh()" data-original-title=""  title="">
+                                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <form class="form-horizontal">
+
+                                    <div class="row"style="padding-top: 10px" >
+                                        <div class="col-md-12">
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-6">Datapod</label>
+                                                    <div class="col-md-9 col-sm-9 col-xs-6">
+                                                        <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.datapod" ng-options="r as r.name for r in allDatapod track by r.uuid" select2 ng-change="onChangeDatapod()">
+                                                            <option value="">-Select-</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-6">Start Date</label>
+                                                    <div class="col-md-9 col-sm-9 col-xs-6">
+                                                        <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#"href="#">
+                                                            <div class="input-group date">
+                                                                <span  style="" class="form-control" >{{searchForm.startdate | date :'EEE MMM dd HH:mm:ss yyyy'}}</span>     
+                                                                <span class="input-group-addon"><i class="fa fa-calendar"  style="color: #666;"></i></span>
+                                                            </div>
+                                                         </a>
+                                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                             <datetimepicker
+                                                             data-ng-model="searchForm.startdate"
+                                                             data-datetimepicker-config="{ dropdownSelector: '#start_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
+                                                             data-on-set-time="startDateOnSetTime();onChangeDate()"
+                                                             data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                                                         </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!--End Col-md-12-->
+                                    </div><!--End Row--> 
+
+                                    <div class="row" >
+                                        <div class="col-md-12">
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-6">Atrribute</label>
+                                                    <div class="col-md-9 col-sm-9 col-xs-6">
+                                                        <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.attribute" ng-options="r as r.name for r in allAttribute track by r.attributeId" select2 ng-change="onChangeAttribute()">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-6">End Date</label>
+                                                    <div class="col-md-9 col-sm-9 col-xs-6 col-lg-9">
+                                                        <a class="dropdown-toggle" id="end_date" role="button" data-toggle="dropdown" data-target="#"href="#">
+                                                            <div class="input-group date">
+                                                                <span class="form-control">{{searchForm.enddate | date :'EEE MMM dd HH:mm:ss yyyy'}}</span>
+                                                                <span class="input-group-addon"><i class="fa fa-calendar"  style="color: #666;"></i></span>
+                                                            </div>
+                                                        </a>
+                                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                            <datetimepicker data-ng-model="searchForm.enddate" data-datetimepicker-config="{ dropdownSelector: '#end_date', renderOn: 'start-date-changed' }"data-on-set-time="endDateOnSetTime(); onChangeDate()"
+                                                            data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!--End Col-md-12-->
+                                    </div><!--End Row-->  
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-6 col-sm-6 col-xs-12 custpadding" >
+                                                <div class="form-group">
+                                                    <div class="col-md-9 col-sm-9 col-xs-6 col-lg-offset-3 col-xm-offset-3  col-sm-offset-3 col-md-offset-3">
+                                                        <input type="submit" class="btn btn-success" value="Search" name="submit" ng-disabled="isDatapodChange" ng-click="resultSearchCriteria()">
+                                                        <sapn class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-show="isRSCProgress">
+                                                            <div class="bounce1"></div>
+                                                            <div class="bounce2"></div>
+                                                            <div class="bounce3"></div>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div><!--End portlet-body -->
+                        </div><!--End portlet box green -->
+                    </div><!--End Col-md-12-->
+                </div><!--End row-->
+
+
+                <div class="row" style="padding-top: 10px">
+                    <div class="col-md-12">
+                        <div class="portlet box green">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class=""></i>Compare Results
+                                </div>
+                                <div class="tools">
+                                    <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="resultCompareResultRefresh(true)" data-original-title=""  title="">
+                                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="row form-horizontal" style="padding-top: 10px" >
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 pull-left">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-6">Source</label>
+                                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                                            <!-- <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectSoureProfile" ng-options="r as (r.name+'-'+r.createdOn) for r in allSourceProfile track by r.uuid" select2 ng-change="onChangeSourceProfile()"> -->
+                                                            <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectSoureProfile" ng-options="r as (r.createdOn) for r in allSourceProfile track by r.uuid" select2 ng-change="onChangeSourceProfile()">
+                                                                <option value="">-Select Profile-</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                                            <table class="table table-bordered"  ng-if="sourceProfileResult.length > 0 && isSTShow">
+                                                                <tr ng-repeat="col in sourceColumns">
+                                                                    <td><b>{{ col }}</b></td>
+                                                                    <td>{{ sourceProfileResult[$index][col]}}</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="spinner text-center" ng-show="isSPPProgress && isSTShow ">
+                                                            <div class="bounce1"></div>
+                                                            <div class="bounce2"></div>
+                                                            <div class="bounce3"></div>
+                                                        </div>
+                                                        <div ng-if="isSPPError && isSTShow"> 
+                                                            <h3 style="font-size:14px;color:blue">Some Error Occured</h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> 
+
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12 pull-left">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-6">Target</label>
+                                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                                            <!-- <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectTargetProfile" ng-options="r as (r.name+'-'+r.createdOn) for r in allTargetProfile track by r.uuid"  ng-change="onChangeTargetProfile()" select2>-->
+                                                            <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectTargetProfile" ng-options="r as (r.createdOn) for r in allTargetProfile track by r.uuid"  ng-change="onChangeTargetProfile()" select2>    
+                                                                <option value="">-Select Profile-</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                                            <table class="table table-bordered" ng-if="targetProfileResult.length > 0 && isSTShow ">
+                                                                <tr ng-repeat="col in targetColumns">
+                                                                    <td><b>{{ col }}</b></td>
+                                                                    <td>{{ targetProfileResult[$index][col]}}</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="spinner text-center" ng-show="isTPPProgress && isSTShow">
+                                                            <div class="bounce1"></div>
+                                                            <div class="bounce2"></div>
+                                                            <div class="bounce3"></div>
+                                                        </div>
+                                                        <div ng-if="isTPPError && isSTShow"> 
+                                                            <h3 style="font-size:14px;color:blue">Some Error Occured</h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+
+                                        
+                                    </div>
+                                </div>
+                            </div><!--End portlet-body -->
+                        </div><!--End portlet box green -->
+                    </div><!--End Col-md-12-->
+                </div><!--End row-->
+
+
+                <!-- <div class="row">
+                    <div class="col-md-12">
+                        <div class="portlet box green">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class=""></i>Trend Analysis
+                                </div>
+                                <div class="tools">
+                                    <a title="Refresh" data-toggle="tooltip" data-placement="top"  data-original-title=""  title="">
+                                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="row form-horizontal" >
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 pull-left">
+                                            <div class="row" >
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-left: 0px;padding-right: 0px;">Profile Attribute</label>
+                                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                                        <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectProfileAttr" select2 ng-options="r.name as r.caption for r in profileAttributes" ng-change="onChangeProfileAttributes()">
+                                                            <option value="">-Select-</option>
+                                                        </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12 pull-left">
+                                            <div class="row" >
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="col-md-9 col-sm-9 col-xs-12 pull-left">
+                                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right: 0px;padding-left: 16%;">Period</label>
+                                                            <div class="col-md-9 col-sm-9 col-xs-6" style="padding-left: 12%;">
+                                                                <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectProfilePriode" select2 ng-options="r.name as r.caption for r in profilePeriods">
+                                                                    <option value="">-Select-</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-3 col-xs-12 pull-left">
+                                                                <input type="button" class="btn btn-success"  name="button" value="Submit" ng-click="getTrenddingData()">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <br>
+                            <br>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="" ng-if="isChartShow && chartdata.datapoints.length >0">                    
+                                            <c3chart chartGroup="chart" bindto-id="chart-1" chart-data="chartdata.datapoints" chart-columns="chartdata.datacolumns" chart-x="chartdata.datax" enable-zoom="true">
+                                                <chart-bar ratio="0.5" />
+                                                <chart-legend show-legend="true"/>
+                                                <chart-axes values-x=""/>
+                                                <chart-axis>
+                                                    <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="{{chartdata.datax.id}}">
+                                                        <chart-axis-x-tick tick-rotate="10" tick-multiline="false" tick-culling-max="5" />
+                                                    </chart-axis-x>
+                                                </chart-axis>
+                                            </c3chart>
+                                        </div>
+                                        <div class="spinner text-center" ng-show="isChartProgrss">
+                                            <div class="bounce1"></div>
+                                            <div class="bounce2"></div>
+                                            <div class="bounce3"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+            </div>
+        </uib-tab>
+
+
+
+        <uib-tab index="1" heading="Attributes" select="go(0)">
+            <div ng-controller="ProfileComapreAttributeController">
+
+                <div class="portlet box green">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-magnifier"></i>Search Criteria
+                        </div>
+                        <div class="tools">
+                            <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refreshMonitoring()" data-original-title=""  title="">
+                                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                            </a>
+                            <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <form class="form-horizontal">
+                            <div class="col-md-12" style="padding-bottom: 2%;">
+                                <div class="col-md-1" style="padding-top: 1%;padding-right: 0px;padding-left: 0%;font-weight: 600;font-size: 16px;">Source</div>
+                                    <div class="col-md-11" style="padding-bottom: 0%;padding-left: 0px;"><hr></hr></div>
+                                </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 custpadding">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-6">Datapod</label>
+                                            <div class="col-md-9 col-sm-9 col-xs-6">
+                                                <select title="Source Datapod"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="attrSourceSearchForm.sourceDatapod" ng-options="r as r.name for r in allAttrSourceDatapod track by r.uuid" select2 ng-change="onChangeAttrSourceDatapod()">
+                                                    <option value="">-Select-</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- <div class="col-md-5 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+                                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                                <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#"href="#">
+                                                    <div class="input-group date">
+                                                        <span class="form-control"  >{{searchForm.sourceStartDate | date :'EEE MMM dd HH:mm:ss yyyy' }}</span>
+                                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker
+                                                    data-ng-model="searchForm.sourceStartDate"
+                                                    data-datetimepicker-config="{ dropdownSelector: '#start_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
+                                                    data-on-set-time="startDateOnSetTime()"
+                                                    data-before-render="startDateBeforeRender($dates)">
+                                                    </datetimepicker>
+                                                </ul>
+                                            </div>         
+                                        </div>
+                                    </div> -->
+                                    <div class="col-md-6 col-sm-6 col-xs-12" >
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-left: 0px;padding-right: 0px;">Profile Attribute</label>
+                                            <div class="col-md-9 col-sm-9 col-xs-6">
+                                                <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="attrSourceSearchForm.selectSourceProfileAttr" select2 ng-options="r.name as r.caption for r in profileAttrAttributes" ng-change="onChangeSourceProfileAttributes(0)">
+                                                    <!-- <option value="">-Select-</option> -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>                      
+                                </div>
+                            </div><!--End Row-->
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 custpadding">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select" >Attribute</label>
+                                            <div class="col-md-9 col-sm-9 col-xs-6">
+                                                <select title="Source Attribute"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="attrSourceSearchForm.sourceAttribute" ng-options="r as r.name for r in allAttrSourceAttribute track by r.attributeId" select2 ng-change="onChangeAttribute()">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="col-md-5 col-sm-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-6">End Date </label>
+                                            <div class="col-md-9 col-sm-9 col-xs-6">
+                                                <a class="dropdown-toggle" id="end_date" role="button" data-toggle="dropdown" data-target="#"href="#">
+                                                    <div class="input-group date">
+                                                        <span class="form-control"  >{{searchForm.SourceEnddate | date :'EEE MMM dd HH:mm:ss yyyy' }}</span>
+                                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="searchForm.SourceEnddate"
+                                                    data-datetimepicker-config="{ dropdownSelector: '#end_date', renderOn: 'start-date-changed' }"
+                                                    data-on-set-time="endDateOnSetTime()"
+                                                    data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-md-6 col-sm-6 col-xs-12 custpadding">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Period</label>
+                                            <div class="col-md-9 col-sm-9 col-xs-6">
+                                                <select title="Sorurce Profile Period"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="attrSourceSearchForm.selectSourceProfilePriode" select2 ng-options="r.name as r.caption for r in profileAttrPeriods">
+                                                    <!-- <option value="">-Select-</option> -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            
+                            <div class="col-md-12" style="padding-bottom: 2%;padding-top: 2%;">
+                                    <div class="col-md-1" style="padding-top: 1%;padding-right: 0px;padding-left: 0%;font-weight: 600;font-size: 16px;">Target</div>
+                                        <div class="col-md-11" style="padding-bottom: 0%;padding-left: 0px;"><hr></hr></div>
+                                    </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 custpadding">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-6">Datapod</label>
+                                                <div class="col-md-9 col-sm-9 col-xs-6">
+                                                    <select title="Target Datapod"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="attrTargetSearchForm.targetDatapod" ng-options="r as r.name for r in allAttrTargetDatapod track by r.uuid" select2 ng-change="onChangeAttrTargetDatapod()">
+                                                        <option value="">-Select-</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- <div class="col-md-5 col-sm-6 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" >Start Date</label>
+                                                <div class="col-md-9 col-sm-9 col-xs-9">
+                                                    <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#"href="#">
+                                                        <div class="input-group date">
+                                                            <span class="form-control">{{searchForm.targetStartdate | date :'EEE MMM dd HH:mm:ss yyyy' }}</span>
+                                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                        </div>
+                                                    </a>
+                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                        <datetimepicker
+                                                        data-ng-model="searchForm.targetStartdate"
+                                                        data-datetimepicker-config="{ dropdownSelector: '#start_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
+                                                        data-on-set-time="startDateOnSetTime()"
+                                                        data-before-render="startDateBeforeRender($dates)">
+                                                        </datetimepicker>
+                                                    </ul>
+                                                </div>         
+                                            </div>
+                                        </div> -->
+                                        <div class="col-md-6 col-sm-6 col-xs-12" >
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-left: 0px;padding-right: 0px;">Profile Attribute</label>
+                                                <div class="col-md-9 col-sm-9 col-xs-6">
+                                                    <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="attrTargetSearchForm.selectTargetProfileAttr" select2 ng-options="r.name as r.caption for r in profileAttrAttributes" ng-change="onChangeTargetProfileAttributes(1)">
+                                                        <!-- <option value="">-Select-</option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>                      
+                                    </div>
+                                </div><!--End Row-->
+        
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 custpadding">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select" >Attribute</label>
+                                                <div class="col-md-9 col-sm-9 col-xs-6">
+                                                    <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="attrTargetSearchForm.targetAttribute" ng-options="r as r.name for r in allAttrTargetAttribute track by r.attributeId" select2 ng-change="onChangeAttribute()">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <!-- <div class="col-md-5 col-sm-6 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-6">End Date </label>
+                                                <div class="col-md-9 col-sm-9 col-xs-6">
+                                                    <a class="dropdown-toggle" id="end_date" role="button" data-toggle="dropdown" data-target="#"href="#">
+                                                        <div class="input-group date">
+                                                            <span class="form-control">{{searchForm.targetEnddate | date :'EEE MMM dd HH:mm:ss yyyy' }}</span>
+                                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                        </div>
+                                                    </a>
+                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                        <datetimepicker data-ng-model="searchForm.targetEnddate"
+                                                        data-datetimepicker-config="{ dropdownSelector: '#end_date', renderOn: 'start-date-changed' }"
+                                                        data-on-set-time="endDateOnSetTime()"
+                                                        data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                        <div class="col-md-6 col-sm-6 col-xs-12 custpadding">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Period</label>
+                                                <div class="col-md-9 col-sm-9 col-xs-6">
+                                                    <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="attrTargetSearchForm.selectTargetProfilePriode" select2 ng-options="r.name as r.caption for r in profileAttrPeriods">
+                                                        <!-- <option value="">-Select-</option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                            <div class="row">
+                                <div class="col-md-12" style="padding-top:2%">
+                                <div class="col-md-6 col-sm-6 col-xs-12 custpadding" >
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <input type="button" class="btn btn-success" value="Search" name="submit" ng-click="attrSearchCriteria()">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                        <div class="col-md-12">
+                            <div class="portlet box green">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class=""></i>Trend Analysis
+                                    </div>
+                                    <div class="tools">
+                                        <a title="Refresh" data-toggle="tooltip" data-placement="top"  data-original-title=""  title="">
+                                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                  
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-6"  ng-repeat="localchartdata in chartdata">
+                                                <span  ng-hide="localchartdata.isProgress"style="font-size:20px;"><b>{{localchartdata.title}}</b></span>  
+                                                <div ng-if="localchartdata.datapoints.length >0 && !localchartdata.isProgress">
+                                                <br>                   
+                                                <c3chart chartGroup="chart" bindto-id="{{localchartdata.id}}" chart-data="localchartdata.datapoints" chart-columns="localchartdata.datacolumns" chart-x="localchartdata.datax" enable-zoom="true">
+                                                    <chart-bar ratio="0.5" />
+                                                    <chart-legend show-legend="true"/>
+                                                    <chart-axes values-x=""/>
+                                                    <chart-axis>
+                                                        <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="{{localchartdata.datax.id}}">
+                                                            <chart-axis-x-tick tick-rotate="10" tick-multiline="false" tick-culling-max="5" />
+                                                        </chart-axis-x>
+                                                    </chart-axis>
+                                                </c3chart>
+                                                </div>
+                                                <div class=" centercontent"  style="min-height: 370px;" ng-if="localchartdata.datapoints.length ==0"> 
+                                                        <h3 style="font-size:14px;color:blue">No Data Found</h3>
+                                                </div>
+                                                <div class="spinner centercontent text-center" ng-show="localchartdata.isProgress">
+                                                    <div class="bounce1"></div>
+                                                    <div class="bounce2"></div>
+                                                    <div class="bounce3"></div>
+                                                </div>
+                                            </div>
+                                          
+                                        </div>
+                                    </div><!--End Row 2-->
+    
+                                </div><!--End portlet-body -->
+                            </div><!--End portlet box green -->
+                        </div><!--End Col-md-12-->
+                    </div><!--End row-->
+
+
+            </div>            
+        </uib-tab>
+        
+    </uib-tabset><br><br>
+</div>
+                  

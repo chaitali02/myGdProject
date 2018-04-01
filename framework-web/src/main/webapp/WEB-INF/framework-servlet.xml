@@ -218,6 +218,10 @@
 	<bean id="profileInfo" class="com.inferyx.framework.common.ProfileInfo">
 		<property name="profileTargetUUID" value="${framework.profile.datapod.uuid}"></property>
 	</bean>
+	
+	<bean id="reconInfo" class="com.inferyx.framework.common.ReconInfo">
+		<property name="reconTargetUUID" value="${framework.recon.datapod.uuid}"></property>
+	</bean>
 
 	<bean id="registerDataPod" class="com.inferyx.framework.register.DatapodRegister">
 		<!-- <constructor-arg ref="miUtil"/> <constructor-arg ref="dataSourceFactory"/> 
@@ -293,6 +297,8 @@
 	<bean id="dataFrameService" class="com.inferyx.framework.service.DataFrameService"/>
 	<bean id="downloadExec" class="com.inferyx.framework.domain.DownloadExec"/>
 	<bean id="uploadExec" class="com.inferyx.framework.domain.UploadExec"/>
+	<bean id="predictExec" class="com.inferyx.framework.domain.PredictExec"/>
+	<bean id="sparkMLOperator" class="com.inferyx.framework.operator.SparkMLOperator"/>
 	
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
@@ -326,6 +332,13 @@
 	
 	<bean id="pythonConnector" class="com.inferyx.framework.connector.PythonConnector"/>
 	<bean id="pythonExecutor" class="com.inferyx.framework.executor.PythonExecutor"/>
+	
+	<bean id="reconOperator" class="com.inferyx.framework.operator.ReconOperator"/>
+	<bean id="reconExecServiceImpl" class="com.inferyx.framework.service.ReconExecServiceImpl"/>
+	<bean id="reconGroupServiceImpl" class="com.inferyx.framework.service.ReconGroupServiceImpl"/> 
+	<bean id="reconServiceImpl" class="com.inferyx.framework.service.ReconServiceImpl"/>
+	<bean id="reconGroupExecServiceImpl" class="com.inferyx.framework.service.ReconGroupExecServiceImpl"/>
+	<bean id="reconViewServiceImpl" class="com.inferyx.framework.service.ReconViewServiceImpl"/>
 	
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>

@@ -112,9 +112,15 @@ SystemMonitoringModule.controller('systemMonitoringController', function($filter
 
       }
       $scope.action = function(data, mode) {
-
+       //debugger
         $scope.setActivity(data.uuid,data.version,dagMetaDataService.elementDefs[data.type.toLowerCase()].execType,mode);
-        var stateName = dagMetaDataService.elementDefs[data.type.toLowerCase()].detailState;
+        var stateName;
+        if(data.type =="session"){
+          stateName= dagMetaDataService.elementDefs[(data.type).toLowerCase()].detailState;
+        }else{
+          stateName= dagMetaDataService.elementDefs[(data.type+"exec").toLowerCase()].detailState;
+        }
+        
         $rootScope.previousState={};
         $rootScope.previousState.name='systemmonitering';
         $rootScope.previousState.params={};

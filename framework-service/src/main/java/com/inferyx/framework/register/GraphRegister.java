@@ -68,6 +68,8 @@ import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
+import com.inferyx.framework.dao.IReconDao;
+import com.inferyx.framework.dao.IReconExecDao;
 import com.inferyx.framework.dao.IRelationDao;
 import com.inferyx.framework.dao.IRoleDao;
 import com.inferyx.framework.dao.IRuleDao;
@@ -77,6 +79,8 @@ import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.ISimulateDao;
 import com.inferyx.framework.dao.ISimulateExecDao;
+import com.inferyx.framework.dao.ITrainDao;
+import com.inferyx.framework.dao.ITrainExecDao;
 import com.inferyx.framework.dao.IUploadDao;
 import com.inferyx.framework.dao.IUserDao;
 import com.inferyx.framework.dao.IVertexDao;
@@ -334,15 +338,56 @@ public class GraphRegister<T> {
 	@Autowired
 	PredictExec predictExec;
 	@Autowired
-	IPredictDao iPredictDAo;
+	IPredictDao iPredictDao;
 	@Autowired
 	IPredictExecDao iPredictExecDao;
 	@Autowired
 	ISimulateDao iSimulateDao;
 	@Autowired
 	ISimulateExecDao iSimulateExecDao;
+	@Autowired
+	ITrainDao iTrainDao;
+	@Autowired
+	ITrainExecDao iTrainExecDao;
+	@Autowired
+	IReconDao iReconDao;
+	@Autowired
+	IReconExecDao iReconExecDao;
 	
 	
+	
+	public IReconDao getiReconDao() {
+		return iReconDao;
+	}
+
+	public void setiReconDao(IReconDao iReconDao) {
+		this.iReconDao = iReconDao;
+	}
+
+	public IReconExecDao getiReconExecDao() {
+		return iReconExecDao;
+	}
+
+	public void setiReconExecDao(IReconExecDao iReconExecDao) {
+		this.iReconExecDao = iReconExecDao;
+	}
+
+	public ITrainExecDao getiTrainExecDao() {
+		return iTrainExecDao;
+	}
+
+	public void setiTrainExecDao(ITrainExecDao iTrainExecDao) {
+		this.iTrainExecDao = iTrainExecDao;
+	}
+
+	public ITrainDao getiTrainDao() {
+		return iTrainDao;
+	}
+
+	public void setiTrainDao(ITrainDao iTrainDao) {
+		this.iTrainDao = iTrainDao;
+	}
+
 	public ISimulateDao getiSimulateDao() {
 		return iSimulateDao;
 	}
@@ -362,26 +407,25 @@ public class GraphRegister<T> {
 	 *
 	 * @return the iPredictDao
 	 */
-	public IPredictDao getiPredictDAo() {
-		return iPredictDAo;
-	}
 
-	/**
-	 * @Ganesh
-	 *
-	 * @param iPredictDao the iPredictDao to set
-	 */
-	public void setiPredictDAo(IPredictDao iPredictDAo) {
-		this.iPredictDAo = iPredictDAo;
+	public IPredictExecDao getiPredictExecDao() {
+		return iPredictExecDao;
 	}
-
 	/**
 	 * @Ganesh
 	 *
 	 * @return the iPredictExecDao
 	 */
-	public IPredictExecDao getiPredictExecDao() {
-		return iPredictExecDao;
+	public IPredictDao getiPredictDao() {
+		return iPredictDao;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iPredictExecDao
+	 */
+	public void setiPredictDao(IPredictDao iPredictDao) {
+		this.iPredictDao = iPredictDao;
 	}
 
 	/**
@@ -906,19 +950,6 @@ public class GraphRegister<T> {
 		this.iVizpodExecDao = iVizpodExecDao;
 	}
 	
-	ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
-	
-	static final Logger logger = Logger.getLogger(GraphRegister.class);
-	String resultDatapod;
-	private static final String GET = "get";
-	
-	List<Row> vertexRowList = new ArrayList<Row>();
-	List<Row> edgeRowList = new ArrayList<Row>();
-	List<Row> totalEdgeList = new ArrayList<Row>();
-	List<Row> totalVertexList = new ArrayList<Row>();
-	Map<String, Row> vertexRowMap = new HashMap<>();
-	Map<String, Row> edgeRowMap = new HashMap<>();
-
 	public GraphInfo getGraphFlag() {
 		return graphFlag;
 	}
@@ -983,6 +1014,19 @@ public class GraphRegister<T> {
 		this.iImportDao = iImportDao;
 	}
 
+	ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
+	
+	static final Logger logger = Logger.getLogger(GraphRegister.class);
+	String resultDatapod;
+	//private static final String GET = "get";
+	
+	List<Row> vertexRowList = new ArrayList<Row>();
+	List<Row> edgeRowList = new ArrayList<Row>();
+	List<Row> totalEdgeList = new ArrayList<Row>();
+	List<Row> totalVertexList = new ArrayList<Row>();
+	Map<String, Row> vertexRowMap = new HashMap<>();
+	Map<String, Row> edgeRowMap = new HashMap<>();
+	
 	public List<Row> convertToEdgeRow(List<Edge> edgeList) {
 		if (edgeList == null || edgeList.isEmpty()) {
 			return new ArrayList<>();
@@ -1029,7 +1073,7 @@ public class GraphRegister<T> {
 		java.util.Map<String, Row> verticesRowMap = new HashMap<>();
 		
 		//java.util.Map<String, Object> objectMap = new HashMap<String, Object>();
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		
 		System.out.println("Graph flag is set to " + graphFlag.isMode());
@@ -1041,7 +1085,7 @@ public class GraphRegister<T> {
 		
 		for(MetaType mType : metaTypes){
 			try {
-				Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
+				//Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
 				@SuppressWarnings("unchecked")
 				List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
 				if (objectList == null) {

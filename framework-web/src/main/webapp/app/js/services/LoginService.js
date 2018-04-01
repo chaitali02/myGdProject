@@ -127,7 +127,7 @@
       var encodingdata = Base64.encode(username + ":" + password)
       return $http({
         method: 'GET',
-        url: baseUrl + 'metadata/validateUser?userName=' + username + '&password=' + password,
+        url: baseUrl + 'metadata/validateUser?userName=' + username,
         headers: {
           'Authorization': "Basic " + encodingdata
         },
@@ -150,8 +150,9 @@
         var onSuccessFile = function(response) {
           var baseUrl = "http://" + response.data.serverHost + ":" + response.data.serverPort + "/" + response.data.contextPath + "/";
           console.log("LoginService" + baseUrl)
-          var nodejsdetail = {}
-          LoginFactory.validataUser(username, password, baseUrl, nodejsdetail).then(function(response) {
+          var productdetail = {}
+          productdetail.version=response.data.version;
+          LoginFactory.validataUser(username, password, baseUrl, productdetail).then(function(response) {
             onSuccess(response)
           })
           var onSuccess = function(response) {
@@ -164,6 +165,7 @@
               userUUID: response.headers('userUUID'),
               userName: response.headers('userName'),
               baseUrl: baseUrl,
+              productDetail:productdetail,
             });
           };
         }

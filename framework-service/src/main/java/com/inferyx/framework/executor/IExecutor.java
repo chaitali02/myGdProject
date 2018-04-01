@@ -16,7 +16,10 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.Simulate;
+import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.reader.IReader;
 
 public interface IExecutor {
@@ -95,7 +98,7 @@ public interface IExecutor {
 
 	/**
 	 * Fetch And Train Model
-	 * 
+	 * @param train TODO
 	 * @param model
 	 * @param fieldArray
 	 * @param algorithm
@@ -104,8 +107,8 @@ public interface IExecutor {
 	 * @param paramMap
 	 * @param clientContext
 	 */
-	public Object fetchAndTrainModel(Model model, String[] fieldArray, Algorithm algorithm, String modelName,
-			String filePath, ParamMap paramMap, String clientContext) throws Exception;
+	public Object fetchAndTrainModel(Train train, Model model, String[] fieldArray, Algorithm algorithm,
+			String modelName, String filePath, ParamMap paramMap, String clientContext) throws Exception;
 
 	/**
 	 * Fetch And Create PMML
@@ -164,7 +167,7 @@ public interface IExecutor {
 			boolean writeToParquet, String clientContext) throws Exception;
 	
 	/**
-	 * Fetch Attribute List
+	 * Fire queryon spark list
 	 * 
 	 * @param sql
 	 * @param rowLimit
@@ -174,4 +177,40 @@ public interface IExecutor {
 	 */
 	public List<Object> submitQuery(String sql, int rowLimit, String format, String header, String clientContext)
 			throws IOException;
+	
+	
+	/**
+	 * Fire predict on model
+	 * 
+	 * @param predict
+	 * @param fieldArray
+	 * @param algorithm
+	 * @param filePath
+	 * @param tableName
+	 * @param clientContext
+	 */
+	public Object predictModel(Predict predict,  String[] fieldArray, Algorithm algorithm, 
+			String filePath, String tableName, String clientContext) throws Exception;
+	
+	/**
+	 * Fire simulate on model
+	 * 
+	 * @param simulate
+	 * @param fieldArray
+	 * @param algorithm
+	 * @param filePath
+	 * @param tableName 
+	 * @param clientContext
+	 */
+	public Object simulateModel(Simulate simulate,  String[] fieldArray, Algorithm algorithm, 
+			String filePath, String tableName, String clientContext) throws Exception;
+	
+	/**
+	 * Fetch Prediction and Simulation Results
+	 * 
+	 * @param datastore
+	 * @param datapod
+	 * @param clientContext
+	 */
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, String clientContext) throws Exception;
 }

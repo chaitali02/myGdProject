@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
@@ -110,14 +111,29 @@ public class ProfileController {
 			@RequestParam(value = "action", required = false) String action) {
         return profileExecServiceImpl.findProfileExecByProfile(profileUUID);
     }
-    
+	@RequestMapping(value = "/getProfileExecByProfile", method = RequestMethod.GET, params = {"profileUUID", "startDate", "endDate"}	)
+    public List<ProfileExec> getdqExecByProfile(@RequestParam("profileUUID") String profileUUID,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam("startDate") String startDate,
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException {
+        return profileExecServiceImpl.findProfileExecByProfile(profileUUID, startDate, endDate, type);
+    }
 	@RequestMapping(value = "/getProfileExecByDatapod", method = RequestMethod.GET)
     public List<ProfileExec> getProfileExecByDatapod(@RequestParam("datapodUUID") String datapodUUID,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, ParseException {
         return profileExecServiceImpl.findProfileExecByDatapod(datapodUUID,type);
     }
-	
+
+    @RequestMapping(value = "/getProfileExecByDatapod", method = RequestMethod.GET, params = {"datapodUUID", "startDate", "endDate"}	)
+    public List<ProfileExec> getdqExecByDatapod(@RequestParam("datapodUUID") String datapodUUID,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam("startDate") String startDate,
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException {
+        return profileExecServiceImpl.findProfileExecByDatapod(datapodUUID, startDate, endDate, type);
+    }
     @RequestMapping(value = "/getProfileGroupExecByProfileGroup", method = RequestMethod.GET)
     public List<ProfileGroupExec> getProfileGroupExecByProfileGroup(@RequestParam("profileGroupUUID") String profileGroupUUID,
     		@RequestParam("profileGroupVersion") String profileGroupVersion,

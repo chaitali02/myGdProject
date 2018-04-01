@@ -5,10 +5,12 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -18,6 +20,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,6 +30,8 @@ import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.DataQual;
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -356,6 +361,89 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 
 		return result;
 	}
+	
+	
+	
+	public List<ProfileExec> findProfileExecByProfile(String profileUuid, String startDate, String endDate, String type, String action){		
+		Query query = new Query();
+		query.fields().include("statusList");
+		query.fields().include("dependsOn");
+		query.fields().include("exec");
+		query.fields().include("result");
+		query.fields().include("refKeyList");
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("createdBy");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("published");
+		query.fields().include("appInfo");
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss yyyy z");// Tue Mar 13 04:15:00 2018 UTC
+			
+		
+		try {
+			if ((startDate != null	&& !StringUtils.isEmpty(startDate))
+				&& (endDate != null	&& !StringUtils.isEmpty(endDate))) {
+			query.addCriteria(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate))
+						.lte(simpleDateFormat.parse(endDate)));
+			}
+			else if((startDate != null && !startDate.isEmpty()) && StringUtils.isEmpty(endDate)) 
+					{
+				query.addCriteria(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate)));
+					}
+			else if (endDate != null && !endDate.isEmpty())
+				query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
+			
+			query.addCriteria(Criteria.where("statusList.stage").in("Completed"));
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(profileUuid));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		List<ProfileExec> profileExecObjList = new ArrayList<>();
+		profileExecObjList = (List<ProfileExec>) mongoTemplate.find(query, ProfileExec.class);
+		
+		return profileExecObjList;		
+	}
+	
+	public List<ProfileExec> findProfileExecByDatapod(String datapodUUID, String startDate, String endDate, String type){
+		List<ProfileExec> profileExecObjList = new ArrayList<>();
+		List<ProfileExec> execObjList = new ArrayList<>();
+
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("dependsOn");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+
+		try {
+			if ((datapodUUID != null && !StringUtils.isEmpty(datapodUUID)))
+				query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(datapodUUID));
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		List<Profile> profileList = new ArrayList<>();
+		profileList = (List<Profile>) mongoTemplate.find(query, Profile.class);
+		
+		for (Profile profile : profileList) {
+			System.out.println("UUID : "+profile.getUuid());
+			profileExecObjList = findProfileExecByProfile(profile.getUuid(), startDate, endDate, null, null);
+			if(!profileExecObjList.isEmpty()) {
+				execObjList.addAll(profileExecObjList);
+			}
+			
+			}		
+		return execObjList;	
+	}
+	
 
 	public List<ProfileExec> findProfileExecByProfile(String profileUUID) {
 		List<ProfileExec> profileExecList=null;
@@ -371,6 +459,19 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 			resolvedProfileExecList.add(profileExec);
 		}
 		return resolvedProfileExecList;
+	}
+	
+	public List<ProfileExec> findProfileExecByProfile(String profileUUID, String startDate, String endDate, String type){
+		List<ProfileExec> profileExecObjList = new ArrayList<>();
+		List<ProfileExec> execObjList = new ArrayList<>();
+		
+			profileExecObjList = findProfileExecByProfile(profileUUID, startDate, endDate, null, null);
+			if(!profileExecObjList.isEmpty()) {
+				execObjList.addAll(profileExecObjList);
+			}
+			
+					
+		return execObjList;	
 	}
 
 	public List<ProfileExec> getProfileExecByProfileGroupExec(String profileGroupExecUuid, String profileGroupExecVersion) throws JsonProcessingException {

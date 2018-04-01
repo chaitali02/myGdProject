@@ -1145,7 +1145,8 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
       $scope.isDataError = false;
       angular.forEach(response.data[0], function(value, key) {
         var attribute = {};
-        if (key == "rownum") {
+        var hiveKey=["rownum","DatapodUUID","DatapodVersion"]
+        if (hiveKey.indexOf(key)!=-1) {
           attribute.visible = false
         } else {
           attribute.visible = true
@@ -1314,7 +1315,7 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
       var url = window.URL.createObjectURL(blob);
     
       linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download", uuid+".xlsx");
+      linkElement.setAttribute("download", uuid+".xls");
     
       var clickEvent = new MouseEvent("click", {
         "view": window,

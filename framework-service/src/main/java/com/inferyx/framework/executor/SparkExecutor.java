@@ -36,10 +36,7 @@ import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.amazonaws.services.workspaces.model.RunningMode;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
@@ -51,20 +48,19 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Load;
-import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Simulate;
+import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
-import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SparkMLOperator;
@@ -108,20 +104,19 @@ public class SparkExecutor implements IExecutor {
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private ConnectionFactory connFactory;
-	/*@Autowired
-	HiveContext hiveContext;*/
+	/*
+	 * @Autowired HiveContext hiveContext;
+	 */
 	@Autowired
-	SparkSession sparkSession;
+	private SparkSession sparkSession;
 	@Autowired
 	private MetadataUtil daoRegister;
 	@Autowired
-	DataSourceFactory datasourceFactory;
+	private DataSourceFactory datasourceFactory;
 	@Autowired
-	RuleOperator ruleOperator;
+	private RuleOperator ruleOperator;
 	@Autowired
-	ExecutorFactory execFactory;
-	@Autowired
-	Helper helper;
+	private SparkMLOperator sparkMLOperator;
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 
@@ -199,23 +194,19 @@ public class SparkExecutor implements IExecutor {
 				}
 				data.add(object);
 			}
-			/*ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-					.getRequestAttributes();
-			if (requestAttributes != null) {
-				HttpServletRequest request = requestAttributes.getRequest();
-				if (request != null) {
-					HttpSession session = request.getSession();
-					if (session != null) {
-						ResultSetHolder rsHolder = new ResultSetHolder();
-						rsHolder.setDataFrame(dfSorted);
-						rsHolder.setType(ResultType.dataframe);
-						session.setAttribute("rsHolder", rsHolder);
-					} else
-						logger.info("HttpSession is \"" + null + "\"");
-				} else
-					logger.info("HttpServletResponse is \"" + null + "\"");
-			} else
-				logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");*/
+			/*
+			 * ServletRequestAttributes requestAttributes = (ServletRequestAttributes)
+			 * RequestContextHolder .getRequestAttributes(); if (requestAttributes != null)
+			 * { HttpServletRequest request = requestAttributes.getRequest(); if (request !=
+			 * null) { HttpSession session = request.getSession(); if (session != null) {
+			 * ResultSetHolder rsHolder = new ResultSetHolder();
+			 * rsHolder.setDataFrame(dfSorted); rsHolder.setType(ResultType.dataframe);
+			 * session.setAttribute("rsHolder", rsHolder); } else
+			 * logger.info("HttpSession is \"" + null + "\""); } else
+			 * logger.info("HttpServletResponse is \"" + null + "\""); } else
+			 * logger.info("ServletRequestAttributes requestAttributes is \"" + null +
+			 * "\"");
+			 */
 		} // if SparkSession
 		return data;
 	}
@@ -247,7 +238,7 @@ public class SparkExecutor implements IExecutor {
 			dfTemp.persist(StorageLevel.MEMORY_AND_DISK());
 			sparkSession.sqlContext().registerDataFrameAsTable(dfTemp, tableName);
 			// dfTemp.cache();
-			//hiveContext.registerDataFrameAsTable(dfTemp, tableName);
+			// hiveContext.registerDataFrameAsTable(dfTemp, tableName);
 		}
 		return true;
 	}
@@ -302,6 +293,7 @@ public class SparkExecutor implements IExecutor {
 			filePath = String.format("%s%s", hdfsLocation, filePath);
 		}
 		if (obj instanceof SparkSession) {
+			@SuppressWarnings("unused")
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 			DataFrameHolder dfHolder = iReader.read(dp, datastore, hdfsInfo, obj, ds);
 			return dfHolder.getDataframe();
@@ -362,7 +354,7 @@ public class SparkExecutor implements IExecutor {
 			SparkSession sparkSession = null;
 			if (obj instanceof SparkSession) {
 				sparkSession = (SparkSession) conHolder.getStmtObject();
-				//sparkSession.registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+				// sparkSession.registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
 				sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
 				rsHolder.setCountRows(rsHolder.getDataFrame().count());
 			}
@@ -420,23 +412,23 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
-	public Object fetchAndTrainModel(Model model, String[] fieldArray, Algorithm algorithm, String modelName,
-			String filePath, ParamMap paramMap, String clientContext) throws Exception {
+	public Object fetchAndTrainModel(Train train, Model model, String[] fieldArray, Algorithm algorithm,
+			String trainName, String filePath, ParamMap paramMap, String clientContext) throws Exception {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		Dataset<Row> df = null;
 		Object result = null;
 
 		// Fetch data/dataframe/dataset
-		if (model.getSource().getRef().getType().toString().equals(MetaType.datapod.toString())) {
+		if (train.getSource().getRef().getType().toString().equals(MetaType.datapod.toString())) {
 			Datapod datapod = new Datapod();
-			if (model.getSource().getRef().getVersion() != null) {
+			if (train.getSource().getRef().getVersion() != null) {
 				// datapod =
 				// datapodServiceImpl.findOneByUuidAndVersion(datapodUUID,datapodVersion);
-				datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(model.getSource().getRef().getUuid(),
-						model.getSource().getRef().getVersion(), MetaType.datapod.toString());
+				datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
+						train.getSource().getRef().getVersion(), MetaType.datapod.toString());
 			} else {
 				// datapod = datapodServiceImpl.findLatestByUuid(datapodUUID);
-				datapod = (Datapod) commonServiceImpl.getLatestByUuid(model.getSource().getRef().getUuid(),
+				datapod = (Datapod) commonServiceImpl.getLatestByUuid(train.getSource().getRef().getUuid(),
 						MetaType.datapod.toString());
 			}
 			DataStore datastore = dataStoreServiceImpl.findLatestByMeta(datapod.getUuid(), datapod.getVersion());
@@ -450,15 +442,15 @@ public class SparkExecutor implements IExecutor {
 			Object obj = conHolder.getStmtObject();
 			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
 			df = dataFrameHolder.getDataframe();
-		} else if (model.getSource().getRef().getType().toString().equals(MetaType.dataset.toString())) {
+		} else if (train.getSource().getRef().getType().toString().equals(MetaType.dataset.toString())) {
 			DataSet dataset = new DataSet();
-			if (model.getSource().getRef().getVersion() != null) {
+			if (train.getSource().getRef().getVersion() != null) {
 				// dataset = datasetServiceImpl.findOneByUuidAndVersion(uuid,version);
-				dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(model.getSource().getRef().getUuid(),
-						model.getSource().getRef().getVersion(), MetaType.dataset.toString());
+				dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
+						train.getSource().getRef().getVersion(), MetaType.dataset.toString());
 			} else {
 				// dataset = datasetServiceImpl.findLatestByUuid(uuid);
-				dataset = (DataSet) commonServiceImpl.getLatestByUuid(model.getSource().getRef().getUuid(),
+				dataset = (DataSet) commonServiceImpl.getLatestByUuid(train.getSource().getRef().getUuid(),
 						MetaType.dataset.toString());
 			}
 
@@ -467,16 +459,16 @@ public class SparkExecutor implements IExecutor {
 			ResultSetHolder rsHolder = executeSql(sql);
 			df = rsHolder.getDataFrame();
 
-		}else if (model.getSource().getRef().getType().toString().equals(MetaType.rule.toString())) {
+		} else if (train.getSource().getRef().getType().toString().equals(MetaType.rule.toString())) {
 			Rule rule = new Rule();
-			if (model.getSource().getRef().getVersion() != null) {
-				rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(model.getSource().getRef().getUuid(),
-						model.getSource().getRef().getVersion(), MetaType.rule.toString());
+			if (train.getSource().getRef().getVersion() != null) {
+				rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
+						train.getSource().getRef().getVersion(), MetaType.rule.toString());
 			} else {
-				rule = (Rule) commonServiceImpl.getLatestByUuid(model.getSource().getRef().getUuid(),
+				rule = (Rule) commonServiceImpl.getLatestByUuid(train.getSource().getRef().getUuid(),
 						MetaType.rule.toString());
 			}
-			
+
 			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, Mode.BATCH);
 			ResultSetHolder rsHolder = executeSql(sql);
 			df = rsHolder.getDataFrame();
@@ -491,42 +483,41 @@ public class SparkExecutor implements IExecutor {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 			Dataset<Row> trainingTmp = va.transform(df);
 			// training = trainingTmp.withColumnRenamed(fieldArray[0],"label");
-			training = trainingTmp
-					.withColumn("label", trainingTmp.col(model.getLabel()).cast("Double"))
-					.select("label", "features");
+			training = trainingTmp.withColumn("label", trainingTmp.col(model.getLabel()).cast("Double")).select("label",
+					"features");
 
 			logger.info("DataFrame count for training: " + training.count());
 
-		} /*else if (algorithm.getTrainName().contains("DecisionTreeClassifier")
-				|| algorithm.getTrainName().contains("NaiveBayes")
-				|| algorithm.getTrainName().contains("RandomForestClassifier")
-				|| algorithm.getTrainName().contains("LinearSVC")) {
-			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-			Dataset<Row> trainingTmp = va.transform(df);
-			training = trainingTmp.withColumnRenamed(fieldArray[0], "label");
-		}*/else {
+		} /*
+			 * else if (algorithm.getTrainName().contains("DecisionTreeClassifier") ||
+			 * algorithm.getTrainName().contains("NaiveBayes") ||
+			 * algorithm.getTrainName().contains("RandomForestClassifier") ||
+			 * algorithm.getTrainName().contains("LinearSVC")) { va = (new
+			 * VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+			 * Dataset<Row> trainingTmp = va.transform(df); training =
+			 * trainingTmp.withColumnRenamed(fieldArray[0], "label"); }
+			 */else {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 			training = va.transform(df);
 		}
 		training.printSchema();
-		logger.info("tableName--Algo:" + modelName);
+		logger.info("tableName--Algo:" + trainName);
 		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
-		SparkMLOperator sparkMLOperator = new SparkMLOperator();
-		sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
-		sparkMLOperator.setSparkContext(sparkContext);
-		sparkMLOperator.setFilePathUrl(filePathUrl);
-		sparkMLOperator.setModel(model);
-		sparkMLOperator.setCommonServiceImpl(commonServiceImpl);
-		sparkMLOperator.setAlgorithm(algorithm);
-		sparkMLOperator.setModelExecServiceImpl(modelExecServiceImpl);
-		sparkMLOperator.setFilePath(filePath);	
-		sparkMLOperator.setConnectionFactory(connectionFactory);
-		sparkMLOperator.setExecFactory(execFactory);
-		sparkMLOperator.setHelper(helper);
-		
-		/*List<ModelExec> modelExecList = modelExecServiceImpl.getModelExecByModel(model.getUuid(), model.getVersion());
-		sparkMLOperator.predict(null, null, training, modelExecList.get(0), null, va, null);*/
-		result = sparkMLOperator.trainAndValidate(algorithm.getTrainName(), algorithm.getModelName(), df, va, paramMap);
+		// SparkMLOperator sparkMLOperator = new SparkMLOperator();
+		//sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
+		//sparkMLOperator.setSparkContext(sparkContext);
+		//sparkMLOperator.setFilePathUrl(filePathUrl);
+		//sparkMLOperator.setModel(model);
+		//sparkMLOperator.setCommonServiceImpl(commonServiceImpl);
+		//sparkMLOperator.setAlgorithm(algorithm);
+		//sparkMLOperator.setModelExecServiceImpl(modelExecServiceImpl);
+		//sparkMLOperator.setFilePath(filePath);
+		//sparkMLOperator.setConnectionFactory(connectionFactory);
+		//sparkMLOperator.setExecFactory(execFactory);
+		//sparkMLOperator.setHelper(helper);
+		//sparkMLOperator.setTrain(train);
+		//sparkMLOperator.setHdfsInfo(hdfsInfo);
+		result = sparkMLOperator.trainAndValidate(train, model, algorithm, algorithm.getTrainName(), algorithm.getModelName(), df, va, paramMap, filePathUrl, filePath);
 		return result;
 	}
 
@@ -586,7 +577,7 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> dfTmp = sparkSession.read().format("com.databricks.spark.csv").option("inferSchema", "true")
 				.option("header", "true").load(load.getSource().getValue());
 		long count = dfTmp.count();
-		//sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
+		// sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
 		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, "dfLoadTemp");
 		ResultSetHolder rsHolder = executeSql(
 				"SELECT *, " + ((dagExecVer == null) ? loadExecVer : dagExecVer) + " AS version FROM dfLoadTemp",
@@ -596,9 +587,9 @@ public class SparkExecutor implements IExecutor {
 		// dfTask = hiveContext.sql("select *, "+ dagExecVer + " as version from
 		// dfLoadTemp").coalesce(4);
 		dfTask.cache();
-		//sparkSession.registerDataFrameAsTable(dfTask, datapodTableName);
+		// sparkSession.registerDataFrameAsTable(dfTask, datapodTableName);
 		sparkSession.sqlContext().registerDataFrameAsTable(dfTask, datapodTableName);
-		
+
 		logger.info("Going to datapodWriter");
 		dfTask.printSchema();
 		// Datapod datapod = (Datapod) daoRegister.getRefObject(new
@@ -643,7 +634,7 @@ public class SparkExecutor implements IExecutor {
 				df.persist(StorageLevel.MEMORY_AND_DISK());
 				// df.cache();
 				SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-				//sparkSession.registerDataFrameAsTable(df, tableName);
+				// sparkSession.registerDataFrameAsTable(df, tableName);
 				df.createOrReplaceGlobalTempView(tableName);
 				sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 				// hiveContext.registerDataFrameAsTable(df, tableName);
@@ -704,11 +695,11 @@ public class SparkExecutor implements IExecutor {
 		StringBuilder columnName = new StringBuilder();
 
 		// Execute SQL
-		logger.info("inside SparkExecutor for the quiery: "+sql);
+		logger.info("inside SparkExecutor for the quiery: " + sql);
 		Dataset<Row> df = sparkSession.sql(sql).coalesce(10);
 		df.persist(StorageLevel.MEMORY_AND_DISK());
-		//df.cache();
-		
+		// df.cache();
+
 		Row[] rows;
 		if (rowLimit == 0) {
 			rows = (Row[]) df.head(20);
@@ -718,8 +709,8 @@ public class SparkExecutor implements IExecutor {
 		if (format == null) {
 			format = "";
 		}
-		
-		//Create header row
+
+		// Create header row
 		String[] columns = df.columns();
 		for (String columnHeader : columns) {
 			columnName.append(columnHeader);
@@ -734,7 +725,7 @@ public class SparkExecutor implements IExecutor {
 			}
 		}
 
-		//Generate output format
+		// Generate output format
 		for (Row row : rows) {
 			java.util.TreeMap<String, Object> object = new TreeMap<String, Object>();
 			if (format.equals("") || !format.equalsIgnoreCase("csv")) {
@@ -759,22 +750,26 @@ public class SparkExecutor implements IExecutor {
 		}
 		return data;
 	}
-	
-	public Object predictModel(Predict predict,  String[] fieldArray, Algorithm algorithm, 
-			String filePath, String clientContext) {
-		
-		try {			
-			//predict = (Predict) commonServiceImpl.getOneByUuidAndVersion("f06e9f5d-3b8b-4daf-9900-a9b641cbb5db","1490413126", MetaType.predict.toString());
-			
-			//fieldArray = modelExecServiceImpl.getAttributeNames(predict);
-			
+
+	@Override
+	public Object predictModel(Predict predict, String[] fieldArray, Algorithm algorithm, String filePath,
+			String tableName, String clientContext) throws Exception {
+
+		try {
+			// fieldArray = modelExecServiceImpl.getAttributeNames(predict);
+
 			MetaIdentifierHolder modelHolder = predict.getDependsOn();
 			MetaIdentifierHolder sourceHolder = predict.getSource();
 			MetaIdentifierHolder targetHolder = predict.getTarget();
-			
-			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelHolder.getRef().getUuid(), modelHolder.getRef().getVersion(), modelHolder.getRef().getType().toString());
-			Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
-			Datapod target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelHolder.getRef().getUuid(),
+					modelHolder.getRef().getVersion(), modelHolder.getRef().getType().toString());
+			Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+					sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+			Datapod target = null;
+			if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
+				target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
+						targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
 
 			Dataset<Row> df = null;
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -793,33 +788,33 @@ public class SparkExecutor implements IExecutor {
 				df = dataFrameHolder.getDataframe();
 			} else if (source instanceof Dataset) {
 				DataSet dataset = (DataSet) source;
-				if (model.getSource().getRef().getVersion() != null) {
-					dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(model.getSource().getRef().getUuid(),
-							model.getSource().getRef().getVersion(), MetaType.dataset.toString());
+				if (predict.getSource().getRef().getVersion() != null) {
+					dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(predict.getSource().getRef().getUuid(),
+							predict.getSource().getRef().getVersion(), MetaType.dataset.toString());
 				} else {
-					dataset = (DataSet) commonServiceImpl.getLatestByUuid(model.getSource().getRef().getUuid(),
+					dataset = (DataSet) commonServiceImpl.getLatestByUuid(predict.getSource().getRef().getUuid(),
 							MetaType.dataset.toString());
 				}
-				
+
 				String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, Mode.BATCH);
 				ResultSetHolder rsHolder = executeSql(sql);
 				df = rsHolder.getDataFrame();
 
-			}else if (source instanceof Rule) {
+			} else if (source instanceof Rule) {
 				Rule rule = (Rule) source;
-				if (model.getSource().getRef().getVersion() != null) {
-					rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(model.getSource().getRef().getUuid(),
-							model.getSource().getRef().getVersion(), MetaType.rule.toString());
+				if (predict.getSource().getRef().getVersion() != null) {
+					rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(predict.getSource().getRef().getUuid(),
+							predict.getSource().getRef().getVersion(), MetaType.rule.toString());
 				} else {
-					rule = (Rule) commonServiceImpl.getLatestByUuid(model.getSource().getRef().getUuid(),
+					rule = (Rule) commonServiceImpl.getLatestByUuid(predict.getSource().getRef().getUuid(),
 							MetaType.rule.toString());
 				}
-				
+
 				String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, Mode.BATCH);
 				ResultSetHolder rsHolder = executeSql(sql);
 				df = rsHolder.getDataFrame();
 			}
-			
+
 			VectorAssembler va = new VectorAssembler();
 			Dataset<Row> transformedDf = null;
 
@@ -827,8 +822,7 @@ public class SparkExecutor implements IExecutor {
 					|| algorithm.getTrainName().contains("LogisticRegression")) {
 				va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 				Dataset<Row> trainingTmp = va.transform(df);
-				transformedDf = trainingTmp
-						.withColumn("label", trainingTmp.col(model.getLabel()).cast("Double"))
+				transformedDf = trainingTmp.withColumn("label", trainingTmp.col(model.getLabel()).cast("Double"))
 						.select("label", "features");
 
 				logger.info("DataFrame count for training: " + transformedDf.count());
@@ -837,63 +831,123 @@ public class SparkExecutor implements IExecutor {
 				va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 				transformedDf = va.transform(df);
 			}
-			List<ModelExec> execList = modelExecServiceImpl.getModelExecByModel(model.getUuid(), model.getVersion());
+
+			TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
+					model.getVersion());
+			if (latestTrainExec == null)
+				throw new Exception("Executed model not found.");
+
 			transformedDf.printSchema();
+
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
-			SparkMLOperator sparkMLOperator = new SparkMLOperator();
-			sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
-			sparkMLOperator.setSparkContext(sparkContext);
-			sparkMLOperator.setFilePathUrl(filePathUrl);
-			sparkMLOperator.setModel(model);
-			sparkMLOperator.setCommonServiceImpl(commonServiceImpl);
-			sparkMLOperator.setAlgorithm(algorithm);
-			sparkMLOperator.setModelExecServiceImpl(modelExecServiceImpl);
-			sparkMLOperator.setFilePath(filePath);	
-			sparkMLOperator.setConnectionFactory(connectionFactory);
-			sparkMLOperator.setExecFactory(execFactory);
-			sparkMLOperator.setHelper(helper);
-			sparkMLOperator.setPredict(predict);
-			sparkMLOperator.setSqlContext(sqlContext);
-			return sparkMLOperator.predict(targetHolder.getRef().getType().toString(), target, transformedDf, execList.get(0), fieldArray, va, commonServiceImpl.getApp().getUuid());
+
+			// SparkMLOperator sparkMLOperator = new SparkMLOperator();
+			//sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
+			//sparkMLOperator.setSparkContext(sparkContext);
+			//sparkMLOperator.setFilePathUrl(filePathUrl);
+			//sparkMLOperator.setModel(model);
+			//sparkMLOperator.setCommonServiceImpl(commonServiceImpl);
+			//sparkMLOperator.setAlgorithm(algorithm);
+			//sparkMLOperator.setModelExecServiceImpl(modelExecServiceImpl);
+			//sparkMLOperator.setFilePath(filePath);
+			//sparkMLOperator.setConnectionFactory(connectionFactory);
+			//sparkMLOperator.setExecFactory(execFactory);
+			//sparkMLOperator.setHelper(helper);
+			//sparkMLOperator.setPredict(predict);
+			//sparkMLOperator.setSqlContext(sqlContext);
+			//sparkMLOperator.setDaoRegister(daoRegister);
+			//sparkMLOperator.setDatasourceFactory(dataSourceFactory);
+			//sparkMLOperator.setHdfsInfo(hdfsInfo);
+			return sparkMLOperator.predict(predict, model, algorithm, target, transformedDf, fieldArray, latestTrainExec, va,
+					targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
+			throw new Exception(e.getCause().getMessage());
+		}catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception(e.getMessage());
 		}
-		
-		return null;
 	}
-	
-	public Object simulateModel(Simulate simulate,  String[] fieldArray, Algorithm algorithm, 
-			String filePath, String clientContext) {
+
+	@Override
+	public Object simulateModel(Simulate simulate, String[] fieldArray, Algorithm algorithm, String filePath,
+			String tableName, String clientContext) throws Exception {
 		try {
 			MetaIdentifierHolder modelHolder = simulate.getDependsOn();
-			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelHolder.getRef().getUuid(), modelHolder.getRef().getVersion(), modelHolder.getRef().getType().toString());
-			
-			//fieldArray = modelExecServiceImpl.getAttributeNames(model);
-			
-			List<ModelExec> execList = modelExecServiceImpl.getModelExecByModel(model.getUuid(), model.getVersion());
+			MetaIdentifierHolder targetHolder = simulate.getTarget();
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelHolder.getRef().getUuid(),
+					modelHolder.getRef().getVersion(), modelHolder.getRef().getType().toString());
+			Datapod target = null;
+			if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
+				target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
+						targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+
+			// fieldArray = modelExecServiceImpl.getAttributeNames(model);
+
+			TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
+					model.getVersion());
+			if (latestTrainExec == null)
+				throw new Exception("Executed model not found.");
+
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
-			SparkMLOperator sparkMLOperator = new SparkMLOperator();
-			sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
-			sparkMLOperator.setSparkContext(sparkContext);
-			sparkMLOperator.setFilePathUrl(filePathUrl);
-			sparkMLOperator.setModel(model);
-			sparkMLOperator.setCommonServiceImpl(commonServiceImpl);
-			sparkMLOperator.setAlgorithm(algorithm);
-			sparkMLOperator.setModelExecServiceImpl(modelExecServiceImpl);
-			sparkMLOperator.setFilePath(filePath);	
-			sparkMLOperator.setConnectionFactory(connectionFactory);
-			sparkMLOperator.setExecFactory(execFactory);
-			sparkMLOperator.setHelper(helper);
-			sparkMLOperator.setSimulate(simulate);
-			sparkMLOperator.setSqlContext(sqlContext);
-			return sparkMLOperator.simulate(null, null, execList.get(0), fieldArray, clientContext);
+			// SparkMLOperator sparkMLOperator = new SparkMLOperator();
+			//sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
+			//sparkMLOperator.setSparkContext(sparkContext);
+			//sparkMLOperator.setFilePathUrl(filePathUrl);
+			//sparkMLOperator.setModel(model);
+			//sparkMLOperator.setCommonServiceImpl(commonServiceImpl);
+			//sparkMLOperator.setAlgorithm(algorithm);
+			//sparkMLOperator.setModelExecServiceImpl(modelExecServiceImpl);
+			//sparkMLOperator.setFilePath(filePath);
+			//sparkMLOperator.setConnectionFactory(connectionFactory);
+			//sparkMLOperator.setExecFactory(execFactory);
+			//sparkMLOperator.setHelper(helper);
+			//sparkMLOperator.setSimulate(simulate);
+			//sparkMLOperator.setSqlContext(sqlContext);
+			//sparkMLOperator.setDaoRegister(daoRegister);
+			//sparkMLOperator.setDatasourceFactory(dataSourceFactory);
+			//sparkMLOperator.setSparkSession(sparkSession);
+			//sparkMLOperator.setHdfsInfo(hdfsInfo);
+			return sparkMLOperator.simulate(simulate, model, algorithm, target, latestTrainExec, fieldArray,
+					targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, clientContext);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
+			throw new Exception(e.getCause().getMessage());
+		}catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception(e.getMessage());
 		}
-		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, String clientContext)
+			throws Exception {
+		List<Map<String, Object>> data = new ArrayList<>();
+		Dataset<Row> df = null;
+		if (datastore == null) {
+			logger.error("Datastore is not available for this datapod");
+			throw new Exception();
+		}
+		IReader iReader = dataSourceFactory.getDatapodReader();
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
+		ConnectionHolder conHolder = conn.getConnection();
+
+		Object obj = conHolder.getStmtObject();
+		if (obj instanceof SparkSession) {
+			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
+			df = dataFrameHolder.getDataframe();
+		}
+		df.show();
+		String[] columns = df.columns();
+		for (Row row : df.javaRDD().collect()) {
+			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			for (String column : columns) {
+				object.put(column, (row.getAs(column)==null?"":row.getAs(column).toString()) );
+			}
+			data.add(object);
+		}
+
+		return data;
 	}
 }
