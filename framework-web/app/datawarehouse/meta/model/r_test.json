@@ -1,0 +1,47 @@
+{
+  "id": "5a9f6ffeaa022841ce035c3e",
+  "uuid": "9020f19b-099c-4234-aae0-e25cb5fbff98",
+  "version": "1520398334",
+  "name": "R Test",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Mar 06 23:52:14 EST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "features": [],
+  "label": {
+    "ref": null,
+    "value": null,
+    "attrId": null,
+    "attrName": null
+  },
+  "algorithm": null,
+  "paramList": null,
+  "labelRequired": null,
+  "type": "R",
+  "customScript": null,
+  "scriptName": "9020f19b-099c-4234-aae0-e25cb5fbff98_1520398334.R",
+  "trainPercent" : 70,
+  "valPercent" : 30,
+  "customeFlag" : "Y"
+}

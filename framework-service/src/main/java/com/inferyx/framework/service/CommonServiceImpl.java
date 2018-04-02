@@ -1424,7 +1424,7 @@ public class CommonServiceImpl <T> {
 							if (interface1.getName().equals("java.util.List")) {
 								listObj = (ArrayList)invokedObj;
 								for (Object arrayObj : listObj) {
-									if (arrayObj.getClass().getPackage().getName().contains("gridedge")) {
+									if (arrayObj.getClass().getPackage().getName().contains("inferyx")) {
 										resolveName(arrayObj, null);
 									}
 								}
@@ -1434,7 +1434,7 @@ public class CommonServiceImpl <T> {
 						}
 						continue;
 					}
-					if (!invokedObj.getClass().getPackage().getName().contains("gridedge")) {
+					if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 						continue;
 					}
 					resolveName(invokedObj, type);
@@ -1513,7 +1513,7 @@ public class CommonServiceImpl <T> {
 					continue;
 				}
 				
-				if (!invokedObj.getClass().getPackage().getName().contains("gridedge")) {
+				if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 					continue;
 				}
 				attributeName = resolveAttributeName(attributeId, invokedObj);

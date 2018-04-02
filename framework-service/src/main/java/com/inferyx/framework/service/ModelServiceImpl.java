@@ -758,8 +758,8 @@ public class ModelServiceImpl {
 		String title = "";
 		if(location.contains(hdfsInfo.getHdfsURL()))
 			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/stages");
-		if(location.contains(hdfsInfo.getSchemaPath()))
-			location = StringUtils.substringBetween(location, hdfsInfo.getSchemaPath(), "/stages");
+		if(location.contains(Helper.getPropertyValue("framework.model.train.path")))
+			location = StringUtils.substringBetween(location, Helper.getPropertyValue("framework.model.train.path"), "/stages");
 		
 		if(location.startsWith("/") && location.endsWith("/"))
 			title = location.substring(1, location.length()-1);
@@ -776,7 +776,7 @@ public class ModelServiceImpl {
 
 			response.setHeader("filename",""+fileName + ".pmml");
 			
-			File file = new File(hdfsInfo.getSchemaPath() +"/"+location + "/" + fileName + ".pmml");
+			File file = new File(Helper.getPropertyValue("framework.model.train.path") +"/"+location + "/" + fileName + ".pmml");
 
 			if (file.exists()) {
 				DownloadExec downloadExec = new DownloadExec();

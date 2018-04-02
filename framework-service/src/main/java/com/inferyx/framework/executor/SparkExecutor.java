@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
@@ -502,7 +503,7 @@ public class SparkExecutor implements IExecutor {
 		}
 		training.printSchema();
 		logger.info("tableName--Algo:" + trainName);
-		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.train.path"), filePath);
 		// SparkMLOperator sparkMLOperator = new SparkMLOperator();
 		//sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
 		//sparkMLOperator.setSparkContext(sparkContext);
@@ -839,7 +840,7 @@ public class SparkExecutor implements IExecutor {
 
 			transformedDf.printSchema();
 
-			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
 
 			// SparkMLOperator sparkMLOperator = new SparkMLOperator();
 			//sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
@@ -889,7 +890,7 @@ public class SparkExecutor implements IExecutor {
 			if (latestTrainExec == null)
 				throw new Exception("Executed model not found.");
 
-			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.simulate.path"), filePath);
 			// SparkMLOperator sparkMLOperator = new SparkMLOperator();
 			//sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
 			//sparkMLOperator.setSparkContext(sparkContext);

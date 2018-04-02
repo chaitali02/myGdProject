@@ -20,8 +20,8 @@
 			}
 		}
 	],
-	"type": "clustering",
-	"library": "sparkML",
+	"type": "REGRESSION",
+	"library": "SPARKML",
 	"trainName": "org.apache.spark.ml.clustering.LDA",
 	"modelName": "org.apache.spark.ml.clustering.LDAModel",
 	"labelRequired": "Y",
@@ -30,5 +30,6 @@
 			"type": "paramlist",
 			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a85"
 		}
-	}
+	},
+  	"savePmml" : "N"
 }
