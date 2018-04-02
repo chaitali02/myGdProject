@@ -119,7 +119,8 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 		  			resultjson.id=response[i].id;
 		  			resultjson.name=response[i].name;
 		  			resultjson.dese=response[i].dese;
-		  			resultjson.registeredOn=response[i].registeredOn;
+					resultjson.registeredOn=response[i].registeredOn;
+					resultjson.registeredBy=response[i].registeredBy;
 		  			if(response[i].status == "UnRegistered"){
 
 		  				resultjson.status="Not Registered"
@@ -190,7 +191,8 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 	  			resultjson.id=response[i].id;
 	  			resultjson.name=response[i].name;
 	  			resultjson.dese=response[i].dese;
-	  			resultjson.registeredOn=response[i].registeredOn;
+				resultjson.registeredOn=response[i].registeredOn;
+				resultjson.registeredBy=response[i].registeredBy;
 	  			if(response[i].status == "UnRegistered"){
 
 	  				resultjson.status="Not Registered"

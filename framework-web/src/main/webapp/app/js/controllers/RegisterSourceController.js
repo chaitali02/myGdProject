@@ -41,8 +41,14 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         },
       },
       {
-        displayName: 'RegisteredOn',
+        displayName: 'Registered On',
         name: 'registeredOn',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center'
+      },
+      {
+        displayName: 'Registered BY',
+        name: 'registeredBy',
         cellClass: 'text-center',
         headerCellClass: 'text-center'
       },
@@ -121,6 +127,14 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       $scope.isSearchDisable=true;
       $scope.gridOptions.data=[];
 
+    }
+  }
+  $scope.onChangeStatus=function(){
+    
+    if($scope.selectDataSource !=null){
+      $scope.isSearchDisable=false;
+    }else{
+      $scope.isSearchDisable=true;
     }
   }
   $scope.searchSource=function(){
