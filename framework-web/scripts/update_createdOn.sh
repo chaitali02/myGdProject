@@ -17,10 +17,10 @@ if [[ $hostname = "" ]] ; then
 	exit 1
 fi
 
-var=`/home/joy/Documents/mongodb-linux-x86_64-ubuntu1404-3.4.2/bin/mongo --quiet --host localhost framework --eval "db.getCollectionNames().join('\n')"`
+var=`mongo --quiet --host localhost framework --eval "db.getCollectionNames().join('\n')"`
 for collection in $(echo $var)
 do
 
 	echo Updating $collection collection
-	/home/joy/Documents/mongodb-linux-x86_64-ubuntu1404-3.4.2/bin/mongo --host $hostname framework --eval "printjson(db.${collection}.updateMany( {}, {\$set: {\"createdOn\":ISODate()}}, {multi:true}))"
+	mongo --host $hostname framework --eval "printjson(db.${collection}.updateMany( {}, {\$set: {\"createdOn\":ISODate()}}, {multi:true}))"
 done
