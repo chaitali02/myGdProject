@@ -1,0 +1,126 @@
+{
+  "uuid": "151d6478-75d2-4b76-a1e8-4c64ea8b7a91",
+  "version": "1520324974",
+  "name": "linear_svm_classifier_test",
+  "desc": "Linear Support Vector Machine Classifier Algorithm",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Mar 06 13:59:34 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "features": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "0",
+      "attrName": "customer_id"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "1",
+      "attrName": "address_id"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "2",
+      "attrName": "branch_id"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "3",
+      "attrName": "commute_distance_miles"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "4",
+      "attrName": "label"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "5",
+      "attrName": "censor"
+    }
+  ],
+  "label": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+      "version": null,
+      "name": "test_model"
+    },
+    "value": null,
+    "attrId": "4",
+    "attrName": "label"
+  },
+  "algorithm": {
+    "ref": {
+      "type": "algorithm",
+      "uuid": "7db4e820-3e15-4ef9-b326-a32f6f63823b",
+      "version": null,
+      "name": "Linear Support Vector Machine Classifier"
+    },
+    "value": null
+  },
+  "paramList": null,
+  "labelRequired": null,
+  "type": "SPARK",
+  "customScript": null,
+  "scriptName": null,
+  "trainPercent" : 70,
+  "valPercent" : 30,
+  "customeFlag" : "N"
+}

@@ -20,12 +20,6 @@
 			}
 		}
 	],
-	"source": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
-		}
-	},
 	"label": {
 		"ref": {
 			"type": "datapod",
@@ -70,5 +64,8 @@
 		}
 	},
 	"type" : "SPARK",
- 	"scriptName" : ""
+ 	"scriptName" : "",
+    "trainPercent" : 70,
+    "valPercent" : 30,
+  "customeFlag" : "N"
 }

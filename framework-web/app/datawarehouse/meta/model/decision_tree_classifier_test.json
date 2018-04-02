@@ -1,0 +1,126 @@
+{
+  "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678",
+  "version": "1520328123",
+  "name": "decision_tree_classifier_test",
+  "desc": "DecisionTreeClassifier Test Model",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Mar 06 14:52:03 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "features": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "0",
+      "attrName": "customer_id"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "1",
+      "attrName": "address_id"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "2",
+      "attrName": "branch_id"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "3",
+      "attrName": "commute_distance_miles"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "4",
+      "attrName": "label"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "5",
+      "attrName": "censor"
+    }
+  ],
+  "label": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+      "version": null,
+      "name": "test_model"
+    },
+    "value": null,
+    "attrId": "4",
+    "attrName": "label"
+  },
+  "algorithm": {
+    "ref": {
+      "type": "algorithm",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678",
+      "version": null,
+      "name": "Decision Tree Classifier"
+    },
+    "value": null
+  },
+  "paramList": null,
+  "labelRequired": null,
+  "type": "SPARK",
+  "customScript": null,
+  "scriptName": null,
+  "trainPercent" : 70,
+  "valPercent" : 30,
+  "customeFlag" : "N"
+}

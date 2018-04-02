@@ -20,8 +20,8 @@
 			}
 		}
 	],
-	"type": "clustering",
-	"library": "sparkML",
+	"type": "REGRESSION",
+	"library": "SPARKML",
 	"trainName": "org.apache.spark.ml.clustering.KMeans",
 	"modelName": "org.apache.spark.ml.clustering.KMeansModel",
 	"labelRequired": "N",
@@ -30,5 +30,6 @@
 			"type": "paramlist",
 			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a79"
 		}
-	}
+	},
+  	"savePmml" : "Y"
 }
