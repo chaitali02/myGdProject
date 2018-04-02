@@ -1,0 +1,199 @@
+{
+  "uuid": "77aefb4c-191c-11e7-93ae-92361f002699",
+  "version": "1488620350",
+  "name": "rc_rule_results",
+  "desc": "Data Reconciliation",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+  "createdOn": "Wed Mar 07 18:25:13 IST 2018",
+  "tags": null,
+  "active": "Y",
+  "published": "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }
+    ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+    }
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "name": "sourcedatapoduuid",
+      "type": "string",
+      "desc": "SourceDatapodUUID",
+      "key": "0",
+      "partition": "N",
+      "dispName": "SourceDatapodUUID",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 1,
+      "name": "sourcedatapodversion",
+      "type": "string",
+      "desc": "SourceDatapodVersion",
+      "key": null,
+      "partition": "N",
+      "dispName": "SourceDatapodVersion",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 2,
+      "name": "sourcedatapodname",
+      "type": "string",
+      "desc": "SourceDatapodName",
+      "key": null,
+      "partition": "N",
+      "dispName": "SourceDatapodName",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 3,
+      "name": "sourceattributeid",
+      "type": "string",
+      "desc": "SourceAttributeId",
+      "key": null,
+      "partition": "N",
+      "dispName": "SourceAttributeId",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 4,
+      "name": "sourceattributename",
+      "type": "string",
+      "desc": "SourceAttributeName",
+      "key": null,
+      "partition": "N",
+      "dispName": "SourceAttributeName",
+      "active": "Y",
+      "expr": null
+    },    
+    {
+      "attributeId": 5,
+      "name": "targetdatapoduuid",
+      "type": "string",
+      "desc": "TargetDatapodUUID",
+      "key": "0",
+      "partition": "N",
+      "dispName": "TargetDatapodUUID",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 6,
+      "name": "targetdatapodversion",
+      "type": "string",
+      "desc": "TargetDatapodVersion",
+      "key": null,
+      "partition": "N",
+      "dispName": "TargetDatapodVersion",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 7,
+      "name": "targetdatapodname",
+      "type": "string",
+      "desc": "TargetDatapodName",
+      "key": null,
+      "partition": "N",
+      "dispName": "TargetDatapodName",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 8,
+      "name": "targetattributeid",
+      "type": "string",
+      "desc": "Id of target attribute",
+      "key": null,
+      "partition": "N",
+      "dispName": "TargetAttributeId",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 9,
+      "name": "targetattributename",
+      "type": "string",
+      "desc": "Name of target attribute",
+      "key": null,
+      "partition": "N",
+      "dispName": "TargetAttributeName",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 10,
+      "name": "sourcevalue",
+      "type": "Double",
+      "desc": "Computed value from source",
+      "key": null,
+      "partition": "Y",
+      "dispName": "SourceValue",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 11,
+      "name": "targetvalue",
+      "type": "Double",
+      "desc": "Computed value from target",
+      "key": null,
+      "partition": "N",
+      "dispName": "TargetValue",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 12,
+      "name": "status",
+      "type": "String",
+      "desc": "Status of check",
+      "key": null,
+      "partition": "N",
+      "dispName": "status",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 15,
+      "name": "version",
+      "type": "Integer",
+      "desc": "version",
+      "key": null,
+      "partition": "N",
+      "dispName": "version",
+      "active": "Y",
+      "expr": null
+    }
+  ]
+}

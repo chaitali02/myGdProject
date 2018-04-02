@@ -1,0 +1,30 @@
+{
+  "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+  "version": "1521430822",
+  "name": "Anti Money Laundering",
+  "desc": "Anti Money Laundering",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+    }
+  },
+  "createdOn": "Sun Mar 18 23:40:22 EDT 2018",
+  "tags": null,
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+      }
+    }
+  ],
+  "dataSource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    }
+}
