@@ -5,7 +5,15 @@ public class Registry {
 	private String name;
 	private String desc;
 	private String registeredOn;
+	private String registeredBy;
 	private String status;
+	
+	public String getRegisteredBy() {
+		return registeredBy;
+	}
+	public void setRegisteredBy(String registeredBy) {
+		this.registeredBy = registeredBy;
+	}
 	public String getId() {
 		return id;
 	}

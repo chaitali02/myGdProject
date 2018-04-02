@@ -32,7 +32,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -141,7 +140,6 @@ import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
-import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
@@ -330,6 +328,7 @@ public class CommonServiceImpl <T> {
 	ILogDao iLogDao;
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
+	@SuppressWarnings("rawtypes")
 	@Resource(name="taskThreadMap")
 	ConcurrentHashMap taskThreadMap;
 	@Autowired
@@ -1266,7 +1265,7 @@ public class CommonServiceImpl <T> {
 		return null;
 	}
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List findAllLatest(MetaType type) {
 		List objectList = new ArrayList();
 		List finalObjectList = new ArrayList();
@@ -1613,6 +1612,7 @@ public class CommonServiceImpl <T> {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public T getAllByUuid(String uuid, String type) throws JsonProcessingException{
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
@@ -2187,6 +2187,7 @@ public class CommonServiceImpl <T> {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public Object setMetaStatusForStage (DagExec dagExec, Object retObj, Status.Stage stage, String stageId) throws Exception {
 		String uuid = dagExec.getUuid();
 		String version = dagExec.getVersion();
@@ -2254,6 +2255,7 @@ public class CommonServiceImpl <T> {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public Object setMetaStatusForTask (DagExec dagExec, Object retObj, Status.Stage stage, String stageId, String taskId) throws Exception {
 		String uuid = dagExec.getUuid();
 		String version = dagExec.getVersion();
@@ -2487,6 +2489,7 @@ public class CommonServiceImpl <T> {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Status> getAllStatusForExec(MetaIdentifier ref) {
 		Object iDao = null;
 		Object metaObj = null;
@@ -2911,7 +2914,6 @@ public class CommonServiceImpl <T> {
 			return null;
 		}
 		
-		@SuppressWarnings("unlikely-arg-type")
 		public String findAppId(String type)
 		{
 			String appUuid=null;
@@ -2923,6 +2925,16 @@ public class CommonServiceImpl <T> {
 				}
 			return appUuid;
 			
+		}
+
+		public List<Object> getAllByMetaList(String[] type) {
+			List<Object> metaList = new ArrayList<>();
+			for(String meta : type) {
+				@SuppressWarnings("unchecked")
+				List<Object> metaObjectList = (List<Object>) findAll(Helper.getMetaType(meta));
+				metaList.addAll(metaObjectList);
+			}
+			return metaList;
 		}
 		
 		

@@ -652,9 +652,10 @@ public class MetadataController {
 	@RequestMapping(value = "/getRegistryByDatasource", method = RequestMethod.GET)
 	public @ResponseBody List<Registry> getRegistryByDatasource(@RequestParam("datasourceUuid") String datasourceUuid,
 			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "action", required = false) String action)
 			throws JsonProcessingException {
-		return registerService.getRegistryByDatasource(datasourceUuid);
+		return registerService.getRegistryByDatasource(datasourceUuid,status);
 	}
 
 	@RequestMapping(value = "/getFunctionByFunctionInfo", method = RequestMethod.GET)

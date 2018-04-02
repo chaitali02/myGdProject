@@ -3281,13 +3281,15 @@ public class RegisterService {
 		return result;
 	}
 
-	public List<Registry> getRegistryByDatasource(String datasourceUuid) throws JsonProcessingException {
+	public List<Registry> getRegistryByDatasource(String datasourceUuid,String status) throws JsonProcessingException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
 		//Datasource datasource = datasourceServiceImpl.findLatestByUuid(datasourceUuid);
 		Datasource datasource = (Datasource) commonServiceImpl.getLatestByUuid(datasourceUuid, MetaType.datasource.toString());
 		List<Registry> registryList = new ArrayList<Registry>();
+		List<Registry> registerList = new ArrayList<Registry>();
+		List<Registry> unRegisterList = new ArrayList<Registry>();
 
 		if (datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) | datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			String hiveDBName = datasource.getDbname();
@@ -3506,6 +3508,7 @@ public class RegisterService {
 								registry.setRegisteredOn(datapod.getCreatedOn());
 								registry.setDesc(datapod.getDesc());
 								registry.setRegisteredOn(datapod.getCreatedOn());
+								registry.setRegisteredBy(datapod.getCreatedBy().getRef().getName());
 								registry.setStatus("Registered");
 								registryList.add(registry);
 								break;
@@ -3536,7 +3539,35 @@ public class RegisterService {
 				i++;
 			}
 		}
-		return registryList;
+		
+		if (status.equalsIgnoreCase("UnRegistered")) {
+			int count = 1;
+			for (Registry unRegiser : registryList) {
+				
+				if (unRegiser.getStatus().equalsIgnoreCase("UnRegistered")) {
+					
+					unRegiser.setId(Integer.toString(count));
+					unRegisterList.add(unRegiser);
+					count++;
+				}
+			}
+			return unRegisterList;
+		} else if (status.equals("Registered")) {
+			int count = 1;
+			for (Registry register : registryList) {
+				
+				if (register.getStatus().equals("Registered")) {
+					
+					register.setId(Integer.toString(count));
+					registerList.add(register);
+					count++;
+				}
+			}
+			return registerList;
+		} else {
+			return registryList;
+		}
+
 	}
 
 	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, Mode runMode)
