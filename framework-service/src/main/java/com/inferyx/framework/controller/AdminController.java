@@ -3,6 +3,7 @@ package com.inferyx.framework.controller;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.domain.Export;
 import com.inferyx.framework.domain.Import;
 import com.inferyx.framework.service.AdminServiceImpl;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ExportServiceImpl;
 import com.inferyx.framework.service.ImportServiceImpl;
 
@@ -37,6 +39,8 @@ public class AdminController {
 	ExportServiceImpl exportServiceImpl;
 	@Autowired
 	ImportServiceImpl importServiceImpl;
+	@Autowired
+	CommonServiceImpl<?> commonServiceImpl;
 
 	@RequestMapping(value="/getTaskThreadMap", method=RequestMethod.GET)
     public ConcurrentHashMap getTaskThreadMap() throws Exception {
@@ -100,5 +104,12 @@ public class AdminController {
 		Export export = mapper.convertValue(metaObject, Export.class);
 		return  mapper.writeValueAsString(exportServiceImpl.save(export));
 	}	
+	
+	@RequestMapping(value = "/getAllByMetaList", method = RequestMethod.GET)
+	public List<Object> getAllByMetaList(@RequestParam(value = "type") String[] type,
+										 @RequestParam(value = "action", required = false) String action){
+		return commonServiceImpl.getAllByMetaList(type);
+		
+	}
 }
 
