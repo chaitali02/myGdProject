@@ -274,10 +274,8 @@ public class SparkMLOperator implements IModelOperator {
 			if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
 				try {
 					LOGGER.info("trainedDataSet schema : " + trainedDataSet.schema());
-					if(filePathUrl.contains("file://"))
-						filePathUrl = filePathUrl.replaceAll("file://", "");
-					if(filePathUrl.contains("hdfs://"))
-						filePathUrl = filePathUrl.replaceAll("hdfs://", "");
+					if(filePathUrl.contains(hdfsInfo.getHdfsURL()))
+						filePathUrl = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					
 					String fileLocation = filePathUrl + "/" + model.getUuid() + "_" + model.getVersion() + "_"
 							+ (filePathUrl.substring(filePathUrl.lastIndexOf("/") + 1)) + ".pmml";

@@ -1,0 +1,36 @@
+{
+  "uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67",
+  "version": "1521430857",
+  "name": "aml_analyst",
+  "desc": "Analyst group for anti-money laundering application",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+    }
+  },
+  "createdOn": "Sun Mar 18 23:40:57 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+      }
+    }
+  ],
+  "roleId": {
+    "ref": {
+      "type": "role",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f88"
+    }
+  },
+  "appId": {
+    "ref": {
+      "type": "application",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+    }
+  }
+}
