@@ -308,7 +308,7 @@ public class ImportServiceImpl {
 						if (intrfce.getName().equals("java.util.List")) {
 							listObj = (ArrayList)invokedObj;
 							for (Object arrayObj : listObj) {								
-								if (arrayObj.getClass().getPackage().getName().contains("gridedge")) {
+								if (arrayObj.getClass().getPackage().getName().contains("inferyx")) {
 									//logger.info("Class : " + invokedObj.getClass().getName()+"  invokedObj instanceof MetaIdentifierHolder: "+(invokedObj instanceof MetaIdentifierHolder));
 									includeDependency(arrayObj, zipFile, level);
 								}
@@ -319,7 +319,7 @@ public class ImportServiceImpl {
 					}
 					continue;
 				}
-				if (!invokedObj.getClass().getPackage().getName().contains("gridedge")) {
+				if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 					continue;
 				}
 				includeDependency(invokedObj, zipFile, level);
@@ -456,7 +456,7 @@ public class ImportServiceImpl {
 					if (intrfce.getName().equals("java.util.List")) {
 						listObj = (ArrayList)invokedObj;
 						for (Object arrayObj : listObj) {								
-							if (arrayObj.getClass().getPackage().getName().contains("gridedge")) {
+							if (arrayObj.getClass().getPackage().getName().contains("inferyx")) {
 								//logger.info("Class : " + invokedObj.getClass().getName()+"  invokedObj instanceof MetaIdentifierHolder: "+(invokedObj instanceof MetaIdentifierHolder));
 								result = validateDependency(invokedObj, level, zipFile);
 								if(result == false) {
@@ -473,7 +473,7 @@ public class ImportServiceImpl {
 				}
 				continue;
 			}
-			if (!invokedObj.getClass().getPackage().getName().contains("gridedge")) {
+			if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 				continue;
 			}
 			result = validateDependency(invokedObj, level, zipFile);

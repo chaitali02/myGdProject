@@ -312,7 +312,7 @@ public class ExportServiceImpl implements Serializable {
 						if (intrfce.getName().equals("java.util.List")) {
 							listObj = (ArrayList)invokedObj;
 							for (Object arrayObj : listObj) {								
-								if (arrayObj.getClass().getPackage().getName().contains("gridedge")) {
+								if (arrayObj.getClass().getPackage().getName().contains("inferyx")) {
 									//logger.info("Class : " + invokedObj.getClass().getName());
 									includeDependencies(arrayObj, level, uuidInZipSet, zos);
 								}
@@ -324,7 +324,7 @@ public class ExportServiceImpl implements Serializable {
 					continue;
 				}
 				
-				if (!invokedObj.getClass().getPackage().getName().contains("gridedge")) {
+				if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 					continue;
 				}
 				includeDependencies(invokedObj, level, uuidInZipSet,zos);
