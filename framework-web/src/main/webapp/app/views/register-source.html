@@ -60,22 +60,46 @@
       </div>
       <div class="portlet-body">
         <form class="form-horizontal">
-          <div class="form-group">
-            <label class="control-label col-md-1 col-sm-1 col-xs-12" for="select">Name</label>
-            <div class="col-md-4">
-              <select class="form-control" select2 data-ng-model="selectDataSource" ng-change="onChangeSource()"  ng-options="r as r.name for r in allDataSource">
-              <option value="">-Select-</option>
-              </select>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-12 col-lg-12" >
+              <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3" for="select">Name</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
+                    <select class="form-control" select2 data-ng-model="selectDataSource" ng-change="onChangeSource()"  ng-options="r as r.name for r in allDataSource">
+                    <option value="">-Select-</option>
+                    </select>
+                  </div>
+                  </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3" for="select">Status</label>
+                  <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
+                    <div class="btn-group" ng-init="selectStatus='Registered'">
+                      <label class="btn btn-default" ng-model="selectStatus"  uib-btn-radio="'Registered'">Registered</label>
+                      <label class="btn btn-default" ng-model="selectStatus"  uib-btn-radio="'UnRegistered'" uncheckable>Not Registered</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-group">
-            <div class="col-md-offset-1 col-md-4">
-              <button type="button" class="btn green" ng-disabled="isSearchDisable" ng-click="searchSource()">Search</button>
-              <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="isDataSourceInpogress">
-                <div class="bounce1"></div>
-                <div class="bounce2"></div>
-                <div class="bounce3"></div>
-              </span>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-12 col-lg-12" >
+              <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3" for="select"></label>
+                  <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
+                    <button type="button" class="btn green" ng-disabled="isSearchDisable" ng-click="searchSource()">Search</button>
+                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="isDataSourceInpogress">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </form>
@@ -89,39 +113,29 @@
           <i class="fa fa-cogs"></i>Details
         </div>
         <div class="actions">
-            <button type="submit" class="btn btn-default btn-sm" ng-disabled="isRSDisable" style="color:white;" ng-click="submitRegisgterSource()"> 
-              <span ng-show="searchButtonText == 'Registering'"><i class="glyphicon glyphicon-refresh spinning"></i></span>
-              <span ng-show="searchButtonText == 'Register'"><i class="fa fa-plus"></i></span>
-              {{ searchButtonText }}
-            </button>
-          <!-- <a ng-click="submitRegisgterSource()" class="btn btn-default btn-sm">
-            <i class="fa fa-plus"></i> Register </a> -->
+          <button type="submit" class="btn btn-default btn-sm" ng-disabled="isRSDisable" style="color:white;" ng-click="submitRegisgterSource()"> 
+            <span ng-show="searchButtonText == 'Registering'"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+            <span ng-show="searchButtonText == 'Register'"><i class="fa fa-plus"></i></span>
+            {{ searchButtonText }}
+          </button>
         </div>
       </div>
 
-      <div class="portlet-body"><div class="row">
-
-        <div class="col-md-12 col-sm-12">
-          <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
-            <label>Search:</label>
-            <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext" aria-controls="datastoredatatable">
+      <div class="portlet-body">
+        <div class="row">
+          <div class="col-md-12 col-sm-12">
+            <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+              <label>Search:</label>
+              <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext" aria-controls="datastoredatatable">
+            </div>
           </div>
         </div>
-      </div>
+        
         <div ui-grid="gridOptions" class="grid" ui-grid-selection ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
           <div class="nodatawatermark_results"style="top:60%;" ng-show="!gridOptions.data.length">No data available</div>
         </div>
       </div>
-      </div>
-
-      <!-- <div class="spinner centercontent" ng-show="spinner">
-          <div class="bounce1"></div>
-          <div class="bounce2"></div>
-          <div class="bounce3"></div>
-        </div>
-        <div ng-show="isDataError">
-          <h3 style="font-size:14px;color:red">{{datamessage}}</h3>
-        </div> -->
+    </div>
 
   </div>
-</div>
+</disv>

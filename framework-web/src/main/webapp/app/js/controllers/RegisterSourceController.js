@@ -126,7 +126,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
   $scope.searchSource=function(){
     $scope.isSearchDisable=true;
     $scope.isDataSourceInpogress = true;
-    RegisterSourceService.getRegistryByDatasource($scope.selectDataSource.uuid).then(function (response) {onSuccessGetRegistryByDatasource(response.data)}, function (response) {onError(response.data)});
+    RegisterSourceService.getRegistryByDatasource($scope.selectDataSource.uuid,$scope.selectStatus).then(function (response) {onSuccessGetRegistryByDatasource(response.data)}, function (response) {onError(response.data)});
     var onSuccessGetRegistryByDatasource = function (response) {
      // console.log(JSON.stringify(response))
       $scope.isDataSourceInpogress = false;

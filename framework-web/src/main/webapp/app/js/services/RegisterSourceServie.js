@@ -29,11 +29,11 @@ AdminModule.factory("RegisterSourceFacoty",function($http,$location){
    		           return response;
    		        })
        }
-	factory.findRegistryByDatasource=function(uuid){
+	factory.findRegistryByDatasource=function(uuid,status){
        	var url=$location.absUrl().split("app")[0]
            return $http({
    			    method: 'GET',
-   			    url:url+"metadata/getRegistryByDatasource?type=datasource&action=view&datasourceUuid="+uuid,
+   			    url:url+"metadata/getRegistryByDatasource?type=datasource&action=view&datasourceUuid="+uuid+"&status="+status,
    			    }).
    			    then(function (response,status,headers) {
    		           return response;
@@ -179,9 +179,9 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 	  	  }
 	  	  return deferred.promise;
 	  	}/*End getDatasourceByType*/
-	this.getRegistryByDatasource=function(uuid){
+	this.getRegistryByDatasource=function(uuid,status){
 	  	  var deferred = $q.defer();
-	  	  RegisterSourceFacoty.findRegistryByDatasource(uuid).then(function(response){OnSuccess(response.data)},function(response){onError(response.data)});
+	  	  RegisterSourceFacoty.findRegistryByDatasource(uuid,status).then(function(response){OnSuccess(response.data)},function(response){onError(response.data)});
 	  	  var OnSuccess=function(response){
 	  		  //console.log(JSON.stringify(response))
 	  		  var result=[]
