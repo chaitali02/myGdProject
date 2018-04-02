@@ -1,5 +1,4 @@
 {
-    "_id" : ObjectId("59bbed9881d082efbbffb923"),
     "uuid" : "d04716df-e96a-419f-9118-c81342b47f87",
     "name" : "admin",
     "version" : "1464977196",
@@ -1317,7 +1316,7 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "2681570a-1a3b-44b8-b6ce-9b7fc61e3626",
+		 			"uuid" : "b61f03bb-a137-40e4-bc25-8540c077cac1",
 		 			"version" : null,
 		            "name" : "ExportPublish"
 				},
@@ -1326,7 +1325,7 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "2681570a-1a3b-44b8-b6ce-9b7fc61e3626",
+		 			"uuid" : "7d533daf-9e0d-4e31-b0dd-51e782db5111",
 		 			"version" : null,
 		            "name" : "ExportUnpublish"
 				},
@@ -2001,7 +2000,7 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "4d7f6d07-6179-47ca-8fc7-711f798d5d57",
+		 			"uuid" : "b5665142-9cf8-4222-8155-4d934f084c7b",
 		 			"version" : null,
 		            "name" : "ImportPublish"
 				},
@@ -2010,7 +2009,7 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "4d7f6d07-6179-47ca-8fc7-711f798d5d57",
+		 			"uuid" : "792ef114-4582-4077-aee2-b3d3ae0724be",
 		 			"version" : null,
 		            "name" : "ImportUnpublish"
 				},
@@ -4112,7 +4111,636 @@
 		            "name" : "VizpodView"
 				},
 				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "09e9c765-b649-4f5e-90a7-9d845349fd45",
+		 			"version" : null,
+		            "name" : "PredictView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "6a7920ed-0608-45cb-92df-2e26174508f7",
+		 			"version" : null,
+		            "name" : "PredictUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "29dbd2bc-8ff0-4a00-a13e-20f208e0d53d",
+		 			"version" : null,
+		            "name" : "PredictRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "be9e4a7c-0481-4feb-afec-dec448a3ed5b",
+		 			"version" : null,
+		            "name" : "PredictPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9593697f-843c-40b1-a122-b33828a3d8bb",
+		 			"version" : null,
+		            "name" : "PredictExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "cf4f05a7-2d43-4193-a423-bde703878c84",
+		 			"version" : null,
+		            "name" : "PredictExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0d5f1406-c0e6-47f2-891e-833eb03db234",
+		 			"version" : null,
+		            "name" : "PredictEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "53343da7-9f88-42ef-b91e-af341b87df43",
+		 			"version" : null,
+		            "name" : "PredictDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bfb28597-3e3a-4fb8-b475-69ce63d87c34",
+		 			"version" : null,
+		            "name" : "PredictClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "c72e195f-9fa7-489b-9b17-bcc9e104f9e8",
+		 			"version" : null,
+		            "name" : "PredictAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2f8f33b3-1b90-42d7-a3db-3550d67f496c",
+		 			"version" : null,
+		            "name" : "SimulateView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "dcf67ef6-97e9-4b8f-a492-4d61cb42e703",
+		 			"version" : null,
+		            "name" : "SimulateUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "70151378-875f-4594-8001-6745a0db2615",
+		 			"version" : null,
+		            "name" : "SimulateRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "6b75538f-8dff-468d-b4d3-c1980d3c4fce",
+		 			"version" : null,
+		            "name" : "SimulatePublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "aadc2293-d776-49ad-b991-acef5b82ced2",
+		 			"version" : null,
+		            "name" : "SimulateExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "71026085-6348-4364-be09-15d789208a79",
+		 			"version" : null,
+		            "name" : "SimulateExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b5f3b2ee-3d99-4e5d-be61-3d74c5481b9d",
+		 			"version" : null,
+		            "name" : "SimulateEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "acecb4a7-35f6-45b2-93d0-92c1f0390e6b",
+		 			"version" : null,
+		            "name" : "SimulateDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0a08751b-5683-49f6-971c-c1802c19e9a2",
+		 			"version" : null,
+		            "name" : "SimulateClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "22a5f821-f524-4ff9-b4aa-a65358b114f7",
+		 			"version" : null,
+		            "name" : "SimulateAdd"
+				},
+				"value" : null
+		},		
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "440c3165-1cea-42a1-bfb6-3f728b3323d7",
+		 			"version" : null,
+		            "name" : "TrainView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "13243591-212e-4fed-aa07-e153641f4373",
+		 			"version" : null,
+		            "name" : "TrainUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "09997f0d-1d6d-48f9-bbcd-1348cbff2d32",
+		 			"version" : null,
+		            "name" : "TrainRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2570a19d-fa2d-4397-986e-c44fb9e9b960",
+		 			"version" : null,
+		            "name" : "TrainPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "616342ec-a8dd-4321-b058-ec3bfc5b41cf",
+		 			"version" : null,
+		            "name" : "TrainExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "21adc6cd-2e22-4a68-b4e2-bf75be7081d0",
+		 			"version" : null,
+		            "name" : "TrainExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "d528766c-0496-4830-a5ff-7ee68cd2c7dd",
+		 			"version" : null,
+		            "name" : "TrainEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b9a9f293-e9b0-469c-9f7d-408267ea4822",
+		 			"version" : null,
+		            "name" : "TrainDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "e4a70a06-911a-433d-af52-9ee8ea8be756",
+		 			"version" : null,
+		            "name" : "TrainClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "3a2c3f20-85b4-4e2b-a1a8-e0432792ce0b",
+		 			"version" : null,
+		            "name" : "TrainAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b2724735-cba0-47ea-aefa-2fb425eaf38c",
+		 			"version" : null,
+		            "name" : "ReconView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9b789719-e5ee-4a29-b84f-a642ab7a6495",
+		 			"version" : null,
+		            "name" : "ReconUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "14fdc958-c3f5-4148-80b8-10798f87b7ef",
+		 			"version" : null,
+		            "name" : "ReconRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "1d0669b8-73a2-4082-bc1b-b50080066a5d",
+		 			"version" : null,
+		            "name" : "ReconPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "d6b075b5-4649-4d9f-b22d-a51e07ab0a1b",
+		 			"version" : null,
+		            "name" : "ReconExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "06c86986-c247-4bf3-be56-aee6ea080686",
+		 			"version" : null,
+		            "name" : "ReconExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "6dbc2a50-c132-42aa-9d8a-46f81826f467",
+		 			"version" : null,
+		            "name" : "ReconEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0874d3c3-b5cc-490d-a9be-f947e9872335",
+		 			"version" : null,
+		            "name" : "ReconDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "42e6848a-ea0a-40db-ab5e-472b5b381f68",
+		 			"version" : null,
+		            "name" : "ReconClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "20285cc7-8339-4ef3-9ace-59d6cee07767",
+		 			"version" : null,
+		            "name" : "ReconAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "f9e69dd0-be6f-4009-9078-c5e3c2689402",
+		 			"version" : null,
+		            "name" : "ReconexecView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "dfb38dc6-87ca-45a0-a565-833f24937218",
+		 			"version" : null,
+		            "name" : "ReconexecUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "f358ad83-f20e-4a49-ba48-8acc6ecd734e",
+		 			"version" : null,
+		            "name" : "ReconexecRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "830a5d2d-7d15-4208-b069-eca12b54c57a",
+		 			"version" : null,
+		            "name" : "ReconexecPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "90e8a50a-d6a8-435e-92d0-3259bc8535cc",
+		 			"version" : null,
+		            "name" : "ReconexecExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b1988484-1043-4fb0-bea0-4ec28f972c79",
+		 			"version" : null,
+		            "name" : "ReconexecExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "36e9ff95-7628-4443-8ec6-f9fdf1155074",
+		 			"version" : null,
+		            "name" : "ReconexecEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0eaeeedb-c1b1-4704-ac3b-466f80547504",
+		 			"version" : null,
+		            "name" : "ReconexecDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a89ec477-99e4-4ee2-a102-4afcde58a849",
+		 			"version" : null,
+		            "name" : "ReconexecClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "ce362b62-db65-4627-a31c-9bdcbfb6f26e",
+		 			"version" : null,
+		            "name" : "ReconexecAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a5706573-aaa1-4972-add2-05d1c9baf334",
+		 			"version" : null,
+		            "name" : "RecongroupView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a86ac2fa-5a1e-418f-b917-dacbd4402313",
+		 			"version" : null,
+		            "name" : "RecongroupUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b1e7db45-0f71-4514-b829-dc4c17ad8dad",
+		 			"version" : null,
+		            "name" : "RecongroupRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "7748cc6f-0a5b-4b20-b03a-f1a7330f71c5",
+		 			"version" : null,
+		            "name" : "RecongroupPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9e413c72-e70c-4eee-96ef-1ef6bf896ac5",
+		 			"version" : null,
+		            "name" : "RecongroupExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2a878f29-210a-43d9-b719-ecfc7ecfcb0d",
+		 			"version" : null,
+		            "name" : "RecongroupExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9125df8b-b037-465c-88df-2a190cccb517",
+		 			"version" : null,
+		            "name" : "RecongroupEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "8159f4a5-66f4-4c0b-8810-1727cfb42d07",
+		 			"version" : null,
+		            "name" : "RecongroupDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "136bdf76-5062-4c2b-9b9b-481d51fc131a",
+		 			"version" : null,
+		            "name" : "RecongroupClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "326db0be-c679-4df0-88d7-403f161a1ea1",
+		 			"version" : null,
+		            "name" : "RecongroupAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "87af5cb2-3f06-4c93-9244-90d59f23ed82",
+		 			"version" : null,
+		            "name" : "RecongroupexecView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2c8aecb5-bc3a-4de7-9fca-6be965a204c8",
+		 			"version" : null,
+		            "name" : "RecongroupexecUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a7d3eb3d-ad31-42b4-aac8-70e14e491e8d",
+		 			"version" : null,
+		            "name" : "RecongroupexecRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b584af90-de72-4dd1-b5c6-ed6fd29ed23e",
+		 			"version" : null,
+		            "name" : "RecongroupexecPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "eb1fdf34-b101-4a4a-8244-f80ac791fafd",
+		 			"version" : null,
+		            "name" : "RecongroupexecExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "11af9c7d-a3f6-42e8-ab67-f0edfa4adc20",
+		 			"version" : null,
+		            "name" : "RecongroupexecExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "3a833d52-2bb4-4a5f-a117-2dda1cdb36eb",
+		 			"version" : null,
+		            "name" : "RecongroupexecEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "a178d7c1-a8ee-45c1-81f3-ca7c48d4e6f8",
+		 			"version" : null,
+		            "name" : "RecongroupexecDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "8279caa5-03cb-4bc3-b99b-27108dee7f34",
+		 			"version" : null,
+		            "name" : "RecongroupexecClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2cd3494b-103e-4752-91e1-a6b368931e8f",
+		 			"version" : null,
+		            "name" : "RecongroupexecAdd"
+				},
+				"value" : null
 		}
-        	
     ]
 }

@@ -1,6 +1,7 @@
 {
+  "id": "5a9e5c2c2750526eb943a836",
   "uuid": "2054aca1-22a5-4488-9b8e-833f73b02fe8",
-  "version": "1519982009",
+  "version": "1520327724",
   "name": "randomforest_classifier_test",
   "desc": "Random Forest Classifier Test Model",
   "createdBy": {
@@ -12,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Mar 02 14:43:29 IST 2018",
+  "createdOn": "Tue Mar 06 14:45:24 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -27,22 +28,13 @@
       "value": null
     }
   ],
-  "source": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-      "version": null,
-      "name": "customer"
-    },
-    "value": null
-  },
   "features": [
     {
       "ref": {
         "type": "datapod",
-        "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
         "version": null,
-        "name": "customer"
+        "name": "test_model"
       },
       "value": null,
       "attrId": "0",
@@ -51,9 +43,9 @@
     {
       "ref": {
         "type": "datapod",
-        "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
         "version": null,
-        "name": "customer"
+        "name": "test_model"
       },
       "value": null,
       "attrId": "1",
@@ -62,9 +54,9 @@
     {
       "ref": {
         "type": "datapod",
-        "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
         "version": null,
-        "name": "customer"
+        "name": "test_model"
       },
       "value": null,
       "attrId": "2",
@@ -73,25 +65,47 @@
     {
       "ref": {
         "type": "datapod",
-        "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
         "version": null,
-        "name": "customer"
+        "name": "test_model"
       },
       "value": null,
-      "attrId": "10",
+      "attrId": "3",
       "attrName": "commute_distance_miles"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "4",
+      "attrName": "label"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
+        "version": null,
+        "name": "test_model"
+      },
+      "value": null,
+      "attrId": "5",
+      "attrName": "censor"
     }
   ],
   "label": {
     "ref": {
       "type": "datapod",
-      "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+      "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
       "version": null,
-      "name": "customer"
+      "name": "test_model"
     },
     "value": null,
-    "attrId": "0",
-    "attrName": "customer_id"
+    "attrId": "4",
+    "attrName": "label"
   },
   "algorithm": {
     "ref": {
@@ -106,5 +120,8 @@
   "labelRequired": null,
   "type": "SPARK",
   "customScript": null,
-  "scriptName": null
+  "scriptName": null,
+  "trainPercent" : 70,
+  "valPercent" : 30,
+  "customeFlag" : "N"
 }

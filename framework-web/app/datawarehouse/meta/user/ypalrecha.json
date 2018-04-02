@@ -40,6 +40,12 @@
 				"type": "group",
 				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
 			}
+		},
+		{
+			"ref": {
+				"type": "group",
+				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c3"
+			}
 		}
 	],
 	"roleInfo": [
