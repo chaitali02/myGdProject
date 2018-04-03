@@ -240,61 +240,63 @@ AdminModule.controller('MigrationAssistController', function($location,$state,$h
     });
   }
   $scope.okFile = function() {
-  $('#filemodal').modal('hide');
-  CommonService.getLatestByUuid($scope.selectuuid,$scope.type).then(function(response) {
-    onSuccessGetUuid(response.data)
-  });
-  var onSuccessGetUuid = function(response) {
-    var jsonobj = angular.toJson(response, true);
-    var data = new Blob([jsonobj], {
-      type: 'application/json;charset=utf-8'
+    $('#filemodal').modal('hide');
+    CommonService.getLatestByUuid($scope.selectuuid,$scope.type).then(function(response) {
+      onSuccessGetUuid(response.data)
     });
-    FileSaver.saveAs(data, response.name + '.json');
-    $scope.message = $scope.pageheading+" Downloaded Successfully";
-    notify.type='success',
-     notify.title= 'Success',
-    notify.content=$scope.message
-    $scope.$emit('notify', notify);
-  }
-}
-$scope.downloadFile = function(data) {
-  var uuid = data.uuid
-  var url=$location.absUrl().split("app")[0]
-  $http({
-    method: 'GET',
-    url: url+'admin/export/download?uuid=' + uuid,
-    responseType: 'arraybuffer'
-  }).success(function(data, status, headers) {
-    headers = headers();
-
-    var filename = headers['x-filename'];
-    var contentType = headers['content-type'];
-
-    var linkElement = document.createElement('a');
-    try {
-      var blob = new Blob([data], {
-        type: contentType
+    var onSuccessGetUuid = function(response) {
+      var jsonobj = angular.toJson(response, true);
+      var data = new Blob([jsonobj], {
+        type: 'application/json;charset=utf-8'
       });
-      var url = window.URL.createObjectURL(blob);
-
-      linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download", uuid+".zip");
-
-      var clickEvent = new MouseEvent("click", {
-        "view": window,
-        "bubbles": true,
-        "cancelable": false
-      });
-      linkElement.dispatchEvent(clickEvent);
-    } catch (ex) {
-      console.log(ex);
+      FileSaver.saveAs(data, response.name + '.json');
+      $scope.message = $scope.pageheading+" Downloaded Successfully";
+      notify.type='success',
+      notify.title= 'Success',
+      notify.content=$scope.message
+      $scope.$emit('notify', notify);
     }
-  }).error(function(data) {
-    console.log(data);
-  });
-};
+  }
+
+  $scope.downloadFile = function(data) {
+    var uuid = data.uuid
+    var url=$location.absUrl().split("app")[0]
+    $http({
+      method: 'GET',
+      url: url+'admin/export/download?uuid=' + uuid,
+      responseType: 'arraybuffer'
+    }).success(function(data, status, headers) {
+      headers = headers();
+
+      var filename = headers['x-filename'];
+      var contentType = headers['content-type'];
+
+      var linkElement = document.createElement('a');
+      try {
+        var blob = new Blob([data], {
+          type: contentType
+        });
+        var url = window.URL.createObjectURL(blob);
+
+        linkElement.setAttribute('href', url);
+        linkElement.setAttribute("download", uuid+".zip");
+
+        var clickEvent = new MouseEvent("click", {
+          "view": window,
+          "bubbles": true,
+          "cancelable": false
+        });
+        linkElement.dispatchEvent(clickEvent);
+      } catch (ex) {
+        console.log(ex);
+      }
+    }).error(function(data) {
+      console.log(data);
+    });
+  };
 })
 AdminModule.controller('DetailExportController',function($state,$stateParams,$rootScope,$scope,MigrationAssistServices,CommonService,$timeout,$filter,dagMetaDataService) {
+  
   $scope.showExport=true;
   $scope.showgraphdiv=false;
   $scope.isDependencyShow=false;
@@ -375,7 +377,14 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
       return $filter('filter')($scope.allmetatypename, query);
     });
   };
-
+  $scope.loadAllMetaType = function(query) {
+    return $timeout(function() {
+      return $filter('filter')($scope.allmetadata, query);
+    });
+  };
+  $scope.onAddMetaType=function(){
+   console.log($scope.metatype)
+  }
   $scope.submitExport = function() {
     var exportJson = {};
     $scope.isSubmitExportEnable = true;
@@ -458,64 +467,67 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
     enableFullRowSelection:$scope.selectFeature==true?false:true,
   };
 
-$scope.gridOptionsDatapod.columnDefs = [
- {
-  name: 'uuid',
-  displayName: 'uuid',
-  visible:false,
-  headerCellClass: 'text-center'
-},
- ,{
-   name: 'type',
-   displayName: 'Type',
-   headerCellClass: 'text-center'
- },
- {
-   name: 'name',
-   displayName: 'Name',
-   headerCellClass: 'text-center'
- },
- {
-   name: 'version',
-   cellClass:'text-center',
-   displayName:'Version',
-   headerCellClass: 'text-center'
- },
+  $scope.gridOptionsDatapod.columnDefs = [
+  {
+    name: 'uuid',
+    displayName: 'uuid',
+    visible:false,
+    headerCellClass: 'text-center'
+  },
+  ,{
+    name: 'type',
+    displayName: 'Type',
+    headerCellClass: 'text-center'
+  },
+  {
+    name: 'name',
+    displayName: 'Name',
+    headerCellClass: 'text-center'
+  },
+  {
+    name: 'version',
+    cellClass:'text-center',
+    displayName:'Version',
+    headerCellClass: 'text-center'
+  },
 
-];
-if($stateParams.mode!="true"){
-  $scope.gridOptionsDatapod.columnDefs[5]={
-    name: 'status',
-    displayName: 'Validate Status',
-    headerCellClass: 'text-center',
-    cellTemplate:'<div class="ui-grid-cell-contents text-center" ng-show="row.entity.status"><i style="color:{{row.entity.status==\'true\'?\'green\':row.entity.status==\'false\'?\'red\':\'blue\'}};font-size:16px;" class="{{row.entity.status!=\'true\' && row.entity.status!=\'false\'  ? \'fa fa-minus-circle\' : row.entity.status!=\'false\' ? \'fa fa-check-circle\' : \'fa fa-times-circle\'}}" aria-hidden="true"></i></div>'
+  ];
+  if($stateParams.mode!="true"){
+    $scope.gridOptionsDatapod.columnDefs[5]={
+      name: 'status',
+      displayName: 'Validate Status',
+      headerCellClass: 'text-center',
+      cellTemplate:'<div class="ui-grid-cell-contents text-center" ng-show="row.entity.status"><i style="color:{{row.entity.status==\'true\'?\'green\':row.entity.status==\'false\'?\'red\':\'blue\'}};font-size:16px;" class="{{row.entity.status!=\'true\' && row.entity.status!=\'false\'  ? \'fa fa-minus-circle\' : row.entity.status!=\'false\' ? \'fa fa-check-circle\' : \'fa fa-times-circle\'}}" aria-hidden="true"></i></div>'
+    }
   }
-}
-$scope.gridOptionsDatapod.onRegisterApi = function(gridApi){
- $scope.gridApi = gridApi;
- gridApi.selection.on.rowSelectionChanged($scope,function(row){
-      $scope.selectButtonClick(row.entity);
-   });
 
-   gridApi.selection.on.rowSelectionChangedBatch($scope,function(row){
-          $scope.selectButtonClick(row.entity);
-     });
+  $scope.gridOptionsDatapod.onRegisterApi = function(gridApi){
+  $scope.gridApi = gridApi;
+  gridApi.selection.on.rowSelectionChanged($scope,function(row){
+        $scope.selectButtonClick(row.entity);
+    });
 
- $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
-};
-$scope.getGridStyle = function() {
- var style = {
-   'margin-top': '10px',
-   'margin-bottom': '10px',
- }
- if ($scope.filteredRows && $scope.filteredRows.length >0) {
-   style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 50 : 400) + 50) + 'px';
- }
- else{
-   style['height']="100px";
- }
- return style;
-}
+    gridApi.selection.on.rowSelectionChangedBatch($scope,function(row){
+            $scope.selectButtonClick(row.entity);
+      });
+
+  $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+  };
+
+  $scope.getGridStyle = function() {
+  var style = {
+    'margin-top': '10px',
+    'margin-bottom': '10px',
+  }
+  if ($scope.filteredRows && $scope.filteredRows.length >0) {
+    style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 50 : 400) + 50) + 'px';
+  }
+  else{
+    style['height']="100px";
+  }
+  return style;
+  }
+
   /*Start showImportPage*/
   $scope.showPage=function(){
     $scope.showImport=true;
@@ -570,6 +582,7 @@ $scope.getGridStyle = function() {
     $scope.allExportMetaInfo = metaInfoArray;
     $scope.gridOptionsDatapod.data=metaInfoArray;
   }
+
   $scope.validate=function(){
     var importJson={}
     $scope.isSubmitEnable=false;
@@ -608,9 +621,11 @@ $scope.getGridStyle = function() {
     var onError = function(response) {
     }
   }
+
   $scope.onIncludeDep=function () {
-      $scope.isSubmitEnable=false;
+    $scope.isSubmitEnable=false;
   }
+
   $scope.selectButtonClick=function(row, $event){
     $scope.isValidate=true;
     $scope.isSubmitEnable=false;
