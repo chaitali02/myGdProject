@@ -852,11 +852,25 @@ public class DatapodServiceImpl {
 	@SuppressWarnings("unlikely-arg-type")
 	public void upload(MultipartFile csvFile, String datapodUuid) {		
 		String csvFileName = csvFile.getOriginalFilename();
-		String uploadPath = null;
-		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
-		Datasource datasource = null;		
 		try {
+			//patern matching for csv filename
+			Pattern p = Pattern.compile("[ !@#$%&*()_+=|<>?{}\\[\\]~-]");
+			Matcher match = p.matcher(csvFileName);
+			/*while(match.find()){
+			String s = match.group();
+			csvFileName = csvFileName.replaceAll("\\"+s, "");
+			}*/
+			boolean z = match.find();
+			if (z == true || csvFileName.contains(" ")) 
+				throw new Exception("CSV file name contains white space or special character");
+			else
+				 System.out.println("There is no special char.");
+
+			String uploadPath = null;
+			/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+					? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
+			Datasource datasource = null;		
+
 			//csvFileName = csvFileName.substring(StringUtils.lastIndexOf(csvFileName, "/") + 1, csvFileName.length());
 			uploadPath = hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
 			// Copy file to server location
