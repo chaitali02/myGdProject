@@ -21,25 +21,25 @@ mv $TOMCAT_HOME/webapps/framework.war /tmp/framework.war.bkp
 
 echo
 echo "Pulling master branch..."
-cd $GIT_HOME/projectX
+cd $GIT_HOME/inferyx
 git stash
 git pull
 
 echo
 echo "Copying config files..."
-cp deploy/conf/$HOSTNAME/pom.xml .
-cp deploy/conf/$HOSTNAME/core-site.xml src/main/resources
-cp deploy/conf/$HOSTNAME/hdfs-site.xml src/main/resources
-cp deploy/conf/$HOSTNAME/hive-site.xml src/main/resources
-cp deploy/conf/$HOSTNAME/yarn-site.xml src/main/resources
-cp deploy/conf/$HOSTNAME/log4j.properties src/main/resources
-cp deploy/conf/$HOSTNAME/framework.properties src/main/resources
-cp deploy/conf/$HOSTNAME/framework_ui.properties src/main/webapp/app/resources/framework.properties
+cp framework-web/deploy/conf/$HOSTNAME/pom.xml .
+cp framework-web/deploy/conf/$HOSTNAME/core-site.xml framework-web/src/main/resources
+cp framework-web/deploy/conf/$HOSTNAME/hdfs-site.xml framework-web/src/main/resources
+cp framework-web/deploy/conf/$HOSTNAME/hive-site.xml framework-web/src/main/resources
+cp framework-web/deploy/conf/$HOSTNAME/yarn-site.xml framework-web/src/main/resources
+cp framework-web/deploy/conf/$HOSTNAME/log4j.properties framework-web/src/main/resources
+cp framework-web/deploy/conf/$HOSTNAME/framework.properties framework-web/src/main/resources
+cp framework-web/deploy/conf/$HOSTNAME/framework_ui.properties framework-web/src/main/webapp/app/resources/framework.properties
 
 echo
 echo "Building and Deploying war..."
 mvn clean install
-cp target/framework.war $TOMCAT_HOME/webapps
+cp framework-web/target/framework.war $TOMCAT_HOME/webapps
 
 echo
 echo "Taking mongodb backup..."
@@ -48,7 +48,7 @@ mv /home/inferyx/mongodump/framework /home/inferyx/mongodump/framework.$(date +%
 
 echo
 echo "Refreshing metadata..."
-cd $GIT_HOME/projectX/scripts
+cd $GIT_HOME/inferyx/framework-web/scripts
 ./run.sh
 
 echo
