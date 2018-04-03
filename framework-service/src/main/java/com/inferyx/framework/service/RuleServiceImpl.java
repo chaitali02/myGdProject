@@ -487,9 +487,13 @@ public class RuleServiceImpl extends RuleTemplate {
 		try {
 			limit = offset + limit;
 			offset = offset + 1;
-			boolean requestIdExistFlag = false;
-			StringBuilder orderBy = new StringBuilder();
+
 			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(ruleExecUUID, ruleExecVersion);
+			
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+			
+			/*boolean requestIdExistFlag = false;
+			StringBuilder orderBy = new StringBuilder();
 			dataStoreServiceImpl.setRunMode(runMode);
 			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(),
 					datastore.getVersion(), runMode);
@@ -506,10 +510,10 @@ public class RuleServiceImpl extends RuleTemplate {
 			}
 			exec = execFactory.getExecutor(execContext.toString());
 			if (requestId == null|| requestId.equals("null") || requestId.isEmpty()) {
-				if (datasource.getType().toLowerCase().toLowerCase().contains("spark")
-						|| datasource.getType().toLowerCase().toLowerCase().contains("file")
-						|| datasource.getType().toLowerCase().toLowerCase().contains("hive")
-						|| datasource.getType().toLowerCase().toLowerCase().contains("impala")) {
+				if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
 					data = exec.executeAndFetch("Select * from (Select Row_Number() Over(ORDER BY 1) as rownum, * from "
 							+ tableName + ")as tab where rownum >= " + offset + " AND rownum <= " + limit, appUuid);
 				} else {
@@ -540,25 +544,25 @@ public class RuleServiceImpl extends RuleTemplate {
 						}
 						if (requestIdExistFlag) {
 							data = requestMap.get(requestId);
-							/*if (datasource.getType().toLowerCase().toLowerCase().contains("spark")
-									|| datasource.getType().toLowerCase().toLowerCase().contains("file")
-									|| datasource.getType().toLowerCase().toLowerCase().contains("hive")
-									|| datasource.getType().toLowerCase().toLowerCase().contains("impala")) {
-								data = exec.executeAndFetch("Select * from " + tabName + " where rownum >= " + offset
-										+ " AND rownum <= " + limit, appUuid);
-							} else {
-								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-									if (runMode.equals(Mode.ONLINE))
-										data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
-												appUuid);
-									else
-										data = exec.executeAndFetch(
-												"Select * from " + tableName + " where  rownum<" + limit, appUuid);
-								else {
-									data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
-											appUuid);
-								}
-							}*/
+//							if (datasource.getType().toLowerCase().toLowerCase().contains("spark")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("file")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("hive")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("impala")) {
+//								data = exec.executeAndFetch("Select * from " + tabName + " where rownum >= " + offset
+//										+ " AND rownum <= " + limit, appUuid);
+//							} else {
+//								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+//									if (runMode.equals(Mode.ONLINE))
+//										data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+//												appUuid);
+//									else
+//										data = exec.executeAndFetch(
+//												"Select * from " + tableName + " where  rownum<" + limit, appUuid);
+//								else {
+//									data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+//											appUuid);
+//								}
+//							}
 						} else {
 							if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
@@ -584,50 +588,51 @@ public class RuleServiceImpl extends RuleTemplate {
 
 							tabName = requestId.replace("-", "_");
 							requestMap.put(requestId, data);
-							/*if (datasource.getType().toLowerCase().toLowerCase().contains("spark")
-									|| datasource.getType().toLowerCase().toLowerCase().contains("file")
-									|| datasource.getType().toLowerCase().toLowerCase().contains("hive")
-									|| datasource.getType().toLowerCase().toLowerCase().contains("impala")) {
-								data = exec.executeAndFetch("Select * from " + tabName + " where rownum >= " + offset
-										+ " AND rownum <= " + limit, appUuid);
-							} else {
-								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-									if (runMode.equals(Mode.ONLINE))
-										data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
-												appUuid);
-									else
-										data = exec.executeAndFetch(
-												"Select * from " + tableName + " where  rownum<" + limit, appUuid);
-								else {
-									data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
-											appUuid);
-								}
-							}*/
+//							if (datasource.getType().toLowerCase().toLowerCase().contains("spark")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("file")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("hive")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("impala")) {
+//								data = exec.executeAndFetch("Select * from " + tabName + " where rownum >= " + offset
+//										+ " AND rownum <= " + limit, appUuid);
+//							} else {
+//								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+//									if (runMode.equals(Mode.ONLINE))
+//										data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+//												appUuid);
+//									else
+//										data = exec.executeAndFetch(
+//												"Select * from " + tableName + " where  rownum<" + limit, appUuid);
+//								else {
+//									data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+//											appUuid);
+//								}
+//							}
 						}
 					//}
 				}else {
-					if (datasource.getType().toLowerCase().toLowerCase().contains("spark")
-							|| datasource.getType().toLowerCase().toLowerCase().contains("file")
-							|| datasource.getType().toLowerCase().toLowerCase().contains("hive")
-							|| datasource.getType().toLowerCase().toLowerCase().contains("impala")) {
-						data = exec.executeAndFetch("Select * from " + tableName + " where rownum >= " + offset
+					if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+							|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+							|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+						data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum >= " + offset
 								+ " AND rownum <= " + limit, appUuid);
 					} else {
 						if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 							if (runMode.equals(Mode.ONLINE))
-								data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
 										appUuid);
 							else
 								data = exec.executeAndFetch(
-										"Select * from " + tableName + " where  rownum<" + limit, appUuid);
+										"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, appUuid);
 						else {
-							data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+							data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
 									appUuid);
 						}
 					}
 				}
-			}
+			}*/
 		} catch (Exception e) {
+			e.printStackTrace();
 			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
 					.getRequestAttributes();
 			if (requestAttributes != null) {

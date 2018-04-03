@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -837,12 +838,17 @@ public class MapServiceImpl {
 	}
 	
 	public List<java.util.Map<String, Object>> getMapResults(String mapExecUUID, String mapExecVersion, int offset, int limit,
-			String sortBy, String order, String requestId, Mode runMode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			String sortBy, String order, String requestId, Mode runMode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
 		String appUuid = commonServiceImpl.getApp().getUuid();
 		List<java.util.Map<String, Object>> data = new ArrayList<>();
 		limit = offset + limit;
 		offset = offset + 1;
-		boolean requestIdExistFlag = false;
+
+		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(mapExecUUID, mapExecVersion);
+		
+		data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+		
+		/*boolean requestIdExistFlag = false;
 		StringBuilder orderBy = new StringBuilder();
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(mapExecUUID, mapExecVersion);
 		String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
@@ -917,7 +923,7 @@ public class MapServiceImpl {
 				}
 			}
 		}
-	}
+	}*/
 		return data;
 	}
 	

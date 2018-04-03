@@ -226,7 +226,12 @@ public class ReconServiceImpl extends RuleTemplate {
 		try {
 			limit = offset+limit;
 			offset = offset+1;
-			String appUuid = null;
+
+			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reconExecUUID, reconExecVersion);
+			
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+			
+			/*String appUuid = null;
 			boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();
 			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(reconExecUUID, reconExecVersion);
@@ -327,7 +332,7 @@ public class ReconServiceImpl extends RuleTemplate {
 						}
 					}
 				}
-			}
+			}*/
 		}catch (Exception e) {
 			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 			if(requestAttributes != null) {

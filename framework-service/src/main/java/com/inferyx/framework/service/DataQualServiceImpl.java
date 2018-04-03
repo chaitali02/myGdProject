@@ -561,8 +561,13 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			limit = offset+limit;
-			offset = offset+1;
-			String appUuid = null;
+			offset = offset+1;			
+
+			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(dataQualExecUUID, dataQualExecVersion);
+			
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+			
+			/*String appUuid = null;
 			boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();
 			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(dataQualExecUUID, dataQualExecVersion);
@@ -663,7 +668,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 						}
 					}
 				}
-			}
+			}*/
 		}catch (Exception e) {
 			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 			if(requestAttributes != null) {
