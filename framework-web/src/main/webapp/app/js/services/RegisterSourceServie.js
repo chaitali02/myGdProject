@@ -193,16 +193,17 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 	  			resultjson.dese=response[i].dese;
 				resultjson.registeredOn=response[i].registeredOn;
 				resultjson.registeredBy=response[i].registeredBy;
+				
 	  			if(response[i].status == "UnRegistered"){
-
+					resultjson.isDisabled=false;
 	  				resultjson.status="Not Registered"
 	  			}
 	  			else{
+					resultjson.isDisabled=true;
 	  				resultjson.status=response[i].status
-	  			}
-
-	  			resultjson.selected="false"
-	  				result[i]=resultjson
+				}	
+					resultjson.selected=false;
+					result[i]=resultjson
 
 	  		  }
 
@@ -227,7 +228,7 @@ AdminModule.service("RegisterSourceService",function($q,RegisterSourceFacoty){
 	             }
 
 	  		  }*/
-
+              console.log(result)
 	  		  deferred.resolve({
 				    data:result
 		      });
