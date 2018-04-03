@@ -965,6 +965,7 @@ public class DataStoreServiceImpl {
 		return result;
 	}*/
 
+	/********************** UNUSED **********************/
 	/*public List<DataStore> resolveName(List<DataStore> datastore) {
 		List<DataStore> dataStoreList = new ArrayList<>();
 		for (DataStore dStore : datastore) {
