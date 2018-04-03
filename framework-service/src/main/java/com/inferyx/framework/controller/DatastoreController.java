@@ -46,8 +46,8 @@ public class DatastoreController {
 	@RequestMapping(value = "/getResult", method = RequestMethod.GET)
 	public List<Map<String, Object>> getResult(@RequestParam(value = "uuid") String datastoreUuid,
 											   @RequestParam(value = "version") String datastoreVersion,
-												@RequestParam(value="offset", defaultValue="0") int offset, 
-												@RequestParam(value="limit", defaultValue="200") int limit,
+												@RequestParam(value="offset", defaultValue="0", required=false) int offset, 
+												@RequestParam(value="limit", defaultValue="200", required=false) int limit,
 												@RequestParam(value="sortBy", required=false) String sortBy,
 												@RequestParam(value="order", required=false) String order, 
 												@RequestParam(value="requestId", required=false) String requestId,
