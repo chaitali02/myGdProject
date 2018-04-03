@@ -1170,4 +1170,62 @@ public class ModelServiceImpl {
 		runModelServiceImpl.call();
 		return trainExec;
 	}
+	
+public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVersion, HttpServletResponse response,Mode runMode) throws Exception {
+
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion,
+				MetaType.trainExec.toString());
+		MetaIdentifierHolder dependsOn = trainExec.getDependsOn();
+		String fileName = trainExec.getUuid() + "_" + trainExec.getVersion() + "_" + dependsOn.getRef().getVersion()
+				+ ".log";
+
+		String filePath = Helper.getPropertyValue("framework.model.log.path") + "/" + fileName;
+
+		try {
+			response.setContentType("text/plain");
+			response.setHeader("Content-disposition", "attachment");
+
+			response.setHeader("filename", "" + fileName + ".log");
+
+			File file = new File(filePath);
+
+			if (file.exists()) {
+				DownloadExec downloadExec = new DownloadExec();
+
+				downloadExec.setBaseEntity();
+				downloadExec.setLocation(filePath);
+				downloadExec.setDependsOn(new MetaIdentifierHolder(
+						new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)));
+
+				OutputStream out = response.getOutputStream();
+				FileInputStream in = new FileInputStream(file);
+				byte[] buffer = new byte[Integer.parseInt(file.length() + "")];
+				int length;
+				while ((length = in.read(buffer)) > 0) {
+					out.write(buffer, 0, length);
+				}
+				commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);
+				in.close();
+				out.flush();
+			} else {
+				logger.info("Requested file " + "/" + filePath + "/" + fileName + ".log" + " not found.");
+				response.setStatus(300);
+				throw new FileNotFoundException();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			response.setStatus(500);
+			throw new IOException();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			response.setStatus(500);
+			throw new IOException();
+		}
+
+		return response;
+
+	}
+
 }

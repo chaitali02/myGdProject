@@ -43,6 +43,8 @@ public class CSVRegister extends DataSourceRegister {
 				registryList.get(i).setStatus("Registered");
 				Datapod dp = datapodServiceImpl.findOneByName(registryList.get(i).getName());
 				registryList.get(i).setRegisteredOn(dp.getCreatedOn());
+				registryList.get(i).setRegisteredBy(dp.getCreatedBy().getRef().getName());
+
 			}
 		}
  		return registryList;

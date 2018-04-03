@@ -2,19 +2,22 @@
 AdminModule = angular.module('AdminModule');
 AdminModule.controller('RegisterSourceController', function ($stateParams,$filter,$rootScope, $scope, RegisterSourceService,uiGridConstants) {
   $scope.isSearchDisable = true;
+  $scope.isSelectAllDisabled=true;
   $scope.isRSDisable=true;
   $scope.searchButtonText = "Register";
   $scope.gridOptions = {
     paginationPageSizes: null,
     enableGridMenu: true,
-    rowHeight: 45,
-      columnDefs: [{
-      displayName: 'Id',
-      name: 'id',
-      minWidth: 250,
-      visible: false,
-      cellClass: 'text-center',
-      headerCellClass: 'text-center'
+    rowHeight: 40,
+      columnDefs: [
+      
+      {
+        
+        name: "selected",
+        maxWidth: 40,
+        visible: true,
+        headerCellTemplate:'<div class="ui-grid-cell-contents" style="padding-top:9px;"><input  type="checkbox" style="width: 30px;height:16px;" ng-disabled="grid.appScope.isSelectAllDisabled" ng-model="grid.appScope.selectedAllRow" ng-change="grid.appScope.OnSelectAllRow()"/></div>',
+        cellTemplate:'<div class="ui-grid-cell-contents"  style="padding-top:2px;padding-left:4px;"><input type="checkbox"  ng-disabled="row.entity.isDisabled" style="width:20px;height:16px;" ng-model="row.entity.selected" ng-change="grid.appScope.onSelectRow()"/></div>'
       },{
         displayName: 'Id',
         name: 'id',
@@ -73,12 +76,12 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
   };
   $scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.gridApi = gridApi;
-    gridApi.selection.on.rowSelectionChanged($scope,function(row){
-      $scope.selectButtonClick(row.entity);
-   });
-   gridApi.selection.on.rowSelectionChangedBatch($scope,function(row){
-      $scope.selectButtonClick(row.entity);
-    });
+  //   gridApi.selection.on.rowSelectionChanged($scope,function(row){
+  //     $scope.selectButtonClick(row.entity);
+  //  });
+  //  gridApi.selection.on.rowSelectionChangedBatch($scope,function(row){
+  //     $scope.selectButtonClick(row.entity);
+  //   });
 
     $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
   };
@@ -146,6 +149,10 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       $scope.isDataSourceInpogress = false;
       $scope.originalData = response
       $scope.gridOptions.data=response;
+      if($scope.selectStatus =="Registered" || response.length ==0)
+        $scope.isSelectAllDisabled=true;
+      else
+        $scope.isSelectAllDisabled=false;
     }
     var onError = function (response) {
       $scope.isDataSourceInpogress = false;
@@ -155,19 +162,55 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
     }
   }
 
-  $scope.selectButtonClick=function(row, $event){
-    console.log($scope.gridApi.selection.getSelectedRows())
-    if($scope.gridApi.selection.getSelectedRows().length >0){
+  // $scope.selectButtonClick=function(row, $event){
+  //   console.log($scope.gridApi.selection.getSelectedRows())
+  //   if($scope.gridApi.selection.getSelectedRows().length >0){
+  //     $scope.isRSDisable=false;
+  //   }else{$scope.isRSDisable=true;}
+  // }
+  $scope.OnSelectAllRow = function() {
+    angular.forEach($scope.gridOptions.data, function(source) {
+      if(source.status !="Registered")
+      source.selected = $scope.selectedAllRow;
+    });
+    console.log($scope.getSelectedRow());
+    if($scope.getSelectedRow().length > 0){
       $scope.isRSDisable=false;
-    }else{$scope.isRSDisable=true;}
+    }else{
+      $scope.isRSDisable=true;
+      //$scope.selectedAllRow = false
+    }
   }
+  
+  $scope.getSelectedRow= function() {
+    //$scope.selectedAllRow = false;
+    var newDataList = [];
+    angular.forEach($scope.gridOptions.data, function(selected) {
+      if (selected.selected) {
+        newDataList.push(selected);
+      }
+    });
+    return newDataList;
+  }
+  $scope.onSelectRow = function(index, data) {
+    console.log($scope.getSelectedRow());
+    if($scope.getSelectedRow().length > 0){
+      $scope.isRSDisable=false;
+    }else{
+      $scope.isRSDisable=true;
+      //$scope.selectedAllRow = false
+    }
+  }
+
 
    $scope.submitRegisgterSource = function () {
     var registerSourceArray = [];
     $scope.isRSDisable=true;
     var count = 0;
     $scope.searchButtonText = "Registering";
-    var selectRegisterSoucre=$scope.gridApi.selection.getSelectedRows()
+    //var selectRegisterSoucre=$scope.gridApi.selection.getSelectedRows()
+    
+    var selectRegisterSoucre=$scope.getSelectedRow();
     for (var i = 0; i < selectRegisterSoucre.length; i++) {
       var registerSourceJson = {};
       $scope.gridOptions.data[selectRegisterSoucre[i].id-1].status="Registering"
@@ -185,12 +228,17 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
      // console.log(JSON.stringify(response))
       $scope.searchButtonText = "Register";
       $scope.dataLoading = false;
+      $scope.selectedAllRow = false;
       for (var i = 0; i < response.length; i++) {
         var id = response[i].id - 1
         $scope.gridOptions.data[id].registeredOn = response[i].registeredOn;
         $scope.gridOptions.data[id].desc = response[i].desc;
         $scope.gridOptions.data[id].status = response[i].status;
-        $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
+        $scope.gridOptions.data[id].selected= false;
+        $scope.gridOptions.data[id].isDisabled=true;
+        $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
+        //$scope.gridOptions.data.splice(i,1);
+       // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
       }
       notify.type = 'success',
       notify.title = 'Success',
