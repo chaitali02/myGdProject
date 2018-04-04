@@ -118,7 +118,7 @@ public class AdminController {
 	}	
 	
 	@RequestMapping(value = "/getAllByMetaList", method = RequestMethod.GET)
-	public List<Object> getAllByMetaList(@RequestParam(value = "type") String[] type,
+	public Map<String, List<Object>> getAllByMetaList(@RequestParam(value = "type") String[] type,
 										 @RequestParam(value = "action", required = false) String action){
 		return commonServiceImpl.getAllByMetaList(type);
 		

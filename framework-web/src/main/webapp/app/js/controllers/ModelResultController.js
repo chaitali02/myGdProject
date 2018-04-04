@@ -248,14 +248,22 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
             $scope.isPMMLDownload=response.savePmml =="Y" ? false:true; 
         } 
     }
+    
+    $scope.getModelByTrainExec=function(){
+        ModelService.getModelByTrainExec($scope.modelDetail.uuid, $scope.modelDetail.version,'modelExec').then(function(response){ onSuccessGetMdoelByTrainExec(response.data)});
+        var onSuccessGetMdoelByTrainExec = function(response) {
+            $scope.modelData=response; 
+        } 
+    }
 
     $scope.getTrainResult = function(data) {
         var uuid = data.uuid;
         var version = data.version;
         $scope.modelDetail={};
         $scope.modelDetail.uuid=uuid;
-        $scope.modelDetail.version=version
+        $scope.modelDetail.version=version;
         $scope.getAlgorithumByTrainExec();
+        $scope.getModelByTrainExec();
         ModelService.getModelResult(uuid, version).then(function(response){ onSuccessGetModelResult(response.data)});
         var onSuccessGetModelResult = function(response) {
             $scope.modelresult = response;
@@ -289,7 +297,8 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
         var version = data.version;
         $scope.modelDetail={};
         $scope.modelDetail.uuid=uuid;
-        $scope.modelDetail.version=version
+        $scope.modelDetail.version=version;
+
         ModelService.getSimulateResult(uuid, version).then(function(response){ onSuccessGetSimulateResult(response.data)},function(response){OnError(response.data)});
         var onSuccessGetSimulateResult = function(response) {
             $scope.showProgress = false;
@@ -397,6 +406,7 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
     $scope.downloadMoldeResult = function() {
         var baseurl = $location.absUrl().split("app")[0];
         var url;
+       
         if($stateParams.type =="predict"){
             url=baseurl+"model/predict/download?action=view&predictExecUUID="+$scope.modelDetail.uuid+"&predictExecVersion="+$scope.modelDetail.version+"&mode=BATCH";
         }
@@ -404,6 +414,10 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
             url=baseurl+"model/simulate/download?action=view&simulateExecUUID="+$scope.modelDetail.uuid+"&simulateExecVersion="+$scope.modelDetail.version+"&mode=''";
         }
         else if($stateParams.type =="train"){
+            if($scope.modelData.customeFlag =="N"){
+                $scope.downloadTrainData();
+            return ;
+            } 
             url=baseurl+"model/train/download?action=view&trainExecUUID="+$scope.modelDetail.uuid+"&trainExecVersion="+$scope.modelDetail.version+"&mode=''";
         }
         $http({method : 'GET',
@@ -424,8 +438,8 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
                     });
                     var url = window.URL.createObjectURL(blob);
                     linkElement.setAttribute('href', url);
-                    linkElement.setAttribute("download", $scope.modelDetail.uuid+".xls");
-                    //LoadXML("showPMML",url);
+                    //linkElement.setAttribute("download", $scope.modelDetail.uuid+".xls");
+                    linkElement.setAttribute("download",filename);
                     var clickEvent = new MouseEvent(
                         "click", {
                             "view" : window,
@@ -440,6 +454,28 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
             console.log();
         });
     };
+    $scope.downloadTrainData=function(){
+        
+        var linkElement = document.createElement('a');
+        try {
+            var blob = new Blob([ $scope.modelresult ], {
+                type: "text/xml"
+            });
+            var url = window.URL.createObjectURL(blob);
+            linkElement.setAttribute('href', url);
+            linkElement.setAttribute("download", $scope.modelDetail.uuid+".txt");
+            var clickEvent = new MouseEvent(
+                "click", {
+                    "view" : window,
+                    "bubbles" : true,
+                    "cancelable" : false
+                });
+            linkElement.dispatchEvent(clickEvent);
+
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
 
     var myVarResult;
     $scope.autoRefreshResultOnChange=function () {

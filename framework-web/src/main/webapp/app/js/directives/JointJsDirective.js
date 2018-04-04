@@ -97,7 +97,9 @@
                   
                     $('#resultsloader').hide();
                     if(response.data.length >0){
-                    	  $('#resultswrapper').show();
+                        $('#resultswrapper').show();
+                        if(params.type == "train")
+                        $scope.trainData=response.data;
                     	renderTable(response.data);}
                     else{  $('#resultswrapper').hide();
                     	 $('#errorMsg').show();
@@ -182,7 +184,58 @@
           var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
           $scope.gridOptions.data=params.slice(offset,limit);
         }
-
+        
+        $scope.downloadTrainData=function(uuid){
+          var linkElement = document.createElement('a');
+          try {
+              var blob = new Blob([$scope.trainData], {
+                  type: "text/xml"
+              });
+              var url = window.URL.createObjectURL(blob);
+              linkElement.setAttribute('href', url);
+              linkElement.setAttribute("download", uuid+".txt");
+              var clickEvent = new MouseEvent(
+                  "click", {
+                      "view" : window,
+                      "bubbles" : true,
+                      "cancelable" : false
+                  });
+              linkElement.dispatchEvent(clickEvent);
+  
+          } catch (ex) {
+              console.log(ex);
+          }
+        }
+        $scope.downloaddata=function(url,uuid){
+          $http({
+            method: 'GET',
+            url:url,
+            responseType: 'arraybuffer'
+          }).success(function(data, status, headers) {
+            headers = headers();  
+            var filename = headers['filename'];
+            var contentType = headers['content-type']; 
+            var linkElement = document.createElement('a');
+            try {
+              var blob = new Blob([data], {
+              type: contentType
+            });
+            var url = window.URL.createObjectURL(blob);
+              linkElement.setAttribute('href', url);
+              linkElement.setAttribute("download",filename);
+              var clickEvent = new MouseEvent("click", {
+                "view": window,
+                "bubbles": true,
+                "cancelable": false
+              });
+              linkElement.dispatchEvent(clickEvent);
+            } catch (ex) {
+              console.log(ex);
+            }
+          }).error(function(data) {
+            console.log(data);
+        }); 
+        }
         window.downloadPiplineFile = function() {               
           var uuid = $scope.downloadDetail.uuid;
           var version=$scope.downloadDetail.version;
@@ -198,53 +251,47 @@
             var url;
             if($scope.downloadDetail.type =="profile"){
               url=baseurl+"profile/download?action=view&profileExecUUID="+uuid+"&profileExecVersion="+version+"&mode="+mode;
+              $scope.downloaddata(url,uuid)
             }
             else if($scope.downloadDetail.type =="dataqual"){
               url=baseurl+"dataqual/download?action=view&dataQualExecUUID="+uuid+"&dataQualExecVersion="+version+"&mode="+mode;
+              $scope.downloaddata(url,uuid);
             }
             else if($scope.downloadDetail.type =="map"){
               url=baseurl+"map/download?action=view&mapExecUUID="+uuid+"&mapExecVersion="+version+"&mode="+mode;
+              $scope.downloaddata(url,uuid)
             }
             else if($scope.downloadDetail.type =="recon"){
               url=baseurl+"recon/download?action=view&reconExecUUID="+uuid+"&reconExecVersion="+version+"&mode="+mode;
+              $scope.downloaddata(url,uuid)
             }
             else if($scope.downloadDetail.type =="predict"){
               url=baseurl+"/model/predict/download?action=view&predictExecUUID="+uuid+"&predictExecVersion="+version+"&mode="+mode;
+              $scope.downloaddata(url,uuid)
             }
             else if($scope.downloadDetail.type =="simulate"){
               url=baseurl+"/model/simulate/download?action=view&simulateExecUUID="+uuid+"&simulateExecVersion="+version+"&mode="+mode;
+              $scope.downloaddata(url,uuid)
             }
             else if($scope.downloadDetail.type =="train"){
-              url=baseurl+"/model/train/download?action=view&trainExecUUID="+uuid+"&trainExecVersion="+version+"&mode="+mode;
-            }
-            $http({
-              method: 'GET',
-              url:url,
-              responseType: 'arraybuffer'
-            }).success(function(data, status, headers) {
-              headers = headers();  
-              var filename = headers['x-filename'];
-              var contentType = headers['content-type']; 
-              var linkElement = document.createElement('a');
-              try {
-                var blob = new Blob([data], {
-                type: contentType
+              url=baseurl+"model/getModelByTrainExec?action=view&uuid="+uuid+"&version="+version;
+              $http({
+                method: 'GET',
+                url:url,
+                
+              }).success(function(data, status, headers) {
+                if(data.customeFlag =="N"){
+                  $scope.downloadTrainData(uuid);
+                  return false;
+                }
+                else{
+                  url=baseurl+"/model/train/download?action=view&trainExecUUID="+uuid+"&trainExecVersion="+version+"&mode="+mode;
+                  $scope.downloaddata(url,uuid)
+                }
               });
-              var url = window.URL.createObjectURL(blob);
-                linkElement.setAttribute('href', url);
-                linkElement.setAttribute("download", uuid+".xls");
-                var clickEvent = new MouseEvent("click", {
-                  "view": window,
-                  "bubbles": true,
-                  "cancelable": false
-                });
-                linkElement.dispatchEvent(clickEvent);
-              } catch (ex) {
-                console.log(ex);
-              }
-            }).error(function(data) {
-              console.log(data);
-          });      
+            
+            }
+                 
          });
         };
       },

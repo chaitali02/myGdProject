@@ -135,7 +135,7 @@ ReconModule.factory('ReconRuleFactory', function ($http, $location) {
         var url = $location.absUrl().split("app")[0]
         return $http({
           method: 'POST',
-          url: url + "recon/execute?action=execute&type=recon&uuid=" + uuid + "&uuid=" + version,
+          url: url + "recon/execute?action=execute&type=recon&uuid=" + uuid + "&version=" + version,
           headers: {
             'Accept': '*/*',
             'content-Type': "application/json",

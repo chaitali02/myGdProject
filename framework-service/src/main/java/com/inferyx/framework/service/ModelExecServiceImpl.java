@@ -742,4 +742,17 @@ public class ModelExecServiceImpl {
 		return response;
 
 	}
+	
+	public Model getModelByTrainExec(String trainExecUUID, String trainExecVersion) throws JsonProcessingException {
+
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUUID, trainExecVersion,
+				MetaType.trainExec.toString());
+
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(),
+				trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
+
+		return (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(),
+				train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+
+	}
 }
