@@ -237,7 +237,7 @@
     }
 
     this.SaveFile=function(filename,data,type){
-      var url="metadata/file?action=edit&fileName="+filename+"&type="+type
+      var url="admin/upload?action=edit&fileName="+filename+"&type="+type+"&fileType=zip"
   		var deferred = $q.defer();
   	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
     	    var onSuccess=function(response){
