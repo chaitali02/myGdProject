@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,19 +19,29 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Export;
+import com.inferyx.framework.domain.FileType;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Property;
+import com.inferyx.framework.domain.UploadExec;
 
 @Service
 public class AdminServiceImpl {	
 	@Resource(name="taskThreadMap")
-	ConcurrentHashMap taskThreadMap;	
+	ConcurrentHashMap taskThreadMap;
+	@Autowired
+	CommonServiceImpl<?> commonServiceImpl;	
 	
 	static final Logger logger = Logger.getLogger(AdminServiceImpl.class);
 
@@ -100,5 +111,23 @@ public class AdminServiceImpl {
 	}
 	private File createPropertiesFile(String relativeFilePath) throws URISyntaxException {
 	    return new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()), relativeFilePath);
+	}
+
+	public String upload(MultipartFile multiPartFile, String filename, String fileType) throws FileNotFoundException, IOException, JSONException, ParseException {
+
+		FileType fType = Helper.getFileType(fileType);
+		String directoryPath = Helper.getFileDirectoryByFileType(fType);
+		String location = directoryPath + "/" + filename;
+		File dest = new File(location);
+		multiPartFile.transferTo(dest);
+		
+		UploadExec uploadExec=new UploadExec();
+		uploadExec.setFileName(filename);
+		uploadExec.setBaseEntity();
+		uploadExec.setLocation(location);
+		//uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(metaType), metaUuid, metaVersion)));
+		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+		
+		return dest.getAbsolutePath();
 	}
 }
