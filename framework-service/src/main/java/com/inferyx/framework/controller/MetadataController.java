@@ -402,7 +402,7 @@ public class MetadataController {
 		return datapodServiceImpl.createAndLoad(csvFileName, runMode);
 	}
 
-	@RequestMapping(value = "/file", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/file", method = RequestMethod.POST)
 	public @ResponseBody String getFileContain(HttpServletRequest request,
 			@RequestParam("file") MultipartFile multiPartFile, @RequestParam("fileName") String filename,
 			@RequestParam(value = "type", required = false) String type,
@@ -425,7 +425,7 @@ public class MetadataController {
 			result=mapper.writeValueAsString(importServiceImpl.uploadFile(multiPartFile,filename));
 		}
 		return result;
-	}
+	}*/
 	
 
 	@RequestMapping(value = "/uploadProfileImage", method = RequestMethod.POST)

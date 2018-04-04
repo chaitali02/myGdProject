@@ -1,5 +1,6 @@
 package com.inferyx.framework.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -18,16 +19,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inferyx.framework.dao.IDatasourceDao;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Export;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Import;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.service.AdminServiceImpl;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ExportServiceImpl;
 import com.inferyx.framework.service.ImportServiceImpl;
+import com.inferyx.framework.service.SecurityServiceImpl;
 
 @RestController
 @RequestMapping(value="/admin")
@@ -41,6 +49,10 @@ public class AdminController {
 	ImportServiceImpl importServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	IDatasourceDao iDatasourceDao;
+	@Autowired
+	private SecurityServiceImpl securityServiceImpl;
 
 	@RequestMapping(value="/getTaskThreadMap", method=RequestMethod.GET)
     public ConcurrentHashMap getTaskThreadMap() throws Exception {
@@ -110,6 +122,24 @@ public class AdminController {
 										 @RequestParam(value = "action", required = false) String action){
 		return commonServiceImpl.getAllByMetaList(type);
 		
+	}
+	
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public @ResponseBody String getFileContain(HttpServletRequest request,
+											   @RequestParam("file") MultipartFile multiPartFile, 
+											   @RequestParam("fileName") String filename,
+											   @RequestParam(value = "fileType") String fileType,
+											   @RequestParam(value = "type", required = false) String type,
+											   @RequestParam(value = "action", required = false) String action)
+											throws IOException, JSONException, ParseException {
+		String result = null;
+		if(fileType.equalsIgnoreCase(FileType.ZIP.toString())){
+			ObjectMapper mapper=new ObjectMapper();
+			result = mapper.writeValueAsString(importServiceImpl.uploadFile(multiPartFile, filename));
+		} else {
+			result = adminServiceImpl.upload(multiPartFile, filename, fileType);
+		}
+		return result;
 	}
 }
 
