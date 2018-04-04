@@ -1913,6 +1913,25 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         }
     })
 
+    .state('filemanager', {
+        url:"/Admin/FileManager",
+        templateUrl: "views/file-manager.html",
+        data: { pageTitle: 'Admin'},
+        controller: "",
+        resolve: {
+            deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name: 'Admin',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+					files: [
+						'js/controllers/FileMangegerController.js',
+                        'js/services/FileManagerServie.js'
+                    ]
+                });
+            }]
+        }
+    })
+
 	
 	.state('migrationassist', {
         url:"/Admin/MigrationAssist?type",

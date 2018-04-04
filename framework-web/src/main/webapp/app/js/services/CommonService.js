@@ -389,6 +389,7 @@
           result.name = response[i].name;
           result.createdBy = response[i].createdBy;
           result.createdOn = response[i].createdOn;
+          result.active = response[i].active;
           if(response[i].status !=null && response[i].status.length > 0){
             if (response[i].status[len].stage == "NotStarted") {
               result.status = "Not Started"

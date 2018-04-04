@@ -194,41 +194,7 @@
                 </li>
             </ul>
         </li>
-        <!--Datapod Menu-->
-      <!-- <li class="nav-item">
-          <a href="#" class="nav-link nav-toggle">
-                <i class="{{Datapoddata.class}}"></i>
-                <span class="title">{{Datapoddata.caption}}</span>
-                <span class="arrow"></span>
-            </a>
-            <ul class="sub-menu submenucheck">
-                <li class="nav-item" data-ng-repeat="datapoddatasubmenu in Datapoddata.submenu | orderBy:'caption' | filter:searchtext"    ng-click="selectMeta(Datapoddata.name,datapoddatasubmenu.name,datapoddatasubmenu.uuid,datapoddatasubmenu.caption)">
-                    <a ui-sref="{{Datapoddata.name}}({id:'{{datapoddatasubmenu.uuid}}'})" class="nav-link">
-                        <span class="title">{{datapoddatasubmenu.caption}}</span>
-                    </a>
-                </li>
-            </ul>
-        </li> -->
-
-
-        <!--  <li class="nav-item">
-          <a href="#" class="nav-link nav-toggle">
-                <i class="{{Vizpoddata.class}}"></i>
-                <span class="title">{{Vizpoddata.caption}}</span>
-                <span class="arrow"></span>
-            </a>
-            <ul class="sub-menu">
-                <li class="nav-item" data-ng-repeat="vizpoddatasubmenu in Vizpoddata.submenu | orderBy:'caption' | filter:searchtext "    ng-click="selectMeta(Vizpoddata.name,vizpoddatasubmenu.name,vizpoddatasubmenu.uuid,vizpoddatasubmenu.caption)">
-                   ({type:'{{datasubmenu.name}}'})
-                    <a ui-sref="{{Vizpoddata.name}}" class="nav-link">
-                     <span class="title">{{vizpoddatasubmenu.caption}}</span>
-                     </a>
-
-
-                </li>
-                </ul>
-
-        </li> -->
+      
         <!--Admind Menu-->
         <li class="nav-item" ng-show="role=='admin'">
           <a href="#" class="nav-link nav-toggle">
@@ -248,11 +214,7 @@
                      <span class="title">Register Source</span>
                      </a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a ui-sref="migrationassist" class="nav-link">
-                     <span class="title">Migration Assist</span>
-                     </a>
-                </li> -->
+              
                 <li class="nav-item">
                     <a ui-sref="migrationassist" class="nav-link">
                      <span class="title">Migration Assist</span>
@@ -263,13 +225,11 @@
                      <span class="title">Settings</span>
                      </a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a ui-sref="registersource1" class="nav-link">
-                     <span class="title">Register Source1s</span>
-                     </a>
-
-
-                </li> -->
+                <li class="nav-item">
+                    <a ui-sref="filemanager" class="nav-link">
+                        <span class="title">File Manager</span>
+                    </a>
+                </li>
             </ul>
         </li>
 
