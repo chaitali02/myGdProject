@@ -794,123 +794,141 @@ public class VizpodServiceImpl {
 			datastoreVersion, execParams, null, rowLimit, offset, limit, sortBy, order, requestId);
 	}*/
 	
+	@SuppressWarnings("finally")
 	public VizpodResultHolder getVizpodResults(String vizpodUUID, String vizpodVersion, ExecParams execParams, VizExec vizExec, 
 			 									int rowLimit, int offset, int limit, String sortBy, String order, String requestId, 
 												Mode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException 
 	{
-		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/
-		//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
-		List<Map<String, Object>> data = new ArrayList<>();
-		//Vizpod vizpod = iVizpodDao.findOneByUuidAndVersion(appUuid,vizpodUUID, vizpodVersion);
-		Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUUID, vizpodVersion, MetaType.vizpod.toString());
-		List<String> orderList = new ArrayList<>();
-		List<String> sortList = new ArrayList<>();
-		if(StringUtils.isNotBlank(order))
-		{	
-		 orderList = Arrays.asList(order.split("\\s*,\\s*"));
-		}
-		if(StringUtils.isNotBlank(sortBy))
-		{
-		 sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
-		}
-		
-		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		StringBuilder orderBy = new StringBuilder();
-		boolean requestIdExistFlag = false;
-		boolean flag = true;
-		if(execParams!=null && execParams.getFilterInfo() != null){
-			for (AttributeRefHolder filterInfo : execParams.getFilterInfo()) {
-				vizpod.getFilterInfo().add(filterInfo);
-				}
-			}
-	
-		
-		/**** Get sql and update in vizpodexec - START ****/
-		if (vizExec == null) {
-			vizExec = new VizExec();
-			vizExec.setBaseEntity();
-			MetaIdentifierHolder vizpodRef = new MetaIdentifierHolder();
-			vizpodRef.setRef(new MetaIdentifier(MetaType.vizpod,vizpodUUID,vizpodVersion));
-			vizExec.setDependsOn(vizpodRef);
-		}
-		vizExec.setExecParams(execParams);
-		try {
-			vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, runMode,false));
-			logger.info(vizExec.getSql());
-			vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		/**** Get sql and update in vizpodexec - END ****/
-		//DataFrame df = sqlContext.sql(vizExec.getSql());
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		limit = offset + limit;
-		offset = offset + 1;
-		
-//		if (sortBy.equals(null) || sortBy.isEmpty() && order.equals(null) || order.isEmpty() && requestId.equals(null) || requestId.isEmpty()) {
-		if (StringUtils.isNotBlank(sortBy) || StringUtils.isNotBlank(order) ) {
-			for (int i = 0; i < sortList.size(); i++) {
-				orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));
+		List<Map<String, Object>> data = new ArrayList<>();
+		try {
+			/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/
+			//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
+			//Vizpod vizpod = iVizpodDao.findOneByUuidAndVersion(appUuid,vizpodUUID, vizpodVersion);
+			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUUID, vizpodVersion, MetaType.vizpod.toString());
+			List<String> orderList = new ArrayList<>();
+			List<String> sortList = new ArrayList<>();
+			if(StringUtils.isNotBlank(order))
+			{	
+			 orderList = Arrays.asList(order.split("\\s*,\\s*"));
 			}
-			if (requestId != null) {
-				String tabName = null;
-				for (Map.Entry<String, String> entry : requestMap.entrySet()) {
-					String id = entry.getKey();
-					if (id.equals(requestId)) {
-						requestIdExistFlag = true;
+			if(StringUtils.isNotBlank(sortBy))
+			{
+			 sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
+			}
+			
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+			StringBuilder orderBy = new StringBuilder();
+			boolean requestIdExistFlag = false;
+			boolean flag = true;
+			if(execParams!=null && execParams.getFilterInfo() != null){
+				for (AttributeRefHolder filterInfo : execParams.getFilterInfo()) {
+					vizpod.getFilterInfo().add(filterInfo);
 					}
 				}
-				if (requestIdExistFlag) {
-					tabName = requestMap.get(requestId);
-					if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
-						data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
-					else
-						if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-							data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum <= " + limit, null);
-						else
-							data = exec.executeAndFetch("SELECT * FROM " + tabName + " LIMIT " + limit, null);
-				} else {
-					if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
-						data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM ("
-									+ vizExec.getSql() + ") tn ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", null);
-					tabName = requestId.replace("-", "_");
-					requestMap.put(requestId, tabName);
-					if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
-						data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+		
+			
+			/**** Get sql and update in vizpodexec - START ****/
+			if (vizExec == null) {
+				vizExec = new VizExec();
+				vizExec.setBaseEntity();
+				MetaIdentifierHolder vizpodRef = new MetaIdentifierHolder();
+				vizpodRef.setRef(new MetaIdentifier(MetaType.vizpod,vizpodUUID,vizpodVersion));
+				vizExec.setDependsOn(vizpodRef);
+			}
+			vizExec.setExecParams(execParams);
+			try {
+				vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, runMode,false));
+				logger.info(vizExec.getSql());
+				vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			/**** Get sql and update in vizpodexec - END ****/
+			//DataFrame df = sqlContext.sql(vizExec.getSql());
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			limit = offset + limit;
+			offset = offset + 1;
+			
+//			if (sortBy.equals(null) || sortBy.isEmpty() && order.equals(null) || order.isEmpty() && requestId.equals(null) || requestId.isEmpty()) {
+			if (StringUtils.isNotBlank(sortBy) || StringUtils.isNotBlank(order) ) {
+				for (int i = 0; i < sortList.size(); i++) {
+					orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));
+				}
+				if (requestId != null) {
+					String tabName = null;
+					for (Map.Entry<String, String> entry : requestMap.entrySet()) {
+						String id = entry.getKey();
+						if (id.equals(requestId)) {
+							requestIdExistFlag = true;
+						}
+					}
+					if (requestIdExistFlag) {
+						tabName = requestMap.get(requestId);
+						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+							data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
 						else
 							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
 								data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum <= " + limit, null);
 							else
 								data = exec.executeAndFetch("SELECT * FROM " + tabName + " LIMIT " + limit, null);
+					} else {
+						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+							data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM ("
+										+ vizExec.getSql() + ") tn ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", null);
+						tabName = requestId.replace("-", "_");
+						requestMap.put(requestId, tabName);
+						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+							data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+							else
+								if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+									data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum <= " + limit, null);
+								else
+									data = exec.executeAndFetch("SELECT * FROM " + tabName + " LIMIT " + limit, null);
+					}
 				}
-			}
-		} else {
-			if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-					|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
-					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (" + vizExec.getSql()
-				+ ") tn ) AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
-			else
-				if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-					data = exec.executeAndFetch("SELECT * FROM ("+vizExec.getSql() + ") vizpod WHERE rownum <= " + limit, null);
+			} else {
+				if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+						data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (" + vizExec.getSql()
+					+ ") tn ) AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
 				else
-					data = exec.executeAndFetch("SELECT * FROM ("+vizExec.getSql() + ") vizpod LIMIT " + limit, null);
-		}
-		/**** Get sql and update in vizpodexec - START ****/
-		/*df.cache();*/
-		MetaIdentifierHolder vizpodRef = new MetaIdentifierHolder();
-		vizpodRef.setRef(new MetaIdentifier(MetaType.vizpod,vizpodUUID,vizpodVersion));
-		vizExec.setDependsOn(vizpodRef);
-		//vizExecServiceImpl.save(vizExec);
-		commonServiceImpl.save(MetaType.vizExec.toString(), vizExec);
-		/**** Get sql and update in vizpodexec - END ****/
-		VizpodResultHolder resultHolder = new VizpodResultHolder(data, vizExec);
-		return resultHolder;
+					if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+						data = exec.executeAndFetch("SELECT * FROM ("+vizExec.getSql() + ") vizpod WHERE rownum <= " + limit, null);
+					else
+						data = exec.executeAndFetch("SELECT * FROM ("+vizExec.getSql() + ") vizpod LIMIT " + limit, null);
+			}
+			/**** Get sql and update in vizpodexec - START ****/
+			/*df.cache();*/
+			MetaIdentifierHolder vizpodRef = new MetaIdentifierHolder();
+			vizpodRef.setRef(new MetaIdentifier(MetaType.vizpod,vizpodUUID,vizpodVersion));
+			vizExec.setDependsOn(vizpodRef);
+			//vizExecServiceImpl.save(vizExec);
+			commonServiceImpl.save(MetaType.vizExec.toString(), vizExec);
+			/**** Get sql and update in vizpodexec - END ****/
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+				if(message.contains("Table or view not found")) {
+					message = "Table or view not found.";
+				}
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table or View does not exists.");
+			throw new RuntimeException((message != null) ? message : "Table or View does not exists.");			 		
+		} finally {
+			VizpodResultHolder resultHolder = new VizpodResultHolder(data, vizExec);
+			return resultHolder;
+		}		
 	}
 	
 	

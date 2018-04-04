@@ -2,6 +2,7 @@ package com.inferyx.framework.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -36,7 +37,7 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 
-public class RunMapServiceImpl implements Runnable {
+public class RunMapServiceImpl implements Callable<TaskHolder> {
 	@Autowired
 	ConnectionFactory connFactory;
 	
@@ -60,9 +61,47 @@ public class RunMapServiceImpl implements Runnable {
 	private	Engine engine;
 	protected Helper helper;
 	protected SessionContext sessionContext;
+	private String name;
+	private MetaType execType;
 	
 	static final Logger logger = Logger.getLogger(RunMapServiceImpl.class);
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the execType
+	 */
+	public MetaType getExecType() {
+		return execType;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param execType the execType to set
+	 */
+	public void setExecType(MetaType execType) {
+		this.execType = execType;
+	}
+
 	/**
 	 * @return the sessionContext
 	 */
@@ -226,18 +265,26 @@ public class RunMapServiceImpl implements Runnable {
 	public void setHelper(Helper helper) {
 		this.helper = helper;
 	}
-
 	@Override
-	public void run() {
+	public TaskHolder call() throws Exception {
 		try {
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
 			execute();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			//commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution failed.");
+			throw new Exception((message != null) ? message : "Map execution failed.");
 		}
-	}	
-	
+		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(execType, mapExec.getUuid(), mapExec.getVersion()));
+		return taskHolder;
+	}
+		
 //	public void run() {
 //		try {
 //			executeSql();
@@ -365,14 +412,21 @@ public class RunMapServiceImpl implements Runnable {
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Completed);			
 //			statusList = commonServiceImpl.setMetaStatus(mapExec.getUuid(), mapExec.getVersion(), MetaType.mapExec, Status.Stage.Completed);
 //			mapExec.setStatus(statusList);
-//			mapExecServiceImpl.save(mapExec);	
+//			mapExecServiceImpl.save(mapExec);
 		} catch (Exception e) {
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Failed);			
 //			statusList = commonServiceImpl.setMetaStatus(mapExec.getUuid(), mapExec.getVersion(), MetaType.mapExec, Status.Stage.Failed);
 //			mapExec.setStatus(statusList);
 //			iMapExecDao.save(mapExec);
 			e.printStackTrace();
-			throw new RuntimeException();			
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution failed.");
+			throw new RuntimeException((message != null) ? message : "Map execution failed.");			
 		} 		
 	}
 	

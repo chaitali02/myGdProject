@@ -606,67 +606,79 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	
 	@SuppressWarnings({ "unused" })
 	public void execute() throws Exception {
-		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-		List<Status> statusList = trainExec.getStatusList();
-		trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
-		if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-				|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-			customLogger.writeLog(this.getClass(), trainExec.getStatusList().size() > 0
-					? "Latest status: " + trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
-					: "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-		}
-		boolean isSuccess = false;
-		Object result = null;
-		if (!modelType.equalsIgnoreCase(ExecContext.R.toString())
-				&& !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-			Algorithm algorithm = null;
-			if (algorithmVersion != null) {
-				algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithmUUID, algorithmVersion,
-						MetaType.algorithm.toString());
-			} else {
-				algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(algorithmUUID, MetaType.algorithm.toString());
-			}
-
-
-			String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
-			String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(),
-					trainExec.getVersion());
-			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(),
-					trainExec.getVersion());
-
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath,
-					paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
-			dataStoreServiceImpl.setRunMode(Mode.BATCH);
-			dataStoreServiceImpl.create((String) result, trainName,
-					new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()),
-					new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
-					trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
-			trainExec.setResult(resultRef);
-			if (result != null)
-				isSuccess = true;
-			else
-				isSuccess = false;
-		}
-		if (modelType != null && (modelType.equalsIgnoreCase(ExecContext.R.toString())
-				|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString()))) {
-			isSuccess = modelServiceImpl.executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(),
-					trainExec.getVersion(), null);
-			// customLogger.writeLog(this.getClass(), "Script executed ....", logPath);
-		}
-
-		if (!isSuccess) {
-			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
+		try {
+			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+			List<Status> statusList = trainExec.getStatusList();
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
 			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(),
-						trainExec.getStatusList().size() > 0
-								? "Latest status: "
-										+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
-								: "Status list is empty",
-						logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size() > 0
+						? "Latest status: " + trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
+						: "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 			}
-		}
+			boolean isSuccess = false;
+			Object result = null;
+			if (!modelType.equalsIgnoreCase(ExecContext.R.toString())
+					&& !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				Algorithm algorithm = null;
+				if (algorithmVersion != null) {
+					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithmUUID, algorithmVersion,
+							MetaType.algorithm.toString());
+				} else {
+					algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(algorithmUUID, MetaType.algorithm.toString());
+				}
+
+
+				String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
+				String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(),
+						trainExec.getVersion());
+				String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(),
+						trainExec.getVersion());
+
+				Datasource datasource = commonServiceImpl.getDatasourceByApp();
+				IExecutor exec = execFactory.getExecutor(datasource.getType());
+				result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath,
+						paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
+				dataStoreServiceImpl.setRunMode(Mode.BATCH);
+				dataStoreServiceImpl.create((String) result, trainName,
+						new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()),
+						new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+						trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+				trainExec.setResult(resultRef);
+				if (result != null)
+					isSuccess = true;
+				else
+					isSuccess = false;
+			}
+			if (modelType != null && (modelType.equalsIgnoreCase(ExecContext.R.toString())
+					|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString()))) {
+				isSuccess = modelServiceImpl.executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(),
+						trainExec.getVersion(), null);
+				// customLogger.writeLog(this.getClass(), "Script executed ....", logPath);
+			}
+
+			if (!isSuccess) {
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
+				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+					customLogger.writeLog(this.getClass(),
+							trainExec.getStatusList().size() > 0
+									? "Latest status: "
+											+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
+									: "Status list is empty",
+							logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution failed.");
+			throw new RuntimeException((message != null) ? message : "Train execution failed.");			 		
+		}		
 	}
 }

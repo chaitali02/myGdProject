@@ -424,8 +424,8 @@ public class DataStoreServiceImpl {
 		} 
 		datastore = findLatestByMeta(dataStoreMetaUUID, dataStoreMetaVer);
 		if (datastore == null) {
-			logger.error("Datastore is not available for this datapod");
-			throw new Exception("No data found for "+dp.getName()+" datapod.");
+			logger.error("No data found for datapod "+dp.getName()+".");
+			throw new Exception("No data found for datapod "+dp.getName()+".");
 		}
 		return getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
 	}

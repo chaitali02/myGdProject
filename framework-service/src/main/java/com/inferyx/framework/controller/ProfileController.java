@@ -97,9 +97,7 @@ public class ProfileController {
 			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws IOException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException, NullPointerException, ParseException, SQLException, JSONException {
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		Mode runMode = Helper.getExecutionMode(mode);
 		return profileServiceImpl.getProfileResults(profileExecUUID, profileExecVersion, offset, limit, sortBy, order,
 				requestId, runMode);

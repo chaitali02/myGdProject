@@ -359,12 +359,36 @@ public class DataQualServiceImpl  extends RuleTemplate{
 
 	public DataQualExec create(String dataQualUUID, String dataQualVersion,
 			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
-		return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, null, refKeyMap, datapodList, dagExec);
+		try {
+			return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, null, refKeyMap, datapodList, dagExec);
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create DQExec.");
+			throw new Exception((message != null) ? message : "Can not create DQExec.");
+		}
 	}
 	
 	public DataQualExec create(String dataQualUUID, String dataQualVersion, DataQualExec dataQualExec,
 			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
-		return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, dataQualExec, refKeyMap, datapodList, dagExec);
+		try {
+			return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, dataQualExec, refKeyMap, datapodList, dagExec);
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create DQExec.");
+			throw new Exception((message != null) ? message : "Can not create DQExec.");
+		}
 	}
 	
 	public DataQualExec execute(String dataqualUUID, String dataqualVersion, DataQualExec dataqualExec,
@@ -378,15 +402,27 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		Datapod targetDatapod = (Datapod) daoRegister
 				.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
 		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
-				targetDatapod.getVersion());
-		return (DataQualExec) super.execute(dataqualUUID, dataqualVersion, MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec, dataqualGroupExec, targetDatapodKey, taskList, runMode);
+				targetDatapod.getVersion());		
+		try {
+			return (DataQualExec) super.execute(dataqualUUID, dataqualVersion, MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec, dataqualGroupExec, targetDatapodKey, taskList, runMode);
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Data Quality execution failed.");
+			throw new Exception((message != null) ? message : "Data Quality execution failed.");
+		}
 	}
 	
 	@Override
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
-		return execute(uuid, version, metaExecutor, (DataQualExec) baseRuleExec, (DataQualGroupExec)baseGroupExec, taskList, runMode);
+			return execute(uuid, version, metaExecutor, (DataQualExec) baseRuleExec, (DataQualGroupExec)baseGroupExec, taskList, runMode);
 	}
 	
 	
@@ -557,7 +593,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 	}
 
-	public List<Map<String, Object>> getDQResults(String dataQualExecUUID, String dataQualExecVersion, int offset, int limit, String sortBy, String order, String requestId, Mode runMode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, SQLException, JSONException {
+	public List<Map<String, Object>> getDQResults(String dataQualExecUUID, String dataQualExecVersion, int offset, int limit, String sortBy, String order, String requestId, Mode runMode) throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			limit = offset+limit;
@@ -670,23 +706,15 @@ public class DataQualServiceImpl  extends RuleTemplate{
 				}
 			}*/
 		}catch (Exception e) {
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-			if(requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if(response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(401);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				}else
-					logger.info("HttpServletResponse response is \""+null+"\"");
-			}else
-				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
 	}
@@ -812,6 +840,14 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		}catch(Exception e){
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.Failed);
 			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.");
+			throw new Exception((message != null) ? message : "Failed data quality parsing.");
 		}
 		return dataQualExec;
 	}
