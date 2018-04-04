@@ -27,6 +27,8 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
+import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -332,4 +334,23 @@ public class MapExecServiceImpl {
 			e.printStackTrace();
 		}
 	}			
+
+	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
+
+		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
+		MetaIdentifierHolder resultHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getResult").invoke(exec);
+		com.inferyx.framework.domain.DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
+				resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion(), MetaType.datastore.toString());
+		MetaIdentifier mi = new MetaIdentifier();
+		ExecStatsHolder execHolder = new ExecStatsHolder();
+		mi.setType(MetaType.datastore);
+		mi.setUuid(resultHolder.getRef().getUuid());
+		mi.setVersion(resultHolder.getRef().getVersion());
+		execHolder.setRef(mi);
+		execHolder.setNumRows(dataStore.getNumRows());
+		execHolder.setPersistMode(dataStore.getPersistMode());
+		execHolder.setRunMode(dataStore.getRunMode());
+		return execHolder;
+	}
+
 }
