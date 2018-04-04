@@ -51,10 +51,10 @@ padding: 20px 0 0;}
           <i class="fa fa-cogs"></i>{{caption}} Result
         </div>
         <div class="tools">
-         <a title="Download PMML" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
+         <!-- <a title="Download PMML" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
             <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-          </a>
-          <a title="Download" ng-click="downloadMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='predict'|| type=='simulate'">
+          </a> -->
+          <a title="Download" ng-click="downloadMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;">
               <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
           <a title="Show PMML" ng-click="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
@@ -136,10 +136,12 @@ padding: 20px 0 0;}
             <i class="fa fa-cogs"></i>PMML Result
           </div>
           <div class="tools">  
-           <a title="Download PMML" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload">
+           <a title="Download" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload">
               <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
-             
+            <a title="Show PMML" ng-click="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="true"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
+              <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a> 
             <a  title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>

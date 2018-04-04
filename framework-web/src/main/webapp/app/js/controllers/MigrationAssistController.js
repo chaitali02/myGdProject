@@ -333,7 +333,7 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
       for(var i=0;i<response.metaInfo.length;i++){
         var metainfo={};
         metainfo.id=response.metaInfo[i].ref.uuid;
-        metainfo.name=response.metaInfo[i].ref.name;
+        metainfo.name=response.metaInfo[i].ref.type+"-"+response.metaInfo[i].ref.name;
         metaInfoArray[i]=metainfo;
       }
       $scope.metaNameTags=metaInfoArray;
@@ -343,6 +343,7 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
     MigrationAssistServices.getAll().then(function(response){onSuccessGetAll(response.data)},function(response) {onError(response.data)});
     var onSuccessGetAll = function(response) {
       $scope.allmetadata = response
+      console.log($scope.allmetadata)
     }
     var onError = function(response) {
       $scope.isDataInpogress = true;
@@ -352,24 +353,33 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
       $scope.spinner = false;
     }
   }
-  $scope.getAllNames = function() {
-    $scope.metaNameTags = null;
-    $scope.isDisabled = true
-    if($scope.metatype.name != null) {
-      $scope.spinner = true;
-      CommonService.getAllLatest($scope.metatype.name).then(function(response){onSuccessgetAllLatest(response.data)},function(response){onError(response.data)});
-      var onSuccessgetAllLatest = function(response){
-        $scope.allmetatypename = response
-        $scope.isDisabled = false;
-        $scope.isSubmitExportEnable = false;
-      }
-      var onError = function(response) {
-        $scope.isDataInpogress = true;
-        $scope.isDataError = true;
-        $scope.msgclass = "errorMsg";
-        $scope.datamessage = "Some Error Occurred";
-        $scope.spinner = false;
-      }
+  // $scope.getAllNames = function() {
+  //   $scope.metaNameTags = null;
+  //   $scope.isDisabled = true
+  //   if($scope.metatype.name != null) {
+  //     $scope.spinner = true;
+  //     CommonService.getAllLatest($scope.metatype.name).then(function(response){onSuccessgetAllLatest(response.data)},function(response){onError(response.data)});
+  //     var onSuccessgetAllLatest = function(response){
+  //       $scope.allmetatypename = response
+  //       $scope.isDisabled = false;
+  //       $scope.isSubmitExportEnable = false;
+  //     }
+  //     var onError = function(response) {
+  //       $scope.isDataInpogress = true;
+  //       $scope.isDataError = true;
+  //       $scope.msgclass = "errorMsg";
+  //       $scope.datamessage = "Some Error Occurred";
+  //       $scope.spinner = false;
+  //     }
+  //   }
+  // }
+
+  $scope.getAllLetestByMetaList=function(type){
+    MigrationAssistServices.getAllByMetaList(type).then(function(response){onSuccessGetAll(response.data)},function(response) {onError(response.data)});
+    var onSuccessGetAll = function(response) {
+      $scope.allmetatypename=response;
+      $scope.isSubmitExportEnable = false;
+      console.log(response)
     }
   }
   $scope.loadAllMetaName = function(query) {
@@ -382,9 +392,44 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
       return $filter('filter')($scope.allmetadata, query);
     });
   };
-  $scope.onAddMetaType=function(){
-   console.log($scope.metatype)
+  $scope.onAddMetaType=function(event){
+    $timeout(function() {
+    console.log($scope.metatype)
+    var type=[];
+    for(var i=0;i<$scope.metatype.length;i++){
+      type[i]=$scope.metatype[i].text;
+    }
+    console.log(type);
+    $scope.getAllLetestByMetaList(type);
+   });
   }
+
+  $scope.onRemoveMetaType=function(event){
+    $timeout(function() {
+    console.log($scope.metatype)
+    var type=[];
+    for(var i=0;i<$scope.metatype.length;i++){
+      type[i]=$scope.metatype[i].text;
+    }
+    console.log(type);
+    $scope.getAllLetestByMetaList(type);
+    $scope.removeTagMetaInfo(type);
+    if(type.length >0){
+      
+    }
+   });
+  }
+
+  $scope.removeTagMetaInfo=function(type){
+    var newDataList=[];
+    angular.forEach($scope.metaNameTags, function(item){
+      if(type.indexOf(item.type) !=-1){
+          newDataList.push(item);
+      }
+    });
+    $scope.metaNameTags =newDataList;
+  }
+
   $scope.submitExport = function() {
     var exportJson = {};
     $scope.isSubmitExportEnable = true;
@@ -396,7 +441,7 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
     for (var i = 0; i < $scope.metaNameTags.length; i++) {
       var metainfo = {};
       var ref = {}
-      ref.type = $scope.metatype.name;
+      ref.type = $scope.metaNameTags[i].type;
       ref.uuid = $scope.metaNameTags[i].uuid;
       ref.version = $scope.metaNameTags[i].version;
       metainfo.ref = ref;
@@ -414,7 +459,7 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
       $scope.executionmsg = "Meta Exported Successfully"
       notify.type = 'success',
       notify.title = 'Success',
-      notify.content = $scope.executionmsg //"Dashboard Deleted Successfully"
+      notify.content = $scope.executionmsg
       $scope.$emit('notify', notify);
       setTimeout(function(){  $state.go('migrationassist',{'type':'export'});},2000);
     }

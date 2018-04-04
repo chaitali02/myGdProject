@@ -110,15 +110,15 @@ DatascienceModule.controller('CreateTrainController', function($state, $statePar
       }
     }
   }
-  $scope.getAllLetestTarget=function(defaultValue){
-    TrainService.getAllLatest($scope.selectTargetType).then(function(response) { onGetAllLatest(response.data)});
-    var onGetAllLatest = function(response) {
-      $scope.allTarget = response;
-      if(typeof $stateParams.id == "undefined" || defaultValue ==true) {
-        $scope.selectTarget=response[0];
-      }
-    }
-  }
+  // $scope.getAllLetestTarget=function(defaultValue){
+  //   TrainService.getAllLatest($scope.selectTargetType).then(function(response) { onGetAllLatest(response.data)});
+  //   var onGetAllLatest = function(response) {
+  //     $scope.allTarget = response;
+  //     if(typeof $stateParams.id == "undefined" || defaultValue ==true) {
+  //       $scope.selectTarget=response[0];
+  //     }
+  //   }
+  // }
   $scope.getAllAttribute=function(){
     TrainService.getAllAttributeBySource($scope.selectSource.uuid,$scope.selectSourceType).then(function(response) { onGetAllAttributeBySource(response.data)});
     var onGetAllAttributeBySource = function(response) {
@@ -130,7 +130,7 @@ DatascienceModule.controller('CreateTrainController', function($state, $statePar
   }
   $scope.getAllLetestModel();
   $scope.getAllLetestSource();
-  $scope.getAllLetestTarget();
+  // $scope.getAllLetestTarget();
   
   $scope.onChangeModel=function(){
     TrainService.getOneByUuidandVersion($scope.selectModel.uuid,$scope.selectModel.version,"model").then(function(response) { onSuccessGetLatestByUuid(response.data)});
