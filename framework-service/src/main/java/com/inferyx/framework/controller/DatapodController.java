@@ -62,7 +62,7 @@ public class DatapodController {
 	
 	
 	@RequestMapping(value="/download",method=RequestMethod.GET)
-	public boolean  download(@RequestParam(value= "datapodUUID") String datapodUUID, 
+	public HttpServletResponse  download(@RequestParam(value= "datapodUUID") String datapodUUID, 
 	    		@RequestParam(value= "datapodVersion") String datapodVersion,
 	    		@RequestParam(value = "format", defaultValue="excel")String format,
 				@RequestParam(value ="rows",defaultValue="1000") int rows,
@@ -75,13 +75,10 @@ public class DatapodController {
 				@RequestParam(value="requestId",required = false) String requestId, 
 				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
 	    		{
-			Mode runMode = Helper.getExecutionMode(mode);
-			try {
-				response = datapodServiceImpl.download(datapodUUID, datapodVersion,format,offset,limit,response,rows,sortBy,order,requestId, runMode);
-				return true;
-			}catch (Exception e) {
-				return false;
-			}
+		    Mode runMode = Helper.getExecutionMode(mode);
+    	    response = datapodServiceImpl.download(datapodUUID, datapodVersion, format, offset, limit, response, rows,sortBy, order, requestId, runMode);
+    	    return null;
+		
 	   }
 	 
 	 @RequestMapping(value="/getDatapodSample", method=RequestMethod.GET)
