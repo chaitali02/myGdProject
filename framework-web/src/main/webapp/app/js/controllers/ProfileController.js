@@ -806,8 +806,7 @@ ProfileModule.controller('ResultProfileController', function( $http,dagMetaDataS
       responseType: 'arraybuffer'
     }).success(function(data, status, headers) {
       headers = headers();
-    
-      var filename = headers['x-filename'];
+			var filename = headers['filename'];
       var contentType = headers['content-type'];
     
       var linkElement = document.createElement('a');
@@ -816,10 +815,8 @@ ProfileModule.controller('ResultProfileController', function( $http,dagMetaDataS
         type: contentType
       });
       var url = window.URL.createObjectURL(blob);
-    
       linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download", uuid+".xls");
-    
+      linkElement.setAttribute("download",filename);
       var clickEvent = new MouseEvent("click", {
         "view": window,
         "bubbles": true,

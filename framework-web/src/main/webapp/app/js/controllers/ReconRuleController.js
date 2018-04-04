@@ -1001,7 +1001,7 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
       responseType: 'arraybuffer'
     }).success(function(data, status, headers) {
       headers = headers();
-      var filename = headers['x-filename'];
+      var filename = headers['filename'];
       var contentType = headers['content-type'];
       var linkElement = document.createElement('a');
       try {
@@ -1010,7 +1010,7 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
         });
         var url = window.URL.createObjectURL(blob);
         linkElement.setAttribute('href', url);
-        linkElement.setAttribute("download", uuid+".xls");
+        linkElement.setAttribute("download",filename);
         var clickEvent = new MouseEvent("click", {
           "view": window,
           "bubbles": true,

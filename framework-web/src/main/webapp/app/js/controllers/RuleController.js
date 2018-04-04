@@ -478,7 +478,7 @@ RuleModule.controller('DetailRuleController', function(privilegeSvc,$state, $coo
       $scope.paramtable = paramInfoArray;
       paramSetjson.paramInfoArray = paramInfoArray;
       $scope.isTabelShow = true;
-    } else {
+    } else { linkElement.setAttribute("download",filename);
       $scope.isTabelShow = false;
     }
   }
@@ -1729,20 +1729,16 @@ RuleModule.controller('ResultRuleController', function($http,$log, dagMetaDataSe
       responseType: 'arraybuffer'
     }).success(function(data, status, headers) {
       headers = headers();
-    
-      var filename = headers['x-filename'];
+      var filename = headers['filename'];
       var contentType = headers['content-type'];
-    
       var linkElement = document.createElement('a');
       try {
       var blob = new Blob([data], {
         type: contentType
       });
       var url = window.URL.createObjectURL(blob);
-    
       linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download", uuid+".xls");
-    
+      linkElement.setAttribute("download",filename);
       var clickEvent = new MouseEvent("click", {
         "view": window,
         "bubbles": true,
