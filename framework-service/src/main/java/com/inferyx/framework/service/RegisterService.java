@@ -4314,6 +4314,10 @@ public class RegisterService {
 			case "reconexec":
 				result = ow.writeValueAsString(reconExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
 				break;
+			
+			case "mapexec":
+				result = ow.writeValueAsString(mapExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
 			}
 		}
 		return result;
