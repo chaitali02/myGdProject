@@ -402,7 +402,10 @@ public class ProfileServiceImpl extends RuleTemplate {
 			limit = offset + limit;
 			offset = offset + 1;
 			DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(profileExecUUID, profileExecVersion);
-			dataStoreServiceImpl.setRunMode(runMode);
+			
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+			
+			/*dataStoreServiceImpl.setRunMode(runMode);
 			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
 					runMode);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -439,7 +442,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 				else {
 					data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
 				}
-			}
+			}*/
 		} catch (Exception e) {
 			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
 					.getRequestAttributes();

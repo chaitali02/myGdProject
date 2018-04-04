@@ -37,8 +37,7 @@ public class CSVRegister extends DataSourceRegister {
 		//Datasource ds = datasourceServiceImpl.findOneByUuidAndVersion(uuid, version);
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
 		String filepath = hdfsInfo.getHdfsURL()+ds.getPath();
-		for(int i=0; i<registryList.size(); i++)
-		{
+		for(int i=0; i<registryList.size(); i++) {
 			MetaIdentifierHolder dagExec = datapodServiceImpl.createAndLoad(filepath+registryList.get(i).getName()+".csv", runMode);
 			if(dagExec != null) {
 				registryList.get(i).setStatus("Registered");

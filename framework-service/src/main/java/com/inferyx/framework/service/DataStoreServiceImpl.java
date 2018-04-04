@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -60,6 +61,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.executor.ExecContext;
@@ -147,6 +149,8 @@ public class DataStoreServiceImpl {
 	private MessageServiceImpl messageServiceImpl;
 	
 	Map<String, String> requestMap = new HashMap<String, String>();
+	
+	Map<String, List<Map<String, Object>>> requestNewMap = new HashMap<>();
 
 	static final Logger logger = Logger.getLogger(DataStoreServiceImpl.class);
     
@@ -421,7 +425,7 @@ public class DataStoreServiceImpl {
 		datastore = findLatestByMeta(dataStoreMetaUUID, dataStoreMetaVer);
 		if (datastore == null) {
 			logger.error("Datastore is not available for this datapod");
-			throw new Exception();
+			throw new Exception("No data found for "+dp.getName()+" datapod.");
 		}
 		return getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
 	}
@@ -615,7 +619,7 @@ public class DataStoreServiceImpl {
 					logger.info("HttpServletResponse response is \"" + null + "\"");
 			} else
 				logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
-			throw new Exception();
+			throw new Exception("Datastore is not available for this datapod");
 		}
 		List<Map<String, Object>> results = getDatapodResults(ds.getUuid(),ds.getVersion(),null,0,rows,null,rows,null,null,null, runMode);
 		return results;
@@ -965,6 +969,7 @@ public class DataStoreServiceImpl {
 		return result;
 	}*/
 
+	/********************** UNUSED **********************/
 	/*public List<DataStore> resolveName(List<DataStore> datastore) {
 		List<DataStore> dataStoreList = new ArrayList<>();
 		for (DataStore dStore : datastore) {
@@ -1326,4 +1331,140 @@ public class DataStoreServiceImpl {
 		return baseEntityList;
 	}*/
 
+	public List<Map<String, Object>> getResultByDatastore(String datastoreUuid, String datastoreVersion, String requestId, int offset,
+			int limit, String sortBy, String order) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException{
+		List<Map<String, Object>> data = new ArrayList<>();
+		
+		try {
+			DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreUuid, datastoreVersion, MetaType.datastore.toString());
+			StringBuilder orderBy = new StringBuilder();
+			Mode runMode = Helper.getExecutionMode(dataStore.getRunMode());
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			ExecContext execContext = null;
+			IExecutor exec = null;
+			String appUuid = null;
+			if (runMode.equals(Mode.ONLINE)) {
+				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
+						|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
+								? helper.getExecutorContext(engine.getExecEngine())
+								: helper.getExecutorContext(ExecContext.spark.toString());
+				appUuid = commonServiceImpl.getApp().getUuid();
+			} else {
+				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+			}
+			exec = execFactory.getExecutor(execContext.toString());
+			appUuid = commonServiceImpl.getApp().getUuid();
+		
+		
+			boolean requestIdExistFlag = false;
+			String tableName = getTableNameByDatastore(dataStore.getUuid(),
+					dataStore.getVersion(), runMode); 
+			
+			if (requestId == null|| requestId.equals("null") || requestId.isEmpty()) {
+				if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM "
+							+ tableName + ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+				} else {
+					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+						if (runMode.equals(Mode.ONLINE))
+							data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
+						else
+							data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum< " + limit,
+									appUuid);
+					else {
+						data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
+					}
+				}
+			} else {
+				List<String> orderList = Arrays.asList(order.split("\\s*,\\s*"));
+				List<String> sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
+
+				if (StringUtils.isNotBlank(sortBy) || StringUtils.isNotBlank(order)) {
+					for (int i = 0; i < sortList.size(); i++)
+						orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));
+						@SuppressWarnings("unused")
+						String tabName = null;
+						for (Map.Entry<String, List<Map<String, Object>>> entry : requestNewMap.entrySet()) {
+							String id = entry.getKey();
+							if (id.equals(requestId)) {
+								requestIdExistFlag = true;
+							}
+						}
+						if (requestIdExistFlag) {
+							data = requestNewMap.get(requestId);
+						} else {
+							if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+									|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+									|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+								data = exec.executeAndFetch(
+										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
+												+ tableName +") AS tab) AS tab1",
+												appUuid);
+							} else {
+								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+									if (runMode.equals(Mode.ONLINE))
+										data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
+												appUuid);
+									else
+										data = exec.executeAndFetch(
+												"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, appUuid);
+								else {
+									data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
+											appUuid);
+								}
+							}
+
+							tabName = requestId.replace("-", "_");
+							requestNewMap.put(requestId, data);							
+						}
+				}else {
+					if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+							|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+							|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+						data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum >= " + offset
+								+ " AND rownum <= " + limit, appUuid);
+					} else {
+						if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+							if (runMode.equals(Mode.ONLINE))
+								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
+										appUuid);
+							else
+								data = exec.executeAndFetch(
+										"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, appUuid);
+						else {
+							data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
+									appUuid);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
+					.getRequestAttributes();
+			if (requestAttributes != null) {
+				HttpServletResponse response = requestAttributes.getResponse();
+				if (response != null) {
+					response.setContentType("application/json");
+					Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
+					Message savedMessage = messageServiceImpl.save(message);
+					ObjectMapper mapper = new ObjectMapper();
+					String messageJson = mapper.writeValueAsString(savedMessage);
+					response.setContentType("application/json");
+					response.setStatus(404);
+					response.getOutputStream().write(messageJson.getBytes());
+					response.getOutputStream().close();
+				} else
+					logger.info("HttpServletResponse response is \"" + null + "\"");
+			} else
+				logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+		}
+		
+		return data;
+	}
 }

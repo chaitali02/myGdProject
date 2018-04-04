@@ -201,7 +201,7 @@ public class ModelController {
 		Mode runMode = Helper.getExecutionMode(mode);
 		response = modelServiceImpl.download(ruleExecUUID, ruleExecVersion, response, runMode);
 	}
-
+	
 	@RequestMapping(value = "/predict/execute", method = RequestMethod.POST)
 	public boolean predict(@RequestParam("uuid") String predictUUID, @RequestParam("version") String predictVersion,
 			@RequestBody(required = false) ExecParams execParams,
@@ -383,4 +383,14 @@ public class ModelController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return modelExecServiceImpl.getModelByTrainExec(trainExecUUID, trainExecVersion);
 	}
+
+	@RequestMapping(value = "/train/download", method = RequestMethod.GET)
+	public void downloadLog(@RequestParam(value = "trainExecUUID") String trainExecUUID,
+			@RequestParam(value = "trainExecVersion") String trainExecVersion,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
+			HttpServletResponse response) throws Exception {
+		Mode runMode = Helper.getExecutionMode(mode);
+		response = modelServiceImpl.downloadLog(trainExecUUID, trainExecVersion, response, runMode);
+	}
+
 }

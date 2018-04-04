@@ -2794,12 +2794,12 @@ public class CommonServiceImpl <T> {
 	       downloadExec.setDependsOn(dependsOn);
 			try {
 				FileOutputStream fileOut = null;
-				response.setContentType("application/xml charset=utf-16");
-				response.setHeader("Content-type", "application/xml");
 				HSSFWorkbook workbook = WorkbookUtil.getWorkbook(results);
-
 				downloadPath = Helper.getPropertyValue("framework.file.download.path");
-				response.addHeader("Content-Disposition", "attachment; filename=" + uuid + ".xls");
+				//response.addHeader("Content-Disposition", "attachment; filename=" + uuid + ".xls");
+				response.setContentType("application/xml charset=utf-16");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename", "" + uuid+"_"+version + ".xls");
 				ServletOutputStream os = response.getOutputStream();
 				workbook.write(os);
 

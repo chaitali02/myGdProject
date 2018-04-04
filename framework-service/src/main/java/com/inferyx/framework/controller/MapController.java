@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -122,7 +123,7 @@ public class MapController {
 			@RequestParam(value="requestId", required=false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
 		Mode runMode = Helper.getExecutionMode((mode.equals("undefined")) ? mode="BATCH" : mode);
 		return mapServiceImpl.getMapResults(mapExecUUID, mapExecVersion, offset, limit, sortBy, order, requestId, runMode);
 	}
