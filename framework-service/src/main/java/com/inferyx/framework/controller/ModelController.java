@@ -374,4 +374,13 @@ public class ModelController {
 				sortBy,type, order, "1", runMode);
 		return null;
 	}
+	
+	@RequestMapping(value = "/getModelByTrainExec", method = RequestMethod.GET)
+	public com.inferyx.framework.domain.Model getModelByTrainExec(
+			@RequestParam("uuid") String trainExecUUID,
+			@RequestParam("version") String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return modelExecServiceImpl.getModelByTrainExec(trainExecUUID, trainExecVersion);
+	}
 }

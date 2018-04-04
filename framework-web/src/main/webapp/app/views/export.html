@@ -137,21 +137,26 @@
               <div class="form-group" ng-hide="exportdata.uuid">
                 <label class="control-label col-md-3 col-sm-1 col-xs-12">Meta Type</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <select select2 title="Type" ng-change="getAllNames()" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="metatype" ng-options="r as r.name for r in allmetadata">
-                  </select>
-                  <!-- <tags-input class="tag-scroll" ng-model="metatype" ng-disabled="isDisabled" display-property="name" key-property="id" add-from-autocomplete-only="true" ng-focus="onAddMetaType()" on-tag-added="onAddMetaType()" style="height:65px;">
-                      <auto-complete source="loadAllMetaType($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
-                      </auto-complete>
-                    </tags-input> -->
+                  <!-- <select select2 title="Type" ng-change="getAllNames()" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="metatype" ng-options="r as r.name for r in allmetadata">
+                  </select> -->
+                  <tags-input ng-model="metatype" on-tag-removed="onRemoveMetaType()"  on-tag-added="onAddMetaType()" add-from-autocomplete-only="true">
+                      <auto-complete source="loadAllMetaType($query)" min-length="1" >
+                        </auto-complete>
+                    </tags-input>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-1 col-xs-12" for="select">Meta Info</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tags-input class="tag-scroll" ng-model="metaNameTags" ng-disabled="isDisabled" display-property="name" key-property="id" add-from-autocomplete-only="true" ng-focus="onTagFocuse()" style="height:65px;">
+                 
+                  <tags-input  class="tag-scroll" ng-model="metaNameTags" add-from-autocomplete-only="true" display-property="name" key-property="id">
+                      <auto-complete source="loadAllMetaName($query)" min-length="1"   highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
+                        </auto-complete>
+                    </tags-input>
+                  <!-- <tags-input class="tag-scroll"  ng-model="metaNameTags" ng-disabled="isDisabled" display-property="name" key-property="id" add-from-autocomplete-only="true" ng-focus="onTagFocuse()" style="height:65px;">
                     <auto-complete source="loadAllMetaName($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
                     </auto-complete>
-                  </tags-input>
+                  </tags-input> -->
                 </div>
               </div>
               <div class="form-group">
@@ -184,3 +189,13 @@
     </div>
   </div><!-- END MAIN CONTENT -->
  </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>

@@ -100,10 +100,10 @@ DatascienceModule.factory('ModelFactory',function($http,$location){
         }).then(function(response){ return  response})
     }
 
-    factory.findModelExecByModel=function(uuid){
+    factory.findModelByTrainExec=function(uuid,version){
       var url=$location.absUrl().split("app")[0]
       return $http({
-        url:url+"model/getModelExecByModel?action=view&modelUUID="+uuid,
+        url:url+"model/getModelByTrainExec?action=view&uuid="+uuid+"&version="+version,
         method: "GET"
         }).then(function(response){ return  response})
     }
@@ -335,52 +335,12 @@ DatascienceModule.service("ModelService", function ($http,ModelFactory,$q,sortFa
           return deferred.promise;
   }
 
-  this.getModelExecByModel=function(uuid){
+  this.getModelByTrainExec=function(uuid,version){
     var deferred = $q.defer();
-    ModelFactory.findModelExecByModel(uuid).then(function(response){onSuccess(response.data)});
+    ModelFactory.findModelByTrainExec(uuid,version).then(function(response){onSuccess(response.data)});
     var onSuccess=function(response){
-      var rowDataSet = [];
-      var headerColumns=['id','uuid','version','name','createdBy','createdOn','status','action']
-      for(var i=0;i<response.length;i++){
-        var rowData = [];
-        if(response[i].status !=null){
-          response[i].status.sort(sortFactory.sortByProperty("createdOn"));
-          var len=response[i].status.length-1;
-        }
-        for(var j=0;j<headerColumns.length;j++){
-          var columnname=headerColumns[j]
-          if(columnname == "createdBy"){
-            rowData[j]=response[i].createdBy.ref.name;
-          }
-          else if(columnname == "status"){
-            if(response[i].status !=null){
-              if(response[i].status[len].stage == "InProgress"){
-                rowData[j]="In Progress";
-              }
-              else if(response[i].status[len].stage == "NotStarted"){
-                rowData[j]="Not Started";
-              }
-              else{
-                rowData[j]=response[i].status[len].stage;
-              }
-            }
-            else{
-              rowData[j]=" ";
-            }
-          }
-          else if(columnname == "action"){
-            rowData[j]=false;
-          }
-          else{
-            rowData[j]=response[i][columnname];
-          }
-
-        }
-        rowDataSet[i]=rowData;
-      }
-
       deferred.resolve({
-        data:rowDataSet
+        data:response
       })
     }
     return deferred.promise;

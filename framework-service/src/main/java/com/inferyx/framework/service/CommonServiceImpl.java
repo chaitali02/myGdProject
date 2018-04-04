@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -2927,12 +2928,13 @@ public class CommonServiceImpl <T> {
 			
 		}
 
-		public List<Object> getAllByMetaList(String[] type) {
-			List<Object> metaList = new ArrayList<>();
+		public Map<String, List<Object>> getAllByMetaList(String[] type) {
+			//List<Object> metaList = new ArrayList<>();
+			Map<String, List<Object>> metaList = new HashMap<>();
 			for(String meta : type) {
 				@SuppressWarnings("unchecked")
 				List<Object> metaObjectList = (List<Object>) findAll(Helper.getMetaType(meta));
-				metaList.addAll(metaObjectList);
+				metaList.put(meta, metaObjectList);
 			}
 			return metaList;
 		}
