@@ -686,9 +686,9 @@ public class Helper {
 		if(fileType != null)
 			switch (fileType) {
 				case SCRIPT : return getPropertyValue("framework.model.script.path");				
-				case CSV : return getPropertyValue("framework.file.path");
+				case CSV : return getPropertyValue("framework.file.upload.path");
 				case LOG : return getPropertyValue("framework.model.log.path");
-				case ZIP : return getPropertyValue("file.zip.location");		
+				case ZIP : return getPropertyValue("framework.file.zip.location");		
 				case XLS : return getPropertyValue("framework.file.download.path");		
 			}
 		return null;

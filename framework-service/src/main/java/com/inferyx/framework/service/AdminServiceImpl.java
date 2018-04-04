@@ -122,6 +122,7 @@ public class AdminServiceImpl {
 		multiPartFile.transferTo(dest);
 		
 		UploadExec uploadExec=new UploadExec();
+		uploadExec.setName(Helper.getFileName(filename));
 		uploadExec.setFileName(filename);
 		uploadExec.setBaseEntity();
 		uploadExec.setLocation(location);

@@ -140,7 +140,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
                                         <div class="col-md-9 col-sm-6 col-xs-12">
-                                            <select class="form-control" select2 data-ng-model="searchForm.status" ng-options="r.name as r.caption for r in allStatus">
+                                            <select class="form-control" select2 data-ng-model="searchForm.active" ng-options="r.name as r.caption for r in allStatus">
                                                 <option value="">All</option>
                                             </select>
                                         </div>
@@ -208,33 +208,33 @@
             </div>
         </div>
     </div>
-</div>
-
-<div id="fileupload" class="modal fade bs-modal-lg in"tabindex="-1" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog" style="width:27%;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-          <h4 class="modal-title">File Upload</h4>
-        </div>
-        <div class="modal-body">
-          <div class="slimScrollDiv" style="padding-top:30px;">
-            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-              <div class="row">
-                <div class="col-md-2"style="margin-top:5px;">
-                  <label style="margin-left:4px;">Select</label>
-                </div>
-                <div class="col-md-10">
-                  <input type="file"  id="csv_file" class="jfilestyle" accept=".csv" data-buttonText="<span class='glyphicon glyphicon-folder-open'style='color:#94A0B2;'></span>" style="float:left;margin-left:4px;">
+    <div id="fileupload" class="modal fade bs-modal-lg in"tabindex="-1" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" style="width:27%;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+              <h4 class="modal-title">File Upload</h4>
+            </div>
+            <div class="modal-body">
+              <div class="slimScrollDiv" style="padding-top:30px;">
+                <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                  <div class="row">
+                    <div class="col-md-2"style="margin-top:5px;">
+                      <label style="margin-left:4px;">Select</label>
+                    </div>
+                    <div class="col-md-10">
+                      <input type="file"  id="csv_file" file-model-change " on-submit="fileNameValidate" class="jfilestyle" accept=".csv"  data-buttonText="<span class='glyphicon glyphicon-folder-open'style='color:#94A0B2;'></span>" style="float:left;margin-left:4px;">
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="modal-footer">
+              <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+              <button type="button" class="btn green" ng-click="uploadFile()">Submit</button>
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-          <button type="button" class="btn green" ng-click="uploadFile()">Submit</button>
-        </div>
       </div>
-    </div>
-  </div>
+</div>
+

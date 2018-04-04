@@ -207,7 +207,7 @@ AdminModule.controller("FileManagerController",function(uiGridConstants,$state,$
         }
         }
         tags = tags.toString();
-        CommonService.getBaseEntityStatusByCriteria("uploadexec", $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '',$scope.searchForm.published || '', $scope.searchForm.status || '').then(function(response) {onSuccess(response.data)},function error() {
+        CommonService.getBaseEntityByCriteria("uploadexec", $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '',$scope.searchForm.published || '').then(function(response) {onSuccess(response.data)},function error() {
             $scope.loading = false;});
         var onSuccess = function(response) {
         console.log(response);
@@ -220,26 +220,37 @@ AdminModule.controller("FileManagerController",function(uiGridConstants,$state,$
     $scope.refresh();
 
     $scope.upload=function(){
+        $(":file").jfilestyle('clear')
+        $("#csv_file").val("");
         $('#fileupload').modal({
             backdrop: 'static',
             keyboard: false
         });
     }
+
     $scope.uploadFile=function(){
         var iEl = angular.element(document.querySelector('#csv_file'));
         var file = iEl[0].files[0]
+        console.log(file)
         var fd = new FormData();
         fd.append('file', file);
         $('#fileupload').modal('hide');
-        FileManagerService
+        $scope.searchButtonText="Uploading"
         FileManagerService.SaveFile(file.name,fd,"").then(function(response){onSuccess(response.data)});
         var onSuccess=function(response){
+            $scope.searchButtonText="Upload"
             $scope.msg = "CSV Uploaded Successfully"
             notify.type = 'success',
             notify.title = 'Success',
             notify.content = $scope.msg
             $scope.$emit('notify', notify); 
-
+            $scope.getBaseEntityStatusByCriteria(false);
         }
+    }
+    $scope.fileNameValidate=function(data){
+        console.log(data)
+    }
+    $scope.searchCriteria=function(){
+        $scope.getBaseEntityStatusByCriteria(false);
     }
 });

@@ -1925,7 +1925,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
 					files: [
 						'js/controllers/FileMangegerController.js',
-                        'js/services/FileManagerServie.js'
+                        'js/services/FileManagerService.js'
                     ]
                 });
             }]
