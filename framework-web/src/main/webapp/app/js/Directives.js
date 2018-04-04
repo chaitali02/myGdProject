@@ -1507,6 +1507,30 @@ InferyxApp.directive('fileModel', ['$parse','CommonService', function ($parse,Co
 	        }
 	    };
 }]);
+InferyxApp.directive('fileModelChange', ['$parse', function ($parse) {
+  return {
+      restrict: 'A',
+      scope: {
+        onSubmit: "="
+      },
+      link: function(scope, element, attrs) {
+          var model = $parse(attrs.fileModel);
+          var modelSetter = model.assign;
+          element.bind('change', function(){
+            var file=element[0].files[0]
+              scope.$apply(function(){
+                // var regex = /[a-z]+/;
+                // var str1 = file.name
+                // alert(regex.test(str1));
+               
+                  scope.onSubmit({
+                    'fileName':file.name
+                  });
+              });
+          });
+      }
+  };
+}]);
 
 InferyxApp.directive('notification', function($timeout){
   return {

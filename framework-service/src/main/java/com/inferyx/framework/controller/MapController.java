@@ -92,7 +92,7 @@ public class MapController {
 		return new MetaIdentifierHolder(new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion()));
 	}
 	@RequestMapping(value="/download",method=RequestMethod.GET)
-	public boolean  download(@RequestParam(value= "mapExecUUID") String mapExecUUID, 
+	public HttpServletResponse  download(@RequestParam(value= "mapExecUUID") String mapExecUUID, 
 	    		@RequestParam(value= "mapExecVersion") String mapExecVersion,
 	    		@RequestParam(value = "format", defaultValue="excel")String format,
 				@RequestParam(value ="rows",defaultValue="1000") int rows,
@@ -106,12 +106,9 @@ public class MapController {
 				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
 	    		{
 			Mode runMode = Helper.getExecutionMode(mode);
-			try {
-				response = mapServiceImpl.download(mapExecUUID, mapExecVersion,format,offset,limit,response,rows,sortBy,order,requestId, runMode);
-				return true;
-			}catch (Exception e) {
-				return false;
-			}
+			response = mapServiceImpl.download(mapExecUUID, mapExecVersion,format,offset,limit,response,rows,sortBy,order,requestId, runMode);
+			return null;
+			
 	   }
 	@RequestMapping(value = "/getResults", method = RequestMethod.GET)
 	public List<Map<String, Object>> getResults (@RequestParam("uuid") String mapExecUUID, 

@@ -237,7 +237,7 @@
     }
 
     this.SaveFile=function(filename,data,type){
-      var url="metadata/file?action=edit&fileName="+filename+"&type="+type
+      var url="admin/upload?action=edit&fileName="+filename+"&type="+type+"&fileType=zip"
   		var deferred = $q.defer();
   	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
     	    var onSuccess=function(response){
@@ -389,6 +389,7 @@
           result.name = response[i].name;
           result.createdBy = response[i].createdBy;
           result.createdOn = response[i].createdOn;
+          result.active = response[i].active;
           if(response[i].status !=null && response[i].status.length > 0){
             if (response[i].status[len].stage == "NotStarted") {
               result.status = "Not Started"

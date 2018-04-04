@@ -291,6 +291,18 @@
               metajson.state="simulate"
               metajson.param={type:'simulate'};
               break;
+            case "recon":
+              metajson.caption="Reconciliation";
+              metajson.icon='fa fa-compress';
+              metajson.state="recon"
+              metajson.param={type:'recon'};
+              break;
+            case "recongroup":
+              metajson.caption="Recon Group";
+              metajson.icon='fa fa-compress';
+              metajson.state="recongroup"
+              metajson.param={type:'recongroup'};
+              break;  
           }
 
           metaarray[i] = metajson

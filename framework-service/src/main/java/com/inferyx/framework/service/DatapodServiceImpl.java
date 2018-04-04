@@ -473,9 +473,18 @@ public class DatapodServiceImpl {
 			 */
 		}
 
-		// Load datapod using load object
-		//String fileName = Helper.getFileName(csvFileName);
+		/* Code for UploadExec*/	
+		//String uploadPath = hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
 		String uploadPath = csvFileName;
+		UploadExec uploadExec=new UploadExec();			       
+		uploadExec.setBaseEntity();
+		uploadExec.setLocation(uploadPath);
+		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,dp.getUuid(),dp.getVersion())));
+		uploadExec.setFileName(fileName);
+		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+		
+		// Load datapod using load object
+		//String fileName = Helper.getFileName(csvFileName);		
 		Load load = new Load();
 		AttributeRefHolder loadSourceMIHolder = new AttributeRefHolder();
 		MetaIdentifier loadSourceMIdentifier = new MetaIdentifier();
@@ -856,7 +865,7 @@ public class DatapodServiceImpl {
 		String csvFileName = csvFile.getOriginalFilename();
 		try {
 			//patern matching for csv filename
-			Pattern p = Pattern.compile("[ !@#$%&*()_+=|<>?{}\\[\\]~-]");
+			Pattern p = Pattern.compile("[ !@#$%&*()+=|<>?{}\\[\\]~-]");
 			Matcher match = p.matcher(csvFileName);
 			/*while(match.find()){
 			String s = match.group();
