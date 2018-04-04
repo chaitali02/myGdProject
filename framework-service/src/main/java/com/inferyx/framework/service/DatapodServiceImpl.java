@@ -865,7 +865,7 @@ public class DatapodServiceImpl {
 		String csvFileName = csvFile.getOriginalFilename();
 		try {
 			//patern matching for csv filename
-			Pattern p = Pattern.compile("[ !@#$%&*()_+=|<>?{}\\[\\]~-]");
+			Pattern p = Pattern.compile("[ !@#$%&*()+=|<>?{}\\[\\]~-]");
 			Matcher match = p.matcher(csvFileName);
 			/*while(match.find()){
 			String s = match.group();
