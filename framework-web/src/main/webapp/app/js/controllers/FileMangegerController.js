@@ -268,9 +268,8 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
   }
 
   $scope.download=function(data){
-    FileManagerService.download(data.name+".csv",'csv').then(function (response) { onError(response) });
+    FileManagerService.download(data.name+".csv",'csv').then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      console.log(response)
       var filename =response.headers['filename'];
       var contentType = response.headers['content-type']; 
       var linkElement = document.createElement('a');
@@ -293,6 +292,6 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
     }
   }
   var onError=function(response){
-    console.log(response.data);
+    console.log(response);
   }
 });
