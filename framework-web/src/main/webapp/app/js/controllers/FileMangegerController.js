@@ -268,10 +268,10 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
   }
 
   $scope.download=function(data){
-    FileManagerService.download(data.name+".csv",'csv').then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
+    FileManagerService.download(data.name+".csv",'csv').then(function (response){ onSuccess(response.data)});
     var onSuccess = function (response) {
-      var filename =response.headers['filename'];
-      var contentType = response.headers['content-type']; 
+      var filename =response.headers('filename');
+      var contentType = response.headers('content-type'); 
       var linkElement = document.createElement('a');
       try {
         var blob = new Blob([response.data], {
@@ -279,7 +279,7 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
       });
       var url = window.URL.createObjectURL(blob);
       linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download","abc.csv");
+      linkElement.setAttribute("download",filename);
       var clickEvent = new MouseEvent("click", {
         "view": window,
         "bubbles": true,
