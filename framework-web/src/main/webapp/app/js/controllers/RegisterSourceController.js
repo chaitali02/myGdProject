@@ -50,7 +50,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         headerCellClass: 'text-center'
       },
       {
-        displayName: 'Registered BY',
+        displayName: 'Registered By',
         name: 'registeredBy',
         cellClass: 'text-center',
         headerCellClass: 'text-center'
