@@ -11,4 +11,16 @@ AdminModule.service('FileManagerService',function($q,CommonFactory,sortFactory){
         }
         return deferred.promise;
     }
+
+    this.download=function(fileName,fileType){
+        var url="common/download?action=view&type=downloadexec&fileType="+fileType+"&fileName="+fileName;
+        var deferred = $q.defer();
+        CommonFactory.httpGet(url).then(function(response){onSuccess(response)});
+        var onSuccess=function(response){
+            deferred.resolve({
+                data:response
+            });
+        }
+        return deferred.promise;
+    }
 });

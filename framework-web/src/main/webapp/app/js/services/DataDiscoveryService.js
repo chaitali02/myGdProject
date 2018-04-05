@@ -48,7 +48,8 @@
 	        	datapodJSon.numRows = response[i].numRows;	        	
 	        }
 	        else {
-	        	datapodJSon.numRows = "0";
+
+	        	datapodJSon.numRows =0;
 	        }
 	        
 	        if(response[i].lastUpdatedOn != null) {
@@ -61,7 +62,8 @@
 	        datapodJSon.class = colorclassarray[randomno];
 	        datapodarray[i] = datapodJSon
 	      }
-	      datapodarray.sort(sortFactory.sortByProperty("name"));
+				datapodarray.sort(sortFactory.sortByProperty("name"));
+				console.log(datapodarray)
 	      deferred.resolve({
 	        data: datapodarray
 	      });

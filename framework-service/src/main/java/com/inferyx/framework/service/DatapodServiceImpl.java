@@ -476,12 +476,12 @@ public class DatapodServiceImpl {
 		/* Code for UploadExec*/	
 		//String uploadPath = hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
 		String uploadPath = csvFileName;
-		UploadExec uploadExec=new UploadExec();			       
-		uploadExec.setBaseEntity();
-		uploadExec.setLocation(uploadPath);
-		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,dp.getUuid(),dp.getVersion())));
-		uploadExec.setFileName(fileName);
-		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+//		UploadExec uploadExec=new UploadExec();			       
+//		uploadExec.setBaseEntity();
+//		uploadExec.setLocation(uploadPath);
+//		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,dp.getUuid(),dp.getVersion())));
+//		uploadExec.setFileName(fileName);
+//		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 		
 		// Load datapod using load object
 		//String fileName = Helper.getFileName(csvFileName);		

@@ -55,7 +55,8 @@ var InferyxApp = angular.module("InferyxApp", [
 	'jcs-autoValidate',
 	'angular-screenshot',
     'ui.bootstrap.datetimepicker',
-    'ngclipboard'
+    'ngclipboard',
+    "Utils"
 ]);
 
 
