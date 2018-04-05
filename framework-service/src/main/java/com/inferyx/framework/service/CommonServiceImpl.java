@@ -2739,7 +2739,7 @@ public class CommonServiceImpl <T> {
 		return domainObject;
 	}
 
-	 public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response) throws IOException {
+	 public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
 		try {
 			FileType type = Helper.getFileType(fileType);			
         	
@@ -2756,9 +2756,10 @@ public class CommonServiceImpl <T> {
                 }
  
                 response.setContentType(mimeType);
-                response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
                 response.setContentLength((int) file.length());
- 
+                response.setContentType("application/xml charset=utf-16");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename",fileName);
                 ServletOutputStream os = response.getOutputStream();
                 FileInputStream fis = new FileInputStream(file);
                 Long fileSize = file.length();
@@ -2774,12 +2775,19 @@ public class CommonServiceImpl <T> {
             } else {
             	logger.info("Requested " + fileName + " file not found!!");
             	response.setStatus(300);
-            	throw new FileNotFoundException();
+            	throw new FileNotFoundException("Requested " + fileName + " file not found!!");
             }
         } catch (IOException e) {
-        	logger.error(e.getCause().getMessage());
-        	response.setStatus(500);
-        	throw new IOException();
+        	logger.error(e.getMessage());
+        	e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
         }
 	return response;
 	}

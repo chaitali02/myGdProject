@@ -263,7 +263,7 @@ public class CommonController<T> {
 	}
 	
 	@RequestMapping("/download")
-    public boolean download(@RequestParam(value = "fileType") String fileType,
+    public HttpServletResponse download(@RequestParam(value = "fileType") String fileType,
     						@RequestParam(value = "fileName") String fileName,
     						HttpServletRequest request,
     						HttpServletResponse response){
@@ -272,9 +272,9 @@ public class CommonController<T> {
 		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			return null;
 		}
-		return true;
+		return null;
     }
 	
 	@RequestMapping(value = "/getAllLatestCompleteObjects", method = RequestMethod.GET)

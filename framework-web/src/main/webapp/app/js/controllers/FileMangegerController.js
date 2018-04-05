@@ -280,7 +280,7 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
       });
       var url = window.URL.createObjectURL(blob);
       linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download",filename);
+      linkElement.setAttribute("download","abc.csv");
       var clickEvent = new MouseEvent("click", {
         "view": window,
         "bubbles": true,
