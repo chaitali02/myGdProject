@@ -805,12 +805,12 @@ public class ModelServiceImpl {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 			response.setStatus(500);
-			throw new IOException();
+			throw new IOException(e.getMessage());
 		}catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 			response.setStatus(500);
-			throw new IOException();
+			throw new IOException(e.getMessage());
 		}
 		return response;
 
@@ -861,25 +861,14 @@ public class ModelServiceImpl {
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
-			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
-				ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-						.getRequestAttributes();
-				if (requestAttributes != null) {
-					HttpServletResponse response = requestAttributes.getResponse();
-					if (response != null) {
-						response.setContentType("application/json");
-						Message message = new Message("412", MessageStatus.FAIL.toString(), e.getMessage());
-						Message savedMessage = messageServiceImpl.save(message);
-						ObjectMapper mapper = new ObjectMapper();
-						String messageJson = mapper.writeValueAsString(savedMessage);
-						response.setContentType("application/json");
-						response.setStatus(412);
-						response.getOutputStream().write(messageJson.getBytes());
-						response.getOutputStream().close();
-					} else
-						logger.info("HttpServletResponse response is \"" + null + "\"");
-				} else
-					logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.");
+			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
 		}
 		return isSuccess;
 	}
@@ -934,25 +923,14 @@ public class ModelServiceImpl {
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
-			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-					.getRequestAttributes();
-			if (requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if (response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("412", MessageStatus.FAIL.toString(), e.getMessage());
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(412);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				} else
-					logger.info("HttpServletResponse response is \"" + null + "\"");
-			} else
-				logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.");
+			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
 		}
 
 		return isSuccess;
@@ -991,7 +969,15 @@ public class ModelServiceImpl {
 			e.printStackTrace();
 			logger.error(e);				
 			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
-			throw new Exception("Predict Exec creation failed.");
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable Predict.");
+			throw new RuntimeException((message != null) ? message : "Can not create executable Predict.");
 		}
 		return predictExec;
 	}
@@ -1026,10 +1012,17 @@ public class ModelServiceImpl {
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.NotStarted);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error(e);	
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
-			throw new Exception("Simulate Exec creation failed.");
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable Simulate.");
+			throw new RuntimeException((message != null) ? message : "Can not create executable Simulate.");
 		}
 		return simulateExec;
 	}
@@ -1037,33 +1030,34 @@ public class ModelServiceImpl {
 	
 	public TrainExec create(Train train, Model model, ExecParams execParams, ParamMap paramMap,
 			TrainExec trainExec) throws Exception {
-		
-		MetaIdentifierHolder trainRef = new MetaIdentifierHolder();
-				
 		String logPath = null;
-		if (trainExec == null) {
-			trainExec = new TrainExec();
-			trainRef.setRef(new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()));
-			trainExec.setDependsOn(trainRef);
-			trainExec.setBaseEntity();
-			
-			/*
-			 * 
-			 * log file_name formation : modeluuid + modelversion + trainexecversion
-			 * 
-			 */
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
-			}
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(),
-						"Created raw model exec, uuid: " + trainExec.getUuid(), 
-						logPath,
-						Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
-		}
-		trainExec.setExecParams(execParams);
+		
 		try {
+			MetaIdentifierHolder trainRef = new MetaIdentifierHolder();
+					
+			if (trainExec == null) {
+				trainExec = new TrainExec();
+				trainRef.setRef(new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()));
+				trainExec.setDependsOn(trainRef);
+				trainExec.setBaseEntity();
+				
+				/*
+				 * 
+				 * log file_name formation : modeluuid + modelversion + trainexecversion
+				 * 
+				 */
+				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+					logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+				}
+				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+					customLogger.writeLog(this.getClass(),
+							"Created raw model exec, uuid: " + trainExec.getUuid(), 
+							logPath,
+							Thread.currentThread().getStackTrace()[1].getLineNumber());
+				}
+			}
+			trainExec.setExecParams(execParams);
+			
 			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 			List<Status> statusList = trainExec.getStatusList();
 			if (statusList == null) {
@@ -1105,7 +1099,6 @@ public class ModelServiceImpl {
 						Thread.currentThread().getStackTrace()[1].getLineNumber());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error(e);
 			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
@@ -1118,7 +1111,15 @@ public class ModelServiceImpl {
 			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size()>0 ? "Train exec creation failed, status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 			}
-			throw new Exception("Train exec creation failed");
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable Train.");
+			throw new RuntimeException((message != null) ? message : "Can not create executable Train.");
 		}		
 		return trainExec;
 	}
@@ -1216,12 +1217,12 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			e.printStackTrace();
 			logger.error(e.getMessage());
 			response.setStatus(500);
-			throw new IOException();
+			throw new IOException(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 			response.setStatus(500);
-			throw new IOException();
+			throw new IOException(e.getMessage());
 		}
 
 		return response;

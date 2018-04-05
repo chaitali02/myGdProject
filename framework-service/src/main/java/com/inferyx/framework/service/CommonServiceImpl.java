@@ -47,6 +47,8 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -131,6 +133,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Log;
+import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
@@ -2939,6 +2942,26 @@ public class CommonServiceImpl <T> {
 			return metaList;
 		}
 		
-		
+		public HttpServletResponse sendResponse(String code, String status, String msg) throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+			if(requestAttributes != null) {
+				HttpServletResponse response = requestAttributes.getResponse();
+				if(response != null) {
+						Message message = new Message(code, status, msg);
+						Message savedMessage = messageServiceImpl.save(message);
+						
+						ObjectMapper mapper = new ObjectMapper();
+						String messageJson = mapper.writeValueAsString(savedMessage);
+						response.setContentType("application/json");
+						response.setStatus(Integer.parseInt(code));
+						response.getOutputStream().write(messageJson.getBytes());
+						response.getOutputStream().close();
+						return response;
+				}else
+					logger.info("HttpServletResponse response is \""+null+"\"");
+			}else
+				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
+			return null;
+		}
 		
 }

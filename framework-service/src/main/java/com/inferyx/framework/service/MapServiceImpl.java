@@ -657,59 +657,73 @@ public class MapServiceImpl {
 	 * @return MapExec
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unused")
 	public MapExec generateSql(String uuid, String version, MapExec mapExec, 
 			DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			ExecParams execParams, Mode runMode) throws Exception {
-		Map map = null;
-		MetaIdentifierHolder mapRef = new MetaIdentifierHolder();
-		Task indvTask = null;
-		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-
-		if (StringUtils.isBlank(version)) {
-			//map = iMapDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-			map = (Map) commonServiceImpl.getLatestByUuid(uuid, MetaType.map.toString());
-			version = map.getVersion();
-		} else {
-			//map = iMapDao.findOneByUuidAndVersion(uuid, version);
-			map = (Map) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.map.toString());
-		}
-		// Create mapExec
-		if (mapExec == null) {
-			mapExec = new MapExec();
-			mapRef.setRef(new MetaIdentifier(MetaType.map, uuid, version));
-			mapExec.setDependsOn(mapRef);
-			mapExec.setBaseEntity();
-		}
-		mapExec.setName(map.getName());
-		mapExec.setAppInfo(map.getAppInfo());
-		
-		if (stage != null && indvExecTask != null && dagExec != null) {
-			indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-			parseDPNames(dagExec, indvTask, map, datapodList, refKeyMap, otherParams);
-		}
-		
-		Status status = new Status(Status.Stage.NotStarted, new Date());
-		List<Status> statusList = new ArrayList<>();		
-		statusList.add(status);
-		//mapExec.setName(map.getName());
-		mapExec.setStatusList(statusList);		
 		try {
-			mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
-		} catch (Exception e) {
-			Status failedStatus = new Status(Status.Stage.Failed, new Date());
-			if (statusList == null) {
-				statusList = new ArrayList<>();
+			Map map = null;
+			MetaIdentifierHolder mapRef = new MetaIdentifierHolder();
+			Task indvTask = null;
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+
+			if (StringUtils.isBlank(version)) {
+				//map = iMapDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
+				map = (Map) commonServiceImpl.getLatestByUuid(uuid, MetaType.map.toString());
+				version = map.getVersion();
+			} else {
+				//map = iMapDao.findOneByUuidAndVersion(uuid, version);
+				map = (Map) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.map.toString());
 			}
-			statusList.remove(failedStatus);
-			statusList.add(failedStatus);
+			// Create mapExec
+			if (mapExec == null) {
+				mapExec = new MapExec();
+				mapRef.setRef(new MetaIdentifier(MetaType.map, uuid, version));
+				mapExec.setDependsOn(mapRef);
+				mapExec.setBaseEntity();
+			}
+			mapExec.setName(map.getName());
+			mapExec.setAppInfo(map.getAppInfo());
+			
+			if (stage != null && indvExecTask != null && dagExec != null) {
+				indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
+				parseDPNames(dagExec, indvTask, map, datapodList, refKeyMap, otherParams);
+			}
+			
+			Status status = new Status(Status.Stage.NotStarted, new Date());
+			List<Status> statusList = new ArrayList<>();		
+			statusList.add(status);
+			//mapExec.setName(map.getName());
+			mapExec.setStatusList(statusList);		
+			try {
+				mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
+			} catch (Exception e) {
+				Status failedStatus = new Status(Status.Stage.Failed, new Date());
+				if (statusList == null) {
+					statusList = new ArrayList<>();
+				}
+				statusList.remove(failedStatus);
+				statusList.add(failedStatus);
+			}
+			mapExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.");
+			throw new Exception((message != null) ? message : "Can not generate query.");
 		}
-		mapExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+		
 		return mapExec;
 	}
 
 	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
+	 * @throws Exception **********************/
 	/*public StringBuilder generateSql(DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList,
 			ExecParams execParams, HashMap<String, String> otherParams) throws Exception {
 
@@ -766,7 +780,7 @@ public class MapServiceImpl {
 		return builder;
 	}// End method
 */	
-	public MapExec executeSql(MapExec mapExec, String dagExecVer, OrderKey datapodKey, DataStore dataStore, Mode runMode) throws JsonProcessingException {
+	public MapExec executeSql(MapExec mapExec, String dagExecVer, OrderKey datapodKey, DataStore dataStore, Mode runMode) throws Exception {
 		//String sql = null;
 		if(mapExec == null)	{
 			mapExec = new MapExec();
@@ -825,8 +839,9 @@ public class MapServiceImpl {
 		//mapExec.setAppInfo(map.getAppInfo());
 		// Save MapExec
 		//iMapExecDao.save(mapExec);
-		
-		runMapServiceImpl.run();
+		runMapServiceImpl.setName(MetaType.mapExec+"_"+mapExec.getUuid()+"_"+mapExec.getVersion());
+		runMapServiceImpl.setExecType(MetaType.mapExec);
+		runMapServiceImpl.call();
 		// Run rule
 		/*if (taskExecutor == null) {
 			runMapServiceImpl.run();

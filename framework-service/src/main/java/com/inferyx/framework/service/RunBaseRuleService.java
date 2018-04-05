@@ -447,7 +447,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		return SaveMode.Append.toString();
 	}
 	
-	public TaskHolder execute() {
+	public TaskHolder execute() throws Exception {
 		// Set status to In Progress
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		long countRows = -1L;
@@ -541,7 +541,15 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				e1.printStackTrace();
 			}			
 			e.printStackTrace();
-			} 
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Execution failed.");
+			throw new java.lang.Exception((message != null) ? message : "Execution failed.");
+		} 
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion())); 
 		return taskHolder;
 

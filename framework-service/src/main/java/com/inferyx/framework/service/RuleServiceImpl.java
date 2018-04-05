@@ -385,15 +385,24 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * @param datapodList
 	 * @param dagExec
 	 * @return
+	 * @throws Exception 
 	 */
 	public RuleExec create(String ruleUUID, String ruleVersion, RuleExec ruleExec,
 			java.util.Map<String, MetaIdentifier> refKeyMap, ExecParams execParams, List<String> datapodList,
-			DagExec dagExec) {
+			DagExec dagExec) throws Exception {
 		try {
 			ruleExec = (RuleExec) super.create(ruleUUID, ruleVersion, MetaType.rule, MetaType.ruleExec, ruleExec,
 					refKeyMap, datapodList, dagExec);
 		} catch (Exception e) {
 			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create Business Rule.");
+			throw new Exception((message != null) ? message : "Can not create Business Rule.");
 		}
 		return ruleExec;
 	}
@@ -435,6 +444,15 @@ public class RuleServiceImpl extends RuleTemplate {
 			synchronized (ruleExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
 			}
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Business Rule execution failed.");
+			throw new Exception((message != null) ? message : "Business Rule execution failed.");
 		}
 		return ruleExec;
 	}
@@ -480,9 +498,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	
 	
 	public List<Map<String, Object>> getRuleResults(String ruleExecUUID, String ruleExecVersion, int offset, int limit,
-			String sortBy, String order, String requestId, Mode runMode) throws IOException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException,
-			NullPointerException, ParseException, SQLException, RuntimeException, JSONException {
+			String sortBy, String order, String requestId, Mode runMode) throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			limit = offset + limit;
@@ -633,24 +649,14 @@ public class RuleServiceImpl extends RuleTemplate {
 			}*/
 		} catch (Exception e) {
 			e.printStackTrace();
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-					.getRequestAttributes();
-			if (requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if (response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(404);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				} else
-					logger.info("HttpServletResponse response is \"" + null + "\"");
-			} else
-				logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
 	}
@@ -783,7 +789,7 @@ public class RuleServiceImpl extends RuleTemplate {
 
 	}
 	
-	@SuppressWarnings({ "unchecked", "null" })
+	@SuppressWarnings({ "unchecked"})
 	public List<RuleExec> finddqExecByDatapod(String datapodUUID,String type) throws JsonProcessingException, ParseException {
 
 		List<String> ruleUUIDlist = new ArrayList<String>();

@@ -69,7 +69,7 @@ public class RuleController {
 			@RequestParam("version") String ruleVersion,
 		    @RequestBody (required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) {
+			@RequestParam(value = "action", required = false) String action) throws Exception {
 		RuleExec ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);
 		return ruleExec.getRef(MetaType.ruleExec);
 	}
@@ -112,7 +112,7 @@ public class RuleController {
 		    @RequestBody (required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		Mode runMode = Helper.getExecutionMode(mode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		RuleExec ruleExec = null;
@@ -201,7 +201,7 @@ public class RuleController {
 			@RequestParam(value="requestId") String requestId,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException, SQLException, RuntimeException, JSONException {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		Mode runMode = Helper.getExecutionMode(mode);
 		return ruleServiceImpl.getRuleResults(ruleExecUUID,ruleExecVersion,offset,limit,sortBy,order,requestId, runMode);
 	}

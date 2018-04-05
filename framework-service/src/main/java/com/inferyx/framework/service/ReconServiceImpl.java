@@ -154,6 +154,7 @@ public class ReconServiceImpl extends RuleTemplate {
 		}catch (Exception e) {
 			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Failed);
 			e.printStackTrace();
+			throw new Exception("ReconExec not created.");
 		}
 		return reconExec;
 	}

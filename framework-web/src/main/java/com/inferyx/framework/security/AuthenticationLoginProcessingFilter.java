@@ -124,29 +124,37 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			SecurityContextHolder.getContext().setAuthentication(authManager.authenticate(authentication));
 			authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext()
 					.getAuthentication();
-			
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-			HttpSession session = requestAttributes.getRequest().getSession(false);
-			
-			logger.info("sessionId: "+session.getId());
-			session.setAttribute("sessionId", session.getId());
-			HttpServletResponse resp = (HttpServletResponse) response;
-			SessionContext sessionContext = (SessionContext) session.getAttribute("sessionContext");
-			String userUuid = sessionContext.getUserInfo().getRef().getUuid();
-			String sessionUuid;
-			Session sessionDO;
-			
-			//logger.info("Session Object: " + sessionContext.getSessionInfo());
 
-			if(sessionContext.getSessionInfo() == null || sessionContext.getSessionInfo().getRef().getUuid().isEmpty()) {
-				logger.info("Empty Session Object. Unable to set sessionId");
-				resp.addHeader("sessionId", null);			
-			} else {
-				sessionUuid = sessionContext.getSessionInfo().getRef().getUuid();
-				//sessionDO = sessionServiceImpl.findLatestByUuid(sessionUuid);
-				sessionDO = (Session) commonServiceImpl.getLatestByUuid(sessionUuid, MetaType.session.toString());
-				resp.addHeader("sessionId", sessionDO.getSessionId());
+			HttpServletResponse resp = (HttpServletResponse) response;
+			try {
+				ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+				HttpSession session = requestAttributes.getRequest().getSession(false);
+				
+				logger.info("sessionId: "+session.getId());
+				session.setAttribute("sessionId", session.getId());
+				SessionContext sessionContext = (SessionContext) session.getAttribute("sessionContext");
+				String userUuid = sessionContext.getUserInfo().getRef().getUuid();
+				resp.addHeader("userUUID", userUuid);
+				String sessionUuid;
+				Session sessionDO;
+				
+				//logger.info("Session Object: " + sessionContext.getSessionInfo());
+
+				if(sessionContext.getSessionInfo() == null || sessionContext.getSessionInfo().getRef().getUuid().isEmpty()) {
+					logger.info("Empty Session Object. Unable to set sessionId");
+					resp.addHeader("sessionId", null);			
+				} else {
+					sessionUuid = sessionContext.getSessionInfo().getRef().getUuid();
+					//sessionDO = sessionServiceImpl.findLatestByUuid(sessionUuid);
+					sessionDO = (Session) commonServiceImpl.getLatestByUuid(sessionUuid, MetaType.session.toString());
+					resp.addHeader("sessionId", sessionDO.getSessionId());
+				}
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			
 			// MetaIdentifier sessionMeta = new MetaIdentifier(MetaType.session,
 			// sessionDO.getUuid(),sessionDO.getVersion());
 			// sessionInfo.setRef(sessionMeta);
@@ -161,7 +169,6 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			
 			//logger.info("userName:>--->>"+authentication.getPrincipal().toString());
 			resp.addHeader("userName", authentication.getPrincipal().toString());
-			resp.addHeader("userUUID", userUuid);
 
 			if (debug) {
 				this.logger.debug("Login Authentication Authorization header found for user '" + username + "'");

@@ -162,62 +162,76 @@ public class RunDagServiceImpl implements Callable<String> {
 		return parseAndExecute();
 	}
 	
+	@SuppressWarnings("finally")
 	public String parseAndExecute() throws Exception {
-		FrameworkThreadLocal.getSessionContext().set(sessionContext);
-		//Check if parsing has happ or not. If not then parse.
-		dagServiceImpl.setRunMode(runMode);
-		if (Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.NotStarted)) {
-			// Parse to create SQL
-			dagExec = dagServiceImpl.parseDagExec(dag, dagExec);
-			//dagExecServiceImpl.save(dagExec);
-			commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
-		}
-		
-		synchronized (dagExec.getUuid()) {
-			commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.InProgress);
-		}
+		try {
 
-		// Execute the object
-		dagExec = btchServ.createDagExecBatch(dag, dagExec, runMode);
-		
-		
-		//dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion());
-		dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString());
-		List<StageExec> dagExecStgs = DagExecUtil.castToStageExecList(dagExec.getStages());
-		boolean setCompletedStatus = true;
-		
-		
-		for (StageExec stageExec : dagExecStgs) {
-			Status latestStatus = Helper.getLatestStatus(stageExec.getStatusList());
-			logger.info("After dag exec latestStatus : " + latestStatus.getStage().toString() + " for stage exec : " + stageExec.getStageId());
-			if (latestStatus.getStage().equals(Status.Stage.Failed)) {
-				synchronized (dagExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Failed);
-				}
-				setCompletedStatus = false;
-				break;
-			} else if (latestStatus.getStage().equals(Status.Stage.Killed)) {
-				synchronized (dagExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Terminating);
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Killed);
-				}
-				setCompletedStatus = false;
-				break;
-			} else if (!latestStatus.getStage().equals(Status.Stage.Completed)) {
-				setCompletedStatus = false;
-				break;
+			FrameworkThreadLocal.getSessionContext().set(sessionContext);
+			//Check if parsing has happ or not. If not then parse.
+			dagServiceImpl.setRunMode(runMode);
+			if (Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.NotStarted)) {
+				// Parse to create SQL
+				dagExec = dagServiceImpl.parseDagExec(dag, dagExec);
+				//dagExecServiceImpl.save(dagExec);
+				commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 			}
-		}
-		
-		if (setCompletedStatus) {
-			logger.info("DagExec completed");
+			
 			synchronized (dagExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Completed);
+				commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.InProgress);
 			}
+
+			// Execute the object
+			dagExec = btchServ.createDagExecBatch(dag, dagExec, runMode);
+			
+			
+			//dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion());
+			dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString());
+			List<StageExec> dagExecStgs = DagExecUtil.castToStageExecList(dagExec.getStages());
+			boolean setCompletedStatus = true;
+			
+			
+			for (StageExec stageExec : dagExecStgs) {
+				Status latestStatus = Helper.getLatestStatus(stageExec.getStatusList());
+				logger.info("After dag exec latestStatus : " + latestStatus.getStage().toString() + " for stage exec : " + stageExec.getStageId());
+				if (latestStatus.getStage().equals(Status.Stage.Failed)) {
+					synchronized (dagExec.getUuid()) {
+						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Failed);
+					}
+					setCompletedStatus = false;
+					break;
+				} else if (latestStatus.getStage().equals(Status.Stage.Killed)) {
+					synchronized (dagExec.getUuid()) {
+						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Terminating);
+						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Killed);
+					}
+					setCompletedStatus = false;
+					break;
+				} else if (!latestStatus.getStage().equals(Status.Stage.Completed)) {
+					setCompletedStatus = false;
+					break;
+				}
+			}
+			
+			if (setCompletedStatus) {
+				logger.info("DagExec completed");
+				synchronized (dagExec.getUuid()) {
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Completed);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
+			throw new Exception((message != null) ? message : "Pipeline execution failed.");
+		}finally {			
+			taskThreadMap.remove("Dag_"+dagExec.getUuid());
+			return "Dag_"+dagExec.getUuid();
 		}
-		
-		taskThreadMap.remove("Dag_"+dagExec.getUuid());
-		return "Dag_"+dagExec.getUuid();
 	}
 
 }

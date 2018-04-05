@@ -982,6 +982,14 @@ public class DagServiceImpl {
 						statusList.remove(failedStatus);
 						statusList.add(failedStatus);
 						e.printStackTrace();
+						String message = null;
+						try {
+							message = e.getMessage();
+						}catch (Exception e2) {
+							// TODO: handle exception
+						}
+						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
+						throw new Exception((message != null) ? message : "Pipeline execution failed.");
 					} finally {
 						//mapExecServiceImpl.save(mapExec);
 						commonServiceImpl.save(MetaType.mapExec.toString(), mapExec);

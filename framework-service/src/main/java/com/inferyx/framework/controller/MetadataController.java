@@ -244,6 +244,7 @@ public class MetadataController {
 		return registerService.getFilterByDatapod(datapodUUID, type);
 	}*/
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/getOneById", method = RequestMethod.GET, params = { "id", "type" })
 	public @ResponseBody String getOneById(@RequestParam("id") String id, @RequestParam("type") String type,
 			HttpServletRequest request) throws JsonProcessingException {
@@ -283,6 +284,7 @@ public class MetadataController {
 		return registerService.getDataStoreByDatapod(datapodUUID, type);
 	}
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/getAllLatest", method = RequestMethod.GET)
 	public @ResponseBody String getAllLatest(@RequestParam("type") String type, HttpServletRequest request,
 			@RequestParam(value = "inputFlag", required = false) String inputFlag) throws JsonProcessingException {
@@ -297,24 +299,28 @@ public class MetadataController {
 		return objectWriter.writeValueAsString(commonServiceImpl.getAllLatest(type, "Y"));
 	}
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/getAllByUuid", method = RequestMethod.GET)
 	public @ResponseBody String getAllByUuid(@RequestParam("uuid") String uuid, @RequestParam("type") String type)
 			throws JsonProcessingException {
 		return registerService.getAllByUuid(uuid, type);
 	}*/
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/getAll", method = RequestMethod.GET)
 	public @ResponseBody String getAll(@RequestParam("type") String type, HttpServletRequest request)
 			throws JsonProcessingException {
 		return registerService.getMetaDataList(type, request);
 	}*/
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/getList", method = RequestMethod.GET)
 	public @ResponseBody List<BaseEntity> getList(@RequestParam("type") String type, HttpServletRequest request)
 			throws JsonProcessingException {
 		return registerService.getList(type, request);
 	}*/
-	
+
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/dag", method = RequestMethod.POST)
 	public @ResponseBody String executeDag(@RequestBody Dag dag,
 			@RequestParam(value = "type", required = false) String type,
@@ -322,6 +328,7 @@ public class MetadataController {
 		return null;
 	}*/
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public ResponseEntity<String> save(@RequestBody Map<String, Object> document, @RequestParam("type") String type)
 			throws Exception {
@@ -329,24 +336,28 @@ public class MetadataController {
 		return new ResponseEntity<String>(Id, HttpStatus.OK);
 	}*/
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/saveAs", method = RequestMethod.GET)
 	public @ResponseBody String SaveAs(@RequestParam("uuid") String uuid, @RequestParam("version") String version,
 			@RequestParam("type") String type) throws Exception {
 		return registerService.saveAs(uuid, version, type);
 	}*/
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/resolveName", method = RequestMethod.POST)
 	public @ResponseBody Object resolveName(@RequestBody Map<String, Object> document,
 			@RequestParam("type") String type) {
 		return refParser.resolveName(document, type);
 	}*/
-	
+
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public ResponseEntity<String> delete(@RequestParam("id") String id, @RequestParam("type") String type) {
 		registerService.delete(id, type);
 		return new ResponseEntity<String>("deleted successfully", HttpStatus.OK);
 	}*/
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public @ResponseBody String test(@RequestParam("param1") String param1, 
 			@RequestParam("param2") String param2,
@@ -387,7 +398,8 @@ public class MetadataController {
 
 	}
 
-	@RequestMapping(value = "/registerFile", method = RequestMethod.GET)
+	/********************** UNUSED **********************/
+	/*@RequestMapping(value = "/registerFile", method = RequestMethod.GET)
 	public @ResponseBody MetaIdentifierHolder loadCsv(@RequestParam("csvFileName") String csvFileName,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
@@ -400,8 +412,9 @@ public class MetadataController {
 			runMode = Mode.valueOf(mode); 
 		}
 		return datapodServiceImpl.createAndLoad(csvFileName, runMode);
-	}
+	}*/
 
+	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/file", method = RequestMethod.POST)
 	public @ResponseBody String getFileContain(HttpServletRequest request,
 			@RequestParam("file") MultipartFile multiPartFile, @RequestParam("fileName") String filename,

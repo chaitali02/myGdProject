@@ -377,8 +377,30 @@ public class ProfileServiceImpl extends RuleTemplate {
 	public ProfileExec create(String profileUUID, String profileVersion, ProfileExec profileExec,
 			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec)
 			throws NumberFormatException, Exception {
-		return (ProfileExec) super.create(profileUUID, profileVersion, MetaType.profile, MetaType.profileExec,
-				profileExec, refKeyMap, datapodList, dagExec);
+		try {
+			return (ProfileExec) super.create(profileUUID, profileVersion, MetaType.profile, MetaType.profileExec,
+					profileExec, refKeyMap, datapodList, dagExec);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create ProfileExec.");
+			throw new NumberFormatException((message != null) ? message : "Can not create ProfileExec.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create ProfileExec.");
+			throw new Exception((message != null) ? message : "Can not create ProfileExec.");
+		}		
 	}
 
 	public ProfileExec execute(String profileUUID, String profileVersion, ProfileExec profileExec,
@@ -394,9 +416,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 	}
 
 	public List<Map<String, Object>> getProfileResults(String profileExecUUID, String profileExecVersion, int offset,
-			int limit, String sortBy, String order, String requestId, Mode runMode) throws IOException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException, NullPointerException, java.text.ParseException, SQLException, JSONException {
+			int limit, String sortBy, String order, String requestId, Mode runMode) throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			limit = offset + limit;
@@ -444,30 +464,21 @@ public class ProfileServiceImpl extends RuleTemplate {
 				}
 			}*/
 		} catch (Exception e) {
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-					.getRequestAttributes();
-			if (requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if (response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(404);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				} else
-					logger.info("HttpServletResponse response is \"" + null + "\"");
-			} else
-				logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
 	}
 
 	public void restart(String type, String uuid, String version, Mode runMode)
-			throws IOException, ParseException, JSONException {
+			throws Exception {
 		// ProfileExec profileExec= profileExecServiceImpl.findOneByUuidAndVersion(uuid,
 		// version);
 		ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
@@ -490,9 +501,25 @@ public class ProfileServiceImpl extends RuleTemplate {
 					commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Failed);
 				} catch (Exception e1) {
 					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.");
+					throw new Exception((message != null) ? message : "Can not parse Profile.");
 				}
 			}
 			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.");
+			throw new Exception((message != null) ? message : "Can not parse Profile.");
 		}
 
 	}
@@ -500,14 +527,16 @@ public class ProfileServiceImpl extends RuleTemplate {
 	@Override
 	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
 			List<String> datapodList, DagExec dagExec, Mode runMode) throws Exception {
-		Profile profile = null;
-		ProfileOperator profileOperator = null;
-		StringBuilder sbProfileSelect = new StringBuilder();
-		ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-				MetaType.profileExec.toString());
-		profile = (Profile) commonServiceImpl.getOneByUuidAndVersion(profileExec.getDependsOn().getRef().getUuid(),
-				profileExec.getDependsOn().getRef().getVersion(), MetaType.profile.toString());
+		ProfileExec profileExec =null;
 		try {
+			Profile profile = null;
+			ProfileOperator profileOperator = null;
+			StringBuilder sbProfileSelect = new StringBuilder();
+			profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+					MetaType.profileExec.toString());
+			profile = (Profile) commonServiceImpl.getOneByUuidAndVersion(profileExec.getDependsOn().getRef().getUuid(),
+					profileExec.getDependsOn().getRef().getVersion(), MetaType.profile.toString());
+			
 			for (int i = 0; i < profile.getAttributeInfo().size(); i++) {
 				profileOperator = profileOperatorFactory.getOperator(runMode);
 				String sql = profileOperator.generateSql(profile, profileExec,
@@ -524,7 +553,15 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.");
+			throw new Exception((message != null) ? message : "Can not parse Profile.");
+		}	
 		return profileExec;
 	}
 
@@ -532,12 +569,24 @@ public class ProfileServiceImpl extends RuleTemplate {
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
-		Datapod targetDatapod = (Datapod) daoRegister
-				.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
-		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
-				targetDatapod.getVersion());
-		return super.execute(uuid, version, MetaType.profile, MetaType.profileExec, metaExecutor, baseRuleExec,
-				baseGroupExec, targetDatapodKey, taskList, runMode);
+		try {
+			Datapod targetDatapod = (Datapod) daoRegister
+					.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
+			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
+					targetDatapod.getVersion());
+			return super.execute(uuid, version, MetaType.profile, MetaType.profileExec, metaExecutor, baseRuleExec,
+					baseGroupExec, targetDatapodKey, taskList, runMode);			
+		}catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Profile execution failed.");
+			throw new Exception((message != null) ? message : "Profile execution failed.");
+		}
 	}
 
 	public HttpServletResponse download(String uuid, String version, String format, String download, int offset,
