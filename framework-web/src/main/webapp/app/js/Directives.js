@@ -1519,12 +1519,11 @@ InferyxApp.directive('fileModelChange', ['$parse', function ($parse) {
           element.bind('change', function(){
             var file=element[0].files[0]
               scope.$apply(function(){
-                // var regex = /[a-z]+/;
-                // var str1 = file.name
-                // alert(regex.test(str1));
-               
+                var patt1 = new RegExp(/^[0-9a-zA-Z\.]*$/);
+                var result = patt1.test(file.name);
                   scope.onSubmit({
-                    'fileName':file.name
+                    'fileName':file.name,
+                     'valid':result
                   });
               });
           });

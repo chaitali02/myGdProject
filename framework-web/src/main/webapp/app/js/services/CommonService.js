@@ -297,6 +297,7 @@
       }
       return deferred.promise;
     } /*End getOneById*/
+    
     this.getBaseEntityByCriteria = function(type, name, userName, startDate, endDate, tags, active, published) {
       var deferred = $q.defer();
       var url = "metadata/getBaseEntityByCriteria?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;

@@ -1,7 +1,9 @@
 AdminModule= angular.module('AdminModule');
 AdminModule.controller("FileManagerController",function(uiGridConstants,$state,$filter,$location,$http,$stateParams,dagMetaDataService, $rootScope,FileManagerService,$scope,CommonService) {
     $scope.searchForm={};
-    $scope.tz=localStorage.serverTz
+    $scope.tz=localStorage.serverTz;
+    $scope.isFileNameValid=true;
+    $scope.isSubmitDisable=true;
     var matches = $scope.tz.match(/\b(\w)/g);
     $scope.timezone=matches.join('');
     $scope.autoRefreshCounter=05;
@@ -229,26 +231,36 @@ AdminModule.controller("FileManagerController",function(uiGridConstants,$state,$
     }
 
     $scope.uploadFile=function(){
-        var iEl = angular.element(document.querySelector('#csv_file'));
-        var file = iEl[0].files[0]
-        console.log(file)
-        var fd = new FormData();
-        fd.append('file', file);
-        $('#fileupload').modal('hide');
-        $scope.searchButtonText="Uploading"
-        FileManagerService.SaveFile(file.name,fd,"").then(function(response){onSuccess(response.data)});
-        var onSuccess=function(response){
-            $scope.searchButtonText="Upload"
-            $scope.msg = "CSV Uploaded Successfully"
-            notify.type = 'success',
-            notify.title = 'Success',
-            notify.content = $scope.msg
-            $scope.$emit('notify', notify); 
-            $scope.getBaseEntityStatusByCriteria(false);
-        }
+      if($scope.isSubmitDisable){
+        $scope.msg = "Special character or space not allowed in file name."
+        notify.type = 'info',
+        notify.title = 'Info',
+        notify.content = $scope.msg
+        $scope.$emit('notify', notify);
+        return false; 
+      }
+      var iEl = angular.element(document.querySelector('#csv_file'));
+      var file = iEl[0].files[0]
+      console.log(file)
+      var fd = new FormData();
+      fd.append('file', file);
+      $('#fileupload').modal('hide');
+      $scope.searchButtonText="Uploading"
+      FileManagerService.SaveFile(file.name,fd,"").then(function(response){onSuccess(response.data)});
+      var onSuccess=function(response){
+        $scope.searchButtonText="Upload"
+        $scope.msg = "CSV Uploaded Successfully"
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = $scope.msg
+        $scope.$emit('notify', notify); 
+        $scope.getBaseEntityStatusByCriteria(false);
+      }
     }
     $scope.fileNameValidate=function(data){
         console.log(data)
+        $scope.isFileNameValid=data.valid;
+        $scope.isSubmitDisable=!data.valid;
     }
     $scope.searchCriteria=function(){
         $scope.getBaseEntityStatusByCriteria(false);

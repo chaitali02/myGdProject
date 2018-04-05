@@ -6,6 +6,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   $scope.select = $stateParams.type.toLowerCase();
   $scope.newType = $stateParams.type.toLowerCase();
   $scope.autorefreshcounter = 05
+  $scope.isFileNameValid=true;
+  $scope.isFileSubmitDisable=true;
   $scope.path = dagMetaDataService.statusDefs
   var notify = {
     type: 'success',
@@ -548,8 +550,22 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     });
   }
 
+  $scope.fileNameValidate=function(data){
+    console.log(data)
+    $scope.isFileNameValid=data.valid;
+    $scope.isFileSubmitDisable=!data.valid;
+}
+
   $scope.uploadFile = function () {
     //var file = $scope.myFile;
+    if($scope.isFileSubmitDisable){
+      $scope.msg = "Special character or space not allowed in file name."
+      notify.type = 'info',
+      notify.title = 'Info',
+      notify.content = $scope.msg
+      $scope.$emit('notify', notify);
+      return false; 
+    }
     var iEl = angular.element(document.querySelector('#csv_file'));
     var file = iEl[0].files[0]
     var fd = new FormData();
