@@ -1645,10 +1645,14 @@
         App.scrollTop();
         if($scope.showResults){
           $scope.showResults = false;
+          $rootScope.showGroupDowne=false;
+          $rootScope.showGrid=false;
           $scope.$emit('resultExecChanged',false);
         }
         else if($scope.showGroupGraph){
           $scope.showGroupGraph = false;
+          rootScope.showGroupDowne=true;
+          $rootScope.showGrid=false;
           $scope.$emit('daggroupExecChanged',false);
         }
       }
