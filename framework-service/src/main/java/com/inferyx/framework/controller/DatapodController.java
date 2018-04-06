@@ -126,6 +126,13 @@ public class DatapodController {
 		return datapodServiceImpl.getDatapodStats();
 	}
 	
+	@RequestMapping(value = "/getDatapodStats2", method = RequestMethod.GET)
+	public @ResponseBody List<DatapodStatsHolder> getDatapodStats2(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return datapodServiceImpl.getDatapodStats2();
+	}
+	
 	@RequestMapping(value = "/upload", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
 	public boolean upload(@RequestParam("csvFileName") MultipartFile csvFile,
 			@RequestParam(value = "datapodUuid") String datapodUuid,
