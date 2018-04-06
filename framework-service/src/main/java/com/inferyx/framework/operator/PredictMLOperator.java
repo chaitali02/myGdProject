@@ -37,6 +37,7 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
 /**
@@ -63,8 +64,7 @@ public class PredictMLOperator {
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
-	private SparkMLOperator sparkMLOperator; 
-
+	private ModelServiceImpl modelServiceImpl; 
 	/**
 	 * 
 	 */
@@ -140,7 +140,7 @@ public class PredictMLOperator {
 				datapodWriter.write(dfTask, filePathUrl, targetDp, SaveMode.Append.toString());
 				return filePathUrl;
 			} else {
-				if (sparkMLOperator.save(modelName, trainedModel, sparkContext, filePathUrl))
+				if (modelServiceImpl.save(modelName, trainedModel, sparkContext, filePathUrl))
 					return filePathUrl + "/data";
 				else
 					return null;

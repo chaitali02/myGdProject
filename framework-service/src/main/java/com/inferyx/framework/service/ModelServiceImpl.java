@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1228,5 +1229,53 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return response;
 
 	}
+
+	public boolean save(String className, Object obj, SparkContext sparkContext, String path) {
+
+		Class<?> dynamicClass = obj.getClass();
+		// dynamicClass = dynamicClass.cast(obj);
+
+		Class<?>[] paramSave = new Class[1];
+		// paramSave[0] = SparkContext.class;
+		paramSave[0] = String.class;
+
+		/*
+		 * //KMeansModel kmeansModel = obj; if(obj. instanceof KMeansModel){ KMeansModel
+		 * kmeansModel = (KMeansModel)obj; kmeansModel.save(path);
+		 * 
+		 * try { kmeansModel.save(path); return true; } catch (IOException e) {
+		 * e.printStackTrace(); } }
+		 */
+		Method m1 = null;
+		try {
+			m1 = dynamicClass.getMethod("save", paramSave);
+			try {
+				m1.invoke(obj, path);
+				return true;
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				// e.printStackTrace();
+				String expMessage = e.getCause().getMessage();// getMessage();
+				if (expMessage.contains("use write().overwrite().save(path) for Java")) {
+					// KMeansModel kmeansModel = (KMeansModel) obj;
+					try {
+						Object mlWriter = obj.getClass().getMethod("write").invoke(obj);
+						Object mlWriter_2 = mlWriter.getClass().getMethod("overwrite").invoke(mlWriter);
+						mlWriter_2.getClass().getMethod("save", String.class).invoke(mlWriter_2, path);
+						// kmeansModel.write().overwrite().save(path);
+						return true;
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ioExp) {
+						ioExp.printStackTrace();
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+				}
+			}
+		} catch (NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
 
 }

@@ -33,6 +33,7 @@ import org.apache.spark.storage.StorageLevel;
 import org.dmg.pmml.PMML;
 import org.jpmml.model.JAXBUtil;
 import org.jpmml.sparkml.ConverterUtil;
+import org.neo4j.storageengine.api.TransactionApplicationMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,8 +64,11 @@ import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
+import com.inferyx.framework.operator.SimulateMLOperator;
 import com.inferyx.framework.operator.SparkMLOperator;
+import com.inferyx.framework.operator.TrainAndValidateOperator;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -118,6 +122,13 @@ public class SparkExecutor implements IExecutor {
 	private RuleOperator ruleOperator;
 	@Autowired
 	private SparkMLOperator sparkMLOperator;
+	@Autowired
+	private PredictMLOperator predictMLOperator;
+	@Autowired
+	private SimulateMLOperator simulateMLOperator ;
+	@Autowired
+	private TrainAndValidateOperator trainAndValidateOperator ;
+	
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 
@@ -518,7 +529,7 @@ public class SparkExecutor implements IExecutor {
 		//sparkMLOperator.setHelper(helper);
 		//sparkMLOperator.setTrain(train);
 		//sparkMLOperator.setHdfsInfo(hdfsInfo);
-		result = sparkMLOperator.trainAndValidate(train, model, algorithm, algorithm.getTrainName(), algorithm.getModelName(), df, va, paramMap, filePathUrl, filePath);
+		result = trainAndValidateOperator.trainAndValidate(train, model, algorithm, algorithm.getTrainName(), algorithm.getModelName(), df, va, paramMap, filePathUrl, filePath);
 		return result;
 	}
 
@@ -859,7 +870,7 @@ public class SparkExecutor implements IExecutor {
 			//sparkMLOperator.setDaoRegister(daoRegister);
 			//sparkMLOperator.setDatasourceFactory(dataSourceFactory);
 			//sparkMLOperator.setHdfsInfo(hdfsInfo);
-			return sparkMLOperator.predict(predict, model, algorithm, target, transformedDf, fieldArray, latestTrainExec, va,
+			return predictMLOperator.predict(predict, model, algorithm, target, transformedDf, fieldArray, latestTrainExec, va,
 					targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -909,7 +920,7 @@ public class SparkExecutor implements IExecutor {
 			//sparkMLOperator.setDatasourceFactory(dataSourceFactory);
 			//sparkMLOperator.setSparkSession(sparkSession);
 			//sparkMLOperator.setHdfsInfo(hdfsInfo);
-			return sparkMLOperator.simulate(simulate, model, algorithm, target, latestTrainExec, fieldArray,
+			return simulateMLOperator.simulate(simulate, model, algorithm, target, latestTrainExec, fieldArray,
 					targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, clientContext);
 		} catch (IOException e) {
 			e.printStackTrace();
