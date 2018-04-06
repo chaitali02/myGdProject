@@ -59,9 +59,10 @@ public class ProfileOperator {
 		}
 		dp = (Datapod) daoRegister.getRefObject(profile.getDependsOn().getRef());
 		if (profile.getAttributeInfo() != null) {
-			logger.info("getProfileTableName(DP) : " + getTableName(dp, profileExec, datapodList, dagExec, runMode));
-			return generateSql(profile, profileExec, getTableName(dp, profileExec, datapodList, dagExec, runMode),
-					attrId, dp.getAttribute(Integer.parseInt(attrId)).getName(), runMode);
+			String tableName = getTableName(dp, profileExec, datapodList, dagExec, runMode);
+			logger.info("getProfileTableName(DP) : " + tableName);
+			return generateSql(profile, profileExec, tableName, attrId, 
+					dp.getAttribute(Integer.parseInt(attrId)).getName(), runMode);
 		} else {
 			return generateSql(profile, profileExec, getTableName(dp, profileExec, datapodList, dagExec, runMode), null,
 					dagExec, runMode);
