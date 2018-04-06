@@ -1,1 +1,14 @@
+ld/
 /target/
+.project
+.settings
+.classpath
+.DS_Store
+*target
+*bin
+*build
+/derby.log
+metastore_db
+src/main/webapp/app/node_modules/
+src/main/webapp/app/.tmp/
+
