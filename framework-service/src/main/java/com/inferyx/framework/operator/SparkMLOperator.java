@@ -59,6 +59,7 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
@@ -85,6 +86,8 @@ public class SparkMLOperator implements IModelOperator {
 	private SparkSession sparkSession;
 	@Autowired
 	private HDFSInfo hdfsInfo;
+	@Autowired
+	private ModelServiceImpl modelServiceImpl;
 
 	static final Logger LOGGER = Logger.getLogger(SparkMLOperator.class);
 
@@ -152,56 +155,7 @@ public class SparkMLOperator implements IModelOperator {
 		return paramMapList;
 	}
 
-	public boolean save(String className, Object obj, SparkContext sparkContext, String path) {
-
-		Class<?> dynamicClass = obj.getClass();
-		// dynamicClass = dynamicClass.cast(obj);
-
-		Class<?>[] paramSave = new Class[1];
-		// paramSave[0] = SparkContext.class;
-		paramSave[0] = String.class;
-
-		/*
-		 * //KMeansModel kmeansModel = obj; if(obj. instanceof KMeansModel){ KMeansModel
-		 * kmeansModel = (KMeansModel)obj; kmeansModel.save(path);
-		 * 
-		 * try { kmeansModel.save(path); return true; } catch (IOException e) {
-		 * e.printStackTrace(); } }
-		 */
-		Method m1 = null;
-		try {
-			m1 = dynamicClass.getMethod("save", paramSave);
-			try {
-				m1.invoke(obj, path);
-				return true;
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				//e.printStackTrace();
-				String expMessage = e.getCause().getMessage();// getMessage();
-				if (expMessage.contains("use write().overwrite().save(path) for Java")) {
-					//KMeansModel kmeansModel = (KMeansModel) obj;
-					try {
-						Object mlWriter = obj.getClass().getMethod("write").invoke(obj);
-						Object mlWriter_2 = mlWriter.getClass().getMethod("overwrite").invoke(mlWriter);
-						mlWriter_2.getClass().getMethod("save", String.class).invoke(mlWriter_2, path);
-						//kmeansModel.write().overwrite().save(path);
-						return true;
-					} catch (IllegalAccessException 
-							| IllegalArgumentException 
-							| InvocationTargetException ioExp) {
-						ioExp.printStackTrace();
-					}catch (Exception e2) {
-						e2.printStackTrace();
-					}
-				}
-			}
-		} catch (NoSuchMethodException 
-				| SecurityException e) {
-			e.printStackTrace();
-		}
-
-		return false;
-	}
-
+	
 	@Override
 	public Object trainAndValidate(Train train, Model model, Algorithm algorithm,String modelClassName, String modelName, Dataset<Row> df, VectorAssembler va,
 			ParamMap paramMap, String filePathUrl,String filePath) throws Exception {
@@ -270,7 +224,7 @@ public class SparkMLOperator implements IModelOperator {
 			 */
 
 			// Vector features = new DenseVector(values)
-			boolean result = save(modelName, trngModel, sparkContext, filePathUrl);
+			boolean result = modelServiceImpl.save(modelName, trngModel, sparkContext, filePathUrl);
 			if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
 				try {
 					LOGGER.info("trainedDataSet schema : " + trainedDataSet.schema());
@@ -401,7 +355,7 @@ public class SparkMLOperator implements IModelOperator {
 				datapodWriter.write(dfTask, filePathUrl, targetDp, SaveMode.Append.toString());
 				return filePathUrl;
 			} else {
-				if (save(modelName, trainedModel, sparkContext, filePathUrl))
+				if (modelServiceImpl.save(modelName, trainedModel, sparkContext, filePathUrl))
 					return filePathUrl + "/data";
 				else
 					return null;

@@ -340,6 +340,10 @@
 	<bean id="reconGroupExecServiceImpl" class="com.inferyx.framework.service.ReconGroupExecServiceImpl"/>
 	<bean id="reconViewServiceImpl" class="com.inferyx.framework.service.ReconViewServiceImpl"/>
 	
+	<bean id="trainAndValidateOperator" class="com.inferyx.framework.operator.TrainAndValidateOperator"/>
+	<bean id="simulateMLOperator" class="com.inferyx.framework.operator.SimulateMLOperator"/>
+	<bean id="predictMLOperator" class="com.inferyx.framework.operator.PredictMLOperator"/>
+	
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>
 	<!--<bean id="exceptionHandlingAspect" class="com.inferyx.framework.aspect.ControllerValidation"/> -->
