@@ -13,9 +13,9 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 
 @Component
-public class ProfileSqlOperator extends ProfileOperator {
+public class ProfileMySQLOperator extends ProfileOperator {
 
-	public ProfileSqlOperator() {
+	public ProfileMySQLOperator() {
 	}
 	
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
@@ -26,14 +26,14 @@ public class ProfileSqlOperator extends ProfileOperator {
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 		sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, \'"
 				+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, "+datapod.getName()+" AS datapodName, " + attrId
-				+ " AS AttributeId, "+attrName+" AS attributeName, min(cast(" + attrName + " AS SIGNED)) AS minVal, max(cast(" + attrName
+				+ " AS AttributeId, "+attrName+" AS attributeName, "+ "(SELECT COUNT(*) FROM " + profileTableName +" tab) AS numRows, min(cast(" + attrName + " AS SIGNED)) AS minVal, max(cast(" + attrName
 				+ " AS SIGNED)) AS maxVal, avg(" + attrName + ") AS avgVal,cast(" + getMedianVal(attrName)
 				+ " AS decimal) AS medianVal, stddev(" + attrName + ") AS stdDev, count(distinct " + attrName
 				+ ") AS numDistinct, count(distinct " + attrName + ")/count(" + attrName
 				+ ")*100 AS perDistinct, count(if(" + attrName + " is null,1,0)) AS numNull,count(if(" + attrName
 				+ "" + " is null,1,0)) / count(" + attrName + ")*100 AS perNull, count(if(" + attrName
-				+ " is null,1,0)) / count(" + attrName + ") AS sixSigma, '" + profileExec.getVersion()
-				+ "' AS version from " + profileTableName;
+				+ " is null,1,0)) / count(" + attrName + ") AS sixSigma, " + " CURDATE() AS load_date, " + " unix_timestamp() AS load_id, '" 
+				+ profileExec.getVersion() + "' AS version from " + profileTableName;
     	logger.info("query is : " + sql);
 		return sql;
 	}

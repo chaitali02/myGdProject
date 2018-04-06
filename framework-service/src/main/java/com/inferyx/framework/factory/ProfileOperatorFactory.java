@@ -20,7 +20,7 @@ import com.inferyx.framework.operator.ProfileHiveOperator;
 import com.inferyx.framework.operator.ProfileImpalaOperator;
 import com.inferyx.framework.operator.ProfileOperator;
 import com.inferyx.framework.operator.ProfileOracleOperator;
-import com.inferyx.framework.operator.ProfileSqlOperator;
+import com.inferyx.framework.operator.ProfileMySQLOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 
@@ -38,7 +38,7 @@ public class ProfileOperatorFactory /*extends OperatorFactory*/ {
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
-	private ProfileSqlOperator profileSqlOperator;
+	private ProfileMySQLOperator profileMySQLOperator;
 	@Autowired
 	private ProfileImpalaOperator profileImpalaOperator;
 	@Autowired
@@ -87,7 +87,7 @@ public class ProfileOperatorFactory /*extends OperatorFactory*/ {
 		} else if (datasourceName.equalsIgnoreCase(ExecContext.HIVE.toString()) || datasourceName.equalsIgnoreCase(ExecContext.spark.toString()) || datasourceName.equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return profileHiveOperator;
 		} else if (datasourceName.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-			return profileSqlOperator;
+			return profileMySQLOperator;
 		} else {
 			return profileOracleOperator;
 		}
