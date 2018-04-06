@@ -59,7 +59,7 @@
 
       $scope.$on('generateResults',function (e,params) {
         $rootScope.showGrid=true;
-        $rootScope.showGroupDowne=true;
+        $rootScope.showGroupDowne=false;
         $('#errorMsg').hide();
         $scope.searchtext = '';
         if(initialised){
@@ -1138,6 +1138,7 @@
         App.scrollTop();
         if(params.type.slice(-5).toLowerCase() == 'group'){
           $scope.showGroupGraph = true;
+          $rootScope.showGroupDowne=true;
           $scope.lastGroupParams = params;
           $scope.$broadcast('generateGroupGraph',params);
         }
@@ -1489,6 +1490,7 @@
         }
             
         $scope.graphReady = true;
+        
         d3.selectAll('#paper')
           .on('contextmenu', function(){
             //alert($scope.isTemplate)1.jitu
@@ -1642,16 +1644,20 @@
       });
           
       $scope.closeSubTabs = function () {
+        debugger;
         App.scrollTop();
         if($scope.showResults){
           $scope.showResults = false;
-          $rootScope.showGroupDowne=false;
+          if($scope.showGroupGraph)
+          $rootScope.showGroupDowne=true;
+          else
+          $scope.showGroupGraph=false;
           $rootScope.showGrid=false;
           $scope.$emit('resultExecChanged',false);
         }
         else if($scope.showGroupGraph){
           $scope.showGroupGraph = false;
-          rootScope.showGroupDowne=true;
+          $rootScope.showGroupDowne=false;
           $rootScope.showGrid=false;
           $scope.$emit('daggroupExecChanged',false);
         }
