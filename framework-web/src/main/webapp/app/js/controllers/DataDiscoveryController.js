@@ -61,47 +61,48 @@ DatadiscoveryModule.controller('DataDiscoveryController', function ($state, dagM
 DatadiscoveryModule.filter('isoCurrencyWithK1', ["$filter", "iso4217", function ($filter, iso4217) {
 	return function (amount, fraction) {
         return Math.abs(Number(amount)) >= 1.0e+18
-        ? Math.abs(Number(amount)) / 1.0e+18 + "Qui"
+        ? (Math.abs(Number(amount)) / 1.0e+18).toFixed(fraction) + "Qui"
        // fifteen Zeroes for Millions 
        : Math.abs(Number(amount)) >= 1.0e+15
-        ? Math.abs(Number(amount)) / 1.0e+15 + "Qua"
+        ? (Math.abs(Number(amount)) / 1.0e+15).toFixed(fraction) + "Qua"
        // twelve Zeroes for Millions 
        : Math.abs(Number(amount)) >= 1.0e+12
-        ? Math.abs(Number(amount)) / 1.0e+12 + "T"
+        ? (Math.abs(Number(amount)) / 1.0e+12).toFixed(fraction) + "T"
        // Nine Zeroes for Millions 
        : Math.abs(Number(amount)) >= 1.0e+9
-       ? Math.abs(Number(amount)) / 1.0e+9 + "B"
+       ? (Math.abs(Number(amount)) / 1.0e+9).toFixed(fraction) + "B"
        // Six Zeroes for Millions 
        : Math.abs(Number(amount)) >= 1.0e+6
    
-       ?  (Math.abs(Number(amount)) / 1.0e+6) + "M"
+       ?  ((Math.abs(Number(amount)) / 1.0e+6)) %1==0 ?(Math.abs(Number(amount)) / 1.0e+6) +"M" :(Math.abs(Number(amount)) / 1.0e+6).toFixed(fraction) + "M"
        // Three Zeroes for Thousands
        : Math.abs(Number(amount)) >= 1.0e+3
    
-       ? Math.abs(Number(amount)) / 1.0e+3 + "K"
+       ? ((Math.abs(Number(amount)) / 1.0e+3)) %1 ==0 ? (Math.abs(Number(amount)) / 1.0e+3)+ "K" :(Math.abs(Number(amount)) / 1.0e+3).toFixed(fraction) + "K"
    
        : Math.abs(Number(amount));
     }
 }])
-DatadiscoveryModule.filter('isoCurrencyWithK2', ["$filter", "iso4217", function ($filter, iso4217) {
-	return function (amount, fraction) {
-        return Math.abs(Number(amount)) >= 1.0e+12
-        ? $filter('number')(amount) + "T"
-       // Six Zeroes for Millions 
-       : Math.abs(Number(amount)) >= 1.0e+9
-       ? $filter('number')(amount)+ "B"
-       // Six Zeroes for Millions 
-       : Math.abs(Number(amount)) >= 1.0e+6
+
+// DatadiscoveryModule.filter('isoCurrencyWithK2', ["$filter", "iso4217", function ($filter, iso4217) {
+// 	return function (amount, fraction) {
+//         return Math.abs(Number(amount)) >= 1.0e+12
+//         ? $filter('number')(amount) + "T"
+//        // Six Zeroes for Millions 
+//        : Math.abs(Number(amount)) >= 1.0e+9
+//        ? $filter('number')(amount)+ "B"
+//        // Six Zeroes for Millions 
+//        : Math.abs(Number(amount)) >= 1.0e+6
    
-       ? $filter('number')(amount)+ "M"
-       // Three Zeroes for Thousands
-       : Math.abs(Number(amount)) >= 1.0e+3
+//        ? $filter('number')(amount)+ "M"
+//        // Three Zeroes for Thousands
+//        : Math.abs(Number(amount)) >= 1.0e+3
    
-       ? $filter('number')(amount) + "K"
+//        ? $filter('number')(amount) + "K"
    
-       : Math.abs(Number(amount));
-    }
-}])
+//        : Math.abs(Number(amount));
+//     }
+// }])
 
 DatadiscoveryModule.factory('PagerService', PagerService)
 function PagerService() {

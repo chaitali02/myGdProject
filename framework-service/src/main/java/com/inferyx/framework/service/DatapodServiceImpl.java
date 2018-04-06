@@ -1076,6 +1076,7 @@ public class DatapodServiceImpl {
 			uploadExec.setLocation(uploadPath);
 			uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,datapod.getUuid(),datapod.getVersion())));
 			uploadExec.setFileName(csvFileName);
+			uploadExec.setName(Helper.getFileName(csvFileName));
 			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 			   
 			// Load datapod using load object

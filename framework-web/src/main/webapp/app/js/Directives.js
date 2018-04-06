@@ -1519,7 +1519,7 @@ InferyxApp.directive('fileModelChange', ['$parse', function ($parse) {
           element.bind('change', function(){
             var file=element[0].files[0]
               scope.$apply(function(){
-                var patt1 = new RegExp(/^[0-9a-zA-Z\.]*$/);
+                var patt1 = new RegExp(/^[0-9a-zA-Z\._]*$/);
                 var result = patt1.test(file.name);
                   scope.onSubmit({
                     'fileName':file.name,

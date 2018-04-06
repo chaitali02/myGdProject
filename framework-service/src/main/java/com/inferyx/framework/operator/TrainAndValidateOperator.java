@@ -33,6 +33,7 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.service.ModelServiceImpl;
 
 /**
  * @author joy
@@ -46,7 +47,7 @@ public class TrainAndValidateOperator {
 	@Autowired
 	private HDFSInfo hdfsInfo;
 	@Autowired
-	private SparkMLOperator sparkMLOperator; 
+	private ModelServiceImpl modelServiceImpl; 
 
 	static final Logger logger = Logger.getLogger(SparkMLOperator.class);
 
@@ -124,7 +125,7 @@ public class TrainAndValidateOperator {
 			 */
 
 			// Vector features = new DenseVector(values)
-			boolean result = sparkMLOperator.save(modelName, trngModel, sparkContext, filePathUrl);
+			boolean result = modelServiceImpl.save(modelName, trngModel, sparkContext, filePathUrl);
 			if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
 				try {
 					logger.info("trainedDataSet schema : " + trainedDataSet.schema());

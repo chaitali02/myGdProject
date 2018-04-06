@@ -185,6 +185,7 @@ DataPipelineModule.controller('WorkflowResultController', function ($location, $
   }
 
   $scope.getDagExec();
+
   $scope.savePng = function (index, name) {
     let svg = document.querySelector('#paper').querySelector('svg');
     var w = document.querySelector('#paper').width
