@@ -1,18 +1,18 @@
 {
-  "uuid": "77aefb4c-191c-11e7-93ae-92361f002671",
-  "version": "1488620350",
-  "name": "dp_rule_results",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
-    }
-  },
-  "createdOn": "Wed Mar 07 18:25:13 IST 2018",
-  "tags": null,
-  "active": "Y",
-  "published": "N",
+    "uuid" : "77aefb4c-191c-11e7-93ae-92361f002671",
+    "version" : "1488620350",
+    "name" : "dp_rule_results",
+    "desc" : "Profile Results",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+        }
+    },
+    "createdOn" : ISODate("2018-04-03T07:20:08.080Z"),
+    "tags" : null,
+    "active" : "Y",
+    "published" : "N",
     "appInfo" : [ 
         {
             "ref" : {
@@ -33,189 +33,218 @@
             }
         }
     ],
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-    }
-  },
-  "cache": "Y",
-  "attributes": [
-    {
-      "attributeId": 0,
-      "name": "DatapodUUID",
-      "type": "string",
-      "desc": "DatapodUUID",
-      "key": "0",
-      "partition": "N",
-      "dispName": "DatapodUUID",
-      "active": "Y",
-      "expr": null
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
     },
-    {
-      "attributeId": 1,
-      "name": "DatapodVersion",
-      "type": "string",
-      "desc": "DatapodVersion",
-      "key": null,
-      "partition": "N",
-      "dispName": "DatapodVersion",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 2,
-      "name": "DatapodName",
-      "type": "string",
-      "desc": "DatapodName",
-      "key": null,
-      "partition": "N",
-      "dispName": "DatapodName",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 3,
-      "name": "AttributeId",
-      "type": "string",
-      "desc": "AttributeId",
-      "key": null,
-      "partition": "N",
-      "dispName": "AttributeId",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 4,
-      "name": "AttributeName",
-      "type": "string",
-      "desc": "AttributeName",
-      "key": null,
-      "partition": "N",
-      "dispName": "AttributeName",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 5,
-      "name": "minVal",
-      "type": "Double",
-      "desc": "Minimum value in data",
-      "key": null,
-      "partition": "Y",
-      "dispName": "minVal",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 6,
-      "name": "maxVal",
-      "type": "Double",
-      "desc": "Maximum value in data",
-      "key": null,
-      "partition": "N",
-      "dispName": "maxVal",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 7,
-      "name": "avgVal",
-      "type": "Double",
-      "desc": "Average value in data",
-      "key": null,
-      "partition": "N",
-      "dispName": "avgVal",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 8,
-      "name": "medianVal",
-      "type": "Double",
-      "desc": "Median value in data",
-      "key": null,
-      "partition": "N",
-      "dispName": "medianVal",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 9,
-      "name": "stdDev",
-      "type": "Double",
-      "desc": "Standard deviation in data",
-      "key": null,
-      "partition": "N",
-      "dispName": "stdDev",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 10,
-      "name": "numDistinct",
-      "type": "Integer",
-      "desc": "No of distinct values",
-      "key": null,
-      "partition": "N",
-      "dispName": "numDistinct",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 11,
-      "name": "perDistinct",
-      "type": "Double",
-      "desc": "Percentage distinct values",
-      "key": null,
-      "partition": "N",
-      "dispName": "perDistinct",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 12,
-      "name": "numNull",
-      "type": "Integer",
-      "desc": "No of null values",
-      "key": null,
-      "partition": "N",
-      "dispName": "numNull",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 13,
-      "name": "perNull",
-      "type": "Double",
-      "desc": "Percentage null values",
-      "key": null,
-      "partition": "N",
-      "dispName": "perNull",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 14,
-      "name": "sixSigma",
-      "type": "double",
-      "desc": "Null Values to the total row count",
-      "key": null,
-      "partition": "N",
-      "dispName": "sixSigma",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 15,
-      "name": "version",
-      "type": "Integer",
-      "desc": "version",
-      "key": null,
-      "partition": "N",
-      "dispName": "version",
-      "active": "Y",
-      "expr": null
-    }
-  ]
+    "cache" : "Y",
+    "attributes" : [ 
+        {
+            "attributeId" : 0,
+            "name" : "DatapodUUID",
+            "type" : "string",
+            "desc" : "DatapodUUID",
+            "key" : "0",
+            "partition" : "N",
+            "dispName" : "DatapodUUID",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 1,
+            "name" : "DatapodVersion",
+            "type" : "string",
+            "desc" : "DatapodVersion",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "DatapodVersion",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 2,
+            "name" : "DatapodName",
+            "type" : "string",
+            "desc" : "DatapodName",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "DatapodName",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 3,
+            "name" : "AttributeId",
+            "type" : "string",
+            "desc" : "AttributeId",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "AttributeId",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 4,
+            "name" : "AttributeName",
+            "type" : "string",
+            "desc" : "AttributeName",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "AttributeName",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 5,
+            "name" : "numRows",
+            "type" : "Long",
+            "desc" : "Number of Rows",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "numRows",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 6,
+            "name" : "minVal",
+            "type" : "Double",
+            "desc" : "Minimum value in data",
+            "key" : null,
+            "partition" : "Y",
+            "dispName" : "minVal",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 7,
+            "name" : "maxVal",
+            "type" : "Double",
+            "desc" : "Maximum value in data",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "maxVal",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 8,
+            "name" : "avgVal",
+            "type" : "Double",
+            "desc" : "Average value in data",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "avgVal",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 9,
+            "name" : "medianVal",
+            "type" : "Double",
+            "desc" : "Median value in data",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "medianVal",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 10,
+            "name" : "stdDev",
+            "type" : "Double",
+            "desc" : "Standard deviation in data",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "stdDev",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 11,
+            "name" : "numDistinct",
+            "type" : "Integer",
+            "desc" : "No of distinct values",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "numDistinct",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 12,
+            "name" : "perDistinct",
+            "type" : "Double",
+            "desc" : "Percentage distinct values",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "perDistinct",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 13,
+            "name" : "numNull",
+            "type" : "Integer",
+            "desc" : "No of null values",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "numNull",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 14,
+            "name" : "perNull",
+            "type" : "Double",
+            "desc" : "Percentage null values",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "perNull",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 15,
+            "name" : "sixSigma",
+            "type" : "double",
+            "desc" : "Null Values to the total row count",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "sixSigma",
+            "active" : "Y",
+            "expr" : null
+        }, 
+        {
+            "attributeId" : 16,
+            "name" : "load_date",
+            "type" : "string",
+            "desc" : "load_date",
+            "dispName" : "load_date",
+            "partition" : "Y",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 17,
+            "name" : "load_id",
+            "type" : "Integer",
+            "desc" : "load_id",
+            "dispName" : "load_id",
+            "partition" : "Y",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 18,
+            "name" : "version",
+            "type" : "Integer",
+            "desc" : "version",
+            "key" : null,
+            "partition" : "N",
+            "dispName" : "version",
+            "active" : "Y",
+            "expr" : null
+        }
+    ]
 }

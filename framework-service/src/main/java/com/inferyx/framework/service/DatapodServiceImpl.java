@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -43,6 +44,7 @@ import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -79,6 +81,9 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.Profile;
+import com.inferyx.framework.domain.ProfileExec;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -860,6 +865,137 @@ public class DatapodServiceImpl {
 			return result;
 	}
 	
+
+	public List<DatapodStatsHolder> getDatapodStats2()
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException {
+		List<DatapodStatsHolder> result = new ArrayList<DatapodStatsHolder>();
+		List<Datapod> datapodList = commonServiceImpl.findAllLatest(MetaType.datapod);
+		List<Datasource> dsList = commonServiceImpl.findAllLatest(MetaType.datasource);
+		Map<String,String> dsMap = new HashMap<String,String>();
+		for (Datasource dsrc : dsList) {
+			dsMap.put(dsrc.getUuid(), dsrc.getName());
+		}
+		
+		
+		
+
+		
+		
+		for (Datapod dp : datapodList) {
+
+			DatapodStatsHolder dsh = new DatapodStatsHolder();
+			MetaIdentifier mi = new MetaIdentifier();
+			mi.setType(MetaType.datapod);
+			mi.setUuid(dp.getUuid());
+			mi.setVersion(dp.getVersion());
+			mi.setName(dp.getName());
+			dsh.setRef(mi);
+			dsh.setDataSource(dsMap.get(dp.getDatasource().getRef().getUuid()));
+			
+			Query query = new Query();
+			try {
+				query.fields().include("uuid");
+				query.fields().include("version");
+				query.fields().include("name");
+				query.fields().include("type");
+				query.fields().include("dependsOn");
+				query.fields().include("createdOn");
+				query.fields().include("appInfo"); 
+				
+				query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(dp.getUuid()));
+				//query.addCriteria(Criteria.where("dependsOn.ref.version").is(dp.getVersion()));
+				query.with(new Sort(Sort.Direction.DESC, "version"));
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			List<Profile> profileObjectList = new ArrayList<>();
+			profileObjectList = (List<Profile>) mongoTemplate.find(query, Profile.class);
+
+			Query query2 = new Query();
+			if(profileObjectList.size() > 0) {
+				try {
+					query2.fields().include("uuid");
+					query2.fields().include("version");
+					query2.fields().include("name");
+					query2.fields().include("type");
+					query2.fields().include("exec");
+					query2.fields().include("dependsOn");
+					query2.fields().include("createdOn");
+					query2.fields().include("result");
+					query2.fields().include("statusList");
+					query2.fields().include("appInfo");
+					
+					query2.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
+					query2.addCriteria(Criteria.where("dependsOn.ref.uuid").is(profileObjectList.get(0).getUuid()));
+					//query2.addCriteria(Criteria.where("dependsOn.ref.version").is(profileObjectList.get(0).getVersion()));
+					query2.with(new Sort(Sort.Direction.DESC, "version"));
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				List<ProfileExec> profileExecObjList = new ArrayList<>();
+				profileExecObjList = (List<ProfileExec>) mongoTemplate.find(query2, ProfileExec.class);
+				
+				if(profileExecObjList.size() > 0) {
+					ProfileExec profileExec = profileExecObjList.get(0);
+					String profileQuery = profileExec.getExec();
+					
+					String appUuid = commonServiceImpl.getApp().getUuid();
+					
+					Datasource datasource = commonServiceImpl.getDatasourceByApp();
+					IExecutor exec = execFactory.getExecutor(datasource.getType());
+					try {
+						List<Map<String, Object>> data = exec.executeAndFetch(profileQuery, appUuid);
+						Long numRows = (Long) data.get(0).get("numRows");
+						dsh.setNumRows(numRows);
+						dsh.setLastUpdatedOn(profileExec.getCreatedOn());
+					} catch (Exception e) {
+						/*DataStore ds = datastoreServiceImpl.findLatestByMeta(dp.getUuid(),dp.getVersion());
+						if (ds != null) {
+							dsh.setNumRows(ds.getNumRows());
+							dsh.setLastUpdatedOn(ds.getCreatedOn());
+						}*/
+						dsh.setNumRows(0L);
+						dsh.setLastUpdatedOn("");
+					}
+					
+				} else {
+					/*DataStore ds = datastoreServiceImpl.findLatestByMeta(dp.getUuid(),dp.getVersion());
+					if (ds != null) {
+					dsh.setNumRows(ds.getNumRows());
+					dsh.setLastUpdatedOn(ds.getCreatedOn());
+				}*/
+				dsh.setNumRows(0L);
+				dsh.setLastUpdatedOn("");
+				}
+				
+			} else {
+				/*DataStore ds = datastoreServiceImpl.findLatestByMeta(dp.getUuid(),dp.getVersion());
+				if (ds != null) {
+				dsh.setNumRows(ds.getNumRows());
+				dsh.setLastUpdatedOn(ds.getCreatedOn());
+			}*/
+			dsh.setNumRows(0L);
+			dsh.setLastUpdatedOn("");
+			}
+			
+			/*DataStore ds = datastoreServiceImpl.findLatestByMeta(dp.getUuid(),dp.getVersion());
+			if (ds != null) {
+				dsh.setNumRows(ds.getNumRows());
+				dsh.setLastUpdatedOn(ds.getCreatedOn());
+			}*/
+			result.add(dsh);			
+			
+		}
+			return result;
+	}
+	
 	@SuppressWarnings("unlikely-arg-type")
 	public void upload(MultipartFile csvFile, String datapodUuid) {		
 		String csvFileName = csvFile.getOriginalFilename();
@@ -940,6 +1076,7 @@ public class DatapodServiceImpl {
 			uploadExec.setLocation(uploadPath);
 			uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,datapod.getUuid(),datapod.getVersion())));
 			uploadExec.setFileName(csvFileName);
+			uploadExec.setName(Helper.getFileName(csvFileName));
 			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 			   
 			// Load datapod using load object

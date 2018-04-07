@@ -38,7 +38,7 @@ public class ProfileOracleOperator extends ProfileOperator {
 		} else {*/
 		sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, \'"
 				+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion,  " +datapod.getName()+" AS datapodName, "+ attrId
-				+ "  AS AttributeId, "+attrName+" AS attributeName, min(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName
+				+ "  AS AttributeId, "+attrName+" AS attributeName, " + "(SELECT COUNT(*) FROM "+ profileTableName + " tab) AS numRows, min(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName
 				+ ", 1)AS int)) AS minVal, max(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, "
 				+ attrName + ", 1)AS int)) AS maxVal, avg(decode(translate(" + attrName + ",' 0123456789',' '), null, "
 				+ attrName + ", '0')) AS avgVal ,median(cast(decode( translate(" + attrName
@@ -48,7 +48,8 @@ public class ProfileOracleOperator extends ProfileOperator {
 				+ attrName + ",'0'),0 , 1))*100  AS perDistinct, cast(count(" + attrName
 				+ ") as decimal) AS numNull,count(" + attrName + ") / count(REPLACE(nvl(" + attrName
 				+ ",'0'),0 , 1))*100 AS perNull, count(" + attrName + ") / count(REPLACE(nvl(" + attrName
-				+ ",'0'),0 , 1)) AS sixSigma, " + profileExec.getVersion() + " AS version from " + profileTableName;
+				+ ",'0'),0 , 1)) AS sixSigma, " + " To_CHAR(sysdate,'yyyy/mm/dd' ) AS load_date, " + " SELECT (sysdate - to_date('01-Jan-1970', 'dd-Mon-yyyy')) *24*60*60*1000 FROM dual AS load_id, " 
+				+ profileExec.getVersion() + " AS version from " + profileTableName;
 		//}
 		logger.info("query is : " + sql);
 		return sql;
