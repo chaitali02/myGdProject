@@ -1,0 +1,79 @@
+{
+   
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    },
+    "cache" : "Y",
+    "attributes" : [ 
+        {
+            "attributeId" : 0,
+            "name" : "id",
+            "type" : "string",
+            "desc" : "id",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 1,
+            "name" : "covar1",
+            "type" : "double",
+            "desc" : "covar1",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "covar1",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 2,
+            "name" : "covar2",
+            "type" : "double",
+            "desc" : "covar2",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "covar2",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 3,
+            "name" : "covar3",
+            "type" : "double",
+            "desc" : "covar3",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "covar3",
+            "active" : "Y"
+        }
+    ],
+    "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
+    "version" : "1523276166",
+    "name" : "covariances",
+    "desc" : "covariances attributes for simulation",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-04-09T12:16:06.000Z"),
+    "tags" : [ 
+        "demo"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

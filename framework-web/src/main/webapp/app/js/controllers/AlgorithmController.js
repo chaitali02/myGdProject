@@ -31,7 +31,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	$scope.librarytypes = ["SPARKML", "R", "JAVA"];
 	$scope.paramtable = null;
 	//$scope.types = ["clustering", "classification", "regression", "simulation"];
-	$scope.types = ["CLUSTERING", "CLASSIFICATION", "REGRESSION", "SIMULATION"];
+	$scope.types = ["CLUSTERING", "CLASSIFICATION", "REGRESSION", "SIMULATION",'MULTIVARIATENORMALDISTRIBUTION'];
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['algorithm'] || [];

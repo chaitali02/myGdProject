@@ -1384,7 +1384,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     },
     'simulateexec':{
       name : 'simulateexec',
-      caption : 'Silulation Exec',
+      caption : 'Simulation Exec',
       execType:'simulateExec',
       metaType:'simulateExec',
       color : '#EB54C3',
