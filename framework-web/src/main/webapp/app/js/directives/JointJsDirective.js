@@ -1101,8 +1101,7 @@
       isTemplate:'=',
 	  },
     link: function ($scope, element, attrs) {
-     // alert($scope.addMode)
-      //alert($scope.isTemplate)
+     
       $rootScope.showGrid=false;
       $rootScope.showGroupDowne=false;
       $scope.elementDefs = dagMetaDataService.elementDefs;
@@ -1310,10 +1309,7 @@
         window.getAllCell=function(){
           return $scope.graph.getCells();
         }
-        // function setAllCell(graph){
-
-        //   $scope.graph=$scope.graph.getCell(id).attributes.attrs[".body"].active=true;;
-        // }
+            
         function setGrid(paper, gridSize, color) {
           paper.options.gridSize = gridSize;// Set grid size on the JointJS paper object (joint.dia.Paper instance)
           var canvas = $('<canvas/>', { width: gridSize, height: gridSize });// Draw a grid into the HTML 5 canvas and convert it to a data URI image
@@ -1329,7 +1325,6 @@
         }
 
         $scope.$on('createGraph',function (e,data) {
-         // alert($scope.isTemplate)
           if(!data){
             return;
           }
@@ -1416,7 +1411,63 @@
             });
           });
         }
+
+        function rightClick(){
+          if(!$scope.editMode || $scope.isTemplate){
+            return false; 
+          }
           
+          if($scope.editMode && $scope.isTemplate){
+            return false; 
+          }
+          var menuItems = [];
+          angular.forEach(dagMetaDataService.elementDefs,function (element,type) {
+            if(element.allowInMenu){
+              var menuItemsObj={}
+              var chidernItems=[]
+              console.log(element.name)
+              menuItemsObj.image=element.iconPath;
+              menuItemsObj.title =element.name;
+              menuItemsObj.id =element.name + '-add';
+              menuItemsObj.type =element.name;
+              menuItemsObj.menutype ="parent";
+              menuItemsObj.onMenuClick=onMenuClick;
+             //menuItemsObj.onMouseOver=onMouseClick;
+              if(element.childMenu.length >0){
+                for(var i=0;i<element.childMenu.length;i++){
+                  var item=element.childMenu[i]
+                  if(dagMetaDataService.elementDefs[item].allowInChildMenu ==true){
+                    var childitem={};
+                    childitem.title=dagMetaDataService.elementDefs[item].name;
+                    childitem.id =dagMetaDataService.elementDefs[item].name + '-add';
+                    childitem.type =dagMetaDataService.elementDefs[item].name;
+                    childitem.menutype ="child";
+                    childitem.image=dagMetaDataService.elementDefs[item].iconPath;
+                    childitem.onChildMenuClick=onChildMenuClick;
+                    //childitem.onMouseOver=onMouseClick;
+                    chidernItems[i]=childitem;
+                  }
+                }
+              }
+              menuItemsObj.chidernItems=chidernItems;
+              menuItems.push(menuItemsObj)
+            }
+          });
+          console.log(menuItems)
+          d3.selectAll('#paper').on('contextmenu', d3.contextMenu(menuItems));
+        }
+        
+        function onMenuClick(elm, d, i){
+          var item=dagMetaDataService.elementDefs[elm.type]
+          if(item.childMenu.length ==0)
+            addelement(event,elm.type)
+        }
+
+        function onChildMenuClick(elm, d, i){
+          if(elm.menutype=="child")
+            addelement(event,elm.type)
+        }
+
         function createGraph(data) {
           var dx = $( document ).width();
           var dy = $( document ).height();
@@ -1490,20 +1541,21 @@
         }
             
         $scope.graphReady = true;
-        
-        d3.selectAll('#paper')
-          .on('contextmenu', function(){
-            //alert($scope.isTemplate)1.jitu
-            if(!$scope.editMode || $scope.isTemplate){
-              return false; 
-            }
+
+        rightClick();
+        // d3.selectAll('#paper')
+        //   .on('contextmenu', function(){
+        //     if(!$scope.editMode || $scope.isTemplate){
+        //       return false; 
+        //     }
             
-            if($scope.editMode && $scope.isTemplate){
-              return false; 
-            }
-            d3.event.preventDefault();
-            menu(d3.mouse(this)[0], d3.mouse(this)[1]);
-          });
+        //     if($scope.editMode && $scope.isTemplate){
+        //       return false; 
+        //     }
+        //     //d3.event.preventDefault();
+        //    // d3.contextMenu(chek)
+        //    // menu(d3.mouse(this)[0], d3.mouse(this)[1]);
+        //   });
 
         if($scope.execMode){
           $('#paper svg').addClass('exec-mode');
@@ -2091,129 +2143,129 @@
         dblClickFn(e,cell);
       };
 
-      function contextMenu() {
-        var height,
-        width,
-        margin = 0.1, // fraction of width
-        items = [],
-        rescale = false,
-        style = {
-          'rect': {
-            'mouseout': {
-              'fill': 'rgb(0,0,0)',
-              'opacity':'0.8',
-              'stroke': 'white',
-              'stroke-width': '1px'
-            },
-            'mouseover': {
-              'fill': '#32c5d2'
-            }
-          },
-          'text': {
-            'fill': 'white',
-            'font-size': '13',
-            'font-family': 'Open Sans'
-          }
-        };
+      // function contextMenu() {
+      //   var height,
+      //   width,
+      //   margin = 0.1, // fraction of width
+      //   items = [],
+      //   rescale = false,
+      //   style = {
+      //     'rect': {
+      //       'mouseout': {
+      //         'fill': 'rgb(0,0,0)',
+      //         'opacity':'0.8',
+      //         'stroke': 'white',
+      //         'stroke-width': '1px'
+      //       },
+      //       'mouseover': {
+      //         'fill': '#32c5d2'
+      //       }
+      //     },
+      //     'text': {
+      //       'fill': 'white',
+      //       'font-size': '13',
+      //       'font-family': 'Open Sans'
+      //     }
+      //   };
 
-        function menu(x, y) {
-          d3.select('.context-menu').remove();
-          scaleItems();
-          // Draw the menu
-          d3.select('svg')
-            .append('g').attr('class', 'context-menu')
-            .selectAll('tmp')
-            .data(items).enter()
-            .append('g').attr('class', 'menu-entry')
-            .style({'cursor': 'pointer'})
-            .on('mouseover', function(){
-              d3.select(this).select('rect').style(style.rect.mouseover) })
-            .on('mouseout', function(){
-              d3.select(this).select('rect').style(style.rect.mouseout) });
-            d3.selectAll('.menu-entry')
-              .append('rect')
-              .attr('x', x)
-              .attr('y', function(d, i){ return y + (i * height); })
-              .attr('id', function(d){ return d.id; })
-              .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
-              .attr('width', width+50)
-              .attr('height', height)
-              .style(style.rect.mouseout);
+      //   function menu(x, y) {
+      //     d3.select('.context-menu').remove();
+      //     scaleItems();
+      //     // Draw the menu
+      //     d3.select('svg')
+      //       .append('g').attr('class', 'context-menu')
+      //       .selectAll('tmp')
+      //       .data(items).enter()
+      //       .append('g').attr('class', 'menu-entry')
+      //       .style({'cursor': 'pointer'})
+      //       .on('mouseover', function(){
+      //         d3.select(this).select('rect').style(style.rect.mouseover) })
+      //       .on('mouseout', function(){
+      //         d3.select(this).select('rect').style(style.rect.mouseout) });
+      //       d3.selectAll('.menu-entry')
+      //         .append('rect')
+      //         .attr('x', x)
+      //         .attr('y', function(d, i){ return y + (i * height); })
+      //         .attr('id', function(d){ return d.id; })
+      //         .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
+      //         .attr('width', width+50)
+      //         .attr('height', height)
+      //         .style(style.rect.mouseout);
 
-            d3.selectAll('.menu-entry')
-              .append('image')
-              .attr('x', x+10)
-              .attr('y', function(d, i){ return y + 10 + (i * height); })
-              .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
-              .attr('width','15')
-              .attr('height','15')
-              .attr('stroke-width','1')
-              .attr('stroke','#ccc')
-              .attr('xmlns:xlink',"http://www.w3.org/1999/xlink")
-              .attr('xlink:href',function(d){return d.image;});
+      //       d3.selectAll('.menu-entry')
+      //         .append('image')
+      //         .attr('x', x+10)
+      //         .attr('y', function(d, i){ return y + 10 + (i * height); })
+      //         .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
+      //         .attr('width','15')
+      //         .attr('height','15')
+      //         .attr('stroke-width','1')
+      //         .attr('stroke','#ccc')
+      //         .attr('xmlns:xlink',"http://www.w3.org/1999/xlink")
+      //         .attr('xlink:href',function(d){return d.image;});
                    
-              d3.selectAll('.menu-entry')
-                .append('text')
-                .text(function(d){ return d.title; })
-                .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
-                .attr('x', x+25)
-                .attr('y', function(d, i){ return y + (i * height); })
-                .attr('dy', height - 10 - margin / 2)
-                .attr('dx', margin)
-                .style(style.text);
-              // Other interactions
+      //         d3.selectAll('.menu-entry')
+      //           .append('text')
+      //           .text(function(d){ return d.title; })
+      //           .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
+      //           .attr('x', x+25)
+      //           .attr('y', function(d, i){ return y + (i * height); })
+      //           .attr('dy', height - 10 - margin / 2)
+      //           .attr('dx', margin)
+      //           .style(style.text);
+      //         // Other interactions
               
-              d3.select('body')
-                .on('click', function() {
-                  d3.select('.context-menu').remove();
-                });
-              }
+      //         d3.select('body')
+      //           .on('click', function() {
+      //             d3.select('.context-menu').remove();
+      //           });
+      //         }
 
-              menu.items = function(argumentItems) {
-                if (!argumentItems.length) return items;
-                  for (i in argumentItems) items.push(argumentItems[i]);
-                    rescale = true;
-                    return menu;
-              }
+      //         menu.items = function(argumentItems) {
+      //           if (!argumentItems.length) return items;
+      //             for (i in argumentItems) items.push(argumentItems[i]);
+      //               rescale = true;
+      //               return menu;
+      //         }
 
-              // Automatically set width, height, and margin;
-              function scaleItems() {
-                if (rescale) {
-                  d3.select('svg').selectAll('tmp')
-                    .data(items).enter()
-                    .append('text')
-                    .text(function(d){ return d.title; })
-                    .style(style.text)
-                    .attr('x', -1000)
-                    .attr('y', -1000)
-                    .attr('class', 'tmp');
+      //         // Automatically set width, height, and margin;
+      //         function scaleItems() {
+      //           if (rescale) {
+      //             d3.select('svg').selectAll('tmp')
+      //               .data(items).enter()
+      //               .append('text')
+      //               .text(function(d){ return d.title; })
+      //               .style(style.text)
+      //               .attr('x', -1000)
+      //               .attr('y', -1000)
+      //               .attr('class', 'tmp');
                       
-                  var z = d3.selectAll('.tmp')[0]
-                    .map(function(x){ return x.getBBox(); });
-                    width = d3.max(z.map(function(x){ return x.width; }));
-                    margin = margin * width;
-                    width =  width + 2 * margin;
-                    height = d3.max(z.map(function(x){ return x.height+ 15 + margin / 2; }));
-                    // cleanup
-                  d3.selectAll('.tmp').remove();
-                  rescale = false;
-                }
-              }
-            return menu;
-          }
+      //             var z = d3.selectAll('.tmp')[0]
+      //               .map(function(x){ return x.getBBox(); });
+      //               width = d3.max(z.map(function(x){ return x.width; }));
+      //               margin = margin * width;
+      //               width =  width + 2 * margin;
+      //               height = d3.max(z.map(function(x){ return x.height+ 15 + margin / 2; }));
+      //               // cleanup
+      //             d3.selectAll('.tmp').remove();
+      //             rescale = false;
+      //           }
+      //         }
+      //       return menu;
+      //     }
 
-          var menuitems = [];
-          angular.forEach(dagMetaDataService.elementDefs,function (element,type) {
-            if(element.allowInMenu){
-              menuitems.push({
-                image : element.iconPath,
-                title : element.name,
-                id : element.name + '-add',
-                type : type
-              })
-            }
-          });
-          var menu = contextMenu().items(menuitems);
+      //     var menuitems = [];
+      //     angular.forEach(dagMetaDataService.elementDefs,function (element,type) {
+      //       if(element.allowInMenu){
+      //         menuitems.push({
+      //           image : element.iconPath,
+      //           title : element.name,
+      //           id : element.name + '-add',
+      //           type : type
+      //         })
+      //       }
+      //     });
+      //     var menu = contextMenu().items(menuitems);
 
           function iconContextMenu() {
             var height,
