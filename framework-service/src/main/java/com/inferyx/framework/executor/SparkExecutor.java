@@ -132,8 +132,8 @@ public class SparkExecutor implements IExecutor {
 	private SimulateMLOperator simulateMLOperator ;
 	@Autowired
 	private TrainAndValidateOperator trainAndValidateOperator ;
-	@Autowired
-	private SparkMonteCarloOperator sparkMonteCarloOperator;
+	//@Autowired
+	//private SparkMonteCarloOperator sparkMonteCarloOperator;
 	
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
@@ -970,7 +970,7 @@ public class SparkExecutor implements IExecutor {
 	}
 	
 	public void executeMonteCarlo(long seed, MetaIdentifierHolder factorMeansInfo, MetaIdentifierHolder factorCovariancesInfo) throws IOException {
-		Instrument[] instruments = sparkMonteCarloOperator.readInstruments("instrument file path");
+		/*Instrument[] instruments = sparkMonteCarloOperator.readInstruments("instrument file path");
 		int numTrials = 100;
 		int parallelism = 10;
 		
@@ -980,7 +980,7 @@ public class SparkExecutor implements IExecutor {
 		Broadcast<Instrument[]> broadcastInstruments = null;//sparkContext.broadcast(instruments);
 		List<Long> seeds = LongStream.range(seed, seed + parallelism).boxed().collect(Collectors.toList());
 		//JavaRDD<Long> seedRdd = sparkContext.parallelize(seeds, parallelism, Instrument.class);
-		
+*/		
 	}
 	
 }
