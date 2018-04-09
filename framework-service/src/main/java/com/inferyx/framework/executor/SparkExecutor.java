@@ -10,11 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
@@ -49,6 +53,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Instrument;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -68,6 +73,7 @@ import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
 import com.inferyx.framework.operator.SparkMLOperator;
+import com.inferyx.framework.operator.SparkMonteCarloOperator;
 import com.inferyx.framework.operator.TrainAndValidateOperator;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -121,13 +127,13 @@ public class SparkExecutor implements IExecutor {
 	@Autowired
 	private RuleOperator ruleOperator;
 	@Autowired
-	private SparkMLOperator sparkMLOperator;
-	@Autowired
 	private PredictMLOperator predictMLOperator;
 	@Autowired
 	private SimulateMLOperator simulateMLOperator ;
 	@Autowired
 	private TrainAndValidateOperator trainAndValidateOperator ;
+	@Autowired
+	private SparkMonteCarloOperator sparkMonteCarloOperator;
 	
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
@@ -962,4 +968,19 @@ public class SparkExecutor implements IExecutor {
 
 		return data;
 	}
+	
+	public void executeMonteCarlo(long seed, MetaIdentifierHolder factorMeansInfo, MetaIdentifierHolder factorCovariancesInfo) throws IOException {
+		Instrument[] instruments = sparkMonteCarloOperator.readInstruments("instrument file path");
+		int numTrials = 100;
+		int parallelism = 10;
+		
+		double[] factorMeans = sparkMonteCarloOperator.readMeans("factor means file path");
+		double[][] factorCovariances = sparkMonteCarloOperator.readCovariances("factor covariance file path");
+		
+		Broadcast<Instrument[]> broadcastInstruments = null;//sparkContext.broadcast(instruments);
+		List<Long> seeds = LongStream.range(seed, seed + parallelism).boxed().collect(Collectors.toList());
+		//JavaRDD<Long> seedRdd = sparkContext.parallelize(seeds, parallelism, Instrument.class);
+		
+	}
+	
 }
