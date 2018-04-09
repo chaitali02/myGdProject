@@ -1,0 +1,51 @@
+{
+    
+    "dependsOn" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "2afb170a-f6f6-4639-b314-82910a158755"
+        }
+    },
+    "paramInfo" : [ 
+        {
+            "paramSetId" : "0",
+            "paramSetVal" : [ 
+                {
+                    "paramId" : "0",
+                    "ref" : {
+                        "type" : "paramlist",
+                        "uuid" : "2afb170a-f6f6-4639-b314-82910a158755"
+                    },
+                    "value" : "1"
+                }
+            ]
+        }
+    ],
+    "uuid" : "5ee56fdd-1ec0-41c8-9c98-2888887185c9",
+    "version" : "1523277765",
+    "name" : "parmset_Multivariate_Normal_Distribution",
+    "desc" : "paramset for  Multivariate Normal Distribution",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-04-09T12:42:45.000Z"),
+    "tags" : [ 
+        "demo"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

@@ -1748,27 +1748,26 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
             }]
         }
     })
-
     .state('metaListfilter', {
         url: "/dataPreparation/filter?id&mode&returnBack&version",
         templateUrl: "views/filter.html",
-        data: { pageTitle: 'Data Preparation'},
+        data: {pageTitle: 'Data Preparation'},
         controller: "",
-        esolve: {
+        resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {
                 return $ocLazyLoad.load({
                     name: 'InferyxApp',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                     files: [
-                      	'js/controllers/FilterController.js',
-                        'js/services/MetadataService.js',
-                        'js/services/FilterService.js',
-
+                       'js/services/MetadataService.js',
+                        'js/controllers/FilterController.js',
+                       'js/services/FilterService.js'
                     ]
                 });
             }]
         }
     })
+    
 
 
     .state('metaListmeasure', {
@@ -1823,7 +1822,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
                      insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                      files: [
                         'js/services/MetadataService.js',
-                     	  'js/controllers/RelationController.js',
+                     	'js/controllers/RelationController.js',
                         'js/services/RelationService.js'
                      ]
                  });

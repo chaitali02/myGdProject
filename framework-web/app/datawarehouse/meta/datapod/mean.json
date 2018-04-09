@@ -1,0 +1,59 @@
+{
+    
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    },
+    "cache" : "Y",
+    "attributes" : [ 
+        {
+            "attributeId" : 0,
+            "name" : "id",
+            "type" : "string",
+            "desc" : "id",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 1,
+            "name" : "mean",
+            "type" : "double",
+            "desc" : "mean",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "mean",
+            "active" : "Y"
+        }
+    ],
+    "uuid" : "3a47402e-6ba5-4ca7-b3a4-7e01fd4dcdd9",
+    "version" : "1523275811",
+    "name" : "means",
+    "desc" : "mean values for simulation",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-04-09T12:10:11.000Z"),
+    "tags" : [ 
+        "demoe"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

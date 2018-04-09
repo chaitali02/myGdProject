@@ -1,0 +1,42 @@
+{
+    
+    "type" : "MULTIVARIATENORMALDISTRIBUTION",
+    "library" : "SPARKML",
+    "trainName" : "org.apache.spark.ml.regression.LinearRegression",
+    "modelName" : "org.apache.spark.ml.regression.LinearRegressionModel",
+    "labelRequired" : "Y",
+    "paramList" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "2afb170a-f6f6-4639-b314-82910a158755"
+        }
+    },
+    "savePmml" : "N",
+    "uuid" : "a71db857-555d-4f5b-a47d-43d39d2a8866",
+    "version" : "1523277870",
+    "name" : "algorithm_Multivariate_Normal_Distribution",
+    "desc" : "Algorithm for Multivariate Normal Distribution",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-04-09T12:44:30.000Z"),
+    "tags" : [ 
+        "demo"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

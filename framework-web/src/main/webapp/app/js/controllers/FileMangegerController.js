@@ -250,7 +250,7 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
     FileManagerService.SaveFile(file.name, fd, "").then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
       $scope.searchButtonText = "Upload"
-      $scope.msg = "CSV Uploaded Successfully"
+      $scope.msg = "File Uploaded Successfully"
       notify.type = 'success',
         notify.title = 'Success',
         notify.content = $scope.msg
