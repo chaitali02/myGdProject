@@ -46,10 +46,7 @@ public class SimulateMLOperator {
 		StringBuilder sb = new StringBuilder();
 		// write code
 		try {
-			Model model_2 = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
-					simulate.getDependsOn().getRef().getVersion(),
-					simulate.getDependsOn().getRef().getType().toString());
-			for (Feature feature : model_2.getFeatures()) {
+			for (Feature feature : model.getFeatures()) {
 				sb.append("(" + feature.getMinVal() + " + rand()*(" + feature.getMaxVal() + "-" + feature.getMinVal()
 						+ ")) AS " + feature.getName() + ", ");
 			}
