@@ -7,7 +7,7 @@
         }
     },
     "label" : "account_type_id",
-    "customeFlag" : "N",
+    "customFlag" : "N",
     "features" : [ 
         {
             "featureId" : "0",
