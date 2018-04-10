@@ -9,18 +9,47 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Model extends BaseEntity {
 
 	private String type;
-	private MetaIdentifierHolder algorithm;
+	private MetaIdentifierHolder dependsOn;
 	private String label;
 	private List<Feature> features = new ArrayList<Feature>();
 	private String scriptName;
-	private String customeFlag;
+	private String customFlag;
 
-	public String getCustomeFlag() {
-		return customeFlag;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the dependsOn
+	 */
+	public MetaIdentifierHolder getDependsOn() {
+		return dependsOn;
 	}
 
-	public void setCustomeFlag(String customeFlag) {
-		this.customeFlag = customeFlag;
+	/**
+	 * @Ganesh
+	 *
+	 * @param dependsOn the dependsOn to set
+	 */
+	public void setDependsOn(MetaIdentifierHolder dependsOn) {
+		this.dependsOn = dependsOn;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the customFlag
+	 */
+	public String getCustomFlag() {
+		return customFlag;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param customFlag the customFlag to set
+	 */
+	public void setCustomFlag(String customFlag) {
+		this.customFlag = customFlag;
 	}
 
 	/**
@@ -88,11 +117,4 @@ public class Model extends BaseEntity {
 		this.features = features;
 	}
 
-	public MetaIdentifierHolder getAlgorithm() {
-		return algorithm;
-	}
-
-	public void setAlgorithm(MetaIdentifierHolder algorithm) {
-		this.algorithm = algorithm;
-	}
 }
