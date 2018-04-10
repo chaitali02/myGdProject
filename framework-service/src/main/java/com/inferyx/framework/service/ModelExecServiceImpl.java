@@ -555,8 +555,8 @@ public class ModelExecServiceImpl {
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(),
 				train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 
-		return (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getAlgorithm().getRef().getUuid(),
-				model.getAlgorithm().getRef().getVersion(), MetaType.algorithm.toString());
+		return (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(),
+				model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 	}
 
 	public List<Model> getAllModelByType(String customeFlag, String action) {

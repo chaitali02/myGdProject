@@ -266,10 +266,10 @@ public class ModelServiceImpl {
 			}
 		}
 		Algorithm algo= null;
-		if (model.getAlgorithm().getRef().getVersion() != null)
-			algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getAlgorithm().getRef().getUuid(), model.getAlgorithm().getRef().getVersion(), MetaType.algorithm.toString());
+		if (model.getDependsOn().getRef().getVersion() != null)
+			algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 		else 
-			algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getAlgorithm().getRef().getUuid(), MetaType.algorithm.toString());
+			algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
 				
 		/*if(model.getLabel() != null && algo.getLabelRequired().equalsIgnoreCase("Y")){
 			List<Attribute> attributeList = null;
@@ -827,7 +827,7 @@ public class ModelServiceImpl {
 					predict.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 			
 			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
-					model.getAlgorithm().getRef().getUuid(), model.getAlgorithm().getRef().getVersion(),
+					model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
 					MetaType.algorithm.toString());
 
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
@@ -882,7 +882,7 @@ public class ModelServiceImpl {
 					simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 
 			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
-					model.getAlgorithm().getRef().getUuid(), model.getAlgorithm().getRef().getVersion(),
+					model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
 					MetaType.algorithm.toString());
 
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(),
@@ -1136,8 +1136,8 @@ public class ModelServiceImpl {
 		//Model model = iModelDao.findOneByUuidAndVersion(modelUUID, modelVersion);
 		//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID, modelVersion, MetaType.model.toString());
 		if(!model.getType().equalsIgnoreCase(ExecContext.R.toString()) && !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-			runModelServiceImpl.setAlgorithmUUID(model.getAlgorithm().getRef().getUuid());
-			runModelServiceImpl.setAlgorithmVersion(model.getAlgorithm().getRef().getVersion());
+			runModelServiceImpl.setAlgorithmUUID(model.getDependsOn().getRef().getUuid());
+			runModelServiceImpl.setAlgorithmVersion(model.getDependsOn().getRef().getVersion());
 		}
 		runModelServiceImpl.setAlgorithmServiceImpl(algorithmServiceImpl);
 		runModelServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);

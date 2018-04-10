@@ -314,7 +314,7 @@ public class ParamSetServiceImpl {
 	public List<ParamSet> getParamSetByModel (String modelUUID, String modelVersion) throws JsonProcessingException {		
 		//Model model = modelServiceImpl.findOneByUuidAndVersion(modelUUID,modelVersion);
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID,modelVersion, MetaType.model.toString());
-		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getAlgorithm().getRef().getUuid(), MetaType.algorithm.toString());
+		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
 		//ParamList paramList = paramListServiceImpl.findLatestByUuid(algo.getParamList().getRef().getUuid());
 		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
 		MetaIdentifier dependsOnRef = new MetaIdentifier();
@@ -332,7 +332,7 @@ public class ParamSetServiceImpl {
 		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUUID,trainVersion, MetaType.train.toString());
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(),train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 
-		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getAlgorithm().getRef().getUuid(), MetaType.algorithm.toString());
+		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
 		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
 		MetaIdentifier dependsOnRef = new MetaIdentifier();
 		dependsOnRef.setType(MetaType.paramlist);
@@ -415,12 +415,12 @@ public class ParamSetServiceImpl {
 			model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID, modelVersion, MetaType.model.toString());
 		}
 		Algorithm algo = null;
-		if (StringUtils.isBlank(model.getAlgorithm().getRef().getVersion())) {
+		if (StringUtils.isBlank(model.getDependsOn().getRef().getVersion())) {
 			//algo = iAlgorithmDao.findLatestByUuid(model.getAlgorithm().getRef().getUuid(), new Sort(Sort.Direction.DESC, "version"));
-			algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getAlgorithm().getRef().getUuid(), MetaType.algorithm.toString());
+			algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
 		} else {
 			//algo = iAlgorithmDao.findOneByUuidAndVersion(model.getAlgorithm().getRef().getUuid(), model.getAlgorithm().getRef().getVersion());
-			algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getAlgorithm().getRef().getUuid(), model.getAlgorithm().getRef().getVersion(), MetaType.algorithm.toString());
+			algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 		}
 		String className = algo.getTrainName();
 		
