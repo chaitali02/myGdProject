@@ -3780,10 +3780,10 @@ public class RegisterService {
 		return resolvedList;
 	}
 
-	public String getFormulaByType2(String uuid) throws JsonProcessingException {
+	public String getFormulaByType2(String uuid,String[] formulaType) throws JsonProcessingException {
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(formulaServiceImpl.findFormulaByType2(uuid));
+		result = ow.writeValueAsString(formulaServiceImpl.findFormulaByType2(uuid,formulaType));
 
 		return result;
 	}
@@ -4359,5 +4359,6 @@ public class RegisterService {
 		
 		return ruleExecObjList;
 	}
+
 	
 }

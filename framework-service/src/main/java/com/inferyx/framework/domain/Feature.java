@@ -8,6 +8,24 @@ public class Feature {
 	private String desc;
 	private int minVal;
 	private int maxVal;
+	private ParamListHolder paramListInfo;
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the paramListInfo
+	 */
+	public ParamListHolder getParamListInfo() {
+		return paramListInfo;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param paramListInfo the paramListInfo to set
+	 */
+	public void setParamListInfo(ParamListHolder paramListInfo) {
+		this.paramListInfo = paramListInfo;
+	}
 	/**
 	 * @Ganesh
 	 *
