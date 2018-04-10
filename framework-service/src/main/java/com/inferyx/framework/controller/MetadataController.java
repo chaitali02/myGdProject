@@ -852,4 +852,12 @@ public class MetadataController {
 		return metadataServiceImpl.getParamByParamList(paramListUuid);
 	}
 	
+
+	@RequestMapping(value = "/getParamListByFormula", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder>  getParamListByFormula(
+			@RequestParam(value = "uuid") String formulaUuid ,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
+		return metadataServiceImpl.getParamListByFormula(formulaUuid);
+	}
+	
 }
