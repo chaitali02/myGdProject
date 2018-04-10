@@ -559,22 +559,7 @@ public class ModelExecServiceImpl {
 				model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 	}
 
-	public List<Model> getAllModelByType(String customeFlag, String action) {
-		Query query = new Query();
-		query.fields().include("uuid");
-		query.fields().include("version");
-		query.fields().include("name");
-		query.fields().include("type");
-		query.fields().include("createdOn");
-		query.fields().include("appInfo");
-
-		query.addCriteria(Criteria.where("customeFlag").is(customeFlag));
-
-		List<Model> model = new ArrayList<>();
-		model = (List<Model>) mongoTemplate.find(query, Model.class);
-
-		return model;
-	}
+	
 
 	public TrainExec getLatestTrainExecByModel(String modelUuid, String modelVersion) throws Exception {
 

@@ -42,6 +42,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -1277,5 +1278,21 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return false;
 	}
 
+	public List<Model> getAllModelByType(String customeFlag, String action) {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+
+		query.addCriteria(Criteria.where("customFlag").is(customeFlag));
+
+		List<Model> model = new ArrayList<>();
+		model = (List<Model>) mongoTemplate.find(query, Model.class);
+
+		return model;
+	}
 
 }
