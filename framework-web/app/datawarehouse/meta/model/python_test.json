@@ -43,5 +43,5 @@
   "scriptName": "5fa7ebdf-1da3-4976-ba9b-09d764c5dac8_1520399963.py",
   "trainPercent" : 70,
   "valPercent" : 30,
-  "customeFlag" : "Y"
+  "customFlag" : "Y"
 }
