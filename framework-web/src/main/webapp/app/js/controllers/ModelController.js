@@ -24,7 +24,9 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   $scope.model = {};
   $scope.model.versions = [];
   $scope.isshowmodel = false;
-  $scope.SourceTypes = ["datapod", "dataset"];
+  //$scope.SourceTypes = ["datapod", "dataset"];
+  $scope.dependsOnType= ["algorithm", "formula"];
+  $scope.selectedDependsOnType=$scope.dependsOnType[0];
   $scope.paramtable = null;
   $scope.type = ["string", "double", "date"];
   $scope.scriptTypes= ["SPARK","PYTHON", "R"];
@@ -130,6 +132,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     feature.desc = "";
     feature.minVal = "";
     feature.maxVal=""
+    feature.paramListInfo={};
     $scope.featureTableArray.splice($scope.featureTableArray.length, 0, feature);
   }
 
@@ -174,31 +177,58 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
       //$scope.selectalgorithm=$scope.allalgorithm[0]
     }
   }
-  
-  $scope.getAllLatestAlgorithm=function(){
-    ModelService.getAllLatest("algorithm").then(function(response) { onGetAllLatestAlgorithm(response.data )});
-    var onGetAllLatestAlgorithm = function(response) {
-      $scope.allalgorithm = response
+  $scope.getParamListByFormula=function(){
+    ModelService.getParamListByFormula($scope.selectedDependsOn.uuid,"paramlsit").then(function(response) { onGetParamListByFormula(response.data )});
+    var onGetParamListByFormula = function(response) {
+      $scope.allParamlist = response
      
     }
   }
+  // $scope.getAllLatestAlgorithm=function(){
+  //   ModelService.getAllLatest("algorithm").then(function(response) { onGetAllLatestAlgorithm(response.data )});
+  //   var onGetAllLatestAlgorithm = function(response) {
+  //     $scope.allalgorithm = response
+     
+  //   }
+  // }
   
-  $scope.selectType = function() {
-    ModelService.getAllLatest($scope.selectSourceType).then(function(response) { onGetAllLatest(response.data)});
+  // $scope.selectType = function() {
+  //   ModelService.getAllLatest($scope.selectSourceType).then(function(response) { onGetAllLatest(response.data)});
+  //   var onGetAllLatest = function(response) {
+  //     $scope.allsource = response
+  //     $scope.selectSource= $scope.allsource[0]
+  //     $scope.selectalgorithm=$scope.allalgorithm[0]
+  //     $scope.onChangeSource()
+  //   }
+  // }
+
+  $scope.onChangeDependsOnType=function(){
+    ModelService.getAllLatest($scope.selectedDependsOnType).then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
-      $scope.allsource = response
-      $scope.selectSource= $scope.allsource[0]
-      $scope.selectalgorithm=$scope.allalgorithm[0]
-      $scope.onChangeSource()
+      $scope.allDependsOn= response
+      $scope.selectedDependsOn= $scope.allDependsOn[0]
+      $scope.onChangeDependsOn()
     }
   }
-  $scope.onChangeSource = function() {
+
+  $scope.onChangeDependsOn = function() {
+      if ($scope.allDependsOn != null && $scope.selectedDependsOn != null && $scope.selectedDependsOn =="formula") {
+       $scope.isParamListShow=true;
+       $scope.getParamListByFormula();
+      }else{
+        $scope.isParamListShow=false;
+      }
+    }
+
+  /*$scope.onChangeSource = function() {
     if ($scope.allsource != null && $scope.selectSource != null) {
       $scope.onChangeAlgorithm()
       $scope.getAllLabel();
     }
-  }
-  $scope.getAllAttributeBySource=function(){
+  }*/
+
+
+  /*$scope.getAllAttributeBySource=function(){
     ModelService.getAllAttributeBySource($scope.selectSource.uuid, $scope.selectSourceType).then(function(response) {
       onSuccessGetAllAttributeBySource(response.data)
     });
@@ -206,8 +236,9 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
       $scope.allsourceLabel = response
     }
     
-  }
-  $scope.getAllLabel=function(){
+  }*/
+
+  /*$scope.getAllLabel=function(){
     if($scope.selectSourceType !="datapod"){
       $scope.getAllAttributeBySource();
     }else{
@@ -230,7 +261,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
 	    }
     }
   }
-  }
+  }*/
   
   $scope.getModelScript=function(uuid,version){
     ModelService.getModelScript(uuid,version).then(function(response) {onGetModelScript(response)});
@@ -238,7 +269,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
      $scope.scriptCode=response.data;
     }
   }
-  $scope.onChangeAlgorithm = function() {
+  /*$scope.onChangeAlgorithm = function() {
     $scope.isShowExecutionparam = false;
     $scope.checkboxModelexecution = "NO";
     $scope.allparamset = null;
@@ -256,7 +287,8 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     //     	$scope.isLabelDisable = true;
     //    }
     //   }
-  }
+  }*/
+
   if (typeof $stateParams.id != "undefined") {
     $scope.showactive="true"
     $scope.mode = $stateParams.mode;
@@ -289,11 +321,19 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
         //   }
         // }//End  If LabelRequired
         $scope.selectLabel = $scope.modeldata.label;
-        $scope.getAllLatestAlgorithm();
-        var algorithm = {}
-        algorithm.uuid = $scope.modeldata.algorithm.ref.uuid;
-        algorithm.name = $scope.modeldata.algorithm.ref.name;
-        $scope.selectalgorithm = algorithm
+        $scope.selectedDependsOnType=$scope.modeldata.dependsOn.ref.type
+        $scope.onChangeDependsOnType();
+        var selectedDependsOn = {}
+        selectedDependsOn.uuid = $scope.modeldata.dependsOn.ref.uuid;
+        selectedDependsOn.name = $scope.modeldata.dependsOn.ref.name;
+        $scope.selectedDependsOn = selectedDependsOn;
+        if($scope.selectedDependsOnType =="formula")
+        $scope.getParamListByFormula();
+        //$scope.getAllLatestAlgorithm();
+        // var algorithm = {}
+        // algorithm.uuid = $scope.modeldata.algorithm.ref.uuid;
+        // algorithm.name = $scope.modeldata.algorithm.ref.name;
+        // $scope.selectalgorithm = algorithm
         $scope.checkboxCustom=false
         $scope.featureTableArray=[];
         for(var i=0;i< $scope.modeldata.features.length;i++){
@@ -304,7 +344,14 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
-          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type [i].type =="string"?true:false; 
+          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type [i].type =="string"?true:false;
+          if($scope.selectedDependsOnType== "formula"){
+            var paramListInfo={};
+            paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;
+            paramListInfo.name=$scope.modeldata.features[i].paramListInfo.ref.name;
+            paramListInfo.paramId=$scope.modeldata.features[i].paramListInfo.paramId;
+            featureObj.paramListInfo=paramListInfo;
+          } 
           $scope.featureTableArray[i]=featureObj; 
         }
        
@@ -317,7 +364,8 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   } //End If onSuccessGetLatestByUuid
   else {
     $scope.showactive="false"
-    $scope.getAllLatestAlgorithm();
+   // $scope.getAllLatestAlgorithm();
+    $scope.onChangeDependsOnType();
   }
   
 
@@ -349,11 +397,19 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
         //   }
         // }//End  If LabelRequired
         $scope.selectLabel = $scope.modeldata.label;
-        $scope.getAllLatestAlgorithm();
-        var algorithm = {}
-        algorithm.uuid = $scope.modeldata.algorithm.ref.uuid;
-        algorithm.name = $scope.modeldata.algorithm.ref.name;
-        $scope.selectalgorithm = algorithm
+        $scope.selectedDependsOnType=$scope.modeldata.dependsOn.ref.type
+        $scope.onChangeDependsOnType();
+        var selectedDependsOn = {}
+        selectedDependsOn.uuid = $scope.modeldata.dependsOn.ref.uuid;
+        selectedDependsOn.name = $scope.modeldata.dependsOn.ref.name;
+        $scope.selectedDependsOn = selectedDependsOn;
+        if($scope.selectedDependsOnType =="formula")
+        $scope.getParamListByFormula();
+        // $scope.getAllLatestAlgorithm();
+        // var algorithm = {}
+        // algorithm.uuid = $scope.modeldata.algorithm.ref.uuid;
+        // algorithm.name = $scope.modeldata.algorithm.ref.name;
+        // $scope.selectalgorithm = algorithm
         $scope.checkboxCustom=false
         $scope.featureTableArray=[];
         for(var i=0;i< $scope.modeldata.features.length;i++){
@@ -405,12 +461,21 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
       // source.ref = ref;
       // modelJson.source = source;
 
-      var algorithm = {};
+      // var algorithm = {};
+      // var ref = {};
+      // ref.type = "algorithm";
+      // ref.uuid = $scope.selectalgorithm.uuid;
+      // algorithm.ref = ref;
+      // modelJson.algorithm = algorithm;
+
+      var dependsOn = {};
       var ref = {};
-      ref.type = "algorithm";
-      ref.uuid = $scope.selectalgorithm.uuid;
-      algorithm.ref = ref;
-      modelJson.algorithm = algorithm;
+      ref.type = $scope.selectedDependsOnType;
+      ref.uuid = $scope.selectedDependsOn.uuid;
+      dependsOn.ref = ref;
+      modelJson.dependsOn = dependsOn;
+      
+      
       // if ($scope.isLabelDisable == false) {
       //   var label = {};
       //   var ref = {};
@@ -436,6 +501,15 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
         featureObj.desc=$scope.featureTableArray[i].desc
         featureObj.minVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].minVal
         featureObj.maxVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].maxVal
+        if($scope.selectedDependsOnType =="formula"){
+          var paramListInfo={};
+          var ref={};
+          ref.uuid=$scope.featureTableArray.paramListInfo.uuid;
+          ref.type=$scope.selectedDependsOnType;
+          paramListInfo.ref=ref;
+          paramListInfo.paramId=$scope.featureTableArray.paramListInfo.paramId;
+          featureObj.paramListInfo=paramListInfo;
+        }
         featureArray[i]=featureObj;
       }
 

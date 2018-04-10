@@ -253,7 +253,20 @@
                           </select>
                         </div>
                       </div> -->
-                      <div class="form-group">
+                       <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Depends On</label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                          <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedDependsOnType" ng-change="onChangeDependsOnType()" ng-options="r for r in dependsOnType">
+                          </select>
+                        </div>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                        </label>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                          <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeDependsOn()" data-ng-model="selectedDependsOn" ng-options="r as r.name for r in allDependsOn | orderBy:'name' track by r.uuid ">
+                          </select>
+                        </div>
+                      </div>
+                      <!-- <div class="form-group">
                         <label class="col-md-3 control-label">Algorithm
                         </label>
                         <div class="col-md-6">
@@ -261,7 +274,7 @@
                             ng-options="r as r.name for r in allalgorithm | orderBy:'name' track by r.uuid">
                           </select>
                         </div>
-                      </div>
+                      </div> -->
                       <div class="form-group">
                         <label class="col-md-3 control-label">Label
                         </label>
@@ -298,6 +311,7 @@
                                   <th style="width:25%; text-align:center">Desc</th>
                                   <th style="width:15%; text-align:center">Min Value</th>
                                   <th style="width:15%; text-align:center">Max Value</th>
+                                  <th style="width:15%; text-align:center" ng-show="isParamListShow">Params</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -314,6 +328,10 @@
                                   <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.desc" title="{{data.sourceFeature.desc}}"ng-disabled="{{mode}}"></span></td>
                                   <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.minVal" title="{{data.sourceFeature.minVal}}"ng-disabled="{{mode}}|| data.isMinMaxDiabled"></span></td>
                                   <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.maxVal" title="{{data.sourceFeature.maxVal}}" ng-disabled="{{mode}} || data.isMinMaxDiabled"></span> </td>
+                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.paramListInfo" ng-options="r for r in allParamlist track by r.uuid+r.paramId">
+                                    </select>
+                                   </td>
                                 </tr>
                               </tbody>
                             </table>
