@@ -48,6 +48,8 @@ import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Param;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.RolePriv;
 import com.inferyx.framework.domain.StatusHolder;
@@ -840,6 +842,13 @@ public class MetadataController {
 			@RequestParam(value ="category" ,defaultValue="aggregate") String category,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return metadataServiceImpl.getFunctionByType(category);
+	}
+	
+	@RequestMapping(value = "/getParamByParamList", method = RequestMethod.GET)
+	public @ResponseBody List<Param> getParamByParamList(
+			@RequestParam(value = "uuid") String paramListUuid ,
+			@RequestParam(value = "type", required = false) String type ) {
+		return metadataServiceImpl.getParamByParamList(paramListUuid);
 	}
 	
 }
