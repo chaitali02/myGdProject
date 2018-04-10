@@ -107,7 +107,7 @@
     "attrId": "4",
     "attrName": "label"
   },
-  "algorithm": {
+  "dependsOn": {
     "ref": {
       "type": "algorithm",
       "uuid": "4e0d5928-39c7-4e0c-aa98-0d32ad2c1518",
