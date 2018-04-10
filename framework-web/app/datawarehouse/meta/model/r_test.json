@@ -43,5 +43,5 @@
   "scriptName": "9020f19b-099c-4234-aae0-e25cb5fbff98_1520398334.R",
   "trainPercent" : 70,
   "valPercent" : 30,
-  "customeFlag" : "Y"
+  "customFlag" : "Y"
 }
