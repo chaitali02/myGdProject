@@ -50,6 +50,7 @@ import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.RolePriv;
 import com.inferyx.framework.domain.StatusHolder;
@@ -843,9 +844,9 @@ public class MetadataController {
 	}
 	
 	@RequestMapping(value = "/getParamByParamList", method = RequestMethod.GET)
-	public @ResponseBody List<Param> getParamByParamList(
+	public @ResponseBody List<ParamListHolder> getParamByParamList(
 			@RequestParam(value = "uuid") String paramListUuid ,
-			@RequestParam(value = "type", required = false) String type ) {
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
 		return metadataServiceImpl.getParamByParamList(paramListUuid);
 	}
 	

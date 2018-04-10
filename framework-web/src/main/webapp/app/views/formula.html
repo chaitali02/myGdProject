@@ -274,6 +274,10 @@
                   <div ng-show="isSourceAtributeFunction">
                     <select select2 ng-model="sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"></select>
                   </div>
+                  <div ng-show="isSourceAtributeParamlist">
+                    
+                    <select select2 ng-model="sourceparamlist" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.dname for c in lodeParamlist"></select>
+                  </div>
                 </div>
                 <a ng-click="addAttribute()" class="formula_function btn green" ng-disabled="{{mode}}" style="margin-left:-5px;"> Add+ </a>
               </div>

@@ -1390,6 +1390,7 @@ public class CommonServiceImpl <T> {
 								innerMethod.invoke(object, resolveAttributeName(attrId, object));
 							}
 						}
+						
 					}
 					if(object instanceof ParamSet) {
 						ParamSet paramSet = (ParamSet) object;
@@ -1412,7 +1413,8 @@ public class CommonServiceImpl <T> {
 						}
 						paramSet.setParamInfo(paramInfos);
 						object = paramSet;
-					}					
+					}
+					
 					Object invokedObj = method.invoke(object);
 					if (invokedObj == null || invokedObj.getClass().isPrimitive()) {
 						continue;
@@ -1506,6 +1508,14 @@ public class CommonServiceImpl <T> {
 					if (type.equals(MetaType.datapod) || type.equals(MetaType.rule) || type.equals(MetaType.dataset)) {
 						attributeName = String.class.cast(attrObj.getClass().getMethod("getAttributeName", Integer.class).invoke(attrObj, Integer.parseInt(attributeId)));
 						return attributeName;
+					} else if (type.equals(MetaType.paramlist)) {
+						if(attrObj instanceof ParamList) {
+							ParamList paramList = (ParamList) attrObj;
+							for(Param param : paramList.getParams()) {
+								if(param.getParamId().equalsIgnoreCase(attributeId))
+									return param.getParamName();
+							}
+						}
 					} else {
 						return null;
 					}

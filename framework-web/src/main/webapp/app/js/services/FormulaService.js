@@ -194,7 +194,6 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 		var deferred = $q.defer();
 		MetadataFormulaFactory.findExpressionByType(uuid, type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
-
 			deferred.resolve({
 				data: response
 			})
@@ -202,7 +201,28 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 
 		return deferred.promise;
 	}
+	this.getParamByParamList = function (uuid, type) {
+		var deferred = $q.defer();
+		MetadataFormulaFactory.findParamByParamList(uuid,type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			var attributes = [];
+			for (var j = 0; j < response.length; j++) {
+				var attributedetail = {};
+				attributedetail.uuid = response[j].ref.uuid;
+				attributedetail.datapodname = response[j].ref.name;
+				attributedetail.name = response[j].attrName;
+				attributedetail.dname =response[j].paramName //response[j].ref.name + "." + response[j].paramName;
+				attributedetail.attributeId = response[j].paramId;
+				attributes.push(attributedetail);
+			}
+			deferred.resolve({
+				data: attributes
+			})
+		}
 
+		return deferred.promise;
+	}
+	
 	this.getAllAttributeBySource = function (uuid, type) {
 		var deferred = $q.defer();
 
@@ -267,24 +287,24 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 			}
 
 		}
-		if(type == 'paramlist'){
-			MetadataFormulaFactory.findParamByParamList(uuid, type).then(function (response) { onSuccess(response.data) });
-			var onSuccess = function (response) {
-				var attributes = [];
-				for (var j = 0; j < response.length; j++) {
-					var attributedetail = {};
-					attributedetail.uuid = response[j].ref.uuid;
-					attributedetail.datapodname = response[j].ref.name;
-					attributedetail.name = response[j].attrName;
-					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
-					attributedetail.attributeId = response[j].attrId;
-					attributes.push(attributedetail)
-				}
-				deferred.resolve({
-					data: attributes
-				})
-			}
-		}
+		// if(type == 'paramlist'){
+		// 	MetadataFormulaFactory.findParamByParamList(uuid, type).then(function (response) { onSuccess(response.data) });
+		// 	var onSuccess = function (response) {
+		// 		var attributes = [];
+		// 		for (var j = 0; j < response.length; j++) {
+		// 			var attributedetail = {};
+		// 			attributedetail.uuid = response[j].ref.uuid;
+		// 			attributedetail.datapodname = response[j].ref.name;
+		// 			attributedetail.name = response[j].attrName;
+		// 			attributedetail.dname =response[j].paramName //response[j].ref.name + "." + response[j].paramName;
+		// 			attributedetail.attributeId = response[j].paramId;
+		// 			attributes.push(attributedetail)
+		// 		}
+		// 		deferred.resolve({
+		// 			data: attributes
+		// 		})
+		// 	}
+		// }
 
 		return deferred.promise;
 	}
@@ -450,12 +470,19 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 					formulainfo.value = response.formulaInfo[i].value;
 
 				}
-				else if (response.formulaInfo[i].ref.type == "datapod" || response.formulaInfo[i].ref.type == "dataset" || response.formulaInfo[i].ref.type =="paramlist") {
+				else if (response.formulaInfo[i].ref.type == "datapod" || response.formulaInfo[i].ref.type == "dataset") {
 
 					formulainfo.type = response.formulaInfo[i].ref.type;
 					formulainfo.uuid = response.formulaInfo[i].ref.uuid;
 					formulainfo.attrId = response.formulaInfo[i].attributeId;
 					formulainfo.value = response.formulaInfo[i].ref.name + "." + response.formulaInfo[i].attributeName;
+				}
+				else if(response.formulaInfo[i].ref.type =="paramlist"){
+					formulainfo.type = response.formulaInfo[i].ref.type;
+					formulainfo.uuid = response.formulaInfo[i].ref.uuid;
+					formulainfo.attrId = response.formulaInfo[i].attributeId;
+					formulainfo.value = response.formulaInfo[i].attributeName;
+
 				}
 				else {
 

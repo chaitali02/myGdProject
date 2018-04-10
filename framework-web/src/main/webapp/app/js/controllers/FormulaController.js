@@ -15,7 +15,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 	else {
 		$scope.isAdd = true;
 	}
-	$scope.formulaTypes['simple','aggr','custom']
+	$scope.formulaTypes=['simple','aggr','custom']
 	$scope.mode = "false"
 	$scope.formuladata;
 	$scope.showformula = true;
@@ -98,7 +98,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		{ "text": "datapod", "caption": "attribute" },
 		{ "text": "expression", "caption": "expression" },
 		{ "text": "formula", "caption": "formula" },
-		{ "text": "function", "caption": "function" }]
+		{ "text": "function", "caption": "function" },
+	    { "text": "paramlist", "caption": "paramlist" }]
 	$scope.attributeType = $scope.attributeTypes[1]
 	$scope.$watch("isshowmodel", function (newvalue, oldvalue) {
 		$scope.isshowmodel = newvalue
@@ -269,7 +270,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 	$scope.addAttribute = function () {
 		var len = $scope.formulainfoarray.length;
 		var data = {}
-
+       debugger;
 		if ($scope.attributeType.text == "datapod") {
 			if ($scope.attributeinfo != null) {
 				data.type = "datapod"
@@ -309,6 +310,14 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 				$scope.sourcefunction = null;
 			}
 		}
+		else if($scope.attributeType.text == "paramlist"){
+			data.type = $scope.attributeType.text
+			data.value = $scope.sourceparamlist.dname
+			data.uuid = $scope.sourceparamlist.uuid;
+			data.attrId = $scope.sourceparamlist.attributeId;
+			$scope.sourceparamlist = null;
+		}
+
 		$scope.formulainfoarray[len] = data;
 
 	}
@@ -320,6 +329,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.isSourceAtributeFormula = false;
 			$scope.isSourceAtributeExpression = false;
 			$scope.isSourceAtributeFunction = false;
+			$scope.isSourceAtributeParamlist = false;
 		}
 		else if (type == "datapod") {
 			$scope.isSourceAtributeSimple = false;
@@ -327,6 +337,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.isSourceAtributeFormula = false;
 			$scope.isSourceAtributeExpression = false;
 			$scope.isSourceAtributeFunction = false;
+			$scope.isSourceAtributeParamlist = false;
 		}
 		else if (type == "formula") {
 			$scope.isSourceAtributeSimple = false;
@@ -334,6 +345,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.isSourceAtributeFormula = true;
 			$scope.isSourceAtributeExpression = false;
 			$scope.isSourceAtributeFunction = false;
+			$scope.isSourceAtributeParamlist = false;
 			MetadataFormulaSerivce.getFormulaByType($scope.allformuladepands.defaultoption.uuid, $scope.selectedDependsOnType).then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
 				$scope.formulaLodeFormula = response.data
@@ -345,6 +357,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.isSourceAtributeFormula = false;
 			$scope.isSourceAtributeExpression = true;
 			$scope.isSourceAtributeFunction = false;
+			$scope.isSourceAtributeParamlist = false;
 			MetadataFormulaSerivce.getExpressionByType($scope.allformuladepands.defaultoption.uuid, $scope.selectedDependsOnType).then(function (response) { onSuccessExpression(response.data) });
 			var onSuccessExpression = function (response) {
 				$scope.formulaLodeExpression = response
@@ -356,9 +369,24 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.isSourceAtributeFormula = false;
 			$scope.isSourceAtributeExpression = false;
 			$scope.isSourceAtributeFunction = true;
+			$scope.isSourceAtributeParamlist = false;
 			MetadataFormulaSerivce.getAllLatestFunction("function", 'Y').then(function (response) { onSuccessFunction(response.data) });
 			var onSuccessFunction = function (response) {
 				$scope.ruleLodeFunction = response
+			}
+		}
+		else if (type == "paramlist") {
+			$scope.isSourceAtributeSimple = false;
+			$scope.isSourceAtributeDatapod = false;
+			$scope.isSourceAtributeFormula = false;
+			$scope.isSourceAtributeExpression = false;
+			$scope.isSourceAtributeFunction = false;
+			$scope.isSourceAtributeParamlist = true;
+			debugger;
+			MetadataFormulaSerivce.getParamByParamList($scope.allformuladepands.defaultoption.uuid,"paramlist").then(function (response) { onSuccessParamlist(response.data) });
+			var onSuccessParamlist = function (response) {
+				debugger
+				$scope.lodeParamlist = response
 			}
 		}
 	}
@@ -467,6 +495,14 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 					ref.uuid = $scope.formulainfoarray[i].uuid;
 					formulainfo.ref = ref;
 					formulainfo.attributeId = $scope.formulainfoarray[i].attrId;
+				}
+				else if ($scope.formulainfoarray[i].type == "paramlist") {
+						
+					ref.type = $scope.formulainfoarray[i].type;
+					ref.uuid = $scope.formulainfoarray[i].uuid;
+					formulainfo.ref = ref;
+					formulainfo.attributeId = $scope.formulainfoarray[i].attrId;
+					formulaJson.formulaType = "custom"
 				}
 				else {
 					if ($scope.formulainfoarray[i].type == "formula") {

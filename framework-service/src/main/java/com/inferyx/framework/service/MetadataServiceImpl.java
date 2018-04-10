@@ -62,6 +62,7 @@ import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
@@ -1066,14 +1067,20 @@ public class MetadataServiceImpl {
 		
 	}
 
-	public List<Param> getParamByParamList(String paramListUuid) {
-		List<Param> params = new ArrayList<>();		
-		try {			
-			ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(paramListUuid, MetaType.paramlist.toString(),"N");			
-			params = paramList.getParams();		
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+	public List<ParamListHolder> getParamByParamList(String paramListUuid) throws JsonProcessingException {	
+		List<ParamListHolder> holderList = new ArrayList<>();
+			
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(paramListUuid, MetaType.paramlist.toString(),"N");			
+		
+		for(Param param : paramList.getParams()) {
+			ParamListHolder paramListHolder = new ParamListHolder();
+			paramListHolder.setParamId(param.getParamId());
+			paramListHolder.setParamName(param.getParamName());
+			paramListHolder.setParamType(param.getParamType());
+			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+			paramListHolder.getRef().setName(paramList.getName());
+			holderList.add(paramListHolder);
 		}
-		return params;
-	}	
+		return holderList;
+		}	
 }
