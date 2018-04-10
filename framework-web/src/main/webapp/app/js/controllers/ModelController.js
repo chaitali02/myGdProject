@@ -202,21 +202,31 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   //   }
   // }
 
-  $scope.onChangeDependsOnType=function(){
+  $scope.onChangeDependsOnType=function(defaultValue){
     ModelService.getAllLatest($scope.selectedDependsOnType).then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
       $scope.allDependsOn= response
+      if(defaultValue)
       $scope.selectedDependsOn= $scope.allDependsOn[0]
       $scope.onChangeDependsOn()
     }
   }
 
   $scope.onChangeDependsOn = function() {
-      if ($scope.allDependsOn != null && $scope.selectedDependsOn != null && $scope.selectedDependsOn =="formula") {
+    
+      if ($scope.allDependsOn != null && $scope.selectedDependsOn != null && $scope.selectedDependsOnType == "formula") {
        $scope.isParamListShow=true;
        $scope.getParamListByFormula();
       }else{
         $scope.isParamListShow=false;
+      }
+    }
+
+    $scope.onChangeParamInfo=function(index){
+      $scope.featureTableArray[index].name=$scope.featureTableArray[index].paramListInfo.paramName;
+      $scope.featureTableArray[index].type=$scope.featureTableArray[index].paramListInfo.paramType.toLowerCase();
+      if($scope.featureTableArray[index].type){
+        $scope.isMinMaxDiabled=true;
       }
     }
 
@@ -322,13 +332,15 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
         // }//End  If LabelRequired
         $scope.selectLabel = $scope.modeldata.label;
         $scope.selectedDependsOnType=$scope.modeldata.dependsOn.ref.type
-        $scope.onChangeDependsOnType();
+        $scope.onChangeDependsOnType(false);
         var selectedDependsOn = {}
         selectedDependsOn.uuid = $scope.modeldata.dependsOn.ref.uuid;
         selectedDependsOn.name = $scope.modeldata.dependsOn.ref.name;
         $scope.selectedDependsOn = selectedDependsOn;
-        if($scope.selectedDependsOnType =="formula")
-        $scope.getParamListByFormula();
+        if($scope.selectedDependsOnType =="formula"){
+          $scope.getParamListByFormula();
+          $scope.isParamListShow=true
+        }
         //$scope.getAllLatestAlgorithm();
         // var algorithm = {}
         // algorithm.uuid = $scope.modeldata.algorithm.ref.uuid;
@@ -345,7 +357,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
           featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type [i].type =="string"?true:false;
-          if($scope.selectedDependsOnType== "formula"){
+          if($scope.selectedDependsOnType== "formula" && $scope.modeldata.features[i].paramListInfo !=null){
             var paramListInfo={};
             paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;
             paramListInfo.name=$scope.modeldata.features[i].paramListInfo.ref.name;
@@ -365,7 +377,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   else {
     $scope.showactive="false"
    // $scope.getAllLatestAlgorithm();
-    $scope.onChangeDependsOnType();
+    $scope.onChangeDependsOnType(true);
   }
   
 
@@ -398,13 +410,15 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
         // }//End  If LabelRequired
         $scope.selectLabel = $scope.modeldata.label;
         $scope.selectedDependsOnType=$scope.modeldata.dependsOn.ref.type
-        $scope.onChangeDependsOnType();
+        $scope.onChangeDependsOnType(false);
         var selectedDependsOn = {}
         selectedDependsOn.uuid = $scope.modeldata.dependsOn.ref.uuid;
         selectedDependsOn.name = $scope.modeldata.dependsOn.ref.name;
         $scope.selectedDependsOn = selectedDependsOn;
-        if($scope.selectedDependsOnType =="formula")
-        $scope.getParamListByFormula();
+        if($scope.selectedDependsOnType =="formula"){
+          $scope.getParamListByFormula();
+          $scope.isParamListShow=true
+        }
         // $scope.getAllLatestAlgorithm();
         // var algorithm = {}
         // algorithm.uuid = $scope.modeldata.algorithm.ref.uuid;
@@ -420,7 +434,14 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
-          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type [i].type =="string"?true:false; 
+          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type [i].type =="string"?true:false;
+          if($scope.selectedDependsOnType== "formula" &&  $scope.modeldata.features[i].paramListInfo){
+            var paramListInfo={};
+            paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;
+            paramListInfo.name=$scope.modeldata.features[i].paramListInfo.ref.name;
+            paramListInfo.paramId=$scope.modeldata.features[i].paramListInfo.paramId;
+            featureObj.paramListInfo=paramListInfo;
+          }  
           $scope.featureTableArray[i]=featureObj; 
         }
        
@@ -453,7 +474,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     modelJson.tags = tagArray;
     if(!$scope.checkboxCustom){
       modelJson.type="SPARK"
-      modelJson.customeFlag="N"
+      modelJson.customFlag="N"
       //  var source = {};
       // var ref = {};
       // ref.type = $scope.selectSourceType;
@@ -501,14 +522,16 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
         featureObj.desc=$scope.featureTableArray[i].desc
         featureObj.minVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].minVal
         featureObj.maxVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].maxVal
-        if($scope.selectedDependsOnType =="formula"){
+        if($scope.selectedDependsOnType =="formula" && $scope.allParamlist.length >0){
           var paramListInfo={};
           var ref={};
-          ref.uuid=$scope.featureTableArray.paramListInfo.uuid;
-          ref.type=$scope.selectedDependsOnType;
+          ref.uuid=$scope.featureTableArray[i].paramListInfo.uuid;
+          ref.type="paramlist";
           paramListInfo.ref=ref;
-          paramListInfo.paramId=$scope.featureTableArray.paramListInfo.paramId;
+          paramListInfo.paramId=$scope.featureTableArray[i].paramListInfo.paramId;
           featureObj.paramListInfo=paramListInfo;
+        }else{
+          featureObj.paramListInfo=null
         }
         featureArray[i]=featureObj;
       }

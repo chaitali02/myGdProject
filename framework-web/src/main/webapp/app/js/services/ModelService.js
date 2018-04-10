@@ -214,8 +214,19 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
     var deferred = $q.defer();
     ModelFactory.findParamListByFormula(uuid, type).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
+      var params = [];
+			for (var j = 0; j < response.length; j++) {
+				var paramsdetail = {};
+				paramsdetail.uuid = response[j].ref.uuid;
+				paramsdetail.name = response[j].ref.name;
+				paramsdetail.paramName = response[j].paramName;
+        paramsdetail.dname =response[j].paramName //response[j].ref.name + "." + response[j].paramName;
+        paramsdetail.paramType =response[j].paramType
+				paramsdetail.paramId = response[j].paramId;
+				params.push(paramsdetail);
+			}
       deferred.resolve({
-        data: response
+        data: params
       });
     }
     return deferred.promise;
