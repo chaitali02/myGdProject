@@ -25,7 +25,7 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 	$scope.isSourceAtributeDatapod=true;
 	$scope.formula={};
 	$scope.formula.versions=[];
-	$scope.depandsOnTypes=["datapod","relation",'dataset'];
+	$scope.depandsOnTypes=["datapod","relation",'dataset','paramlist'];
 	$scope.isDependencyShow=false;
 
 	$scope.privileges = [];
@@ -148,10 +148,10 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 	}
 
     $scope.onChangedepandsOnTypes=function(){
-    	MetadataFormulaSerivce.getAllLatest($scope.formulatype).then(function(response){onSuccessRelation(response.data)});
+    	MetadataFormulaSerivce.getAllLatest($scope.selectedDependsOnType).then(function(response){onSuccessRelation(response.data)});
  	    var onSuccessRelation=function(response){
  	       $scope.allformuladepands=response
- 	       MetadataFormulaSerivce.getAllAttributeBySource($scope.allformuladepands.defaultoption.uuid,$scope.formulatype).then(function(response){onSuccessGetAllAttributeBySource(response.data)});
+ 	       MetadataFormulaSerivce.getAllAttributeBySource($scope.allformuladepands.defaultoption.uuid,$scope.selectedDependsOnType).then(function(response){onSuccessGetAllAttributeBySource(response.data)});
  	        var onSuccessGetAllAttributeBySource=function(resposne){
  	           $scope.allAttribute=resposne;
  	        }
@@ -159,7 +159,7 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
  	}
 
 	$scope.selectDependson=function(){
-		MetadataFormulaSerivce.getAllAttributeBySource($scope.allformuladepands.defaultoption.uuid,$scope.formulatype).then(function(response){onSuccessGetAllAttributeBySource(response.data)});
+		MetadataFormulaSerivce.getAllAttributeBySource($scope.allformuladepands.defaultoption.uuid,$scope.selectedDependsOnType).then(function(response){onSuccessGetAllAttributeBySource(response.data)});
         var onSuccessGetAllAttributeBySource=function(resposne){
            $scope.allAttribute=resposne;
         }
@@ -187,7 +187,7 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 		    defaultversion.version=response.formuladata.version;
 			defaultversion.uuid=response.formuladata.uuid;
 		    $scope.formula.defaultVersion=defaultversion;
-		    $scope.formulatype=response.formuladata.dependsOn.ref.type
+		    $scope.selectedDependsOnType=response.formuladata.dependsOn.ref.type
 		    MetadataFormulaSerivce.getAllLatest(response.formuladata.dependsOn.ref.type).then(function(response){onSuccessGetAllLatest(response.data)});
 	        var onSuccessGetAllLatest=function(response){
 		         $scope.allformuladepands=response
@@ -217,9 +217,9 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 
     	if(typeof $sessionStorage.fromStateName != "undefined" &&  $sessionStorage.fromStateName !="metadata" && $sessionStorage.fromStateName !="metaListformula"){
 				$scope.showactive="false"
-				$scope.formulatype=$sessionStorage.dependon.type
+				$scope.selectedDependsOnType=$sessionStorage.dependon.type
 	    	$scope.isDependonDisabled=true;
-	    	MetadataFormulaSerivce.getAllLatest($scope.formulatype).then(function(response){onSuccessRelation(response.data)});
+	    	MetadataFormulaSerivce.getAllLatest($scope.selectedDependsOnType).then(function(response){onSuccessRelation(response.data)});
 	 	    var onSuccessRelation=function(response){
 	 	       $scope.allformuladepands=response
 	 	       var defaultoption={};
@@ -338,7 +338,7 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 		   $scope.isSourceAtributeFormula=true;
 		   $scope.isSourceAtributeExpression=false;
 		   $scope.isSourceAtributeFunction=false;
-		   MetadataFormulaSerivce.getFormulaByType($scope.allformuladepands.defaultoption.uuid,$scope.formulatype).then(function(response){onSuccessFormula(response.data)});
+		   MetadataFormulaSerivce.getFormulaByType($scope.allformuladepands.defaultoption.uuid,$scope.selectedDependsOnType).then(function(response){onSuccessFormula(response.data)});
 		   var onSuccessFormula=function(response){
 		     $scope.formulaLodeFormula=response.data
 		   }
@@ -349,7 +349,7 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 		   $scope.isSourceAtributeFormula=false;
 		   $scope.isSourceAtributeExpression=true;
 		   $scope.isSourceAtributeFunction=false;
-		   MetadataFormulaSerivce.getExpressionByType($scope.allformuladepands.defaultoption.uuid,$scope.formulatype).then(function(response){onSuccessExpression(response.data)});
+		   MetadataFormulaSerivce.getExpressionByType($scope.allformuladepands.defaultoption.uuid,$scope.selectedDependsOnType).then(function(response){onSuccessExpression(response.data)});
 		   var onSuccessExpression=function(response){
 		     $scope.formulaLodeExpression=response
 		   }
@@ -397,7 +397,7 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 		    defaultversion.version=response.formuladata.version;
 			defaultversion.uuid=response.formuladata.uuid;
 		    $scope.formula.defaultVersion=defaultversion;
-		    $scope.formulatype=response.formuladata.dependsOn.ref.type
+		    $scope.selectedDependsOnType=response.formuladata.dependsOn.ref.type
 		    MetadataFormulaSerivce.getAllLatest(response.formuladata.dependsOn.ref.type).then(function(response){onSuccessGetAllLatest(response.data)});
 	        var onSuccessGetAllLatest=function(response){
 		         $scope.allformuladepands=response
@@ -438,31 +438,29 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 		formulaJson.name=$scope.formuladata.name
 	    var tagArray=[];
 		if($scope.tags !=null){
-	    for(var counttag=0;counttag<$scope.tags.length;counttag++){
-	       	tagArray[counttag]=$scope.tags[counttag].text;
-	    }
+			for(var counttag=0;counttag<$scope.tags.length;counttag++){
+				tagArray[counttag]=$scope.tags[counttag].text;
+			}
 		}
 	    formulaJson.tags=tagArray
 	    formulaJson.desc=$scope.formuladata.desc
 	    var dependsOn={};
 	    var ref={}
-	    ref.type=$scope.formulatype
+	    ref.type=$scope.selectedDependsOnType
 	    ref.uuid=$scope.allformuladepands.defaultoption.uuid
 	    dependsOn.ref=ref;
 	    formulaJson.dependsOn = dependsOn;
 	    formulaJson.active=$scope.formuladata.active
-			formulaJson.published=$scope.formuladata.published
+		formulaJson.published=$scope.formuladata.published
 	    var formulaArray=[];
 	    if($scope.formulainfoarray.length >0){
 	    	for(var i=0;i<$scope.formulainfoarray.length;i++){
 	    		var formulainfo={}
 	    		var ref={};
 	    		if($scope.formulainfoarray[i].type == "simple"){
-
 	    			if(aggrfun.indexOf($scope.formulainfoarray[i].value.toLowerCase()) > -1){
 	    				formulaJson.formulaType="aggr"
 	    			}
-
 	    			ref.type=$scope.formulainfoarray[i].type;
 	    			formulainfo.ref=ref;
 	    			formulainfo.value=$scope.formulainfoarray[i].value;
@@ -473,7 +471,7 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 	    			formulainfo.value=$scope.formulainfoarray[i].value;
 	    		}
 	    		else if($scope.formulainfoarray[i].type == "datapod" ||$scope.formulainfoarray[i].type == "dataset" ){
-	    			if($scope.formulatype =="dataset"){
+	    			if($scope.selectedDependsOnType =="dataset"){
 	    				ref.type="dataset";
 	    			}
 	    			else{
@@ -486,18 +484,16 @@ MetadataModule.controller('MetadataFormulaController',function($state,$scope,$st
 	    		else{
 	    			if($scope.formulainfoarray[i].type =="formula"){
 	    				if(formulaJson.formulaType !="aggr")
-	    				formulaJson.formulaType=$scope.formulainfoarray[i].formulatype;
+	    					formulaJson.formulaType=$scope.formulainfoarray[i].formulatype;
 	    			}
 	    			if($scope.formulainfoarray[i].type == "function"){
-	    				//alert($scope.formulainfoarray[i].category)
-	    			if($scope.formulainfoarray[i].category == "aggregate"){
-	    				formulaJson.formulaType="aggr"
-	    			}
+						if($scope.formulainfoarray[i].category == "aggregate"){
+							formulaJson.formulaType="aggr"
+						}
 	    			}
 	    		    ref.type=$scope.formulainfoarray[i].type;
 	    			ref.uuid=$scope.formulainfoarray[i].uuid;
 	    			formulainfo.ref=ref;
-
 	    		}
 	    		formulaArray[i]=formulainfo;
 	    	}
