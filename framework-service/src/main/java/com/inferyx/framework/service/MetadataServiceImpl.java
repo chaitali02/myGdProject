@@ -50,6 +50,7 @@ import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
+import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.LoadExec;
@@ -1083,4 +1084,27 @@ public class MetadataServiceImpl {
 		}
 		return holderList;
 		}	
+	
+	public List<ParamListHolder> getParamListByFormula(String formulaUuid) throws JsonProcessingException {	
+
+		Formula formula = (Formula) commonServiceImpl.getLatestByUuid(formulaUuid, MetaType.formula.toString(), "N");
+
+		List<ParamListHolder> holderList = new ArrayList<>();
+		ParamList paramList = null;
+		if (formula.getDependsOn().getRef().getType().equals(MetaType.paramlist)) {
+
+			paramList = (ParamList) commonServiceImpl.getLatestByUuid(formula.getDependsOn().getRef().getUuid(),
+					MetaType.paramlist.toString(), "N");
+		}
+		for (Param param : paramList.getParams()) {
+			ParamListHolder paramListHolder = new ParamListHolder();
+			paramListHolder.setParamId(param.getParamId());
+			paramListHolder.setParamName(param.getParamName());
+			paramListHolder.setParamType(param.getParamType());
+			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+			paramListHolder.getRef().setName(paramList.getName());
+			holderList.add(paramListHolder);
+		}
+		return holderList;
+	}
 }
