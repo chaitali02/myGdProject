@@ -16,7 +16,6 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.TrainExec;
-import com.inferyx.framework.service.CommonServiceImpl;
 
 /**
  * @author joy
@@ -26,8 +25,6 @@ public class SimulateMLOperator {
 
 	@Autowired
 	private SparkSession sparkSession;
-	@Autowired
-	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private PredictMLOperator predictMLOperator;
 	
