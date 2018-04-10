@@ -60,6 +60,8 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.Param;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
@@ -1063,7 +1065,15 @@ public class MetadataServiceImpl {
 		return function;
 		
 	}
-	
-	
-	
+
+	public List<Param> getParamByParamList(String paramListUuid) {
+		List<Param> params = new ArrayList<>();		
+		try {			
+			ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(paramListUuid, MetaType.paramlist.toString(),"N");			
+			params = paramList.getParams();		
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return params;
+	}	
 }
