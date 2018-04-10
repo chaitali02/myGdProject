@@ -67,5 +67,5 @@
  	"scriptName" : "",
     "trainPercent" : 70,
     "valPercent" : 30,
-  "customeFlag" : "N"
+  "customFlag" : "N"
 }

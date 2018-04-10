@@ -1,0 +1,65 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "model",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+        }
+    },
+    "target" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+        }
+    },
+    "numIterations" : 1000,
+    "featureInfo" : [ 
+        {
+            "featureId" : "0",
+            "featureName" : "interest_rate",
+            "ref" : {
+                "type" : "model",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+            }
+        }, 
+        {
+            "featureId" : "1",
+            "featureName" : "account_type_id",
+            "ref" : {
+                "type" : "model",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+            }
+        }, 
+        {
+            "featureId" : "2",
+            "featureName" : "account_status_id",
+            "ref" : {
+                "type" : "model",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+            }
+        }
+    ],
+    "uuid" : "c1b110a1-2f16-46d6-9718-899cf92a03ad",
+    "version" : "1521705021",
+    "name" : "test_linear_regression",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-03-22T07:50:21.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}
