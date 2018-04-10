@@ -16,7 +16,6 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.TrainExec;
-import com.inferyx.framework.service.CommonServiceImpl;
 
 /**
  * @author joy
@@ -26,8 +25,6 @@ public class SimulateMLOperator {
 
 	@Autowired
 	private SparkSession sparkSession;
-	@Autowired
-	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private PredictMLOperator predictMLOperator;
 	
@@ -46,10 +43,7 @@ public class SimulateMLOperator {
 		StringBuilder sb = new StringBuilder();
 		// write code
 		try {
-			Model model_2 = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
-					simulate.getDependsOn().getRef().getVersion(),
-					simulate.getDependsOn().getRef().getType().toString());
-			for (Feature feature : model_2.getFeatures()) {
+			for (Feature feature : model.getFeatures()) {
 				sb.append("(" + feature.getMinVal() + " + rand()*(" + feature.getMaxVal() + "-" + feature.getMinVal()
 						+ ")) AS " + feature.getName() + ", ");
 			}

@@ -1096,15 +1096,16 @@ public class MetadataServiceImpl {
 			paramList = (ParamList) commonServiceImpl.getLatestByUuid(formula.getDependsOn().getRef().getUuid(),
 					MetaType.paramlist.toString(), "N");
 		}
-		for (Param param : paramList.getParams()) {
-			ParamListHolder paramListHolder = new ParamListHolder();
-			paramListHolder.setParamId(param.getParamId());
-			paramListHolder.setParamName(param.getParamName());
-			paramListHolder.setParamType(param.getParamType());
-			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
-			paramListHolder.getRef().setName(paramList.getName());
-			holderList.add(paramListHolder);
-		}
+		if(paramList != null)
+			for (Param param : paramList.getParams()) {
+				ParamListHolder paramListHolder = new ParamListHolder();
+				paramListHolder.setParamId(param.getParamId());
+				paramListHolder.setParamName(param.getParamName());
+				paramListHolder.setParamType(param.getParamType());
+				paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+				paramListHolder.getRef().setName(paramList.getName());
+				holderList.add(paramListHolder);
+			}
 		return holderList;
 	}
 }
