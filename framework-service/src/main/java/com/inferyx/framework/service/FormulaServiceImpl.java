@@ -37,6 +37,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.FormulaType;
 import com.inferyx.framework.domain.FormulaTypeHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -343,9 +344,11 @@ public class FormulaServiceImpl {
 	}*/
 
 	public List<Formula> findFormulaByType(String uuid) throws JsonProcessingException {
-		/*String appUuid = (securityServiceImpl.getAppInfo() != null
-				&& securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
+		/*
+		 * String appUuid = (securityServiceImpl.getAppInfo() != null &&
+		 * securityServiceImpl.getAppInfo().getRef() != null) ?
+		 * securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+		 */
 		Aggregation formulaAggr = newAggregation(match(Criteria.where("dependsOn.ref.uuid").is(uuid)),
 				group("uuid").max("version").as("version"));
 		AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, "formula", Formula.class);
@@ -354,8 +357,10 @@ public class FormulaServiceImpl {
 		// Fetch formula details for each id
 		List<Formula> result = new ArrayList<Formula>();
 		for (Formula s : formulaList) {
-			//Formula formulaLatest = iFormulaDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			Formula formulaLatest = (Formula) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(), MetaType.formula.toString());
+			// Formula formulaLatest = iFormulaDao.findOneByUuidAndVersion(appUuid,
+			// s.getId(), s.getVersion());
+			Formula formulaLatest = (Formula) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(),
+					MetaType.formula.toString());
 			result.add(formulaLatest);
 		}
 		return result;
@@ -425,14 +430,27 @@ public class FormulaServiceImpl {
 		return baseEntityList;
 	}*/
 
-	public List<FormulaTypeHolder> findFormulaByType2(String uuid) throws JsonProcessingException {
+	public List<FormulaTypeHolder> findFormulaByType2(String uuid, String[] formulaType) throws JsonProcessingException {
 		/*String appUuid = (securityServiceImpl.getAppInfo() != null
 				&& securityServiceImpl.getAppInfo().getRef() != null)
 						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
+		List<Formula> formulaList = new ArrayList<>();
 		Aggregation formulaAggr = newAggregation(match(Criteria.where("dependsOn.ref.uuid").is(uuid)),
 				group("uuid").max("version").as("version"));
-		AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, "formula", Formula.class);
-		List<Formula> formulaList = formulaResults.getMappedResults();
+
+		if (formulaType.length == 0) {
+			AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, "formula", Formula.class);
+			formulaList.addAll(formulaResults.getMappedResults());
+		} else {
+			for (String type : formulaType) {
+				Aggregation formulatype = newAggregation(
+						match(Criteria.where("dependsOn.ref.uuid").is(uuid).and("formulaType").is(type)),
+						group("uuid").max("version").as("version"));
+				AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulatype, "formula",
+						Formula.class);
+				formulaList.addAll(formulaResults.getMappedResults());
+			}
+		}
 
 		// Fetch formula details for each id
 		List<FormulaTypeHolder> result = new ArrayList<FormulaTypeHolder>();
