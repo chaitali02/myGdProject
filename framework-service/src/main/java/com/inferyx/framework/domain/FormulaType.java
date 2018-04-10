@@ -12,6 +12,6 @@ package com.inferyx.framework.domain;
 
 public enum FormulaType {
 
-	simple, sum_aggr, percentage, aggr, CUSTOM;
+	simple, sum_aggr, percentage, aggr, custom;
 
 }
