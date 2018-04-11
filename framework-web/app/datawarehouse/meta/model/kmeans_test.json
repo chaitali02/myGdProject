@@ -22,32 +22,36 @@
 	],
 	"features": [
 		{
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
-			},
-			"attrId": "0"
+			"featureId" : "0",
+            "name" : "customer_id",
+            "type" : "integer",
+            "desc" : "customer_id",
+            "minVal" : 1,
+            "maxVal" : 10
 		},
 		{
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
-			},
-			"attrId": "1"
+			"featureId" : "1",
+            "name" : "address_id",
+            "type" : "integer",
+            "desc" : "address_id",
+            "minVal" : 1,
+            "maxVal" : 10
 		},
 		{
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
-			},
-			"attrId": "2"
+			"featureId" : "2",
+            "name" : "branch_id",
+            "type" : "integer",
+            "desc" : "branch_id",
+            "minVal" : 1,
+            "maxVal" : 10
 		},
 		{
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
-			},
-			"attrId": "10"
+			"featureId" : "10",
+            "name" : "commute_distance_miles",
+            "type" : "integer",
+            "desc" : "commute_distance_miles",
+            "minVal" : 1,
+            "maxVal" : 10
 		}
 	],
 	"dependsOn": {

@@ -29,70 +29,52 @@
   ],
   "features": [
     {
-      "ref": {
-        "type": "datapod",
-        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
-        "version": null,
-        "name": "test_model"
-      },
-      "value": null,
-      "attrId": "0",
-      "attrName": "customer_id"
+     	"featureId" : "0",
+        "name" : "customer_id",
+        "type" : "integer",
+        "desc" : "customer_id",
+        "minVal" : 1,
+        "maxVal" : 100
     },
     {
-      "ref": {
-        "type": "datapod",
-        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
-        "version": null,
-        "name": "test_model"
-      },
-      "value": null,
-      "attrId": "1",
-      "attrName": "address_id"
+      "featureId" : "1",
+        "name" : "address_id",
+        "type" : "integer",
+        "desc" : "address_id",
+        "minVal" : 1,
+        "maxVal" : 100
     },
     {
-      "ref": {
-        "type": "datapod",
-        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
-        "version": null,
-        "name": "test_model"
-      },
-      "value": null,
-      "attrId": "2",
-      "attrName": "branch_id"
+      "featureId" : "2",
+        "name" : "branch_id",
+        "type" : "integer",
+        "desc" : "branch_id",
+        "minVal" : 1,
+        "maxVal" : 100
     },
     {
-      "ref": {
-        "type": "datapod",
-        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
-        "version": null,
-        "name": "test_model"
-      },
-      "value": null,
-      "attrId": "3",
-      "attrName": "commute_distance_miles"
+      "featureId" : "3",
+        "name" : "commute_distance_miles",
+        "type" : "integer",
+        "desc" : "commute_distance_miles",
+        "minVal" : 1,
+        "maxVal" : 100
     },
     {
-      "ref": {
-        "type": "datapod",
-        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
-        "version": null,
-        "name": "test_model"
-      },
-      "value": null,
-      "attrId": "4",
-      "attrName": "label"
+      "featureId" : "4",
+        "name" : "label",
+        "type" : "integer",
+        "desc" : "label",
+        "minVal" : 1,
+        "maxVal" : 100
     },
     {
-      "ref": {
-        "type": "datapod",
-        "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
-        "version": null,
-        "name": "test_model"
-      },
-      "value": null,
-      "attrId": "5",
-      "attrName": "censor"
+      "featureId" : "5",
+        "name" : "censor",
+        "type" : "integer",
+        "desc" : "censor",
+        "minVal" : 1,
+        "maxVal" : 100
     }
   ],
   "label": {
