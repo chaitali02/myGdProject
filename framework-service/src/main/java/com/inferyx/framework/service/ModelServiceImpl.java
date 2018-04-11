@@ -1271,14 +1271,15 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					}
 				}
 			}
-		} catch (NoSuchMethodException | SecurityException e) {
+		} catch (NoSuchMethodException 
+				| SecurityException e) {
 			e.printStackTrace();
 		}
 
 		return false;
 	}
 
-	public List<Model> getAllModelByType(String customeFlag, String action) {
+	public List<Model> getAllModelByType(String customeFlag, String modelType) {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -1287,12 +1288,15 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		query.fields().include("createdOn");
 		query.fields().include("appInfo");
 
-		query.addCriteria(Criteria.where("customFlag").is(customeFlag));
-
-		List<Model> model = new ArrayList<>();
-		model = (List<Model>) mongoTemplate.find(query, Model.class);
-
-		return model;
+		try {
+			query.addCriteria(Criteria.where("customFlag").is(customeFlag));
+			
+			if(modelType != null)
+				query.addCriteria(Criteria.where("dependsOn.ref.type").is(modelType));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return (List<Model>) mongoTemplate.find(query, Model.class);
 	}
 
 }
