@@ -147,5 +147,11 @@ public class PredictMLOperator {
 			}	
 	}
 
+	public Object execute(Predict predict, Model model, Dataset<Row> df, String[] fieldArray, String tableName,
+			String filePathUrl, String filePath, String uuid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

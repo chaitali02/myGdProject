@@ -825,51 +825,40 @@ public class SparkExecutor implements IExecutor {
 				df = rsHolder.getDataFrame();
 			}
 
-			VectorAssembler va = new VectorAssembler();
-			Dataset<Row> transformedDf = null;
-
-			if (algorithm.getTrainName().contains("LinearRegression")
-					|| algorithm.getTrainName().contains("LogisticRegression")) {
-				va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-				Dataset<Row> trainingTmp = va.transform(df);
-				transformedDf = trainingTmp.withColumn("label", trainingTmp.col(model.getLabel()).cast("Double"))
-						.select("label", "features");
-
-				logger.info("DataFrame count for training: " + transformedDf.count());
-
-			} else {
-				va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-				transformedDf = va.transform(df);
-			}
-
-			TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
-					model.getVersion());
-			if (latestTrainExec == null)
-				throw new Exception("Executed model not found.");
-
-			transformedDf.printSchema();
-
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
 
-			// SparkMLOperator sparkMLOperator = new SparkMLOperator();
-			//sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
-			//sparkMLOperator.setSparkContext(sparkContext);
-			//sparkMLOperator.setFilePathUrl(filePathUrl);
-			//sparkMLOperator.setModel(model);
-			//sparkMLOperator.setCommonServiceImpl(commonServiceImpl);
-			//sparkMLOperator.setAlgorithm(algorithm);
-			//sparkMLOperator.setModelExecServiceImpl(modelExecServiceImpl);
-			//sparkMLOperator.setFilePath(filePath);
-			//sparkMLOperator.setConnectionFactory(connectionFactory);
-			//sparkMLOperator.setExecFactory(execFactory);
-			//sparkMLOperator.setHelper(helper);
-			//sparkMLOperator.setPredict(predict);
-			//sparkMLOperator.setSqlContext(sqlContext);
-			//sparkMLOperator.setDaoRegister(daoRegister);
-			//sparkMLOperator.setDatasourceFactory(dataSourceFactory);
-			//sparkMLOperator.setHdfsInfo(hdfsInfo);
-			return predictMLOperator.execute(predict, model, algorithm, target, transformedDf, fieldArray, latestTrainExec, va,
-					targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
+			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+				return predictMLOperator.execute(predict, model, df, fieldArray, tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
+			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+				VectorAssembler va = new VectorAssembler();
+				Dataset<Row> transformedDf = null;
+
+				if (algorithm.getTrainName().contains("LinearRegression")
+						|| algorithm.getTrainName().contains("LogisticRegression")) {
+					va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+					Dataset<Row> trainingTmp = va.transform(df);
+					transformedDf = trainingTmp.withColumn("label", trainingTmp.col(model.getLabel()).cast("Double"))
+							.select("label", "features");
+
+					logger.info("DataFrame count for training: " + transformedDf.count());
+
+				} else {
+					va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+					transformedDf = va.transform(df);
+				}
+
+				TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
+						model.getVersion());
+				if (latestTrainExec == null)
+					throw new Exception("Executed model not found.");
+
+				transformedDf.printSchema();
+
+				return predictMLOperator.execute(predict, model, algorithm, target, transformedDf, fieldArray, latestTrainExec, va,
+						targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
+			} else 
+				return null;
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new Exception(e.getCause().getMessage());
