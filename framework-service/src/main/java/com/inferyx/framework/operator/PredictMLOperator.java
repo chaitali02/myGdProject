@@ -73,7 +73,7 @@ public class PredictMLOperator {
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
-	public Object predict(Predict predict, Model model, Algorithm algorithm, Datapod targetDp, Dataset<Row> df, String[] fieldArray, TrainExec latestTrainExec,
+	public Object execute(Predict predict, Model model, Algorithm algorithm, Datapod targetDp, Dataset<Row> df, String[] fieldArray, TrainExec latestTrainExec,
 			VectorAssembler va, String targetType, String tableName, String filePathUrl, String filePath, String clientContext) throws Exception {
 
 			Vector features = null; // extract feature column as vector from df

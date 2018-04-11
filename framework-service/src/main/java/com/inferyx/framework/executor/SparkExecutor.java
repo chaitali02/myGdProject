@@ -527,7 +527,7 @@ public class SparkExecutor implements IExecutor {
 		//sparkMLOperator.setHelper(helper);
 		//sparkMLOperator.setTrain(train);
 		//sparkMLOperator.setHdfsInfo(hdfsInfo);
-		result = trainAndValidateOperator.trainAndValidate(train, model, algorithm, algorithm.getTrainName(), algorithm.getModelName(), df, va, paramMap, filePathUrl, filePath);
+		result = trainAndValidateOperator.execute(train, model, algorithm, algorithm.getTrainName(), algorithm.getModelName(), df, va, paramMap, filePathUrl, filePath);
 		return result;
 	}
 
@@ -868,7 +868,7 @@ public class SparkExecutor implements IExecutor {
 			//sparkMLOperator.setDaoRegister(daoRegister);
 			//sparkMLOperator.setDatasourceFactory(dataSourceFactory);
 			//sparkMLOperator.setHdfsInfo(hdfsInfo);
-			return predictMLOperator.predict(predict, model, algorithm, target, transformedDf, fieldArray, latestTrainExec, va,
+			return predictMLOperator.execute(predict, model, algorithm, target, transformedDf, fieldArray, latestTrainExec, va,
 					targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -918,7 +918,7 @@ public class SparkExecutor implements IExecutor {
 			//sparkMLOperator.setDatasourceFactory(dataSourceFactory);
 			//sparkMLOperator.setSparkSession(sparkSession);
 			//sparkMLOperator.setHdfsInfo(hdfsInfo);
-			return simulateMLOperator.simulate(simulate, model, algorithm, target, latestTrainExec, fieldArray,
+			return simulateMLOperator.execute(simulate, model, algorithm, target, latestTrainExec, fieldArray,
 					targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, clientContext);
 		} catch (IOException e) {
 			e.printStackTrace();

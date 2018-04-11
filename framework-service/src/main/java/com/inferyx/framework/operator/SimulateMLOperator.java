@@ -35,7 +35,7 @@ public class SimulateMLOperator {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Object simulate(Simulate simulate, Model model, Algorithm algorithm, Datapod targetDp, TrainExec latestTrainExec, String[] fieldArray, String targetType,
+	public Object execute(Simulate simulate, Model model, Algorithm algorithm, Datapod targetDp, TrainExec latestTrainExec, String[] fieldArray, String targetType,
 			String tableName, String filePathUrl, String filePath, String clientContext) throws Exception {
 
 		int numIterations = simulate.getNumIterations();
@@ -62,7 +62,7 @@ public class SimulateMLOperator {
 			VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 			Dataset<Row> assembledDf = va.transform(df);
 			assembledDf.show();
-			return predictMLOperator.predict(null, model, algorithm, targetDp, assembledDf, fieldArray, latestTrainExec, va, targetType, tableName, filePathUrl, filePath, clientContext);
+			return predictMLOperator.execute(null, model, algorithm, targetDp, assembledDf, fieldArray, latestTrainExec, va, targetType, tableName, filePathUrl, filePath, clientContext);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}

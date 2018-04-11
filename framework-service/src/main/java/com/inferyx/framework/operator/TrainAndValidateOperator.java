@@ -58,7 +58,7 @@ public class TrainAndValidateOperator {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Object trainAndValidate(Train train, Model model, Algorithm algorithm,String modelClassName, String modelName, Dataset<Row> df, VectorAssembler va,
+	public Object execute(Train train, Model model, Algorithm algorithm,String modelClassName, String modelName, Dataset<Row> df, VectorAssembler va,
 			ParamMap paramMap, String filePathUrl,String filePath) throws Exception {
 		PipelineModel trngModel = null;
 		List<String> customDirectories = new ArrayList<>();
