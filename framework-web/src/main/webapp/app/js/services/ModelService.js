@@ -206,10 +206,36 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
       method: "GET",
     }).then(function(response){ return  response})
   }
+  factory.findFormulaByType=function(type){
+    var url=$location.absUrl().split("app")[0]
+    return $http({
+      url:url+"metadata/getFormulaByType2?action=view&type="+type+"&formulaType=custom",
+      method: "GET",
+    }).then(function(response){ return  response})
+  }
+  
   return factory;
 })
 
 DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sortFactory) {
+  this.getFormulaByType = function (type) {
+    var deferred = $q.defer();
+    ModelFactory.findFormulaByType(type).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      var formulaArray=[];
+      for(var i=0;i<response.length;i++){
+        var formulaInto={};
+        formulaInto.uuid=response[i].ref.uuid;
+        formulaInto.name=response[i].ref.name;
+        formulaArray.push(formulaInto)
+      }
+      deferred.resolve({
+        data: formulaArray
+      });
+    }
+    return deferred.promise;
+  }
+
   this.getParamListByFormula = function (uuid,type) {
     var deferred = $q.defer();
     ModelFactory.findParamListByFormula(uuid, type).then(function (response) { onSuccess(response.data) });
