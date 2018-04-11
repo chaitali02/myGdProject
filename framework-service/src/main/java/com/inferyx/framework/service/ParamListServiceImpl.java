@@ -24,6 +24,7 @@ import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamHolder;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
@@ -260,4 +261,15 @@ public class ParamListServiceImpl {
 		}
 		return null;
 	}*/
+	
+	public String sql(Integer paramId, ParamList paramList) {
+		List<Param> list = paramList.getParams();
+		for(Param param : list) {
+			if(param.getParamId().equalsIgnoreCase(paramId.toString()))
+				//return String.format("%s.%s", paramList.getName(), param.getParamName());
+				return param.getParamName();
+			break;
+		}
+		return null;
+	}
 }

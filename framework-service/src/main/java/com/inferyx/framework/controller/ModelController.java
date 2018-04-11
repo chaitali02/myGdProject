@@ -209,14 +209,15 @@ public class ModelController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
-			List<ParamMap> paramMapList = new ArrayList<>();
+			
 			Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictUUID, predictVersion,
 					MetaType.predict.toString());
-			paramMapList = paramSetServiceImpl.getParamMap(execParams, predict.getDependsOn().getRef().getUuid(),
-					predict.getDependsOn().getRef().getVersion());
 
 			PredictExec predictExec = null;
-			if (paramMapList.size() > 0) {
+			if (execParams != null) {
+				List<ParamMap> paramMapList = new ArrayList<>();
+				paramMapList = paramSetServiceImpl.getParamMap(execParams, predict.getDependsOn().getRef().getUuid(),
+						predict.getDependsOn().getRef().getVersion());
 				for (ParamMap paramMap : paramMapList) {
 					predictExec = modelServiceImpl.create(predict, execParams, paramMap, predictExec);
 					modelServiceImpl.predict(predict, execParams, predictExec);
@@ -239,14 +240,14 @@ public class ModelController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
-			List<ParamMap> paramMapList = new ArrayList<>();
 			Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateUUID, simulateVersion,
 					MetaType.simulate.toString());
-			paramMapList = paramSetServiceImpl.getParamMap(execParams, simulate.getDependsOn().getRef().getUuid(),
-					simulate.getDependsOn().getRef().getVersion());
 
 			SimulateExec simulateExec = null;
-			if (paramMapList.size() > 0) {
+			if (execParams != null) {
+				List<ParamMap> paramMapList = new ArrayList<>();
+				paramMapList = paramSetServiceImpl.getParamMap(execParams, simulate.getDependsOn().getRef().getUuid(),
+						simulate.getDependsOn().getRef().getVersion());
 				for (ParamMap paramMap : paramMapList) {
 					simulateExec = modelServiceImpl.create(simulate, execParams, paramMap, simulateExec);
 					modelServiceImpl.simulate(simulate, execParams, simulateExec);

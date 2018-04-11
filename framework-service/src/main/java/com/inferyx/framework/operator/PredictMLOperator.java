@@ -3,6 +3,9 @@
  */
 package com.inferyx.framework.operator;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.spark.SparkContext;
@@ -17,20 +20,27 @@ import org.apache.spark.storage.StorageLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.DataFrameHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.FeatureAttrMap;
+import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -65,6 +75,8 @@ public class PredictMLOperator {
 	private ExecutorFactory execFactory;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl; 
+	@Autowired
+	private FormulaOperator formulaOperator;
 	/**
 	 * 
 	 */
@@ -148,9 +160,69 @@ public class PredictMLOperator {
 	}
 
 	public Object execute(Predict predict, Model model, Dataset<Row> df, String[] fieldArray, String tableName,
-			String filePathUrl, String filePath, String uuid) {
-		// TODO Auto-generated method stub
-		return null;
+			String filePathUrl, String filePath, String uuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		StringBuilder builder = new StringBuilder();
+		String aliaseName = "";
+		builder.append("SELECT ");
+		MetaIdentifierHolder dependsOn = model.getDependsOn();
+		Object object = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
+		if(object instanceof Formula) {
+			
+			Formula formula = (Formula) object;
+			
+			List<Feature> modelFeatures = model.getFeatures();
+			
+			Formula dumyFormula = formula;
+			
+			List<SourceAttr> formulaInfo = dumyFormula.getFormulaInfo();
+			List<FeatureAttrMap> predictFeatures = predict.getFeatureAttrMap();
+			
+			for(SourceAttr attr : formulaInfo) {
+				if(attr.getRef().getType().equals(MetaType.paramlist))
+					for(FeatureAttrMap featureAttrMap : predictFeatures) {
+						boolean flag = false;
+						for(Feature feature : modelFeatures) {
+							if(featureAttrMap.getFeatureMapId().equalsIgnoreCase(feature.getFeatureId())) {
+								ParamListHolder paramListHolder = feature.getParamListInfo();
+								if(paramListHolder.getParamId().equals(attr.getAttributeId().toString())) {
+									attr.getRef().setUuid(featureAttrMap.getAttribute().getRef().getUuid());
+									attr.getRef().setType(featureAttrMap.getAttribute().getRef().getType());
+									attr.setAttributeId(Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+									
+									if(attr.getRef().getType().equals(MetaType.datapod)) {
+										Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attr.getRef().getUuid(), attr.getRef().getVersion(), attr.getRef().getType().toString());
+										aliaseName = datapod.getName();
+										String attrName = datapod.getAttributes().get(attr.getAttributeId()).getName();
+										builder.append(attrName).append(" AS ").append(feature.getName()).append(", ");
+									}
+									
+									flag = true;
+									break;
+								}
+							}
+						}
+						if(flag)
+							break;
+					}
+			}
+			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null)).append(" AS ").append(model.getLabel());
+			builder.append(" FROM ");
+			builder.append(tableName.replaceAll("-", "_")).append(" ").append(aliaseName);
+
+
+			System.out.println(" builder query : "+builder);
+			
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			ResultSetHolder rsHolder = exec.executeSql(builder.toString());
+			Dataset<Row> resultDf = rsHolder.getDataFrame();
+			resultDf.printSchema();
+			resultDf.show();
+			IWriter datapodWriter = datasourceFactory.getDatapodWriter(null, daoRegister);
+			datapodWriter.write(resultDf, filePathUrl, null, SaveMode.Append.toString());
+			return filePathUrl;
+		}
+		return filePathUrl;
 	}
 
 

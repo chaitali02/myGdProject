@@ -1,6 +1,8 @@
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -88,7 +90,14 @@ public class LivyExecutor implements IExecutor {
 	public ResultSetHolder executeAndPersist(String sql, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
 		IWriter datapodWriter = null;
-		datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);	
+		try {
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new IOException("Can not write data.");
+		}	
 		return null;
 	}
 

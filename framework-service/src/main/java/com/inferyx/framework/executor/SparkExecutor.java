@@ -328,7 +328,14 @@ public class SparkExecutor implements IExecutor {
 		ResultSetHolder rsHolder = executeSql(sql);
 		if (obj instanceof SparkSession) {
 			df = rsHolder.getDataFrame();
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			try {
+				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new IOException("Can not write data.");
+			}
 			datapodWriter.write(df, filePathUrl, datapod, saveMode);
 		}
 		return rsHolder;
@@ -349,7 +356,14 @@ public class SparkExecutor implements IExecutor {
 			// hiveContext = (HiveContext) conHolder.getStmtObject();
 			rsHolder = executeAndRegister(sql, tableName, clientContext);
 			df = rsHolder.getDataFrame();
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			try {
+				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new IOException("Can not write data.");
+			}
 			datapodWriter.write(df, filePathUrl, datapod, saveMode);
 		}
 		return rsHolder;
@@ -828,6 +842,7 @@ public class SparkExecutor implements IExecutor {
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
 
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+				sparkSession.sqlContext().registerDataFrameAsTable(df, tableName.replaceAll("-", "_"));
 				return predictMLOperator.execute(predict, model, df, fieldArray, tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				VectorAssembler va = new VectorAssembler();
@@ -882,31 +897,18 @@ public class SparkExecutor implements IExecutor {
 						targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
 
 			// fieldArray = modelExecServiceImpl.getAttributeNames(model);
-
-			TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
+			
+			TrainExec latestTrainExec = null;
+			if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+				latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
 					model.getVersion());
-			if (latestTrainExec == null)
-				throw new Exception("Executed model not found.");
+
+				if (latestTrainExec == null)
+					throw new Exception("Executed model not found.");
+			}
 
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.simulate.path"), filePath);
-			// SparkMLOperator sparkMLOperator = new SparkMLOperator();
-			//sparkMLOperator.setParamSetServiceImpl(paramSetServiceImpl);
-			//sparkMLOperator.setSparkContext(sparkContext);
-			//sparkMLOperator.setFilePathUrl(filePathUrl);
-			//sparkMLOperator.setModel(model);
-			//sparkMLOperator.setCommonServiceImpl(commonServiceImpl);
-			//sparkMLOperator.setAlgorithm(algorithm);
-			//sparkMLOperator.setModelExecServiceImpl(modelExecServiceImpl);
-			//sparkMLOperator.setFilePath(filePath);
-			//sparkMLOperator.setConnectionFactory(connectionFactory);
-			//sparkMLOperator.setExecFactory(execFactory);
-			//sparkMLOperator.setHelper(helper);
-			//sparkMLOperator.setSimulate(simulate);
-			//sparkMLOperator.setSqlContext(sqlContext);
-			//sparkMLOperator.setDaoRegister(daoRegister);
-			//sparkMLOperator.setDatasourceFactory(dataSourceFactory);
-			//sparkMLOperator.setSparkSession(sparkSession);
-			//sparkMLOperator.setHdfsInfo(hdfsInfo);
+			
 			return simulateMLOperator.execute(simulate, model, algorithm, target, latestTrainExec, fieldArray,
 					targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, clientContext);
 		} catch (IOException e) {

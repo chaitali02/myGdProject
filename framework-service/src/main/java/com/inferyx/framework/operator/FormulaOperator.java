@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,9 +30,11 @@ import com.inferyx.framework.domain.FormulaType;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DatasetServiceImpl;
+import com.inferyx.framework.service.ParamListServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 @Component
@@ -41,6 +44,10 @@ public class FormulaOperator {
 	@Autowired protected DatasetServiceImpl datasetServiceImpl;
 	@Autowired protected FunctionOperator functionOperator;
 	@Autowired protected ParamSetServiceImpl paramSetServiceImpl;
+	@Autowired protected ParamListServiceImpl paramListServiceImpl;
+	@Autowired protected 
+	
+	static final Logger LOGGER = Logger.getLogger(FormulaOperator.class);
 
 	public String generateSql(Formula formula,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -54,7 +61,12 @@ public class FormulaOperator {
 				String value = null;
 				value = paramSetServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				builder.append(value);
-			} 
+			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams == null) {
+				String value = null;
+				ParamList paramList = (ParamList) daoRegister.getRefObject(sourceAttr.getRef());
+				value = paramListServiceImpl.sql(sourceAttr.getAttributeId(), paramList);
+				builder.append(value);
+			}  
 			if (sourceAttr.getRef().getType() == MetaType.function) {
 				Function function = (Function) daoRegister.getRefObject(sourceAttr.getRef());
 				builder.append(functionOperator.generateSql(function, refKeyMap, otherParams));
@@ -103,7 +115,7 @@ public class FormulaOperator {
 			builder.append(" OVER (PARTITION BY " + otherParams.get("partitionBy") + ")");
 		}
 
-		System.out.println(String.format("Generalize formula %s", builder.toString()));
+		LOGGER.info(String.format("Generalize formula %s", builder.toString()));
 		return builder.toString();
 	}
 	

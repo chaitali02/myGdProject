@@ -9,19 +9,6 @@
     "formulaInfo" : [ 
         {
             "ref" : {
-                "type" : "paramlist",
-                "uuid" : "57c548cb-e54d-419a-af1d-a95acab57210"
-            },
-            "attributeId" : 1
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "="
-        }, 
-        {
-            "ref" : {
                 "type" : "function",
                 "uuid" : "9e3e25b2-02fb-11e7-93ae-92361f002671"
             }
