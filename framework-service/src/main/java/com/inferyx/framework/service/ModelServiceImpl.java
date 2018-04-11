@@ -36,6 +36,7 @@ import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.SaveMode;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -1126,7 +1127,13 @@ public class ModelServiceImpl {
 		return trainExec;
 	}
 	
-	public TrainExec train(Train train, Model model, TrainExec  trainExec, ExecParams execParams, ParamMap paramMap) throws FileNotFoundException, IOException{
+	public TrainExec train(Train train, Model model, TrainExec  trainExec, ExecParams execParams, ParamMap paramMap) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException{
+		
+		if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+			commonServiceImpl.sendResponse("400", MessageStatus.FAIL.toString(), "Training can not be performed on formula.");
+			throw new RuntimeException("Training can not be performed on formula."); 
+		}
+		
 		RunModelServiceImpl runModelServiceImpl = new RunModelServiceImpl();
 		List<Status> statusList = trainExec.getStatusList();
 		if (statusList == null) {
