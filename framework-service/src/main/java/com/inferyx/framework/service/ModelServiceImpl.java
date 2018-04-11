@@ -1279,7 +1279,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return false;
 	}
 
-	public List<Model> getAllModelByType(String customeFlag, String modelType) {
+	public List<Model> getAllModelByType(String customFlag, String modelType) {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -1289,7 +1289,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		query.fields().include("appInfo");
 
 		try {
-			query.addCriteria(Criteria.where("customFlag").is(customeFlag));
+			query.addCriteria(Criteria.where("customFlag").is(customFlag));
 			
 			if(modelType != null)
 				query.addCriteria(Criteria.where("dependsOn.ref.type").is(modelType));
