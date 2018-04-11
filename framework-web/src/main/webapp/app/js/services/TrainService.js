@@ -61,7 +61,7 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
       method: "GET"
     }).then(function (response) { return response })
   };
-
+ 
   factory.findOneById = function (id, type) {
     var url = $location.absUrl().split("app")[0]
     return $http({
@@ -101,10 +101,29 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
     })
   }
 
+  factory.findAllModelByType = function (flag,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "model/getAllModelByType?action=view&customFlag="+flag+"&type=" + type+"&modelType=algorithm",
+      method: "GET",
+    }).then(function (response) { return response })
+
+
+  }
   return factory;
 })
 
 DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sortFactory) {
+  this.getAllModelByType = function (flag, type) {
+    var deferred = $q.defer();
+    TrainFactory.findAllModelByType(flag, type).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
 
   this.getOneById = function (uuid, type) {
     var deferred = $q.defer();
