@@ -263,10 +263,10 @@ public class ModelController {
 	}
 
 	@RequestMapping(value = "/getAllModelByType", method = RequestMethod.GET)
-	public List<Model> getAllModelByType(@RequestParam("customeFlag") String customeFlag,
+	public List<Model> getAllModelByType(@RequestParam("customFlag") String customFlag,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "modelType") String modelType) throws Exception {
-		return modelServiceImpl.getAllModelByType(customeFlag, modelType);
+			@RequestParam(value = "modelType" ,required = false) String modelType) throws Exception {
+		return modelServiceImpl.getAllModelByType(customFlag, modelType);
 	}
 
 	@RequestMapping(value = "/train/execute", method = RequestMethod.POST)

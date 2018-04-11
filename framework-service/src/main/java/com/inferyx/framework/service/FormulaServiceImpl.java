@@ -435,16 +435,33 @@ public class FormulaServiceImpl {
 				&& securityServiceImpl.getAppInfo().getRef() != null)
 						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
 		List<Formula> formulaList = new ArrayList<>();
-		Aggregation formulaAggr = newAggregation(match(Criteria.where("dependsOn.ref.uuid").is(uuid)),
-				group("uuid").max("version").as("version"));
-
+		
+		List<Criteria> criteriaList = new ArrayList<>();
+		
+		
+		try {
+			if(uuid != null)
+				criteriaList.add(Criteria.where("dependsOn.ref.uuid").is(uuid));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 		if (formulaType.length == 0) {
+			Criteria criteria = new Criteria(); 
+			Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+			Aggregation formulaAggr = newAggregation(match(criteria2),
+					group("uuid").max("version").as("version"));
 			AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, "formula", Formula.class);
 			formulaList.addAll(formulaResults.getMappedResults());
 		} else {
-			for (String type : formulaType) {
+			for (String type : formulaType) {	
+				Criteria criteria = new Criteria(); 
+				criteriaList.add(Criteria.where("formulaType").is(type));	
+				Criteria criteria2 = criteria.orOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 				Aggregation formulatype = newAggregation(
-						match(Criteria.where("dependsOn.ref.uuid").is(uuid).and("formulaType").is(type)),
+						match(criteria2),
 						group("uuid").max("version").as("version"));
 				AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulatype, "formula",
 						Formula.class);

@@ -635,7 +635,7 @@ public class MetadataController {
 	}
 
 	@RequestMapping(value = "/getFormulaByType2", method = RequestMethod.GET)
-	public @ResponseBody String getFormulaByType2(@RequestParam("uuid") String uuid,
+	public @ResponseBody String getFormulaByType2(@RequestParam(value="uuid",required = false) String uuid,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "formulaType", required = false,defaultValue ="") String[] formulaType)
