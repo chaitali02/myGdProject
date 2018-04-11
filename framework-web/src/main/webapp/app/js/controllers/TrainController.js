@@ -93,7 +93,7 @@ DatascienceModule.controller('CreateTrainController', function($state, $statePar
   
 
   $scope.getAllLetestModel=function(defaultValue){
-    TrainService.getAllLatest("model").then(function(response) { onGetAllLatest(response.data)});
+    TrainService.getAllModelByType('N',"model").then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
       $scope.allModel = response;
       if(defaultValue ==true){}

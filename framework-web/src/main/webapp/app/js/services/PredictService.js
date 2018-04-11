@@ -27,7 +27,7 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
   factory.findAllModelByType = function (flag,type) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "model/getAllModelByType?action=view&customeFlag="+flag+"&type=" + type,
+      url: url + "model/getAllModelByType?action=view&customFlag="+flag+"&type=" + type,
       method: "GET",
     }).then(function (response) { return response })
 

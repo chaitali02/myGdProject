@@ -167,16 +167,28 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     } //End getAllVersionByUuid
   } //End GetAllVersion
   
-  $scope.getAllLatest=function(){
-    ModelService.getAllLatest($scope.selectSourceType).then(function(response) { onGetAllLatest(response.data)});
+  $scope.getAllLatest=function(defaultValue){
+    ModelService.getAllLatest($scope.selectedDependsOnType).then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
-      $scope.allsource = response
-      if (typeof $stateParams.id == "undefined") {
-      $scope.selectSource= $scope.allsource[0]
-      }
-      //$scope.selectalgorithm=$scope.allalgorithm[0]
+      $scope.allDependsOn= response
+      if(defaultValue)
+        $scope.selectedDependsOn= $scope.allDependsOn[0];
+      $scope.onChangeDependsOn();
     }
   }
+
+  
+    $scope.getFormulaByType=function(defaultValue){
+      ModelService.getFormulaByType("formula").then(function(response) { onGetFormulaByType(response.data)});
+      var onGetFormulaByType = function(response) {
+        $scope.allDependsOn = response
+        if(defaultValue)
+        $scope.selectedDependsOn= $scope.allDependsOn[0]
+        $scope.onChangeDependsOn()
+       
+      }
+    }
+  
   $scope.getParamListByFormula=function(){
     ModelService.getParamListByFormula($scope.selectedDependsOn.uuid,"paramlsit").then(function(response) { onGetParamListByFormula(response.data )});
     var onGetParamListByFormula = function(response) {
@@ -203,13 +215,12 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   // }
 
   $scope.onChangeDependsOnType=function(defaultValue){
-    ModelService.getAllLatest($scope.selectedDependsOnType).then(function(response) { onGetAllLatest(response.data)});
-    var onGetAllLatest = function(response) {
-      $scope.allDependsOn= response
-      if(defaultValue)
-      $scope.selectedDependsOn= $scope.allDependsOn[0]
-      $scope.onChangeDependsOn()
+    if($scope.selectedDependsOnType =='algorithm'){
+      $scope.getAllLatest(defaultValue);
+    }else{
+      $scope.getFormulaByType(defaultValue);
     }
+    
   }
 
   $scope.onChangeDependsOn = function() {
