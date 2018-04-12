@@ -841,6 +841,18 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : false,
     },
+    'distribution':{
+      name : 'distribution',
+      caption : 'Distribution',
+      execType:'',
+      metaType:'algorithm',
+      color : '#00E676',
+      allowInMenu : false,
+      listState : 'distribution',
+      detailState:'createdistribution',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
     'paramlist':{
       name : 'paramlist',
       caption : 'Parameter List',
