@@ -27,6 +27,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Message;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataFrameService;
 import com.inferyx.framework.service.MessageServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
@@ -41,6 +42,8 @@ public class ParquetReader implements IReader
 	DataFrameService dataFrameService;
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
+	@Autowired
+	CommonServiceImpl<?> commonServiceImpl;
 	
 	/*DataFrame df;*/
 	/*HiveContext hiveContext;*/
@@ -76,45 +79,25 @@ public class ParquetReader implements IReader
 			e.printStackTrace();
 			String errorMessage = e.getMessage();
 			if(errorMessage.contains("Path does not exist:")) {
-				ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-						.getRequestAttributes();
-				if (requestAttributes != null) {
-					HttpServletResponse response = requestAttributes.getResponse();
-					if (response != null) {
-						response.setContentType("application/json");
-						Message message = new Message("404", MessageStatus.FAIL.toString(), "File path not exist.");
-						try {
-							Message savedMessage = messageServiceImpl.save(message);
-							ObjectMapper mapper = new ObjectMapper();
-							String messageJson = mapper.writeValueAsString(savedMessage);
-							response.setContentType("application/json");
-							response.setStatus(404);
-							response.getOutputStream().write(messageJson.getBytes());
-							response.getOutputStream().close();
-						} catch (IllegalAccessException e1) {
-							e1.printStackTrace();
-						} catch (IllegalArgumentException e1) {
-							e1.printStackTrace();
-						} catch (InvocationTargetException e1) {
-							e1.printStackTrace();
-						} catch (NoSuchMethodException e1) {
-							e1.printStackTrace();
-						} catch (SecurityException e1) {
-							e1.printStackTrace();
-						} catch (NullPointerException e1) {
-							e1.printStackTrace();
-						} catch (JSONException e1) {
-							e1.printStackTrace();
-						} catch (ParseException e1) {
-							e1.printStackTrace();
-						}
-					} else
-						logger.info("HttpServletResponse response is \"" + null + "\"");
-				} else
-					logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
-				throw new IOException("File path does not exist.");
+				e.printStackTrace();
+				String message = null;
+				try {
+					message = e.getMessage();
+				}catch (Exception e2) {
+					// TODO: handle exception
+				}
+				try {
+					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.");
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+						| NoSuchMethodException | SecurityException | NullPointerException | JSONException
+						| ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					throw new RuntimeException((message != null) ? message : "File path not exist.");
+				}
+				throw new RuntimeException((message != null) ? message : "File path not exist.");
 			}
-			}
+		}
 		
 		return dfmh;
 	}	

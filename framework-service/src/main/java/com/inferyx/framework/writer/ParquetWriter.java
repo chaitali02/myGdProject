@@ -1,21 +1,57 @@
 package com.inferyx.framework.writer;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
+import org.codehaus.jettison.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.MessageStatus;
 
 @Component
 public class ParquetWriter implements IWriter {
 
+	@Autowired
+	CommonServiceImpl<?> commonServiceImpl;
+	
 	@Override
-	public void write(Dataset<Row> df, String filePathUrl, Datapod d, String saveMode) {
-		if(saveMode.equalsIgnoreCase("append"))	{
-			df.write().mode(SaveMode.Append).parquet(filePathUrl);
-		}else if(saveMode.equalsIgnoreCase("overwrite")) {
-			df.write().mode(SaveMode.Overwrite).parquet(filePathUrl);
+	public void write(Dataset<Row> df, String filePathUrl, Datapod datapod, String saveMode) throws IOException {
+		try {
+
+			if(saveMode.equalsIgnoreCase("append"))	{
+				df.write().mode(SaveMode.Append).parquet(filePathUrl);
+			}else if(saveMode.equalsIgnoreCase("overwrite")) {
+				df.write().mode(SaveMode.Overwrite).parquet(filePathUrl);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			String errorMessage = e.getMessage();
+			if(errorMessage.contains("Path does not exist:")) {
+				e.printStackTrace();
+				String message = null;
+				try {
+					message = e.getMessage();
+				}catch (Exception e2) {
+					// TODO: handle exception
+				}
+				try {
+					commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "File path not exist.");
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+						| NoSuchMethodException | SecurityException | NullPointerException | JSONException
+						| ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					throw new RuntimeException((message != null) ? message : "File path not exist.");
+				}
+				throw new RuntimeException((message != null) ? message : "File path not exist.");
+			}
 		}
 	}
 }
