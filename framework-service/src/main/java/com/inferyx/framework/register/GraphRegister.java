@@ -40,6 +40,7 @@ import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasetDao;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IDimensionDao;
+import com.inferyx.framework.dao.IDistributionDao;
 import com.inferyx.framework.dao.IDownloadDao;
 import com.inferyx.framework.dao.IEdgeDao;
 import com.inferyx.framework.dao.IExportDao;
@@ -351,8 +352,27 @@ public class GraphRegister<T> {
 	IReconDao iReconDao;
 	@Autowired
 	IReconExecDao iReconExecDao;
+	@Autowired
+	IDistributionDao iDistributionDao;
 	
-	
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iDistributionDao
+	 */
+	public IDistributionDao getiDistributionDao() {
+		return iDistributionDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iDistributionDao the iDistributionDao to set
+	 */
+	public void setiDistributionDao(IDistributionDao iDistributionDao) {
+		this.iDistributionDao = iDistributionDao;
+	}	
 	
 	public IReconDao getiReconDao() {
 		return iReconDao;

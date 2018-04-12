@@ -47,6 +47,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Dimension;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.Export;
 import com.inferyx.framework.domain.Expression;
@@ -246,6 +247,7 @@ public class Helper {
 				case reconExec : return "iReconExecDao";
 				case recongroup : return "iReconGroupDao";
 				case recongroupExec : return "iReconGroupExecDao";
+				case distribution : return "iDistributionDao";
 				
 				default:
 					return null;
@@ -347,6 +349,7 @@ public class Helper {
 		case reconExec : return ReconExec.class;
 		case recongroup : return ReconGroup.class;
 		case recongroupExec : return ReconGroupExec.class;
+		case distribution : return Distribution.class;
 
 		default:
 			return null;
@@ -419,6 +422,7 @@ public class Helper {
 				case "reconexec" : return MetaType.reconExec;
 				case "recongroup" : return MetaType.recongroup;
 				case "recongroupexec" : return MetaType.recongroupExec;
+				case "distribution" : return MetaType.distribution;
 
 				default : return null;
 			}
@@ -559,36 +563,7 @@ public class Helper {
 		case "online": return Mode.ONLINE;
 		default: return null;
 		}
-	}/*
-	public ResultSetHolder getDataFrameFromTempTable(String tableName) throws RuntimeException, IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, JSONException, ParseException {
-		ResultSetHolder rsHolder = null;
-		IConnector conn = connFactory.getConnector("spark");
-		ConnectionHolder conHolder = conn.getConnection();
-		Object obj = conHolder.getConObject();
-		if(obj instanceof HiveContext)	{
-			String []tablenameList = ((HiveContext)obj).tableNames();
-			boolean tableFound = false;
-			if (tablenameList != null && tablenameList.length > 0) {
-				for (String tname : tablenameList) {
-					if (tname.equals(tableName)) {
-						tableFound = true;
-						break;
-					}
-				}
-				logger.info("is table found - "+tableFound);
-			}
-			HiveContext hiveContext = ((HiveContext)obj);
-			if(tableFound) {
-				DataFrame df = hiveContext.table(tableName);
-				rsHolder = new ResultSetHolder();
-				rsHolder.setDataFrame(df);
-				rsHolder.setType(ResultType.dataframe);
-			}else {
-				throw new RuntimeException("Temp table not found.");
-			}
-		}
-		return rsHolder;
-	}*/
+	}
 	
 	/**
 	 * Get partition clause

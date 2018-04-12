@@ -74,6 +74,7 @@ import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasetDao;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IDimensionDao;
+import com.inferyx.framework.dao.IDistributionDao;
 import com.inferyx.framework.dao.IDownloadDao;
 import com.inferyx.framework.dao.IEdgeDao;
 import com.inferyx.framework.dao.IExportDao;
@@ -377,6 +378,27 @@ public class CommonServiceImpl <T> {
 	ReconGroupServiceImpl reconGroupServiceImpl;
 	@Autowired
 	ReconGroupExecServiceImpl reconGroupExecServiceImpl;
+	@Autowired
+	IDistributionDao iDistributionDao;
+	
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iDistributionDao
+	 */
+	public IDistributionDao getiDistributionDao() {
+		return iDistributionDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iDistributionDao the iDistributionDao to set
+	 */
+	public void setiDistributionDao(IDistributionDao iDistributionDao) {
+		this.iDistributionDao = iDistributionDao;
+	}
 
 	public ReconServiceImpl getReconServiceImpl() {
 		return reconServiceImpl;
