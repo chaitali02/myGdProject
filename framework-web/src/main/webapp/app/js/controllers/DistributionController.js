@@ -19,7 +19,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 	
 	$scope.mode = " ";
 	$scope.isSubmitInProgress = false;
-	$scope.isSubmitEnable = true;
+	$scope.isSubmitEnable = false;
 	$scope.distributionData;
 	$scope.showForm = true;
 	$scope.showGraphDiv = false
@@ -42,7 +42,6 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage();
-		alert("dfd")
 		$state.go('createdistribution', {
 			id: uuid,
 			version: version,
@@ -50,6 +49,9 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if(isEdit){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('createdistribution', {
 			id: uuid,
@@ -178,7 +180,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		DistributionService.submit(distributionJson, 'distribution').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.isSubmitInProgress = false;
-			$scope.isSubmitEnable = false;
+			$scope.isSubmitEnable = true;
 			notify.type = 'success',
 			notify.title = 'Success',
 			notify.content = 'Distribution Saved Successfully'

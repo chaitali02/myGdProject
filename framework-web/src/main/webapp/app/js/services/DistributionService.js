@@ -24,25 +24,11 @@ DatascienceModule.factory('DistributionFactory', function ($http, $location) {
 
 
   }
-  factory.findSaveAs = function (uuid, version, type) {
-    var url = $location.absUrl().split("app")[0]
-    return $http({
-      url: url + "common/saveAs?action=clone&uuid=" + uuid + "&version=" + version + "&type=" + type,
-      method: "GET",
-    }).then(function (response) { return response })
-  }
-  factory.findExecuteModel = function (uuid, version) {
-    var url = $location.absUrl().split("app")[0]
-    return $http({
-      url: url + "model/train?action=execute&modelUUID=" + uuid + "&modelVersion=" + version,
-      method: "GET",
-    }).then(function (response) { return response })
-  }
-
+ 
   factory.findOneByUuidandVersion = function (uuid, version, type) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "metadata/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
+      url: url + "common/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
       method: "GET",
 
     }).then(function (response) { return response })
@@ -60,18 +46,12 @@ DatascienceModule.factory('DistributionFactory', function ($http, $location) {
       data: JSON.stringify(data),
     }).success(function (response) { return response })
   }
-  factory.findGraphData = function (uuid, version, degree) {
-    var url = $location.absUrl().split("app")[0]
-    return $http({
-      url: url + "metadata/graph/getGraphJson?action=view&uuid=" + uuid + "&version=" + version + "&degree=" + degree,
-      method: "GET"
-    }).then(function (response) { return response })
-  };
+ 
 
   factory.findOneById = function (id, type) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "metadata/getOneById?action=view&id=" + id + "&type=" + type,
+      url: url + "common/getOneById?action=view&id=" + id + "&type=" + type,
       method: "GET"
     }).then(function (response) { return response })
   }
@@ -99,17 +79,6 @@ DatascienceModule.service("DistributionService", function ($http, DistributionFa
     return deferred.promise;
   }
 
-
-  this.saveAs = function (uuid, version, type) {
-    var deferred = $q.defer();
-    DistributionFactory.findSaveAs(uuid, version, type).then(function (response) { onSuccess(response.data) });
-    var onSuccess = function (response) {
-      deferred.resolve({
-        data: response
-      });
-    }
-    return deferred.promise;
-  }
   this.getLatestByUuid = function (uuid, type) {
     var deferred = $q.defer();
     DistributionFactory.findLatestByUuid(uuid, type).then(function (response) { onSuccess(response.data) });
@@ -121,7 +90,6 @@ DatascienceModule.service("DistributionService", function ($http, DistributionFa
     }
     return deferred.promise;
   }
-
   this.getOneByUuidandVersion = function (uuid, version, type) {
     var deferred = $q.defer();
     DistributionFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
@@ -133,7 +101,6 @@ DatascienceModule.service("DistributionService", function ($http, DistributionFa
     }
     return deferred.promise;
   }
-
   this.getAllLatest = function (type) {
     var deferred = $q.defer();
     DistributionFactory.findAllLatest(type).then(function (response) { onSuccess(response.data) });
@@ -144,43 +111,7 @@ DatascienceModule.service("DistributionService", function ($http, DistributionFa
     }
     return deferred.promise;
   }
-  this.getGraphData = function (uuid, version, degree) {
-    var deferred = $q.defer();
-    DistributionFactory.findGraphData(uuid, version, degree).then(function (response) { onSuccess(response.data) });
-    var onSuccess = function (response) {
-      deferred.resolve({
-        data: response
-      });
-    }
-    return deferred.promise;
-  }
-
-  this.getAllLatestList = function (type) {
-    var deferred = $q.defer();
-    DistributionFactory.findAllLatest(type).then(function (response) { onSuccess(response.data) });
-    var onSuccess = function (response) {
-      var rowDataSet = [];
-      var headerColumns = ['id', 'uuid', 'version', 'name', 'createdBy', 'createdOn']
-      for (var i = 0; i < response.length; i++) {
-        var rowData = [];
-        for (var j = 0; j < headerColumns.length; j++) {
-          var columnname = headerColumns[j]
-          if (columnname == "createdBy") {
-            rowData[j] = response[i].createdBy.ref.name;
-          }
-          else {
-            rowData[j] = response[i][columnname];
-          }
-        }
-        rowDataSet[i] = rowData;
-      }
-      deferred.resolve({
-        data: rowDataSet
-      })
-    }
-    return deferred.promise;
-  }
-
+  
   this.submit = function (data, type) {
     var deferred = $q.defer();
     DistributionFactory.submit(data, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
