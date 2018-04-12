@@ -20,13 +20,7 @@
 			}
 		}
 	],
-	"label": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
-		},
-		"attrId": "2"
-	},
+	"label": "branch_id",
 	"features": [
 		{
 			"featureId" : "0",
