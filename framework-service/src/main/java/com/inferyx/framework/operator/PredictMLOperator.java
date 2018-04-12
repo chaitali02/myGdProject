@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
@@ -77,6 +78,9 @@ public class PredictMLOperator {
 	private ModelServiceImpl modelServiceImpl; 
 	@Autowired
 	private FormulaOperator formulaOperator;
+	
+	static final Logger LOGGER = Logger.getLogger(PredictMLOperator.class);
+	
 	/**
 	 * 
 	 */
@@ -86,7 +90,7 @@ public class PredictMLOperator {
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	public Object execute(Predict predict, Model model, Algorithm algorithm, Datapod targetDp, Dataset<Row> df, String[] fieldArray, TrainExec latestTrainExec,
-			VectorAssembler va, String targetType, String tableName, String filePathUrl, String filePath, String clientContext) throws Exception {
+			String targetType, String tableName, String filePathUrl, String filePath, String clientContext) throws Exception {
 
 			Vector features = null; // extract feature column as vector from df
 			String modelName = algorithm.getModelName();
@@ -111,20 +115,8 @@ public class PredictMLOperator {
 
 			String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
 
-			if (targetType.equalsIgnoreCase(MetaType.datapod.toString())) {
+			//if (targetType.equalsIgnoreCase(MetaType.datapod.toString())) {
 				Datasource datasource = commonServiceImpl.getDatasourceByApp();
-
-				List<Attribute> attributeList = targetDp.getAttributes();
-				Attribute version = new Attribute();
-				version.setActive("Y");
-				version.setAttributeId(attributeList.size());
-				version.setDesc("version");
-				version.setDispName("version");
-				version.setName("version");
-				version.setType("String");
-				version.setPartition("N");
-				attributeList.add(version);
-				targetDp.setAttributes(attributeList);
 
 				df.createOrReplaceGlobalTempView("tempPredictResult");
 				IConnector connector = connectionFactory.getConnector(datasource.getType().toLowerCase());
@@ -149,18 +141,31 @@ public class PredictMLOperator {
 
 				dfTask.printSchema();
 				IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
-				datapodWriter.write(dfTask, filePathUrl, targetDp, SaveMode.Append.toString());
-				return filePathUrl;
-			} else {
+				datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
+				return filePathUrl + "/data";
+			/*} else {
 				if (modelServiceImpl.save(modelName, trainedModel, sparkContext, filePathUrl))
 					return filePathUrl + "/data";
 				else
 					return null;
-			}	
+			}	*/
 	}
 
-	public Object execute(Predict predict, Model model, Dataset<Row> df, String[] fieldArray, String tableName,
+	public Object execute(String sql, String tableName,
 			String filePathUrl, String filePath, String uuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		ResultSetHolder rsHolder = exec.executeSql(sql);
+		Dataset<Row> resultDf = rsHolder.getDataFrame();
+		resultDf.printSchema();
+		resultDf.show();
+		IWriter datapodWriter = datasourceFactory.getDatapodWriter(null, daoRegister);
+		datapodWriter.write(resultDf, filePathUrl + "/data", null, SaveMode.Append.toString());
+		return filePathUrl  + "/data";
+	}
+	
+	public String parse(Predict predict, Model model, Dataset<Row> df, String[] fieldArray, String tableName,
+			String filePathUrl, String filePath) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		String aliaseName = "";
 		builder.append("SELECT ");
@@ -205,25 +210,14 @@ public class PredictMLOperator {
 							break;
 					}
 			}
+			
 			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null)).append(" AS ").append(model.getLabel());
 			builder.append(" FROM ");
 			builder.append(tableName.replaceAll("-", "_")).append(" ").append(aliaseName);
 
-
-			System.out.println(" builder query : "+builder);
-			
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			ResultSetHolder rsHolder = exec.executeSql(builder.toString());
-			Dataset<Row> resultDf = rsHolder.getDataFrame();
-			resultDf.printSchema();
-			resultDf.show();
-			IWriter datapodWriter = datasourceFactory.getDatapodWriter(null, daoRegister);
-			datapodWriter.write(resultDf, filePathUrl, null, SaveMode.Append.toString());
-			return filePathUrl;
+			LOGGER.info("query : "+builder);
 		}
-		return filePathUrl;
+		return builder.toString();
 	}
-
 
 }

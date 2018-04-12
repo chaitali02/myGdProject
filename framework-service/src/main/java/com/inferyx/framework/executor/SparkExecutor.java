@@ -843,7 +843,9 @@ public class SparkExecutor implements IExecutor {
 
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				sparkSession.sqlContext().registerDataFrameAsTable(df, tableName.replaceAll("-", "_"));
-				return predictMLOperator.execute(predict, model, df, fieldArray, tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
+				
+				String sql = predictMLOperator.parse(predict, model, df, fieldArray, tableName, filePathUrl, filePathUrl);				
+				return predictMLOperator.execute(sql, tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				VectorAssembler va = new VectorAssembler();
 				Dataset<Row> transformedDf = null;
@@ -868,9 +870,7 @@ public class SparkExecutor implements IExecutor {
 					throw new Exception("Executed model not found.");
 
 				transformedDf.printSchema();
-
-				return predictMLOperator.execute(predict, model, algorithm, target, transformedDf, fieldArray, latestTrainExec, va,
-						targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
+				return predictMLOperator.execute(predict, model, algorithm, target, transformedDf, fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 			} else 
 				return null;
 			
@@ -897,20 +897,30 @@ public class SparkExecutor implements IExecutor {
 						targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
 
 			// fieldArray = modelExecServiceImpl.getAttributeNames(model);
-			
-			TrainExec latestTrainExec = null;
-			if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-				latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
-					model.getVersion());
-
-				if (latestTrainExec == null)
-					throw new Exception("Executed model not found.");
-			}
 
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.simulate.path"), filePath);
+
 			
-			return simulateMLOperator.execute(simulate, model, algorithm, target, latestTrainExec, fieldArray,
-					targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, clientContext);
+			tableName = tableName.replaceAll("-", "_");
+			
+			Dataset<Row> df = simulateMLOperator.generateDataframe(simulate, model, tableName);
+			VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+			Dataset<Row> assembledDf = va.transform(df);
+			assembledDf.show();
+			
+			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+				sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
+				String sql = simulateMLOperator.parse(simulate, model, assembledDf, fieldArray, tableName, filePathUrl, filePath);
+				return simulateMLOperator.execute(sql, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
+			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+				TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
+					model.getVersion());
+				if (latestTrainExec == null)
+					throw new Exception("Executed model not found.");
+				return simulateMLOperator.execute(simulate, model, algorithm, target, latestTrainExec, fieldArray,
+						targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, assembledDf, clientContext);
+			} else 
+				return null;			
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new Exception(e.getCause().getMessage());

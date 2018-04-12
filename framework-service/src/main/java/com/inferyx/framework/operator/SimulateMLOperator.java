@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 
+import org.apache.log4j.Logger;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -55,6 +56,8 @@ public class SimulateMLOperator {
 	@Autowired
 	private DataSourceFactory datasourceFactory;
 	
+	static final Logger LOGGER = Logger.getLogger(SimulateMLOperator.class);
+	
 	/**
 	 * 
 	 */
@@ -63,50 +66,27 @@ public class SimulateMLOperator {
 	}
 	
 	public Object execute(Simulate simulate, Model model, Algorithm algorithm, Datapod targetDp, TrainExec latestTrainExec, String[] fieldArray, String targetType,
-			String tableName, String filePathUrl, String filePath, String clientContext) throws Exception {
-
-		int numIterations = simulate.getNumIterations();
-		Dataset<Row> df = null;
-		StringBuilder sb = new StringBuilder();
-		// write code
-		try {
-			for (Feature feature : model.getFeatures()) {
-				sb.append("(" + feature.getMinVal() + " + rand()*(" + feature.getMaxVal() + "-" + feature.getMinVal()
-						+ ")) AS " + feature.getName() + ", ");
-			}
-			// df = sqlContext.range(0,numIterations).select("id",
-			// sb.toString().substring(0, sb.toString().length()-2));
-
-			tableName = tableName.replaceAll("-", "_");
-			df = sparkSession.sqlContext().range(0, numIterations);
-			// df.registerTempTable(tableName);
-			df.createOrReplaceTempView(tableName);
-			
-			sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
-			df = sparkSession.sqlContext()
-					.sql("SELECT id, " + sb.toString().substring(0, sb.toString().length() - 2) + " FROM " + tableName);
-			df.show();
-			VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-			Dataset<Row> assembledDf = va.transform(df);
-			assembledDf.show();
-			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-				sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
-				return execute(simulate, model, assembledDf, fieldArray, tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
-			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-				
-				return predictMLOperator.execute(null, model, algorithm, targetDp, assembledDf, fieldArray, latestTrainExec, va, targetType, tableName, filePathUrl, filePath, clientContext);
-			} else 
-				return null;
-			
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+			String tableName, String filePathUrl, String filePath, Dataset<Row> assembledDf, String clientContext) throws Exception {
+		return predictMLOperator.execute(null, model, algorithm, targetDp, assembledDf, fieldArray, latestTrainExec, targetType, tableName, filePathUrl, filePath, clientContext);
 	}
 	
-	public String execute(Simulate simulate, Model model, Dataset<Row> df, String[] fieldArray, String tableName,
-			String filePathUrl, String filePath, String uuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+	public String execute(String sql, String filePathUrl, String filePath, String uuid)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException {
+		
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			ResultSetHolder rsHolder = exec.executeSql(sql);
+			Dataset<Row> resultDf = rsHolder.getDataFrame();
+			resultDf.printSchema();
+			resultDf.show();
+			IWriter datapodWriter = datasourceFactory.getDatapodWriter(null, daoRegister);
+			datapodWriter.write(resultDf, filePathUrl + "/data", null, SaveMode.Append.toString());
+		return filePathUrl  + "/data";
+	}
+	
+	public String parse(Simulate simulate, Model model, Dataset<Row> df, String[] fieldArray, String tableName,
+			String filePathUrl, String filePath) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		String aliaseName = "";
 		builder.append("SELECT ");
@@ -122,18 +102,32 @@ public class SimulateMLOperator {
 			builder.append(" FROM ");
 			builder.append(tableName.replaceAll("-", "_")).append(" ").append(aliaseName);
 			
-			System.out.println("sim query: "+builder.toString());
-			
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			ResultSetHolder rsHolder = exec.executeSql(builder.toString());
-			Dataset<Row> resultDf = rsHolder.getDataFrame();
-			resultDf.printSchema();
-			resultDf.show();
-			IWriter datapodWriter = datasourceFactory.getDatapodWriter(null, daoRegister);
-			datapodWriter.write(resultDf, filePathUrl, null, SaveMode.Append.toString());
+			LOGGER.info("query : "+builder);
 		}
-		return filePathUrl;
+		
+		return builder.toString();
 	}
+	
+	public Dataset<Row> generateDataframe(Simulate simulate, Model model, String tableName) throws Exception{
+		int numIterations = simulate.getNumIterations();
+		Dataset<Row> df = null;
+		StringBuilder sb = new StringBuilder();
+		// write code
+		for (Feature feature : model.getFeatures()) {
+			sb.append("(" + feature.getMinVal() + " + rand()*(" + feature.getMaxVal() + "-" + feature.getMinVal()
+					+ ")) AS " + feature.getName() + ", ");
+		}
+		// df = sqlContext.range(0,numIterations).select("id",
+		// sb.toString().substring(0, sb.toString().length()-2));
 
+		df = sparkSession.sqlContext().range(0, numIterations);
+		// df.registerTempTable(tableName);
+		df.createOrReplaceTempView(tableName);
+		
+		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		df = sparkSession.sqlContext()
+				.sql("SELECT id, " + sb.toString().substring(0, sb.toString().length() - 2) + " FROM " + tableName);
+		df.show();
+		return df;
+	}
 }
