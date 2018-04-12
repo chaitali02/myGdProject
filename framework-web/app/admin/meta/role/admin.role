@@ -4741,6 +4741,96 @@
 		            "name" : "RecongroupexecAdd"
 				},
 				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "80a89cb4-6897-459b-aa10-e3874b54a5b6",
+		 			"version" : null,
+		            "name" : "DistributionView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "fbdfce9f-79f1-44e9-bea5-5c27192f5f6f",
+		 			"version" : null,
+		            "name" : "DistributionUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "43831356-6df8-4791-ae53-8b296816c594",
+		 			"version" : null,
+		            "name" : "DistributionRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "359bc9e5-8968-40b1-a675-cc1113676c92",
+		 			"version" : null,
+		            "name" : "DistributionPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "8e76b86c-8074-4428-a2b4-e35a2c55edce",
+		 			"version" : null,
+		            "name" : "DistributionExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "57183e48-618d-401c-ac4b-d3f392c1ea39",
+		 			"version" : null,
+		            "name" : "DistributionExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "f7d8acf3-1044-4a98-b993-a05c6b8bc867",
+		 			"version" : null,
+		            "name" : "DistributionEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "23d7593a-0bd5-416c-ab3e-99c8056b72ee",
+		 			"version" : null,
+		            "name" : "DistributionDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "1ea5a1d2-9d8d-4996-9b02-615003ed2718",
+		 			"version" : null,
+		            "name" : "DistributionClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "7268130f-516e-4c82-b44a-6db2ed6eee47",
+		 			"version" : null,
+		            "name" : "DistributionAdd"
+				},
+				"value" : null
 		}
     ]
 }

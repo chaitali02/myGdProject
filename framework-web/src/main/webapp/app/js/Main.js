@@ -415,6 +415,7 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
             "class":"fa fa-flask",
             "submenu":[
                 {"name":"algorithm","type":"algorithm","uuid":"null","caption":"Algorithm"},
+                {"name":"distribution","type":"distribution","uuid":"null","caption":"Distribution"},
                 {"name":"model","type":"model","uuid":"null","caption":"Model"},
                 // {"name":"model","type":"model","uuid":"null","caption":"Model2"},
                 {"name":"paramlist","type":"paramlist","uuid":"null","caption":"Parameter List"},
@@ -2132,7 +2133,32 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
             }]
         }
     })
-        
+    
+    .state('distribution', {
+        url:"/Datascience/DistributionList",
+        templateUrl:"views/common-list.html",
+        data: { pageTitle: 'Data Science'},
+        params:{type:'distribution'}
+    })
+
+    .state('createdistribution', {
+        url:"/CreateDistribution?id&mode&returnBack&version",
+        templateUrl:"views/distribution.html",
+        data: {pageTitle: 'Data Science'},
+        controller: "",
+        resolve: {
+            deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name: 'Distribution',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                    files: [
+                        'js/controllers/DistributionController.js',
+                        'js/services/DistributionService.js'
+                    ]
+                });
+            }]
+        }
+    })
     .state('model', {
         url:"/Datascience/ModelList",
 		templateUrl:"views/common-list.html",
