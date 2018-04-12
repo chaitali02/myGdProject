@@ -91,8 +91,8 @@
               <div class="form-group" ng-show="distributionData.uuid">
                 <label class="col-md-3 control-label">Version</label>
                 <div class="col-md-6">
-                  <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion(algorithm.defaultVersion.uuid,algorithm.defaultVersion.version)"
-                    data-ng-model="algorithm.defaultVersion.version" ng-options="c.version as c.version for c in algorithm.versions">
+                  <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion(distribution.defaultVersion.uuid,distribution.defaultVersion.version)"
+                    data-ng-model="distribution.defaultVersion.version" ng-options="c.version as c.version for c in distribution.versions">
                   </select>
                 </div>
               </div>
@@ -154,19 +154,27 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectlibrary" ng-options="r for r in librarytypes" required="">
+                  <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedLibrary" ng-options="r for r in libraryTypes" required="">
                   </select>
 
                 </div>
               </div>
 
-           
+              <div class="form-group">
+                <label class="col-md-3 control-label">Class Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" required="" ng-disabled="{{mode}}" ng-model="distributionData.className">
+                </div>
+              </div>
+              
               <div class="form-group">
                 <label class="col-md-3 control-label">Parameter List
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <select class="form-control" required="" select2 name="version" ng-disabled="{{mode}}" data-ng-model="selectparamlist" ng-options="r as r.name for r in allparamlist | orderBy:'name' track by r.uuid ">
+                  <select class="form-control" required="" select2 name="version" ng-disabled="{{mode}}" data-ng-model="selectedParamlist" ng-options="r as r.name for r in allParamlist | orderBy:'name' track by r.uuid ">
                   </select>
                 </div>
               </div>
