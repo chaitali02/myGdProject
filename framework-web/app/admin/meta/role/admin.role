@@ -4808,7 +4808,7 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "f7d8acf3-1044-4a98-b993-a05c6b8bc867",
+		 			"uuid" : "23d7593a-0bd5-416c-ab3e-99c8056b72ee",
 		 			"version" : null,
 		            "name" : "DistributionDelete"
 				},
