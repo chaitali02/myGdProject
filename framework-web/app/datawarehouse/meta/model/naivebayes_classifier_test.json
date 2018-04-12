@@ -78,17 +78,7 @@
         "maxVal" : 100
     }
   ],
-  "label": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f",
-      "version": null,
-      "name": "test_model"
-    },
-    "value": null,
-    "attrId": "4",
-    "attrName": "label"
-  },
+  "label": "label",
   "dependsOn": {
     "ref": {
       "type": "algorithm",
