@@ -343,7 +343,6 @@
     } /*End getGraphResults*/
 
     this.execute = function(type, uuid, version, data) {
-      debugger;
       var url;
       if (type.substr(-5) == 'group') {
         var plainType = type.slice(0, -5);

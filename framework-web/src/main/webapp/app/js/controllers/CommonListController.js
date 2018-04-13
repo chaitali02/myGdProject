@@ -22,21 +22,13 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   $scope.handleGroup = -1;
   $scope.privileges = [];
   $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
-  console.log($scope.privileges)
-  console.log(privilegeSvc.privileges)
-  // if(!$scope.privileges) {
-  //   $timeout(function () {
-  //     $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
-  //     if(!$scope.privileges)
-  //       $scope.privileges = [];
-  //   }, 1000);
-  // }
-
+  //console.log($scope.privileges)
+ // console.log(privilegeSvc.privileges)
+ 
   $scope.$on('privilegesUpdated', function (e, data) {
-
     $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
-    console.log($scope.privileges)
-    console.log(privilegeSvc.privileges)
+   // console.log($scope.privileges)
+  //  console.log(privilegeSvc.privileges)
     
   });
 
@@ -70,7 +62,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
   
   $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-    console.log(fromParams)
+    //console.log(fromParams)
     $sessionStorage.fromStateName = fromState.name
     $sessionStorage.fromParams = fromParams
   });

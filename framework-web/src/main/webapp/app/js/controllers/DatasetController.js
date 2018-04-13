@@ -335,7 +335,7 @@
   				$scope.tags=response.tags
   				MetadataDatasetSerivce.getAllLatest(response.dataset.dependsOn.ref.type).then(function(response){onSuccess(response.data)});
   				var onSuccess=function(response){
-  					console.log(JSON.stringify(response))
+  					//console.log(JSON.stringify(response))
   					$scope.datasetRelation=response;
   					var defaultoption={};
   					defaultoption.type=$scope.dataset.dependsOn.ref.type

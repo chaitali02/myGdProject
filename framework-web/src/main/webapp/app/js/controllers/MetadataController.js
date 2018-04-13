@@ -436,7 +436,7 @@
       return style;
     }
 		$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-			console.log(fromParams)
+			//console.log(fromParams)
 			$sessionStorage.fromStateName=fromState.name
 			$sessionStorage.fromParams=fromParams
 		});
@@ -600,7 +600,7 @@
 			var onSuccessGetLatestByUuid=function(response){
 				var defaultversion={};
 				$scope.datapoddata=response.datapodata
-        console.log(JSON.stringify($scope.datapoddata))
+        //console.log(JSON.stringify($scope.datapoddata))
 				$scope.gridOptionsDatapod.data=response.attributes;
 				/*if($sessionStorage.showgraph == true && $sessionStorage.fromStateName !="metadata"){
 				$scope.showDatapodGraph($scope.datapoddata.uuid,$scope.datapoddata.version);

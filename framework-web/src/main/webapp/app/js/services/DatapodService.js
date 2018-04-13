@@ -1,277 +1,276 @@
 /**
  *
  */
-MetadataModule=angular.module('MetadataModule');
-MetadataModule.factory('MetadataDatapodFactory',function($http,$location){
-    var factory={}
-    factory.findLatestByUuid=function(uuid,type){
-    	var url=$location.absUrl().split("app")[0]
-  	    return $http({
-  		        url:url+"common/getLatestByUuid?action=view&uuid="+uuid+"&type="+type,
-  		      	method: "GET",
-           }).then(function(response){ return  response})
-    }
-    factory.findOneByUuidAndVersion=function(uuid,version,type){
-    	 var url=$location.absUrl().split("app")[0]
-    	 return $http({
-    		url:url+"common/getOneByUuidAndVersion?action=view&uuid="+uuid+"&version="+version+"&type="+type,
-    		method: "GET",
-
-  	   	}).then(function(response){ return  response})
-  	  }
-      factory.datapodSubmit=function(data,type){
-     	  var url=$location.absUrl().split("app")[0]
-     	  return $http({
-               url:url+"common/submit?action=edit&type="+type,
-                 headers: {
-                  'Accept':'*/*',
-                  'content-Type' : "application/json",
-                   },
-               method:"POST",
-               data:JSON.stringify(data),
-          }).success(function(response){return response})
-       }
-      factory.findGraphData=function(uuid,version,degree){
-    	   var url=$location.absUrl().split("app")[0]
-		   return $http({
-		                url:url+"graph/getGraphResults?action=view&uuid="+uuid+"&version="+version+"&degree="+degree,
-		                method: "GET"
-		          }).then(function(response){ return  response})
-	   };
-	   factory.findOneById=function(id,type){
-		     var url=$location.absUrl().split("app")[0]
-			  return $http({
-				       url:url+"metadata/getOneById?action=view&id="+id+"&type="+type,
-				       method: "GET"
-		          }).then(function(response){ return  response})
-
-
-		  }
-	   factory.findAllVersionByUuid=function(uuid,type){
-		     var url=$location.absUrl().split("app")[0]
-			  return $http({
-				       url:url+"common/getAllVersionByUuid?action=view&uuid="+uuid+"&type="+type,
-				       method: "GET"
-		          }).then(function(response){ return  response})
-
-
-		  }
-	   factory.findDatasourceByType=function(type){
-	       	var url=$location.absUrl().split("app")[0]
-	           return $http({
-	   			    method: 'GET',
-	   			    url:url+"metadata/getDatasourceByType?action=view&type="+type,
-	   			    }).
-	   			    then(function (response,status,headers) {
-	   		           return response;
-	   		        })
-	       }
-	factory.findDatapodSample=function(uuid,version){
-    	var url=$location.absUrl().split("app")[0]
+MetadataModule = angular.module('MetadataModule');
+MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
+	var factory = {}
+	factory.findLatestByUuid = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url:url+"datapod/getDatapodSample?action=view&datapodUUID="+uuid+"&datapodVersion="+version+"&row=100",
+			url: url + "common/getLatestByUuid?action=view&uuid=" + uuid + "&type=" + type,
 			method: "GET",
-	        }).then(function(response){ return  response})
+		}).then(function (response) { return response })
+	}
+	factory.findOneByUuidAndVersion = function (uuid, version, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "common/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
+			method: "GET",
+
+		}).then(function (response) { return response })
+	}
+	factory.datapodSubmit = function (data, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "common/submit?action=edit&type=" + type,
+			headers: {
+				'Accept': '*/*',
+				'content-Type': "application/json",
+			},
+			method: "POST",
+			data: JSON.stringify(data),
+		}).success(function (response) { return response })
+	}
+	factory.findGraphData = function (uuid, version, degree) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "graph/getGraphResults?action=view&uuid=" + uuid + "&version=" + version + "&degree=" + degree,
+			method: "GET"
+		}).then(function (response) { return response })
+	};
+	factory.findOneById = function (id, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "metadata/getOneById?action=view&id=" + id + "&type=" + type,
+			method: "GET"
+		}).then(function (response) { return response })
+
+
+	}
+	factory.findAllVersionByUuid = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "common/getAllVersionByUuid?action=view&uuid=" + uuid + "&type=" + type,
+			method: "GET"
+		}).then(function (response) { return response })
+
+
+	}
+	factory.findDatasourceByType = function (type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getDatasourceByType?action=view&type=" + type,
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
+	factory.findDatapodSample = function (uuid, version) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "datapod/getDatapodSample?action=view&datapodUUID=" + uuid + "&datapodVersion=" + version + "&row=100",
+			method: "GET",
+		}).then(function (response) { return response })
 	}
 
-	factory.findDownloadSample=function(uuid,version){
-    	var url=$location.absUrl().split("app")[0]
+	factory.findDownloadSample = function (uuid, version) {
+		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url:url+"datapod/download?action=view&datapodUUID="+uuid+"&datapodVersion="+version+"&row=100",
+			url: url + "datapod/download?action=view&datapodUUID=" + uuid + "&datapodVersion=" + version + "&row=100",
 			method: "GET",
-	        }).then(function(response){ return  response})
-	  }
-   
-   return factory;
+		}).then(function (response) { return response })
+	}
+
+	return factory;
 });
 
-MetadataModule.service('MetadataDatapodSerivce',function($q,sortFactory,MetadataDatapodFactory){
-	this.getDatapodSample=function(data){
-	    var deferred = $q.defer();
-	    MetadataDatapodFactory.findDatapodSample(data.uuid,data.version).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
-        var onSuccess=function(response){
-    	    deferred.resolve({
-              data:response
-            });
-        }
-        var onError=function(response){
-			  deferred.reject({
-				  data:response
-			  })
+MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, MetadataDatapodFactory) {
+	this.getDatapodSample = function (data) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findDatapodSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
 		}
-        return deferred.promise;
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
 	}
-	
-	this.getDownloadSample=function(data){
-	    var deferred = $q.defer();
-	    MetadataDatapodFactory.findDownloadSample(data.uuid,data.version).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
-        var onSuccess=function(response){
-    	    deferred.resolve({
-              data:response
-            });
-        }
-        var onError=function(response){
-			  deferred.reject({
-				  data:response
-			  })
-		}
-        return deferred.promise;
-    }
-	this.getLatestDataSourceByUuid=function(id,type){
-		   var deferred=$q.defer();
-		   MetadataDatapodFactory.findLatestByUuid(id,type).then(function(response){onSuccess(response.data)});
-		   var onSuccess=function(response){
-		      deferred.resolve({
-		                  data:response
-		              })
-		     }
-		  return deferred.promise;
-		}
-	this.getDatasourceByType=function(type){
-	  	  var deferred = $q.defer();
-	      MetadataDatapodFactory.findDatasourceByType(type).then(function(response){OnSuccess(response.data)});
-	  	  var OnSuccess=function(response){
-	  		  deferred.resolve({
-				    data:response
-		      });
-	  	  }
-	  	  return deferred.promise;
-	  	}/*End getDatasourceByType*/
-	this.getAllVersionByUuid=function(uuid,type){
-		   var deferred=$q.defer();
-		   MetadataDatapodFactory.findAllVersionByUuid(uuid,type).then(function(response){onSuccess(response.data)});
-		   var onSuccess=function(response){
-		      deferred.resolve({
-		                  data:response
-		              })
-		     }
-		  return deferred.promise;
-	   };
-	this.getLatestByUuid=function(id,type){
-		   var deferred=$q.defer();
-		   MetadataDatapodFactory.findLatestByUuid(id,type).then(function(response){onSuccess(response.data)});
-		   var onSuccess=function(response){
-			   var datapodjson={};
-			   datapodjson.datapodata=response;
-			   var attributearray=[];
-			   for(var i=0;i<response.attributes.length;i++){
-				  var  attribute={};
-				  attribute.attributeId=response.attributes[i].attributeId;
-				  attribute.name=response.attributes[i].name;
-				  attribute.isAttributeEnable=true;
-				  attribute.dispName=response.attributes[i].dispName;
-				  attribute.type=response.attributes[i].type.toLowerCase();
-				  attribute.desc=response.attributes[i].desc;
-				  attribute.active=response.attributes[i].active;
 
-				  if(response.attributes[i].key !="" && response.attributes[i].key !=null){
-					  attribute.key="Y";
-				  }
-				  else{
-					  attribute.key="N";
-				  }
-				  attribute.partition=response.attributes[i].partition;
+	this.getDownloadSample = function (data) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findDownloadSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+	this.getLatestDataSourceByUuid = function (id, type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findLatestByUuid(id, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+	this.getDatasourceByType = function (type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findDatasourceByType(type).then(function (response) { OnSuccess(response.data) });
+		var OnSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		return deferred.promise;
+	}/*End getDatasourceByType*/
+	this.getAllVersionByUuid = function (uuid, type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findAllVersionByUuid(uuid, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	};
+	this.getLatestByUuid = function (id, type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findLatestByUuid(id, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			var datapodjson = {};
+			datapodjson.datapodata = response;
+			var attributearray = [];
+			for (var i = 0; i < response.attributes.length; i++) {
+				var attribute = {};
+				attribute.attributeId = response.attributes[i].attributeId;
+				attribute.name = response.attributes[i].name;
+				attribute.isAttributeEnable = true;
+				attribute.dispName = response.attributes[i].dispName;
+				attribute.type = response.attributes[i].type.toLowerCase();
+				attribute.desc = response.attributes[i].desc;
+				attribute.active = response.attributes[i].active;
 
-			      attributearray[i]=attribute
-			   }
-			   //console.log(JSON.stringify(attributearray))
-			  datapodjson.attributes=attributearray
-		      deferred.resolve({
-		                  data:datapodjson
-		              })
-		     }
-		  return deferred.promise;
-		}
-	this.getOneById=function(id,type){
-		   var deferred=$q.defer();
-		   MetadataDatapodFactory.findOneById(id,type).then(function(response){onSuccess(response.data)});
-		   var onSuccess=function(response){
-			   var datapodjson={};
-			   datapodjson.datapodata=response;
-			   var attributearray=[];
-			   for(var i=0;i<response.attributes.length;i++){
-				  var  attribute={};
-				  attribute.attributeId=response.attributes[i].attributeId;
-				  attribute.name=response.attributes[i].name;
-				  attribute.dispName=response.attributes[i].dispName;
-				  attribute.type=response.attributes[i].type.toLowerCase();
-				  attribute.desc=response.attributes[i].desc;
-				  if(response.attributes[i].key !="" && response.attributes[i].key !=null){
-					  attribute.key="Y";
-				  }
-				  else{
-					  attribute.key="N";
-				  }
-				  attribute.partition=response.attributes[i].partition;
+				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
+					attribute.key = "Y";
+				}
+				else {
+					attribute.key = "N";
+				}
+				attribute.partition = response.attributes[i].partition;
 
-			      attributearray[i]=attribute
-			   }
-			  datapodjson.attributes=attributearray
-		      deferred.resolve({
-		                  data:datapodjson
-		              })
-		     }
-		  return deferred.promise;
+				attributearray[i] = attribute
+			}
+			//console.log(JSON.stringify(attributearray))
+			datapodjson.attributes = attributearray
+			deferred.resolve({
+				data: datapodjson
+			})
 		}
-	this.getGraphData=function(uuid,version,degree){
-		   var deferred=$q.defer();
-		   MetadataDatapodFactory.findGraphData(uuid,version,degree).then(function(response){onSuccess(response.data)});
-		   var onSuccess=function(response){
-		      deferred.resolve({
-		                  data:response
-		              })
-		     }
-		  return deferred.promise;
-	   };
-	this.getOneByUuidAndVersion=function(uuid,version,type){
-		   var deferred=$q.defer();
-		   MetadataDatapodFactory.findOneByUuidAndVersion(uuid,version,type).then(function(response){onSuccess(response.data)});
-		   var onSuccess=function(response){
-			   var datapodjson={};
-			   datapodjson.datapodata=response;
-			   var attributearray=[];
-			   for(var i=0;i<response.attributes.length;i++){
-				  var  attribute={};
-				  attribute.attributeId=response.attributes[i].attributeId;
-				  attribute.dispName=response.attributes[i].dispName;
-				  attribute.name=response.attributes[i].name;
-				  attribute.isAttributeEnable=true;
-				  attribute.type=response.attributes[i].type.toLowerCase();
-				  attribute.desc=response.attributes[i].desc;
-				  attribute.active=response.attributes[i].active;
-          console.log(response.attributes[i].key );
-				  if(response.attributes[i].key !="" && response.attributes[i].key !=null){
-					  attribute.key="Y";
-				  }
-				  else{
-					  attribute.key="N";
-				  }
-				  attribute.partition=response.attributes[i].partition;
+		return deferred.promise;
+	}
+	this.getOneById = function (id, type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findOneById(id, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			var datapodjson = {};
+			datapodjson.datapodata = response;
+			var attributearray = [];
+			for (var i = 0; i < response.attributes.length; i++) {
+				var attribute = {};
+				attribute.attributeId = response.attributes[i].attributeId;
+				attribute.name = response.attributes[i].name;
+				attribute.dispName = response.attributes[i].dispName;
+				attribute.type = response.attributes[i].type.toLowerCase();
+				attribute.desc = response.attributes[i].desc;
+				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
+					attribute.key = "Y";
+				}
+				else {
+					attribute.key = "N";
+				}
+				attribute.partition = response.attributes[i].partition;
 
-			      attributearray[i]=attribute
-			   }
-			  datapodjson.attributes=attributearray
-        console.log(JSON.stringify(attributearray));
-		      deferred.resolve({
-		                  data:datapodjson
-		              })
-		     }
-		  return deferred.promise;
+				attributearray[i] = attribute
+			}
+			datapodjson.attributes = attributearray
+			deferred.resolve({
+				data: datapodjson
+			})
 		}
-	this.submit=function(data,type){
-		   var deferred=$q.defer();
-		   MetadataDatapodFactory.datapodSubmit(data,type).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
-		   var onSuccess=function(response){
-		      deferred.resolve({
-		                  data:response
-		              })
-		     }
-         var onError=function(response){
-         deferred.reject({
-           data:response
-         })
-         }
-		  return deferred.promise;
+		return deferred.promise;
+	}
+	this.getGraphData = function (uuid, version, degree) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findGraphData(uuid, version, degree).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
 		}
+		return deferred.promise;
+	};
+	this.getOneByUuidAndVersion = function (uuid, version, type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			var datapodjson = {};
+			datapodjson.datapodata = response;
+			var attributearray = [];
+			for (var i = 0; i < response.attributes.length; i++) {
+				var attribute = {};
+				attribute.attributeId = response.attributes[i].attributeId;
+				attribute.dispName = response.attributes[i].dispName;
+				attribute.name = response.attributes[i].name;
+				attribute.isAttributeEnable = true;
+				attribute.type = response.attributes[i].type.toLowerCase();
+				attribute.desc = response.attributes[i].desc;
+				attribute.active = response.attributes[i].active;
+				//console.log(response.attributes[i].key);
+				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
+					attribute.key = "Y";
+				}
+				else {
+					attribute.key = "N";
+				}
+				attribute.partition = response.attributes[i].partition;
+				attributearray[i] = attribute
+			}
+			datapodjson.attributes = attributearray
+			//console.log(JSON.stringify(attributearray));
+			deferred.resolve({
+				data: datapodjson
+			})
+		}
+		return deferred.promise;
+	}
+	this.submit = function (data, type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.datapodSubmit(data, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
 
 });

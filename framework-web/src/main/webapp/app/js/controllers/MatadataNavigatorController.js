@@ -30,7 +30,7 @@
       name: "caption"
     };
     $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-      console.log(fromParams)
+     // console.log(fromParams)
       $sessionStorage.fromStateName = fromState.name
       $sessionStorage.fromParams = fromParams
 

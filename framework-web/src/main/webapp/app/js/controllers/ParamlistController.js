@@ -47,7 +47,7 @@
 	$scope.paramlist.versions=[];
 	$scope.isshowmodel=false;
 	$scope.paramtable=null;
-	$scope.type = ["string","double","date","integer"];
+	$scope.type = ["string","double","date","integer","row"];
   $scope.isDependencyShow=false;
   $scope.privileges = [];
   $scope.privileges = privilegeSvc.privileges['paramlist'] || [];

@@ -166,7 +166,7 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
         CommonService.getBaseEntityStatusByCriteria($scope.searchForm.modelType+"exec", $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '',$scope.searchForm.published || '', $scope.searchForm.status || '').then(function(response) {onSuccess(response.data)},function error() {
             $scope.loading = false;});
         var onSuccess = function(response) {
-        console.log(response);
+       // console.log(response);
         $scope.gridOptions.data = response;
         $scope.originalData = response;
         }
@@ -414,7 +414,7 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
             url=baseurl+"model/simulate/download?action=view&simulateExecUUID="+$scope.modelDetail.uuid+"&simulateExecVersion="+$scope.modelDetail.version+"&mode=''";
         }
         else if($stateParams.type =="train"){
-            if($scope.modelData.customeFlag =="N"){
+            if($scope.modelData.customFlag =="N"){
                 $scope.downloadTrainData();
             return ;
             } 
