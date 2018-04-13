@@ -600,26 +600,9 @@ public class DataStoreServiceImpl {
 		setRunMode(runMode);
 		DataStore ds = findDataStoreByMeta(datapodUUID, datapodVersion);
 		if (ds == null) {
-			logger.error("Datastore is not available for this datapod");
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-					.getRequestAttributes();
-			if (requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if (response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod");
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(404);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				} else
-					logger.info("HttpServletResponse response is \"" + null + "\"");
-			} else
-				logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
-			throw new Exception("Datastore is not available for this datapod");
+			logger.error("Datastore is not available for this datapod");			
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod");
+			throw new RuntimeException("Datastore is not available for this datapod");
 		}
 		List<Map<String, Object>> results = getDatapodResults(ds.getUuid(),ds.getVersion(),null,0,rows,null,rows,null,null,null, runMode);
 		return results;
