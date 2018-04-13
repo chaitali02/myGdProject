@@ -1,5 +1,6 @@
 package com.inferyx.framework.writer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +35,7 @@ public class HiveWriter implements IWriter {
 	}
 
 	@Override
-	public void write(Dataset<Row> df, String filePathUrl, Datapod d, String saveMode) {
+	public void write(Dataset<Row> df, String filePathUrl, Datapod d, String saveMode) throws IOException {
 		try {
 			Datasource dataSource = daoRegister.getiDatasourceDao()
 					.findLatestByUuid(d.getDatasource().getRef().getUuid(), new Sort(Sort.Direction.DESC, "version"));

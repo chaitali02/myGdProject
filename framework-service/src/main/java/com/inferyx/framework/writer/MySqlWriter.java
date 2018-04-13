@@ -1,5 +1,6 @@
 package com.inferyx.framework.writer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +27,7 @@ public class MySqlWriter implements IWriter {
 		this.daoRegister = daoRegister;
 	}
 	@Override
-	public void write(Dataset<Row> df, String filePathUrl, Datapod d, String saveMode) 
+	public void write(Dataset<Row> df, String filePathUrl, Datapod d, String saveMode) throws IOException 
 	{	try{
 			Datasource dataSource = daoRegister.getiDatasourceDao().findLatestByUuid(d.getDatasource().getRef().getUuid(), new Sort(Sort.Direction.DESC, "version")); 
 			//Datasource dataSource =  daoRegister.getiDatasourceDao().findOneByUuidAndVersion(d.getDatasource().getRef().getUuid(),d.getDatasource().getRef().getVersion());

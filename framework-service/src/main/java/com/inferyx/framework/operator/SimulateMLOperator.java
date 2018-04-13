@@ -71,8 +71,7 @@ public class SimulateMLOperator {
 	}
 	
 	public String execute(String sql, String filePathUrl, String filePath, String uuid)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException, NullPointerException, ParseException, IOException {
+			throws Exception {
 		
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());

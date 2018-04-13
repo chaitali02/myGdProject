@@ -1,5 +1,6 @@
 package com.inferyx.framework.writer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +26,7 @@ public class ImpalaWriter implements IWriter {
 		this.daoRegister = daoRegister;
 	}
 	@Override
-	public void write(Dataset<Row> dataFrame, String filePathUrl, Datapod datapod, String saveMode) {
+	public void write(Dataset<Row> dataFrame, String filePathUrl, Datapod datapod, String saveMode) throws IOException {
 		try{
 			Datasource dataSource = daoRegister.getiDatasourceDao().findLatestByUuid(datapod.getDatasource().getRef().getUuid(), new Sort(Sort.Direction.DESC, "version")); 
 			//Datasource dataSource =  daoRegister.getiDatasourceDao().findOneByUuidAndVersion(d.getDatasource().getRef().getUuid(),d.getDatasource().getRef().getVersion());
