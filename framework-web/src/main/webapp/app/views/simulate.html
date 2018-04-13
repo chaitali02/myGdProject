@@ -342,12 +342,55 @@
                                                 </select>
                                             </div>
                                         </div>
+                                       
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Factor Mean</label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectFactorMeanType" ng-options="r for r in factorTypes"
+                                                    ng-change="onChangeTargeType()">
+                                                </select>
+                                            </div>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="selectFactorMean" ng-options="r as r.name for r in allFactorMean  track by r.uuid ">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Factor Covarient</label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectFactorCovarientType" ng-options="r for r in factorTypes"
+                                                    ng-change="onChangeTargeType()">
+                                                </select>
+                                            </div>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <select class="form-control" select2 ng-disabled="{{mode}} "  data-ng-model="selectFactorCovarient" ng-options="r as r.name for r in allFactorCovarient  track by r.uuid ">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Distribution Type</label> 
+                                            <div class="col-md-6">                                          
+                                                <select class="form-control" select2 ng-disabled="{{mode}} "  data-ng-model="selectDistributionType" ng-options="r as r.name for r in allDistribution  track by r.uuid ">
+                                                </select>
+
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Num Iterations
                                                 <!-- <span class="required" aria-required="true"> * </span> -->
                                             </label>
                                             <div class="col-md-2">
                                                 <input type="number" class="form-control" ng-disabled="{{mode}}" ng-model="Simulatedata.numIterations" maxlength="100000">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Seed
+                                                <!-- <span class="required" aria-required="true"> * </span> -->
+                                            </label>
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="Simulatedata.seed" ng-init="generateRadomValue()">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -397,3 +440,7 @@
 </div>
 <!--End Row-->
 </div>
+<br>
+<br>
+<br>
+<br>

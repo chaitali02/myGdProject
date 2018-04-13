@@ -26,12 +26,16 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
   $scope.showgraphdiv = false
   $scope.graphDataStatus = false
   $scope.Simulate = {};
+  
   $scope.Simulate.versions = [];
   $scope.isshowSimulate = false;
   $scope.sourceTypes = ["datapod", "dataset","rule"];
   $scope.selectSourceType=$scope.sourceTypes[0];
   $scope.targetTypes = ["datapod","file"];
-  $scope.selectTargetType=$scope.targetTypes[0]; 
+  $scope.selectTargetType=$scope.targetTypes[0];
+  $scope.factorTypes = ["datapod"];
+  $scope.selectFactorMeanType=$scope.factorTypes[0];
+  $scope.selectFactorCovarientType=$scope.factorTypes[0];
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
   $scope.backCount;
@@ -58,7 +62,10 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     $sessionStorage.fromParams = fromParams
 
   });
-   
+  $scope.generateRadomValue=function(){
+    $scope.Simulatedata.seed= Math.floor(1000 + Math.random() * 9000);
+    $scope.Simulatedata.numIterations=1000;
+  }
   $scope.countContinue = function() {
     if($scope.Simulatedata.name!=null || $scope.selectSourceType!=null){
       $scope.continueCount = $scope.continueCount + 1;
@@ -100,13 +107,24 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
       
     }
   }
-  $scope.getAllLetestSource=function(){
-    SimulateService.getAllLatest($scope.selectSourceType).then(function(response) { onGetAllLatest(response.data)});
+  $scope.getAllLetestDistribution=function(defaultValue){
+    SimulateService.getAllLatest("distribution").then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
-      $scope.allSource = response;
+      $scope.allDistribution = response;
+      if(defaultValue ==true){
+        $scope.selectDistributionType=response[0]
+      }
+      
+    }
+  }
+  $scope.getAllLetestFactors=function(){
+    SimulateService.getAllLatest($scope.selectFactorMeanType).then(function(response) { onGetAllLatest(response.data)});
+    var onGetAllLatest = function(response) {
+      $scope.allFactorMean = response;
+      $scope.allFactorCovarient = response;
       if(typeof $stateParams.id == "undefined") {
-        $scope.selectSource=response[0];
-        $scope.getAllAttribute();
+        $scope.selectFactorMean=response[0];
+        $scope.selectFactorCovarient=response[0];
       }
     }
   }
@@ -129,7 +147,8 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     }
   }
   $scope.getAllLetestModel();
- // $scope.getAllLetestSource();
+  $scope.getAllLetestDistribution();
+  $scope.getAllLetestFactors();
   $scope.getAllLetestTarget();
   
   $scope.onChangeModel=function(){
@@ -202,11 +221,28 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
       selectModel.uuid=response.dependsOn.ref.uuid;
       selectModel.name=response.dependsOn.ref.name;
       $scope.selectModel=selectModel;
-      // var selectSource={};
-      // $scope.selectSource=null;
-      // selectSource.uuid=response.source.ref.uuid;
-      // selectSource.name=response.source.ref.name;
-      // $scope.selectSource=selectSource;
+      var selectFactorMean={};
+      $scope.selectFactorMean=null;
+      if(response.factorMeanInfo !=null){
+        selectFactorMean.uuid=response.factorMeanInfo.ref.uuid;
+        selectFactorMean.name=response.factorMeanInfo.ref.name;
+        $scope.selectFactorMean=selectFactorMean;
+      }
+      var selectFactorCovarient={};
+      $scope.selectCovarientMean=null;
+      if(response.factorCovarientInfo !=null){
+        selectFactorCovarient.uuid=response.factorCovarientInfo.ref.uuid;
+        selectFactorCovarient.name=response.factorCovarientInfo.ref.name;
+        $scope.selectFactorCovarient=selectFactorCovarient;
+      }
+      var selectDistributionType={};
+      $scope.selectDistributionType=null;
+      if(response.distributionTypeInfo !=null){
+        selectDistributionType.uuid=response.distributionTypeInfo.ref.uuid;
+        selectDistributionType.name=response.distributionTypeInfo.ref.name;
+        $scope.selectDistributionType=selectDistributionType;
+      }
+      
       var selectTarget={};
       $scope.selectTarget=null;
       selectTarget.uuid=response.target.ref.uuid;
@@ -267,6 +303,7 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     SimulateJson.active = $scope.Simulatedata.active;
     SimulateJson.published=$scope.Simulatedata.published; 
     SimulateJson.numIterations=$scope.Simulatedata.numIterations;
+    SimulateJson.seed=$scope.Simulatedata.seed;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -280,12 +317,25 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     ref.uuid=$scope.selectModel.uuid;
     dependsOn.ref=ref;
     SimulateJson.dependsOn=dependsOn;
-    // var source={};
-    // var sourceref={};
-    // sourceref.type=$scope.selectSourceType;
-    // sourceref.uuid=$scope.selectSource.uuid;
-    // source.ref=sourceref;
-    // SimulateJson.source=source;
+    var factorMeanInfo={};
+    var factorMeanRef={};
+    factorMeanRef.type=$scope.selectFactorMeanType;
+    factorMeanRef.uuid=$scope.selectFactorMean.uuid;
+    factorMeanInfo.ref=factorMeanRef;
+    SimulateJson.factorMeanInfo=factorMeanInfo;
+    var factorCovarientInfo={};
+    var factorCovarientRef={};
+    factorCovarientRef.type=$scope.selectFactorCovarientType;
+    factorCovarientRef.uuid=$scope.selectFactorCovarient.uuid;
+    factorCovarientInfo.ref=factorCovarientRef;
+    SimulateJson.factorCovarientInfo=factorCovarientInfo;
+
+    var distributionTypeInfo={};
+    var distributionTypeInfoRef={};
+    distributionTypeInfoRef.type="distribution";
+    distributionTypeInfoRef.uuid=$scope.selectDistributionType.uuid;
+    distributionTypeInfo.ref=distributionTypeInfoRef;
+    SimulateJson.distributionTypeInfo=distributionTypeInfo;
     var target={};
     var targetref={};
     targetref.type=$scope.selectTargetType;

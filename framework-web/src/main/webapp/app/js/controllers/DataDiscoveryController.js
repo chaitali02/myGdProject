@@ -13,7 +13,7 @@ DatadiscoveryModule.controller('DataDiscoveryController', function ($state, dagM
     ]
     $scope.optiondata = { "caption": "Name A-Z", name: "named" };
     $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-        console.log(fromParams)
+       // console.log(fromParams)
         $sessionStorage.fromStateName = fromState.name
         $sessionStorage.fromParams = fromParams
 

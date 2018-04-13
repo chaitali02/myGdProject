@@ -63,7 +63,7 @@
 	        datapodarray[i] = datapodJSon
 	      }
 				datapodarray.sort(sortFactory.sortByProperty("name"));
-				console.log(datapodarray)
+				//console.log(datapodarray)
 	      deferred.resolve({
 	        data: datapodarray
 	      });
