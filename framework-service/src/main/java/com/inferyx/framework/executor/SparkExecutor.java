@@ -1,20 +1,28 @@
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
@@ -22,8 +30,11 @@ import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.mllib.stat.KernelDensity;
 import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
@@ -48,11 +59,15 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Distribution;
+import com.inferyx.framework.domain.Instrument;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Param;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -66,6 +81,7 @@ import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
+import com.inferyx.framework.operator.SparkMonteCarloOperator;
 import com.inferyx.framework.operator.TrainAndValidateOperator;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -124,8 +140,8 @@ public class SparkExecutor implements IExecutor {
 	private SimulateMLOperator simulateMLOperator ;
 	@Autowired
 	private TrainAndValidateOperator trainAndValidateOperator ;
-	//@Autowired
-	//private SparkMonteCarloOperator sparkMonteCarloOperator;
+	@Autowired
+	private JavaSparkContext javaSparkContext;
 	
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
@@ -843,7 +859,6 @@ public class SparkExecutor implements IExecutor {
 
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				sparkSession.sqlContext().registerDataFrameAsTable(df, tableName.replaceAll("-", "_"));
-				
 				String sql = predictMLOperator.parse(predict, model, df, fieldArray, tableName, filePathUrl, filePathUrl);				
 				return predictMLOperator.execute(sql, tableName, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
@@ -902,21 +917,33 @@ public class SparkExecutor implements IExecutor {
 
 			
 			tableName = tableName.replaceAll("-", "_");
-			
-			Dataset<Row> df = simulateMLOperator.generateDataframe(simulate, model, tableName);
-			VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-			Dataset<Row> assembledDf = va.transform(df);
-			assembledDf.show();
-			
+						
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+				Distribution distribution = (Distribution) daoRegister.getRefObject(simulate.getDistributionTypeInfo().getRef());
+				int seed = Integer.parseInt(""+simulate.getSeed());
+				int numTrials = simulate.getNumIterations();
+				Dataset<Row> dfTemp = executeDistribution(distribution, numTrials, 100, simulate.getFactorMeanInfo(), simulate.getFactorCovarientInfo());
+				
+				Dataset<Row> df = dfTemp.withColumnRenamed("value", fieldArray[0]);
+				
+				VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+				Dataset<Row> assembledDf = va.transform(df);
+				assembledDf.show();
 				sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 				String sql = simulateMLOperator.parse(simulate, model, assembledDf, fieldArray, tableName, filePathUrl, filePath);
-				return simulateMLOperator.execute(sql, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
+			return simulateMLOperator.execute(sql, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+				
 				TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
 					model.getVersion());
 				if (latestTrainExec == null)
 					throw new Exception("Executed model not found.");
+				
+				Dataset<Row> df = simulateMLOperator.generateDataframe(simulate, model, tableName);
+				VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+				Dataset<Row> assembledDf = va.transform(df);
+				assembledDf.show();
+				
 				return simulateMLOperator.execute(simulate, model, algorithm, target, latestTrainExec, fieldArray,
 						targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, assembledDf, clientContext);
 			} else 
@@ -962,18 +989,78 @@ public class SparkExecutor implements IExecutor {
 		return data;
 	}
 	
-	public void executeMonteCarlo(long seed, MetaIdentifierHolder factorMeansInfo, MetaIdentifierHolder factorCovariancesInfo) throws IOException {
-		/*Instrument[] instruments = sparkMonteCarloOperator.readInstruments("instrument file path");
-		int numTrials = 100;
-		int parallelism = 10;
+	public Dataset<Row> executeDistribution(Distribution distribution, int numTrials, long seed, MetaIdentifierHolder factorMeansInfo, MetaIdentifierHolder factorCovariancesInfo) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, NullPointerException, ParseException {
 		
-		double[] factorMeans = sparkMonteCarloOperator.readMeans("factor means file path");
-		double[][] factorCovariances = sparkMonteCarloOperator.readCovariances("factor covariance file path");
+		Row dataset = null;
 		
-		Broadcast<Instrument[]> broadcastInstruments = null;//sparkContext.broadcast(instruments);
-		List<Long> seeds = LongStream.range(seed, seed + parallelism).boxed().collect(Collectors.toList());
-		//JavaRDD<Long> seedRdd = sparkContext.parallelize(seeds, parallelism, Instrument.class);
-*/		
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(distribution.getParamList().getRef().getUuid(), distribution.getParamList().getRef().getVersion(), distribution.getParamList().getRef().getType().toString());
+		
+		List<Param> params = paramList.getParams();
+		
+		int parallelism = Integer.parseInt(params.get(0).getParamValue());
+		String str = params.get(1).getParamValue();
+		String[] splits = str.split(",");
+		List<Double> datasetList = new ArrayList<>();
+		for(String split : splits)
+			datasetList.add(Double.parseDouble(split));
+		dataset = RowFactory.create(datasetList.toArray());
+		
+		Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(factorMeansInfo.getRef().getUuid(), factorMeansInfo.getRef().getVersion(), factorMeansInfo.getRef().getType().toString());
+		DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
+		
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		
+		IReader datapodReader = datasourceFactory.getDatapodReader(factorMeanDp, commonActivity);
+		DataFrameHolder meansHolder = datapodReader.read(factorMeanDp, factorMeanDs, hdfsInfo, sparkSession, datasource);
+		Dataset<Row> meansDf = meansHolder.getDataframe();
+		meansDf.show();
+		
+		List<String> meanColList = new ArrayList<>();
+		for(int i=0; i<factorMeanDp.getAttributes().size(); i++) {
+			if(i>0)
+				meanColList.add(factorMeanDp.getAttributes().get(i).getName());
+		}			
+		
+		List<Double> meansValList = new ArrayList<>();
+		for(Row row : meansDf.collectAsList()) {
+				for(String col : meanColList)
+					meansValList.add(row.getAs(col));
+		}		
+		double[] factorMeans = ArrayUtils.toPrimitive(meansValList.toArray(new Double[meansValList.size()]));
+		//double[] factorMeans = sparkMonteCarloOperator.readMeans(factorMeanDs.getLocation());
+		
+		Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(factorCovariancesInfo.getRef().getUuid(), factorCovariancesInfo.getRef().getVersion(), factorCovariancesInfo.getRef().getType().toString());
+		DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
+		meansHolder = datapodReader.read(factorCovarianceDp, factorCovarianceDs, hdfsInfo, sparkSession, datasource);
+		Dataset<Row> covarsDf = meansHolder.getDataframe();
+		covarsDf.show();
+		
+		List<String> covarColList = new ArrayList<>();
+		for(int i=0; i<factorCovarianceDp.getAttributes().size(); i++) {
+			if(i>0)
+				covarColList.add(factorCovarianceDp.getAttributes().get(i).getName());
+		}	
+		
+		List<double[]> covarsRowList = new ArrayList<>();
+		for(Row row : covarsDf.collectAsList()) {
+			List<Double> covarsValList = new ArrayList<>();
+				for(String col : covarColList)
+					covarsValList.add(row.getAs(col));
+				covarsRowList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
+		}
+		
+		double[][] factorCovariances = covarsRowList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
+		//double[][] factorCovariances = sparkMonteCarloOperator.readCovariances(factorCovarianceDs.getLocation());
+		
+		Broadcast<Row> broadcastInstruments = javaSparkContext.broadcast(dataset);
+		//List<Long> seeds = LongStream.range(seed, seed + parallelism).boxed().collect(Collectors.toList());
+		//JavaRDD<Long> seedRdd = javaSparkContext.parallelize(seeds, parallelism);
+		Double[] trialValues = simulateMLOperator.trialValues(seed, distribution.getClassName(), numTrials/parallelism, broadcastInstruments.value(), 
+				factorMeans, factorCovariances);
+		Dataset<Row> df = sparkSession.sqlContext().createDataset(Arrays.asList(trialValues), Encoders.DOUBLE()).toDF();
+		df.show();
+		
+		return df;
 	}
 	
 }

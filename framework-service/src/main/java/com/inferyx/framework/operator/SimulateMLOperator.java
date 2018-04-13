@@ -4,9 +4,12 @@
 package com.inferyx.framework.operator;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 
+import org.apache.commons.math3.random.MersenneTwister;
+import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.sql.Dataset;
@@ -129,4 +132,27 @@ public class SimulateMLOperator {
 		df.show();
 		return df;
 	}
+	
+	public Double[] trialValues(long seed, String className, int numTrials, Row dataset, double[] factorMeans,
+			double[][] factorCovariances) throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+		RandomGenerator rand = new MersenneTwister(seed);
+		Double[] trialValues = new Double[numTrials] ;
+		
+		Class<?> distributorClass = Class.forName(className);
+		Class<?>[] type = { RandomGenerator.class, double[].class, double[][].class};
+		Constructor<?> cons = distributorClass.getConstructor(type);
+		Object[] obj = {rand, factorMeans, factorCovariances};
+		Object object = cons.newInstance(obj);
+		
+		for (int i = 0; i < numTrials; i++) {
+			double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
+			Double totalValue = 0.0;
+			for (int j=0; j<dataset.length(); j++) {			
+				totalValue = trial[j] * (Double)dataset.get(j);
+			}
+			trialValues[i] = totalValue;
+		}
+		return trialValues;
+	}
+
 }

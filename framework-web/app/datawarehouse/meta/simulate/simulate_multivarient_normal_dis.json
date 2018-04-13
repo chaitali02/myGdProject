@@ -11,7 +11,7 @@
             "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
         }
     },
-    "numIterations" : 1000,
+    "numIterations" : 20000,
     "featureInfo" : [ 
         {
             "featureId" : "0",
@@ -22,10 +22,28 @@
             }
         }
     ],
-    "seed" : NumberLong(0),
-    "uuid" : "5807857b-7790-4502-8bbf-81b47e344f05",
-    "version" : "1523455036",
-    "name" : "test_simulate_formula",
+    "seed" : NumberLong(6349),
+    "distributionTypeInfo" : {
+        "ref" : {
+            "type" : "distribution",
+            "uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050"
+        }
+    },
+    "factorMeanInfo" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "3a47402e-6ba5-4ca7-b3a4-7e01fd4dcdd9"
+        }
+    },
+    "factorCovarientInfo" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a"
+        }
+    },
+    "uuid" : "00c1af72-5815-4e52-b452-1c781961d040",
+    "version" : "1523603970",
+    "name" : "simulate_multivarient_normal_dis",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -34,7 +52,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-04-11T13:57:16.000Z"),
+    "createdOn" : ISODate("2018-04-12T19:19:30.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

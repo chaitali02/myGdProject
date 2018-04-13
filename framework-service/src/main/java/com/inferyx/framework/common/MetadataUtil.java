@@ -33,6 +33,7 @@ import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasetDao;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IDimensionDao;
+import com.inferyx.framework.dao.IDistributionDao;
 import com.inferyx.framework.dao.IExpressionDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.dao.IFormulaDao;
@@ -77,6 +78,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Dimension;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
@@ -222,7 +224,29 @@ public class MetadataUtil {
 	IParamSetDao iParamSetDao;
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;
+    @Autowired 
+    IDistributionDao iDistributionDao;
     
+    
+    
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iDistributionDao
+	 */
+	public IDistributionDao getiDistributionDao() {
+		return iDistributionDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iDistributionDao the iDistributionDao to set
+	 */
+	public void setiDistributionDao(IDistributionDao iDistributionDao) {
+		this.iDistributionDao = iDistributionDao;
+	}
+
 	public IAlgorithmDao getiAlgorithmDao() {
 		return iAlgorithmDao;
 	}
@@ -1169,6 +1193,15 @@ public class MetadataUtil {
 				return reconExec;
 			}
 		}
+		
+		if(ref.getType() == MetaType.distribution)
+			if (key.getVersion() != null ) {
+				return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.distribution.toString());
+			} else {
+				Distribution distribution = (Distribution) commonServiceImpl.getLatestByUuid(ref.getUuid(), MetaType.distribution.toString());
+				ref.setVersion(distribution.getVersion());
+				return distribution;
+			}
 	//	logger.error("Meta not found");
 		return null;
 	}

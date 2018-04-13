@@ -1,0 +1,40 @@
+{
+    "params" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "parallelism",
+            "paramType" : "INTEGER",
+            "paramValue" : "5"
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "dataset",
+            "paramType" : "ROW",
+            "paramValue" : "1.0,2.0,3.35"
+        }
+    ],
+    "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
+    "version" : "1523604347",
+    "name" : "paramlist_multivariate_normal_distribution",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-04-12T19:25:47.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}
