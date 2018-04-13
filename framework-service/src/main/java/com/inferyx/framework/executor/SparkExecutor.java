@@ -1,7 +1,6 @@
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -12,15 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.ml.Pipeline;
@@ -30,7 +26,6 @@ import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.param.ParamMap;
-import org.apache.spark.mllib.stat.KernelDensity;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
@@ -60,7 +55,6 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
-import com.inferyx.framework.domain.Instrument;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -81,7 +75,6 @@ import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
-import com.inferyx.framework.operator.SparkMonteCarloOperator;
 import com.inferyx.framework.operator.TrainAndValidateOperator;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -922,7 +915,7 @@ public class SparkExecutor implements IExecutor {
 				Distribution distribution = (Distribution) daoRegister.getRefObject(simulate.getDistributionTypeInfo().getRef());
 				int seed = Integer.parseInt(""+simulate.getSeed());
 				int numTrials = simulate.getNumIterations();
-				Dataset<Row> dfTemp = executeDistribution(distribution, numTrials, 100, simulate.getFactorMeanInfo(), simulate.getFactorCovarientInfo());
+				Dataset<Row> dfTemp = executeDistribution(distribution, numTrials, seed, simulate.getFactorMeanInfo(), simulate.getFactorCovarientInfo());
 				
 				Dataset<Row> df = dfTemp.withColumnRenamed("value", fieldArray[0]);
 				
@@ -992,7 +985,6 @@ public class SparkExecutor implements IExecutor {
 	public Dataset<Row> executeDistribution(Distribution distribution, int numTrials, long seed, MetaIdentifierHolder factorMeansInfo, MetaIdentifierHolder factorCovariancesInfo) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, NullPointerException, ParseException {
 		
 		Row dataset = null;
-		
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(distribution.getParamList().getRef().getUuid(), distribution.getParamList().getRef().getVersion(), distribution.getParamList().getRef().getType().toString());
 		
 		List<Param> params = paramList.getParams();
@@ -1057,6 +1049,8 @@ public class SparkExecutor implements IExecutor {
 		//JavaRDD<Long> seedRdd = javaSparkContext.parallelize(seeds, parallelism);
 		Double[] trialValues = simulateMLOperator.trialValues(seed, distribution.getClassName(), numTrials/parallelism, broadcastInstruments.value(), 
 				factorMeans, factorCovariances);
+		for(Double dbl : trialValues)
+			System.out.println(dbl);
 		Dataset<Row> df = sparkSession.sqlContext().createDataset(Arrays.asList(trialValues), Encoders.DOUBLE()).toDF();
 		df.show();
 		
