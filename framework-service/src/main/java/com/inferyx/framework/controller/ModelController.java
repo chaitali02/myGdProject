@@ -394,5 +394,5 @@ public class ModelController {
 		Mode runMode = Helper.getExecutionMode(mode);
 		response = modelServiceImpl.downloadLog(trainExecUUID, trainExecVersion, response, runMode);
 	}
-
+	
 }

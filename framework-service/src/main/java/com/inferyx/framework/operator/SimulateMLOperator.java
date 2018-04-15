@@ -4,31 +4,38 @@
 package com.inferyx.framework.operator;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.log4j.Logger;
-import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.distribution.MultiNormalDist;
+import com.inferyx.framework.distribution.MultivariateMapFunction;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
-import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.TrainExec;
@@ -42,7 +49,7 @@ import com.inferyx.framework.writer.IWriter;
  * @author joy
  *
  */
-public class SimulateMLOperator {
+public class SimulateMLOperator implements Serializable {
 
 	@Autowired
 	private SparkSession sparkSession;
@@ -58,6 +65,8 @@ public class SimulateMLOperator {
 	private MetadataUtil daoRegister;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
+	@Autowired
+	private MultiNormalDist multiNormalDist;
 	
 	static final Logger LOGGER = Logger.getLogger(SimulateMLOperator.class);
 	
@@ -94,10 +103,12 @@ public class SimulateMLOperator {
 		builder.append("SELECT ");
 		MetaIdentifierHolder dependsOn = model.getDependsOn();
 		Object object = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
+		int i = 0;
 		if(object instanceof Formula) {
 			Formula formula = (Formula) object;
 			for (Feature feature : model.getFeatures()) {
 				builder.append(feature.getName()).append(" AS ").append(feature.getName()).append(", ");
+				i++;
 			}
 			
 			builder.append(formulaOperator.generateSql(formula, null, null, null)).append(" AS ").append(model.getLabel());
@@ -133,7 +144,7 @@ public class SimulateMLOperator {
 		return df;
 	}
 	
-	public Double[] trialValues(long seed, String className, int numTrials, Row dataset, double[] factorMeans,
+	/*public Double[] trialValues(long seed, String className, int numTrials, Row dataset, double[] factorMeans,
 			double[][] factorCovariances) throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 		RandomGenerator rand = new MersenneTwister(seed);
 		Double[] trialValues = new Double[numTrials] ;
@@ -153,6 +164,53 @@ public class SimulateMLOperator {
 			trialValues[i] = totalValue;
 		}
 		return trialValues;
+	}*/
+	
+	public Dataset<Row> generateRandomSampler(long seed, String className, int numTrials) {
+		Dataset<Row> df = null;
+		RandomGenerator rand = new MersenneTwister(seed);
+		// Create numTrials rows
+		df = sparkSession.sqlContext().range(0, numTrials);
+		return df;
 	}
+	
+	public Dataset<Row> simulateMultiVarNormDist(long seed, String className, int numTrials, Row dataset, double[] factorMeans,
+			double[][] factorCovariances) throws NoSuchMethodException, SecurityException, ClassNotFoundException {
+		Dataset<Row> df = generateRandomSampler(seed, className, numTrials);
+		Class<?> distributorClass = Class.forName(className);
+		Class<?>[] type = { RandomGenerator.class, double[].class, double[][].class};
+		Constructor<?> cons = distributorClass.getConstructor(type);
+//		df.withColumn("trialValues", functions.callUDF("multivarnormdist", seed, cons, factorMeans, factorCovariances));
+		MultivariateMapFunction mapFunc = new MultivariateMapFunction(factorMeans, factorCovariances, cons, seed, dataset);
+		JavaRDD<Row> rowRDD = df.javaRDD().map(mapFunc);
+		/*JavaRDD<Row> rowRDD = df.javaRDD().map(new Function<Row, Row>() {
 
+			@Override
+			public Row call(Row inputRow) throws Exception {
+				RandomGenerator rand = new MersenneTwister(seed);
+				Object[] obj = {rand, factorMeans, factorCovariances};
+				Object object = cons.newInstance(obj);
+				Double totalValue = 0.0;
+				double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
+				for (int j=0; j<dataset.length(); j++) {			
+					totalValue += trial[j] * (Double)dataset.get(j);
+				}
+				return RowFactory.create(inputRow.getLong(0), totalValue);
+			}
+		});
+*/		
+		// Generate the schema based on the string of schema
+		List<StructField> fields = new ArrayList<>();
+		fields.add(DataTypes.createStructField("slNo", DataTypes.LongType, true));
+		fields.add(DataTypes.createStructField("trialValue", DataTypes.LongType, true));
+		StructType schema = DataTypes.createStructType(fields);
+		// Apply the schema to the RDD
+		df = sparkSession.createDataFrame(rowRDD, schema);
+		return df;
+	}
+	
+	public Dataset<Row> executeDistribution(Distribution distribution, int numTrials, long seed, MetaIdentifierHolder factorMeansInfo, MetaIdentifierHolder factorCovariancesInfo) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, NullPointerException, ParseException {
+		return multiNormalDist.executeDistribution(distribution, numTrials, seed, factorMeansInfo, factorCovariancesInfo);
+	}
+	
 }

@@ -924,6 +924,7 @@ public class SparkExecutor implements IExecutor {
 				assembledDf.show();
 				sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 				String sql = simulateMLOperator.parse(simulate, model, assembledDf, fieldArray, tableName, filePathUrl, filePath);
+				logger.info("Parsed sql : " + sql);
 			return simulateMLOperator.execute(sql, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				
@@ -984,7 +985,8 @@ public class SparkExecutor implements IExecutor {
 	
 	public Dataset<Row> executeDistribution(Distribution distribution, int numTrials, long seed, MetaIdentifierHolder factorMeansInfo, MetaIdentifierHolder factorCovariancesInfo) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, NullPointerException, ParseException {
 		
-		Row dataset = null;
+		return simulateMLOperator.executeDistribution(distribution, numTrials, seed, factorMeansInfo, factorCovariancesInfo);
+		/*Row dataset = null;
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(distribution.getParamList().getRef().getUuid(), distribution.getParamList().getRef().getVersion(), distribution.getParamList().getRef().getType().toString());
 		
 		List<Param> params = paramList.getParams();
@@ -1054,7 +1056,9 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> df = sparkSession.sqlContext().createDataset(Arrays.asList(trialValues), Encoders.DOUBLE()).toDF();
 		df.show();
 		
-		return df;
+		Dataset<Row> df = simulateMLOperator.simulateMultiVarNormDist(seed, distribution.getClassName(), numTrials/parallelism, broadcastInstruments.value(), 
+				factorMeans, factorCovariances);*/
+//		return df;
 	}
 	
 }

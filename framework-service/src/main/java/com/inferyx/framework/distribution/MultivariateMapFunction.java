@@ -17,8 +17,12 @@ import org.apache.spark.sql.RowFactory;
  */
 public class MultivariateMapFunction implements Function<Row, Row> {
 	
-	private Double[] factorMeans;
-	private Double[][] factorCovariances;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 329038594226801317L;
+	private double[] factorMeans;
+	private double[][] factorCovariances;
 	private Constructor<?> cons;
 	private Long seed;
 	private Row dataset;
@@ -31,17 +35,17 @@ public class MultivariateMapFunction implements Function<Row, Row> {
 	}
 
 	/**
-	 * @param factorMeans
-	 * @param factorCovariances
+	 * @param factorMeans2
+	 * @param factorCovariances2
 	 * @param cons
 	 * @param seed
 	 * @param dataset
 	 */
-	public MultivariateMapFunction(Double[] factorMeans, Double[][] factorCovariances, Constructor<?> cons, Long seed,
+	public MultivariateMapFunction(double[] factorMeans2, double[][] factorCovariances2, Constructor<?> cons, Long seed,
 			Row dataset) {
 		super();
-		this.factorMeans = factorMeans;
-		this.factorCovariances = factorCovariances;
+		this.factorMeans = factorMeans2;
+		this.factorCovariances = factorCovariances2;
 		this.cons = cons;
 		this.seed = seed;
 		this.dataset = dataset;
