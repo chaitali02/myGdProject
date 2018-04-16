@@ -4,21 +4,36 @@
 DatadiscoveryModule = angular.module('DatadiscoveryModule');
 
 
-DatadiscoveryModule.controller('DataDiscoveryController', function ($state, dagMetaDataService, PagerService, $stateParams, $rootScope, $scope, $sessionStorage, DataDiscoveryService) {
+DatadiscoveryModule.controller('DataDiscoveryController', function ($state,$filter,dagMetaDataService, PagerService, $stateParams, $rootScope, $scope, $sessionStorage, DataDiscoveryService) {
     $scope.optionsort = [
-        { "caption": "Name A-Z", name: "name" },
-        { "caption": "Name Z-A", name: "-name" },
-        { "caption": "Date Asc", name: "lastUpdatedOn" },
-        { "caption": "Date Desc", name: "-lastUpdatedOn" },
+        { "caption": "Name A-Z", name: "name" ,"isAsc":true },
+        { "caption": "Name Z-A", name: "-name","isAsc":false  },
+        { "caption": "Date Asc", name: "lastUpdatedOn" ,"isAsc":true},
+        { "caption": "Date Desc", name: "-lastUpdatedOn", "isAsc":false },
     ]
+
     $scope.optiondata = { "caption": "Name A-Z", name: "named" };
+    $scope.pagination={
+        currentPage:1,
+        pageSize:10,
+        paginationPageSizes:[10, 25, 50, 75, 100],
+        maxSize:5,
+    }
+
     $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-       // console.log(fromParams)
         $sessionStorage.fromStateName = fromState.name
         $sessionStorage.fromParams = fromParams
 
     });
+
+
     var vm = this;
+    
+    $scope.refreshData = function(searchtext) {
+        var data = $filter('filter')($scope.originalData,searchtext, undefined);
+        $scope.allMetaCount=$scope.getResults($scope.pagination,data);
+    };
+
     $scope.onShowDetail = function (data) {
         $rootScope.previousState = {};
         $rootScope.previousState.name = "datadiscovery"
@@ -35,27 +50,65 @@ DatadiscoveryModule.controller('DataDiscoveryController', function ($state, dagM
     };
     DataDiscoveryService.getDatapodStats().then(function (response) { onSuccessGetDatapodStats(response.data) });
     var onSuccessGetDatapodStats = function (response) {
-        //console.log(JSON.stringify(response))
         $scope.allMetaCount = response;
-        vm.pager = {};
-        vm.setPage = setPage;
-        if (response.length > 0) {
-            // initialize to page 1
-            vm.setPage(1);
-        }
+        $scope.originalData=response;
+        $scope.allMetaCount=$scope.getResults($scope.pagination,response);
+        // vm.pager = {};
+        // vm.setPage = setPage;
+        // if (response.length > 0) {
+        //     // initialize to page 1
+        //     vm.setPage(1);
+        // }
 
-        function setPage(page) {
-            if (page < 1 || page > vm.pager.totalPages) {
-                return;
-            }
-            // get pager object from service
-            vm.pager = PagerService.GetPager(response.length, page);
-            // get page of items
-            $scope.allMetaCount = response.slice(vm.pager.startIndex, vm.pager.endIndex + 1);
-        }
+        // function setPage(page) {
+        //     if (page < 1 || page > vm.pager.totalPages) {
+        //         return;
+        //     }
+        //     // get pager object from service
+        //     vm.pager = PagerService.GetPager(response.length, page);
+        //     // get page of items
+        //     $scope.allMetaCount = response.slice(vm.pager.startIndex, vm.pager.endIndex + 1);
+        // }
 
     }//End onSuccessGetDatapodStats
-    
+
+    $scope.onPageChanged = function(){
+        $scope.allMetaCount=$scope.getResults($scope.pagination,$scope.originalData);    
+    };
+    $scope.getResults = function(pagination,params) {
+        pagination.totalItems=params.length;
+        if(pagination.totalItems >0){
+          pagination.to = (((pagination.currentPage - 1) * (pagination.pageSize))+1);
+        }
+        else{
+          pagination.to=0;
+        }
+        if(pagination.totalItems < (pagination.pageSize*pagination.currentPage)) {
+            pagination.from = pagination.totalItems;
+        } else {
+          pagination.from = ((pagination.currentPage) * pagination.pageSize);
+        }
+        var limit = (pagination.pageSize* pagination.currentPage);
+        var offset = ((pagination.currentPage - 1) * pagination.pageSize)
+        return params.slice(offset,limit);
+    }
+    $scope.orderByParm=function(){
+        $scope.allMetaCount=$filter('orderBy')($scope.allMetaCount,$scope.optiondata.name);
+       //  $scope.allMetaCount=$scope.getResults($scope.pagination,$scope.allMetaCount); 
+    }
+    function sortArrOfObjectsByParam(arrToSort /* array */, strObjParamToSortBy /* string */, sortAscending /* bool(optional, defaults to true) */) {
+        if (sortAscending == undefined) sortAscending = true; // default to true
+
+        if (sortAscending) {
+          arrToSort.sort(function (a, b) {
+            return a[strObjParamToSortBy] > b[strObjParamToSortBy];
+          });
+        } else {
+          arrToSort.sort(function (a, b) {
+            return a[strObjParamToSortBy] < b[strObjParamToSortBy];
+          });
+        }
+      }
 
 });
 DatadiscoveryModule.filter('isoCurrencyWithK1', ["$filter", "iso4217", function ($filter, iso4217) {
@@ -84,25 +137,7 @@ DatadiscoveryModule.filter('isoCurrencyWithK1', ["$filter", "iso4217", function 
     }
 }])
 
-// DatadiscoveryModule.filter('isoCurrencyWithK2', ["$filter", "iso4217", function ($filter, iso4217) {
-// 	return function (amount, fraction) {
-//         return Math.abs(Number(amount)) >= 1.0e+12
-//         ? $filter('number')(amount) + "T"
-//        // Six Zeroes for Millions 
-//        : Math.abs(Number(amount)) >= 1.0e+9
-//        ? $filter('number')(amount)+ "B"
-//        // Six Zeroes for Millions 
-//        : Math.abs(Number(amount)) >= 1.0e+6
-   
-//        ? $filter('number')(amount)+ "M"
-//        // Three Zeroes for Thousands
-//        : Math.abs(Number(amount)) >= 1.0e+3
-   
-//        ? $filter('number')(amount) + "K"
-   
-//        : Math.abs(Number(amount));
-//     }
-// }])
+
 
 DatadiscoveryModule.factory('PagerService', PagerService)
 function PagerService() {
