@@ -288,7 +288,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       allowInChildMenu : false,
     },
     'dq':{
-      name : 'dataqual',
+      name : 'dq',
       caption:"Rule",
       color : 'orange',
       icon : 'dq.svg',
