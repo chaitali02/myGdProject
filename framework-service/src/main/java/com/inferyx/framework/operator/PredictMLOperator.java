@@ -137,7 +137,7 @@ public class PredictMLOperator {
 				Dataset<Row> dfTask = rsHolder.getDataFrame();
 				dfTask.cache();
 
-				sqlContext.registerDataFrameAsTable(dfTask, tableName.replaceAll("-", "_"));
+				sqlContext.registerDataFrameAsTable(dfTask, tableName);
 
 				dfTask.printSchema();
 				IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
@@ -213,7 +213,7 @@ public class PredictMLOperator {
 			
 			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null)).append(" AS ").append(model.getLabel());
 			builder.append(" FROM ");
-			builder.append(tableName.replaceAll("-", "_")).append(" ").append(aliaseName);
+			builder.append(tableName).append(" ").append(aliaseName);
 
 			LOGGER.info("query : "+builder);
 		}
