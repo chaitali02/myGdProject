@@ -6,13 +6,19 @@ DatascienceModule = angular.module('DatascienceModule');
 DatascienceModule.controller('CreateModelController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location) {
   $scope.featuureType=["integer","string","double"];
   $scope.mode = "false";
+
   if($stateParams.mode =='true'){
     $scope.isEdit=false;
     $scope.isversionEnable=false;
+    $scope.isAdd=false;
   }
-  else{
+  else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
+    $scope.isAdd=false;
+  }
+  else{
+    $scope.isAdd=true;
   }
   $scope.isSubmitEnable = true;
   $scope.modeldata;
@@ -94,7 +100,25 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     $scope.graphDataStatus = false;
     $scope.showgraphdiv = false
   }
-  
+  $scope.enableEdit=function (uuid,version) {
+    $scope.showDetailPage()
+    $state.go('createmodel', {
+      id: uuid,
+      version: version,
+      mode:'false'
+    });
+  }
+
+  $scope.showview=function (uuid,version) {
+    if(!$scope.isEdit){
+      $scope.showDetailPage()
+      $state.go('createmodel', {
+        id: uuid,
+        version: version,
+        mode:'true'
+      });
+    }     
+  }
   $scope.changeScript= function(){
     $scope.checkboxCustom=$scope.scriptType =="SPARK"?false:true
 
