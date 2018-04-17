@@ -54,13 +54,7 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
       data: JSON.stringify(data),
     }).success(function (response) { return response })
   }
-  factory.findGraphData = function (uuid, version, degree) {
-    var url = $location.absUrl().split("app")[0]
-    return $http({
-      url: url + "graph/getGraphResults?action=view&uuid=" + uuid + "&version=" + version + "&degree=" + degree,
-      method: "GET"
-    }).then(function (response) { return response })
-  };
+
  
   factory.findOneById = function (id, type) {
     var url = $location.absUrl().split("app")[0]
@@ -101,19 +95,35 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
     })
   }
 
-  factory.findAllModelByType = function (flag,type) {
+  factory.findAllModelByType = function (flag,type){
     var url = $location.absUrl().split("app")[0]
     return $http({
       url: url + "model/getAllModelByType?action=view&customFlag="+flag+"&type=" + type+"&modelType=algorithm",
       method: "GET",
-    }).then(function (response) { return response })
-
-
+  }).then(function (response) { return response })
   }
+
+  factory.findParamSetByAlgorithm = function (uuid, version) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "metadata/getParamSetByAlgorithm?action=view&algorithmUuid=" + uuid + "&algorithmVersion=" + version,
+      method: "GET"
+    }).then(function (response) { return response })
+  };
   return factory;
 })
 
 DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sortFactory) {
+  this.getParamSetByAlgorithm = function (uuid, version) {
+    var deferred = $q.defer();
+    TrainFactory.findParamSetByAlgorithm(uuid, version).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.getAllModelByType = function (flag, type) {
     var deferred = $q.defer();
     TrainFactory.findAllModelByType(flag, type).then(function (response) { onSuccess(response.data) });
