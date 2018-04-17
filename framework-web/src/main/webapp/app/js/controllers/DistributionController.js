@@ -62,7 +62,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 	var notify = {
 		type: 'success',
 		title: 'Success',
-		content: 'Dashboard deleted Successfully',
+		content: '',
 		timeout: 3000 //time in ms
 	};
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
@@ -201,7 +201,4 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 			setTimeout(function () { $state.go("distribution"); }, 2000);
 		}
 	}
-
-	
-
 });

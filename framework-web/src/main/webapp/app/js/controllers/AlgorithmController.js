@@ -2,6 +2,7 @@
  **/
 DatascienceModule = angular.module('DatascienceModule');
 DatascienceModule.controller('CreateAlgorithmController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, AlgorithmService, privilegeSvc) {
+	
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -15,15 +16,14 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	else {
 		$scope.isAdd = true;
 	}
+
 	$scope.mode = " ";
 	$scope.dataLoading = false;
 	$scope.isSubmitEnable = true;
-	$scope.algorithmdata;
-	$scope.showalgorithm = true;
+	$scope.algorithmData;
+	$scope.showForm = true;
 	$scope.data = null;
-	$scope.showgraph = false
-	$scope.showgraphdiv = false
-	$scope.graphDataStatus = false
+	$scope.showGraphDiv = false
 	$scope.algorithm = {};
 	$scope.algorithm.versions = [];
 	$scope.isshowmodel = false;
@@ -31,8 +31,14 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	$scope.librarytypes = ["SPARKML", "R", "JAVA"];
 	$scope.paramtable = null;
 	//$scope.types = ["clustering", "classification", "regression", "simulation"];
-	$scope.types = ["CLUSTERING", "CLASSIFICATION", "REGRESSION", "SIMULATION",'MULTIVARIATENORMALDISTRIBUTION'];
+	$scope.types = ["CLUSTERING", "CLASSIFICATION", "REGRESSION", "SIMULATION"];
 	$scope.isDependencyShow = false;
+	var notify = {
+		type: 'success',
+		title: 'Success',
+		content: 'Dashboard deleted Successfully',
+		timeout: 3000 //time in ms
+	};
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['algorithm'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -40,82 +46,44 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.privileges = privilegeSvc.privileges['algorithm'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-	$scope.showAlgorithmPage = function () {
-		$scope.showalgorithm = true;
-		$scope.showgraph = false
-		$scope.graphDataStatus = false;
-		$scope.showgraphdiv = false
-	}
-	$scope.enableEdit = function (uuid, version) {
-		$scope.showAlgorithmPage()
-		$state.go('createalgorithm', {
-			id: uuid,
-			version: version,
-			mode: 'false'
-		});
-	}
-	$scope.showview = function (uuid, version) {
-		$scope.showAlgorithmPage()
-		$state.go('createalgorithm', {
-			id: uuid,
-			version: version,
-			mode: 'true'
-		});
-	}
-	var notify = {
-		type: 'success',
-		title: 'Success',
-		content: 'Dashboard deleted Successfully',
-		timeout: 3000 //time in ms
-	};
-	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+
+    $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 		console.log(fromParams)
 		$sessionStorage.fromStateName = fromState.name
 		$sessionStorage.fromParams = fromParams
 
 	});
 
-	$scope.orderByValue = function (value) {
-		return value;
-	};
-	$scope.$watch("isshowmodel", function (newvalue, oldvalue) {
-		$scope.isshowmodel = newvalue
-		sessionStorage.isshowmodel = newvalue
-	});
+	$scope.showGraph = function (uuid, version) {
+		$scope.showForm = false;
+		$scope.showGraphDiv = true;
+	}//End showGraph
 
-	$scope.addRow = function () {
-		if ($scope.paramtable == null) {
-			$scope.paramtable = [];
-		}
-		var paramjson = {}
-		paramjson.paramId = $scope.paramtable.length;
-		$scope.paramtable.splice($scope.paramtable.length, 0, paramjson);
+	$scope.showPage = function () {
+		$scope.showForm = true;
+		$scope.showGraphDiv = false
 	}
 
-	$scope.selectAllRow = function () {
-
-		angular.forEach($scope.paramtable, function (stage) {
-			stage.selected = $scope.selectallattribute;
+	$scope.enableEdit = function (uuid, version) {
+		$scope.showPage()
+		$state.go('createalgorithm', {
+			id: uuid,
+			version: version,
+			mode: 'false'
 		});
 	}
-	$scope.removeRow = function () {
-		var newDataList = [];
-		$scope.selectallattribute = false;
-		angular.forEach($scope.paramtable, function (selected) {
-			if (!selected.selected) {
-				newDataList.push(selected);
-			}
-		});
-		$scope.paramtable = newDataList;
+
+	$scope.showview = function (uuid, version) {
+		if(!$scope.isEdit){
+			$scope.showPage()
+			$state.go('createalgorithm', {
+				id: uuid,
+				version: version,
+				mode: 'true'
+			});
+	    }
 	}
-
-
-	$scope.showAlgorithmGraph = function (uuid, version) {
-		$scope.showalgorithm = false;
-		$scope.showgraph = false
-		$scope.graphDataStatus = true
-		$scope.showgraphdiv = true;
-	}//End showFunctionGraph
+	
 
 	$scope.getAllVersion = function (uuid) {
 		AlgorithmService.getAllVersionByUuid(uuid, "algorithm").then(function (response) { onGetAllVersionByUuid(response.data) });
@@ -134,7 +102,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.getAllVersion($stateParams.id)
 		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "algorithm").then(function (response) { onSuccessGetLatestByUuid(response.data) });
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.algorithmdata = response
+			$scope.algorithmData = response
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -145,7 +113,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			var onSuccessGetAllLatestParamlist = function (response) {
 				$scope.allparamlist = response;
 				var paramlist = {};
-				paramlist.uuid = $scope.algorithmdata.paramList.ref.uuid;
+				paramlist.uuid = $scope.algorithmData.paramList.ref.uuid;
 				paramlist.name = ""
 				$scope.selectparamlist = paramlist;
 
@@ -169,7 +137,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.selectlibrary = null;
 		AlgorithmService.getOneByUuidandVersion(uuid, version, 'algorithm').then(function (response) { onGetByOneUuidandVersion(response.data) });
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.algorithmdata = response
+			$scope.algorithmData = response
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -180,7 +148,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			var onSuccessGetAllLatestParamlist = function (response) {
 				$scope.allparamlist = response;
 				var paramlist = {};
-				paramlist.uuid = $scope.algorithmdata.paramList.ref.uuid;
+				paramlist.uuid = $scope.algorithmData.paramList.ref.uuid;
 				paramlist.name = ""
 				$scope.selectparamlist = paramlist;
 
@@ -190,22 +158,21 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	}
 
 	$scope.submitAlgorithm = function () {
-		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
 		$scope.myform.$dirty = false;
 		var algorithmJson = {}
-		algorithmJson.uuid = $scope.algorithmdata.uuid
-		algorithmJson.name = $scope.algorithmdata.name
-		algorithmJson.desc = $scope.algorithmdata.desc
-		algorithmJson.active = $scope.algorithmdata.active;
-		algorithmJson.savePmml = $scope.algorithmdata.savePmml;
-		algorithmJson.published = $scope.algorithmdata.published;
+		algorithmJson.uuid = $scope.algorithmData.uuid
+		algorithmJson.name = $scope.algorithmData.name
+		algorithmJson.desc = $scope.algorithmData.desc
+		algorithmJson.active = $scope.algorithmData.active;
+		algorithmJson.savePmml = $scope.algorithmData.savePmml;
+		algorithmJson.published = $scope.algorithmData.published;
 		algorithmJson.type = $scope.selecttype;
 		algorithmJson.library = $scope.selectlibrary;
-		algorithmJson.trainName = $scope.algorithmdata.trainName;
-		algorithmJson.modelName = $scope.algorithmdata.modelName;
-		algorithmJson.labelRequired = $scope.algorithmdata.labelRequired;
+		algorithmJson.trainName = $scope.algorithmData.trainName;
+		algorithmJson.modelName = $scope.algorithmData.modelName;
+		algorithmJson.labelRequired = $scope.algorithmData.labelRequired;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -224,7 +191,6 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
-			$scope.changemodelvalue();
 			notify.type = 'success',
 			notify.title = 'Success',
 			notify.content = 'Algorithm Saved Successfully'
@@ -233,8 +199,8 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		}
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}
@@ -245,9 +211,5 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			setTimeout(function () { $state.go("algorithm"); }, 2000);
 		}
 	}
-
-	$scope.changemodelvalue = function () {
-		$scope.isshowmodel = sessionStorage.isshowmodel
-	};
 
 });
