@@ -837,7 +837,7 @@ public class ModelServiceImpl {
 
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
-			String tableName = String.format("%s_%s_%s", model.getUuid(), model.getVersion(), predictExec.getVersion());
+			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Object result = null;
@@ -890,11 +890,9 @@ public class ModelServiceImpl {
 					model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
 					MetaType.algorithm.toString());
 
-			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(),
-					simulateExec.getVersion());
-			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(),
-					simulateExec.getVersion());
-			String tableName = String.format("%s_%s_%s", model.getUuid(), model.getVersion(), simulateExec.getVersion());
+			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
+			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
+			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 

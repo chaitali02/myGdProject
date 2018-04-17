@@ -904,9 +904,6 @@ public class SparkExecutor implements IExecutor {
 			// fieldArray = modelExecServiceImpl.getAttributeNames(model);
 
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.simulate.path"), filePath);
-
-			
-			tableName = tableName.replaceAll("-", "_");
 						
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				Distribution distribution = (Distribution) daoRegister.getRefObject(simulate.getDistributionTypeInfo().getRef());

@@ -113,7 +113,7 @@ public class SimulateMLOperator implements Serializable {
 			
 			builder.append(formulaOperator.generateSql(formula, null, null, null)).append(" AS ").append(model.getLabel());
 			builder.append(" FROM ");
-			builder.append(tableName.replaceAll("-", "_")).append(" ").append(aliaseName);
+			builder.append(tableName).append(" ").append(aliaseName);
 			
 			LOGGER.info("query : "+builder);
 		}
