@@ -63,7 +63,7 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		});
 	}
 	$scope.showview = function (uuid, version) {
-		if(!$scope.isEdit){
+		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('createparamset', {
 				id: uuid,
@@ -72,7 +72,7 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 			});
 		}
 	}
-	
+
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 		//console.log(fromParams)
 		$sessionStorage.fromStateName = fromState.name
@@ -132,7 +132,7 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 			}
 			$scope.paramtablecol = paramarray;
 			$scope.paramtable = [];
-			console.log(JSON.stringify($scope.paramtablecol))
+			//console.log(JSON.stringify($scope.paramtablecol))
 			$scope.isTabelShow = true;
 		}
 	}
@@ -158,7 +158,7 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		$scope.getAllVersion($stateParams.id)
 		ParamSetService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramset").then(function (response) { onSuccessGetLatestByUuid(response.data) });
 		var onSuccessGetLatestByUuid = function (response) {
-		//	console.log(JSON.stringify(response.paramSetValarray))
+			//	console.log(JSON.stringify(response.paramSetValarray))
 			$scope.paramsetdata = response.paramsetdata
 			var defaultversion = {};
 			defaultversion.version = response.paramsetdata.version;
@@ -187,6 +187,7 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		var onSuccessGetAllLatestParamlist = function (response) {
 			$scope.allparamlist = response;
 			$scope.selectparamlist = $scope.allparamlist[0];
+			$scope.onChangeParamSet();
 		}
 	}
 
@@ -265,15 +266,15 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
 			notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = 'Paramenter Set Saved Successfully'
+				notify.title = 'Success',
+				notify.content = 'Paramenter Set Saved Successfully'
 			$scope.$emit('notify', notify);
 			$scope.okparamsetsave();
 		}
 		var onError = function (response) {
 			notify.type = 'error',
-			notify.title = 'Error',
-			notify.content = "Some Error Occurred"
+				notify.title = 'Error',
+				notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}
