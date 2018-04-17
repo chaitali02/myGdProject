@@ -7,23 +7,25 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
   $scope.isTargetNameDisabled = false;
   $scope.dataLoading = false;
-  if ($stateParams.mode == 'true') {
-    $scope.isEdit = false;
-    $scope.isversionEnable = false;
+  if($stateParams.mode =='true'){
+    $scope.isEdit=false;
+    $scope.isversionEnable=false;
+    $scope.isAdd=false;
   }
-  else {
-    $scope.isEdit = true;
-    $scope.isversionEnable = true;
+  else if($stateParams.mode =='false'){
+    $scope.isEdit=true;
+    $scope.isversionEnable=true;
+    $scope.isAdd=false;
   }
-
+  else{
+    $scope.isAdd=true;
+  }
   $scope.mode = "false"
   $scope.isSubmitEnable = false;
-  $scope.Traindata;
-  $scope.showTrain = true;
+  $scope.trainData;
+  $scope.showForm = true;
   $scope.data = null;
-  $scope.showgraph = false
-  $scope.showgraphdiv = false
-  $scope.graphDataStatus = false
+  $scope.showGraphDiv = false
   $scope.Train = {};
   $scope.Train.versions = [];
   $scope.isshowTrain = false;
@@ -59,7 +61,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   });
 
   $scope.countContinue = function () {
-    if ($scope.Traindata.name != null || $scope.selectSourceType != null) {
+    if ($scope.trainData.name != null || $scope.selectSourceType != null) {
       $scope.continueCount = $scope.continueCount + 1;
       if ($scope.continueCount >= 3) {
         $scope.isSubmitShow = true;
@@ -75,21 +77,36 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
 
-  $scope.showTrainGraph = function (uuid, version) {
-    $scope.showTrain = false;
-    $scope.showgraph = false
-    $scope.graphDataStatus = true
-    $scope.showgraphdiv = true;
+  $scope.showGraph = function (uuid, version) {
+    $scope.showForm = false;
+    $scope.showGraphDiv = true;
   } //End showFunctionGraph
 
 
-  $scope.showTrainPage = function () {
-    $scope.showTrain = true;
-    $scope.showgraph = false
-    $scope.graphDataStatus = false;
-    $scope.showgraphdiv = false
+  $scope.showPage = function () {
+    $scope.showForm = true;
+    $scope.showGraphDiv = false
+  }
+  
+  $scope.enableEdit=function (uuid,version) {
+    $scope.showPage()
+    $state.go('createtrain', {
+      id: uuid,
+      version: version,
+      mode:'false'
+    });
   }
 
+  $scope.showview=function (uuid,version) {
+    if(!$scope.isEdit){
+      $scope.showPage()
+      $state.go('createtrain', {
+        id: uuid,
+        version: version,
+        mode:'true'
+      });
+    }     
+  }
 
   $scope.getAllLetestModel = function (defaultValue) {
     TrainService.getAllModelByType('N', "model").then(function (response) { onGetAllLatest(response.data) });
@@ -196,7 +213,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   $scope.getOneByUuidandVersion = function (uuid, version) {
     TrainService.getOneByUuidandVersion(uuid, version, "train").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
-      $scope.Traindata = response;
+      $scope.trainData = response;
       var selectModel = {}
       var defaultversion = {};
       defaultversion.version = response.version;
@@ -279,13 +296,13 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
     var TrainJson = {}
-    TrainJson.uuid = $scope.Traindata.uuid
-    TrainJson.name = $scope.Traindata.name
-    TrainJson.desc = $scope.Traindata.desc
-    TrainJson.active = $scope.Traindata.active;
-    TrainJson.published = $scope.Traindata.published;
-    TrainJson.valPercent = $scope.Traindata.valPercent;
-    TrainJson.trainPercent = $scope.Traindata.trainPercent;
+    TrainJson.uuid = $scope.trainData.uuid
+    TrainJson.name = $scope.trainData.name
+    TrainJson.desc = $scope.trainData.desc
+    TrainJson.active = $scope.trainData.active;
+    TrainJson.published = $scope.trainData.published;
+    TrainJson.valPercent = $scope.trainData.valPercent;
+    TrainJson.trainPercent = $scope.trainData.trainPercent;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -381,11 +398,11 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
 
   $scope.onChageTrainPercent = function () {
-    $scope.Traindata.valPercent = 100 - $scope.Traindata.trainPercent;
+    $scope.trainData.valPercent = 100 - $scope.trainData.trainPercent;
   }
 
   $scope.onChageValPercent = function () {
-    $scope.Traindata.trainPercent = 100 - $scope.Traindata.valPercent;
+    $scope.trainData.trainPercent = 100 - $scope.trainData.valPercent;
   }
 
 

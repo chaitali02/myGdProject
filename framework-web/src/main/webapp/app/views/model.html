@@ -39,20 +39,20 @@
           </div>
 
           <div class="actions">
-            <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showmodel==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+            <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
               ng-hide="isAdd" data-ng-click="enableEdit(modeldata.uuid,modeldata.version)">
                <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
            </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top"  ng-hide="isAdd" ng-class="(showmodel==true || isEdit==true)? 'currentpage':'notcurrentpage'"
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top"  ng-hide="isAdd" ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
               tooltip  data-ng-click="showview(modeldata.uuid,modeldata.version)">
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip"
-              data-placement="top" ng-show="isDependencyShow" ng-class="showmodel==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(modeldata.uuid,modeldata.version)">
+              data-placement="top" ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(modeldata.uuid,modeldata.version)">
               <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
             </a>
             <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " ng-click="broadcastRefreshData()" data-original-title=""
-              title="" ng-class="showgraphdiv ==false? 'currentpage':'notcurrentpage'"   >
+              title="" ng-class="showGraphDiv ==false? 'currentpage':'notcurrentpage'"   >
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>  
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
@@ -64,7 +64,7 @@
         </div>
 
         <div class="portlet-body form">
-          <div class="form-body graph-body" ng-if="showgraphdiv">
+          <div class="form-body graph-body" ng-if="showGraphDiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
               <div class="bounce1"></div>
@@ -75,7 +75,7 @@
             </div>
           </div>
 
-          <div class="form-wizard" ng-show="showmodel">
+          <div class="form-wizard" ng-show="showForm">
             <div class="form-body" style="padding-top: 20px;">
               <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                 <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">

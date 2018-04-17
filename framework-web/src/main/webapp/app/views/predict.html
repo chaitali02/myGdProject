@@ -17,7 +17,7 @@
                   <i class="fa fa-circle"></i>
                 </li>
                 <li>
-                  <span>{{predictdata.name | strReplace:'_':' '|capitalize}}</span>
+                  <span>{{predictData.name | strReplace:'_':' '|capitalize}}</span>
                 </li>
               </ul>
               <div class="page-toolbar">
@@ -40,14 +40,18 @@
                     </div>
     
                   <div class="actions">
-                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showmodel==true? 'currentpage':'notcurrentpage'" data-ng-click="showPredictPage()">
+                    <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+                        ng-hide="isAdd" data-ng-click="enableEdit(predictData.uuid,predictData.version)">
+                        <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+                    </a>
+                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip   ng-hide="isAdd" ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'" data-ng-click="showview(predictData.uuid,predictData.version)">
                         <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                     </a>
-                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" ng-class="showmodel==false? 'currentpage':'notcurrentpage'" data-ng-click="showPredictGraph(predictdata.uuid,predictdata.version)">
+                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(predictData.uuid,predictData.version)">
                       <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
                     </a>
                     <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " ng-click="broadcastRefreshData()" data-original-title="" title="">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0" ng-class="showGraphDiv ==false? 'currentpage':'notcurrentpage'"></i>
                     </a>
                     <a class="btn btn-circle btn-icon-only btn-default "ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top" tooltip>
                       <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
@@ -56,18 +60,18 @@
                 </div>
                 
                 <div class="portlet-body form">
-                    <div class="form-body graph-body" ng-if="showgraphdiv">
+                    <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
                             <div class="bounce1"></div>
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="predictdata.uuid" version="predict.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="predictData.uuid" version="predict.defaultVersion.version">
                     </div>
                   </div>
     
-                <div class="form-wizard" ng-show="showPredict">
+                <div class="form-wizard" ng-show="showFrom">
                     <div class="form-body" style="padding-top: 20px;">
                         <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                             <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">
@@ -103,10 +107,10 @@
                             <!--Start Tab1-->
                             <div class="tab-pane" id="tab1" ng-class="{'active' : continueCount == 1}">
                                 <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate">
-                                    <div class="form-group" ng-show="predictdata.uuid">
+                                    <div class="form-group" ng-show="predictData.uuid">
                                         <label class="col-md-3 control-label">UUID</label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" data-ng-disabled="true" ng-model="predictdata.uuid">
+                                            <input type="text" class="form-control" data-ng-disabled="true" ng-model="predictData.uuid">
                                         </div>
                                     </div>
                                     
@@ -115,11 +119,11 @@
                                             <span class="required" aria-required="true"> * </span>
                                         </label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="predictdata.name" required>
+                                            <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="predictData.name" required>
                                         </div>
                                     </div>
             
-                                    <div class="form-group" ng-show="predictdata.uuid">
+                                    <div class="form-group" ng-show="predictData.uuid">
                                         <label class="col-md-3 control-label">Version</label>
                                         <div class="col-md-6">
                                             <select class="form-control" select2 name="version"  ng-disabled="{{isversionEnable}}" ng-change="selectVersion(predict.defaultVersion.uuid,predict.defaultVersion.version)" data-ng-model="predict.defaultVersion.version" ng-options="c.version as c.version for c in predict.versions">
@@ -127,17 +131,17 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="form-group" ng-show="predictdata.uuid">
+                                    <div class="form-group" ng-show="predictData.uuid">
                                         <label class="col-md-3 control-label">CreatedBy</label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" ng-disabled="true" ng-model="predictdata.createdBy.ref.name">
+                                            <input type="text" class="form-control" ng-disabled="true" ng-model="predictData.createdBy.ref.name">
                                         </div>
                                     </div>
                                     
-                                    <div class="form-group" ng-show="predictdata.uuid">
+                                    <div class="form-group" ng-show="predictData.uuid">
                                         <label class="col-md-3 control-label">CreatedOn</label>
                                         <div class="col-md-6">
-                                            <input type="text" ng-model="predictdata.createdOn" ng-disabled="true" class="form-control">
+                                            <input type="text" ng-model="predictData.createdOn" ng-disabled="true" class="form-control">
                                         </div>
                                     </div>
                                     
@@ -151,16 +155,16 @@
                                     <div class="form-group">
                                         <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                                         <div class="col-md-6">
-                                            <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="predictdata.desc" rows="2"  style="resize:none;"></textarea>
+                                            <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="predictData.desc" rows="2"  style="resize:none;"></textarea>
                                         </div>
                                     </div>
             
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div class="btn-group" ng-init="predictdata.active='Y'">
-                                                <label class="btn btn-default" ng-model="predictdata.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                                <label class="btn btn-default" ng-model="predictdata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                            <div class="btn-group" ng-init="predictData.active='Y'">
+                                                <label class="btn btn-default" ng-model="predictData.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                                <label class="btn btn-default" ng-model="predictData.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                             </div>
                                         </div>
                                     </div>
@@ -168,9 +172,9 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div class="btn-group" ng-init="predictdata.published='N'">
-                                                <label class="btn btn-default" ng-model="predictdata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                                <label class="btn btn-default" ng-model="predictdata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                            <div class="btn-group" ng-init="predictData.published='N'">
+                                                <label class="btn btn-default" ng-model="predictData.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                                <label class="btn btn-default" ng-model="predictData.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                             </div>
                                         </div>
                                     </div>

@@ -10,21 +10,23 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   if($stateParams.mode =='true'){
     $scope.isEdit=false;
     $scope.isversionEnable=false;
+    $scope.isAdd=false;
   }
-  else{
+  else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
+    $scope.isAdd=false;
   }
-  
+  else{
+    $scope.isAdd=true;
+  }
   $scope.mode="false"
   
   $scope.isSubmitEnable = false;
-  $scope.predictdata;
-  $scope.showPredict = true;
+  $scope.predictData;
+  $scope.showFrom = true;
   $scope.data = null;
-  $scope.showgraph = false
-  $scope.showgraphdiv = false
-  $scope.graphDataStatus = false
+  $scope.showGraphDiv = false
   $scope.predict = {};
   $scope.predict.versions = [];
   $scope.isshowPredict = false;
@@ -60,7 +62,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   });
    
   $scope.countContinue = function() {
-    if($scope.predictdata.name!=null || $scope.selectSourceType!=null){
+    if($scope.predictData.name!=null || $scope.selectSourceType!=null){
       $scope.continueCount = $scope.continueCount + 1;
       if ($scope.continueCount >= 3) {
         $scope.isSubmitShow = true;
@@ -76,21 +78,36 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   }
 
  
-  $scope.showPredictGraph = function(uuid, version) {
-    $scope.showPredict = false;
-    $scope.showgraph = false
-    $scope.graphDataStatus = true
-    $scope.showgraphdiv = true;
+  $scope.showGraph = function(uuid, version) {
+    $scope.showFrom = false;
+    $scope.showGraphDiv = true;
   } //End showFunctionGraph
 
 
-  $scope.showPredictPage = function() {
-    $scope.showPredict = true;
-    $scope.showgraph = false
-    $scope.graphDataStatus = false;
-    $scope.showgraphdiv = false
+  $scope.showPage = function() {
+    $scope.showFrom = true;
+    $scope.showGraphDiv = false
   }
   
+  $scope.enableEdit=function (uuid,version) {
+    $scope.showPage()
+    $state.go('createpredict', {
+      id: uuid,
+      version: version,
+      mode:'false'
+    });
+  }
+
+  $scope.showview=function (uuid,version) {
+    if(!$scope.isEdit){
+      $scope.showPage()
+      $state.go('createpredict', {
+        id: uuid,
+        version: version,
+        mode:'true'
+      });
+    }     
+  }
 
   $scope.getAllLetestModel=function(defaultValue){
     PredictService.getAllModelByType("N","model").then(function(response) { onGetAllLatest(response.data)});
@@ -198,7 +215,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   $scope.getOneByUuidandVersion=function(uuid,version){
     PredictService.getOneByUuidandVersion(uuid,version,"predict").then(function(response){ onSuccessGetLatestByUuid(response.data)});
     var onSuccessGetLatestByUuid = function(response) {
-      $scope.predictdata = response;
+      $scope.predictData = response;
       var selectModel={}
       var defaultversion = {};
       defaultversion.version = response.version;
@@ -281,11 +298,11 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
     var predictJson = {}
-    predictJson.uuid = $scope.predictdata.uuid
-    predictJson.name = $scope.predictdata.name
-    predictJson.desc = $scope.predictdata.desc
-    predictJson.active = $scope.predictdata.active;
-    predictJson.published=$scope.predictdata.published; 
+    predictJson.uuid = $scope.predictData.uuid
+    predictJson.name = $scope.predictData.name
+    predictJson.desc = $scope.predictData.desc
+    predictJson.active = $scope.predictData.active;
+    predictJson.published=$scope.predictData.published; 
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

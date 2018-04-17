@@ -22,18 +22,15 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   }
   $scope.isSubmitEnable = true;
   $scope.modeldata;
-  $scope.showmodel = true;
+  $scope.showForm = true;
   $scope.data = null;
-  $scope.showgraph = false
-  $scope.showgraphdiv = false
-  $scope.graphDataStatus = false
+  $scope.showGraphDiv = false
   $scope.model = {};
   $scope.model.versions = [];
   $scope.isshowmodel = false;
   //$scope.SourceTypes = ["datapod", "dataset"];
   $scope.dependsOnType= ["algorithm", "formula"];
   $scope.selectedDependsOnType=$scope.dependsOnType[0];
-  $scope.paramtable = null;
   $scope.type = ["string", "double", "date"];
   $scope.scriptTypes= ["SPARK","PYTHON", "R"];
   $scope.scriptType="SPARK"
@@ -41,11 +38,9 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
   $scope.backCount;
-  $scope.isTabelShow = false;
   $scope.isLabelDisable = true;
   $scope.isDependencyShow = false;
-  $scope.slectAllRow=false;
-
+  
   var notify = {
     type: 'success',
     title: 'Success',
@@ -86,22 +81,18 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   }
 
   $scope.showGraph = function(uuid, version) {
-    $scope.showmodel = false;
-    $scope.showgraph = false
-    $scope.graphDataStatus = true
-    $scope.showgraphdiv = true;
+    $scope.showForm = false;
+    $scope.showGraphDiv = true;
 
   }//End showFunctionGraph
 
 
-  $scope.showDetailPage = function() {
-    $scope.showmodel = true;
-    $scope.showgraph = false
-    $scope.graphDataStatus = false;
-    $scope.showgraphdiv = false
+  $scope.showPage = function() {
+    $scope.showForm = true;
+    $scope.showGraphDiv = false
   }
   $scope.enableEdit=function (uuid,version) {
-    $scope.showDetailPage()
+    $scope.showPage()
     $state.go('createmodel', {
       id: uuid,
       version: version,
@@ -111,7 +102,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
 
   $scope.showview=function (uuid,version) {
     if(!$scope.isEdit){
-      $scope.showDetailPage()
+      $scope.showPage()
       $state.go('createmodel', {
         id: uuid,
         version: version,
@@ -631,117 +622,6 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     $scope.isshowmodel = sessionStorage.isshowmodel
   };
 
-  // $scope.changeCheckboxExecution = function() {
-  //   if ($scope.checkboxModelexecution == "YES" && !$scope.checkboxCustom) {
-  //     ModelService.getParamSetByAlgorithm($scope.selectalgorithm.uuid, $scope.selectalgorithm.version).then(function(response) {onSuccessGetParamSetByAlgorithm(response.data)});
-  //     var onSuccessGetParamSetByAlgorithm = function(response) {
-  //       $scope.allparamset = response
-  //       $scope.isShowExecutionparam = true;
-
-  //     }
-  //   }else {
-  //     $scope.isShowExecutionparam = false;
-  //     $scope.allparamset = null;
-  //   }
-  // }
-  // $scope.selectAllRow = function() {
-
-  //   angular.forEach($scope.paramtable, function(stage) {
-  //     stage.selected = $scope.selectallattribute;
-  //   });
-  // }
-  // $scope.modelExecute = function(modeldetail) {
-  //   $scope.newDataList = [];
-  //   $scope.selectallattribute = false;
-  //   angular.forEach($scope.paramtable, function(selected) {
-  //     if (selected.selected) {
-  //       $scope.newDataList.push(selected);
-  //     }
-  //   });
-  //   var paramInfoArray = [];
-  //   if ($scope.newDataList.length > 0) {
-  //     var execParams = {}
-  //     var ref = {}
-  //     ref.uuid = $scope.paramsetdata.uuid;
-  //     ref.version = $scope.paramsetdata.version;
-  //     for (var i = 0; i < $scope.newDataList.length; i++) {
-  //       var paraminfo = {};
-  //       paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
-  //       paraminfo.ref = ref;
-  //       paramInfoArray[i] = paraminfo;
-  //     }
-  //   }
-  //   if (paramInfoArray.length > 0) {
-  //     execParams.paramInfo = paramInfoArray;
-  //   } else {
-  //     execParams = null
-  //   }
-  //   console.log(JSON.stringify(execParams));
-  //   ModelService.getExecuteModel(modeldetail.uuid, modeldetail.version, execParams).then(function(response) {
-  //     onSuccessGetExecuteModel(response.data)
-  //   });
-  //   var onSuccessGetExecuteModel = function(response) {
-  //     console.log(JSON.stringify(response));
-  //     $scope.modelmessage = "Model Saved and Submited Successfully"
-  //     notify.type='success',
-  //     notify.title= 'Success',
-  //    notify.content=$scope.modelmessage;
-  //    $scope.$emit('notify', notify);
-  //    $scope.okmodelsave();
-  //   }
-  // }
-  // $scope.onSelectparamSet = function() {
-  //   var paramSetjson = {};
-  //   var paramInfoArray = [];
-  //   if ($scope.paramsetdata != null) {
-  //     for (var i = 0; i < $scope.paramsetdata.paramInfo.length; i++) {
-  //       var paramInfo = {};
-  //       paramInfo.paramSetId = $scope.paramsetdata.paramInfo[i].paramSetId
-  //       var paramSetValarray = [];
-  //       for (var j = 0; j < $scope.paramsetdata.paramInfo[i].paramSetVal.length; j++) {
-  //         var paramSetValjson = {};
-  //         paramSetValjson.paramId = $scope.paramsetdata.paramInfo[i].paramSetVal[j].paramId;
-  //         paramSetValjson.paramName = $scope.paramsetdata.paramInfo[i].paramSetVal[j].paramName;
-  //         paramSetValjson.value = $scope.paramsetdata.paramInfo[i].paramSetVal[j].value;
-  //         paramSetValjson.ref = $scope.paramsetdata.paramInfo[i].paramSetVal[j].ref;
-  //         paramSetValarray[j] = paramSetValjson;
-  //         paramInfo.paramSetVal = paramSetValarray;
-  //         paramInfo.value = $scope.paramsetdata.paramInfo[i].paramSetVal[j].value;
-  //       }
-  //       paramInfoArray[i] = paramInfo;
-  //     }
-  //     $scope.paramtablecol = paramInfoArray[0].paramSetVal;
-  //     $scope.paramtable = paramInfoArray;
-  //     paramSetjson.paramInfoArray = paramInfoArray;
-  //     $scope.isTabelShow = true;
-  //   } else {
-  //     $scope.isTabelShow = false;
-  //   }
-  // }
-  // $scope.addRow = function() {
-  //   if ($scope.paramtable == null) {
-  //     $scope.paramtable = [];
-  //   }
-  //   var paramjson = {}
-  //   paramjson.paramId = $scope.paramtable.length;
-  //   $scope.paramtable.splice($scope.paramtable.length, 0, paramjson);
-  // }
-
-  // $scope.selectAllRow = function() {
-  //   angular.forEach($scope.paramtable, function(stage) {
-  //     stage.selected = $scope.selectallattribute;
-  //   });
-  // }
-  // $scope.removeRow = function() {
-  //   var newDataList = [];
-  //   $scope.selectallattribute = false;
-  //   angular.forEach($scope.paramtable, function(selected) {
-  //     if (!selected.selected) {
-  //       newDataList.push(selected);
-  //     }
-  //   });
-  //   $scope.paramtable = newDataList;
-  // }
 
 }); //End CreateModelController
 

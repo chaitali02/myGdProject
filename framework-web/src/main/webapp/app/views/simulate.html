@@ -16,7 +16,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>{{Simulatedata.name | strReplace:'_':' '|capitalize}}</span>
+                        <span>{{simulateData.name | strReplace:'_':' '|capitalize}}</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -25,8 +25,7 @@
                         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
                     </div>
                 </div>
-            </div>
-            <!-- END PAGE HEADER-->
+            </div><!-- END PAGE HEADER-->
             <br>
             <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
 
@@ -40,17 +39,21 @@
                     </div>
 
                     <div class="actions">
+                        <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+                            ng-hide="isAdd" data-ng-click="enableEdit(simulateData.uuid,simulateData.version)">
+                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+                        </a>
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="showmodel==true? 'currentpage':'notcurrentpage'" data-ng-click="showSimulatePage()">
+                            tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" data-ng-click="showview(simulateData.uuid,simulateData.version)">
                             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip"
-                            data-placement="top" ng-show="isDependencyShow" ng-class="showmodel==false? 'currentpage':'notcurrentpage'"
-                            data-ng-click="showSimulateGraph(Simulatedata.uuid,Simulatedata.version)">
+                            data-placement="top" ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+                            data-ng-click="showFormGraph(simulateData.uuid,simulateData.version)">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
                         </a>
                         <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " ng-click="broadcastRefreshData()" data-original-title=""
-                            title="">
+                            title="" ng-class="showGraphDiv ==false? 'currentpage':'notcurrentpage'" >
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
                         <a class="btn btn-circle btn-icon-only btn-default " ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
@@ -61,18 +64,18 @@
                 </div>
 
                 <div class="portlet-body form">
-                    <div class="form-body graph-body" ng-if="showgraphdiv">
+                    <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
                             <div class="bounce1"></div>
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="Simulatedata.uuid" version="Simulate.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="simulateData.uuid" version="Simulate.defaultVersion.version">
                         </div>
                     </div>
 
-                    <div class="form-wizard" ng-show="showSimulate">
+                    <div class="form-wizard" ng-show="showForm">
                         <div class="form-body" style="padding-top: 20px;">
                             <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                                 <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">
@@ -108,10 +111,10 @@
                                 <!--Start Tab1-->
                                 <div class="tab-pane" id="tab1" ng-class="{'active' : continueCount == 1}">
                                     <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate">
-                                        <div class="form-group" ng-show="Simulatedata.uuid">
+                                        <div class="form-group" ng-show="simulateData.uuid">
                                             <label class="col-md-3 control-label">UUID</label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" data-ng-disabled="true" ng-model="Simulatedata.uuid">
+                                                <input type="text" class="form-control" data-ng-disabled="true" ng-model="simulateData.uuid">
                                             </div>
                                         </div>
 
@@ -120,11 +123,11 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="Simulatedata.name" required>
+                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="simulateData.name" required>
                                             </div>
                                         </div>
 
-                                        <div class="form-group" ng-show="Simulatedata.uuid">
+                                        <div class="form-group" ng-show="simulateData.uuid">
                                             <label class="col-md-3 control-label">Version</label>
                                             <div class="col-md-6">
                                                 <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion(Simulate.defaultVersion.uuid,Simulate.defaultVersion.version)"
@@ -133,17 +136,17 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group" ng-show="Simulatedata.uuid">
+                                        <div class="form-group" ng-show="simulateData.uuid">
                                             <label class="col-md-3 control-label">CreatedBy</label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" ng-disabled="true" ng-model="Simulatedata.createdBy.ref.name">
+                                                <input type="text" class="form-control" ng-disabled="true" ng-model="simulateData.createdBy.ref.name">
                                             </div>
                                         </div>
 
-                                        <div class="form-group" ng-show="Simulatedata.uuid">
+                                        <div class="form-group" ng-show="simulateData.uuid">
                                             <label class="col-md-3 control-label">CreatedOn</label>
                                             <div class="col-md-6">
-                                                <input type="text" ng-model="Simulatedata.createdOn" ng-disabled="true" class="form-control">
+                                                <input type="text" ng-model="simulateData.createdOn" ng-disabled="true" class="form-control">
                                             </div>
                                         </div>
 
@@ -157,16 +160,16 @@
                                         <div class="form-group">
                                             <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                                             <div class="col-md-6">
-                                                <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="Simulatedata.desc" rows="2" style="resize:none;"></textarea>
+                                                <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="simulateData.desc" rows="2" style="resize:none;"></textarea>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <div class="btn-group" ng-init="Simulatedata.active='Y'">
-                                                    <label class="btn btn-default" ng-model="Simulatedata.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                                    <label class="btn btn-default" ng-model="Simulatedata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                                <div class="btn-group" ng-init="simulateData.active='Y'">
+                                                    <label class="btn btn-default" ng-model="simulateData.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="simulateData.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -174,9 +177,9 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <div class="btn-group" ng-init="Simulatedata.published='N'">
-                                                    <label class="btn btn-default" ng-model="Simulatedata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                                    <label class="btn btn-default" ng-model="Simulatedata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                                <div class="btn-group" ng-init="simulateData.published='N'">
+                                                    <label class="btn btn-default" ng-model="simulateData.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="simulateData.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -382,7 +385,7 @@
                                                 <!-- <span class="required" aria-required="true"> * </span> -->
                                             </label>
                                             <div class="col-md-2">
-                                                <input type="number" limit-to="4" class="form-control" ng-disabled="{{mode}}" ng-model="Simulatedata.numIterations" max="1000" required>
+                                                <input type="number" limit-to="4" class="form-control" ng-disabled="{{mode}}" ng-model="simulateData.numIterations" max="1000" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -390,7 +393,7 @@
                                                 <!-- <span class="required" aria-required="true"> * </span> -->
                                             </label>
                                             <div class="col-md-2">
-                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="Simulatedata.seed" ng-init="generateRadomValue()">
+                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="simulateData.seed" ng-init="generateRadomValue()">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -422,23 +425,16 @@
                                             </div>
                                         </div>
                                     </form>
-                                </div>
-                                <!-- End Tab3 -->
-
-                            </div>
-                            <!--End tab-content-->
-                        </div>
-                        <!--End form-body-->
-
+                                </div> <!-- End Tab3 -->
+                            </div><!--End tab-content-->
+                        </div><!--End form-body-->
                     </div>
-                </div>
-                <!--End form-wizard-->
+                </div> <!--End form-wizard-->
                 </form>
             </div>
         </div>
     </div>
-</div>
-<!--End Row-->
+</div><!--End Row-->
 </div>
 <br>
 <br>

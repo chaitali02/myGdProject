@@ -11,20 +11,21 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
   if($stateParams.mode =='true'){
     $scope.isEdit=false;
     $scope.isversionEnable=false;
+    $scope.isAdd=false;
   }
-  else{
+  else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
+    $scope.isAdd=false;
   }
-  
-  
+  else{
+    $scope.isAdd=true;
+  }
   $scope.isSubmitEnable = false;
-  $scope.Simulatedata;
-  $scope.showSimulate = true;
+  $scope.simulateData;
+  $scope.showForm = true;
   $scope.data = null;
-  $scope.showgraph = false
-  $scope.showgraphdiv = false
-  $scope.graphDataStatus = false
+  $scope.showGraphDiv = false
   $scope.Simulate = {};
   
   $scope.Simulate.versions = [];
@@ -63,11 +64,11 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
 
   });
   $scope.generateRadomValue=function(){
-    $scope.Simulatedata.seed= Math.floor(1000 + Math.random() * 9000);
-    $scope.Simulatedata.numIterations=1000;
+    $scope.simulateData.seed= Math.floor(1000 + Math.random() * 9000);
+    $scope.simulateData.numIterations=1000;
   }
   $scope.countContinue = function() {
-    if($scope.Simulatedata.name!=null || $scope.selectSourceType!=null){
+    if($scope.simulateData.name!=null || $scope.selectSourceType!=null){
       $scope.continueCount = $scope.continueCount + 1;
       if ($scope.continueCount >= 3) {
         $scope.isSubmitShow = true;
@@ -82,22 +83,36 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     $scope.isSubmitShow = false;
   }
 
- 
-  $scope.showSimulateGraph = function(uuid, version) {
-    $scope.showSimulate = false;
-    $scope.showgraph = false
-    $scope.graphDataStatus = true
-    $scope.showgraphdiv = true;
+  $scope.showGraph = function(uuid, version) {
+    $scope.showForm = false;
+    $scope.showGraphDiv = true;
   } //End showFunctionGraph
 
 
-  $scope.showSimulatePage = function() {
-    $scope.showSimulate = true;
-    $scope.showgraph = false
-    $scope.graphDataStatus = false;
-    $scope.showgraphdiv = false
+  $scope.showPage = function() {
+    $scope.showForm = true;
+    $scope.showGraphDiv = false
   }
-  
+
+  $scope.enableEdit=function (uuid,version) {
+    $scope.showPage()
+    $state.go('createsimulate', {
+      id: uuid,
+      version: version,
+      mode:'false'
+    });
+  }
+
+  $scope.showview=function (uuid,version) {
+    if(!$scope.isEdit){
+      $scope.showPage()
+      $state.go('createsimulate', {
+        id: uuid,
+        version: version,
+        mode:'true'
+      });
+    }     
+  }
 
   $scope.getAllLetestModel=function(defaultValue){
     SimulateService.getAllModelByType("N","model").then(function(response) { onGetAllLatest(response.data)});
@@ -212,7 +227,7 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
   $scope.getOneByUuidandVersion=function(uuid,version){
     SimulateService.getOneByUuidandVersion(uuid,version,"simulate").then(function(response){ onSuccessGetLatestByUuid(response.data)});
     var onSuccessGetLatestByUuid = function(response) {
-      $scope.Simulatedata = response;
+      $scope.simulateData = response;
       var selectModel={}
       var defaultversion = {};
       defaultversion.version = response.version;
@@ -297,13 +312,13 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
     var SimulateJson = {}
-    SimulateJson.uuid = $scope.Simulatedata.uuid
-    SimulateJson.name = $scope.Simulatedata.name
-    SimulateJson.desc = $scope.Simulatedata.desc
-    SimulateJson.active = $scope.Simulatedata.active;
-    SimulateJson.published=$scope.Simulatedata.published; 
-    SimulateJson.numIterations=$scope.Simulatedata.numIterations;
-    SimulateJson.seed=$scope.Simulatedata.seed;
+    SimulateJson.uuid = $scope.simulateData.uuid
+    SimulateJson.name = $scope.simulateData.name
+    SimulateJson.desc = $scope.simulateData.desc
+    SimulateJson.active = $scope.simulateData.active;
+    SimulateJson.published=$scope.simulateData.published; 
+    SimulateJson.numIterations=$scope.simulateData.numIterations;
+    SimulateJson.seed=$scope.simulateData.seed;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
