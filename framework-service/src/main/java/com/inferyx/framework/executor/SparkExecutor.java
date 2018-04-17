@@ -922,7 +922,7 @@ public class SparkExecutor implements IExecutor {
 				sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 				String sql = simulateMLOperator.parse(simulate, model, assembledDf, fieldArray, tableName, filePathUrl, filePath);
 				logger.info("Parsed sql : " + sql);
-			return simulateMLOperator.execute(sql, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
+				return simulateMLOperator.execute(sql, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				
 				TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
