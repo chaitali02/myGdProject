@@ -16,7 +16,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   var notify = {
     type: 'success',
     title: 'Success',
-    content: 'Dashboard deleted Successfully',
+    content: '',
     timeout: 3000 //time in ms
   };
 
@@ -53,15 +53,13 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   }
 
   $scope.showPage = function() {
-    $scope.showRule = true;
     $scope.showForm = true
-    $scope.showgraph = false
+    $scope.showGraphDiv = false
   }
   
   $scope.showGraph = function(uuid, version) {
-    $scope.showRule = false;
     $scope.showForm = false
-    $scope.showgraph = true;
+    $scope.showGraphDiv = true;
   };
   $scope.enableEdit=function (uuid,version) {
     $scope.showPage()
@@ -72,13 +70,15 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     });
   }
   $scope.showview=function (uuid,version) {
-    $scope.showPage()
-    var name=dagMetaDataService.elementDefs['recon'].listState
-    $state.go('createreconerule', {
-      id: uuid,
-      version: version,
-      mode:'true'
-    });
+    if(!$scope.isEdit){
+      $scope.showPage()
+      var name=dagMetaDataService.elementDefs['recon'].listState
+      $state.go('createreconerule', {
+        id: uuid,
+        version: version,
+        mode:'true'
+      });
+    }
   }
 
   $scope.countBack = function() {
@@ -578,8 +578,8 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 	else{
 	$scope.isAdd=true;
 	}
-  $scope.showRuleGroup = true;
-  $scope.showRuleGroupForm = true;
+  $scope.showForm = true;
+
   $scope.mode = " ";
   $scope.rulegroup = {};
   $scope.rulegroup.versions = []
@@ -594,7 +594,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   var notify = {
     type: 'success',
     title: 'Success',
-    content: 'Dashboard deleted Successfully',
+    content: '',
     timeout: 3000 //time in ms
   };
   $scope.close = function() {
@@ -607,22 +607,19 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
       $state.go($scope.statedetail.name, $scope.statedetail.params)
     }
   }
-  $scope.showRulGroupePage = function() {
-    $scope.showRuleGroup = true;
-    $scope.showgraphdiv = false;
-    $scope.graphDataStatus = false;
-    $scope.showRuleGroupForm = true;
+  $scope.showPage = function() {
+    $scope.showForm = true;
+    $scope.showGraphDiv = false;
+  
   }
 
-  $scope.showRuleGroupGraph = function(uuid, version) {
-    $scope.showRuleGroup = false;
-    $scope.showgraphdiv = true;
-    $scope.graphDataStatus = true;
-    $scope.showRuleGroupForm = false;
+  $scope.showGraph = function(uuid, version) {
+    $scope.showForm = false;
+    $scope.showGraphDiv = true;
   }
 
   $scope.enableEdit=function (uuid,version) {
-    $scope.showRulGroupePage()
+    $scope.showPage()
     $state.go('createreconerulegroup', {
       id: uuid,
       version: version,
@@ -631,12 +628,14 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   }
 
   $scope.showview=function (uuid,version) {
-    $scope.showRulGroupePage()
-    $state.go('createreconerulegroup', {
-      id: uuid,
-      version: version,
-      mode:'true'
-    });
+    if(!$scope.isEdit){
+      $scope.showPage()
+      $state.go('createreconerulegroup', {
+        id: uuid,
+        version: version,
+        mode:'true'
+      });
+   }
   }
 
   RuleGroupService.getAllLatest('recon').then(function(response) {onSuccess(response.data)});
@@ -811,7 +810,7 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
   var notify = {
     type: 'success',
     title: 'Success',
-    content: 'Dashboard deleted Successfully',
+    content: '',
     timeout: 3000 //time in ms
   };
   $scope.getGridStyle = function () {
@@ -992,6 +991,9 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
   }
 
   $scope.downloadFile = function(data) {
+    if($scope.isD3RuleEexecGraphShow){
+      return false;
+    }
     var uuid = data.uuid;
     var version=data.version;
     var url=$location.absUrl().split("app")[0]

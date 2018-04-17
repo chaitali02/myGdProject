@@ -46,11 +46,12 @@
                             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip"
-                            data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showRule==false? 'currentpage':'notcurrentpage'"
+                            data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph()">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
                         </a>
-                        <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" title="" ng-class="showForm ==true? 'currentpage':'notcurrentpage'">
+                        <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" title=""
+                            ng-class="showForm ==true? 'currentpage':'notcurrentpage'">
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-click="close()" title="Close" data-toggle="tooltip"
@@ -61,7 +62,7 @@
                 </div>
 
                 <div class="portlet-body form">
-                    <div class="form-body graph-body" ng-if="showgraph">
+                    <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
                             <div class="bounce1"></div>
@@ -70,7 +71,7 @@
                         </div>
                         <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="reconruledata.uuid" version="rule.defaultVersion.version"></div>
                     </div>
-                    <div class="form-wizard" ng-show="showForm" >
+                    <div class="form-wizard" ng-show="showForm">
                         <div class="form-body" style="padding-top: 20px;">
                             <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                                 <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">
@@ -109,17 +110,17 @@
                             </div>
                             <div class="tab-content">
                                 <!--Start Tab1-->
-                                
+
                                 <div class="tab-pane" id="tab1" ng-class="{'active' : continueCount == 1}">
                                     <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate">
-                                        
+
                                         <div class="form-group" ng-show="reconruledata.uuid">
                                             <label class="control-label col-md-3">UUID</label>
                                             <div class="col-md-6">
                                                 <input type="text" class="form-control" ng-model="reconruledata.uuid" ng-disabled="true">
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Name
                                                 <span class="required" aria-required="true"> * </span>
@@ -128,7 +129,7 @@
                                                 <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="reconruledata.name" required>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group" ng-show="reconruledata.uuid">
                                             <label class="col-md-3 control-label">Version</label>
                                             <div class="col-md-6">
@@ -144,7 +145,7 @@
                                                 <input type="text" class="form-control" ng-model="reconruledata.createdBy.ref.name" ng-disabled="true">
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group" ng-show="reconruledata.uuid">
                                             <label class="control-label col-md-3">Created On</label>
                                             <div class="col-md-6">
@@ -175,7 +176,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -207,7 +208,8 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select class="form-control" ng-change="onChangeSourceType()" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"required>
+                                                <select class="form-control" ng-change="onChangeSourceType()" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"
+                                                    required>
                                                 </select>
                                             </div>
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name
@@ -249,32 +251,23 @@
                                                         <div class="x_title" style="padding:10px;">
                                                             <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeSourceFilterRow()"
                                                                 ng-disabled="isButtonEnaple"></button>
-                                                            <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addSourceFilterRow();" ng-disabled="isButtonEnaple"></button>
+                                                            <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addSourceFilterRow();"
+                                                                ng-disabled="isButtonEnaple"></button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="portlet-body">
                                                 <div class="">
-                                                    <!-- <div>
-                                                        <modal ng-show="showModal1" visible="showModal1" on-sown="modalOneShown()" on-hide="modalOneHide()">
-                                                            <modal-header title="Warning"></modal-header>
-                                                            <modal-body>
-                                                                <span>Do you want remove LHS attributes ?</span>
-                                                            </modal-body>
-                                                            <modal-footer>
-                                                                <button type="button" class="btn btn-success" ng-click="hideOk(1)">Ok</button>
-                                                                <button type="button" class="btn btn-primary" ng-click="hideCancel(1)">Cancel</button>
-                                                            </modal-footer>
-                                                        </modal>
-                                                    </div> -->
+                                                  
                                                     <table class=" row-border hover table  table-striped table-bordered">
                                                         <thead>
                                                             <tr>
                                                                 <th style="text-align: center; Vertical-align:middle;width:10%;">
-                                                                    <span  style="margin-left:0px;margin-right: 0px;"class="form-group"><input style="width: 16px;height:16px;" type="checkbox" ng-model="selectAllSourceRow"
-                                                                    ng-click="selectAllSourceFilterRow()" ng-disabled="{{mode}}"
-                                                                    />
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <input style="width: 16px;height:16px;" type="checkbox"
+                                                                            ng-model="selectAllSourceRow" ng-click="selectAllSourceFilterRow()"
+                                                                            ng-disabled="{{mode}}" />
                                                                     </span>
                                                                 </th>
                                                                 <th style="text-align: center;width:20%;">Logical Operator</th>
@@ -286,32 +279,31 @@
                                                         <tbody>
                                                             <tr ng-repeat="data in sourceFilterTable">
                                                                 <td style="text-align: center; Vertical-align: middle;width:10%;">
-                                                                   <span  style="margin-left:0px;margin-right: 0px;"class="form-group"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;"
-                                                                    type="checkbox" ng-model="data.selected" />
-                                                                </span> 
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <input ng-disabled="{{mode}}" style="width: 16px;height:16px;"
+                                                                            type="checkbox" ng-model="data.selected" />
+                                                                    </span>
                                                                 </td>
                                                                 <td style="width:20%;">
-                                                                    <span  style="margin-left:0px;margin-right: 0px;"class="form-group">
-                                                                        <select ng-model="data.logicalOperator" ng-options="x for x in logicalOperator"
-                                                                        ng-disabled="{{mode}} || $first" class="form-control"></select>
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <select ng-model="data.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="{{mode}} || $first" class="form-control"></select>
                                                                     </span>
                                                                 </td>
                                                                 <td style="width:25%;">
-                                                                    <span  style="margin-left:0px;margin-right: 0px;"class="form-group">
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
                                                                         <select select2 ng-model="data.lhsFilter" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in sourceFilterAttribute track by c.uuid+c.attributeId">
                                                                         </select>
                                                                     </span>
                                                                 </td>
                                                                 <td style="width:20%;">
-                                                                    <span style="margin-left:0px;margin-right: 0px;"class="form-group">
-                                                                        <select ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator"
-                                                                        ng-disabled="{{mode}}" class="form-control"></select>
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <select ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator" ng-disabled="{{mode}}" class="form-control"></select>
                                                                     </span>
                                                                 </td>
                                                                 <td style="width:25%;">
-                                                                    <span  style="margin-left:0px;margin-right: 0px;"class="form-group">
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
                                                                         <input type="text" class="form-control" ng-model="data.filtervalue" title="{{data.filtervalue}}" ng-disabled="{{mode}}">
-                                                                    </span> 
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -337,126 +329,112 @@
                                 <!--Start Tab3-->
                                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
                                     <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="countContinue()" novalidate="novalidate">
-                                            <div class="form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Target
-                                                        <span class="required" aria-required="true"> * </span>
-                                                    </label>
-                                                    <div class="col-md-2 col-sm-2 col-xs-12">
-                                                        <select class="form-control" ng-change="onChangeTargetType()" ng-disabled="{{mode}}" data-ng-model="selectTargetType" ng-options="r for r in SourceTypes"required>
-                                                        </select>
-                                                    </div>
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name
-                                                        <span class="required" aria-required="true"> * </span>
-                                                    </label>
-                                                    <div class="col-md-3 col-sm-3 col-xs-12">
-                                                        <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeTarget()" data-ng-model="allTarget.defaultoption"
-                                                            ng-options="r as r.name for r in allTarget.options  track by r.uuid ">
-                                                        </select>
-                                                    </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Target
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                                <select class="form-control" ng-change="onChangeTargetType()" ng-disabled="{{mode}}" data-ng-model="selectTargetType" ng-options="r for r in SourceTypes"
+                                                    required>
+                                                </select>
+                                            </div>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeTarget()" data-ng-model="allTarget.defaultoption"
+                                                    ng-options="r as r.name for r in allTarget.options  track by r.uuid ">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Attribute
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                                <select class="form-control" select2 name="version" ng-disabled="{{mode}}" data-ng-model="selectTargetAtrribute" ng-options="r as r.name for r in allTargetAtrribute track by r.uuid+r.attributeId ">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Target Function
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                                <select class="form-control" select2 name="version" ng-disabled="{{mode}}" data-ng-model="selectTargetFunction" ng-options="r as r.name for r in allTargetFunction | orderBy:'name' track by r.uuid ">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="portlet light bordered">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <span class="caption-subject  sbold ">Filter</span>
                                                 </div>
-        
-                                                <div class="form-group">
-                                                    <label class="col-md-3 control-label">Attribute
-                                                        <span class="required" aria-required="true"> * </span>
-                                                    </label>
-                                                    <div class="col-md-6">
-                                                        <select class="form-control" select2 name="version" ng-disabled="{{mode}}" data-ng-model="selectTargetAtrribute" ng-options="r as r.name for r in allTargetAtrribute track by r.uuid+r.attributeId ">
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                        <label class="col-md-3 control-label">Target Function
-                                                            <span class="required" aria-required="true"> * </span>
-                                                        </label>
-                                                        <div class="col-md-6">
-                                                            <select class="form-control" select2 name="version" ng-disabled="{{mode}}" data-ng-model="selectTargetFunction" ng-options="r as r.name for r in allTargetFunction | orderBy:'name' track by r.uuid ">
-                                                            </select>
-                                                        </div>
-                                                    </div>
-        
-                                                <div class="portlet light bordered">
-                                                    <div class="portlet-title">
-                                                        <div class="caption">
-                                                            <span class="caption-subject  sbold ">Filter</span>
-                                                        </div>
-                                                        <div class="actions">
-                                                            <div class="btn-group btn-group-devided" data-toggle="buttons">
-                                                                <div class="x_title" style="padding:10px;">
-                                                                    <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeTargetFilterRow()"
-                                                                        ng-disabled="isButtonEnaple"></button>
-                                                                    <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addTargetFilterRow();" ng-disabled="isButtonEnaple"></button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="portlet-body">
-                                                        <div class="">
-                                                            <!-- <div>
-                                                                <modal ng-show="showModal1" visible="showModal1" on-sown="modalOneShown()" on-hide="modalOneHide()">
-                                                                    <modal-header title="Warning"></modal-header>
-                                                                    <modal-body>
-                                                                        <span>Do you want remove LHS attributes ?</span>
-                                                                    </modal-body>
-                                                                    <modal-footer>
-                                                                        <button type="button" class="btn btn-success" ng-click="hideOk(1)">Ok</button>
-                                                                        <button type="button" class="btn btn-primary" ng-click="hideCancel(1)">Cancel</button>
-                                                                    </modal-footer>
-                                                                </modal>
-                                                            </div> -->
-                                                            <table class=" row-border hover table  table-striped table-bordered">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th style="text-align: center; Vertical-align:middle;width:10%;">
-                                                                            <span  style="margin-left:0px;margin-right: 0px;"class="form-group">
-                                                                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="selectAllTargetRow"
-                                                                                ng-click="selectAllTargetFilterRow()" ng-disabled="{{mode}}"
-                                                                            />
-                                                                            </span>
-                                                                        </th>
-                                                                        <th style="text-align: center;width:20%;">Logical Operator</th>
-                                                                        <th style="text-align: center;width:25%;">LHS Attribute</th>
-                                                                        <th style="text-align: center;width:20%;">Operator</th>
-                                                                        <th style="text-align: center;width:25%;">RHS Attribute</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr ng-repeat="data in targetFilterTable">
-                                                                        <td style="text-align: center; Vertical-align: middle;width:10%;">
-                                                                            <span  style="margin-left:0px;margin-right: 0px;"class="form-group">
-                                                                                <input ng-disabled="{{mode}}" style="width: 16px;height:16px;"
-                                                                                type="checkbox" ng-model="data.selected" />
-                                                                            </span>
-                                                                        </td>
-                                                                        <td style="width:20%;">
-                                                                            <span  style="margin-left:0px;margin-right: 0px;"class="form-group">
-                                                                                <select ng-model="data.logicalOperator" ng-options="x for x in logicalOperator"
-                                                                                ng-disabled="{{mode}} || $first" class="form-control"></select>
-                                                                            </span>
-                                                                        </td>
-                                                                        <td style="width:25%;">
-                                                                            <span  style="margin-left:0px;margin-right: 0px;"class="form-group">
-                                                                                <select select2 ng-model="data.lhsFilter" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in targetFilterAttribute track by c.uuid+c.attributeId">
-                                                                                </select>
-                                                                            </span>
-                                                                        </td>
-                                                                        <td style="width:20%;">
-                                                                            <span style="margin-left:0px;margin-right: 0px;"class="form-group">
-                                                                                <select ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator"
-                                                                                ng-disabled="{{mode}}" class="form-control"></select>
-                                                                            </span>
-                                                                        </td>
-                                                                        <td style="width:25%;">
-                                                                            <span  style="margin-left:0px;margin-right: 0px;"class="form-group">
-                                                                                <input type="text" class="form-control" ng-model="data.filtervalue" title="{{data.filtervalue}}" ng-disabled="{{mode}}">
-                                                                            </span>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
+                                                <div class="actions">
+                                                    <div class="btn-group btn-group-devided" data-toggle="buttons">
+                                                        <div class="x_title" style="padding:10px;">
+                                                            <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeTargetFilterRow()"
+                                                                ng-disabled="isButtonEnaple"></button>
+                                                            <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addTargetFilterRow();"
+                                                                ng-disabled="isButtonEnaple"></button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                             
+                                            </div>
+                                            <div class="portlet-body">
+                                                <div class="">
+                                                    <table class=" row-border hover table  table-striped table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="text-align: center; Vertical-align:middle;width:10%;">
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <input style="width: 16px;height:16px;" type="checkbox" ng-model="selectAllTargetRow" ng-click="selectAllTargetFilterRow()"
+                                                                            ng-disabled="{{mode}}" />
+                                                                    </span>
+                                                                </th>
+                                                                <th style="text-align: center;width:20%;">Logical Operator</th>
+                                                                <th style="text-align: center;width:25%;">LHS Attribute</th>
+                                                                <th style="text-align: center;width:20%;">Operator</th>
+                                                                <th style="text-align: center;width:25%;">RHS Attribute</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="data in targetFilterTable">
+                                                                <td style="text-align: center; Vertical-align: middle;width:10%;">
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" />
+                                                                    </span>
+                                                                </td>
+                                                                <td style="width:20%;">
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <select ng-model="data.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="{{mode}} || $first" class="form-control"></select>
+                                                                    </span>
+                                                                </td>
+                                                                <td style="width:25%;">
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <select select2 ng-model="data.lhsFilter" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in targetFilterAttribute track by c.uuid+c.attributeId">
+                                                                        </select>
+                                                                    </span>
+                                                                </td>
+                                                                <td style="width:20%;">
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <select ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator" ng-disabled="{{mode}}" class="form-control"></select>
+                                                                    </span>
+                                                                </td>
+                                                                <td style="width:25%;">
+                                                                    <span style="margin-left:0px;margin-right: 0px;" class="form-group">
+                                                                        <input type="text" class="form-control" ng-model="data.filtervalue" title="{{data.filtervalue}}" ng-disabled="{{mode}}">
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4">
@@ -478,14 +456,13 @@
                                             <div class="col-md-9">
                                                 <div class="mt-checkbox-list" style="margin-top:-7px">
                                                     <label class="mt-checkbox mt-checkbox-outline">
-                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="isExecute" ng-true-value="'YES'" ng-false-value="'NO'"
-                                                            ng-change="changeCheckboxExecution()">
+                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="isExecute" ng-true-value="'YES'" ng-false-value="'NO'" ng-change="changeCheckboxExecution()">
                                                         <span ng-disabled="{{mode}}"></span>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
-                                       
+
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4">
@@ -500,12 +477,16 @@
                                             </div>
                                         </div>
                                     </form>
-                                </div><!-- End Tab4 -->
-                            </div><!--End tab-content-->
-                        </div><!--End form-body-->
+                                </div>
+                                <!-- End Tab4 -->
+                            </div>
+                            <!--End tab-content-->
+                        </div>
+                        <!--End form-body-->
                     </div>
                 </div>
-            </div><!--End form-wizard-->
+            </div>
+            <!--End form-wizard-->
         </div>
     </div>
 </div>

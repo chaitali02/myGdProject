@@ -32,21 +32,21 @@
         </div>
         <div class="actions">
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showRuleGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
+            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
             data-ng-click="enableEdit(ruleGroupDetail.uuid,ruleGroupDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showRuleGroup==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(ruleGroupDetail.uuid,ruleGroupDetail.version)">
+            tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(ruleGroupDetail.uuid,ruleGroupDetail.version)">
             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
           <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip"
-            data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showRuleGroup==false? 'currentpage':'notcurrentpage'"
-            data-ng-click="showRuleGroupGraph(ruleGroupDetail.uuid,ruleGroupDetail.version)">
+            data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+            data-ng-click="showGraph(ruleGroupDetail.uuid,ruleGroupDetail.version)">
             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
           </a>
           <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title=""
-            title="" ng-class="showRuleGroup ==true? 'currentpage':'notcurrentpage'">
+            title="" ng-class="showForm ==true? 'currentpage':'notcurrentpage'">
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
           <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()"title="Close" data-toggle="tooltip" data-placement="top"
@@ -57,7 +57,7 @@
       </div>
 
       <div class="portlet-body form">
-        <div class="form-body graph-body" ng-if="showgraphdiv">
+        <div class="form-body graph-body" ng-if="showGraphDiv">
           <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
           <div class="spinner" id="graphloader">
             <div class="bounce1"></div>
@@ -66,7 +66,7 @@
           </div>
           <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="ruleGroupDetail.uuid" version="rulegroup.defaultVersion.version"></div>
         </div>
-        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submitRuleGroup()" ng-show="showRuleGroup">
+        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submitRuleGroup()" ng-show="showForm">
           <div class="form-wizard">
             
             <div class="form-body">

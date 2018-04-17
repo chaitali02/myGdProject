@@ -1216,7 +1216,7 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
   $scope.currentPage = 1;
   $scope.pageSize = 10;
   $scope.paginationPageSizes = [10, 25, 50, 75, 100],
-    $scope.maxSize = 5;
+  $scope.maxSize = 5;
   $scope.bigTotalItems = 175;
   $scope.bigCurrentPage = 1;
   $scope.sortdetail = [];
@@ -1236,9 +1236,10 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
   var notify = {
     type: 'success',
     title: 'Success',
-    content: 'Dashboard deleted Successfully',
+    content: '',
     timeout: 3000 //time in ms
   };
+
   $scope.getGridStyle = function () {
     var style = {
       'margin-top': '10px',
@@ -1258,6 +1259,7 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
   //   $scope.gridApi = gridApi;
   //   $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
   // };
+
   $scope.onClickRuleResult = function () {
     $scope.isRuleExec = true;
     $scope.isRuleResult = false;
@@ -1269,6 +1271,7 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
       $scope.isRuleSelect = true;
     }
   }
+
   $scope.onClickRuleExec = function () {
     $scope.refreshSearchResults();
     $scope.isRuleSelect = true;
@@ -1295,15 +1298,14 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     var ispresent = false;
     if (ispresent != true) {
       var stateTab = {};
-
       stateTab.route = state.state;
       stateTab.param = state.params;
       stateTab.active = false;
       $rootScope.$broadcast('onAddTab', stateTab);
     }
     $state.go(state.state, state.params);
-
   }
+
   window.showResult = function (params) {
     App.scrollTop();
     $scope.selectGraphRuleExec = params.name
@@ -1315,7 +1317,6 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
       version: params.version
     });
   }
-
 
   $scope.toggleZoom = function () {
     $scope.showZoom = !$scope.showZoom;
@@ -1329,6 +1330,7 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     $scope.isGraphRuleGroupExec = false;
     $scope.isD3RGEexecGraphShow = true;
   }
+
   $scope.getRuleGroupExec = function (data) {
     if ($scope.type.text == 'rule') {
       $scope.getRuleExec(data);
@@ -1372,11 +1374,14 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     setTimeout(function () {
       $scope.$broadcast('generateGroupGraph', params);
     }, 500);
-
   } //End getRuleGroupExec
+
   $scope.getExec = $scope.getRuleGroupExec;
 
   $scope.refreshResultFunction = function () {
+    // if(!$scope.isD3RuleEexecGraphShow){
+    //   return false;
+    // }
     $scope.isD3RuleEexecGraphShow = false;
     $scope.getRuleExec($scope.ruleexecdetail)
   }
@@ -1385,7 +1390,6 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     $scope.isDataError = false;
     $scope.isD3RuleEexecGraphShow = true;
   }
-
 
   $scope.getRuleExec = function (data) {
     $scope.testgrid = false;
@@ -1413,60 +1417,13 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     var onSuccessGetNumRowsbyExec = function (response) {
       $scope.totalItems = response.numRows;
       $scope.getResults(null);
-      // $scope.pagination.totalItems = response.numRows;
-      // if ($scope.pagination.ddlpageSize > response.numRows) {
-      //   $scope.pagination.ddlpageSize = response.numRows
-      // } else {
-      //   $scope.pagination.ddlpageSize = 10;
-      // }
     }
   } //End getRuleExec
 
 
 
 
-  // $scope.pagination = {
-  //   paginationPageSizes: [10, 25, 50, 75, 100, "All"],
-  //   ddlpageSize: 10,
-  //   pageNumber: 1,
-  //   pageSize: 10,
-  //   totalItems: 0,
-  //   getTotalPages: function() {
-  //     return Math.ceil(this.totalItems / this.pageSize);
-  //   },
-  //   pageSizeChange: function() {
-  //     if (this.ddlpageSize == "All")
-  //       this.pageSize = $scope.pagination.totalItems;
-  //     else
-  //       this.pageSize = this.ddlpageSize;
-  //     this.pageNumber = 1
-  //     $scope.getResults(null);
-  //   },
-  //   firstPage: function() {
-  //     if (this.pageNumber > 1) {
-  //       this.pageNumber = 1
-  //       $scope.getResults(null);
-  //     }
-  //   },
-  //   nextPage: function() {
-  //     if (this.pageNumber < this.getTotalPages()) {
-  //       this.pageNumber++;
-  //       $scope.getResults(null);
-  //     }
-  //   },
-  //   previousPage: function() {
-  //     if (this.pageNumber > 1) {
-  //       this.pageNumber--;
-  //       $scope.getResults(null);
-  //     }
-  //   },
-  //   lastPage: function() {
-  //     if (this.pageNumber >= 1) {
-  //       this.pageNumber = this.getTotalPages();
-  //       $scope.getResults(null);
-  //     }
-  //   }
-  // };
+  
 
   $scope.gridOptions = {
     rowHeight: 40,
@@ -1491,12 +1448,6 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
         if (sortColumns.length > 0) {
           $scope.searchRequestId(sortColumns);
         }
-        /* if (sortColumns.length == 0) {
-         paginationOptions.sort = null;
-        }
-        else {
-         paginationOptions.sort = sortColumns[0].sort.direction;
-        }*/
       });
     }
   };
@@ -1506,7 +1457,6 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
 
   $scope.searchRequestId = function (sortColumns) {
     var sortBy = sortColumns[0].name;
-
     var order = sortColumns[0].sort.direction;
     var result = {};
     result.sortBy = sortBy;
@@ -1548,6 +1498,7 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     $scope.testgrid = false;
     $scope.getResults(result);
   }
+
   $scope.testgrid = false;
   $scope.pageChanged = function () {
     $scope.getResults(null)
@@ -1643,7 +1594,9 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     $scope.refreshRuleGroupExecFunction();
   }
   $scope.downloadFile = function (data) {
-
+    if($scope.isD3RuleEexecGraphShow){
+      return false;
+    }
     var uuid = data.uuid;
     var version = data.version;
     var url = $location.absUrl().split("app")[0]

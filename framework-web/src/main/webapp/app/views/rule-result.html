@@ -54,7 +54,7 @@
           <a style="margin:2px auto;color:white;" ng-disabled="!allowReGroupExecution" ng-class="{'currentpage':!allowReGroupExecution}" title="Restart Profile Group" data-toggle="tooltip" data-placement="top" tooltip="" ng-click="reGroupExecute()" disabled="disabled" class="currentpage">
             <i class="fa fa-repeat" area-hidden="true"></i>
           </a>
-          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RGEexecGraphShow==false? 'currentpage':'notcurrentpage'" data-ng-click="refreshRuleGroupExecFunction()" style="height:16px;">
+          <a href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RGEexecGraphShow==false? 'currentpage':'notcurrentpage'" data-ng-click="refreshRuleGroupExecFunction()" style="height:16px;">
             <span class="glyphicon glyphicon-file" style="color:white;"></span>
           </a>
           <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="rGExecshowGraph()" ng-class="isD3RGEexecGraphShow==true? 'currentpage':'notcurrentpage'">
@@ -102,10 +102,10 @@
           <i class="fa fa-cogs"></i>Rule Result
         </div>
         <div class="tools">
-          <a  ng-click="downloadFile(ruleexecdetail)" tooltip-placement="{{showtooltip}}" uib-tooltip="Download">
+          <a   ng-click="downloadFile(ruleexecdetail)" tooltip-placement="{{showtooltip}}" uib-tooltip="Download" ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'">
             <i class=" fa fa-download" aria-hidden="true" style="display:block;margin:2px auto;color:white;"></i>
           </a>
-          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RuleEexecGraphShow==false? 'currentpage':'notcurrentpage'" data-ng-click="refreshResultFunction()" style="height:16px;">
+          <a   title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RuleEexecGraphShow==false? 'currentpage':'notcurrentpage'"   ng-disabled ="!isD3RuleEexecGraphShow" href="javascript:;"data-ng-click="refreshResultFunction()" style="height:16px;">
             <span class="glyphicon glyphicon-file" style="color:white;"></span>
           </a>
           <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="RuleExecshowGraph()" ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'">
