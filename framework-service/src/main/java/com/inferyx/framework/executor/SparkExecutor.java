@@ -918,7 +918,7 @@ public class SparkExecutor implements IExecutor {
 				
 				VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 				Dataset<Row> assembledDf = va.transform(df);
-				assembledDf.show(Integer.parseInt(assembledDf.count()+""));
+				assembledDf.show();
 				sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 				String sql = simulateMLOperator.parse(simulate, model, assembledDf, fieldArray, tableName, filePathUrl, filePath);
 				logger.info("Parsed sql : " + sql);
