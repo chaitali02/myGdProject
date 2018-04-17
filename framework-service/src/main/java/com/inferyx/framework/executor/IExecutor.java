@@ -121,12 +121,12 @@ public interface IExecutor {
 
 	/**
 	 * Fetch Model Results
-	 * 
-	 * @param modelExec
 	 * @param datapod
+	 * @param rowLimit 
 	 * @param clientContext
+	 * @param modelExec
 	 */
-	public List<String> fetchModelResults(DataStore datastore, Datapod datapod, String clientContext) throws Exception;
+	public List<String> fetchModelResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception;
 
 	/**
 	 * Load and Register
@@ -210,7 +210,8 @@ public interface IExecutor {
 	 * 
 	 * @param datastore
 	 * @param datapod
+	 * @param rowLimit 
 	 * @param clientContext
 	 */
-	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, String clientContext) throws Exception;
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception;
 }

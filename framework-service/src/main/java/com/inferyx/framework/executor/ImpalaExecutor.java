@@ -184,7 +184,7 @@ public class ImpalaExecutor implements IExecutor {
 	}
 	
 	@Override
-	public List<String> fetchModelResults(DataStore datastore, Datapod datapod, String clientContext) throws Exception {
+	public List<String> fetchModelResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -229,7 +229,7 @@ public class ImpalaExecutor implements IExecutor {
 		return null;
 	}
 	@Override
-	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, String clientContext)
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;

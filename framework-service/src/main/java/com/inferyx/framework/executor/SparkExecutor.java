@@ -579,7 +579,7 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<String> fetchModelResults(DataStore datastore, Datapod datapod, String clientContext) throws Exception {
+	public List<String> fetchModelResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception {
 		List<String> strList = new ArrayList<>();
 		Dataset<Row> df = null;
 		if (datastore == null) {
@@ -596,9 +596,10 @@ public class SparkExecutor implements IExecutor {
 			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
 			df = dataFrameHolder.getDataframe();
 		}
-
 		df.printSchema();
-		for (Row row : df.javaRDD().collect()) {
+		df.show();
+		Row [] rows = (Row[]) df.head(rowLimit);
+		for (Row row : rows) {
 			strList.add(row.toString());
 		}
 		return strList;
@@ -733,12 +734,8 @@ public class SparkExecutor implements IExecutor {
 		df.persist(StorageLevel.MEMORY_AND_DISK());
 		// df.cache();
 
-		Row[] rows;
-		if (rowLimit == 0) {
-			rows = (Row[]) df.head(20);
-		} else {
-			rows = (Row[]) df.limit(rowLimit).collect();
-		}
+		Row[] rows = (Row[]) df.limit(rowLimit).collect();
+		
 		if (format == null) {
 			format = "";
 		}
@@ -925,7 +922,7 @@ public class SparkExecutor implements IExecutor {
 				sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 				String sql = simulateMLOperator.parse(simulate, model, assembledDf, fieldArray, tableName, filePathUrl, filePath);
 				logger.info("Parsed sql : " + sql);
-			return simulateMLOperator.execute(sql, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
+				return simulateMLOperator.execute(sql, filePathUrl, filePath, commonServiceImpl.getApp().getUuid());
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				
 				TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
@@ -952,7 +949,7 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, String clientContext)
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext)
 			throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
 		Dataset<Row> df = null;
@@ -972,10 +969,11 @@ public class SparkExecutor implements IExecutor {
 		}
 		df.show();
 		String[] columns = df.columns();
-		for (Row row : df.javaRDD().collect()) {
+		Row [] rows = (Row[]) df.head(rowLimit);
+		for (Row row : rows) {
 			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
 			for (String column : columns) {
-				object.put(column, (row.getAs(column)==null?"":row.getAs(column).toString()) );
+				object.put(column, (row.getAs(column)==null ? "":row.getAs(column).toString()) );
 			}
 			data.add(object);
 		}

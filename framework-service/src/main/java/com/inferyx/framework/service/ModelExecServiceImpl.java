@@ -622,7 +622,7 @@ public class ModelExecServiceImpl {
 		}
 	}
 
-	public List<Map<String, Object>> getPredictResults(String execUuid, String execVersion) throws Exception {
+	public List<Map<String, Object>> getPredictResults(String execUuid, String execVersion, int rowLimit) throws Exception {
 		PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.predictExec.toString());
 		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(
@@ -640,13 +640,12 @@ public class ModelExecServiceImpl {
 				MetaType.datastore.toString());
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		List<Map<String, Object>> strList = exec.fetchResults(datastore, datapod,
-				commonServiceImpl.getApp().getUuid());
+		List<Map<String, Object>> strList = exec.fetchResults(datastore, datapod, rowLimit, commonServiceImpl.getApp().getUuid());
 
 		return strList;
 	}
 
-	public List<Map<String, Object>> getSimulateResults(String execUuid, String execVersion) throws Exception {
+	public List<Map<String, Object>> getSimulateResults(String execUuid, String execVersion, int rowLimit) throws Exception {
 		SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.simulateExec.toString());
 
@@ -655,13 +654,12 @@ public class ModelExecServiceImpl {
 				MetaType.datastore.toString());
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		List<Map<String, Object>> strList = exec.fetchResults(datastore, null,
-				commonServiceImpl.getApp().getUuid());
+		List<Map<String, Object>> strList = exec.fetchResults(datastore, null, rowLimit, commonServiceImpl.getApp().getUuid());
 
 		return strList;
 	}
 
-	public List<String> getModelResults(Train train, String execUuid, String execVersion) throws Exception {
+	public List<String> getModelResults(Train train, String execUuid, String execVersion, int rowLimit) throws Exception {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.trainExec.toString());
 
@@ -677,7 +675,7 @@ public class ModelExecServiceImpl {
 				MetaType.datastore.toString());
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		List<String> strList = exec.fetchModelResults(datastore, datapod, securityServiceImpl.getAppInfo().getRef().getUuid());
+		List<String> strList = exec.fetchModelResults(datastore, datapod, rowLimit, securityServiceImpl.getAppInfo().getRef().getUuid());
 
 		return strList;
 	}
@@ -717,11 +715,11 @@ public class ModelExecServiceImpl {
 			int limit, HttpServletResponse response, int rowLimit, String sortBy,String type, String order, String requestId,
 			Mode runMode) throws Exception {
 		if(type.equalsIgnoreCase(MetaType.predictExec.toString())) {
-			List<Map<String, Object>> results =getPredictResults(execUUID, execVersion);
+			List<Map<String, Object>> results =getPredictResults(execUUID, execVersion, rowLimit);
 			response = commonServiceImpl.download(execUUID, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.predict,execUUID,execVersion)));
 		
 		}else {
-		List<Map<String, Object>> results =getSimulateResults(execUUID, execVersion);
+		List<Map<String, Object>> results = getSimulateResults(execUUID, execVersion, rowLimit);
 		response = commonServiceImpl.download(execUUID, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulate,execUUID,execVersion)));
 		}
 		return response;

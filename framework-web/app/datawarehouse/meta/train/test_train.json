@@ -71,7 +71,7 @@
     "valPercent" : 30.0,
     "uuid" : "adba4446-ff6b-4b81-b83c-acc0beb4f6ce",
     "version" : "1521706735",
-    "name" : "test_train",
+    "name" : "train_linear_regression",
     "createdBy" : {
         "ref" : {
             "type" : "user",
