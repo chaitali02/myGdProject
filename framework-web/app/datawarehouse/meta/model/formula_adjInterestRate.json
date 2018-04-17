@@ -27,7 +27,7 @@
     "customFlag" : "N",
     "uuid" : "4f746686-019f-47da-a744-b77acf1b2a99",
     "version" : "1523456997",
-    "name" : "test_formula",
+    "name" : "formula_adjInterestRate",
     "createdBy" : {
         "ref" : {
             "type" : "user",

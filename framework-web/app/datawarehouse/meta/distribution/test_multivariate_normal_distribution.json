@@ -9,7 +9,7 @@
     },
     "uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050",
     "version" : "1523604730",
-    "name" : "test_multivariate_normal_distribution",
+    "name" : "multivariate_normal_distribution",
     "createdBy" : {
         "ref" : {
             "type" : "user",

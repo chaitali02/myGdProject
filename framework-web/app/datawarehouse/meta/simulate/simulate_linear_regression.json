@@ -40,7 +40,7 @@
     ],
     "uuid" : "c1b110a1-2f16-46d6-9718-899cf92a03ad",
     "version" : "1521705021",
-    "name" : "test_linear_regression",
+    "name" : "simulate_linear_regression",
     "createdBy" : {
         "ref" : {
             "type" : "user",

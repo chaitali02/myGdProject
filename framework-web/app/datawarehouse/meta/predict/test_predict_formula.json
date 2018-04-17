@@ -39,7 +39,7 @@
     ],
     "uuid" : "ce0f9ed6-6f22-49d4-8b7e-7fd62f55eb42",
     "version" : "1523439599",
-    "name" : "test_predict_formula",
+    "name" : "predict_formula_adjInterestRate",
     "createdBy" : {
         "ref" : {
             "type" : "user",
