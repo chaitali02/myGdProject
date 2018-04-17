@@ -123,7 +123,9 @@ public class ModelController {
 	public List<String> getModelResults(@RequestParam("uuid") String trainExecUUID,
 			@RequestParam("version") String trainExecVersion,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
+		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
 		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), trainExecUUID,
 				trainExecVersion);
 		Model model =  (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
@@ -131,7 +133,7 @@ public class ModelController {
 				|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 			return modelServiceImpl.readLog(null, MetaType.trainExec.toString(), trainExecUUID, trainExecVersion);
 		} else
-			return modelExecServiceImpl.getModelResults(train, trainExecUUID, trainExecVersion);
+			return modelExecServiceImpl.getModelResults(train, trainExecUUID, trainExecVersion, rowLimit);
 	}
 
 	@RequestMapping(value = "/getModelScript", method = RequestMethod.GET)
@@ -313,18 +315,20 @@ public class ModelController {
 	public List<Map<String, Object>> getPredictResults(@RequestParam("uuid") String predictExecUUID,
 			@RequestParam("version") String predictExecVersion,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		
-		return modelExecServiceImpl.getPredictResults(predictExecUUID, predictExecVersion);
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
+		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+		return modelExecServiceImpl.getPredictResults(predictExecUUID, predictExecVersion, rowLimit);
 	}
 	
 	@RequestMapping(value = "/simulate/getResults", method = RequestMethod.GET)
 	public List<Map<String, Object>> getSimulateResults(@RequestParam("uuid") String simulateExecUUID,
 			@RequestParam("version") String simulateExecVersion,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		
-		return modelExecServiceImpl.getSimulateResults(simulateExecUUID, simulateExecVersion);
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
+		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+		return modelExecServiceImpl.getSimulateResults(simulateExecUUID, simulateExecVersion, rowLimit);
 	}
 	
 	@RequestMapping(value = "/getAlgorithmByTrainExec", method = RequestMethod.GET)
