@@ -67,7 +67,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $sessionStorage.fromParams = fromParams
   });
 
-  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model'];
+  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution'];
   $scope.isExecutable = $scope.nonExecTypes.indexOf($scope.select);
   $scope.isUpload = ($scope.select == 'datapod' ? 0 : -1)
   

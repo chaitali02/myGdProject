@@ -1427,7 +1427,7 @@
               var chidernItems=[]
               console.log(element.name)
               menuItemsObj.image=element.iconPath;
-              menuItemsObj.title =element.name;
+              menuItemsObj.title =element.iconCaption;
               menuItemsObj.id =element.name + '-add';
               menuItemsObj.type =element.name;
               menuItemsObj.menutype ="parent";
@@ -1438,7 +1438,7 @@
                   var item=element.childMenu[i]
                   if(dagMetaDataService.elementDefs[item].allowInChildMenu ==true){
                     var childitem={};
-                    childitem.title=dagMetaDataService.elementDefs[item].name;
+                    childitem.title=dagMetaDataService.elementDefs[item].iconCaption;
                     childitem.id =dagMetaDataService.elementDefs[item].name + '-add';
                     childitem.type =dagMetaDataService.elementDefs[item].name;
                     childitem.menutype ="child";

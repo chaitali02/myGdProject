@@ -274,7 +274,7 @@
               metajson.param={type:'Import'};
               break;
             case "train":
-              metajson.caption="Trainging";
+              metajson.caption="Training";
               metajson.icon='fa fa-flask';
               metajson.state="train"
               metajson.param={type:'train'};

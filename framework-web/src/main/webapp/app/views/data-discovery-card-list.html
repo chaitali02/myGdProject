@@ -15,9 +15,9 @@
                 <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
             </div>
         </div>
-    </div><!--END PAGE HEADER-->
+    </div>
+    <!--END PAGE HEADER-->
     <br>
-    <!--BEGIN MAIN CONTENT-->
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light bordered" style="padding-bottom: 20px;">
@@ -27,11 +27,11 @@
                     <div class="row">
                         <label class="col-md-1" style="margin-top:6px;">Search:</label>
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                            <input type="text" class="form-control" ng-model="searchmeta">
+                            <input type="text" class="form-control" ng-model="searchmeta" ng-change="refreshData(searchmeta)">
                         </div>
 
                         <div class="col-lg-2 col-md-2 col-sm-2" style="float:right;">
-                            <select class="form-control" ng-change="selectOption()" data-ng-model="optiondata" ng-options="r as r.caption for r in optionsort track by r.caption">
+                            <select class="form-control" ng-change="orderByParm()" data-ng-model="optiondata" ng-options="r as r.caption for r in optionsort track by r.caption">
                             </select>
                         </div>
                         <label class="col-md-1" style="margin-top:6px;float:right">Sort By:</label>
@@ -40,10 +40,11 @@
 
                 <div class="portlet-body">
                     <div class="row">
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="datadiscovry in allMetaCount |filter:{name: searchmeta} | orderBy:optiondata.name">
+                        <!-- <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="datadiscovry in allMetaCount |filter:{name: searchmeta} | orderBy:optiondata.name"> -->
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="datadiscovry in allMetaCount">
+    
                             <div class="cardshadow" style="height:152px;">
                                 <a ng-click="onShowDetail(datadiscovry)">
-                                    <!-- ui-sref="metaListdatapod({id:'{{datadiscovry.uuid}}',mode:'true'})" -->
                                     <div class="dashboard-stat2" style="height:150px;">
                                         <div class="display">
                                             <div class="number">
@@ -52,7 +53,9 @@
                                                     <span title="{{datadiscovry.title}}" data-counter="counterup" data-value="7800" style="font-size:22px;">{{datadiscovry.name}}</span>
                                                     <small class="{{datadiscovry.class}}"></small>
                                                 </h3>
-                                                <small title="{{datadiscovry.numRows | number}}" data-toggle="tooltip" data-placement="top" tooltip>{{datadiscovry.numRows | isoCurrencyWithK1:2:""}} <span style="text-transform:lowercase;">records</span></small>
+                                                <small title="{{datadiscovry.numRows | number}}" data-toggle="tooltip" data-placement="top" tooltip>{{datadiscovry.numRows | isoCurrencyWithK1:2:""}}
+                                                    <span style="text-transform:lowercase;">records</span>
+                                                </small>
                                             </div>
                                             <div class="icon">
                                                 <i style="font-size:20px;" class="{{datadiscovry.icon}}"></i>
@@ -61,7 +64,6 @@
                                         <div class="progress-info">
                                             <div class="progress">
                                                 <span style="width: 100%;" class="progress-bar progress-bar-success {{datadiscovry.class}}">
-                                                    <!-- <<span class="sr-only">76% progress</span> -->
                                                 </span>
                                             </div>
                                             <div class="status" style="padding-top:5px;">
@@ -78,18 +80,26 @@
                                 </a>
                             </div>
                         </div>
-
                     </div>
                     <div class="row">
+                        <!-- <div class="col-md-6" style="margin-top:17px">
+                          Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
+                        </div> -->
+                        <div class="col-md-12">
+                          <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
+                            ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;"
+                            max-size="pagination.maxSize" class="pagination-md" boundary-links="true"
+                            previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                          </ul>
+                        </div>
+                      </div>
+                    <!-- <div class="row">
                         <div class="right" style="float:right;margin-right: 15px">
-                            <!-- pager -->
+                           
                             <ul class="pagination" ng-if="vm.pager.pages.length" class="pagination">
-                                <!--li ng-class="{disabled:vm.pager.currentPage === 1}">
-                                                    <a ng-click="vm.setPage(1)">First</a>
-                                            </li-->
                                 <li ng-class="{disabled:vm.pager.currentPage === 1}">
                                     <a ng-click="vm.setPage(vm.pager.currentPage - 1)">
-                                        <</a>
+                                    </a>
                                 </li>
                                 <li ng-repeat="page in vm.pager.pages" ng-class="{active:vm.pager.currentPage === page}">
                                     <a ng-click="vm.setPage(page)">{{page}}</a>
@@ -97,12 +107,10 @@
                                 <li ng-class="{disabled:vm.pager.currentPage === vm.pager.totalPages}">
                                     <a ng-click="vm.setPage(vm.pager.currentPage + 1)">></a>
                                 </li>
-                                <!--li ng-class="{disabled:vm.pager.currentPage === vm.pager.totalPages}">
-                                                <a ng-click="vm.setPage(vm.pager.totalPages)">Last</a>
-                                            </li-->
                             </ul>
                         </div>
-                    </div>
+                    </div> -->
+                    
                 </div>
             </div>
         </div>
