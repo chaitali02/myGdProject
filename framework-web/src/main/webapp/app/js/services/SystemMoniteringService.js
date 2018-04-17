@@ -61,8 +61,7 @@ SystemMonitoringModule.service("SystemMonitoringService",function($q,$http,$loca
         result.createdOn = response[i].createdOn;
         result.type = response[i].type;
         result.appInfo = response[i].appInfo;
-
-        if(response[i].status !=null){
+        if(response[i].status && response[i].status.length >0){
           if (response[i].status[len].stage == "NotStarted") {
             result.status = "Not Started"
           } else if (response[i].status[len].stage == "InProgress") {
