@@ -10,15 +10,10 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -29,52 +24,42 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.spark.SparkContext;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
-import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
+import com.inferyx.framework.distribution.MultiNormalDist;
+import com.inferyx.framework.distribution.MultivariateMapFunction;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
@@ -82,15 +67,14 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FeatureRefHolder;
-import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
@@ -101,7 +85,9 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.SimulateMLOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -151,10 +137,14 @@ public class ModelServiceImpl {
 	SessionHelper sessionHelper;
 	@Autowired
 	private ExecutorFactory execFactory;
-	@Autowired
-	private MessageServiceImpl messageServiceImpl;
 	@Resource(name="taskThreadMap")
 	protected ConcurrentHashMap taskThreadMap;
+	@Autowired
+	private MultiNormalDist multiNormalDist;
+	@Autowired
+	private SparkExecutor sparkExecutor;
+	@Autowired
+	private SimulateMLOperator simulateMLOperator;
 	
 	//private ParamMap paramMap;
 
@@ -909,11 +899,47 @@ public class ModelServiceImpl {
 			Object result = null;
 
 			String[] fieldArray = modelExecServiceImpl.getAttributeNames(simulate);
-
+			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
-
+			
+///
+			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+				if(simulate.getDistributionTypeInfo() != null) {
+					int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
+					
+					Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(1).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(1).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(1).getParamValue().getRef().getType().toString());
+					DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
+					ResultSetHolder meansRSHolder = sparkExecutor.readFile(commonServiceImpl.getApp().getUuid(), factorMeanDp, factorMeanDs, hdfsInfo, null, datasource);
+					double[] factorMeans = sparkExecutor.getMeans(meansRSHolder, factorMeanDp);
+					
+					Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(2).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(2).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(2).getParamValue().getRef().getType().toString());
+					DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
+					ResultSetHolder covsRSHolder = sparkExecutor.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
+					double[][] factorCovariances = sparkExecutor.getCovs(covsRSHolder, factorCovarianceDp);
+					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMVND(seed, factorMeans, factorCovariances);
+					
+					MetaIdentifierHolder dataSetHolder = simulate.getDistDataset();
+					Datapod datasetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
+					DataStore datasetDs = dataStoreServiceImpl.findDataStoreByMeta(datasetDp.getUuid(), datasetDp.getVersion());
+					ResultSetHolder datasetRSHolder = sparkExecutor.readFile(commonServiceImpl.getApp().getUuid(), datasetDp, datasetDs, hdfsInfo, null, datasource);
+					ResultSetHolder dfRSHolder = sparkExecutor.generateFeatureData(multivariateNormal, simulate.getNumIterations(), datasetRSHolder, tableName);
+					sparkExecutor.assembleDataframe(fieldArray, dfRSHolder, tableName);
+					String sql = simulateMLOperator.generateSql(simulate, tableName);
+					sparkExecutor.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+					
+				} else {
+					
+				}
+			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+				if(simulate.getDistributionTypeInfo() != null) {
+									
+				} else {
+				
+				}
+			}
+///			
+		
 			result = exec.simulateModel(simulate, execParams, fieldArray, algorithm, filePath, tableName, commonServiceImpl.getApp().getUuid());
 
 			dataStoreServiceImpl.setRunMode(Mode.BATCH);

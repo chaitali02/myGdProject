@@ -21,13 +21,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.math3.random.MersenneTwister;
+import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
@@ -43,6 +50,7 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.storage.StorageLevel;
@@ -57,6 +65,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
+import com.inferyx.framework.distribution.DoubleToRowFunction;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.DataFrameHolder;
@@ -66,6 +75,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -95,7 +105,9 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
 import scala.collection.Iterator;
+import scala.collection.JavaConversions;
 import scala.collection.Seq;
+import scala.reflect.ClassTag;
 
 @Component
 public class SparkExecutor implements IExecutor {
@@ -311,7 +323,7 @@ public class SparkExecutor implements IExecutor {
 	 * @throws ExecutionException
 	 * @throws Exception
 	 */
-	public Dataset<Row> readFile(String clientContext, Datapod dp, DataStore datastore, HDFSInfo hdfsInfo,
+	public ResultSetHolder readFile(String clientContext, Datapod dp, DataStore datastore, HDFSInfo hdfsInfo,
 			Object conObject, Datasource ds) throws InterruptedException, ExecutionException, Exception {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
@@ -326,7 +338,10 @@ public class SparkExecutor implements IExecutor {
 			@SuppressWarnings("unused")
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 			DataFrameHolder dfHolder = iReader.read(dp, datastore, hdfsInfo, obj, ds);
-			return dfHolder.getDataframe();
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			
+			rsHolder.setDataFrame(dfHolder.getDataframe());
+			return rsHolder;
 		} /*
 			 * else if (obj instanceof LivyClient) { LivyClient client = (LivyClient)
 			 * conHolder.getStmtObject(); // Need to think of persist return
@@ -1068,4 +1083,140 @@ public class SparkExecutor implements IExecutor {
 //		return df;
 	}
 	
+	public ResultSetHolder generateFeatureData(Object object, int numIterations, ResultSetHolder datasetRSHolder, String tableName) {
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		Row dataset = datasetRSHolder.getDataFrame().first();
+		double trialValues[] = new double[numIterations];
+		
+		IntStream.range(0,  numIterations).forEach(i -> {
+			Double totalValue = 0.0;			
+			try {
+				double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
+
+				for (int j=0; j<dataset.length(); j++) {			
+					totalValue += trial[j] * (Double)dataset.get(j);
+				}
+				trialValues[i] = totalValue;
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});		
+		//ClassTag<Row> classTagRow = scala.reflect.ClassTag$.MODULE$.apply(Row.class);
+		//Broadcast<Row> broadcastInstruments = sparkSession.sparkContext().broadcast(dataset, classTagRow);
+		
+		// Generate different seeds so that our simulations don't all end up with the same results
+//		List<Long> seeds = LongStream.range(seed, seed + parallelism).boxed().collect(Collectors.toList());
+//		
+//		ClassTag<Long> classTagLong = scala.reflect.ClassTag$.MODULE$.apply(Long.class);
+//		JavaRDD<Long> seedRdd = sparkSession.sparkContext().parallelize(JavaConversions.asScalaBuffer(seeds), parallelism, classTagLong).toJavaRDD();
+//		
+		// Main computation: run simulations and compute aggregate return for each
+		Dataset<Row> df = sparkSession.sqlContext().range(0, numIterations);
+		JavaRDD<Row> seedRdd = df.toJavaRDD();
+		JavaRDD<Double> trialsRdd = seedRdd.flatMap(sdd -> Arrays.asList(ArrayUtils.toObject(trialValues)).iterator());
+		
+//		JavaRDD<Double> trialsRdd = seedRdd.flatMap(sdd -> Arrays.asList(ArrayUtils.toObject(trialValues)).iterator());
+//		
+		//JavaRDD<Row> trialsRowRdd = trialsRdd.map(new DoubleToRowFunction());
+
+		// Cache the results so that we don't recompute for both of the summarizations below
+	    trialsRdd.cache();
+	    Dataset<Row> featureDf = sparkSession.sqlContext().createDataset(trialsRdd.rdd(), Encoders.DOUBLE()).toDF();
+	    sparkSession.sqlContext().registerDataFrameAsTable(featureDf, tableName);
+	    rsHolder.setDataFrame(featureDf);
+	    
+	    /*Dataset<Row> df = sparkSession.sqlContext().range(0, numIterations);
+	    JavaRDD<Row> rowRDD = df.javaRDD().map((Function<Row, Row>) object);
+	    List<StructField> fields = new ArrayList<>();
+		fields.add(DataTypes.createStructField("slNo", DataTypes.LongType, true));
+		fields.add(DataTypes.createStructField("trialValue", DataTypes.LongType, true));
+		StructType schema = DataTypes.createStructType(fields);
+		// Apply the schema to the RDD
+		df = sparkSession.createDataFrame(rowRDD, schema);
+	    rsHolder.setDataFrame(df);*/
+	    
+		return rsHolder;
+	}
+	
+	public ResultSetHolder simulateModel(String modelPath, String tableName) {
+
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		
+		return rsHolder;
+	}
+	
+	public ResultSetHolder generateFeatureData(List<Feature> features, int numIterations, String tableName) {
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		Dataset<Row> df = null;
+		StringBuilder sb = new StringBuilder();
+		for (Feature feature : features) {
+			sb.append("(" + feature.getMinVal() + " + rand()*(" + feature.getMaxVal() + "-" + feature.getMinVal()
+					+ ")) AS " + feature.getName() + ", ");
+		}
+		df = sparkSession.sqlContext().range(0, numIterations);
+		df.createOrReplaceTempView(tableName);
+		
+		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		df = sparkSession.sqlContext()
+				.sql("SELECT id, " + sb.toString().substring(0, sb.toString().length() - 2) + " FROM " + tableName);
+		df.show();
+		rsHolder.setDataFrame(df);
+		return rsHolder;
+	}
+	
+	
+	public double[][] getCovs(ResultSetHolder rsHolder, Datapod factorCovarianceDp) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		
+		Dataset<Row> covarsDf = rsHolder.getDataFrame();
+		covarsDf.show();
+		
+		
+		List<String> covarColList = new ArrayList<>();
+		for(int i=0; i<factorCovarianceDp.getAttributes().size(); i++) {
+			if(i>0)
+				covarColList.add(factorCovarianceDp.getAttributes().get(i).getName());
+		}	
+		
+		List<double[]> covarsRowList = new ArrayList<>();
+		for(Row row : covarsDf.collectAsList()) {
+			List<Double> covarsValList = new ArrayList<>();
+				for(String col : covarColList)
+					covarsValList.add(row.getAs(col));
+				covarsRowList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
+		}
+		
+		double[][] factorCovariances = covarsRowList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
+		return factorCovariances;
+	}
+	
+	public double[] getMeans(ResultSetHolder rsHolder, Datapod factorMeanDp) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		
+		Dataset<Row> meansDf = rsHolder.getDataFrame();
+		meansDf.show();
+
+		List<String> meanColList = new ArrayList<>();
+		for(int i=0; i<factorMeanDp.getAttributes().size(); i++) {
+			if(i>0)
+				meanColList.add(factorMeanDp.getAttributes().get(i).getName());
+		}			
+		
+		List<Double> meansValList = new ArrayList<>();
+		for(Row row : meansDf.collectAsList()) {
+				for(String col : meanColList)
+					meansValList.add(row.getAs(col));
+		}		
+		double[] factorMeans = ArrayUtils.toPrimitive(meansValList.toArray(new Double[meansValList.size()]));
+		return factorMeans;
+		
+	}
+	
+	public Dataset<Row> assembleDataframe(String[] fieldArray, ResultSetHolder dfRSHolder, String tableName){
+		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+		Dataset<Row> assembledDf = va.transform(dfRSHolder.getDataFrame());
+		assembledDf.show();
+		sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
+		return assembledDf;
+	}
 }

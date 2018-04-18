@@ -11,6 +11,7 @@
 package com.inferyx.framework.distribution;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.stream.LongStream;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.apache.commons.math3.random.MersenneTwister;
+import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Dataset;
@@ -30,6 +32,9 @@ import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -283,4 +288,9 @@ public class MultiNormalDist {
 		return instrumentTrialValue;
 	}
 	
+	public MultivariateNormalDistribution generateMVND(int seed, double[] factorMeans, double[][] factorCovariances) {
+		MersenneTwister rand = new MersenneTwister();
+		MultivariateNormalDistribution multivariateNormal = new MultivariateNormalDistribution(rand, factorMeans, factorCovariances);
+		return multivariateNormal;
+	}
 }
