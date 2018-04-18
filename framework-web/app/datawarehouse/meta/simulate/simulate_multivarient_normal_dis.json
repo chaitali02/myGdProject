@@ -22,23 +22,10 @@
             }
         }
     ],
-    "seed" : NumberLong(6349),
     "distributionTypeInfo" : {
         "ref" : {
             "type" : "distribution",
             "uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050"
-        }
-    },
-    "factorMeanInfo" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "3a47402e-6ba5-4ca7-b3a4-7e01fd4dcdd9"
-        }
-    },
-    "factorCovarientInfo" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a"
         }
     },
     "uuid" : "00c1af72-5815-4e52-b452-1c781961d040",
@@ -52,7 +39,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-04-12T19:19:30.000Z"),
+    "createdOn" : ISODate("2018-04-17T12:04:30.209Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

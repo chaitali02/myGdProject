@@ -55,6 +55,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -889,8 +890,8 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
-	public Object simulateModel(Simulate simulate, String[] fieldArray, Algorithm algorithm, String filePath,
-			String tableName, String clientContext) throws Exception {
+	public Object simulateModel(Simulate simulate, ExecParams execParams, String[] fieldArray, Algorithm algorithm,
+			String filePath, String tableName, String clientContext) throws Exception {
 		try {
 			MetaIdentifierHolder modelHolder = simulate.getDependsOn();
 			MetaIdentifierHolder targetHolder = simulate.getTarget();
@@ -907,9 +908,10 @@ public class SparkExecutor implements IExecutor {
 						
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				Distribution distribution = (Distribution) daoRegister.getRefObject(simulate.getDistributionTypeInfo().getRef());
-				int seed = Integer.parseInt(""+simulate.getSeed());
+				
+				int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
 				int numTrials = simulate.getNumIterations();
-				Dataset<Row> dfTemp = executeDistribution(distribution, numTrials, seed, simulate.getFactorMeanInfo(), simulate.getFactorCovarientInfo());
+				Dataset<Row> dfTemp = executeDistribution(distribution, numTrials, seed, execParams.getParamListInfo().get(1).getParamValue(), execParams.getParamListInfo().get(2).getParamValue());
 				
 				Dataset<Row> df = dfTemp.withColumnRenamed("value", fieldArray[0]);
 				
