@@ -1,8 +1,13 @@
-/**
+/*******************************************************************************
+ * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
  *
- * @Author Ganesh
+ * This unpublished material is proprietary to Inferyx Inc.
+ * The methods and techniques described herein are considered  trade 
+ * secrets and/or confidential. Reproduction or distribution, in whole or 
+ * in part, is forbidden.
  *
- */
+ * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
+ *******************************************************************************/
 package com.inferyx.framework.domain;
 
 import java.util.List;
