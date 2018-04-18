@@ -430,6 +430,44 @@
       }
       return deferred.promise;
     }
+    this.getParamListByType = function(type, uuid, version) {
+     
+      var deferred = $q.defer();
+      var url;
+      if (type == "simulate") {
+        url = "metadata/getParamListBySimulate?uuid=" + uuid+"&type="+type;
+      }
+      url += '&action=view'
+      CommonFactory.httpGet(url).then(function(response) {
+        onSuccess(response.data)
+      });
+      var onSuccess = function(response) {
+        var paramListHolder=[];
+        if(response.length >0){
+          for(var i=0;i<response.length;i++){
+            var paramList={};
+            paramList.uuid=response[i].ref.uuid;
+            paramList.type=response[i].ref.type;
+            paramList.paramId=response[i].paramId;
+            paramList.paramType=response[i].paramType.toLowerCase();
+            paramList.paramName=response[i].paramName;
+            if(response[i].paramType.toLowerCase() !="row"){
+              paramList.isParamType="simple";
+              paramList.paramValue=response[i].paramValue.value;
+            }else{
+              paramList.isParamType="datapod";
+              paramList.paramValue=response[i].paramValue;    
+            }
+           
+            paramListHolder[i]=paramList;
+          }
+        }
+        deferred.resolve({
+          data: paramListHolder
+        });
+      }
+      return deferred.promise;
+    }
     this.executeWithParams = function(type, uuid, version, data) {
       var deferred = $q.defer();
       var url

@@ -919,7 +919,7 @@ public class ModelServiceImpl {
 					double[][] factorCovariances = sparkExecutor.getCovs(covsRSHolder, factorCovarianceDp);
 					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMVND(seed, factorMeans, factorCovariances);
 					
-					MetaIdentifierHolder dataSetHolder = simulate.getDistDataset();
+					MetaIdentifierHolder dataSetHolder = simulate.getSource();
 					Datapod datasetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
 					DataStore datasetDs = dataStoreServiceImpl.findDataStoreByMeta(datasetDp.getUuid(), datasetDp.getVersion());
 					ResultSetHolder datasetRSHolder = sparkExecutor.readFile(commonServiceImpl.getApp().getUuid(), datasetDp, datasetDs, hdfsInfo, null, datasource);
