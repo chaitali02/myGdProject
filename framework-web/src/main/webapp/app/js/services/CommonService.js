@@ -453,12 +453,12 @@
             paramList.paramName=response[i].paramName;
             if(response[i].paramType.toLowerCase() !="row"){
               paramList.isParamType="simple";
-              paramList.paramValue=response[i].paramValue;
+              paramList.paramValue=response[i].paramValue.value;
             }else{
               paramList.isParamType="datapod";
               paramList.paramValue=response[i].paramValue;    
             }
-            paramList.paramValue=response[i].paramValue;
+           
             paramListHolder[i]=paramList;
           }
         }

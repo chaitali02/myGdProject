@@ -420,19 +420,64 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       onSuccessGetExecuteModel(response.data)
     });
     var onSuccessGetExecuteModel = function (response) {
-      $('#executeParamList').modal({
-        backdrop: 'static',
-        keyboard: false
-      });
-      $scope.paramListHolder = response;
+      if(response.length ==0){
+        $scope.executeWithParams(null);
+      }else{
+        $('#executeParamList').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        $scope.getAllLatest();
+        $scope.paramListHolder = response;
+      }
     }
 
   }
 
   $scope.executeWithExecParamList=function(){
-    
+    $('#executeParamList').modal('hide');
+    var execParams={};
+    var paramListInfo=[];
+    if($scope.paramListHolder.length>0){
+      for(var i=0;i<$scope.paramListHolder.length;i++){
+        var paramList={};
+        paramList.paramId=$scope.paramListHolder[i].paramId;
+        paramList.paramName=$scope.paramListHolder[i].paramName;
+        paramList.paramType=$scope.paramListHolder[i].paramType;
+        var ref={};
+        var paramValue={};  
+        if($scope.paramListHolder[i].paramType !="row"){
+          ref.type="simple";
+          paramValue.ref=ref;
+          paramValue.value=$scope.paramListHolder[i].paramValue;  
+        }
+        else{
+          ref.type="datapod";
+          ref.uuid=$scope.paramListHolder[i].selectedParamValue.uuid;  
+          paramValue.ref=ref;
+        }
+        paramList.paramValue=paramValue;
+        paramListInfo[i]=paramList;
+      }
+      execParams.paramListInfo=paramListInfo;
+    }
+    else{
+      execParams=null;
+    }
+    console.log(JSON.stringify(execParams))
+  $scope.executeWithParams(execParams);
   }
-
+  $scope.executeWithParams=function(data){
+    $scope.executionmsg = $scope.caption + " Submited Successfully"
+    notify.type = 'success',
+    notify.title = 'Success',
+    notify.content = $scope.executionmsg
+    $scope.$emit('notify', notify);
+    CommonService.executeWithParams($scope.select,$scope.exeDetail.uuid,$scope.exeDetail.version,data).then(function (response){onSuccessGetExecuteModel(response.data)});
+    var onSuccessGetExecuteModel = function (response) {
+      console.log(JSON.stringify(response));
+    }
+  }
   $scope.onSelectparamSet = function () {
     var paramSetjson = {};
     var paramInfoArray = [];
@@ -530,7 +575,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.getExecParamsSet();
     }
     else if($scope.select == 'simulate'){
-      $scope.getAllLatest();
       $scope.getExecParamList();
     }
     else if($scope.select == 'predict'){

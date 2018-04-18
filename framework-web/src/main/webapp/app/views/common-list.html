@@ -239,7 +239,7 @@
             </div>
           </div>
           
-          <div id="executeParamList" class="modal fade bs-modal-lg in"  aria-hidden="true" style="display: none;">
+          <div id="executeParamList" class="modal fade bs-modal-lg in"   style="display: none;">
             <div class="modal-dialog">
               <div class="modal-content" style="resize: both;overflow: auto;">
                 <div class="modal-header">
@@ -274,7 +274,7 @@
                                   <td style="width:20%;">
                                     <div ng-if="listHolder.isParamType =='simple'">
                                         <input ng-if="listHolder.paramType !='integer'" type="text" ng-model="listHolder.paramValue"  class="form-control">
-                                        <input ng-if="listHolder.paramType =='integer'" type="number" ng-model="listHolder.paramValue"   class="form-control">
+                                        <input ng-if="listHolder.paramType =='integer'" type="text " ng-model="listHolder.paramValue"   class="form-control">
                                     </div>
                                     <div ng-if="listHolder.isParamType !='simple'">
                                         <select class="form-control" select2  data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDatapod | orderBy:'name'">
