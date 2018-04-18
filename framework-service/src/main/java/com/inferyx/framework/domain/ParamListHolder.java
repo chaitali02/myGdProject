@@ -18,8 +18,25 @@ public class ParamListHolder extends MetaIdentifierHolder{
 	private String paramId;
 	private String paramName;
 	private String paramType;
-	
-	
+	private MetaIdentifierHolder paramValue;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the paramValue
+	 */
+	public MetaIdentifierHolder getParamValue() {
+		return paramValue;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param paramValue the paramValue to set
+	 */
+	public void setParamValue(MetaIdentifierHolder paramValue) {
+		this.paramValue = paramValue;
+	}
 
 	public String getParamType() {
 		return paramType;

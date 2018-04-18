@@ -22,28 +22,25 @@ public class Simulate extends BaseEntity {
 	private MetaIdentifierHolder target;
     private int numIterations;
 	private List<FeatureRefHolder> featureInfo  = new ArrayList<FeatureRefHolder>();
-	private long seed;
 	private MetaIdentifierHolder distributionTypeInfo;
-	private MetaIdentifierHolder factorMeanInfo;
-	private MetaIdentifierHolder factorCovarientInfo;
+	private MetaIdentifierHolder distDataset;
 	
-    
-	/**
+   	/**
 	 * @Ganesh
 	 *
-	 * @return the seed
+	 * @return the distDataset
 	 */
-	public long getSeed() {
-		return seed;
+	public MetaIdentifierHolder getDistDataset() {
+		return distDataset;
 	}
 
 	/**
 	 * @Ganesh
 	 *
-	 * @param seed the seed to set
+	 * @param distDataset the distDataset to set
 	 */
-	public void setSeed(long seed) {
-		this.seed = seed;
+	public void setDistDataset(MetaIdentifierHolder distDataset) {
+		this.distDataset = distDataset;
 	}
 
 	/**
@@ -62,41 +59,6 @@ public class Simulate extends BaseEntity {
 	 */
 	public void setDistributionTypeInfo(MetaIdentifierHolder distributionTypeInfo) {
 		this.distributionTypeInfo = distributionTypeInfo;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @return the factorMeanInfo
-	 */
-	public MetaIdentifierHolder getFactorMeanInfo() {
-		return factorMeanInfo;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param factorMeanInfo the factorMeanInfo to set
-	 */
-	public void setFactorMeanInfo(MetaIdentifierHolder factorMeanInfo) {
-		this.factorMeanInfo = factorMeanInfo;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the factorCovarientInfo
-	 */
-	public MetaIdentifierHolder getFactorCovarientInfo() {
-		return factorCovarientInfo;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param factorCovarientInfo the factorCovarientInfo to set
-	 */
-	public void setFactorCovarientInfo(MetaIdentifierHolder factorCovarientInfo) {
-		this.factorCovarientInfo = factorCovarientInfo;
 	}
 
 	public int getNumIterations() {
