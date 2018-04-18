@@ -246,6 +246,9 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 	}
 
 	$scope.addData = function (data) {
+		if(!$scope.isEdit && !$scope.isAdd ){
+			return false;
+		}
 		var aggrfun = ["SUM", "MIN", "MAX", "COUNT", "AVG"]
 		var len = $scope.formulainfoarray.length;
 		if (aggrfun.indexOf(data.value) > -1) {
