@@ -893,11 +893,11 @@ public class ModelServiceImpl {
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
-
+			
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
+			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-
 			Object result = null;
-
 			String[] fieldArray = modelExecServiceImpl.getAttributeNames(simulate);
 			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -940,11 +940,11 @@ public class ModelServiceImpl {
 			}
 ///			
 		
-			result = exec.simulateModel(simulate, execParams, fieldArray, algorithm, filePath, tableName, commonServiceImpl.getApp().getUuid());
+			//result = exec.simulateModel(simulate, execParams, fieldArray, algorithm, filePath, tableName, commonServiceImpl.getApp().getUuid());
 
 			dataStoreServiceImpl.setRunMode(Mode.BATCH);
 
-			dataStoreServiceImpl.create((String) result, modelName,
+			dataStoreServiceImpl.create(filePathUrl, modelName,
 					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
 					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
 					simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
