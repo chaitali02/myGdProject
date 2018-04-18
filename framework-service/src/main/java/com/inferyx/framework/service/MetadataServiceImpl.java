@@ -1157,7 +1157,14 @@ public class MetadataServiceImpl {
 					paramListHolder.setParamId(param.getParamId());
 					paramListHolder.setParamName(param.getParamName());
 					paramListHolder.setParamType(param.getParamType());
-					paramListHolder.setValue(param.getParamValue());
+					if(param.getParamType().equalsIgnoreCase("ROW")) {
+					
+						paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
+					}
+					else {
+						paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+						
+					}
 					paramListHolder.setRef(
 							new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 					paramListHolder.getRef().setName(paramList.getName());
