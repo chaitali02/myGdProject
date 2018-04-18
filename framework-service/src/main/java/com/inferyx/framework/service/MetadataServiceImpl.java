@@ -1135,29 +1135,44 @@ public class MetadataServiceImpl {
 		return holderList;
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public List<ParamListHolder> getParamListBySimulate(String simulateUuid) throws JsonProcessingException {	
 
 		Simulate simulate = (Simulate) commonServiceImpl.getLatestByUuid(simulateUuid, MetaType.simulate.toString(), "N");
-
-		Distribution distribution = (Distribution) commonServiceImpl.getLatestByUuid(simulate.getDistributionTypeInfo().getRef().getUuid(), MetaType.distribution.toString(), "N");
-
+		
 		List<ParamListHolder> holderList = new ArrayList<>();
-		ParamList paramList = null;
-		if (distribution.getParamList().getRef().getType().equals(MetaType.paramlist)) {
+		if (  simulate.getDistributionTypeInfo()!=null && simulate.getDistributionTypeInfo().getRef().getType().equals(MetaType.distribution)) {
+			Distribution distribution = (Distribution) commonServiceImpl.getLatestByUuid(
+					simulate.getDistributionTypeInfo().getRef().getUuid(), MetaType.distribution.toString(), "N");
 
-			paramList = (ParamList) commonServiceImpl.getLatestByUuid(distribution.getParamList().getRef().getUuid(),
-					MetaType.paramlist.toString(), "N");
-		}
-		if(paramList != null)
-			for (Param param : paramList.getParams()) {
-				ParamListHolder paramListHolder = new ParamListHolder();
-				paramListHolder.setParamId(param.getParamId());
-				paramListHolder.setParamName(param.getParamName());
-				paramListHolder.setParamType(param.getParamType());
-				paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
-				paramListHolder.getRef().setName(paramList.getName());
-				holderList.add(paramListHolder);
+			ParamList paramList = null;
+			if (distribution.getParamList().getRef().getType().equals(MetaType.paramlist)) {
+
+				paramList = (ParamList) commonServiceImpl.getLatestByUuid(
+						distribution.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
 			}
+			if (paramList != null)
+				for (Param param : paramList.getParams()) {
+					ParamListHolder paramListHolder = new ParamListHolder();
+					paramListHolder.setParamId(param.getParamId());
+					paramListHolder.setParamName(param.getParamName());
+					paramListHolder.setParamType(param.getParamType());
+					if(param.getParamType().equalsIgnoreCase("ROW")) {
+					
+						paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
+					}
+					else {
+						paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+						
+					}
+					paramListHolder.setRef(
+							new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+					paramListHolder.getRef().setName(paramList.getName());
+					holderList.add(paramListHolder);
+				}
+
+			return holderList;
+		}
 		return holderList;
 	}
 	
