@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Wed Apr 18 09:32:50 IST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0162-d6eb-557b-000027c86b70 
+on database directory /home/rohini/git/inferyx/framework-web/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@6792aa3e 
+Loaded from file:/home/rohini/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_161-b12
+user.dir=/home/rohini/git/inferyx/framework-web
+os.name=Linux
+os.arch=amd64
+os.version=4.13.0-38-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
