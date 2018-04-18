@@ -393,8 +393,14 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.$emit('notify', notify);
     }
   }
-
-  $scope.getExecParams = function () {
+  $scope.getAllLatest=function(){
+    CommonService.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
+		var onSuccessGetAllLatest = function (response) {
+      $scope.allDatapod=response;
+      $scope.selectedParamValue=response[0];
+    }
+  }
+  $scope.getExecParamsSet = function () {
     $scope.paramtablecol = null
     $scope.paramtable = null;
     $scope.isTabelShow = false;
@@ -409,6 +415,24 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.allparamset = response;
     }
   }
+  $scope.getExecParamList=function(){
+    CommonService.getParamListByType($scope.select,$scope.exeDetail.uuid, $scope.exeDetail.version).then(function (response) {
+      onSuccessGetExecuteModel(response.data)
+    });
+    var onSuccessGetExecuteModel = function (response) {
+      $('#executeParamList').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+      $scope.paramListHolder = response;
+    }
+
+  }
+
+  $scope.executeWithExecParamList=function(){
+    
+  }
+
   $scope.onSelectparamSet = function () {
     var paramSetjson = {};
     var paramInfoArray = [];
@@ -499,9 +523,26 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   } //End excutionDag
 
   $scope.ok = function () {
+    
     $('#DagConfExModal').modal('hide');
+   
     if ($scope.select == 'rule' || $scope.select == 'train') {
-      $scope.getExecParams();
+      $scope.getExecParamsSet();
+    }
+    else if($scope.select == 'simulate'){
+      $scope.getAllLatest();
+      $scope.getExecParamList();
+    }
+    else if($scope.select == 'predict'){
+      $scope.executionmsg = $scope.caption + " Submited Successfully"
+      notify.type = 'success',
+      notify.title = 'Success',
+      notify.content = $scope.executionmsg
+      $scope.$emit('notify', notify);
+      CommonService.executeWithParams($scope.select,$scope.exeDetail.uuid,$scope.exeDetail.version,null).then(function (response){onSuccessGetExecuteModel(response.data)});
+      var onSuccessGetExecuteModel = function (response) {
+        console.log(JSON.stringify(response));
+      }
     } 
     else{
       $scope.executionmsg = $scope.caption + " Submited Successfully"
@@ -509,22 +550,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       notify.title = 'Success',
       notify.content = $scope.executionmsg
       $scope.$emit('notify', notify);
-      if($scope.select == 'predict' || $scope.select == 'simulate'  ) {
-        CommonService.executeWithParams($scope.select,$scope.exeDetail.uuid,$scope.exeDetail.version,null).then(function (response) {
-          onSuccessGetExecuteModel(response.data)
-        });
-        var onSuccessGetExecuteModel = function (response) {
-          console.log(JSON.stringify(response));
-    
-        }
-      }
-      else {
-        CommonService.execute($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version, null).then(function (response) {
-          onSuccessExecutionDag(response.data)
-        });
-      }
-      var onSuccessExecutionDag = function (response) {
-        console.log("DagExec: " + JSON.stringify(response))
+      CommonService.execute($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version, null).then(function (response){ onSuccessExecute(response.data)});
+      var onSuccessExecute = function (response) {
+          console.log("DagExec: " + JSON.stringify(response))
       }
     }
   };
