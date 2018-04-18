@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Wed Apr 18 15:54:14 IST 2018:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0162-d848-869e-0000271da050 
-on database directory /home/gridedge-3/git/inferyx/framework-web/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@1fa29b9e 
-Loaded from file:/home/gridedge-3/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
+Wed Apr 18 19:56:36 IST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0162-d926-6981-0000247f58f0 
+on database directory /home/gridedge2/inferyx/framework-web/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@6fa48ee4 
+Loaded from file:/home/gridedge2/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_121-b13
-user.dir=/home/gridedge-3/git/inferyx/framework-web
+java.runtime.version=1.8.0_141-8u141-b15-3~14.04-b15
+user.dir=/home/gridedge2/inferyx/framework-web
 os.name=Linux
 os.arch=amd64
-os.version=3.13.0-93-generic
+os.version=4.4.0-104-generic
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
