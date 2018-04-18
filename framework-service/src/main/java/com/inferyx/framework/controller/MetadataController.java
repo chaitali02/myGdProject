@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (C) GridEdge Consulting LLC, 2016 All rights reserved. 
+ * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
  *
- * This unpublished material is proprietary to GridEdge Consulting LLC.
+ * This unpublished material is proprietary to Inferyx Inc.
  * The methods and techniques described herein are considered  trade 
  * secrets and/or confidential. Reproduction or distribution, in whole or 
  * in part, is forbidden.
  *
- * Written by Yogesh Palrecha <ypalrecha@gridedge.com>
+ * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
@@ -858,6 +858,20 @@ public class MetadataController {
 			@RequestParam(value = "uuid") String formulaUuid ,
 			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
 		return metadataServiceImpl.getParamListByFormula(formulaUuid);
+	}
+	
+	@RequestMapping(value = "/getParamListByDistribution", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder>  getParamListByDistribution(
+			@RequestParam(value = "uuid") String distribution ,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
+		return metadataServiceImpl.getParamListByDistribution(distribution);
+	}
+	
+	@RequestMapping(value = "/getParamListBySimulate", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder>  getParamListBySimulate(
+			@RequestParam(value = "uuid") String simulateUuid ,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
+		return metadataServiceImpl.getParamListBySimulate(simulateUuid);
 	}
 	
 }
