@@ -860,4 +860,18 @@ public class MetadataController {
 		return metadataServiceImpl.getParamListByFormula(formulaUuid);
 	}
 	
+	@RequestMapping(value = "/getParamListByDistribution", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder>  getParamListByDistribution(
+			@RequestParam(value = "uuid") String distribution ,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
+		return metadataServiceImpl.getParamListByDistribution(distribution);
+	}
+	
+	@RequestMapping(value = "/getParamListBySimulate", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder>  getParamListBySimulate(
+			@RequestParam(value = "uuid") String simulateUuid ,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
+		return metadataServiceImpl.getParamListBySimulate(simulateUuid);
+	}
+	
 }

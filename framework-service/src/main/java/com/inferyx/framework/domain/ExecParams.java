@@ -13,19 +13,33 @@ package com.inferyx.framework.domain;
 import java.util.List;
 
 public class ExecParams {
-	
+
 	private List<MetaIdentifier> refKeyList;
-
 	private List<ParamSetHolder> paramInfo;
-
 	private List<MetaIdentifierHolder> dimInfo;
-	
-	private List<AttributeRefHolder> filterInfo;	
-
+	private List<AttributeRefHolder> filterInfo;
 	private List<String> stageInfo;
-	
 	private ParamSetHolder paramSetHolder;
+	private List<ParamListHolder> paramListInfo;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the paramListInfo
+	 */
+	public List<ParamListHolder> getParamListInfo() {
+		return paramListInfo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param paramListInfo the paramListInfo to set
+	 */
+	public void setParamListInfo(List<ParamListHolder> paramListInfo) {
+		this.paramListInfo = paramListInfo;
+	}
+
 	public List<ParamSetHolder> getParamInfo() {
 		return paramInfo;
 	}
@@ -33,7 +47,7 @@ public class ExecParams {
 	public void setParamInfo(List<ParamSetHolder> paramInfo) {
 		this.paramInfo = paramInfo;
 	}
-	
+
 	public ParamSetHolder getParamSetHolder() {
 		return paramSetHolder;
 	}
@@ -73,5 +87,5 @@ public class ExecParams {
 	public void setStageInfo(List<String> stageInfo) {
 		this.stageInfo = stageInfo;
 	}
-	
+
 }

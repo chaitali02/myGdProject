@@ -88,8 +88,8 @@ public class MultiNormalDist {
 	public Row getInstruments(List<Param> params) throws JsonProcessingException {
 		Row dataset = null;
 		
-		int parallelism = Integer.parseInt(params.get(0).getParamValue());
-		String str = params.get(1).getParamValue();
+		int parallelism = Integer.parseInt(params.get(3).getParamValue());
+		String str = params.get(4).getParamValue();
 		String[] splits = str.split(",");
 		List<Double> datasetList = new ArrayList<>();
 		for(String split : splits)
@@ -202,7 +202,7 @@ public class MultiNormalDist {
 		Row instruments = getInstruments(params);
 		double[] factorMeans = getMeans(factorMeansInfo);
 		double[][] factorCovariances = getCovs(factorCovariancesInfo);
-		int parallelism = Integer.parseInt(params.get(0).getParamValue());
+		int parallelism = Integer.parseInt(params.get(3).getParamValue());
 		
 		ClassTag<Row> classTagRow = scala.reflect.ClassTag$.MODULE$.apply(Row.class);
 		Broadcast<Row> broadcastInstruments = sparkSession.sparkContext().broadcast(instruments, classTagRow);

@@ -914,7 +914,7 @@ public class ModelServiceImpl {
 
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 
-			result = exec.simulateModel(simulate, fieldArray, algorithm, filePath, tableName, commonServiceImpl.getApp().getUuid());
+			result = exec.simulateModel(simulate, execParams, fieldArray, algorithm, filePath, tableName, commonServiceImpl.getApp().getUuid());
 
 			dataStoreServiceImpl.setRunMode(Mode.BATCH);
 

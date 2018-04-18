@@ -24,6 +24,7 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
@@ -206,14 +207,15 @@ public interface IExecutor {
 	 * Fire simulate on model
 	 * 
 	 * @param simulate
+	 * @param execParams TODO
 	 * @param fieldArray
 	 * @param algorithm
 	 * @param filePath
 	 * @param tableName 
 	 * @param clientContext
 	 */
-	public Object simulateModel(Simulate simulate,  String[] fieldArray, Algorithm algorithm, 
-			String filePath, String tableName, String clientContext) throws Exception;
+	public Object simulateModel(Simulate simulate,  ExecParams execParams, String[] fieldArray, 
+			Algorithm algorithm, String filePath, String tableName, String clientContext) throws Exception;
 	
 	/**
 	 * Fetch Prediction and Simulation Results

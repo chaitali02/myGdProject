@@ -50,6 +50,7 @@ import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
@@ -74,6 +75,7 @@ import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
+import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.StatusHolder;
@@ -1108,4 +1110,55 @@ public class MetadataServiceImpl {
 			}
 		return holderList;
 	}
+	
+	public List<ParamListHolder> getParamListByDistribution(String distributionUuid) throws JsonProcessingException {	
+
+		Distribution distribution = (Distribution) commonServiceImpl.getLatestByUuid(distributionUuid, MetaType.distribution.toString(), "N");
+
+		List<ParamListHolder> holderList = new ArrayList<>();
+		ParamList paramList = null;
+		if (distribution.getParamList().getRef().getType().equals(MetaType.paramlist)) {
+
+			paramList = (ParamList) commonServiceImpl.getLatestByUuid(distribution.getParamList().getRef().getUuid(),
+					MetaType.paramlist.toString(), "N");
+		}
+		if(paramList != null)
+			for (Param param : paramList.getParams()) {
+				ParamListHolder paramListHolder = new ParamListHolder();
+				paramListHolder.setParamId(param.getParamId());
+				paramListHolder.setParamName(param.getParamName());
+				paramListHolder.setParamType(param.getParamType());
+				paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+				paramListHolder.getRef().setName(paramList.getName());
+				holderList.add(paramListHolder);
+			}
+		return holderList;
+	}
+	
+	public List<ParamListHolder> getParamListBySimulate(String simulateUuid) throws JsonProcessingException {	
+
+		Simulate simulate = (Simulate) commonServiceImpl.getLatestByUuid(simulateUuid, MetaType.simulate.toString(), "N");
+
+		Distribution distribution = (Distribution) commonServiceImpl.getLatestByUuid(simulate.getDistributionTypeInfo().getRef().getUuid(), MetaType.distribution.toString(), "N");
+
+		List<ParamListHolder> holderList = new ArrayList<>();
+		ParamList paramList = null;
+		if (distribution.getParamList().getRef().getType().equals(MetaType.paramlist)) {
+
+			paramList = (ParamList) commonServiceImpl.getLatestByUuid(distribution.getParamList().getRef().getUuid(),
+					MetaType.paramlist.toString(), "N");
+		}
+		if(paramList != null)
+			for (Param param : paramList.getParams()) {
+				ParamListHolder paramListHolder = new ParamListHolder();
+				paramListHolder.setParamId(param.getParamId());
+				paramListHolder.setParamName(param.getParamName());
+				paramListHolder.setParamType(param.getParamType());
+				paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+				paramListHolder.getRef().setName(paramList.getName());
+				holderList.add(paramListHolder);
+			}
+		return holderList;
+	}
+	
 }

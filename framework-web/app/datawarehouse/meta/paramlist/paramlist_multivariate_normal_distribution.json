@@ -2,12 +2,30 @@
     "params" : [ 
         {
             "paramId" : "0",
+            "paramName" : "seed",
+            "paramType" : "INTEGER",
+            "paramValue" : "6478"
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "factormeans",
+            "paramType" : "ROW",
+            "paramValue" : ""
+        }, 
+        {
+            "paramId" : "2",
+            "paramName" : "factorvarience",
+            "paramType" : "ROW",
+            "paramValue" : ""
+        }, 
+        {
+            "paramId" : "3",
             "paramName" : "parallelism",
             "paramType" : "INTEGER",
             "paramValue" : "5"
         }, 
         {
-            "paramId" : "1",
+            "paramId" : "4",
             "paramName" : "dataset",
             "paramType" : "ROW",
             "paramValue" : "1.0,2.0,3.35"
@@ -24,7 +42,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-04-12T19:25:47.000Z"),
+    "createdOn" : ISODate("2018-04-17T12:04:28.887Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

@@ -256,7 +256,7 @@ public class ModelController {
 					MetaType.simulate.toString());
 
 			SimulateExec simulateExec = null;
-			if (execParams != null) {
+			/*if (execParams != null) {
 				List<ParamMap> paramMapList = new ArrayList<>();
 				paramMapList = paramSetServiceImpl.getParamMap(execParams, simulate.getDependsOn().getRef().getUuid(),
 						simulate.getDependsOn().getRef().getVersion());
@@ -264,10 +264,10 @@ public class ModelController {
 					simulateExec = modelServiceImpl.create(simulate, execParams, paramMap, simulateExec);
 					modelServiceImpl.simulate(simulate, execParams, simulateExec);
 				}
-			} else {
+			} else {*/
 				simulateExec = modelServiceImpl.create(simulate, execParams, null, simulateExec);
 				modelServiceImpl.simulate(simulate, execParams, simulateExec);
-			}
+			//}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
