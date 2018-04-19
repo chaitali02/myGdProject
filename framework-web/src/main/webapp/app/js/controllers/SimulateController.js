@@ -240,6 +240,7 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
       $scope.selectSource=null;
       if(response.source !=null){
         $scope.selectSourceType=response.source.ref.type
+        $scope.getAllLetestSource();
         selectSource.uuid=response.source.ref.uuid;
         selectSource.name=response.source.ref.name;
         $scope.selectSource=selectSource;
