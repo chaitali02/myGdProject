@@ -222,7 +222,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource()" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid " required>
+                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource()" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
                                                 </select>
                                             </div>
                                         </div>
@@ -346,7 +346,7 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-2">
-                                                <input type="number" limit-to="4" class="form-control" ng-disabled="{{mode}}" ng-model="simulateData.numIterations" max="1000" required>
+                                                <input type="number"   limit-to="4" class="form-control" ng-disabled="{{mode}}" ng-model="simulateData.numIterations" max="1000" required>
                                             </div>
                                         </div>
                                       
