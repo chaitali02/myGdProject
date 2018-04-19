@@ -40,6 +40,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.Model;
@@ -188,8 +189,8 @@ public class SimulateMLOperator implements Serializable {
 		Class<?>[] type = { RandomGenerator.class, double[].class, double[][].class};
 		Constructor<?> cons = distributorClass.getConstructor(type);
 //		df.withColumn("trialValues", functions.callUDF("multivarnormdist", seed, cons, factorMeans, factorCovariances));
-		MultivariateMapFunction mapFunc = new MultivariateMapFunction(factorMeans, factorCovariances, cons, seed, dataset);
-		JavaRDD<Row> rowRDD = df.javaRDD().map(mapFunc);
+		/*MultivariateMapFunction mapFunc = new MultivariateMapFunction(factorMeans, factorCovariances, cons, seed, dataset);
+		JavaRDD<Row> rowRDD = df.javaRDD().map(mapFunc);*/
 		/*JavaRDD<Row> rowRDD = df.javaRDD().map(new Function<Row, Row>() {
 
 			@Override
@@ -212,7 +213,7 @@ public class SimulateMLOperator implements Serializable {
 		fields.add(DataTypes.createStructField("trialValue", DataTypes.LongType, true));
 		StructType schema = DataTypes.createStructType(fields);
 		// Apply the schema to the RDD
-		df = sparkSession.createDataFrame(rowRDD, schema);
+//		df = sparkSession.createDataFrame(rowRDD, schema);
 		return df;
 	}
 	
@@ -220,4 +221,15 @@ public class SimulateMLOperator implements Serializable {
 		return multiNormalDist.executeDistribution(distribution, numTrials, seed, factorMeansInfo, factorCovariancesInfo);
 	}
 	
+	/*public String generateSql(Simulate simulate, String tableName) {
+		List<FeatureRefHolder> features = simulate.getFeatureInfo();
+		StringBuilder sb = new StringBuilder();
+		// write code
+		for (FeatureRefHolder featureRef : features) {
+			featureRef.getRef()
+			sb.append("(" + feature.getMinVal() + " + rand()*(" + feature.getMaxVal() + "-" + feature.getMinVal()
+					+ ")) AS " + feature.getName() + ", ");
+		}
+	}
+	*/
 }

@@ -11,6 +11,8 @@
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
+import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
@@ -226,4 +229,42 @@ public interface IExecutor {
 	 * @param clientContext
 	 */
 	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception;
+
+	/**
+	 * 
+	 * @param factorCovarianceDp
+	 * @param factorCovarianceDs
+	 * @param hdfsInfo
+	 * @return
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	double[][] twoDArrayFromDatapod(Datapod factorCovarianceDp, DataStore factorCovarianceDs, HDFSInfo hdfsInfo)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+
+	/**
+	 * 
+	 * @param factorMeanDp
+	 * @param factorMeanDs
+	 * @param hdfsInfo
+	 * @return
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	double[] oneDArrayFromDatapod(Datapod factorMeanDp, DataStore factorMeanDs, HDFSInfo hdfsInfo)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
 }

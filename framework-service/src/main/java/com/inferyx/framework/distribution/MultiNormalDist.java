@@ -224,12 +224,7 @@ public class MultiNormalDist {
 	    trialsRdd.cache();
 	    
 		
-//	    List<StructField> fields = new ArrayList<>();
-//		fields.add(DataTypes.createStructField("slNo", DataTypes.LongType, true));
-		/*fields.add(DataTypes.createStructField("trialValue", DataTypes.DoubleType, true));
-		StructType schema = DataTypes.createStructType(fields);*/
 		return sparkSession.sqlContext().createDataset(trialsRdd.rdd(), Encoders.DOUBLE()).toDF();
-//		return sparkSession.createDataFrame(trialsRowRdd, schema); 
 	}
 
 	/**
@@ -283,4 +278,19 @@ public class MultiNormalDist {
 		return instrumentTrialValue;
 	}
 	
+	/**
+	 * 
+	 * @param seed
+	 * @param instruments
+	 * @param factorMeans
+	 * @param factorCovariances
+	 * @return
+	 */
+	public MultivariateNormalDistribution generateMultivariateNormDist(long seed, Row instruments, 
+			double[] factorMeans, double[][] factorCovariances) {
+		MersenneTwister rand = new MersenneTwister();
+		MultivariateNormalDistribution multivariateNormal = new MultivariateNormalDistribution(rand, 
+				factorMeans, factorCovariances);
+		return multivariateNormal;
+	}
 }

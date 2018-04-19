@@ -27,6 +27,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.ml.Pipeline;
@@ -52,11 +53,13 @@ import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
+import com.inferyx.framework.distribution.MultivariateMapFunction;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.DataFrameHolder;
@@ -1066,6 +1069,100 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> df = simulateMLOperator.simulateMultiVarNormDist(seed, distribution.getClassName(), numTrials/parallelism, broadcastInstruments.value(), 
 				factorMeans, factorCovariances);*/
 //		return df;
+	}
+	
+	/**
+	 * 
+	 * @param factorCovarianceDp
+	 * @param factorCovarianceDs
+	 * @param hdfsInfo
+	 * @param datasource
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	@Override
+	public double[][] twoDArrayFromDatapod (Datapod factorCovarianceDp, DataStore factorCovarianceDs, HDFSInfo hdfsInfo) 
+						throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IReader datapodReader = dataSourceFactory.getDatapodReader(factorCovarianceDp, commonActivity);
+		DataFrameHolder covsHolder = datapodReader.read(factorCovarianceDp, factorCovarianceDs, hdfsInfo, sparkSession, datasource);
+		
+		Dataset<Row> covarsDf = covsHolder.getDataframe();
+		covarsDf.show();
+		
+		List<String> covarColList = new ArrayList<>();
+		for(int i=0; i<factorCovarianceDp.getAttributes().size(); i++) {
+			if(i>0)
+				covarColList.add(factorCovarianceDp.getAttributes().get(i).getName());
+		}	
+		
+		List<double[]> covarsRowList = new ArrayList<>();
+		for(Row row : covarsDf.collectAsList()) {
+			List<Double> covarsValList = new ArrayList<>();
+				for(String col : covarColList)
+					covarsValList.add(row.getAs(col));
+				covarsRowList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
+		}
+		
+		double[][] factorCovariances = covarsRowList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
+		return factorCovariances;
+	}
+	
+
+	/**
+	 * 
+	 * @param factorMeanDp
+	 * @param factorMeanDs
+	 * @param hdfsInfo
+	 * @return
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	@Override
+	public double[] oneDArrayFromDatapod (Datapod factorMeanDp, DataStore factorMeanDs, HDFSInfo hdfsInfo) 
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		List<String> meanColList = new ArrayList<>();
+		
+		IReader datapodReader = dataSourceFactory.getDatapodReader(factorMeanDp, commonActivity);
+		DataFrameHolder meansHolder = datapodReader.read(factorMeanDp, factorMeanDs, hdfsInfo, sparkSession, datasource);
+		Dataset<Row> meansDf = meansHolder.getDataframe();
+		meansDf.show();
+		
+		for(int i=0; i<factorMeanDp.getAttributes().size(); i++) {
+			if(i>0)
+				meanColList.add(factorMeanDp.getAttributes().get(i).getName());
+		}			
+		
+		List<Double> meansValList = new ArrayList<>();
+		for(Row row : meansDf.collectAsList()) {
+				for(String col : meanColList)
+					meansValList.add(row.getAs(col));
+		}		
+		double[] factorMeans = ArrayUtils.toPrimitive(meansValList.toArray(new Double[meansValList.size()]));
+		return factorMeans;
+	
+	}
+	
+	public void generateFeatureData(Object obj, int numIterations, String tableName, List<Double> datasetList) {
+		Row dataset = RowFactory.create(datasetList.toArray());
+		Dataset<Row> df = sparkSession.sqlContext().range(0, numIterations);
+		MultivariateMapFunction mapFunc = new MultivariateMapFunction(obj, dataset);
+		JavaRDD<Row> rowRDD = df.javaRDD().map(mapFunc);
+		df.createOrReplaceTempView(tableName);
 	}
 	
 }
