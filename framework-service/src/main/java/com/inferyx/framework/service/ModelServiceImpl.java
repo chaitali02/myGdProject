@@ -36,6 +36,8 @@ import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
@@ -60,11 +63,11 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
-import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -72,6 +75,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ResultSetHolder;
@@ -86,6 +90,7 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.SimulateMLOperator;
 import com.inferyx.framework.register.GraphRegister;
@@ -145,6 +150,9 @@ public class ModelServiceImpl {
 	private SparkExecutor sparkExecutor;
 	@Autowired
 	private SimulateMLOperator simulateMLOperator;
+	DataSourceFactory dataSourceFactory;
+	@Autowired
+	MetadataUtil commonActivity;
 	
 	//private ParamMap paramMap;
 
@@ -911,14 +919,14 @@ public class ModelServiceImpl {
 					Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(1).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(1).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(1).getParamValue().getRef().getType().toString());
 					DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
 					ResultSetHolder meansRSHolder = sparkExecutor.readFile(commonServiceImpl.getApp().getUuid(), factorMeanDp, factorMeanDs, hdfsInfo, null, datasource);
-					double[] factorMeans = sparkExecutor.getMeans(meansRSHolder, factorMeanDp);
+					double[] factorMeans = sparkExecutor.oneDArrayFromDatapod(meansRSHolder, factorMeanDp);
 					
 					Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(2).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(2).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(2).getParamValue().getRef().getType().toString());
 					DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
 					ResultSetHolder covsRSHolder = sparkExecutor.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
-					double[][] factorCovariances = sparkExecutor.getCovs(covsRSHolder, factorCovarianceDp);
+					double[][] factorCovariances = sparkExecutor.twoDArrayFromDatapod(covsRSHolder, factorCovarianceDp);
 
-					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMVND(seed, factorMeans, factorCovariances);
+					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
 					
 					MetaIdentifierHolder dataSetHolder = simulate.getSource();
 					Datapod datasetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
@@ -1343,5 +1351,70 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		}
 		return (List<Model>) mongoTemplate.find(query, Model.class);
 	}
+	
+	/**
+	 * 
+	 * @param distribution
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public Row getInstruments(List<Param> params) throws JsonProcessingException {
+		Row dataset = null;
+		
+		int parallelism = Integer.parseInt(params.get(3).getParamValue());
+		String str = params.get(4).getParamValue();
+		String[] splits = str.split(",");
+		List<Double> datasetList = new ArrayList<>();
+		for(String split : splits)
+			datasetList.add(Double.parseDouble(split));
+		dataset = RowFactory.create(datasetList.toArray());
+		return dataset;
+	}
+	
+	/**
+	 * 
+	 * @param factorMeansInfo
+	 * @return
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws IOException 
+	 */
+	public double[] getMeans(MetaIdentifierHolder factorMeansInfo) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		IExecutor executor = execFactory.getExecutor(ExecContext.spark.toString());
+		Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(factorMeansInfo.getRef().getUuid(), factorMeansInfo.getRef().getVersion(), factorMeansInfo.getRef().getType().toString());
+		DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
+
+		double[] factorMeans = 	executor.oneDArrayFromDatapod(null, factorMeanDp);
+		return factorMeans;
+		
+	}
+	
+	/**
+	 * 
+	 * @param factorCovariancesInfo
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 * @throws IOException
+	 */
+	public double[][] getCovs(MetaIdentifierHolder factorCovariancesInfo) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		IExecutor executor = execFactory.getExecutor(ExecContext.spark.toString());
+		Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(factorCovariancesInfo.getRef().getUuid(), factorCovariancesInfo.getRef().getVersion(), factorCovariancesInfo.getRef().getType().toString());
+		DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
+
+		double[][] factorCovariances = executor.twoDArrayFromDatapod(null, factorCovarianceDp);
+		return factorCovariances;
+	}
+	
 
 }

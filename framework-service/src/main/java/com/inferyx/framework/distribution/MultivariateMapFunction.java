@@ -28,10 +28,11 @@ public class MultivariateMapFunction implements Function<Row, Row> {
 	 * 
 	 */
 	private static final long serialVersionUID = 329038594226801317L;
-	private double[] factorMeans;
+	/*private double[] factorMeans;
 	private double[][] factorCovariances;
 	private Constructor<?> cons;
-	private Long seed;
+	private Long seed;*/
+	private Object object;
 	private Row dataset;
 
 	/**
@@ -48,21 +49,22 @@ public class MultivariateMapFunction implements Function<Row, Row> {
 	 * @param seed
 	 * @param dataset
 	 */
-	public MultivariateMapFunction(double[] factorMeans2, double[][] factorCovariances2, Constructor<?> cons, Long seed,
+	public MultivariateMapFunction(Object object, 
 			Row dataset) {
 		super();
-		this.factorMeans = factorMeans2;
+		/*this.factorMeans = factorMeans2;
 		this.factorCovariances = factorCovariances2;
 		this.cons = cons;
-		this.seed = seed;
+		this.seed = seed;*/
+		this.object = object;
 		this.dataset = dataset;
 	}
 	
 	@Override
 	public Row call(Row inputRow) throws Exception {
-		RandomGenerator rand = new MersenneTwister(seed);
+		/*RandomGenerator rand = new MersenneTwister(seed);
 		Object[] obj = {rand, factorMeans, factorCovariances};
-		Object object = cons.newInstance(obj);
+		Object object = cons.newInstance(obj);*/
 		Double totalValue = 0.0;
 		double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
 		for (int j=0; j<dataset.length(); j++) {			
