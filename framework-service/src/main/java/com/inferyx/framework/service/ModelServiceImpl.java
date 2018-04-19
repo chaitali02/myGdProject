@@ -894,7 +894,7 @@ public class ModelServiceImpl {
 			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			
-			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.simulate.path"), filePath);
 			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Object result = null;
@@ -917,6 +917,7 @@ public class ModelServiceImpl {
 					DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
 					ResultSetHolder covsRSHolder = sparkExecutor.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
 					double[][] factorCovariances = sparkExecutor.getCovs(covsRSHolder, factorCovarianceDp);
+
 					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMVND(seed, factorMeans, factorCovariances);
 					
 					MetaIdentifierHolder dataSetHolder = simulate.getSource();
@@ -926,8 +927,8 @@ public class ModelServiceImpl {
 					ResultSetHolder dfRSHolder = sparkExecutor.generateFeatureData(multivariateNormal, simulate.getNumIterations(), datasetRSHolder, tableName);
 					sparkExecutor.assembleDataframe(fieldArray, dfRSHolder, tableName);
 					String sql = simulateMLOperator.generateSql(simulate, tableName);
-					sparkExecutor.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 					
+					result = sparkExecutor.executeRegisterAndPersist(sql, tableName, "/simulate"+filePath, null, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 				} else {
 					
 				}
@@ -949,7 +950,7 @@ public class ModelServiceImpl {
 					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
 					simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
 
-			simulateExec.setLocation((String) result);
+			simulateExec.setLocation(filePathUrl);
 			simulateExec.setResult(resultRef);
 			commonServiceImpl.save(MetaType.simulateExec.toString(), simulateExec);
 			if (result != null) {

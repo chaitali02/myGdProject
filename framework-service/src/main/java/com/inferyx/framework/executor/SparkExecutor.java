@@ -1085,16 +1085,17 @@ public class SparkExecutor implements IExecutor {
 	
 	public ResultSetHolder generateFeatureData(Object object, int numIterations, ResultSetHolder datasetRSHolder, String tableName) {
 		ResultSetHolder rsHolder = new ResultSetHolder();
-		Row dataset = datasetRSHolder.getDataFrame().first();
+		Dataset<Row> datasetDF = datasetRSHolder.getDataFrame();
+		Row[] datasets = (Row[]) datasetDF.head(Integer.parseInt(""+datasetDF.count()));
 		double trialValues[] = new double[numIterations];
 		
-		IntStream.range(0,  numIterations).forEach(i -> {
+		for(int i=0; i<numIterations; i++) {
 			Double totalValue = 0.0;			
 			try {
 				double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
 
-				for (int j=0; j<dataset.length(); j++) {			
-					totalValue += trial[j] * (Double)dataset.get(j);
+				for (int j=0; j<datasets.length; j++) {			
+					totalValue += trial[j] * (Double)datasets[j].get(0);
 				}
 				trialValues[i] = totalValue;
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -1102,7 +1103,7 @@ public class SparkExecutor implements IExecutor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		});		
+		}
 		//ClassTag<Row> classTagRow = scala.reflect.ClassTag$.MODULE$.apply(Row.class);
 		//Broadcast<Row> broadcastInstruments = sparkSession.sparkContext().broadcast(dataset, classTagRow);
 		
@@ -1175,7 +1176,6 @@ public class SparkExecutor implements IExecutor {
 		
 		List<String> covarColList = new ArrayList<>();
 		for(int i=0; i<factorCovarianceDp.getAttributes().size(); i++) {
-			if(i>0)
 				covarColList.add(factorCovarianceDp.getAttributes().get(i).getName());
 		}	
 		
@@ -1198,8 +1198,7 @@ public class SparkExecutor implements IExecutor {
 
 		List<String> meanColList = new ArrayList<>();
 		for(int i=0; i<factorMeanDp.getAttributes().size(); i++) {
-			if(i>0)
-				meanColList.add(factorMeanDp.getAttributes().get(i).getName());
+			meanColList.add(factorMeanDp.getAttributes().get(i).getName());
 		}			
 		
 		List<Double> meansValList = new ArrayList<>();
@@ -1213,8 +1212,10 @@ public class SparkExecutor implements IExecutor {
 	}
 	
 	public Dataset<Row> assembleDataframe(String[] fieldArray, ResultSetHolder dfRSHolder, String tableName){
+		Dataset<Row> dfTemp = dfRSHolder.getDataFrame();
+		Dataset<Row> df = dfTemp.withColumnRenamed("value", fieldArray[0]);
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-		Dataset<Row> assembledDf = va.transform(dfRSHolder.getDataFrame());
+		Dataset<Row> assembledDf = va.transform(df);
 		assembledDf.show();
 		sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 		return assembledDf;
