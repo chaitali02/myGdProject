@@ -1,0 +1,55 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "model",
+            "uuid" : "4f746686-019f-47da-a744-b77acf1b2a99"
+        }
+    },
+    "target" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+        }
+    },
+    "numIterations" : 1000,
+    "featureInfo" : [ 
+        {
+            "featureId" : "0",
+            "featureName" : "interestRate",
+            "ref" : {
+                "type" : "model",
+                "uuid" : "4f746686-019f-47da-a744-b77acf1b2a99"
+            }
+        }
+    ],
+    "source" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+        }
+    },
+    "uuid" : "1159ea4a-dcc6-47d8-aa5b-ed79a8701389",
+    "version" : "1524135610",
+    "name" : "sim_formula_without_dist",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-04-19T11:00:10.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}
