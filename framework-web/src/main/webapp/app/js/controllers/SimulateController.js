@@ -132,17 +132,13 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
       
     }
   }
-  // $scope.getAllLetestFactors=function(){
-  //   SimulateService.getAllLatest($scope.selectFactorMeanType).then(function(response) { onGetAllLatest(response.data)});
-  //   var onGetAllLatest = function(response) {
-  //     $scope.allFactorMean = response;
-  //     $scope.allFactorCovarient = response;
-  //     if(typeof $stateParams.id == "undefined") {
-  //       $scope.selectFactorMean=response[0];
-  //       $scope.selectFactorCovarient=response[0];
-  //     }
-  //   }
-  // }
+  $scope.getAllLatestDatapod=function(){
+    CommonService.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
+		var onSuccessGetAllLatest = function (response) {
+      $scope.allDatapod=response;
+    }
+  }
+
   $scope.getAllLetestSource=function(){
     SimulateService.getAllLatest($scope.selectSourceType).then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
@@ -172,7 +168,6 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
   }
   $scope.getAllLetestModel();
   $scope.getAllLetestDistribution();
-  //$scope.getAllLetestFactors();
   $scope.getAllLetestSource();
   $scope.getAllLetestTarget();
   
@@ -241,20 +236,6 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
       selectModel.uuid=response.dependsOn.ref.uuid;
       selectModel.name=response.dependsOn.ref.name;
       $scope.selectModel=selectModel;
-      // var selectFactorMean={};
-      // $scope.selectFactorMean=null;
-      // if(response.factorMeanInfo !=null){
-      //   selectFactorMean.uuid=response.factorMeanInfo.ref.uuid;
-      //   selectFactorMean.name=response.factorMeanInfo.ref.name;
-      //   $scope.selectFactorMean=selectFactorMean;
-      // }
-      // var selectFactorCovarient={};
-      // $scope.selectCovarientMean=null;
-      // if(response.factorCovarientInfo !=null){
-      //   selectFactorCovarient.uuid=response.factorCovarientInfo.ref.uuid;
-      //   selectFactorCovarient.name=response.factorCovarientInfo.ref.name;
-      //   $scope.selectFactorCovarient=selectFactorCovarient;
-      // }
       var selectSource={};
       $scope.selectSource=null;
       if(response.source !=null){
@@ -264,13 +245,11 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
         $scope.selectSource=selectSource;
       }
       var selectDistributionType={};
-      $scope.selectDistributionType=null;
       if(response.distributionTypeInfo !=null){
         selectDistributionType.uuid=response.distributionTypeInfo.ref.uuid;
-        selectDistributionType.name=response.distributionTypeInfo.ref.name;
-        $scope.selectDistributionType=selectDistributionType;
+        selectDistributionType.name=response.distributionTypeInfo.ref.name;      
+        $scope.selectDistributionType=selectDistributionType;        
       }
-      
       var selectTarget={};
       $scope.selectTarget=null;
       selectTarget.uuid=response.target.ref.uuid;
@@ -287,39 +266,59 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
 			  	tags[i]=tag
 			  	$scope.tags=tags;
 			  }
-			}
-     // $scope.getAllAttribute();
+      }
       $scope.onChangeModel();
-      // var featureMapTableArray=[];
-      // for(var i=0;i<response.featureInfo.length;i++){
-      //   var featureMap={};
-      //   var sourceFeature={};
-      //   var targetFeature={};
-      //   sourceFeature.featureId = response.featureInfo[i].featureId;
-      //   sourceFeature.type = response.featureInfo[i].type  ;
-      //   //sourceFeature.datapodname = response.featureInfo[i].name;
-      //   sourceFeature.name = response.featureInfo[i].name;
-      //   sourceFeature.desc = response.featureInfo[i].desc;
-      //   sourceFeature.minVal = response.featureInfo[i].minVal;
-      //   sourceFeature.maxVal = response.featureInfo[i].maxVal;
-      //   featureMap.sourceFeature=sourceFeature;
-      //   featureMapTableArray[i]=featureMap;
-      // }
-      // $scope.featureMapTableArray=featureMapTableArray;
     }
   }
+  
   if(typeof $stateParams.id != "undefined") {
     $scope.showactive="true"
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
-    
     $scope.getAllVersion($stateParams.id)
     $scope.getOneByUuidandVersion($stateParams.id,$stateParams.version);
   }
  
   $scope.selectVersion=function(uuid,version){
+    $scope.selectDistributionType={};
+    $scope.allDistribution=null;
+    $scope.getAllLetestDistribution();
     $scope.getOneByUuidandVersion(uuid,version);
   }
+  
+  $scope.onChangeDistribution=function(){
+    if($scope.selectDistributionType !=null){
+       $scope.checkboxSimulateexecution="No";
+    }else{
+      $scope.isShowExecutionParam=false;
+      $scope.checkboxSimulateexecution="No";  
+    }
+  }
+  $scope.onChangeRunImmediately=function(){
+    $scope.isShowExecutionParam=false;
+    if($scope.selectDistributionType !=null){
+      $scope.getAllLatestDatapod();
+      SimulateService.getParamListByDistribution($scope.selectDistributionType.uuid).then(function(response) {
+        onSuccesGetParamListByDistribution(response.data)
+      });
+      var onSuccesGetParamListByDistribution = function(response) {
+        $scope.paramListHolder=response;
+        if(response.length >0){
+          $scope.isShowExecutionParam=true;
+        }else{
+          $scope.isShowExecutionParam=false;
+        }
+      }
+    }else{
+      $scope.paramListHolder=[];
+    }
+   
+  }
+  $scope.showMessage = function(input) {
+    var show = input.$invalid && (input.$dirty || input.$touched);
+    return show;
+  };
+
   $scope.submitModel = function() {
     $scope.isshowSimulate = true;
     $scope.dataLoading = true;
@@ -331,7 +330,6 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     SimulateJson.active = $scope.simulateData.active;
     SimulateJson.published=$scope.simulateData.published; 
     SimulateJson.numIterations=$scope.simulateData.numIterations;
-    //SimulateJson.seed=$scope.simulateData.seed;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -345,18 +343,6 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     ref.uuid=$scope.selectModel.uuid;
     dependsOn.ref=ref;
     SimulateJson.dependsOn=dependsOn;
-    // var factorMeanInfo={};
-    // var factorMeanRef={};
-    // factorMeanRef.type=$scope.selectFactorMeanType;
-    // factorMeanRef.uuid=$scope.selectFactorMean.uuid;
-    // factorMeanInfo.ref=factorMeanRef;
-    // SimulateJson.factorMeanInfo=factorMeanInfo;
-    // var factorCovarientInfo={};
-    // var factorCovarientRef={};
-    // factorCovarientRef.type=$scope.selectFactorCovarientType;
-    // factorCovarientRef.uuid=$scope.selectFactorCovarient.uuid;
-    // factorCovarientInfo.ref=factorCovarientRef;
-    // SimulateJson.factorCovarientInfo=factorCovarientInfo;
     if($scope.selectSource !=null){
       var source={};
       var sourceRef={};
@@ -372,6 +358,8 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
       distributionTypeInfoRef.uuid=$scope.selectDistributionType.uuid;
       distributionTypeInfo.ref=distributionTypeInfoRef;
       SimulateJson.distributionTypeInfo=distributionTypeInfo;
+    }else{
+      SimulateJson.distributionTypeInfo=null;
     }
     var target={};
     var targetref={};
@@ -435,7 +423,35 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     $scope.isshowSimulate = sessionStorage.isshowmodel
   };
   $scope.simulateExecute=function(response){
-    CommonService.executeWithParams("simulate", response.uuid, response.version,null).then(function(response) { onSuccessExectute()});
+    var execParams={};
+    var paramListInfo=[];
+    if($scope.paramListHolder.length>0){
+      for(var i=0;i<$scope.paramListHolder.length;i++){
+        var paramList={};
+        paramList.paramId=$scope.paramListHolder[i].paramId;
+        paramList.paramName=$scope.paramListHolder[i].paramName;
+        paramList.paramType=$scope.paramListHolder[i].paramType;
+        var ref={};
+        var paramValue={};  
+        if($scope.paramListHolder[i].paramType !="row"){
+          ref.type="simple";
+          paramValue.ref=ref;
+          paramValue.value=$scope.paramListHolder[i].paramValue;  
+        }
+        else{
+          ref.type="datapod";
+          ref.uuid=$scope.paramListHolder[i].selectedParamValue.uuid;  
+          paramValue.ref=ref;
+        }
+        paramList.paramValue=paramValue;
+        paramListInfo[i]=paramList;
+      }
+      execParams.paramListInfo=paramListInfo;
+    }
+    else{
+      execParams=null;
+    }
+    CommonService.executeWithParams("simulate", response.uuid, response.version,execParams).then(function(response) { onSuccessExectute()});
     var onSuccessExectute = function(){
       notify.type='success',
       notify.title= 'Success',

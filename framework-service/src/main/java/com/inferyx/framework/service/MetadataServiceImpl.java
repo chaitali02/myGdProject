@@ -1119,19 +1119,29 @@ public class MetadataServiceImpl {
 		ParamList paramList = null;
 		if (distribution.getParamList().getRef().getType().equals(MetaType.paramlist)) {
 
-			paramList = (ParamList) commonServiceImpl.getLatestByUuid(distribution.getParamList().getRef().getUuid(),
-					MetaType.paramlist.toString(), "N");
+			paramList = (ParamList) commonServiceImpl.getLatestByUuid(
+					distribution.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
 		}
-		if(paramList != null)
+		if (paramList != null)
 			for (Param param : paramList.getParams()) {
 				ParamListHolder paramListHolder = new ParamListHolder();
 				paramListHolder.setParamId(param.getParamId());
 				paramListHolder.setParamName(param.getParamName());
 				paramListHolder.setParamType(param.getParamType());
-				paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+				if(param.getParamType().equalsIgnoreCase("ROW")) {
+				
+					paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
+				}
+				else {
+					paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+					
+				}
+				paramListHolder.setRef(
+						new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 				paramListHolder.getRef().setName(paramList.getName());
 				holderList.add(paramListHolder);
 			}
+
 		return holderList;
 	}
 	
