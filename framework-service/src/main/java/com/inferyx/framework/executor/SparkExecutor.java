@@ -1102,27 +1102,13 @@ public class SparkExecutor implements IExecutor {
 				trialValues[i] = totalValue;
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		//ClassTag<Row> classTagRow = scala.reflect.ClassTag$.MODULE$.apply(Row.class);
-		//Broadcast<Row> broadcastInstruments = sparkSession.sparkContext().broadcast(dataset, classTagRow);
 		
-		// Generate different seeds so that our simulations don't all end up with the same results
-//		List<Long> seeds = LongStream.range(seed, seed + parallelism).boxed().collect(Collectors.toList());
-//		
-//		ClassTag<Long> classTagLong = scala.reflect.ClassTag$.MODULE$.apply(Long.class);
-//		JavaRDD<Long> seedRdd = sparkSession.sparkContext().parallelize(JavaConversions.asScalaBuffer(seeds), parallelism, classTagLong).toJavaRDD();
-//		
-		// Main computation: run simulations and compute aggregate return for each
 		Dataset<Row> df = sparkSession.sqlContext().range(0, numIterations);
 		JavaRDD<Row> seedRdd = df.toJavaRDD();
 		JavaRDD<Double> trialsRdd = seedRdd.flatMap(sdd -> Arrays.asList(ArrayUtils.toObject(trialValues)).iterator());
-		
-//		JavaRDD<Double> trialsRdd = seedRdd.flatMap(sdd -> Arrays.asList(ArrayUtils.toObject(trialValues)).iterator());
-//		
-		//JavaRDD<Row> trialsRowRdd = trialsRdd.map(new DoubleToRowFunction());
 
 		// Cache the results so that we don't recompute for both of the summarizations below
 	    trialsRdd.cache();
@@ -1130,25 +1116,15 @@ public class SparkExecutor implements IExecutor {
 	    sparkSession.sqlContext().registerDataFrameAsTable(featureDf, tableName);
 	    rsHolder.setDataFrame(featureDf);
 	    
-	    /*Dataset<Row> df = sparkSession.sqlContext().range(0, numIterations);
-	    JavaRDD<Row> rowRDD = df.javaRDD().map((Function<Row, Row>) object);
-	    List<StructField> fields = new ArrayList<>();
-		fields.add(DataTypes.createStructField("slNo", DataTypes.LongType, true));
-		fields.add(DataTypes.createStructField("trialValue", DataTypes.LongType, true));
-		StructType schema = DataTypes.createStructType(fields);
-		// Apply the schema to the RDD
-		df = sparkSession.createDataFrame(rowRDD, schema);
-	    rsHolder.setDataFrame(df);*/
-	    
 		return rsHolder;
 	}
 	
-	public ResultSetHolder simulateModel(String modelPath, String tableName) {
+	/*public ResultSetHolder simulateModel(String modelPath, String tableName) {
 
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		
 		return rsHolder;
-	}
+	}*/
 	
 	public ResultSetHolder generateFeatureData(List<Feature> features, int numIterations, String tableName) {
 		ResultSetHolder rsHolder = new ResultSetHolder();
@@ -1167,50 +1143,6 @@ public class SparkExecutor implements IExecutor {
 		df.show();
 		rsHolder.setDataFrame(df);
 		return rsHolder;
-	}
-	
-	
-	public double[][] getCovs(ResultSetHolder rsHolder, Datapod factorCovarianceDp) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
-		
-		Dataset<Row> covarsDf = rsHolder.getDataFrame();
-		covarsDf.show();
-		
-		
-		List<String> covarColList = new ArrayList<>();
-		for(int i=0; i<factorCovarianceDp.getAttributes().size(); i++) {
-				covarColList.add(factorCovarianceDp.getAttributes().get(i).getName());
-		}	
-		
-		List<double[]> covarsRowList = new ArrayList<>();
-		for(Row row : covarsDf.collectAsList()) {
-			List<Double> covarsValList = new ArrayList<>();
-				for(String col : covarColList)
-					covarsValList.add(row.getAs(col));
-				covarsRowList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
-		}
-		
-		double[][] factorCovariances = covarsRowList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
-		return factorCovariances;
-	}
-	
-	public double[] getMeans(ResultSetHolder rsHolder, Datapod factorMeanDp) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
-		
-		Dataset<Row> meansDf = rsHolder.getDataFrame();
-		meansDf.show();
-
-		List<String> meanColList = new ArrayList<>();
-		for(int i=0; i<factorMeanDp.getAttributes().size(); i++) {
-			meanColList.add(factorMeanDp.getAttributes().get(i).getName());
-		}			
-		
-		List<Double> meansValList = new ArrayList<>();
-		for(Row row : meansDf.collectAsList()) {
-				for(String col : meanColList)
-					meansValList.add(row.getAs(col));
-		}		
-		double[] factorMeans = ArrayUtils.toPrimitive(meansValList.toArray(new Double[meansValList.size()]));
-		return factorMeans;
-		
 	}
 	
 	public Dataset<Row> assembleDataframe(String[] fieldArray, ResultSetHolder dfRSHolder, String tableName){
