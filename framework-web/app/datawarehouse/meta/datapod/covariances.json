@@ -1,5 +1,4 @@
 {
-   
     "datasource" : {
         "ref" : {
             "type" : "datasource",
@@ -10,16 +9,6 @@
     "attributes" : [ 
         {
             "attributeId" : 0,
-            "name" : "id",
-            "type" : "string",
-            "desc" : "id",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "id",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 1,
             "name" : "covar1",
             "type" : "double",
             "desc" : "covar1",
@@ -29,7 +18,7 @@
             "active" : "Y"
         }, 
         {
-            "attributeId" : 2,
+            "attributeId" : 1,
             "name" : "covar2",
             "type" : "double",
             "desc" : "covar2",
@@ -39,7 +28,7 @@
             "active" : "Y"
         }, 
         {
-            "attributeId" : 3,
+            "attributeId" : 2,
             "name" : "covar3",
             "type" : "double",
             "desc" : "covar3",
@@ -61,7 +50,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-04-09T12:16:06.000Z"),
+    "createdOn" : ISODate("2018-04-17T12:04:26.950Z"),
     "tags" : [ 
         "demo"
     ],

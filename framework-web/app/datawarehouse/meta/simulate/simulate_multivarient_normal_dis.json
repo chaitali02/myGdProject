@@ -28,8 +28,14 @@
             "uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050"
         }
     },
+    "source" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "ab18598b-3897-419a-b48a-5f7303d30e4d"
+        }
+    },
     "uuid" : "00c1af72-5815-4e52-b452-1c781961d040",
-    "version" : "1523603970",
+    "version" : "1524064947",
     "name" : "simulate_multivarient_normal_dis",
     "createdBy" : {
         "ref" : {
@@ -39,7 +45,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-04-17T12:04:30.209Z"),
+    "createdOn" : ISODate("2018-04-18T15:22:27.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

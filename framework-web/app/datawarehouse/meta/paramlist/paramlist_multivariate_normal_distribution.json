@@ -17,18 +17,6 @@
             "paramName" : "factorvarience",
             "paramType" : "ROW",
             "paramValue" : ""
-        }, 
-        {
-            "paramId" : "3",
-            "paramName" : "parallelism",
-            "paramType" : "INTEGER",
-            "paramValue" : "5"
-        }, 
-        {
-            "paramId" : "4",
-            "paramName" : "dataset",
-            "paramType" : "ROW",
-            "paramValue" : "1.0,2.0,3.35"
         }
     ],
     "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
