@@ -198,26 +198,31 @@
 
                                 <!--Start Tab2-->
                                 <div class="tab-pane" id="tab2" ng-class="{'active' : continueCount == 2}">
-                                    <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()" novalidate="novalidate">
+                                    <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()" novalidate>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model
+                                                    <span class="required" aria-required="true"> * </span>
+                                            </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                                <select select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid"
-                                                    ng-change="onChangeModel()">
+                                                <select select2  class="form-control" ng-disabled="{{mode}}" name="modelName" data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid"
+                                                    ng-change="onChangeModel()" required>
+                                                    
                                                 </select>
+                                                <input  name="modelName" type="hidden" ng-model="selectModel.uuid" required />
+                                                <!-- <span class="error-message" ng-show="showMessage(myform2.modelName)">Please complete this field.</span> -->
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Source</label>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Source <span class="required" aria-required="true"> * </span></label>
                                             <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in sourceTypes"
+                                                <select   class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in sourceTypes" required
                                                     ng-change="onChangeSourceType()">
                                                 </select>
                                             </div>
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource()" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
+                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource()" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid " required>
                                                 </select>
                                             </div>
                                         </div>
@@ -301,7 +306,7 @@
                                                 <a href="javascript:;" class="btn default button-previous" ng-click="countBack()">
                                                     <i class="fa fa-angle-left"></i> Back
                                                 </a>
-                                                <button type="submit" class="btn btn-outline green button-next"> Continue
+                                                <button type="submit"  class="btn btn-outline green button-next"> Continue
                                                     <i class="fa fa-angle-right"></i>
                                                 </button>
                                             </div>
@@ -313,25 +318,6 @@
                                 <!-- Start Tab3 -->
                                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
                                     <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="submitModel()" novalidate="novalidate">
-                                        <!-- <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Target</label>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectTargetType" ng-options="r for r in targetTypes" ng-change="onChangeTargeType()">
-                                                </select>
-                                            </div>
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
-                                            <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="isTargetNameDisabled || {{mode}}" ng-change="onChangeSource()" data-ng-model="selectTarget" ng-options="r as r.name for r in allTarget  track by r.uuid ">
-                                                </select>
-                                        </div>
-                                    </div> -->
-                                        <!-- <div class="form-group">
-                                        <label class="col-md-3 control-label">Target</label>
-                                        <div class="col-md-6">
-                                            <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectTargetType" ng-options="r for r in targetTypes" ng-change="onChangeTargeType()">
-                                            </select>
-                                        </div>
-                                    </div> -->
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Save Results</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12">
@@ -346,74 +332,74 @@
                                             </div>
                                         </div>
                                        
-                                        <!-- <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Factor Mean</label>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectFactorMeanType" ng-options="r for r in factorTypes"
-                                                    ng-change="onChangeTargeType()">
-                                                </select>
-                                            </div>
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
-                                            <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="selectFactorMean" ng-options="r as r.name for r in allFactorMean  track by r.uuid ">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Factor Covarient</label>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectFactorCovarientType" ng-options="r for r in factorTypes"
-                                                    ng-change="onChangeTargeType()">
-                                                </select>
-                                            </div>
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
-                                            <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="{{mode}} "  data-ng-model="selectFactorCovarient" ng-options="r as r.name for r in allFactorCovarient  track by r.uuid ">
-                                                </select>
-                                            </div>
-                                        </div> -->
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Distribution Type</label> 
                                             <div class="col-md-6">                                          
-                                                <select class="form-control" select2 ng-disabled="{{mode}} "  data-ng-model="selectDistributionType" ng-options="r as r.name for r in allDistribution  track by r.uuid ">
-                                                <option value="">-select-</option>
-                                                </select>
-
-                                            </div>
-                                        </div>
-                                        <!-- <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">DataSet</label> 
-                                            <div class="col-md-6">                                          
-                                                <select class="form-control" select2 ng-disabled="{{mode}} "  data-ng-model="selectDistDataset" ng-options="r as r.name for r in allDistDataset  track by r.uuid ">
+                                                <select  class="form-control" select2 ng-disabled="{{mode}}"  data-ng-model="selectDistributionType" ng-options="r as r.name for r in allDistribution  track by r.uuid " ng-change="onChangeDistribution()">
                                                     <option value="">-select-</option>
                                                 </select>
 
                                             </div>
-                                        </div> -->
+                                        </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Num Iterations
-                                                <!-- <span class="required" aria-required="true"> * </span> -->
+                                                <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-2">
                                                 <input type="number" limit-to="4" class="form-control" ng-disabled="{{mode}}" ng-model="simulateData.numIterations" max="1000" required>
                                             </div>
                                         </div>
-                                        <!-- <div class="form-group">
-                                            <label class="col-md-3 control-label">Seed
-                                            </label>
-                                            <div class="col-md-2">
-                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="simulateData.seed" ng-init="generateRadomValue()">
-                                            </div>
-                                        </div> -->
+                                      
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Run Immediately ?
                                             </label>
                                             <div class="col-md-9">
                                                 <div class="mt-checkbox-list" style="margin-top:-7px">
                                                     <label class="mt-checkbox mt-checkbox-outline">
-                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="checkboxSimulateexecution" ng-true-value="'YES'" ng-false-value="'NO'">
+                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="checkboxSimulateexecution" ng-true-value="'YES'" ng-false-value="'NO'" ng-change="onChangeRunImmediately()">
                                                         <span ng-disabled="{{mode}}"></span>
                                                     </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div ng-show="isShowExecutionParam">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div style="overflow-x: auto;">
+                                                        <table class=" row-border hover table  table-striped table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width:6%;text-align:center">ID</th>
+                                                                    <th class="text-center">Param Name</th>
+                                                                    <th class="text-center">Param Value</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="listHolder in paramListHolder">
+                                                                    <td style="width:6%;"><input type="text" ng-model="listHolder.paramId" ng-disabled="true" class="form-control">
+                                                                    </td>
+                                                                    <td style="width:10%;"><input type="text" ng-model="listHolder.paramName" ng-disabled="true" class="form-control">
+                                                                    </td>
+                                                                    <td style="width:20%;">
+                                                                        <div ng-if="listHolder.isParamType =='simple'">
+                                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                            <input ng-if="listHolder.paramType !='integer'" type="text" ng-model="listHolder.paramValue"  class="form-control" required  disable-validation-message="">
+                                                                            <input ng-if="listHolder.paramType =='integer'" type="text " ng-model="listHolder.paramValue"   class="form-control" required  disable-validation-message="">
+                                                                        </span>
+                                                                        </div>
+                                                                        <div ng-if="listHolder.isParamType !='simple'">
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <select class="form-control"  name ="paramValue{{$index}}" select2  data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDatapod | orderBy:'name'" required>
+                                                                                </select disable-validation-message="">
+                                                                                <input  disable-validation-message="" name ="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required />
+                                                                            </span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
