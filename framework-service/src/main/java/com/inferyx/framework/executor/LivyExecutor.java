@@ -248,4 +248,20 @@ public class LivyExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public double[][] twoDArrayFromDatapod(Datapod factorCovarianceDp, DataStore factorCovarianceDs, HDFSInfo hdfsInfo)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double[] oneDArrayFromDatapod(Datapod factorMeanDp, DataStore factorMeanDs, HDFSInfo hdfsInfo)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
