@@ -43,6 +43,7 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Simulate;
@@ -227,10 +228,9 @@ public class SimulateMLOperator implements Serializable {
 		String aliaseName = "";
 		builder.append("SELECT ");
 		MetaIdentifierHolder dependsOn = model.getDependsOn();
-		Object object = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
-		int i = 0;
-		if(object instanceof Formula) {
-			Formula formula = (Formula) object;
+		if(dependsOn.getRef().getType().equals(MetaType.formula)) {
+			Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
+			int i = 0;
 			for (Feature feature : model.getFeatures()) {
 				builder.append(feature.getName()).append(" AS ").append(feature.getName()).append(", ");
 				i++;
@@ -241,9 +241,20 @@ public class SimulateMLOperator implements Serializable {
 			builder.append(tableName).append(" ").append(aliaseName);
 			
 			LOGGER.info("query : "+builder);
+			return builder.toString();
+		} else if(dependsOn.getRef().getType().equals(MetaType.algorithm)) {
+			StringBuilder sb = new StringBuilder();
+			for (Feature feature : model.getFeatures()) {
+				sb.append("(" + feature.getMinVal() + " + rand()*(" + feature.getMaxVal() + "-" + feature.getMinVal()
+						+ ")) AS " + feature.getName() + ", ");
+			}
+			
+			String query = "SELECT id, " + sb.toString().substring(0, sb.toString().length() - 2) + " FROM " + tableName;
+			LOGGER.info("query : "+query);
+			return query;
 		}
 		
-		return builder.toString();
+		return null;
 	}
 	
 }

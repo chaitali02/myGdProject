@@ -145,7 +145,7 @@ public class PredictMLOperator {
 				dfTask.cache();
 
 				sqlContext.registerDataFrameAsTable(dfTask, tableName);
-
+				dfTask.show();
 				dfTask.printSchema();
 				IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 				datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
