@@ -1024,14 +1024,22 @@ public class SparkExecutor implements IExecutor {
 	public ResultSetHolder generateFeatureData(Object object, int numIterations, ResultSetHolder datasetRSHolder, String tableName) {
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		Dataset<Row> datasetDF = datasetRSHolder.getDataFrame();
-		Row[] datasets = (Row[]) datasetDF.head(Integer.parseInt(""+datasetDF.count()));
+		double[] tempTrial = null;
+		try {
+			tempTrial = (double[]) object.getClass().getMethod("sample").invoke(object);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Row[] datasets = (Row[]) datasetDF.head(tempTrial.length);
+		
 		double trialValues[] = new double[numIterations];
 		
 		for(int i=0; i<numIterations; i++) {
 			Double totalValue = 0.0;			
 			try {
 				double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
-
 				for (int j=0; j<datasets.length; j++) {			
 					totalValue += trial[j] * (Double)datasets[j].get(0);
 				}
@@ -1078,10 +1086,10 @@ public class SparkExecutor implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder assembleDataframe(String[] fieldArray, ResultSetHolder dfRSHolder, String tableName, boolean isModelFormula){
+	public ResultSetHolder assembleDataframe(String[] fieldArray, ResultSetHolder dfRSHolder, String tableName, boolean isDistribution){
 		Dataset<Row> df = dfRSHolder.getDataFrame();
-		if(isModelFormula)
-			df = df.withColumnRenamed("value", fieldArray[0]);
+		if(isDistribution)
+			df = df.withColumnRenamed(df.columns()[0], fieldArray[0]);
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> assembledDf = va.transform(df);
 		assembledDf.show();

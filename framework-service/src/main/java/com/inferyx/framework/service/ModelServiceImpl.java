@@ -36,6 +36,7 @@ import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SaveMode;
@@ -53,6 +54,8 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
+import com.inferyx.framework.connector.ConnectionHolder;
+import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
@@ -63,6 +66,7 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.DataFrameHolder;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -79,6 +83,7 @@ import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
@@ -90,10 +95,14 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
+import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
+import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -149,6 +158,7 @@ public class ModelServiceImpl {
 	private MultiNormalDist multiNormalDist;
 	@Autowired
 	private SimulateMLOperator simulateMLOperator;
+	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	MetadataUtil commonActivity;
@@ -156,6 +166,12 @@ public class ModelServiceImpl {
 	private SparkExecutor sparkExecutor;
 	@Autowired
 	private PredictMLOperator predictMLOperator;
+	@Autowired
+	private DatasetOperator datasetOperator;
+	@Autowired
+	private RuleOperator ruleOperator;
+	@Autowired
+	private ConnectionFactory connFactory;
 	
 	//private ParamMap paramMap;
 
@@ -945,7 +961,6 @@ public class ModelServiceImpl {
 					String query = simulateMLOperator.generateSql(simulate, tableName);
 					ResultSetHolder rsHolder = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
 					sparkExecutor.assembleDataframe(fieldArray, rsHolder, tableName, false);
-					String sql = "SELECT * FROM " + tableName;
 					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 					result = exec.executeRegisterAndPersist(query, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
 				}
@@ -966,12 +981,14 @@ public class ModelServiceImpl {
 					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
 
 					MetaIdentifierHolder dataSetHolder = simulate.getSource();
-					Datapod datasetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
-					DataStore datasetDs = dataStoreServiceImpl.findDataStoreByMeta(datasetDp.getUuid(), datasetDp.getVersion());
-					ResultSetHolder datasetRSHolder = exec.readFile(appUuid, datasetDp, datasetDs, hdfsInfo, null, datasource);
-					sparkExecutor.assembleDataframe(fieldArray, datasetRSHolder, tableName, false);
-					ResultSetHolder dfRSHolder = exec.generateFeatureData(multivariateNormal, simulate.getNumIterations(), datasetRSHolder, tableName);
-					sparkExecutor.assembleDataframe(fieldArray, dfRSHolder, tableName, false);
+					Object source = commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
+					/*DataStore datasetDs = dataStoreServiceImpl.findDataStoreByMeta(datasetDp.getUuid(), datasetDp.getVersion());
+					ResultSetHolder datasetRSHolder = exec.readFile(appUuid, datasetDp, datasetDs, hdfsInfo, null, datasource);*/
+					ResultSetHolder datasetRSHolder = getRSHolderBySource(source);
+					ResultSetHolder assembledDfHolder = sparkExecutor.assembleDataframe(fieldArray, datasetRSHolder, tableName, true);
+					ResultSetHolder dfRSHolder = exec.generateFeatureData(multivariateNormal, simulate.getNumIterations(), assembledDfHolder, tableName);
+					String[] customFldArr = new String[] {fieldArray[0]};
+					ResultSetHolder dfHolder = sparkExecutor.assembleDataframe(customFldArr, dfRSHolder, tableName, true);
 					
 					String sql = "SELECT * FROM " + tableName;
 					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
@@ -1430,6 +1447,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 	 * 
 	 * @param factorCovariancesInfo
 	 * @return
+	 * @throws Exception 
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
@@ -1448,5 +1466,41 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return factorCovariances;
 	}*/
 	
+	public ResultSetHolder getRSHolderBySource(Object source) throws Exception {  
+		Dataset<Row> df = null;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		if (source instanceof Datapod) {
+			Datapod datapod = (Datapod) source;
+			DataStore datastore = dataStoreServiceImpl.findLatestByMeta(datapod.getUuid(), datapod.getVersion());
+			if (datastore == null) {
+				logger.error("Datastore is not available for this datapod");
+				throw new Exception();
+			}
+			IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+			IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
+			ConnectionHolder conHolder = conn.getConnection();
+			Object obj = conHolder.getStmtObject();
+			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
+			//df = dataFrameHolder.getDataframe();
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setDataFrame(dataFrameHolder.getDataframe());
+			return rsHolder;
+		} else if (source instanceof DataSet) {
+			DataSet dataset = (DataSet) source;
+			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, Mode.BATCH);
+			ResultSetHolder rsHolder = exec.executeSql(sql);
+			//df = rsHolder.getDataFrame();
+			return rsHolder;
+		} else if (source instanceof Rule) {
+			Rule rule = (Rule) source;
+
+			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, Mode.BATCH);
+			ResultSetHolder rsHolder = exec.executeSql(sql);
+			//df = rsHolder.getDataFrame();
+			return rsHolder;
+		}
+		return null;
+	}
 
 }
