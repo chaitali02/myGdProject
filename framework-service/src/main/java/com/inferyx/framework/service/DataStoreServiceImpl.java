@@ -304,7 +304,28 @@ public class DataStoreServiceImpl {
 */
 	public DataStore findDataStoreByMeta(String uuid, String version) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDataStoreDao.findDataStoreByMeta(appUuid, uuid, version);
+		Query query =new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		
+		if(appUuid != null)
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));
+
+		if(version != null)
+			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid).andOperator(Criteria.where("metaId.ref.version").is(version)));
+		else
+			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid));
+		query.with(new Sort(Sort.Direction.DESC, "version"));
+		List<DataStore> datastoreList = mongoTemplate.find(query, DataStore.class);
+		DataStore dataStore = null;
+		try {
+			dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getUuid(), datastoreList.get(0).getVersion(), MetaType.datastore.toString());
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dataStore;
+		//return iDataStoreDao.findDataStoreByMeta(appUuid, uuid, version);
 	}
 
 	public List<DataStore> findAllLatest() {
