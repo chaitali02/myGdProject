@@ -50,7 +50,10 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.DoubleType;
+import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.storage.StorageLevel;
@@ -1021,45 +1024,41 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
-	public ResultSetHolder generateFeatureData(Object object, int numIterations, ResultSetHolder datasetRSHolder, String tableName) {
+	public ResultSetHolder generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
 		ResultSetHolder rsHolder = new ResultSetHolder();
-		Dataset<Row> datasetDF = datasetRSHolder.getDataFrame();
-		double[] tempTrial = null;
-		try {
-			tempTrial = (double[]) object.getClass().getMethod("sample").invoke(object);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Row[] datasets = (Row[]) datasetDF.head(tempTrial.length);
-		
-		double trialValues[] = new double[numIterations];
-		
-		for(int i=0; i<numIterations; i++) {
-			Double totalValue = 0.0;			
-			try {
-				double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
-				for (int j=0; j<datasets.length; j++) {			
-					totalValue += trial[j] * (Double)datasets[j].get(0);
-				}
-				trialValues[i] = totalValue;
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-					| NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		Dataset<Row> df = sparkSession.sqlContext().range(0, numIterations);
-		JavaRDD<Row> seedRdd = df.toJavaRDD();
-		JavaRDD<Double> trialsRdd = seedRdd.flatMap(sdd -> Arrays.asList(ArrayUtils.toObject(trialValues)).iterator());
 
-		// Cache the results so that we don't recompute for both of the summarizations below
-	    trialsRdd.cache();
-	    Dataset<Row> featureDf = sparkSession.sqlContext().createDataset(trialsRdd.rdd(), Encoders.DOUBLE()).toDF();
-	    sparkSession.sqlContext().registerDataFrameAsTable(featureDf, tableName);
-	    rsHolder.setDataFrame(featureDf);
-	    
+		StructField[] fieldArray = new StructField[features.size()];
+		int count = 0;
+		for(Feature feature : features){
+			StructField field = new StructField(feature.getName(), DataTypes.DoubleType, true, Metadata.empty());
+			
+			fieldArray[count] = field;
+			count ++;
+		}
+		StructType schema = new StructType(fieldArray);
+		
+		List<Row> rowList = new ArrayList<>();
+		for(int i=0; i<numIterations; i++) {
+			List<Double> colList = new ArrayList<>();
+			for(int j=0; j<features.size(); j++) {	
+				try {
+					double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
+					Double totalVal = 0.0;
+					for(double val : trial)
+						totalVal +=val;
+					colList.add(totalVal);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+						| NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+				}
+			}
+			rowList.add(RowFactory.create(colList.toArray()));
+		}
+		
+		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
+		df.show();
+		df.printSchema();
+		rsHolder.setDataFrame(df);
 		return rsHolder;
 	}
 

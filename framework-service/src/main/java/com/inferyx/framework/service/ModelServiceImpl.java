@@ -948,11 +948,11 @@ public class ModelServiceImpl {
 
 					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
 					
-					MetaIdentifierHolder dataSetHolder = simulate.getSource();
+					/*MetaIdentifierHolder dataSetHolder = simulate.getSource();
 					Datapod datasetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
 					DataStore datasetDs = dataStoreServiceImpl.findDataStoreByMeta(datasetDp.getUuid(), datasetDp.getVersion());
-					ResultSetHolder datasetRSHolder = exec.readFile(appUuid, datasetDp, datasetDs, hdfsInfo, null, datasource);
-					ResultSetHolder dfRSHolder = exec.generateFeatureData(multivariateNormal, simulate.getNumIterations(), datasetRSHolder, tableName);
+					ResultSetHolder datasetRSHolder = exec.readFile(appUuid, datasetDp, datasetDs, hdfsInfo, null, datasource);*/
+					ResultSetHolder dfRSHolder = exec.generateFeatureData(multivariateNormal, model.getFeatures(), simulate.getNumIterations(), tableName);
 					sparkExecutor.assembleDataframe(fieldArray, dfRSHolder, tableName, true);
 					String sql = simulateMLOperator.generateSql(simulate, tableName);
 					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
@@ -980,13 +980,11 @@ public class ModelServiceImpl {
 
 					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
 
-					MetaIdentifierHolder dataSetHolder = simulate.getSource();
+					/*MetaIdentifierHolder dataSetHolder = simulate.getSource();
 					Object source = commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
-					/*DataStore datasetDs = dataStoreServiceImpl.findDataStoreByMeta(datasetDp.getUuid(), datasetDp.getVersion());
-					ResultSetHolder datasetRSHolder = exec.readFile(appUuid, datasetDp, datasetDs, hdfsInfo, null, datasource);*/
 					ResultSetHolder datasetRSHolder = getRSHolderBySource(source);
-					ResultSetHolder assembledDfHolder = sparkExecutor.assembleDataframe(fieldArray, datasetRSHolder, tableName, true);
-					ResultSetHolder dfRSHolder = exec.generateFeatureData(multivariateNormal, simulate.getNumIterations(), assembledDfHolder, tableName);
+					ResultSetHolder assembledDfHolder = sparkExecutor.assembleDataframe(fieldArray, datasetRSHolder, tableName, true);*/
+					ResultSetHolder dfRSHolder = exec.generateFeatureData(multivariateNormal, model.getFeatures(), simulate.getNumIterations(), tableName);
 					String[] customFldArr = new String[] {fieldArray[0]};
 					ResultSetHolder dfHolder = sparkExecutor.assembleDataframe(customFldArr, dfRSHolder, tableName, true);
 					
@@ -1248,9 +1246,7 @@ public class ModelServiceImpl {
 			statusList = new ArrayList<>();
 			trainExec.setStatusList(statusList);
 		}
-		
-		//Model model = iModelDao.findOneByUuidAndVersion(modelUUID, modelVersion);
-		//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID, modelVersion, MetaType.model.toString());
+	
 		if(!model.getType().equalsIgnoreCase(ExecContext.R.toString()) && !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 			runModelServiceImpl.setAlgorithmUUID(model.getDependsOn().getRef().getUuid());
 			runModelServiceImpl.setAlgorithmVersion(model.getDependsOn().getRef().getVersion());
@@ -1360,7 +1356,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 				m1.invoke(obj, path);
 				return true;
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				// e.printStackTrace();
+				e.printStackTrace();
 				String expMessage = e.getCause().getMessage();
 				if (expMessage.contains("use write().overwrite().save(path) for Java")) {
 					try {
@@ -1469,7 +1465,6 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 	}*/
 	
 	public ResultSetHolder getRSHolderBySource(Object source) throws Exception {  
-		Dataset<Row> df = null;
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		if (source instanceof Datapod) {
@@ -1484,7 +1479,6 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			ConnectionHolder conHolder = conn.getConnection();
 			Object obj = conHolder.getStmtObject();
 			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
-			//df = dataFrameHolder.getDataframe();
 			ResultSetHolder rsHolder = new ResultSetHolder();
 			rsHolder.setDataFrame(dataFrameHolder.getDataframe());
 			return rsHolder;
@@ -1492,14 +1486,11 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			DataSet dataset = (DataSet) source;
 			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, Mode.BATCH);
 			ResultSetHolder rsHolder = exec.executeSql(sql);
-			//df = rsHolder.getDataFrame();
 			return rsHolder;
 		} else if (source instanceof Rule) {
 			Rule rule = (Rule) source;
-
 			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, Mode.BATCH);
 			ResultSetHolder rsHolder = exec.executeSql(sql);
-			//df = rsHolder.getDataFrame();
 			return rsHolder;
 		}
 		return null;
