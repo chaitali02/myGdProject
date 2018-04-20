@@ -289,12 +289,10 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
   }
   
   $scope.onChangeDistribution=function(){
-    if($scope.selectDistributionType !=null){
-       $scope.checkboxSimulateexecution="No";
-    }else{
+    
       $scope.isShowExecutionParam=false;
       $scope.checkboxSimulateexecution="No";  
-    }
+    
   }
   $scope.onChangeRunImmediately=function(){
     $scope.isShowExecutionParam=false;
@@ -409,6 +407,7 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
       notify.title= 'Error',
       notify.content="Some Error Occurred"
       $scope.$emit('notify', notify);
+      $scope.okmodelsave();
     }
   }
 
@@ -453,12 +452,19 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     else{
       execParams=null;
     }
-    CommonService.executeWithParams("simulate", response.uuid, response.version,execParams).then(function(response) { onSuccessExectute()});
+    CommonService.executeWithParams("simulate", response.uuid, response.version,execParams).then(function(response) { onSuccessExectute()},function(response) { onError()});
     var onSuccessExectute = function(){
       notify.type='success',
       notify.title= 'Success',
       notify.content='Configuration Submited and Saved Successfully'
       $scope.$emit('notify', notify);
+      $scope.okmodelsave();
+    }
+    var onError=function(){
+      // notify.type='success',
+      // notify.title= 'Success',
+      // notify.content='Configuration Submited and Saved Successfully'
+      // $scope.$emit('notify', notify);
       $scope.okmodelsave();
     }
   }

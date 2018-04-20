@@ -137,6 +137,7 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
     SimulateFactory.findParamListByDistribution(uuid,version).then(function(response){ onSuccess(response.data)});
     var onSuccess = function(response) {
       var paramListHolder=[];
+      var type=["ONEDARRAY","TWODARRAY"]
       if(response.length >0){
         for(var i=0;i<response.length;i++){
           var paramList={};
@@ -145,7 +146,7 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
           paramList.paramId=response[i].paramId;
           paramList.paramType=response[i].paramType.toLowerCase();
           paramList.paramName=response[i].paramName;
-          if(response[i].paramType.toLowerCase() !="row"){
+          if(type.indexOf(response[i].paramType) == -1){
             paramList.isParamType="simple";
             paramList.paramValue=response[i].paramValue.value;
           }else{

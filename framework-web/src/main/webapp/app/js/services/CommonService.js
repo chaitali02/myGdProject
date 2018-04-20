@@ -443,6 +443,7 @@
       });
       var onSuccess = function(response) {
         var paramListHolder=[];
+        var type=["ONEDARRAY","TWODARRAY"]
         if(response.length >0){
           for(var i=0;i<response.length;i++){
             var paramList={};
@@ -451,7 +452,8 @@
             paramList.paramId=response[i].paramId;
             paramList.paramType=response[i].paramType.toLowerCase();
             paramList.paramName=response[i].paramName;
-            if(response[i].paramType.toLowerCase() !="row"){
+           
+            if(type.indexOf(response[i].paramType) == -1){
               paramList.isParamType="simple";
               paramList.paramValue=response[i].paramValue.value;
             }else{
@@ -484,13 +486,16 @@
         url = "" + type + "/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
       }
      
-      CommonFactory.httpPost(url, data).then(function(response) {
-        onSuccess(response.data)
-      });
+      CommonFactory.httpPost(url, data).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
       var onSuccess = function(response) {
         deferred.resolve({
           data: response
         });
+      }
+      var onError = function (response) {
+        deferred.reject({
+          data: response
+        })
       }
 
       // else{
