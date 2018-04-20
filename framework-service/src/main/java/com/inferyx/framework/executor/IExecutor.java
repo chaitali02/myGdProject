@@ -281,12 +281,12 @@ public interface IExecutor {
 	/**
 	 * 
 	 * @param object
+	 * @param features
 	 * @param numIterations
-	 * @param datasetRSHolder
 	 * @param tableName
 	 * @return
 	 */
-	public ResultSetHolder generateFeatureData(Object object, int numIterations, ResultSetHolder datasetRSHolder, String tableName);
+	public ResultSetHolder generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName);
 	
 	/**
 	 * 

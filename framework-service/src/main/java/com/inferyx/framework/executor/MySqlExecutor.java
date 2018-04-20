@@ -280,7 +280,7 @@ public class MySqlExecutor implements IExecutor {
 	}
 
 	@Override
-	public ResultSetHolder generateFeatureData(Object object, int numIterations, ResultSetHolder datasetRSHolder,
+	public ResultSetHolder generateFeatureData(Object object, List<Feature> features, int numIterations,
 			String tableName) {
 		// TODO Auto-generated method stub
 		return null;
