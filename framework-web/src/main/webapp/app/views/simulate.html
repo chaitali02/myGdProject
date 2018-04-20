@@ -213,6 +213,17 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Distribution Type
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label> 
+                                            <div class="col-md-6">                                          
+                                                <select  class="form-control" select2 ng-disabled="{{mode}}"  data-ng-model="selectDistributionType" ng-options="r as r.name for r in allDistribution  track by r.uuid " ng-change="onChangeDistribution()">
+                                                    <!-- <option value="">-select-</option> -->
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <!-- <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Source <span class="required" aria-required="true"> * </span></label>
                                             <div class="col-md-2 col-sm-2 col-xs-12">
                                                 <select   class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in sourceTypes" required
@@ -225,7 +236,7 @@
                                                 <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource()" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <div class="row">
                                             <div class="portlet light bordered">
@@ -332,7 +343,7 @@
                                             </div>
                                         </div>
                                        
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Distribution Type</label> 
                                             <div class="col-md-6">                                          
                                                 <select  class="form-control" select2 ng-disabled="{{mode}}"  data-ng-model="selectDistributionType" ng-options="r as r.name for r in allDistribution  track by r.uuid " ng-change="onChangeDistribution()">
@@ -340,7 +351,7 @@
                                                 </select>
 
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Num Iterations
                                                 <span class="required" aria-required="true"> * </span>
