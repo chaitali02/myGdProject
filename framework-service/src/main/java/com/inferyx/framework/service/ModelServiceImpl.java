@@ -59,6 +59,7 @@ import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
+import com.inferyx.framework.datascience.MLDistribution;
 import com.inferyx.framework.distribution.MultiNormalDist;
 import com.inferyx.framework.distribution.MultivariateMapFunction;
 import com.inferyx.framework.domain.Algorithm;
@@ -71,6 +72,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FeatureRefHolder;
@@ -172,6 +174,8 @@ public class ModelServiceImpl {
 	private RuleOperator ruleOperator;
 	@Autowired
 	private ConnectionFactory connFactory;
+	@Autowired
+	private MLDistribution mlDistribution;
 	
 	//private ParamMap paramMap;
 
@@ -908,6 +912,7 @@ public class ModelServiceImpl {
 
 	public boolean simulate(Simulate simulate, ExecParams execParams, SimulateExec simulateExec) throws Exception {
 		boolean isSuccess = false;
+		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(simulate.getDistributionTypeInfo().getRef().getUuid(), simulate.getDistributionTypeInfo().getRef().getVersion(), simulate.getDistributionTypeInfo().getRef().getType().toString());
 		try {
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.InProgress);
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
@@ -946,13 +951,15 @@ public class ModelServiceImpl {
 					ResultSetHolder covsRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
 					double[][] factorCovariances = exec.twoDArrayFromDatapod(covsRSHolder, factorCovarianceDp);
 
-					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
+					//MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
+					
+					Object object = mlDistribution.getDistribution(distribution, execParams);
 					
 					/*MetaIdentifierHolder dataSetHolder = simulate.getSource();
 					Datapod datasetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
 					DataStore datasetDs = dataStoreServiceImpl.findDataStoreByMeta(datasetDp.getUuid(), datasetDp.getVersion());
 					ResultSetHolder datasetRSHolder = exec.readFile(appUuid, datasetDp, datasetDs, hdfsInfo, null, datasource);*/
-					ResultSetHolder dfRSHolder = exec.generateFeatureData(multivariateNormal, model.getFeatures(), simulate.getNumIterations(), tableName);
+					ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
 					sparkExecutor.assembleDataframe(fieldArray, dfRSHolder, tableName, true);
 					String sql = simulateMLOperator.generateSql(simulate, tableName);
 					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
@@ -978,13 +985,14 @@ public class ModelServiceImpl {
 					ResultSetHolder covsRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
 					double[][] factorCovariances = exec.twoDArrayFromDatapod(covsRSHolder, factorCovarianceDp);
 
-					MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
-
+					//MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
+					
+					Object object = mlDistribution.getDistribution(distribution, execParams);
 					/*MetaIdentifierHolder dataSetHolder = simulate.getSource();
 					Object source = commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
 					ResultSetHolder datasetRSHolder = getRSHolderBySource(source);
 					ResultSetHolder assembledDfHolder = sparkExecutor.assembleDataframe(fieldArray, datasetRSHolder, tableName, true);*/
-					ResultSetHolder dfRSHolder = exec.generateFeatureData(multivariateNormal, model.getFeatures(), simulate.getNumIterations(), tableName);
+					ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
 					String[] customFldArr = new String[] {fieldArray[0]};
 					ResultSetHolder dfHolder = sparkExecutor.assembleDataframe(customFldArr, dfRSHolder, tableName, true);
 					
