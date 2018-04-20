@@ -126,7 +126,7 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     SimulateService.getAllLatest("distribution").then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
       $scope.allDistribution = response;
-      if(defaultValue ==true){
+      if(typeof $stateParams.id == "undefined"){
         $scope.selectDistributionType=response[0]
       }
       
@@ -139,15 +139,16 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     }
   }
 
-  $scope.getAllLetestSource=function(){
-    SimulateService.getAllLatest($scope.selectSourceType).then(function(response) { onGetAllLatest(response.data)});
-    var onGetAllLatest = function(response) {
-      $scope.allSource = response;
-      if(typeof $stateParams.id == "undefined") {
-        $scope.selectSource=response[0];
-      }
-    }
-  }
+  // $scope.getAllLetestSource=function(){
+  //   SimulateService.getAllLatest($scope.selectSourceType).then(function(response) { onGetAllLatest(response.data)});
+  //   var onGetAllLatest = function(response) {
+  //     $scope.allSource = response;
+  //     if(typeof $stateParams.id == "undefined") {
+  //       $scope.selectSource=response[0];
+  //     }
+  //   }
+  // }
+
   $scope.getAllLetestTarget=function(defaultValue){
     SimulateService.getAllLatest($scope.selectTargetType).then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
@@ -168,7 +169,7 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
   }
   $scope.getAllLetestModel();
   $scope.getAllLetestDistribution();
-  $scope.getAllLetestSource();
+ // $scope.getAllLetestSource();
   $scope.getAllLetestTarget();
   
   $scope.onChangeModel=function(){
@@ -237,14 +238,14 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
       selectModel.name=response.dependsOn.ref.name;
       $scope.selectModel=selectModel;
       var selectSource={};
-      $scope.selectSource=null;
-      if(response.source !=null){
-        $scope.selectSourceType=response.source.ref.type
-        $scope.getAllLetestSource();
-        selectSource.uuid=response.source.ref.uuid;
-        selectSource.name=response.source.ref.name;
-        $scope.selectSource=selectSource;
-      }
+      // $scope.selectSource=null;
+      // if(response.source !=null){
+      //   $scope.selectSourceType=response.source.ref.type
+      //   $scope.getAllLetestSource();
+      //   selectSource.uuid=response.source.ref.uuid;
+      //   selectSource.name=response.source.ref.name;
+      //   $scope.selectSource=selectSource;
+      // }
       var selectDistributionType={};
       if(response.distributionTypeInfo !=null){
         selectDistributionType.uuid=response.distributionTypeInfo.ref.uuid;
@@ -344,14 +345,14 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
     ref.uuid=$scope.selectModel.uuid;
     dependsOn.ref=ref;
     SimulateJson.dependsOn=dependsOn;
-    if($scope.selectSource !=null){
-      var source={};
-      var sourceRef={};
-      sourceRef.type=$scope.selectSourceType;
-      sourceRef.uuid=$scope.selectSource.uuid;
-      source.ref=sourceRef;
-      SimulateJson.source=source;
-    }
+    // if($scope.selectSource !=null){
+    //   var source={};
+    //   var sourceRef={};
+    //   sourceRef.type=$scope.selectSourceType;
+    //   sourceRef.uuid=$scope.selectSource.uuid;
+    //   source.ref=sourceRef;
+    //   SimulateJson.source=source;
+    // }
     if($scope.selectDistributionType !=null){
       var distributionTypeInfo={};
       var distributionTypeInfoRef={};

@@ -17,7 +17,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		$scope.isAdd = true;
 	}
 	
-	$scope.mode = " ";
+	$scope.mode = false;
 	$scope.isSubmitInProgress = false;
 	$scope.isSubmitEnable = false;
 	$scope.distributionData;
@@ -102,22 +102,23 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 			$scope.distribution.defaultVersion = defaultversion;
 		
 			$scope.selectedLibrary = response.library
-			DistributionService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
-			var onSuccessGetAllLatestParamlist = function (response) {
-				$scope.allParamlist = response;
-				var paramlist = {};
-				paramlist.uuid = $scope.distributionData.paramList.ref.uuid;
-				paramlist.name = ""
-				$scope.selectedParamlist = paramlist;
-
-			}
+			if($scope.distributionData.paramList !=null){
+				DistributionService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+				var onSuccessGetAllLatestParamlist = function (response) {
+					$scope.allParamlist = response;
+					var paramlist = {};
+					paramlist.uuid = $scope.distributionData.paramList.ref.uuid;
+					paramlist.name = ""
+					$scope.selectedParamlist = paramlist;
+				}
+		    }
 		}
 	}//End If
 	else {
 		DistributionService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 		var onSuccessGetAllLatestParamlist = function (response) {
 			$scope.allParamlist = response;
-			$scope.selectedParamlist = $scope.allParamlist[0];
+			//$scope.selectedParamlist = $scope.allParamlist[0];
 		}
 	}
 
@@ -136,14 +137,16 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 			$scope.distribution.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
 			$scope.selectedLibrary = response.library
-			DistributionService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
-			var onSuccessGetAllLatestParamlist = function (response) {
-				$scope.allParamlist = response;
-				var paramlist = {};
-				paramlist.uuid = $scope.distributionData.paramList.ref.uuid;
-				paramlist.name = ""
-				$scope.selectedParamlist = paramlist;
-			}
+			if($scope.distributionData.paramList !=null){
+				DistributionService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+				var onSuccessGetAllLatestParamlist = function (response) {
+					$scope.allParamlist = response;
+					var paramlist = {};
+					paramlist.uuid = $scope.distributionData.paramList.ref.uuid;
+					paramlist.name = ""
+					$scope.selectedParamlist = paramlist;
+				}
+		    }
 		}
 
 	}
@@ -169,13 +172,18 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 			}
 		}
 		distributionJson.tags = tagArray;
-		var paramlist = {};
-		var ref = {};
-		ref.type = "paramlist";
-		ref.uuid = $scope.selectedParamlist.uuid;
-		paramlist.ref = ref;
-		distributionJson.paramList = paramlist
 
+		var paramlist = {};
+		if($scope.selectedParamlist !=null){
+			var ref = {};
+			ref.type = "paramlist";
+			ref.uuid = $scope.selectedParamlist.uuid;
+			paramlist.ref = ref;
+			
+		}else{
+			paramlist=null;
+		}
+		distributionJson.paramList = paramlist
 		console.log(JSON.stringify(distributionJson));
 		DistributionService.submit(distributionJson, 'distribution').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
