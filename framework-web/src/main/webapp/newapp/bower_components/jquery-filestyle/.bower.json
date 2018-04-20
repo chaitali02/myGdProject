@@ -1,0 +1,14 @@
+{
+  "name": "jquery-filestyle",
+  "homepage": "https://github.com/starcode-krasnodar/jquery-filestyle",
+  "version": "1.5.1",
+  "_release": "1.5.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.5.1",
+    "commit": "78695dc6825b6f4e35035104da1ff828ccce0c38"
+  },
+  "_source": "https://github.com/starcode-krasnodar/jquery-filestyle.git",
+  "_target": "1.5.1",
+  "_originalSource": "jquery-filestyle"
+}

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
+ * Copyright (C) GridEdge Consulting LLC, 2016 All rights reserved. 
  *
- * This unpublished material is proprietary to Inferyx Inc.
+ * This unpublished material is proprietary to GridEdge Consulting LLC.
  * The methods and techniques described herein are considered  trade 
  * secrets and/or confidential. Reproduction or distribution, in whole or 
  * in part, is forbidden.
  *
- * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
+ * Written by Yogesh Palrecha <ypalrecha@gridedge.com>
  *******************************************************************************/
 package com.inferyx.framework.security;
 
@@ -32,11 +32,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.LoginStatus;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
-import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.SessionServiceImpl;
 import com.inferyx.framework.service.UserServiceImpl;
 
@@ -46,8 +46,6 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 	UserServiceImpl userServiceImpl;
 	@Autowired
 	SessionServiceImpl sessionServiceImpl;
-    @Autowired
-    CommonServiceImpl<?> commonServiceImpl;
 
 	AuthenticationManager authManager;
 
@@ -62,7 +60,9 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 		boolean debug = this.logger.isDebugEnabled();
 		logger.info("AuthenticationLoginProcessingFilter.doFilter: Entering");
-
+		ObjectMapper mapper = new ObjectMapper();
+		LoginStatus loginStatus=new LoginStatus();
+ 
 		//logger.info("\tSession counter: "+SessionCounter.getActiveSessionNumber());
 	
 		String authorization = ((HttpServletRequest) request).getHeader("Authorization");
@@ -83,8 +83,11 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			HttpServletResponse resp = (HttpServletResponse) response;
 			resp.addHeader("sessionId", "");
 			resp.addHeader("status", "false");
-			resp.addHeader(MetaType.message.toString(), "User limit exceeded, Please contact admin.");
+			resp.addHeader("message", "User limit exceeded, Please contact admin.");
 			logger.info("Request authenticated successfully.");
+			loginStatus.setSessionId("");
+			loginStatus.setStatus("false");
+			
 			return;
 		}else
 		try {
@@ -122,39 +125,37 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			//logger.info("Authentication Manager Object: " + authManager);
 
 			SecurityContextHolder.getContext().setAuthentication(authManager.authenticate(authentication));
-			authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext()
-					.getAuthentication();
-
-			HttpServletResponse resp = (HttpServletResponse) response;
-			try {
-				ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-				HttpSession session = requestAttributes.getRequest().getSession(false);
-				
-				logger.info("sessionId: "+session.getId());
-				session.setAttribute("sessionId", session.getId());
-				SessionContext sessionContext = (SessionContext) session.getAttribute("sessionContext");
-				String userUuid = sessionContext.getUserInfo().getRef().getUuid();
-				resp.addHeader("userUUID", userUuid);
-				String sessionUuid;
-				Session sessionDO;
-				
-				//logger.info("Session Object: " + sessionContext.getSessionInfo());
-
-				if(sessionContext.getSessionInfo() == null || sessionContext.getSessionInfo().getRef().getUuid().isEmpty()) {
-					logger.info("Empty Session Object. Unable to set sessionId");
-					resp.addHeader("sessionId", null);			
-				} else {
-					sessionUuid = sessionContext.getSessionInfo().getRef().getUuid();
-					//sessionDO = sessionServiceImpl.findLatestByUuid(sessionUuid);
-					sessionDO = (Session) commonServiceImpl.getLatestByUuid(sessionUuid, MetaType.session.toString());
-					resp.addHeader("sessionId", sessionDO.getSessionId());
-				}
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 			
+			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			
+			HttpSession session = requestAttributes.getRequest().getSession(false);
+			HttpServletResponse resp = (HttpServletResponse) response;
+			if(session !=null){
+				
+			
+			//logger.info("sessioId: "+session.getId());
+			
+			
+			SessionContext sessionContext = (SessionContext) session.getAttribute("sessionContext");
+			String userUuid = sessionContext.getUserInfo().getRef().getUuid();
+			String sessionUuid;
+			Session sessionDO;
+			
+			//logger.info("Session Object: " + sessionContext.getSessionInfo());
+
+			if(sessionContext.getSessionInfo() == null || sessionContext.getSessionInfo().getRef().getUuid().isEmpty())
+			{
+				logger.info("Empty Session Object. Unable to set sessionId");
+				resp.addHeader("sessionId", null);			
+			}
+			else
+			{
+				sessionUuid = sessionContext.getSessionInfo().getRef().getUuid();
+				sessionDO = sessionServiceImpl.findLatestByUuid(sessionUuid);
+				resp.addHeader("sessionId", sessionDO.getSessionId());
+				loginStatus.setSessionId( sessionDO.getSessionId());
+			}
 			// MetaIdentifier sessionMeta = new MetaIdentifier(MetaType.session,
 			// sessionDO.getUuid(),sessionDO.getVersion());
 			// sessionInfo.setRef(sessionMeta);
@@ -162,20 +163,40 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			// Send response
 					
 			resp.addHeader("status", "" + authentication.isAuthenticated());
-			if (authentication.isAuthenticated())
-				resp.addHeader(MetaType.message.toString(), "User authenticated successfully");
-			else 
-				resp.addHeader(MetaType.message.toString(), "Invalid Login");
-			
+			if (authentication.isAuthenticated()) {
+				resp.addHeader("message", "User authenticated successfully");
+				loginStatus.setMessage("User authenticated successfully");
+				loginStatus.setStatus("true");
+			} else {
+				resp.addHeader("message", "Invalid Login");
+				loginStatus.setMessage("Invalid Login");
+				loginStatus.setStatus("false");
+			}
 			//logger.info("userName:>--->>"+authentication.getPrincipal().toString());
 			resp.addHeader("userName", authentication.getPrincipal().toString());
-
+			resp.addHeader("userUUID", userUuid);
+			loginStatus.setUserName(authentication.getPrincipal().toString());
+			loginStatus.setUserUuid(userUuid);
+			String messageJson = mapper.writeValueAsString(loginStatus);
+			resp.setContentType("application/json");
+			resp.setStatus(200);
+			resp.getOutputStream().write(messageJson.getBytes());
+			resp.getOutputStream().close();
 			if (debug) {
 				this.logger.debug("Login Authentication Authorization header found for user '" + username + "'");
 			}
 
 			//logger.info("Response object sessionId: "+resp.getHeader("sessionId"));
-
+		}else{
+			loginStatus.setStatus("false");
+			loginStatus.setMessage("Invalid Login");
+			loginStatus.setUserName(authentication.getPrincipal().toString());
+			String messageJson = mapper.writeValueAsString(loginStatus);
+			resp.setContentType("application/json");
+			resp.setStatus(200);
+			resp.getOutputStream().write(messageJson.getBytes());
+			resp.getOutputStream().close();
+		}
 		} catch (AuthenticationException failed) {
 			SecurityContextHolder.clearContext();
 
@@ -187,14 +208,16 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			HttpServletResponse resp = (HttpServletResponse) response;
 			resp.addHeader("sessionId", "");
 			resp.addHeader("status", "false");
-			resp.addHeader(MetaType.message.toString(), "Invalid user");
+			resp.addHeader("message", "Invalid user");
 			return;
 			
 		}
+		
 		logger.info("Request authenticated successfully");
 	}
 
 	protected String getCredentialsCharset(HttpServletRequest httpRequest) {
 		return this.credentialsCharset;
 	}
+
 }

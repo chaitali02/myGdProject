@@ -1,0 +1,19 @@
+.modal{
+    position: fixed;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    overflow-y: hidden !important;
+}
+
+.model-select{
+    background-color: #FAFFBD !important;
+    height: 34px !important;
+    color: #555 !important;
+}
+option:not(:checked) { 
+    background-color: #FFF; 
+}

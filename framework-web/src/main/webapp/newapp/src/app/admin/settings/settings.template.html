@@ -1,0 +1,59 @@
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
+<p-growl [(value)]="msgs" ></p-growl>
+<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+<div style="margin-top:10px">
+  <p-tabView (onChange)="onTabChange($event)">
+    <div style="border: 1px solid #ddd;">
+      <p-tabPanel *ngFor="let tab of tabs" header="{{tab.caption}}">
+        <div class="portlet-body form">
+          <div style="margin-right: 15px; margin-left: 15px;">
+            <div class="x_title" style="padding:10px; font-family: none;">
+              <button type="Button" [disabled]="mode == 'true'" class=" btn btn-danger fa fa-minus pull-right" (click)="removeRow()" style="font-family: fontAwesome;"></button>
+              <button type="Button" [disabled]="mode == 'true'" class=" btn btn-success fa fa-plus pull-right" (click)="addRow()" style="font-family: fontAwesome;"></button>
+              <h4 style="font-weight: bold; font-size: 18px">{{tab.title}}</h4>
+              <hr>
+            </div>
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitSettings()">
+              <div class="form-body">
+                <table class=" row-border hover table  table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center; Vertical-align: middle;width:5%;">
+                        <input style="width: 16px;height:16px;" [disabled]="mode" type="checkbox" [(ngModel)]="selectallattribute" (click)="checkAllAttributeRow()"
+                          name="selectAll" />
+                      </th>
+                      <th style="text-align: center; Vertical-align: middle;width:45%;">Property Name</th>
+                      <th style="text-align: center; Vertical-align: middle;width:65%;">Property Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let tabledata of tableData; let i =index">
+                      <td style="text-align: center; Vertical-align: middle;width:5%;">
+                        <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}" [disabled]="mode"
+                        />
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [(ngModel)]="tabledata.propertyName" title="{{tabledata.propertyName}}" [disabled]="mode"
+                          name="propertyName+{{i}}" />
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [(ngModel)]="tabledata.propertyValue" title="{{tabledata.propertyValue}}" [disabled]="mode"
+                          name="propertyValue+{{i}}" />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="form-group" style="margin-bottom: -15px;">
+                  <div class="col-md-12 col-sm-6 col-xs-12" style="text-align: center;">
+                    <input type="button" class="btn btn-primary" (click)="goBack()" style="margin-right:2%;" value="Cancel">
+                    <input type="submit" class="btn btn-success" value="Submit">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+    </div>
+  </p-tabView>
+</div>

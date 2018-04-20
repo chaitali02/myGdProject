@@ -1,0 +1,249 @@
+   <p-growl [(value)]="msgs" ></p-growl>
+   <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+    <br>
+    <!-- BEGIN MAIN CONTENT -->
+    <div class="row" >
+        <div class="col-md-12">
+        <!-- BEGIN: ACCORDION DEMO -->
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                  <i class="fa fa-gift"></i>{{dashboardData.name}}
+                </div>
+                <div class="tools"> 
+                    <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;">
+                        <span class="glyphicon glyphicon-file" style="color:white;"></span>
+                    </a>
+                    <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip style="height:14px;">
+                        <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                    </a>
+                    <a  title="Refresh"  data-toggle="tooltip" data-placement="top" tooltip>
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
+                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="portlet-body form">
+                <!-- <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')" *ngIf="showgraphdiv">
+                    <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                    <div class="form-body show-graph-body" id="graphWrapper">
+                         <app-d3></app-d3>
+                    </div>
+                </div> -->
+              
+                <div class="form-body" style="padding-top:50px;" *ngIf="pageNo == 1">
+                    <form  class="form-horizontal"  name="myform" novalidate="novalidate" (ngSubmit)="submitDatapod()">
+                        <div class="form-group" *ngIf="mode">
+                            <label class="col-md-3 control-label">UUID</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" [(ngModel)]="dashboardData.uuid" name="uuid" placeholder="" [disabled]="true">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Name
+                                <span class="required" aria-required="true"> * </span>
+                            </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" [(ngModel)]="dashboardData.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                            </div>
+                        </div>
+
+                        <div class="form-group" *ngIf="mode">
+                            <label class="col-md-3 control-label">Version </label>
+                            <div class="col-md-6">
+                                <p-dropdown [options]="VersionList"          
+                                  [(ngModel)]="selectedVersion"
+                                  name="selectedVersion"
+                                  dataKey="u_Id"
+                                  [style]="{'width':'100%','padding':'3px'}"
+                                  [filter]="true"
+                                  [disabled]="mode == 'false'"
+                                  (onChange)="onVersionChange()">
+                                </p-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="form-group" *ngIf="dashboardData.createdBy">
+                            <label class="col-md-3 control-label">CreatedBy</label>
+                            <div class="col-md-6" *ngIf="locations!=''">
+                                <input type="text" class="form-control" [disabled]="true" [(ngModel)]="dashboardData.createdBy.ref.name" name="createdBy">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" *ngIf="dashboardData.createdOn">
+                            <label class="col-md-3 control-label">CreatedOn</label>
+                            <div class="col-md-6">
+                                <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="dashboardData.createdOn" name="createdOn">
+                            </div>
+                        </div>
+
+                        <div class="form-group taginput">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
+                                <tag-input [(ngModel)]="dashboardData.tags" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                            <div class="col-md-6">
+                                <textarea [disabled]="mode == 'true'" [(ngModel)]="dashboardData.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
+                            </div>
+                        </div>
+                 
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="btn-group">
+                                        <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dashboardData.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="btn-group">
+                                    <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dashboardData.published " name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">DependsOn</label>
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <select class="form-control" [(ngModel)]="source" name="source" (change)="ChangeSourceType()" [disabled]="mode == 'true'">
+                                    <option *ngFor="let app of sources" [ngValue]="app" >{{app}} </option>
+                                </select>
+                            </div>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                                <span class="required" aria-required="true"> * </span>
+                            </label>
+                            <div class="col-md-3 col-sm-4 col-xs-12" >
+                                <p-dropdown [options]="allNames"          
+                                    [(ngModel)]="sourcedata"
+                                    name="sourcedata"
+                                    dataKey="uuid"
+                                    [disabled]="mode == 'true'"
+                                    [style]="{'width':'100%','padding':'3px'}"
+                                    [filter]="true"
+                                    (onChange)="changeType()">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                                <label class="col-md-3 control-label">FilterInfo
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
+                                    <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" 
+                                        [settings]="dropdownSettings" name="attributeInfo">
+                                    </angular2-multiselect>
+                                </div>
+                            </div>
+                        <hr>
+                        <div class="row" *ngIf="pageNo==1" style="padding-top: 10px;" >
+                            <label class="control-label col-xs-3"></label>
+                            <div class="col-xs-4">
+                                <button class="btn btn-outline green button-next" type="button" (click)="continue()"> Continue
+                                    <i class="fa fa-angle-right"></i>
+                                </button>
+                             </div>
+                        </div>
+                        <hr>
+                        <div class="form-group" style="padding-top: 10px;"  *ngIf="pageNo==2">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                <!-- <a class="btn btn-primary" (click)="goBack()">Cancel</a> -->
+                                <input type="submit" class="btn btn-success" value="Submit"  name="submit" [disabled]="mode == 'true'">
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- End page 1-->
+                <div  *ngIf="pageNo == 2" style="background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');padding:10px 0 10px 0;">
+                    <form  class="form-horizontal"  name="myform2" novalidate="novalidate" (ngSubmit)="submitDatapod()">
+                      <div class="dndPlaceholder col-md-12"
+                        Drag Here
+                        #placeholder></div>
+                        <div class="col-xs-12 sectionRow" id="sectionRowNo_{{rowCol}}" style="padding: 10px;" *ngFor="let row of sectionRows;let rowCol=index"
+                        [dndList]="{
+                            allowedTypes: ['item','container'],horizontal:true}"
+                            [dndPlaceholder]="placeholder"
+                            [dndModel]="row.columns"
+                            (dragover)="dragoverCallback(rowCol)"
+                          >
+                           
+                            <div class=" sectionColumn col-xs-{{getColWidth(row)}} "  *ngFor="let column of row.columns;let colIndex=index"
+                            [dndType]="'item'"
+                            (dndMoved)="removeItem(column, row.columns)"
+                            [dndDraggable]="{draggable:true,effectAllowed:'move'}"
+                            [dndObject]="column"
+                            (dndDragStart)="onDragStart(column)"
+                            (dndDragEnd)="dndDragEnd(column,rowCol)"
+                            (dndInserted)="dndInserted()"
+                           >
+                                <div class="cardshadow" style="background-color:#fcfcfc;padding:5px;margin-bottom:0px;">
+                                    <div >
+                                        <a style="margin-left:5px;"  *ngIf="sectionRows.length >2 || row.columns.length >1 " (click)="removeSectionColumn(row.columns,rowCol,colIndex)" class="pull-right btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+                                        <a  *ngIf="!column.edit"  (click)="column.edit = true;" class="pull-right btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
+                                        <a  *ngIf="column.edit" (click)="column.edit = false;" class="pull-right btn btn-xs btn-success"><i class="fa fa-check"></i></a>
+                                        <a   (click)="addSectionRow(column,rowCol,colIndex,'right')"  class="pull-right btn  addSectionColumn">
+                                            <i class="fa fa-plus-circle"></i>
+                                        </a>  
+                                    </div>
+                                    <div class="addSectionRow" style="left: calc(50% - 20px);">
+                                        <a  (click)="addSectionRow(column,rowCol,0,'bottom')" calss ="btn" style="color:gray;"><i class="fa fa-plus-circle"></i></a>
+                                    </div>
+                                    <div class="row" style="margin-top:28px;">
+                                        <div class="col-md-11" *ngIf="column.edit">
+                                            <div class="col-md-12 col-sm-4 col-xs-12" >
+                                                <input type="text" [(ngModel)]="column.name" name="name{{colIndex}}" [disabled]="mode == 'true'" class="form-control" placeholder="Name"><br>
+                                            </div>
+                                            <div class="col-md-12 col-sm-4 col-xs-12" >
+                                                <p-dropdown [options]="allVizpod"          
+                                                    [(ngModel)]="column.vizpodInfo"
+                                                    name="selectVizpod{{colIndex}}"
+                                                    dataKey="uuid"
+                                                    [disabled]="mode == 'true'"
+                                                    [style]="{'width':'100%','padding':'3px'}"
+                                                    [filter]="true"
+                                                    (onChange)="onChangeVizpod(column.vizpodInfo,rowCol,colIndex)">
+                                                </p-dropdown>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-11 text-center" style="height:100%" *ngIf="!column.edit">
+                                            <div class="">
+                                                <img src="assets/img/{{column.vizpodInfo.type}}.svg" alt="" style="width: 100%;height: 100%;max-width: 75px;max-height: 75px;">
+                                            </div>
+                                            <div class="">
+                                                <label>{{column.name}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                       
+                        <div class="form-group" style="padding-top: 10px;"  *ngIf="pageNo==2">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                <a class="btn btn-primary" (click)="pageBack()">Back</a>
+                                <input type="button" class="btn btn-success" value="Submit"  (click)="submit()" name="submit"  [disabled]="mode == 'true' || isSubmit == 'true'" >
+                                <span class="spinner"  style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
+                                    <div class="bounce1"></div>
+                                    <div class="bounce2"></div>
+                                    <div class="bounce3"></div>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

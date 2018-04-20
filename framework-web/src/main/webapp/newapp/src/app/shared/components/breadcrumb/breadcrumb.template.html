@@ -1,0 +1,20 @@
+
+<div class="page-bar" style="border-bottom: 1px solid #e7ecf1;background-color: #ffffff; position: relative; padding: 0px 20px; margin: -25px -20px 0 -20px;">
+        <ul class="page-breadcrumb"style="padding:11px 0">
+          <li>
+            <a  [routerLink]="['/app/DataDiscovery']">Home</a>
+            <i class="fa fa-circle" style="font-size: 5px; margin: 0 5px; position: relative; top: -3px; opacity: 0.4;"></i>
+          </li>
+          <li *ngFor="let data of breadcrumbData">
+            <span *ngIf="data.routeurl==null">{{data.caption}}</span>
+            <a [routerLink]="[data.routeurl]" *ngIf="data.routeurl!=null">{{data.caption}}</a>
+            <i class="fa fa-circle" *ngIf="data.routeurl!=null" style="font-size: 5px; margin: 0 5px; position: relative; top: -3px; opacity: 0.4;"></i>  
+        </li>     
+        </ul>
+        <div class="page-toolbar" style="padding:11px 0px;">
+          <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase hidden-xs"><app-clock></app-clock></span>&nbsp;
+          </div>
+        </div>
+      </div>

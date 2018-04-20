@@ -1,0 +1,243 @@
+<div>
+  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+  <br>
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <!-- BEGIN MAIN CONTENT -->
+  <div class="row" >
+    <div class="col-md-12">
+      <!-- BEGIN: ACCORDION DEMO -->
+      <div class="portlet box green">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="fa fa-gift"></i>{{relationData.name}}
+          </div>
+          <div class="tools">
+            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;">
+              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            </a>
+            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip style="height:14px;">
+              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+            </a>
+            <a  title="Refresh"  data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+            </a>
+          </div>
+        </div> 
+
+        <div class="portlet-body form">
+          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')" *ngIf="showgraphdiv">
+            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+              <!--<div class="spinner" id="graphloader">-->
+                <!--<div class="bounce1"></div>-->
+                <!--<div class="bounce2"></div>-->
+                <!--<div class="bounce3"></div>-->
+              <!--</div>-->
+            <div class="form-body show-graph-body" id="graphWrapper">
+              <app-d3></app-d3>
+            </div>
+          </div>
+
+          <div class="form-body"  style="padding-top:50px;">
+            <form  class="form-horizontal"  name="myform" novalidate="novalidate" >
+              <div class="form-group" >
+                <label class="col-md-3 control-label">UUID</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [(ngModel)]="relationData.uuid" name="uuid" placeholder="" [disabled]="true">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [(ngModel)]="relationData.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                </div>
+              </div>
+              <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">Version </label>
+                  <div class="col-md-6">
+                    <p-dropdown [options]="VersionList"          
+                    [(ngModel)]="selectedVersion"
+                    name="version"
+                    [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true">
+                    </p-dropdown>
+                  </div>
+                </div>
+              <div class="form-group" >
+                <label class="col-md-3 control-label">CreatedBy</label>
+                <div class="col-md-6" >
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                </div>
+              </div>
+              <div class="form-group" >
+                <label class="col-md-3 control-label">CreatedOn</label>
+                <div class="col-md-6">
+                  <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="relationData.createdOn" name="createdOn">
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <!--tag-input [(ngModel)]="relationData.tags" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input-->
+                  <tag-input [(ngModel)]="relationData.tags" name="tags" [disabled]="true"  theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
+                  
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                <div class="col-md-6">
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="relationData.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
+                </div>
+              </div>
+              <div class="col-md-12">
+                  <div class="col-md-6 form-group">
+                    <label class="control-label col-md-6 col-sm-6 col-xs-12">Depends On
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control" [(ngModel)]="depends" name="depends" [disabled]="mode == 'true'">
+                            <option *ngFor="let app of dependsOnType" [ngValue]="app.value" >{{app.label}} </option>
+                          </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <label class="control-label col-md-2 col-sm-6 col-xs-12" style="float:left;margin-left: -3%;padding-right: 0px;">Name
+                      <span class="required" aria-required="true"> * </span>
+                    </label>  
+                    <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dependsOn">
+                        <p-dropdown [options]="allNames"          
+                        [(ngModel)]="dependsOn"
+                        name="dependsOnName"
+                        [disabled]="mode == 'true'"
+                        [style]="{'width':'100%','padding':'3px'}"
+                        [filter]="true"
+                        (onChange)="changeType()"
+                        >
+                        </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="relationData.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="relationData.published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" style="padding-top: 10px;">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                  <a class="btn btn-primary" (click)="goBack()">Cancel</a>
+
+                  <input type="submit" class="btn btn-success" value="Submit"  name="submit" [disabled]="mode == 'true'">  
+
+                </div>
+              </div>
+              <p-dataTable [value]="relationTableArray" expandableRows="true" [editable]="true">
+                  <p-column field="join" header="Join Datapod" [style]="{'width':'45%'}" [editable]="true">
+                      <ng-template let-col let-data="rowData" pTemplate="editor">
+                          <select #join class="form-control">
+                              <option *ngFor="let join of allNames" [value]="join.value">{{join.label}}</option>
+                          </select>
+                          <!-- <p-dropdown [options]="allNames"          
+                          [(ngModel)]="data[col.field]"
+                          name="data[col.field]"
+                          appendTo="body"
+                          [disabled]="mode == 'true'"
+                          [style]="{'width':'100%','padding':'3px'}"
+                          [filter]="true">
+                          </p-dropdown> -->
+                  </ng-template>
+                  </p-column>
+                  <p-column field="relationJoinType" [style]="{'width':'45%'}" header="Join Type" [editable]="true">
+                      <ng-template let-col1 let-car1="rowData" pTemplate="editor">
+                        <p-dropdown [(ngModel)]="car1[col1.field]" 
+                          name="car1[col1.field]"
+                          [options]="joinType" [autoWidth]="false" 
+                          [style]="{'width':'100%'}" 
+                          required="true"  
+                          appendTo="body">
+                          </p-dropdown> 
+                      </ng-template>
+                  </p-column>
+                  <p-column expander="true" styleClass="col-icon" [style]="{'width':'10%'}"></p-column>
+                  <ng-template let-car pTemplate="rowexpansion">
+                      <tr>
+                          <td colspan="3" style="padding: 0px 17px;">
+                            <div class="x_title" style="padding:10px;" >
+                            <button type="Button" class=" btn btn-danger fa fa-minus pull-right" (click)="removeJoinSubRow($index)" [disabled]="mode == 'true'"></button>
+                            <button type="Button" class=" btn btn-success fa fa-plus pull-right"  (click)="addJoinSubRow($index)" [disabled]="mode == 'true'"></button>
+                           </div>
+                        <br><br>
+                           <table class=" row-border hover table  table-striped table-bordered">
+                              <thead class="theadborder">
+                                <tr>
+                                  <th style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" ng-model="data.selectalljoinkey" ng-change="selectAllSubRow($index)"/></th>
+                                  <th style="text-align: center;width:17%;">Logical Operator</th>
+                                  <th style="text-align: center;width:30%;">LHS Attributes</th>
+                                  <th style="text-align: center;width:15%;">Operator</th>
+                                  <th style="text-align: center;width:33%;">RHS Attributes</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let tabledata of relationTableArray;let i=index">
+              
+                                  <td style="text-align: center; Vertical-align: middle;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" [disabled]="mode == 'true'">
+                                  </td>
+                                  <td>
+                                  <select class="form-control" [(ngModel)]="tabledata.logicalOperator" name="logicalOperator+{{i}}" [disabled]="i === 0">
+                                      <option *ngFor="let app of logicalOperators" [ngValue]="app">{{app}}</option>
+                                    </select>
+                                    </td>
+                                  <!-- <td><select  ng-model="datajoinkye.logicalOperator" ng-options="x for x in logicalOperator" [disabled]="$first || {{mode}}" class="form-control"></select></td> -->
+                                  <td style="width:35%;">
+                                    <!-- <select  select2  ng-model="datajoinkye.rhsoperand"  [disabled]="mode == 'true'" class="form-control"  ng-options="c as (c.datapodname + '.' + c.name) for c in rhsAllAttribute[$parent.$index] track by  c.uuid + c.attributeId">
+                                    </select> -->
+              
+                                  </td>
+                                  <td>
+                                      <select class="form-control" [(ngModel)]="tabledata.operator" name="operator+{{i}}" [disabled]="mode == 'true'">
+                                          <option *ngFor="let app of operators" [ngValue]="app">{{app}}</option>
+                                        </select>
+                                  <!-- <td style="width:15%;"><select  [disabled]="mode == 'true'" ng-model="datajoinkye.relationOperator" ng-options="x for x in relationOperators" [disabled]="mode == 'true'" class="form-control"></select> -->
+                                  </td>
+                                  <td style="width:35%;">
+                                     <!-- <select  select2  ng-model="datajoinkye.lhsoperand"  [disabled]="mode == 'true'" class="form-control"  ng-options="c as (c.datapodname + '.' + c.name) for c in  lhsAllAttribute track by  c.uuid+c.attributeId">
+                                    </select> -->
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                          <td></td>
+                        </tr>
+                  </ng-template>
+              </p-dataTable>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

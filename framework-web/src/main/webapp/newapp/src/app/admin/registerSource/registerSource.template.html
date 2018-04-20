@@ -1,0 +1,118 @@
+
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+<br>             
+<p-growl [(value)]="msgs" ></p-growl> 
+<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>  
+<div class="portlet box green">
+  <div class="portlet-title">
+    <div class="caption">
+      <i class="icon-magnifier"></i>Select Source
+    </div>
+    <div class="tools">
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" data-original-title=""  title="">
+        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+      </a>
+      <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+    </div>
+  </div>
+
+  <div class="portlet-body">
+    <form class="form-horizontal">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-6">Type</label>
+              <div class="col-md-9 col-sm-9 col-xs-6">
+                  <ng-select 
+                  [options]="typeSelect"
+                  [(ngModel)]="type"
+                  placeholder="--Select--"
+                  name="type" 
+                  (closed)="selectType()" style="z-index:100"></ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">          
+          <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-6">Name</label>
+              <div class="col-md-9 col-sm-9 col-xs-6">
+                  <ng-select 
+                  [options]="allNamesTypes"
+                  [(ngModel)]="select"
+                  placeholder="--Select--"
+                  name="select" style="z-index:99" (closed)="ChangeTableData()" ></ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>  
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-5 col-sm-6 col-xs-12 custpadding">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
+              <div class="col-md-9 col-sm-9 col-xs-6">
+                <input type="submit" class="btn btn-success" value="Register" name="submit" [disabled]="isSubmitEnable" (click)="submitRegisterSource()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="portlet box green" >
+  <div class="portlet-title">
+    <div class="caption">
+      <i class="fa fa-gift"></i> Details
+    </div>
+    <div class="tools">
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" data-original-title=""  title="" >
+        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"click="refreshTableData"></i>
+      </a>
+      <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+    </div>
+  </div>
+  <div class="portlet-body form">
+    <!-- <div class="x_title" style="padding:10px;">
+      <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeAttribute()" [disabled]="mode == 'true'"></button>
+      <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addAttribute()"  [disabled]="mode == 'true'"></button>
+    </div> -->
+    <div class="form-body" style="padding-top:50px;">
+      <div>
+        <table class=" row-border hover table  table-striped table-bordered" >
+          <thead>
+            <tr>
+              <th style="width:5%;text-align: center; Vertical-align: middle;">
+                <input [disabled]="mode == 'true'" style="width: 16px;height:16px;"  type="checkbox"  [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow" (click)="checkAllAttributeRow()"/></th> 
+              <th style="text-align: center; Vertical-align: middle;width:5%;">ID</th>    
+              <th style="text-align: center; Vertical-align: middle;width:20%;">Name</th>  
+              <th style="text-align: center; Vertical-align: middle;width:20%;">Desc</th>  
+              <th style="text-align: center; Vertical-align: middle;width:30%;">RegisteredOn</th>  
+              <th style="text-align: center; Vertical-align: middle;width:20%;">Status</th>                                                       
+            </tr>
+          </thead>
+          <tbody>
+             <tr *ngFor="let tabledata of tableData;let i=index">                             
+              <td style="text-align:center;Vertical-align:middle;">
+                <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'" (click)="selectRegisterSource(i)" />
+              </td>
+              <td style="width:5%;text-align: center; Vertical-align: middle;">{{tabledata.id}}</td>                            
+              <td style="width:5%; Vertical-align: middle;">{{tabledata.name}}</td>  
+              <td></td>
+              <td style="width:5%; text-align: center;Vertical-align: middle;">{{tabledata.registeredOn}}</td> 
+              <td style="width:5%;text-align: center; Vertical-align: middle;">{{tabledata.status}}</td>                 
+            </tr> 
+          </tbody> 
+        </table>
+      </div>
+    </div>
+  </div>
+</div> 
+    
+ 

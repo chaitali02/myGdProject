@@ -1,0 +1,168 @@
+<!-- BEGIN HEADER INNER -->
+<style>
+  a:hover{text-decoration:none;}
+  .modal{
+    position: fixed;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    overflow-y: hidden !important;
+}
+
+</style>
+
+<div class="page-header-inner">
+  <!-- BEGIN LOGO -->
+
+  <div class="page-logo" >
+
+    <a style="">
+      <!-- <img src="{{settings.layoutPath}}/img/logo.png" alt="logo" class="logo-default" /> --><div class="text-center logo-default
+          " style="margin-top: 11px;font-size: 20px;color:white;font-family:timeburnernormal;">INFER<span style="color:#007DC9;font-family:timeburnerbold;">YX</span></div></a>
+    <div class="menu-toggler sidebar-toggler">
+      <span></span>
+
+      <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+
+    </div>
+  </div>
+  <!-- END LOGO -->
+  <!-- BEGIN HEADER SEARCH BOX -->
+  <!-- DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box -->
+  <form class="search-form hide" action="#" method="GET">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search..." name="query">
+      <span class="input-group-btn">
+                <a href="javascript:;" class="btn submit">
+                    <i class="icon-magnifier"></i>
+                </a>
+            </span>
+    </div>
+  </form>
+  <!-- END HEADER SEARCH BOX -->
+  <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+  <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+    <span></span>
+  </a>
+  <!-- END RESPONSIVE MENU TOGGLER -->
+  <!-- BEGIN TOP NAVIGATION MENU -->
+
+  <div class="top-menu">
+    <ul class="nav navbar-nav pull-right">
+
+      <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+      <li class="dropdown dropdown-language hide">
+        <a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
+          <!-- <img alt="" src="assets/global/img/flags/us.png"> -->
+          <span class="langname"> EN </span>
+          <i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-default">
+          <li class="active">
+            <a href="#">
+              <img alt="" src=""> English </a>
+          </li>
+          <li>
+            <a href="#">
+              <img alt="" src=""> German </a>
+          </li>
+          <li>
+            <a href="#">
+              <img alt="" src=""> Russian </a>
+          </li>
+          <li>
+            <a href="#">
+              <img alt="" src=""> French </a>
+          </li>
+        </ul>
+      </li>
+      <li class="dropdown dropdown-user">
+        <a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
+          <!-- <img alt="" class="img-circle" width="30px" alt="No Avatar" onerror="this.src='avatars/default.png';"/> -->
+          <img alt="" class="img-circle" width="30px" [src]="imagePath" />
+          <span class="username username-hide-on-mobile">{{userName}}</span>
+          <i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-default">
+          <li>
+            <a>
+              <i class="icon-user"></i> My Profile </a>
+          </li>
+          <li>
+            <a (click)="uploadAvatar()">
+              <!-- <i class="icon-user"></i> -->
+              <img alt="" width="15px" height="15px" class="img-circle" [src]="imagePath"/>
+              Change Avatar</a>
+          </li>
+          <li class="divider"> </li>
+          <li>
+            <a href="#">
+              <i class="icon-lock"></i> Lock Screen </a>
+          </li>
+          <li>
+            <a (click)="logOut()">
+              <i class="icon-key"></i> Log Out </a>
+          </li>
+        </ul>
+      </li>
+
+    </ul>
+  </div>
+  <!-- END TOP NAVIGATION MENU -->
+  <div class="top-menu" style="float:left">
+    <ul class="nav navbar-nav pull-right">
+
+      <li class=" sidebar-toggler" style="
+			    color:white;
+			    padding: 15px 7px 0px 10px;
+			    width: auto;
+			    height: 30px;
+			    display: table;
+			    text-align: center;
+			    cursor: pointer;">
+        <span style="display: table-cell;vertical-align: middle;">Application : </span>
+        <span style="display: table-cell;vertical-align: middle;padding-left:5px;"> Data Warehouse </span></li>
+
+    </ul>
+  </div>
+  <div class="model">
+    <div #AvtarModel class="modal fade in" data-backdrop="false" id="AvtarModel" tabindex="-1" aria-hidden="true" style="display:none;background-color: rgba(0, 0, 0, 0.5);">
+      <div class="modal-dialog">
+        <div class="modal-content" style="width:50%;margin:0 auto;">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+         </button>
+            <h4 class="modal-title">Change Avtar</h4>
+          </div>
+          <div class="modal-body">
+            <div id="avatar-preview-wrapper">
+             
+              <img width="200px" height="200px" id="avatar-preview" [src]="imagePath" alt="your image"/>
+              <!-- <image-upload 
+              [url]="'http://localhost:8080/metadata/uploadProfileImage'">
+            </image-upload> -->
+            <div class="input-group" id="avatar-change-btn">
+              <label class="input-group-btn" style="width:auto">
+                  <span class="btn btn-outline">
+                      Change &hellip; <input id="avatar" (change)="readURL($event);" type="file" [(ngModel)]="file" accept="image/jpeg,image/x-png" style="display:none">
+                  </span>
+              </label>
+          </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn dark btn-outline" (click)="close()">Cancel</button>
+            <button type="button" class="btn green" (click)="upload(fileData)">Ok</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    </div>
+</div>
+
+<!-- END HEADER INNER -->

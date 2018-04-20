@@ -547,6 +547,15 @@ public class SessionServiceImpl {
 		return session;
 	}
 
+	public Session findLatestByUuid(String uuid) {
+		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+		if (appUuid != null) {
+			return iSessionDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
+		}
+		return iSessionDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
+	}
+
 	/*public MetaIdentifierHolder saveAs(Session session) throws IOException{
 		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
 		MetaIdentifier ref = new MetaIdentifier();		

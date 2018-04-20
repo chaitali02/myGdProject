@@ -1,0 +1,18 @@
+<div #ConfirmModel class="modal fade in" id="ConfirmModel" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+    <div class="modal-dialog">
+      <div class="modal-content rulemodel" style="width:50%;margin:0 auto;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+       </button>
+          <h4 class="modal-title">Confirm</h4>
+        </div>
+        <div class="modal-body"> {{ModelData.message}} <span style="text-transform: capitalize">{{ModelData.caption}}</span> ?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" (click)="invokeParentMethod('cancel')">Cancel</button>
+          <button type="button" class="btn green" (click)="invokeParentMethod(ModelData.functionName)">Ok</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>

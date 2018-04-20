@@ -1,0 +1,234 @@
+<div>
+  <!-- BEGIN PAGE HEADER-->
+  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+  <br>
+  
+  <p-growl [(value)]="msgs" ></p-growl>
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div> <!-- BEGIN MAIN CONTENT -->
+  <div class="row" >
+    <div class="col-md-12">
+      <div class="portlet box green">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="fa fa-gift"></i>formula_total_customers
+          </div>
+          <div class="tools">
+            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
+              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            </a>
+            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;">
+              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+            </a>
+            <a  title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip  style="height:14px;" (click)="goBack()">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+            </a>
+          </div>
+        </div>
+        <div class="portlet-body form" >
+          <div class="form-body"  data-ng-show="showformula" style="padding-top:50px;">
+            <form  class="form-horizontal" novalidate="novalidate" name="myform" (ngSubmit)="submitFormula()" #myNewForm = "ngForm">
+              <div class="form-group" ng-show="formuladata.uuid" *ngIf="mode">
+                <label class="col-md-3 control-label">UUID</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [(ngModel)]="formulajson.uuid" name="uuid" placeholder="" [disabled]="true">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [(ngModel)]="formulajson.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">Version </label>
+                <div class="col-md-6">
+                  <p-dropdown [options]="VersionList"          
+                  [(ngModel)]="selectedVersion"
+                  name="version"
+                  [style]="{'width':'100%','padding':'3px'}"
+                  [filter]="true"
+                  [disabled]="mode == 'false'"
+                  (onChange)="onVersionChange()"
+                  >
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">CreatedBy</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                </div>
+              </div>
+
+              <div class="form-group" *ngIf="mode">
+                <label class="col-md-3 control-label">CreatedOn</label>
+                <div class="col-md-6">
+                  <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="formulajson.createdOn" name="createdOn">
+                </div>
+              </div>
+
+              <div class="form-group taginput">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <tag-input [(ngModel)]="tags" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                <div class="col-md-6">
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="formulajson.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="col-md-6 form-group">
+                  <label class="control-label col-md-6 col-sm-6 col-xs-12">Depends On
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                      <select class="form-control" [(ngModel)]="dependsontype" name="dependsontype" (change)="selectType()" [disabled]="mode == 'true'">
+                          <option *ngFor="let app of depandsOnTypes" [ngValue]="app" >{{app}} </option>
+                        </select>
+                  </div>
+                </div>
+                <div class="col-md-6 form-group">
+                  <label class="control-label col-md-2 col-sm-6 col-xs-12" style="float:left;margin-left: -3%;padding-right: 0px;">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <p-dropdown [options]="allNames"          
+                    [(ngModel)]="dependsOn"
+                    name="dependsOnName"
+                    [disabled]="mode == 'true'"
+                    [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true"
+                    (onChange)="changeType()"
+                    >
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="formulajson.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="formulajson.published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">FormulaInfo</label>
+                <div class="col-md-6">
+                  <div id="formulaInfo"  contenteditable="false">
+		                  <span  [ngClass]="data.type =='simple' ? 'formula-default' : (data.type =='function' ? 'formula-default' : 'formula-color')" *ngFor="let data of formulaarray">
+                        {{data.value}}
+		                  </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label"></label>
+                <div class="col-md-6 clearfix" style="width:52%" >
+                  <span *ngFor="let x of formulafuction" class="{{x.class}} formula_span"><a (click)="addData(x)"><i> {{x.value}} </i></a></span>
+                  <span class="formula_function btn red formula_span"><a (click)="clear()" style="color: #fff;"> Clear </a> </span>
+                  <span class="formula_function btn blue formula_span"><a (click)="undo()" style="color: #fff;"> Undo </a></span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
+                <div class="col-md-2 col-sm-2 col-xs-12" style="width:15%;">
+                  <select title="Type" data-toggle="tooltip" data-placement="top" class="form-control" name="attrname" [(ngModel)]="selectAttribute" (change)="onChangeAttribute(selectAttribute)">
+                    <option selected *ngFor="let x of attributeTypes" [value]="x.text">{{x.caption}}</option>
+                  </select>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-12" style="margin-left:-19px;width:29%;">
+                  <div *ngIf="isSourceAtributeSimple">
+                      <input type="text" class="form-control" [(ngModel)]="sourcesimple" name="sourcesimple"  [disabled]="mode">
+                  </div>
+                  <div *ngIf="isSourceAtributeDatapod">
+                      <p-dropdown [options]="allAttribute"          
+                      [(ngModel)]="sourceattribute"
+                      name="sourceattribute"
+                      [disabled]="mode == 'true'"
+                      [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true">
+                      </p-dropdown>
+                  </div>
+                  <div *ngIf="isSourceAtributeFormula">
+                      <p-dropdown [options]="allFormula"          
+                      [(ngModel)]="sourceformula"
+                      name="sourceattribute"
+                      [disabled]="mode == 'true'"
+                      [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true"
+                      >
+                      </p-dropdown>
+                  </div>
+                  <!-- <div *ngIf="isSourceAtributeFormula">
+                      <p-dropdown [options]="allAttribute"          
+                      [(ngModel)]="sourceattribute"
+                      name="sourceattribute"
+                      [disabled]="mode == 'true'"
+                      [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true"
+                      >
+                      </p-dropdown>
+                  </div> -->
+                  <div *ngIf="isSourceAtributeExpression">
+                      <p-dropdown [options]="allExpression"          
+                      [(ngModel)]="sourceexpression"
+                      name="sourceattribute"
+                      [disabled]="mode == 'true'"
+                      [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true"
+                      >
+                      </p-dropdown>
+                  </div>
+                  <div *ngIf="isSourceAtributeFunction">
+                      <p-dropdown [options]="allFunction"          
+                      [(ngModel)]="sourcefunction"
+                      name="sourceattribute"
+                      [disabled]="mode == 'true'"
+                      [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true"
+                      >
+                      </p-dropdown>
+                  </div>
+                </div>
+                <a  (click)="addAttribute()"  class="formula_function btn green" style="margin-left:-5px;"> Add+ </a>
+              </div>
+              <div class="form-group"  style="padding-top: 10px;">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                  <a (click)="goBack()" class="btn btn-primary">Cancel</a><!-- formulaHasChanged == false ||  -->
+                  <input type="submit" class="btn btn-success" value="Submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true" >
+                </div>
+              </div>
+              <br/>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- END MAIN CONTENT -->
+</div> <!-- BEGIN MAIN JS-->

@@ -1,0 +1,34 @@
+
+<div style="overflow: scroll;max-height:450px" [hidden]="!IsGraphShow">
+    <div id="paper1" class="groupgraph" ></div> 
+</div>
+
+<div *ngIf="!IsGraphShow">
+
+    <app-resulttable [tableParms]="tableparms" *ngIf="!IsGraphShow" ></app-resulttable>
+
+</div>
+<div class="tooltipcustom" id="divtoshow" style="display:none;position: fixed;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
+    <div style="margin-top: 5px;margin-right: 15px"></div>
+    <div class="row">
+        <div class="col-md-1">
+            <div class="one" id="dagcolorID" style="margin-left:5px;margin-bottom: 10px"></div>
+        </div>
+        <div class="col-md-5" id="elementTypeText"></div>   
+    </div>
+    <div class="row" style="margin-top: 5px">
+        <span style="margin-left:20px;">Id</span><span id="task_Id" style="margin-left:60px"></span>
+    </div>
+    <div class="row" style="margin-top: 5px">
+        <span style="margin-left:20px">Name</span><span id="task_Name" style="margin-left:36px"></span>
+    </div>
+    <div class="row" style="margin-top: 5px">
+        <span id="task_Version_label" style="margin-left:20px">Version</span> <span id="task_Version" style="margin-left:23px"></span>
+    </div>
+    <!-- <div class="row" style="margin-top: 5px" *ngIf="popoverData.startTime">
+        <span style="margin-left:20px">Start Time</span> <span id="startTime" style="margin-left:4px">{{popoverData.startTime}}</span>
+    </div>
+    <div class="row" style="margin-top: 5px" *ngIf="popoverData.endTime">
+        <span style="margin-left:20px">End Time</span> <span id="endTime" style="margin-left:8px">{{popoverData.endTime}}</span>
+    </div> -->
+</div>

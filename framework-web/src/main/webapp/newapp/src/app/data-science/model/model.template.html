@@ -1,0 +1,313 @@
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+<br>
+<p-growl [(value)]="msgs" ></p-growl>
+<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+<div class="row" >
+    <div class="col-md-12">       
+        <div class="portlet light bordered" id="model_wizard_1">
+            <div class="portlet-title" style="margin-bottom:0px;">
+                <div class="caption">
+                    <i class=" icon-layers "></i>
+                    <span class="caption-subject  bold ">Model Wizard-
+                      <span class="step-title"> Step 1 of 3 </span>
+                    </span>
+                </div>
+    
+                <div class="actions" >
+                    <!-- <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass] ="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+                       ng-hide="isAdd" data- (click)="enableEdit(dqdata.uuid,dqdata.version)">
+                       <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip [ngClass] ="(showdag==true && isEdit==false)? 'currentpage':'notcurrentpage'"
+                       ng-hide="isAdd" data- (click)="showview(dqdata.uuid,dqdata.version)">
+                       <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip  ng-show="isDependencyShow" [ngClass] ="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(dqdata.uuid,dqdata.version)"  style="border:0px solid transparent !important;">
+                        <i class="fa fa-sitemap" style="margin:2px auto;color:white;"></i>
+                    </a>
+                    <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white borderless"  (click)="broadcastRefreshData()" data-original-title="" title=""  style="border:0px solid transparent !important;">
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a> -->
+                    <a class="btn btn-circle btn-icon-only btn-default bg-red bg-hover-grey-salsa font-white borderless"  style="border:0px solid transparent !important;"  (click)="goBack()">
+                        <i class="fa fa-times" style="margin: 2px auto;color:white;"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div>
+                    <div class="form-wizard">
+                        <div class="form-body" style="padding-top: 20px;">    
+                            <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
+                                <li [ngClass] ="{'active' : continueCount == 1,'done':continueCount>1}">
+                                    <a  class="step" aria-expanded="true">
+                                        <span class="number"> 1 </span>
+                                        <span class="desc">
+                                        <i class="fa fa-check"></i> Model Setup </span>
+                                    </a>
+                                </li>
+                                <li [ngClass] ="{'active' : continueCount == 2,'done':continueCount>2}">
+                                    <a class="step">
+                                        <span class="number"> 2 </span>
+                                        <span class="desc">
+                                            <i class="fa fa-check"></i>  Model Source
+                                        </span>
+                                    </a>
+                                </li>
+    
+                                <li [ngClass] ="{'active' : continueCount == 3,'done':continueCount>3}">
+                                    <a  class="step">
+                                        <span class="number"> 3 </span>
+                                          <span class="desc">
+                                            <i class="fa fa-check"></i>Model Execute 
+                                        </span>
+                                    </a>
+                                </li> 
+                                
+                            </ul>
+                           <div id="bar" class="progress progress-striped" role="progressbar"  style="height:10px;">
+                                <div class="progress-bar progress-bar-success"  [style.width]="progressbarWidth"></div>
+                            </div>
+                            <div class="tab-content"> 
+                                
+                                <div class="tab-pane" id="tab1" [ngClass]="{'active' : continueCount == 1}" >
+                                    <form  class="form-horizontal"  name="myform" novalidate="novalidate">
+                                        <div class="form-group" *ngIf="mode">
+                                            <label class="col-md-3 control-label">UUID</label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" [(ngModel)]="model.uuid" name="uuid" placeholder="" [disabled]="true">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Name
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" [(ngModel)]="model.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" *ngIf="mode">
+                                            <label class="col-md-3 control-label">Version </label>
+                                            <div class="col-md-6">
+                                              <p-dropdown [options]="VersionList"          
+                                              [(ngModel)]="selectedVersion"
+                                              name="selectedVersion"
+                                              dataKey="u_Id"
+                                              [style]="{'width':'100%','padding':'3px'}"
+                                              [filter]="true"
+                                              [disabled]="mode == 'false'"
+                                              (onChange)="onVersionChange()">
+                                              </p-dropdown>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" *ngIf="mode">
+                                            <label class="col-md-3 control-label">CreatedBy</label>
+                                            <div class="col-md-6" *ngIf="locations!=''">
+                                              <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" *ngIf="mode" >
+                                            <label class="col-md-3 control-label">CreatedOn</label>
+                                            <div class="col-md-6">
+                                              <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="model.createdOn" name="createdOn">
+                                            </div>
+                                        </div>
+                                        <div class="form-group taginput">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                              <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'"  theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                                            <div class="col-md-6">
+                                              <textarea [disabled]="mode == 'true'" [(ngModel)]="model.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div class="btn-group">
+                                                    <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="model.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                                                </div>
+                                            </div>
+                                        </div>
+                                
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div class="btn-group">
+                                                    <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="model.published " name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <label class="control-label col-md-3"></label>
+                                            <div class="col-md-4" style="padding-top: 2%;">       
+                                                <button type="submit" class="btn btn-outline green "  (click)="countContinue()"> Continue
+                                                    <i class="fa fa-angle-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- End Tab1-->
+
+                                <!--Start Tab2-->
+                                <div class="tab-pane" id="tab2" [ngClass] ="{'active' : continueCount == 2}">
+                                    <form class="form-horizontal" name="myform2" id="submit_form2"  (submit)="countContinue()" novalidate="novalidate">     
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Source
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                                <select class="form-control" [(ngModel)]="source" name="source" (change)="SourceType()" [disabled]="mode == 'true'">
+                                                    <option *ngFor="let app of sources" [ngValue]="app" >{{app}} </option>
+                                                  </select>
+                                            </div>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                                                <span class="required" aria-required="true"> * </span>
+                                              </label>
+                                            <div class="col-md-3 col-sm-4 col-xs-12" >
+                                                <p-dropdown [options]="allNames"          
+                                                [(ngModel)]="sourcedata"
+                                                name="sourcedata"
+                                                dataKey="uuid"
+                                                [disabled]="mode == 'true'"
+                                                [style]="{'width':'100%','padding':'3px'}"
+                                                [filter]="true"
+                                                (onChange)="changeSoruce()"
+                                                >
+                                                </p-dropdown>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" >
+                                            <label class="col-md-3 control-label">Features</label>
+                                            <div class="col-md-6"  *ngIf="allAttribute">           
+                                            <angular2-multiselect [data]="allAttribute" [(ngModel)]="featuresTags" name="featuresTags"
+                                            [settings] ="dropdownSettings"></angular2-multiselect>              
+                                            </div>  
+                                        </div>
+                                        <div class="form-group" >
+                                            <label class="col-md-3 control-label">Algorithm</label>
+                                            <div class="col-md-6">  
+                                                <p-dropdown [options]="allAlgorithm"          
+                                                [(ngModel)]="selectAlgorithm"
+                                                name="selectAlgorithm"
+                                                dataKey="uuid"
+                                                [disabled]="mode == 'true'"
+                                                [style]="{'width':'100%','padding':'3px'}"
+                                                [filter]="true"
+                                                (onChange)="changeAlgorithm()">
+                                                </p-dropdown>
+                                            </div>
+                                        </div> 
+                                      
+                                        <div class="form-group" >
+                                            <label class="col-md-3 control-label">Label</label>
+                                            <div class="col-md-6">
+                                                <p-dropdown [options]="labelArray"          
+                                                    [(ngModel)]="selectedlabel"
+                                                    name="selectedlabel"
+                                                    dataKey="u_Id"
+                                                    [disabled]="mode == 'true' || !IsLableSelected"
+                                                    [style]="{'width':'100%','padding':'3px'}"
+                                                    [filter]="true">
+                                                </p-dropdown>
+                                            </div>
+                                        </div> 
+
+                                         <div class="row">
+                                            <label class="control-label col-md-3"></label>
+                                            <div class="col-md-4" style="padding-top: 2%;">
+                                                <a href="javascript:;" class="btn default button-previous"  (click)="countBack()">
+                                                    <i class="fa fa-angle-left"></i> Back
+                                                </a>
+                                                <button type="submit" class="btn btn-outline green "> Continue
+                                                    <i class="fa fa-angle-right"></i>
+                                                </button>
+                                            </div>
+                                        </div> 
+                                    </form>
+                                </div><!--End Tab2-->
+
+                                <!-- Start Tab3 -->
+                                <div class="tab-pane" id="tab3" [ngClass] ="{'active' : continueCount == 3}">
+                                    <form class="form-horizontal" name="myform3" id="submit_form3" novalidate="novalidate">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12" >
+                                                <p-checkbox [(ngModel)]="checkboxModelexecution" name="checkboxModelexecution" binary="true" (onChange)="changeCheckboxExecution()"></p-checkbox>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="isShowExecutionparam">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set</label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" [(ngModel)]="paramsetdata" (change)="onSelectparamSet()"  name="sourceAttributeType" [disabled]="mode == 'true'">
+                                                        <option value="" style="color:red;">USE DEFAULT VALUE</option>    
+                                                        <option *ngFor="let app of allParameterset" [ngValue]="app">{{app.name}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        
+                                            <div *ngIf="isTabelShow" style="overflow-x: auto;">
+                                                <table class=" row-border hover table  table-striped table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align:center;Vertical-align: middle;width:5%;">
+                                                                <input [disabled]="mode == 'true'"   style="width: 16px;height:16px;"  type="checkbox" [(ngModel)]="selectallattribute" name="selectAllAttributeRow" (click)="selectAllRow()"> 
+                                                            </th>
+                                                            <th style="width:6%;text-align:center">ID</th>
+                                                            <th class="text-center" *ngFor=" let tablecol of paramtablecol">{{tablecol.paramName}}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor=" let tabledata of paramtable; let i=index">
+                                                            <td style="text-align:center;Vertical-align:middle;width:5%;">
+                                                                    <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'"/>
+                                                            </td>
+                                                            <td style="width:6%;">
+                                                                    <input type="text" class="form-control" [(ngModel)]="tabledata.paramSetId"  name="paramSetId+{{i}}" [disabled]="true">
+                                                                
+                                                            </td>
+                                                            <td style="width:20%;"  *ngFor=" let tablecol of tabledata.paramSetVal;let j=index">
+                                                                    <input type="text" class="form-control" [(ngModel)]="tablecol.value"  name="value+{{tablecol.value}}" [disabled]="true">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="control-label col-md-3"></label>
+                                            <div class="col-md-4" style="padding-top: 2%;">
+                                                <a href="javascript:;" class="btn default button-previous"  (click)="countBack()">
+                                                    <i class="fa fa-angle-left"></i> Back
+                                                </a>
+                                                <button type="submit" class="btn green"  [disabled]="mode == 'true' || isSubmit == 'true'"  (click)="submit()" >Submit</button>
+                                                <span class="spinner"  style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
+                                                    <div class="bounce1"></div>
+                                                    <div class="bounce2"></div>
+                                                    <div class="bounce3"></div>
+                                                </span>
+                                            </div>
+                                        </div>  
+                                    </form>
+                                </div><!-- End Tab3-->
+                            </div><!--End tab-content-->
+                        </div><!--End form-body-->
+
+                        <div class="form-actions">
+                        </div>
+                    </div><!--End form-wizard-->
+                            
+                       
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        
+    

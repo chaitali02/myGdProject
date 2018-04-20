@@ -1,0 +1,22 @@
+<div class="row" *ngIf="IsTableShow == true;else falsyTemplate ">
+    <div class="col-md-12" *ngIf="cols !=null">       
+        <!-- <div style="float:right;" *ngIf="cols >0">
+            <p-multiSelect [options]="columnOptions" [(ngModel)]="cols" [style]="{'width':'23px','height':'40px'}"></p-multiSelect>
+        </div> -->
+        
+        <p-dataTable [value]="colsdata"  #dt  exportFilename="data"    selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" >
+            <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
+        </p-dataTable>
+    </div>
+</div>
+<ng-template #falsyTemplate>
+    <div class="spinner text-center">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+    </div>
+</ng-template>
+<div class ="centercontent" *ngIf="IsError">
+   <span style="font-size:14px;color:red;">Some error occur</span>
+
+</div>

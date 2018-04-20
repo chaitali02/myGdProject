@@ -1,0 +1,225 @@
+<div class="page-sidebar navbar-collapse collapse" ng-init="updateMetaData()">
+  <!-- BEGIN SIDEBAR MENU -->
+  <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
+  <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
+  <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
+  <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+  <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
+  <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+
+  <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+    <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
+    <li class="sidebar-search-wrapper">
+      <!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
+      <!-- DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box -->
+      <!-- DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box -->
+      <form class="sidebar-search sidebar-search-bordered" action="#" method="POST">
+        <a href="javascript:;" class="remove">
+          <i class="icon-close"></i>
+        </a>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search..." style="color:white;">
+          <span class="input-group-btn">
+            <a href="javascript:;" class="btn submit">
+              <i class="icon-magnifier"></i>
+            </a>
+          </span>
+        </div>
+      </form>
+      <!-- END RESPONSIVE QUICK SEARCH FORM -->
+    </li>
+
+    <!--Datadiscovery Menu-->
+
+    <li class="nav-item">
+      <a [routerLink]="['DataDiscovery']">
+        <i class="fa fa-binoculars"></i>
+        <span class="title" style="text-transform:capitalize">Data Discovery</span>
+      </a>
+    </li>
+
+    <!--Metadata Navigator Menu-->
+    
+    <li class="nav-item">
+      <a [routerLink]="['metadataNavigator']">
+        <i class="fa fa-paper-plane"></i>
+        <span class="title">Metadata Navigator</span>
+      </a>
+    </li>
+    
+    <!--Datavisualization Menu-->
+    <li class="nav-item" (click)="check(DataVisualizationMenu.id,true)" [ngClass]="{'open': selectedItemId === DataVisualizationMenu.id}">
+      <a  class="nav-link nav-toggle" >
+        <i class="fa fa-desktop "></i>
+        <span class="title">Data Visualization</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu"  [style.display]="selectedItemId === DataVisualizationMenu.id && toggle ==true ? 'block' : none" >
+        <li *ngFor="let dashboardsubmenu of DataVisualizationMenu.subMenu" class="nav-item">
+          <a [routerLink]="['list', dashboardsubmenu.type]" class="nav-link">
+            <span class="title">{{dashboardsubmenu.name}}</span>
+            <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dashboardsubmenu.type].count"></span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!--Profile Menu-->
+    <li class="nav-item" (click)="check(DataProfileMenu.id,true)" [ngClass]="{'open': selectedItemId === DataProfileMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-users"></i>
+        <span class="title">Data Profiling</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === DataProfileMenu.id && toggle ==true ? 'block' : none" >
+        <li *ngFor="let dataprofilesubmenu of DataProfileMenu.subMenu" class="nav-item">
+          <a [routerLink]="['list', dataprofilesubmenu.type]" class="nav-link">
+            <span class="title">{{dataprofilesubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataprofilesubmenu.type].count"></span> -->
+          </a>
+        </li>
+      </ul>
+
+    </li>
+
+    <!--Dataquality Menu-->
+    <li class="nav-item" (click)="check(DataQualityMenu.id,true)" [ngClass]="{'open': selectedItemId === DataQualityMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-rss"></i>
+        <span class="title">Data Quality</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === DataQualityMenu.id && toggle ==true ? 'block' : none" >
+        <li *ngFor="let dataqualitysubmenu of DataQualityMenu.subMenu" class="nav-item">
+          <a [routerLink]="['list', dataqualitysubmenu.type]" class="nav-link">
+            <span class="title">{{dataqualitysubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataqualitysubmenu.type].count"></span>    -->
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!--Data Preparation Menu-->
+    <li class="nav-item" (click)="check(DataPreparationMenu.id,true)" [ngClass]="{'open': selectedItemId === DataPreparationMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-link"></i>
+        <span class="title">Data Preparation</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === DataPreparationMenu.id && toggle ==true ? 'block' : none">
+        <li class="nav-item" *ngFor="let metadatasubmenu of DataPreparationMenu.subMenu ">
+          <a [routerLink]="['list', metadatasubmenu.type]" class="nav-link">
+            <span class="title">{{metadatasubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[metadatasubmenu.type].count"></span> -->
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!--BusinessRule Menu-->
+    <li class="nav-item" (click)="check(BusinessRuleMenu.id,true)" [ngClass]="{'open': selectedItemId === BusinessRuleMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-cogs"></i>
+        <span class="title">Business Rules</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === BusinessRuleMenu.id && toggle ==true ? 'block' : none">
+        <li *ngFor="let businesrulesubmenu of BusinessRuleMenu.subMenu" class="nav-item">
+          <a [routerLink]="['list', businesrulesubmenu.type]" class="nav-link">
+            <span class="title">{{businesrulesubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[businesrulesubmenu.type].count"></span> -->
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!--DataScience Menu-->
+    <li class="nav-item" (click)="check(DataScienceMenu.id,true)" [ngClass]="{'open': selectedItemId === DataScienceMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-flask"></i>
+        <span class="title">Data Science</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === DataScienceMenu.id && toggle ==true ? 'block' : none">
+        <li class="nav-item" *ngFor=" let datasciencesubmenu of DataScienceMenu.subMenu">
+          <a [routerLink]="['list', datasciencesubmenu.type]" class="nav-link">
+            <span class="title" style="text-transform: capitalize">{{datasciencesubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[datasciencesubmenu.type].count"></span> -->
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!--Data Pipeline Menu-->
+    <li class="nav-item" (click)="check(DataPipelineMenu.id,true)" [ngClass]="{'open': selectedItemId === DataPipelineMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-cogs"></i>
+        <span class="title">Data Pipeline</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === DataPipelineMenu.id && toggle ==true ? 'block' : none">
+        <li class="nav-item">
+            <a [routerLink]="['dataPipeline/dag']">
+              <span class="title">Create</span>
+            </a>
+          </li>
+        <li *ngFor="let datapipelinesubmenu of DataPipelineMenu.subMenu" class="nav-item">        
+          <a [routerLink]="['list', datapipelinesubmenu.type]" class="nav-link">
+            <span class="title">{{datapipelinesubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null && datapipelinesubmenu.type!=''" [innerHTML]="_MetaStats[datapipelinesubmenu.type].count"></span> -->
+          </a>
+        </li>
+      </ul>
+    </li>
+
+
+    <!--Admin Menu-->
+    <li class="nav-item" (click)="check(adminMenu.id,true)" [ngClass]="{'open': selectedItemId === adminMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-wrench"></i>
+        <span class="title">Admin</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu"  [style.display]="selectedItemId === adminMenu.id && toggle ==true ? 'block' : none">
+        <li class="nav-item" *ngFor="let admindatasubmenu of adminMenu.subMenu">
+          <a [routerLink]="['list', admindatasubmenu.type]" class="nav-link">
+            <span class="title" style="text-transform: capitalize">{{admindatasubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[admindatasubmenu.type].count"></span>         -->
+          </a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['admin/registerSource']">
+            <span class="title">Register Source</span>
+          </a>
+        </li>
+        <li class="nav-item">        
+          <a [routerLink]="['admin/migration-assist']">
+            <span class="title">Migration Assist</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['admin/settings']">
+            <span class="title">Settings</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+      <!--Job Monitoring Menu-->
+    <li class="nav-item">
+      <a [routerLink]="['jobMonitoring']">
+        <i class="fa fa-tasks"></i>
+        <span class="title">Job Monitoring</span>
+      </a>
+    </li>
+   
+     <!--System Monitoring Menu-->
+    <li class="nav-item">
+      <a  [routerLink]="['systemMonitoring']">
+        <i class="fa fa-tasks"></i>
+        <span class="title">System Monitoring</span>
+      </a>
+    </li>
+  </ul>
+  <!-- END SIDEBAR MENU -->
+</div>

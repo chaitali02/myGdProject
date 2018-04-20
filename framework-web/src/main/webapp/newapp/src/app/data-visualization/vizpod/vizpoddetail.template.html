@@ -1,0 +1,238 @@
+   <p-growl [(value)]="msgs" ></p-growl>
+   <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+    <br>
+    <!-- BEGIN MAIN CONTENT -->
+    <div class="row" >
+        <div class="col-md-12">
+        <!-- BEGIN: ACCORDION DEMO -->
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                  <i class="fa fa-gift"></i>{{vizpoddata.name}}
+                </div>
+                <div class="tools"> 
+                    <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
+                        <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                    </a>
+                    <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
+                        <span class="glyphicon glyphicon-file" style="color:white;"></span>
+                    </a>
+                    <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip style="height:14px;" *ngIf="mode">
+                        <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                    </a>
+                    <a  title="Refresh"  data-toggle="tooltip" data-placement="top" tooltip>
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
+                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="portlet-body form">
+                <!-- <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')" *ngIf="showgraphdiv">
+                    <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                    <div class="form-body show-graph-body" id="graphWrapper">
+                         <app-d3></app-d3>
+                    </div>
+                </div> -->
+              
+                <div class="form-body" style="padding-top:50px;">
+                    <form  class="form-horizontal"  name="myform" novalidate="novalidate" (ngSubmit)="submitDatapod()" #myNewForm = "ngForm" >
+                        <div class="form-group" *ngIf="mode">
+                            <label class="col-md-3 control-label">UUID</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" [(ngModel)]="vizpoddata.uuid" name="uuid" placeholder="" [disabled]="true">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Name
+                                <span class="required" aria-required="true"> * </span>
+                            </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" [(ngModel)]="vizpoddata.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                            </div>
+                        </div>
+
+                        <div class="form-group" *ngIf="mode">
+                            <label class="col-md-3 control-label">Version </label>
+                            <div class="col-md-6">
+                                <p-dropdown [options]="VersionList"          
+                                  [(ngModel)]="selectedVersion"
+                                  name="selectedVersion"
+                                  dataKey="u_Id"
+                                  [style]="{'width':'100%','padding':'3px'}"
+                                  [filter]="true"
+                                  [disabled]="mode == 'false'"
+                                  (onChange)="onVersionChange(selectedVersion.label)">
+                                </p-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="form-group" *ngIf="vizpoddata.createdBy">
+                            <label class="col-md-3 control-label">CreatedBy</label>
+                            <div class="col-md-6" *ngIf="locations!=''">
+                                <input type="text" class="form-control" [disabled]="true" [(ngModel)]="vizpoddata.createdBy.ref.name" name="createdBy">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" *ngIf="vizpoddata.createdOn">
+                            <label class="col-md-3 control-label">CreatedOn</label>
+                            <div class="col-md-6">
+                                <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="vizpoddata.createdOn" name="createdOn">
+                            </div>
+                        </div>
+
+                        <div class="form-group taginput">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
+                                <tag-input [(ngModel)]="vizpoddata.tags" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                            <div class="col-md-6">
+                                <textarea [disabled]="mode == 'true'" [(ngModel)]="vizpoddata.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Source
+                                    <span class="required" aria-required="true"> * </span>
+                            </label>
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <select class="form-control" [(ngModel)]="source" name="source" (change)="ChangeSourceType()" [disabled]="mode == 'true'">
+                                    <option *ngFor="let app of sources" [ngValue]="app" >{{app}} </option>
+                                </select>
+                            </div>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                                <span class="required" aria-required="true"> * </span>
+                            </label>
+                            <div class="col-md-3 col-sm-4 col-xs-12" >
+                                <p-dropdown [options]="allNames"          
+                                    [(ngModel)]="sourcedata"
+                                    name="sourcedata"
+                                    dataKey="uuid"
+                                    [disabled]="mode == 'true'"
+                                    [style]="{'width':'100%','padding':'3px'}"
+                                    [filter]="true"
+                                    (onChange)="changeType()">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Type
+                                <span class="required" aria-required="true"> * </span>
+                            </label>
+                            <div class="col-md-6">
+                                <select class="form-control" [(ngModel)]="vizpodtype" name="vizpodtype" [disabled]="mode == 'true'">
+                                    <option *ngFor="let app of vizpodTypes" [ngValue]="app" >{{app}} </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                                <label class="col-md-3 control-label">Limit</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" [disabled]="mode == 'true'" ng-model="vizpoddata.limit" disabled="disabled">
+                                </div>
+                            </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="btn-group">
+                                        <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="vizpoddata.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="btn-group">
+                                    <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="vizpoddata.published " name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Attribute</label>
+                            <div class="col-md-6">
+                                <ul class="tagitdd" style="height:100px;" [ngClass]="(mode =='true')?'disabled-ul':'default'">
+                                    <li class="btn-draggable tagit-choice-dd  tagit-choice-readonly-dd {{item.class}}" *ngFor=" let item of allAttributes" >
+                                        <span class="tagit-label"  dnd-draggable [dragEnabled]="true"  [dragData]="item">{{item.itemName}}</span>
+                                        <a class="tagit-close-dd">
+                                            <span class="ui-icon ui-icon-close"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-md-3 col-sm-3 col-xs-12 control-label"></label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group ">
+                                    <div class="col-xs-4" dnd-droppable (onDropSuccess)="addToKey($event)"  >
+                                        <label for="name">Key
+                                            <span class="required" aria-required="true"> * </span>
+                                        </label>
+                                        <ul class="tagitdd" [ngClass]="(mode =='true')?'disabled-ul':'default'" style="height:150px;" >
+                                            <li  title="{{item.name}}.{{item.attrName}}" class="tagit-choice-dd tagit-choice-editable-dd" *ngFor="let item of keylist;let keyIndex=index" style="background-color:#99ddff"  >
+                                                <span class="tagit-label">{{item.attrName}}</span>
+                                                <a class="tagit-close-dd">
+                                                    <span class="text-icon" (click)="removeKey(keyIndex)">×</span>
+                                                    <span class="ui-icon ui-icon-close"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                        <div class="col-xs-4"  dnd-droppable (onDropSuccess)="addToGroup($event)">
+                                            <label for="name">Group</label>
+                                            <ul class="tagitdd" style="height:150px;" [ngClass]="(mode =='true')?'disabled-ul':'default'">
+                                                <li title="{{item.name}}.{{item.attributeName}}" class="tagit-choice-dd tagit-choice-editable-dd" *ngFor="let item of grouplist;let groupIndex=index" style="background-color:#ffb380">
+                                                    <span class="tagit-label">{{item.attrName}}</span>
+                                                    <a class="tagit-close-dd">
+                                                           <span class="text-icon" (click)="removeGroup(groupIndex)">×</span>
+                                                           <span class="ui-icon ui-icon-close"></span>
+                                                       </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="col-xs-4"  dnd-droppable (onDropSuccess)="addToValue($event)">
+                                            <label for="name">Value
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <ul class="tagitdd" style="height:150px;"  [ngClass]="(mode == 'true')?'disabled-ul':'default'">
+                                                <li title="{{item.itemName}}" class="tagit-choice-dd tagit-choice-editable-dd" *ngFor="let item of valuelist;let valueIndex=index" style="background-color:#e6ff99" >
+                                                    <span class="tagit-label">{{item.name}}</span>
+                                                    <a class="tagit-close-dd">
+                                                        <span class="text-icon" (click)="removeValue(valueIndex)">×</span>
+                                                        <span class="ui-icon ui-icon-close"></span>
+                                                     </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="form-group" style="padding-top: 10px;">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                <a class="btn btn-primary" (click)="goBack()">Back</a>
+                                <input type="button" class="btn btn-success" value="Submit"  (click)="submit()" name="submit"  [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true" (mouseenter)="checkEmpty()" >
+                                <span class="spinner"  style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
+                                    <div class="bounce1"></div>
+                                    <div class="bounce2"></div>
+                                    <div class="bounce3"></div>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

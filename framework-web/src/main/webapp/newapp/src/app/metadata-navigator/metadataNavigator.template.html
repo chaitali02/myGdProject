@@ -1,0 +1,69 @@
+  
+ <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+  <br>             
+  <div class="row">
+    <div class="col-md-12">
+      <div class="portlet light bordered" style="padding-bottom: 20px;">
+        <div class="portlet-title" style="margin-bottom: 25px;">
+          <div class="actions"></div>
+          <div class="row">
+            <label class="col-md-1" style="margin-top:6px;">Search:</label>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+              <input type="text" class="form-control" [(ngModel)]="searchText">
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2"style="float:right;">
+              <select class="form-control" [(ngModel)]="optiondata">
+                <option *ngFor="let c of optionsort" [ngValue]="c">{{c.caption}}</option>
+              </select >
+            </div>
+            <label class="col-md-1" style="margin-top:6px;float:right">Sort By:</label>
+          </div>
+        </div>
+        <div class="portlet-body">
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" *ngFor="let datadiscovry of allMetaCount | filterMeta : searchText | orderByMeta : [optiondata.name]">
+              <div class="cardshadow" style="height:152px;">
+                <a [routerLink]="['list', datadiscovry.type]">
+                  <div class="dashboard-stat2" style="height:150px;">
+                    <div class="display">                                         
+                      <div class="number" style="margin-top:-4px;">
+                      <h3  style="text-align:left !important;"class="">
+                          <span>{{datadiscovry.count}}</span>
+                          <small class="{{datadiscovry.class}}"></small>
+                      </h3>
+                      <small>{{datadiscovry.caption}}</small>
+                  </div>
+                  <div class="icon">
+                      <i  class=" font-{{datadiscovry.class}} {{datadiscovry.icon}}"></i>
+                  </div>
+                </div>
+                <div class="progress-info">
+                    <div class="progress">
+                        <span style="width: 100%;" class="progress-bar progress-bar-success {{datadiscovry.class}}">
+                            <!-- <span class="sr-only">76% progress</span> -->
+                        </span>
+                    </div>
+                    <div class="status" style="padding-top:5px;">
+                        <div class="status-title" style="text-transform:capitalize;padding-right: 4px;">Last Updated By: </div>
+                        <div title="Last Update By" class="status-number"style="float:left;text-transform: lowercase;">{{datadiscovry.lastUpdatedBy}}</div>
+                    </div>
+                    <div class="status" style="padding-top:15px;">
+                        <span class="status-title" style="text-transform:capitalize;padding-right: 4px;">Last Updated On:</span>
+                        <div title="Last Update On" class="status-number" style="float:left;">{{datadiscovry.lastUpdatedOn | date :'MM-dd-yyyy'}}</div>
+                    </div>
+
+                </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+            
+      
+      
+      
+      
