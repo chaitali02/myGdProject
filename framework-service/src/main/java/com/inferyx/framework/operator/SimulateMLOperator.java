@@ -153,7 +153,7 @@ public class SimulateMLOperator implements Serializable {
 		return df;
 	}
 	
-	/*public Double[] trialValues(long seed, String className, int numTrials, Row dataset, double[] factorMeans,
+	public Double[] trialValues(long seed, String className, int numTrials, Row dataset, double[] factorMeans,
 			double[][] factorCovariances) throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 		RandomGenerator rand = new MersenneTwister(seed);
 		Double[] trialValues = new Double[numTrials] ;
@@ -164,16 +164,16 @@ public class SimulateMLOperator implements Serializable {
 		Object[] obj = {rand, factorMeans, factorCovariances};
 		Object object = cons.newInstance(obj);
 		
-		for (int i = 0; i < numTrials; i++) {
+		/*for (int i = 0; i < numTrials; i++) {
 			double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
 			Double totalValue = 0.0;
 			for (int j=0; j<dataset.length(); j++) {			
 				totalValue = trial[j] * (Double)dataset.get(j);
 			}
 			trialValues[i] = totalValue;
-		}
+		}*/
 		return trialValues;
-	}*/
+	}
 	
 	public Dataset<Row> generateRandomSampler(long seed, String className, int numTrials) {
 		Dataset<Row> df = null;

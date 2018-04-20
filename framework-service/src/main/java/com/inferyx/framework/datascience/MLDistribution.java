@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -30,6 +31,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.SimulateMLOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 
@@ -56,36 +58,44 @@ public class MLDistribution {
 		List<Param> params = paramList.getParams();
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 		
-		Map<String, Object> arguments = new HashMap<>(); 
+		Map<String, Object> arguments = new LinkedHashMap(); 
+		int j = 0; 
 		for(ParamListHolder holder : paramListInfo) {
 			String paramType = holder.getParamType();
 			switch(paramType.toLowerCase()) {
 				case "twodarray" : double[][] twoDarray = getTwoDArray(holder); 
-									arguments.put(holder.getParamName(), twoDarray);
+									arguments.put(holder.getParamType(), twoDarray);
+									j++;
 									break;
 				case "onedarray" : double[] oneDArray = getOneDArray(holder); 
-									arguments.put(holder.getParamName(), oneDArray);
+									arguments.put(holder.getParamType(), oneDArray);
+									j++;
 									break;
-				case "string" : arguments.put(holder.getParamName(), holder.getParamValue().getValue());
+				case "string" : arguments.put(holder.getParamType(), holder.getParamValue().getValue());
+				j++;
 								break;
-				case "double" : arguments.put(holder.getParamName(), holder.getParamValue().getValue());
+				case "double" : arguments.put(holder.getParamType()+"_"+j, holder.getParamValue().getValue());
+				j++;
 								break;
-				case "integer": arguments.put(holder.getParamName(), holder.getParamValue().getValue());
+				case "integer": arguments.put(holder.getParamType(), holder.getParamValue().getValue());
+				j++;
 								break;
-				case "long" : arguments.put(holder.getParamName(), holder.getParamValue().getValue());
+				case "long" : arguments.put(holder.getParamType(), holder.getParamValue().getValue());
+				j++;
 								break;
 			}
 		}
 		
-		
-		Class<?>[] type = new Class<?>[arguments.size()];
-		Class<?> distributorClass = Class.forName(distribution.getClassName());		
+		Class<?>[] type = new Class[arguments.size()];
+		Class<?> distributorClass = Class.forName(distribution.getClassName());	
+		//Class<?>[] arr = {double[].class, double[][].class};	
 		Object[] obj = new Object[arguments.size()];
+		
 		int i = 0;
 		for(String key : arguments.keySet()) {
 			Object value = arguments.get(key);
-			 
-			switch(key) {
+			 key = key.split("_")[0];
+			switch(key.toLowerCase()) {
 			case "twodarray" : obj[i] = value;
 								type[i] = double[][].class;
 								i++;
@@ -98,15 +108,15 @@ public class MLDistribution {
 							type[i] = String.class;
 							i++;
 							break;
-			case "double" : obj[i] = value;
+			case "double" : obj[i] = Double.parseDouble(""+value);
 							type[i] = double.class;
 							i++;
 							break;
-			case "integer" : obj[i] = value;
+			case "integer" : obj[i] = Integer.parseInt(""+value);
 							type[i] = int.class;
 							i++;
 							break;
-			case "long" : obj[i] = value;
+			case "long" : obj[i] = Long.parseLong(""+value);
 							type[i] = long.class;
 							i++;
 							break;
@@ -114,6 +124,7 @@ public class MLDistribution {
 		}
 		Constructor<?> cons = distributorClass.getConstructor(type);
 		Object object = cons.newInstance(obj);
+		//Object objct = object.getClass().getMethod("sample").invoke(object);
 		return object;
 	}
 

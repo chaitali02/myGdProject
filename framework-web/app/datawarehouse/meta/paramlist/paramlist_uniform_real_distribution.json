@@ -1,8 +1,8 @@
 {
-  "id": "5ad9e329b1dfe3183aa2ac7f",
-  "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-  "version": "1523604347",
-  "name": "paramlist_multivariate_normal_distribution",
+  "id": "5ada0a47b1dfe34cf41a9862",
+  "uuid": "72ac4a5d-bd99-4208-b9ad-6fa4551b9c98",
+  "version": "1524238919",
+  "name": "paramlist_uniform_real_distribution",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Apr 20 18:25:05 IST 2018",
+  "createdOn": "Fri Apr 20 21:11:59 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -28,16 +28,16 @@
   ],
   "params": [
     {
-      "paramId": "1",
-      "paramName": "factormeans",
-      "paramType": "ONEDARRAY",
-      "paramValue": ""
+      "paramId": "0",
+      "paramName": "lower",
+      "paramType": "double",
+      "paramValue": "1526.11"
     },
     {
-      "paramId": "2",
-      "paramName": "factorvarience",
-      "paramType": "TWODARRAY",
-      "paramValue": ""
+      "paramId": "1",
+      "paramName": "upper",
+      "paramType": "double",
+      "paramValue": "6352.12"
     }
   ]
 }

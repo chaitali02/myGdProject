@@ -1,8 +1,8 @@
 {
-  "id": "5ad9e329b1dfe3183aa2ac7f",
-  "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-  "version": "1523604347",
-  "name": "paramlist_multivariate_normal_distribution",
+  "id": "5ad9e780b1dfe3183aa2acf1",
+  "uuid": "fd3e1aa9-d14a-4355-9d6d-7bd0b9f44dd4",
+  "version": "1524230016",
+  "name": "paramlist_triangular_distribution",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Apr 20 18:25:05 IST 2018",
+  "createdOn": "Fri Apr 20 18:43:36 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -28,16 +28,22 @@
   ],
   "params": [
     {
+      "paramId": "0",
+      "paramName": "a",
+      "paramType": "double",
+      "paramValue": "3421"
+    },
+    {
       "paramId": "1",
-      "paramName": "factormeans",
-      "paramType": "ONEDARRAY",
-      "paramValue": ""
+      "paramName": "c",
+      "paramType": "double",
+      "paramValue": "5456"
     },
     {
       "paramId": "2",
-      "paramName": "factorvarience",
-      "paramType": "TWODARRAY",
-      "paramValue": ""
+      "paramName": "b",
+      "paramType": "double",
+      "paramValue": "3454"
     }
   ]
 }

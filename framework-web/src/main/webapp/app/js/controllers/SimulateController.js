@@ -432,9 +432,10 @@ DatascienceModule.controller('CreateSimulateController', function($state, $state
         paramList.paramId=$scope.paramListHolder[i].paramId;
         paramList.paramName=$scope.paramListHolder[i].paramName;
         paramList.paramType=$scope.paramListHolder[i].paramType;
+        var type=["ONEDARRAY","TWODARRAY"]
         var ref={};
         var paramValue={};  
-        if($scope.paramListHolder[i].paramType !="row"){
+        if(type.indexOf($scope.paramListHolder[i].paramType.toUpperCase()) ==-1){
           ref.type="simple";
           paramValue.ref=ref;
           paramValue.value=$scope.paramListHolder[i].paramValue;  

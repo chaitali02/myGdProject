@@ -939,17 +939,17 @@ public class ModelServiceImpl {
 ///
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				if(simulate.getDistributionTypeInfo() != null) {
-					int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
+					//int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
 					
-					Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(1).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(1).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(1).getParamValue().getRef().getType().toString());
-					DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
-					ResultSetHolder meansRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorMeanDp, factorMeanDs, hdfsInfo, null, datasource);
-					double[] factorMeans = exec.oneDArrayFromDatapod(meansRSHolder, factorMeanDp);
-					
-					Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(2).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(2).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(2).getParamValue().getRef().getType().toString());
-					DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
-					ResultSetHolder covsRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
-					double[][] factorCovariances = exec.twoDArrayFromDatapod(covsRSHolder, factorCovarianceDp);
+//					Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(1).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(1).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(1).getParamValue().getRef().getType().toString());
+//					DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
+//					ResultSetHolder meansRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorMeanDp, factorMeanDs, hdfsInfo, null, datasource);
+//					double[] factorMeans = exec.oneDArrayFromDatapod(meansRSHolder, factorMeanDp);
+//					
+//					Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(2).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(2).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(2).getParamValue().getRef().getType().toString());
+//					DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
+//					ResultSetHolder covsRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
+//					double[][] factorCovariances = exec.twoDArrayFromDatapod(covsRSHolder, factorCovarianceDp);
 
 					//MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
 					
@@ -973,17 +973,17 @@ public class ModelServiceImpl {
 				}
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				if(simulate.getDistributionTypeInfo() != null) {
-					int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
-					
-					Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(1).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(1).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(1).getParamValue().getRef().getType().toString());
-					DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
-					ResultSetHolder meansRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorMeanDp, factorMeanDs, hdfsInfo, null, datasource);
-					double[] factorMeans = exec.oneDArrayFromDatapod(meansRSHolder, factorMeanDp);
-					
-					Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(2).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(2).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(2).getParamValue().getRef().getType().toString());
-					DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
-					ResultSetHolder covsRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
-					double[][] factorCovariances = exec.twoDArrayFromDatapod(covsRSHolder, factorCovarianceDp);
+					//int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
+//					
+//					Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(1).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(1).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(1).getParamValue().getRef().getType().toString());
+//					DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
+//					ResultSetHolder meansRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorMeanDp, factorMeanDs, hdfsInfo, null, datasource);
+//					double[] factorMeans = exec.oneDArrayFromDatapod(meansRSHolder, factorMeanDp);
+//					
+//					Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(2).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(2).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(2).getParamValue().getRef().getType().toString());
+//					DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
+//					ResultSetHolder covsRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
+//					double[][] factorCovariances = exec.twoDArrayFromDatapod(covsRSHolder, factorCovarianceDp);
 
 					//MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
 					

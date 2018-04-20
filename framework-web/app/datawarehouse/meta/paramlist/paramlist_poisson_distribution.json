@@ -1,8 +1,8 @@
 {
-  "id": "5ad9e329b1dfe3183aa2ac7f",
-  "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-  "version": "1523604347",
-  "name": "paramlist_multivariate_normal_distribution",
+  "id": "5ad9e821b1dfe3183aa2ad05",
+  "uuid": "48d746b5-5a7e-4d7e-91f9-df6515b335bc",
+  "version": "1524230177",
+  "name": "paramlist_poisson_distribution",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Apr 20 18:25:05 IST 2018",
+  "createdOn": "Fri Apr 20 18:46:17 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -28,16 +28,16 @@
   ],
   "params": [
     {
-      "paramId": "1",
-      "paramName": "factormeans",
-      "paramType": "ONEDARRAY",
-      "paramValue": ""
+      "paramId": "0",
+      "paramName": "p",
+      "paramType": "double",
+      "paramValue": "3456"
     },
     {
-      "paramId": "2",
-      "paramName": "factorvarience",
-      "paramType": "TWODARRAY",
-      "paramValue": ""
+      "paramId": "1",
+      "paramName": "epsilon",
+      "paramType": "double",
+      "paramValue": "7563"
     }
   ]
 }

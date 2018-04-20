@@ -1042,10 +1042,20 @@ public class SparkExecutor implements IExecutor {
 			List<Double> colList = new ArrayList<>();
 			for(int j=0; j<features.size(); j++) {	
 				try {
-					double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
 					Double totalVal = 0.0;
+					//double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
+					Object obj = object.getClass().getMethod("sample").invoke(object);
+					Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
+					if(returnType.isArray()) {
+						double[] trial = (double[]) obj;
 					for(double val : trial)
 						totalVal +=val;
+					} else if(returnType.isPrimitive()) {
+						if(!returnType.getName().equalsIgnoreCase("double"))
+								totalVal = Double.parseDouble(""+obj);
+						else
+							totalVal = (Double) obj;
+					}
 					colList.add(totalVal);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 						| NoSuchMethodException | SecurityException e) {
