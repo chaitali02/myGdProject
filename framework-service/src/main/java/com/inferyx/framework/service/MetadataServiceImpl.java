@@ -1117,7 +1117,7 @@ public class MetadataServiceImpl {
 
 		List<ParamListHolder> holderList = new ArrayList<>();
 		ParamList paramList = null;
-		if (distribution.getParamList().getRef().getType().equals(MetaType.paramlist)) {
+		if (distribution.getParamList()!=null && distribution.getParamList().getRef().getType().equals(MetaType.paramlist)) {
 
 			paramList = (ParamList) commonServiceImpl.getLatestByUuid(
 					distribution.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
@@ -1156,7 +1156,7 @@ public class MetadataServiceImpl {
 					simulate.getDistributionTypeInfo().getRef().getUuid(), MetaType.distribution.toString(), "N");
 
 			ParamList paramList = null;
-			if (distribution.getParamList().getRef().getType().equals(MetaType.paramlist)) {
+			if (distribution.getParamList()!=null && distribution.getParamList().getRef().getType().equals(MetaType.paramlist)) {
 
 				paramList = (ParamList) commonServiceImpl.getLatestByUuid(
 						distribution.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
