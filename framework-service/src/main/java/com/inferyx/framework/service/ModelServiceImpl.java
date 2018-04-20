@@ -1038,6 +1038,8 @@ public class ModelServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
+
+			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.");
 			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
 		}
