@@ -198,7 +198,7 @@
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select select2 ng-model="tabledata.paramType" lowercase ng-options="x for x in type | orderBy:orderByValue" ng-disabled="{{mode}}"
+                          <select select2 ng-model="tabledata.paramType"  ng-options="x.name as x.caption for x in type | orderBy:orderByValue" ng-disabled="{{mode}}"
                           class="form-control"></select>
                         </span>
                       </td>

@@ -343,6 +343,8 @@
 	<bean id="trainAndValidateOperator" class="com.inferyx.framework.operator.TrainAndValidateOperator"/>
 	<bean id="simulateMLOperator" class="com.inferyx.framework.operator.SimulateMLOperator"/>
 	<bean id="predictMLOperator" class="com.inferyx.framework.operator.PredictMLOperator"/>
+	
+	<bean id="mlDistribution" class="com.inferyx.framework.datascience.MLDistribution"/>
 		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>

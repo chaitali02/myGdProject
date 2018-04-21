@@ -9,19 +9,18 @@
     "attributes" : [ 
         {
             "attributeId" : 0,
-            "name" : "mean",
+            "name" : "instrument",
             "type" : "double",
-            "desc" : "mean",
+            "desc" : "instrument",
             "key" : "",
             "partition" : "N",
-            "dispName" : "mean",
+            "dispName" : "instrument",
             "active" : "Y"
         }
     ],
-    "uuid" : "3a47402e-6ba5-4ca7-b3a4-7e01fd4dcdd9",
-    "version" : "1523275811",
-    "name" : "means",
-    "desc" : "mean values for simulation",
+    "uuid" : "ab18598b-3897-419a-b48a-5f7303d30e4d",
+    "version" : "1524125127",
+    "name" : "instrument",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -30,10 +29,8 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-04-17T12:04:26.950Z"),
-    "tags" : [ 
-        "demoe"
-    ],
+    "createdOn" : ISODate("2018-04-19T08:05:27.000Z"),
+    "tags" : [],
     "active" : "Y",
     "published" : "N",
     "appInfo" : [ 

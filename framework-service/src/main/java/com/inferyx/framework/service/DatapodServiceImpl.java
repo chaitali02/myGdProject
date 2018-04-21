@@ -1010,9 +1010,7 @@ public class DatapodServiceImpl {
 			boolean z = match.find();
 			if (z == true || csvFileName.contains(" ")) 
 				throw new Exception("CSV file name contains white space or special character");
-			else
-				 System.out.println("There is no special char.");
-
+			
 			String uploadPath = null;
 			/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 					? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/

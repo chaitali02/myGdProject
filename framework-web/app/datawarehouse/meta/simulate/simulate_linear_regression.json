@@ -1,65 +1,92 @@
 {
-    "dependsOn" : {
-        "ref" : {
-            "type" : "model",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
-        }
+  "id": "5ada1b1fb1dfe3541310bf2f",
+  "uuid": "c1b110a1-2f16-46d6-9718-899cf92a03ad",
+  "version": "1524243231",
+  "name": "simulate_linear_regression",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
     },
-    "target" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
-        }
+    "value": null
+  },
+  "createdOn": "Fri Apr 20 22:23:51 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "model",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+      "version": null,
+      "name": "linear_regression_test"
     },
-    "numIterations" : 1000,
-    "featureInfo" : [ 
-        {
-            "featureId" : "0",
-            "featureName" : "interest_rate",
-            "ref" : {
-                "type" : "model",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
-            }
-        }, 
-        {
-            "featureId" : "1",
-            "featureName" : "account_type_id",
-            "ref" : {
-                "type" : "model",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
-            }
-        }, 
-        {
-            "featureId" : "2",
-            "featureName" : "account_status_id",
-            "ref" : {
-                "type" : "model",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
-            }
-        }
-    ],
-    "uuid" : "c1b110a1-2f16-46d6-9718-899cf92a03ad",
-    "version" : "1521705021",
-    "name" : "simulate_linear_regression",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
+    "value": null
+  },
+  "target": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+      "version": null,
+      "name": "account"
     },
-    "createdOn" : ISODate("2018-03-22T07:50:21.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
-            }
-        }
-    ]
+    "value": null
+  },
+  "numIterations": 1000,
+  "featureInfo": [
+    {
+      "ref": {
+        "type": "model",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+        "version": null,
+        "name": "linear_regression_test"
+      },
+      "value": null,
+      "featureId": "0",
+      "featureName": "interest_rate"
+    },
+    {
+      "ref": {
+        "type": "model",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+        "version": null,
+        "name": "linear_regression_test"
+      },
+      "value": null,
+      "featureId": "1",
+      "featureName": "account_type_id"
+    },
+    {
+      "ref": {
+        "type": "model",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+        "version": null,
+        "name": "linear_regression_test"
+      },
+      "value": null,
+      "featureId": "2",
+      "featureName": "account_status_id"
+    }
+  ],
+  "distributionTypeInfo": {
+    "ref": {
+      "type": "distribution",
+      "uuid": "c5bfcdab-6435-4848-9214-6a878a865319",
+      "version": null
+    },
+    "value": null
+  },
+  "source": null
 }

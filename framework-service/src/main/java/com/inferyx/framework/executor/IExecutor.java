@@ -11,13 +11,17 @@
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
+import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
@@ -25,6 +29,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
@@ -226,4 +231,73 @@ public interface IExecutor {
 	 * @param clientContext
 	 */
 	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception;
+
+	/**
+	 * 
+	 * @param rsHolder TODO
+	 * @param factorCovarianceDp
+	 * @return
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	double[][] twoDArrayFromDatapod(ResultSetHolder rsHolder, Datapod factorCovarianceDp)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+
+	/**
+	 * 
+	 * @param rsHolder 
+	 * @param factorMeanDp
+	 * @return
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	double[] oneDArrayFromDatapod(ResultSetHolder rsHolder, Datapod factorMeanDp)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+	
+	/**
+	 * 
+	 * @param features
+	 * @param numIterations
+	 * @param fieldArray TODO
+	 * @param tableName
+	 * @return
+	 */
+	public ResultSetHolder generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) ;
+	
+	/**
+	 * 
+	 * @param object
+	 * @param features
+	 * @param numIterations
+	 * @param tableName
+	 * @return
+	 */
+	public ResultSetHolder generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName);
+	
+	/**
+	 * 
+	 * @param clientContext
+	 * @param datapod
+	 * @param datastore
+	 * @param hdfsInfo
+	 * @param conObject
+	 * @param datasource
+	 * @return
+	 */
+	public ResultSetHolder readFile(String clientContext, Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo,
+			Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception;
 }
