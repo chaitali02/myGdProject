@@ -941,6 +941,9 @@ public class ModelServiceImpl {
 				if(simulate.getDistributionTypeInfo() != null) {
 					//int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
 	
+					ExecParams distExecParam = new ExecParams(); 
+					ExecParams simExecParam = new ExecParams(); 
+					
 					
 					
 					Object object = mlDistribution.getDistribution(distribution, execParams);
