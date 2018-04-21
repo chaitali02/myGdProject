@@ -63,7 +63,6 @@ var onSuccessGetDatasourceByType = function(response) {
         $scope.sourecedata = response
       }
       var onError = function(response) {
-        debugger
         $scope.isDataInpogress = true;
         $scope.isDataError = true;
         $scope.msgclass = "errorMsg";

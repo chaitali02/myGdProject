@@ -141,7 +141,6 @@ export class DatasourceComponent implements OnInit {
     error => console.log("Error :: " + error)); 
   }
   onChangeActive(event) {
-    debugger;
     if(event === true) {
       this.datasource.active = 'Y';
     }

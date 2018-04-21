@@ -766,7 +766,6 @@ export class JointjsComponent{
         let type=data.cell.attributes.elementType
         let uuid=modeldata.uuid;
         let version=modeldata.version;
-        debugger;
         this._dataPipelineService.getMetaIdByExecId(uuid,version,type)
         .subscribe(
             response =>{

@@ -199,7 +199,6 @@ export class ActivityComponent implements OnInit {
  refMetaInfo["name"]=this.metaInfoName
  metaInfo["ref"]=refMetaInfo;
  activityJson["metaInfo"] = metaInfo;
-debugger
  console.log(JSON.stringify(activityJson))
  this._commonService.submit("activity",activityJson).subscribe(
    response => { this.OnSuccessubmit(response)},

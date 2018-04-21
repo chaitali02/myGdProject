@@ -273,7 +273,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 	$scope.addAttribute = function () {
 		var len = $scope.formulainfoarray.length;
 		var data = {}
-       debugger;
+
 		if ($scope.attributeType.text == "datapod") {
 			if ($scope.attributeinfo != null) {
 				data.type = "datapod"
@@ -385,10 +385,9 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.isSourceAtributeExpression = false;
 			$scope.isSourceAtributeFunction = false;
 			$scope.isSourceAtributeParamlist = true;
-			debugger;
+
 			MetadataFormulaSerivce.getParamByParamList($scope.allformuladepands.defaultoption.uuid,"paramlist").then(function (response) { onSuccessParamlist(response.data) });
 			var onSuccessParamlist = function (response) {
-				debugger
 				$scope.lodeParamlist = response
 			}
 		}

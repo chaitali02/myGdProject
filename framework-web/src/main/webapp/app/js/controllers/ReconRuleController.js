@@ -852,7 +852,6 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
   $scope.onClickRuleResult=function(){
     $scope.isRuleExec=true;
     $scope.isRuleResult=false;
-    debugger
       $scope.$emit('resultExecChanged',false);//Update Breadcrum
   }
 

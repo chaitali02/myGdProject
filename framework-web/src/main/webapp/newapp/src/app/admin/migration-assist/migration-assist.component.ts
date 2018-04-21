@@ -215,7 +215,6 @@ export class MigrationAssistComponent implements OnInit {
   }
  
   download(rowDownload) {
-    debugger
     this.uuidAPI = rowDownload.uuid;
    
     alert(this.uuidAPI)
@@ -237,7 +236,6 @@ export class MigrationAssistComponent implements OnInit {
  
   onSucessdownloadExport(response) {
     console.log('api call success')
-    debugger
     console.log(response.headers)
    // headers = headers();
 

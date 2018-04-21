@@ -1696,7 +1696,6 @@
       });
           
       $scope.closeSubTabs = function () {
-        debugger;
         App.scrollTop();
         if($scope.showResults){
           $scope.showResults = false;
