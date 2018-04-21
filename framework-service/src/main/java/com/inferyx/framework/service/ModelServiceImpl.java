@@ -82,6 +82,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Param;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ResultSetHolder;
@@ -917,7 +918,7 @@ public class ModelServiceImpl {
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.InProgress);
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
 					simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-
+			
 			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
 					model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
 					MetaType.algorithm.toString());
@@ -936,17 +937,26 @@ public class ModelServiceImpl {
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			
 			String appUuid = commonServiceImpl.getApp().getUuid();
+			ExecParams distExecParam = new ExecParams(); 
+			ExecParams simExecParam = new ExecParams(); 
+			
+			List<ParamListHolder> distParamHolderList = new ArrayList<>();
+			List<ParamListHolder> simParamHolderList= new ArrayList<>();
+			
+			List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+			for(ParamListHolder holder : paramListInfo) {
+				if(simulate.getParamList() != null && holder.getRef().getUuid().equalsIgnoreCase(simulate.getParamList().getRef().getUuid())) {
+					simParamHolderList.add(holder);
+				} else if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+					distParamHolderList.add(holder);
+				}
+			}
+			distExecParam.setParamListInfo(distParamHolderList);
+			simExecParam.setParamListInfo(simParamHolderList);
 
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-				if(simulate.getDistributionTypeInfo() != null) {
-					//int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
-	
-					ExecParams distExecParam = new ExecParams(); 
-					ExecParams simExecParam = new ExecParams(); 
-					
-					
-					
-					Object object = mlDistribution.getDistribution(distribution, execParams);
+				if(simulate.getDistributionTypeInfo() != null) {					
+					Object object = mlDistribution.getDistribution(distribution, distExecParam);
 					
 					ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
 					sparkExecutor.assembleDataframe(fieldArray, dfRSHolder, tableName, true);
@@ -962,9 +972,7 @@ public class ModelServiceImpl {
 				}
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				if(simulate.getDistributionTypeInfo() != null) {
-					//int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
-
-					Object object = mlDistribution.getDistribution(distribution, execParams);
+					Object object = mlDistribution.getDistribution(distribution, distExecParam);
 					
 					ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
 					String[] customFldArr = new String[] {fieldArray[0]};
