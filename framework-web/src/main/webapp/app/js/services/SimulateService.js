@@ -136,7 +136,7 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
   
   this.getParamByParamList = function (uuid, type) {
 		var deferred = $q.defer();
-		MetadataFormulaFactory.findParamByParamList(uuid,type).then(function (response) { onSuccess(response.data) });
+		SimulateFactory.findParamByParamList(uuid,type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			var paramListHolder=[];
       var type=["ONEDARRAY","TWODARRAY"]
@@ -148,6 +148,7 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
           paramList.paramId=response[i].paramId;
           paramList.paramType=response[i].paramType.toLowerCase();
           paramList.paramName=response[i].paramName;
+          paramList.ref=response[i].ref;
           if(type.indexOf(response[i].paramType) == -1){
             paramList.isParamType="simple";
             paramList.paramValue=response[i].paramValue.value;
@@ -189,6 +190,7 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
           paramList.paramId=response[i].paramId;
           paramList.paramType=response[i].paramType.toLowerCase();
           paramList.paramName=response[i].paramName;
+          paramList.ref=response[i].ref;
           if(type.indexOf(response[i].paramType) == -1){
             paramList.isParamType="simple";
             paramList.paramValue=response[i].paramValue.value;

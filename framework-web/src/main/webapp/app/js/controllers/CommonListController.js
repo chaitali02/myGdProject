@@ -444,6 +444,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         paramList.paramId=$scope.paramListHolder[i].paramId;
         paramList.paramName=$scope.paramListHolder[i].paramName;
         paramList.paramType=$scope.paramListHolder[i].paramType;
+        paramList.ref=$scope.paramListHolder[i].ref;
         var ref={};
         var type=["ONEDARRAY","TWODARRAY"]
         var paramValue={};  

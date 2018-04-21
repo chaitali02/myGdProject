@@ -341,15 +341,15 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   }
 
   $scope.getParamByParamList=function(){
-    SimulateService.getParamByParamList($scope.selectDistributionType.uuid).then(function (response){ onSuccesGetParamByParamList(response.data)});
+    SimulateService.getParamByParamList($scope.selectParamList.uuid).then(function (response){ onSuccesGetParamByParamList(response.data)});
     var onSuccesGetParamByParamList = function (response) {
       var paramList
       paramList = $scope.paramListHolder.concat(response);
       $scope.paramListHolder=paramList;
-      if (response.length > 0) {
-        $scope.isShowExecutionParam = true; 
+      if (response.length > 0 || $scope.paramListHolder.length > 0) {
+       $scope.isShowExecutionParam = true; 
       } else {
-        $scope.isShowExecutionParam = false;
+       $scope.isShowExecutionParam = false;
       }
     }
   }
@@ -485,6 +485,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
         paramList.paramId = $scope.paramListHolder[i].paramId;
         paramList.paramName = $scope.paramListHolder[i].paramName;
         paramList.paramType = $scope.paramListHolder[i].paramType;
+        paramList.ref=$scope.paramListHolder[i].ref;
         var type = ["ONEDARRAY", "TWODARRAY"]
         var ref = {};
         var paramValue = {};
