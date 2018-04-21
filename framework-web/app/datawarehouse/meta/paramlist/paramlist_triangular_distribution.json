@@ -1,49 +1,47 @@
 {
-  "id": "5ad9e780b1dfe3183aa2acf1",
-  "uuid": "fd3e1aa9-d14a-4355-9d6d-7bd0b9f44dd4",
-  "version": "1524230016",
-  "name": "paramlist_triangular_distribution",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
+    "params" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "lowerlimit",
+            "paramType" : "double",
+            "paramValue" : "1000"
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "mode",
+            "paramType" : "double",
+            "paramValue" : "3560"
+        }, 
+        {
+            "paramId" : "2",
+            "paramName" : "upperlimit",
+            "paramType" : "double",
+            "paramValue" : "4500"
+        }
+    ],
+    "uuid" : "fd3e1aa9-d14a-4355-9d6d-7bd0b9f44dd4",
+    "version" : "1524292703",
+    "name" : "paramlist_triangular_distribution",
+    "desc" : "Following conditions should not match else execution will fail, will throw exception.\nif mode < lowerlimit\nif lowerlimit >= upperlimit or if mode > upperlimit.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
     },
-    "value": null
-  },
-  "createdOn": "Fri Apr 20 18:43:36 IST 2018",
-  "tags": [],
-  "active": "Y",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196"
-      },
-      "value": null
-    }
-  ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "a",
-      "paramType": "double",
-      "paramValue": "3421"
-    },
-    {
-      "paramId": "1",
-      "paramName": "c",
-      "paramType": "double",
-      "paramValue": "5456"
-    },
-    {
-      "paramId": "2",
-      "paramName": "b",
-      "paramType": "double",
-      "paramValue": "3454"
-    }
-  ]
+    "createdOn" : ISODate("2018-04-20T18:38:23.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
 }
