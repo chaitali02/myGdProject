@@ -40,7 +40,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   $scope.continueCount = 1;
   $scope.backCount;
   $scope.isDependencyShow = false;
-  $scope.simulationTypes=["DEFAULF","MONTECARLO"];
+  $scope.simulationTypes=["DEFAULT","MONTECARLO"];
   $scope.selectSimulationType=$scope.simulationTypes[0];
   var notify = {
     type: 'success',
