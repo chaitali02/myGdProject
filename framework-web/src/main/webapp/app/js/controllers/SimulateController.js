@@ -27,7 +27,6 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   $scope.data = null;
   $scope.showGraphDiv = false
   $scope.Simulate = {};
-
   $scope.Simulate.versions = [];
   $scope.isshowSimulate = false;
   $scope.sourceTypes = ["datapod", "dataset", "rule"];
@@ -41,6 +40,8 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   $scope.continueCount = 1;
   $scope.backCount;
   $scope.isDependencyShow = false;
+  $scope.simulationTypes=["DEFAULF","MONTECARLO"];
+  $scope.selectSimulationType=$scope.simulationTypes[0];
   var notify = {
     type: 'success',
     title: 'Success',
@@ -247,6 +248,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
       selectModel.uuid = response.dependsOn.ref.uuid;
       selectModel.name = response.dependsOn.ref.name;
       $scope.selectModel = selectModel;
+      $scope.selectSimulationType=response.type;
       var selectSource = {};
       // $scope.selectSource=null;
       // if(response.source !=null){
@@ -311,14 +313,14 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   }
 
   $scope.onChangeDistribution = function () {
-
+    
     $scope.isShowExecutionParam = false;
     $scope.checkboxSimulateexecution = "No";
 
   }
   $scope.onChangeRunImmediately = function () {
     $scope.isShowExecutionParam = false;
-    if ($scope.selectDistributionType != null) {
+    if ($scope.selectDistributionType != null && $scope.checkboxSimulateexecution == "YES") {
       $scope.getAllLatestDatapod();
       SimulateService.getParamListByDistribution($scope.selectDistributionType.uuid).then(function (response) {
         onSuccesGetParamListByDistribution(response.data)
@@ -341,15 +343,17 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   }
 
   $scope.getParamByParamList=function(){
-    SimulateService.getParamByParamList($scope.selectParamList.uuid).then(function (response){ onSuccesGetParamByParamList(response.data)});
-    var onSuccesGetParamByParamList = function (response) {
-      var paramList
-      paramList = $scope.paramListHolder.concat(response);
-      $scope.paramListHolder=paramList;
-      if (response.length > 0 || $scope.paramListHolder.length > 0) {
-       $scope.isShowExecutionParam = true; 
-      } else {
-       $scope.isShowExecutionParam = false;
+    if($scope.selectParamList){
+      SimulateService.getParamByParamList($scope.selectParamList.uuid).then(function (response){ onSuccesGetParamByParamList(response.data)});
+      var onSuccesGetParamByParamList = function (response) {
+        var paramList
+        paramList = $scope.paramListHolder.concat(response);
+        $scope.paramListHolder=paramList;
+        if (response.length > 0 || $scope.paramListHolder.length > 0) {
+          $scope.isShowExecutionParam = true; 
+        } else {
+          $scope.isShowExecutionParam = false;
+        }
       }
     }
   }
@@ -370,6 +374,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     SimulateJson.active = $scope.simulateData.active;
     SimulateJson.published = $scope.simulateData.published;
     SimulateJson.numIterations = $scope.simulateData.numIterations;
+    SimulateJson.type=$scope.selectSimulationType;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -392,7 +397,6 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     //   SimulateJson.source=source;
     // }
       var paramList={};
-      debugger;
      if($scope.selectParamList !=null){
       var paramListRef={};
       paramListRef.type="paramlist";

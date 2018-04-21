@@ -183,7 +183,17 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Type
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label> 
+                                            <div class="col-md-6">                                          
+                                                <select  class="form-control"  ng-disabled="{{mode}}" required  data-ng-model="selectSimulationType" ng-options="r for r in simulationTypes">
+                                                    <!-- <option value="">-select-</option> -->
+                                                </select>
+    
+                                                </div>
+                                            </div>
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4">
@@ -384,7 +394,7 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        
                                         <div ng-show="isShowExecutionParam">
                                             <div class="row">
                                                 <div class="col-md-12">
