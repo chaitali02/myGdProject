@@ -50,7 +50,8 @@ public class MonteCarloSimulation {
 		return null;//Math.min(Math.max(trialValue, dataset.minValue), dataset.maxValue);
 	}
 	
-	public void simulateMonteCarlo(Simulate simulate, ExecParams simExecParam, ExecParams distExecParam, String filePathUrl) {
+	public Object simulateMonteCarlo(Simulate simulate, ExecParams simExecParam, ExecParams distExecParam, String filePathUrl) {
 		
+		return null;
 	}
 }
