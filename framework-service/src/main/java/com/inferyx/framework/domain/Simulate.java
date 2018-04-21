@@ -23,15 +23,8 @@ public class Simulate extends BaseEntity {
     private int numIterations;
 	private List<FeatureRefHolder> featureInfo  = new ArrayList<FeatureRefHolder>();
 	private MetaIdentifierHolder distributionTypeInfo;
-	private MetaIdentifierHolder source;
+	private MetaIdentifierHolder paramList;
 	
-   	/**
-	 * @Ganesh
-	 *
-	 * @return the distDataset
-	 */
-
-
 	/**
 	 * @Ganesh
 	 *
@@ -41,14 +34,6 @@ public class Simulate extends BaseEntity {
 		return distributionTypeInfo;
 	}
 
-	public MetaIdentifierHolder getSource() {
-		return source;
-	}
-
-	public void setSource(MetaIdentifierHolder source) {
-		this.source = source;
-	}
-
 	/**
 	 * @Ganesh
 	 *
@@ -56,6 +41,24 @@ public class Simulate extends BaseEntity {
 	 */
 	public void setDistributionTypeInfo(MetaIdentifierHolder distributionTypeInfo) {
 		this.distributionTypeInfo = distributionTypeInfo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the paramList
+	 */
+	public MetaIdentifierHolder getParamList() {
+		return paramList;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param paramList the paramList to set
+	 */
+	public void setParamList(MetaIdentifierHolder paramList) {
+		this.paramList = paramList;
 	}
 
 	public int getNumIterations() {
