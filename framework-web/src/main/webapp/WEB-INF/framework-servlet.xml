@@ -344,7 +344,7 @@
 	<bean id="simulateMLOperator" class="com.inferyx.framework.operator.SimulateMLOperator"/>
 	<bean id="predictMLOperator" class="com.inferyx.framework.operator.PredictMLOperator"/>
 	
-	<bean id="mlDistribution" class="com.inferyx.framework.datascience.MLDistribution"/>
+	<bean id="mlDistribution" class="com.inferyx.framework.datascience.Math3Distribution"/>
 		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>

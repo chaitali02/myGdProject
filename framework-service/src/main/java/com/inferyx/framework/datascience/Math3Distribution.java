@@ -3,35 +3,25 @@
  */
 package com.inferyx.framework.datascience;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Param;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.operator.SimulateMLOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 
@@ -39,7 +29,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
  * @author Ganesh
  *
  */
-public class MLDistribution {
+public class Math3Distribution {
 
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
@@ -50,81 +40,54 @@ public class MLDistribution {
 	@Autowired
 	private HDFSInfo hdfsInfo;
 	
-	private Constructor<?> cons;
-	
 	public Object getDistribution(Distribution distribution, ExecParams execParams) throws InterruptedException, ExecutionException, Exception {
-		
-		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(distribution.getParamList().getRef().getUuid(), distribution.getParamList().getRef().getVersion(), distribution.getParamList().getRef().getType().toString());
-		List<Param> params = paramList.getParams();
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+
+		Class<?> distributorClass = Class.forName(distribution.getClassName());	
+		Class<?>[] type = new Class[paramListInfo.size()];
+		Object[] obj = new Object[paramListInfo.size()];
 		
-		Map<String, Object> arguments = new LinkedHashMap(); 
 		int j = 0; 
 		for(ParamListHolder holder : paramListInfo) {
-			String paramType = holder.getParamType();
-			switch(paramType.toLowerCase()) {
-				case "twodarray" : double[][] twoDarray = getTwoDArray(holder); 
-									arguments.put(holder.getParamType(), twoDarray);
+			ParamDataType paramDataType = Helper.resolveParamDataType(holder.getParamType());
+			switch(paramDataType) {
+				case TWODARRAY : 	double[][] twoDarray = getTwoDArray(holder); 
+									obj[j] = twoDarray;
+									type[j] = double[][].class;
 									j++;
 									break;
-				case "onedarray" : double[] oneDArray = getOneDArray(holder); 
-									arguments.put(holder.getParamType(), oneDArray);
+				case ONEDARRAY :	 double[] oneDArray = getOneDArray(holder); 
+									obj[j] = oneDArray;
+									type[j] = double[].class;
 									j++;
 									break;
-				case "string" : arguments.put(holder.getParamType(), holder.getParamValue().getValue());
-				j++;
-								break;
-				case "double" : arguments.put(holder.getParamType()+"_"+j, holder.getParamValue().getValue());
-				j++;
-								break;
-				case "integer": arguments.put(holder.getParamType(), holder.getParamValue().getValue());
-				j++;
-								break;
-				case "long" : arguments.put(holder.getParamType(), holder.getParamValue().getValue());
-				j++;
-								break;
+				case STRING : 		obj[j] = holder.getParamValue().getValue();
+									type[j] = String.class;
+									j++;
+									break;
+				case DOUBLE : 		obj[j] = Double.parseDouble(""+holder.getParamValue().getValue());
+									type[j] = double.class;
+									j++;
+									break;
+				case INTEGER :	 	obj[j] = Integer.parseInt(""+holder.getParamValue().getValue());
+									type[j] = int.class;
+									j++;
+									break;
+				case LONG : 		obj[j] = Long.parseLong(""+holder.getParamValue().getValue());
+									type[j] = long.class;
+									j++;
+									break;
+				case DATE : 		obj[j] = getDate();
+									type[j] = Date.class;
+									j++;
+									break;
+				default:
+						break;
 			}
 		}
 		
-		Class<?>[] type = new Class[arguments.size()];
-		Class<?> distributorClass = Class.forName(distribution.getClassName());	
-		//Class<?>[] arr = {double[].class, double[][].class};	
-		Object[] obj = new Object[arguments.size()];
-		
-		int i = 0;
-		for(String key : arguments.keySet()) {
-			Object value = arguments.get(key);
-			 key = key.split("_")[0];
-			switch(key.toLowerCase()) {
-			case "twodarray" : obj[i] = value;
-								type[i] = double[][].class;
-								i++;
-								break;
-			case "onedarray" : obj[i] = value;
-								type[i] = double[].class;
-								i++;
-								break;
-			case "string": obj[i] = value;
-							type[i] = String.class;
-							i++;
-							break;
-			case "double" : obj[i] = Double.parseDouble(""+value);
-							type[i] = double.class;
-							i++;
-							break;
-			case "integer" : obj[i] = Integer.parseInt(""+value);
-							type[i] = int.class;
-							i++;
-							break;
-			case "long" : obj[i] = Long.parseLong(""+value);
-							type[i] = long.class;
-							i++;
-							break;
-			}
-		}
 		Constructor<?> cons = distributorClass.getConstructor(type);
 		Object object = cons.newInstance(obj);
-		//Object objct = object.getClass().getMethod("sample").invoke(object);
 		return object;
 	}
 

@@ -102,6 +102,7 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.executor.ExecContext;
 
 @Component
@@ -665,6 +666,20 @@ public class Helper {
 				case LOG : return getPropertyValue("framework.model.log.path");
 				case ZIP : return getPropertyValue("framework.file.zip.location");		
 				case XLS : return getPropertyValue("framework.file.download.path");		
+			}
+		return null;
+	}
+	
+	public static ParamDataType resolveParamDataType(String paramDataType) {
+		if(paramDataType != null && !StringUtils.isBlank(paramDataType))
+			switch(paramDataType.toLowerCase()) {
+			case "twodarray" : return ParamDataType.TWODARRAY;
+			case "onedarray" : return ParamDataType.ONEDARRAY;
+			case "double" : return ParamDataType.DOUBLE;
+			case "integer" : return ParamDataType.INTEGER;
+			case "long" : return ParamDataType.LONG;
+			case "string" : return ParamDataType.STRING;
+			case "date" : return ParamDataType.DATE;
 			}
 		return null;
 	}

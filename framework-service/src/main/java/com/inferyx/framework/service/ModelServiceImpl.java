@@ -59,7 +59,7 @@ import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
-import com.inferyx.framework.datascience.MLDistribution;
+import com.inferyx.framework.datascience.Math3Distribution;
 import com.inferyx.framework.distribution.MultiNormalDist;
 import com.inferyx.framework.distribution.MultivariateMapFunction;
 import com.inferyx.framework.domain.Algorithm;
@@ -175,7 +175,7 @@ public class ModelServiceImpl {
 	@Autowired
 	private ConnectionFactory connFactory;
 	@Autowired
-	private MLDistribution mlDistribution;
+	private Math3Distribution mlDistribution;
 	
 	//private ParamMap paramMap;
 
