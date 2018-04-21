@@ -60,6 +60,7 @@ import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
 import com.inferyx.framework.datascience.Math3Distribution;
+import com.inferyx.framework.datascience.MonteCarloSimulation;
 import com.inferyx.framework.distribution.MultiNormalDist;
 import com.inferyx.framework.distribution.MultivariateMapFunction;
 import com.inferyx.framework.domain.Algorithm;
@@ -93,6 +94,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.SimulationType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
@@ -177,6 +179,8 @@ public class ModelServiceImpl {
 	private ConnectionFactory connFactory;
 	@Autowired
 	private Math3Distribution mlDistribution;
+	@Autowired
+	private MonteCarloSimulation monteCarloSimulation;
 	
 	//private ParamMap paramMap;
 
@@ -954,50 +958,55 @@ public class ModelServiceImpl {
 			distExecParam.setParamListInfo(distParamHolderList);
 			simExecParam.setParamListInfo(simParamHolderList);
 
-			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-				if(simulate.getDistributionTypeInfo() != null) {					
-					Object object = mlDistribution.getDistribution(distribution, distExecParam);
-					
-					ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
-					sparkExecutor.assembleDataframe(fieldArray, dfRSHolder, tableName, true);
-					String sql = simulateMLOperator.generateSql(simulate, tableName);
-					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-					result = exec.executeRegisterAndPersist(sql, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
-				} else {
-					String query = simulateMLOperator.generateSql(simulate, tableName);
-					ResultSetHolder rsHolder = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
-					sparkExecutor.assembleDataframe(fieldArray, rsHolder, tableName, false);
-					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-					result = exec.executeRegisterAndPersist(query, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
-				}
-			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-				if(simulate.getDistributionTypeInfo() != null) {
-					Object object = mlDistribution.getDistribution(distribution, distExecParam);
-					
-					ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
-					String[] customFldArr = new String[] {fieldArray[0]};
-					ResultSetHolder dfHolder = sparkExecutor.assembleDataframe(customFldArr, dfRSHolder, tableName, true);
-					
-					String sql = "SELECT * FROM " + tableName;
-					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-					result = exec.executeRegisterAndPersist(sql, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
-				} else {
-					TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
-							model.getVersion());
-					if (latestTrainExec == null)
-						throw new Exception("Executed model not found.");
-					
-					MetaIdentifierHolder targetHolder = simulate.getTarget();
-					Datapod target = null;
-					if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
-						target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
-								targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
-					ResultSetHolder rsHolder = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
-					ResultSetHolder assembledDfHolder = sparkExecutor.assembleDataframe(fieldArray, rsHolder, tableName, false);
-					result = predictMLOperator.execute(null, model, algorithm, target, assembledDfHolder.getDataFrame(), fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, appUuid);
-					filePathUrl = filePathUrl + "/data";
+			if(simulate.getType().equalsIgnoreCase(SimulationType.MONTECARLO.toString())) {
+				result = monteCarloSimulation.simulateMonteCarlo(simulate, simExecParam, distExecParam, filePathUrl);
+			} else if(simulate.getType().equalsIgnoreCase(SimulationType.DEFAULT.toString())) {
+				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+					if(simulate.getDistributionTypeInfo() != null) {					
+						Object object = mlDistribution.getDistribution(distribution, distExecParam);
+						
+						ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
+						sparkExecutor.assembleDataframe(fieldArray, dfRSHolder, tableName, true);
+						String sql = simulateMLOperator.generateSql(simulate, tableName);
+						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+						result = exec.executeRegisterAndPersist(sql, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
+					} else {
+						String query = simulateMLOperator.generateSql(simulate, tableName);
+						ResultSetHolder rsHolder = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
+						sparkExecutor.assembleDataframe(fieldArray, rsHolder, tableName, false);
+						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+						result = exec.executeRegisterAndPersist(query, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
+					}
+				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+					if(simulate.getDistributionTypeInfo() != null) {
+						Object object = mlDistribution.getDistribution(distribution, distExecParam);
+						
+						ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
+						String[] customFldArr = new String[] {fieldArray[0]};
+						ResultSetHolder dfHolder = sparkExecutor.assembleDataframe(customFldArr, dfRSHolder, tableName, true);
+						
+						String sql = "SELECT * FROM " + tableName;
+						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+						result = exec.executeRegisterAndPersist(sql, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
+					} else {
+						TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
+								model.getVersion());
+						if (latestTrainExec == null)
+							throw new Exception("Executed model not found.");
+						
+						MetaIdentifierHolder targetHolder = simulate.getTarget();
+						Datapod target = null;
+						if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
+							target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
+									targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+						ResultSetHolder rsHolder = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
+						ResultSetHolder assembledDfHolder = sparkExecutor.assembleDataframe(fieldArray, rsHolder, tableName, false);
+						result = predictMLOperator.execute(null, model, algorithm, target, assembledDfHolder.getDataFrame(), fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, appUuid);
+						filePathUrl = filePathUrl + "/data";
+					}
 				}
 			}
+			
 			
 			dataStoreServiceImpl.setRunMode(Mode.BATCH);
 
@@ -1012,11 +1021,9 @@ public class ModelServiceImpl {
 			if (result != null) {
 				isSuccess = true;
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Completed);
-
 			}else {
 				isSuccess = false;
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
-
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
