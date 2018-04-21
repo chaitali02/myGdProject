@@ -74,6 +74,7 @@ export class metadataNavigatorComponent {
             }
             let randomno = Math.floor((Math.random() * 4) + 0);
             metajson["class"] = colorclassarray[randomno];
+
             metajson["caption"] = this.metaconfig.getMetadataDefs(response[i].type)['caption'];
             metajson["icon"] = this.metaconfig.getMetadataDefs(response[i].type)['class']
             metaarray[count] = metajson;
@@ -83,6 +84,6 @@ export class metadataNavigatorComponent {
    
   }
   this.allMetaCount = metaarray;
-
+  console.log(this.allMetaCount)
 }
 }

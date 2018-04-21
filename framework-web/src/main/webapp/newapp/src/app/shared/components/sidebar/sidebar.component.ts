@@ -213,7 +213,9 @@ export class SidebarComponent {
         // console.log(response)
         this._MetaStats={};
         response.forEach((item,index)=>{
+          if (item.type!='condition' && item.type!='dimension'&& item.type!='message' && item.type!='log' && item.type!='measure') {
         this._MetaStats[item.type]=item; 
+          }
       })
 
     },

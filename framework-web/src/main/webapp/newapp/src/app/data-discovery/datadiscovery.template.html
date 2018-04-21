@@ -47,7 +47,8 @@
                       </div>
                       <div class="status" style="padding-top:15px;">
                         <span class="status-title" style="text-transform:capitalize;padding-right: 4px;">Last Updated On:</span>
-                        <div title="Last Update On" class="status-number" style="float:left;">{{datadiscovry.lastUpdatedOn | date :'MM-dd-yyyy'}}</div>
+                        <div title="Last Update On" *ngIf='datadiscovry.lastUpdatedOn' class="status-number" style="float:left;">{{datadiscovry.lastUpdatedOn | date :'MM-dd-yyyy'}}</div>
+                        <div title="Last Update On" *ngIf='!datadiscovry.lastUpdatedOn' class="status-number" style="float:left;">N/A</div>
                       </div>
                     </div>
                   </div>

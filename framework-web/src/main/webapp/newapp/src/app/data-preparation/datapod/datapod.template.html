@@ -38,18 +38,18 @@
               <div class="form-body {{tableclass}}" *ngIf="isShowSimpleData">
                 <div class="row" *ngIf="IsTableShow == true;else falsyTemplate ">
                   <div class="col-md-12" *ngIf="cols !=null">       
-                    <p-dataTable [value]="colsdata" [paginator]="true" [rows]="10" [pageLinks]="3"   #dt  exportFilename="data"    selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" >
+                    <p-dataTable [value]="colsdata" [paginator]="true" [rows]="10" [pageLinks]="3"   #dt  exportFilename="data"    selectionMode="multiple" [metaKeySelection]="false" scrollable="true" scrollWidth="980px" resizableColumns="true" scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" >
                         <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
                     </p-dataTable>
                   </div>
                 </div>
-                <ng-template #falsyTemplate>
+                <!-- <ng-template #falsyTemplate>
                     <div class="spinner text-center">
                         <div class="bounce1"></div>
                         <div class="bounce2"></div>
                         <div class="bounce3"></div>
                     </div>
-                </ng-template>
+                </ng-template> -->
                 <div class ="centercontent" *ngIf="IsError">
                    <span style="font-size:14px;color:red;">Some error occur</span>
                 
@@ -225,14 +225,6 @@
                         </tr>
                       </tbody>
                     </table>
-                    <!-- <div *ngIf="attributes!=null">
-                      <ag-grid-angular style="width:100%;" class="ag-fresh" [rowData]="attributes"
-                        [columnDefs]="columnDefs1" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
-                        [ngStyle]="getGridStyle(attributes)"[showToolPanel]="true"
-                        [enableFilter]="true"[rowGroupPanelShow]="rowGroupPanelShow"
-                        (selectionChanged) = 'onSelectionChanged($event)'>
-                        </ag-grid-angular>
-                    </div> -->
                   </form>
                 </div>
               </div>

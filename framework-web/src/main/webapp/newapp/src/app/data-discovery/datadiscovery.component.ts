@@ -56,16 +56,23 @@ export class DataDiscoveryComponent {
      
     let count=0;
     for (const item in data) {
+      if(data[item].lastUpdatedOn!=null){
+        data[item].lastUpdatedOn=new Date(data[item].lastUpdatedOn.split('IST')[0])
+      }
+      else{
+        data[item].lastUpdatedOn=''
+      }
+      
         this.locations_temp.push(new DataDiscovery(  
         data[item].ref.name,
         data[item].ref.uuid,
         data[item].ref.type,
         data[item].ref.version,
         data[item].dataSource,
-        data[item].numRows,        
-        //this.datePipe.transform(new Date(data[item].lastUpdatedOn),"MM dd yyyy")
-        //new Date(data[item].lastUpdatedOn.split('IST')[0])
-        new Date(null)
+        data[item].numRows,   
+        data[item].lastUpdatedOn     
+        //this.datePipe.transform(new Date(data[item].lastUpdatedOn),"MM dd yyyy")        
+        //new Date(null)
       ));
       count++;
     }

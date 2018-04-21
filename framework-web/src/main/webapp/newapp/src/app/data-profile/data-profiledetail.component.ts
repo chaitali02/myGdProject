@@ -112,8 +112,9 @@ import{ DependsOn } from './dependsOn'
         temp[n]=allname;
       }
       this.allNames = temp
-     
+      if(this.mode == false) {
       this.getAllAttributeBySource();
+      }
     }
   
     changeType(){
