@@ -452,6 +452,7 @@
             paramList.paramId=response[i].paramId;
             paramList.paramType=response[i].paramType.toLowerCase();
             paramList.paramName=response[i].paramName;
+            paramList.ref=response[i].ref;
            
             if(type.indexOf(response[i].paramType) == -1){
               paramList.isParamType="simple";

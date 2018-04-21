@@ -118,10 +118,54 @@ DatascienceModule.factory('SimulateFactory', function ($http, $location) {
       return response;
     });
   }
+  factory.findParamByParamList = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getParamByParamList?action=view&uuid=" + uuid + "&type=" + type,
+
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
   return factory;
 })
 
 DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $q, sortFactory) {
+  
+  this.getParamByParamList = function (uuid, type) {
+		var deferred = $q.defer();
+		SimulateFactory.findParamByParamList(uuid,type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			var paramListHolder=[];
+      var type=["ONEDARRAY","TWODARRAY"]
+      if(response.length >0){
+        for(var i=0;i<response.length;i++){
+          var paramList={};
+          paramList.uuid=response[i].ref.uuid;
+          paramList.type=response[i].ref.type;
+          paramList.paramId=response[i].paramId;
+          paramList.paramType=response[i].paramType.toLowerCase();
+          paramList.paramName=response[i].paramName;
+          paramList.ref=response[i].ref;
+          if(type.indexOf(response[i].paramType) == -1){
+            paramList.isParamType="simple";
+            paramList.paramValue=response[i].paramValue.value;
+          }else{
+            paramList.isParamType="datapod";
+            paramList.paramValue=response[i].paramValue;    
+          }
+          paramListHolder[i]=paramList;
+        }
+      }
+      deferred.resolve({
+        data: paramListHolder
+      });
+		}
+
+		return deferred.promise;
+	}
   this.getAllModelByType = function (flag, type) {
     var deferred = $q.defer();
     SimulateFactory.findAllModelByType(flag, type).then(function (response) { onSuccess(response.data) });
@@ -146,6 +190,7 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
           paramList.paramId=response[i].paramId;
           paramList.paramType=response[i].paramType.toLowerCase();
           paramList.paramName=response[i].paramName;
+          paramList.ref=response[i].ref;
           if(type.indexOf(response[i].paramType) == -1){
             paramList.isParamType="simple";
             paramList.paramValue=response[i].paramValue.value;
