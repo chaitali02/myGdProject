@@ -1374,14 +1374,17 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 						return true;
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ioExp) {
 						ioExp.printStackTrace();
+						return false;
 					} catch (Exception e2) {
 						e2.printStackTrace();
+						return false;
 					}
 				}
 			}
 		} catch (NoSuchMethodException 
 				| SecurityException e) {
 			e.printStackTrace();
+			return false;
 		}
 
 		return false;
