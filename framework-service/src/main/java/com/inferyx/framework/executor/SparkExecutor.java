@@ -1024,9 +1024,7 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
-	public ResultSetHolder generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
-		ResultSetHolder rsHolder = new ResultSetHolder();
-
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
 		StructField[] fieldArray = new StructField[features.size()];
 		int count = 0;
 		for(Feature feature : features){
@@ -1068,13 +1066,12 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
 		df.show();
 		df.printSchema();
-		rsHolder.setDataFrame(df);
-		return rsHolder;
+		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		return tableName;
 	}
 
 	@Override
-	public ResultSetHolder generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
-		ResultSetHolder rsHolder = new ResultSetHolder();
+	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
 		Dataset<Row> df = null;
 		df = sparkSession.sqlContext().range(0, numIterations);
 		df.createOrReplaceTempView(tableName);
@@ -1091,20 +1088,19 @@ public class SparkExecutor implements IExecutor {
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		df = sparkSession.sqlContext().sql(query);
 		df.show();
-		rsHolder.setDataFrame(df);
-		return rsHolder;
+		return tableName;
 	}
 	
-	public ResultSetHolder assembleDataframe(String[] fieldArray, ResultSetHolder dfRSHolder, String tableName, boolean isDistribution){
-		Dataset<Row> df = dfRSHolder.getDataFrame();
+	public String assembleDataframe(String[] fieldArray, String tableName, boolean isDistribution, String clientContext) throws IOException{
+		String sql = "SELECT * FROM " + tableName;
+		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		if(isDistribution)
 			df = df.withColumnRenamed(df.columns()[0], fieldArray[0]);
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> assembledDf = va.transform(df);
 		assembledDf.show();
 		sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
-		dfRSHolder.setDataFrame(assembledDf);
-		return dfRSHolder;
+		return tableName;
 	}
 	
 	/**
