@@ -18,6 +18,19 @@ import {AppMetadata} from '../../app.metadata';
   encapsulation: ViewEncapsulation.None
 })
 export class DatasetComponent implements OnInit {
+  columnOptions: any[];
+  cols: any[];
+  colsdata: any;
+  IsError: boolean;
+  IsTableShow: boolean;
+  showgraphdiv: boolean;
+  graphDataStatus: boolean;
+  showgraph: boolean;
+  showdatapod: boolean;
+  tableclass: string;
+  isDataInpogress: boolean;
+  isShowSimpleData: boolean;
+  isDataError: boolean;
   selectVersion: any;
   msgs: any[];
   datasetCompare: any;
@@ -58,10 +71,11 @@ export class DatasetComponent implements OnInit {
   allMapSourceAttribute: SelectItem[] = [];
   VersionList: SelectItem[] = [];
   selectedVersion: Version
- isSubmitEnable:any;
-
+  isSubmitEnable:any;
+  baseUrl: any;
   constructor(private _location: Location,config: AppConfig,private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService,  private _datasetService:DatasetService,private activeroute:ActivatedRoute) { 
-    this.showDataset = true;
+    this.baseUrl = config.getBaseUrl();
+    this.showdatapod = true;
     this.dataset = {};
     this.dataset["active"]=true
     this.isSubmitEnable=true;
@@ -557,6 +571,63 @@ export class DatasetComponent implements OnInit {
     onChangeExpression(data,index){
       this.attributeTableArray[index].name=data.name
     }
+    showDatapodSampleTable(data) {
+      this.isDataError = false;
+      this.isShowSimpleData = true;
+      this.isDataInpogress = true;
+      this.tableclass = 'centercontent';
+      this.showdatapod = false;
+      this.showgraph = false;
+      this.graphDataStatus = false;
+      this.showgraphdiv = false;
+      //const api_url = this.baseUrl + 'datapod/getDatapodSample?action=view&datapodUUID=' + data.uuid + '&datapodVersion=' + data.version + '&row=100';
+      const DatapodSampleData = this._datasetService.getDatasetSample(data.uuid,data.version).subscribe(
+        response => { this.OnSuccesDatapodSample(response)},
+        error => {
+          this.IsTableShow=true; 
+          console.log("Error :: " + error)
+          this.IsError=true;   }
+      )
+    }
+  
+    OnSuccesDatapodSample(response) {
+      this.IsTableShow=true;
+      this.colsdata=response
+      let columns=[];
+      console.log(response)
+      if(response.length && response.length > 0){
+        Object.keys(response[0]).forEach(val=>{
+        if (val != "rownum"){
+          let width=((val.split("").length * 9)+20)+"px"
+          columns.push({"field":val, "header":val,colwidth:width});
+        }
+      });
+      }
+      this.cols=columns
+      this.columnOptions = [];
+      for(let i = 0; i < this.cols.length; i++) {
+        this.columnOptions.push({label: this.cols[i].header, value: this.cols[i]});
+      }
+     
+    }
+    enableEdit(uuid, version) {
+      this.showDatapodPage();
+      this.router.navigate(['app/dataPreparation/dataset',uuid,version, 'false']);
+    }
+  
+    showview(uuid, version) {
+      this.showDatapodPage();
+      this.router.navigate(['app/dataPreparation/dataset',uuid,version, 'true']);
+    }
+  
+    showDatapodPage() {
+      this.showdatapod= true;
+      this.isShowSimpleData= false;
+      this.showgraph= false;
+      this.graphDataStatus= false;
+      this.showgraphdiv= false
+    }
+
     submitDataset(){
       this.isSubmitEnable=true;
       let datasetJson={};
@@ -738,12 +809,12 @@ export class DatasetComponent implements OnInit {
         this.goBack()
         }, 1000);
     }
-    enableEdit(uuid, version) {
-      this.router.navigate(['app/dataPreparation/dataset',uuid,version, 'false']);
+  //   enableEdit(uuid, version) {
+  //     this.router.navigate(['app/dataPreparation/dataset',uuid,version, 'false']);
       
-   }
-   showview(uuid, version) {
-      this.router.navigate(['app/dataPreparation/dataset',uuid,version, 'true']);
-  }
+  //  }
+  //  showview(uuid, version) {
+  //     this.router.navigate(['app/dataPreparation/dataset',uuid,version, 'true']);
+  // }
 
 }

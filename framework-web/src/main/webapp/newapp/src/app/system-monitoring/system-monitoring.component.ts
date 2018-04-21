@@ -471,79 +471,76 @@ searchCriteria(){
       }
       else if(type =="jobs"){ 
         this.color=["#76d7c4", "#85c1e9", "#84F0BA", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#73c6b6", "#7dcea0", "#82e0aa", "#f7dc6f", "#f8c471", "#f0b27a", "#e59866"];
-        this.graphJobData=[{'id':"chart4","show":true,"showtooltiptitle":"Expand","iconClass":"fa fa-expand","colExp":true,"title":"Jobs-App","type":"bar","datax":" ","datacolumns":["Data Warehouse"],"datapoints":[{"Data Warehouse":14}]},{"id":"chart5","show":true,"showtooltiptitle":"Expand","iconClass":"fa fa-expand","colExp":true,"index":1,"title":"Jobs-User","type":"pie","datax":" ","datacolumns":["ypalrecha"],"datapoints":[{"ypalrecha":14}]},{"id":"chart2","show":true,"showtooltiptitle":"Expand","iconClass":"fa fa-expand","colExp":true,"index":2,"title":"Jobs-Meta","type":"pie","datax":" ","datacolumns":["load"],"datapoints":[{"load":14}]},{"id":"chart3","show":true,"showtooltiptitle":"Expand","iconClass":"fa fa-expand","colExp":true,"index":3,"title":"Jobs-Status","type":"donut","datax":" ","datacolumns":[],"datapoints":[]}]
-        console.log(this.graphJobData)
-        // var startDateUtcStr="";
-        // var endDateUtcStr="";
-        // if(this.startDate !=""){
-        //     console.log(this.startDate);
-        //     let startDateUtc= new Date(this.startDate.getUTCFullYear(), this.startDate.getUTCMonth(), this.startDate.getUTCDate(),  this.startDate.getUTCHours(), this.startDate.getUTCMinutes(), this.startDate.getUTCSeconds())
-        //     console.log(startDateUtc);
-        //     startDateUtcStr=this.datePipe.transform(startDateUtc,"EEE MMM dd hh:mm:ss yyyy").toString()+" UTC"//startDateUtc.toString().split("GMT")[0]+"UTC";
-        // }
-        // if(this.endDate !=""){
-        //     let endDateUtc= new Date(this.endDate.getUTCFullYear(), this.endDate.getUTCMonth(), this.endDate.getUTCDate(),  this.endDate.getUTCHours(), this.endDate.getUTCMinutes(), this.endDate.getUTCSeconds())
-        //     endDateUtcStr=this.datePipe.transform(endDateUtc,"EEE MMM dd hh:mm:ss yyyy").toString()+" UTC"//endDateUtc.toString().split("GMT")[0]+"UTC";
-        // }
-        // //this.getSessionByUser();
-        // //this.getSessionCountByStatus()
-        // let observables = new Array();
-        // let _vizpodtrack=[];
-        // let promises=[]
-        // var apiList = [{"url":"system/getJobCountByApp","type":"bar","title":"Jobs-App"},{"url":"system/getJobCountByUser","type":"pie","title":"Jobs-User"},{"url":"system/getJobCountByMeta","type":"pie",title:"Jobs-Meta"},{"url":"system/getJobCountByStatus","type":"donut","title":"Jobs-Status"}];
-        // var jobArray=[]
-        // for(var i=0;i<apiList.length;i++){
-        //   var url =apiList[i].url+"?type="+type+"&userName="+(this.username.label || '')+"&startDate="+startDateUtcStr+"&endDate="+endDateUtcStr+"&tags="+this.tags+"&appuuid="+this.app.uuid+"&status="+this.active
-        //   var promise =  this._sharedService.getGraphData(url)
-        //   promises.push(promise)
-        //  }
-        // forkJoin(promises).subscribe(
-        //     result =>{
-        //         console.log(result)
-        //       //   var resultArray=[];
-        //       for(var i=0;i<result.length;i++){
-        //         var jobresult={};
-        //         var resultArray=[];
-        //         var jobgraphcolumnArray=[]
-        //           var jobgraphdataArray=[]
-        //         var count=0;
-        //           resultArray[i]=result[i]   
-        //          _.map(resultArray[i], function(value,key)
-        //          { 
-        //           var jobgraphcolumn={};
-        //           var jobgraphData={};
-        //           if(i==2){
-        //             jobgraphcolumn["id"]=this.metaconfig.getMetadataDefs[key.toLowerCase()].name;
-        //             jobgraphcolumnArray[count]=this.metaconfig.getMetadataDefs[key.toLowerCase()].name;
-        //           }
+        var startDateUtcStr="";
+        var endDateUtcStr="";
+        if(this.startDate !=""){
+            console.log(this.startDate);
+            let startDateUtc= new Date(this.startDate.getUTCFullYear(), this.startDate.getUTCMonth(), this.startDate.getUTCDate(),  this.startDate.getUTCHours(), this.startDate.getUTCMinutes(), this.startDate.getUTCSeconds())
+            console.log(startDateUtc);
+            startDateUtcStr=this.datePipe.transform(startDateUtc,"EEE MMM dd hh:mm:ss yyyy").toString()+" UTC"//startDateUtc.toString().split("GMT")[0]+"UTC";
+        }
+        if(this.endDate !=""){
+            let endDateUtc= new Date(this.endDate.getUTCFullYear(), this.endDate.getUTCMonth(), this.endDate.getUTCDate(),  this.endDate.getUTCHours(), this.endDate.getUTCMinutes(), this.endDate.getUTCSeconds())
+            endDateUtcStr=this.datePipe.transform(endDateUtc,"EEE MMM dd hh:mm:ss yyyy").toString()+" UTC"//endDateUtc.toString().split("GMT")[0]+"UTC";
+        }
+        //this.getSessionByUser();
+        //this.getSessionCountByStatus()
+        let observables = new Array();
+        let _vizpodtrack=[];
+        let promises=[]
+        var apiList = [{"url":"system/getJobCountByApp","type":"bar","title":"Jobs-App"},{"url":"system/getJobCountByUser","type":"pie","title":"Jobs-User"},{"url":"system/getJobCountByMeta","type":"pie",title:"Jobs-Meta"},{"url":"system/getJobCountByStatus","type":"donut","title":"Jobs-Status"}];
+        var jobArray=[]
+        for(var i=0;i<apiList.length;i++){
+          var url =apiList[i].url+"?type="+(this.type.label||'')+"&userName="+(this.username.label || '')+"&startDate="+startDateUtcStr+"&endDate="+endDateUtcStr+"&tags="+this.tags+"&appuuid="+this.app.uuid+"&status="+this.active
+          var promise =  this._sharedService.getGraphData(url)
+          promises.push(promise)
+         }
+        forkJoin(promises).subscribe(
+            result =>{
+                console.log(result)
+              //   var resultArray=[];
+              for(var i=0;i<result.length;i++){
+                var jobresult={};
+                var resultArray=[];
+                var jobgraphcolumnArray=[]
+                  var jobgraphdataArray=[]
+                var count=0;
+                  resultArray[i]=result[i]   
+                 _.map(resultArray[i], function(value,key)
+                 { 
+                  var jobgraphcolumn={};
+                  var jobgraphData={};
+                  if(i==2){
+                    jobgraphcolumn["id"]=key;
+                    jobgraphcolumnArray[count]=key;
+                  }
         
-        //           else{
-        //           jobgraphcolumn["id"]=key
-        //           jobgraphcolumnArray[count]=key;
-        //           }
-        //           jobgraphData[jobgraphcolumn["id"]]=value;
-        //           jobgraphdataArray[count]=jobgraphData
-        //           count=count+1; 
-        //         });
-        //         jobresult["id"]="chart"+i;
-        //         jobresult["show"]=true;
-        //         jobresult["showtooltiptitle"]="Expand";
-        //         jobresult["iconClass"]="fa fa-expand";
-        //         jobresult["colExp"]=true;
-        //         jobresult["index"]=i;
-        //         jobresult["title"]=apiList[i].title
-        //         jobresult["type"]=apiList[i].type
-        //         jobresult["datax"]=" "
-        //         jobresult["datacolumns"]=jobgraphcolumnArray
-        //         jobresult["datapoints"]=jobgraphdataArray
-        //         jobArray[i]=jobresult
-        //        }
-              
-        //        this.graphJobData=jobArray
-        //        console.log(this.graphJobData)
-        //     },
-        //     error => console.log('Error: ', error)
-        // );
+                  else{
+                  jobgraphcolumn["id"]=key
+                  jobgraphcolumnArray[count]=key;
+                  }
+                  jobgraphData[jobgraphcolumn["id"]]=value;
+                  jobgraphdataArray[count]=jobgraphData
+                  count=count+1; 
+                });
+                jobresult["id"]="chart"+(i+5)
+                jobresult["show"]=true;
+                jobresult["showtooltiptitle"]="Expand";
+                jobresult["iconClass"]="fa fa-expand";
+                jobresult["colExp"]=true;
+                jobresult["index"]=i+5;
+                jobresult["title"]=apiList[i].title
+                jobresult["type"]=apiList[i].type
+                jobresult["datax"]=" "
+                jobresult["datacolumns"]=jobgraphcolumnArray
+                jobresult["datapoints"]=jobgraphdataArray
+                jobArray[i]=jobresult
+               }              
+               this.graphJobData=jobArray
+               console.log(this.graphJobData)
+            },
+            error => console.log('Error: ', error)
+        );
       }
     }
     fullScreen(index){

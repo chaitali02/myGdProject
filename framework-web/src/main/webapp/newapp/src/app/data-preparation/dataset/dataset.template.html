@@ -13,7 +13,7 @@
             <i class="fa fa-gift"></i>{{dataset.name}}
           </div>
           <div class="tools">
-            <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
+            <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip (click)="showDatapodSampleTable(dataset)" style="height:16px;" *ngIf="mode">
               <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
@@ -35,6 +35,26 @@
         </div>
       
         <div class="portlet-body form">
+            <div class="form-body {{tableclass}}" *ngIf="isShowSimpleData">
+                <div class="row" *ngIf="IsTableShow == true;else falsyTemplate ">
+                  <div class="col-md-12" *ngIf="cols !=null">       
+                    <p-dataTable [value]="colsdata" [paginator]="true" [rows]="10" [pageLinks]="3"   #dt  exportFilename="data"    selectionMode="multiple" [metaKeySelection]="false" scrollable="true" scrollWidth="980px" resizableColumns="true" scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" >
+                        <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
+                    </p-dataTable>
+                  </div>
+                </div>
+                <!-- <ng-template #falsyTemplate>
+                    <div class="spinner text-center">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                </ng-template> -->
+                <div class ="centercontent" *ngIf="IsError">
+                   <span style="font-size:14px;color:red;">Some error occur</span>
+                
+                </div>
+                </div>
           <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')" *ngIf="showgraphdiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <!--<div class="spinner" id="graphloader">-->
@@ -47,7 +67,7 @@
             </div>
           </div>
 
-          <div class="form-body"  style="padding-top:50px;">
+          <div class="form-body" [hidden]="!showdatapod" style="padding-top:50px;">
             <form  class="form-horizontal"  name="myform" novalidate="novalidate" (ngSubmit)="submitDataset()"#myNewForm = "ngForm">
               <div class="form-group"  *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
