@@ -756,7 +756,9 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 	}
 
 	$scope.downloadFile = function (data) {
-
+        if($scope.isD3RuleEexecGraphShow){
+			return false;
+		}
 		var uuid = data.uuid;
 		var version = data.version;
 		var url = $location.absUrl().split("app")[0]
