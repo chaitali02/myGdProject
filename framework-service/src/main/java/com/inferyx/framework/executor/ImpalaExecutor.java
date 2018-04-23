@@ -157,6 +157,7 @@ public class ImpalaExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
 			String saveMode, String clientContext) throws IOException {
+
 		return executeSql(sql);
 	}
 	@Override
@@ -265,12 +266,12 @@ public class ImpalaExecutor implements IExecutor {
 		return null;
 	}
 	@Override
-	public ResultSetHolder generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
+	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public ResultSetHolder generateFeatureData(Object object, List<Feature> features, int numIterations,
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations,
 			String tableName) {
 		// TODO Auto-generated method stub
 		return null;

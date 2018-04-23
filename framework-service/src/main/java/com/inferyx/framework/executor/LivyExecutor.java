@@ -149,7 +149,7 @@ public class LivyExecutor implements IExecutor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rsHolder;
+		return executeSql(sql);
 	}
 
 	@Override
@@ -267,13 +267,13 @@ public class LivyExecutor implements IExecutor {
 	}
 
 	@Override
-	public ResultSetHolder generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
+	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ResultSetHolder generateFeatureData(Object object, List<Feature> features, int numIterations,
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations,
 			String tableName) {
 		// TODO Auto-generated method stub
 		return null;
