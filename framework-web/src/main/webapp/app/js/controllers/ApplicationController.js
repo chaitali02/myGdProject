@@ -20,11 +20,9 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	$scope.applicationHasChanged = true;
 	$scope.isSubmitEnable = true;
 	$scope.applicationdata;
-	$scope.showapplication = true;
+	$scope.showForm = true;
 	$scope.data = null;
-	$scope.showgraph = false
-	$scope.showgraphdiv = false
-	$scope.graphDataStatus = false
+	$scope.showGraphDiv = false;
 	$scope.application = {};
 	$scope.application.versions = [];
 	$scope.isshowmodel = false;
@@ -38,22 +36,20 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$scope.privileges = privilegeSvc.privileges['application'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-	$scope.showApplicationPage = function () {
-		$scope.showapplication = true;
-		$scope.showgraph = false
-		$scope.graphDataStatus = false;
-		$scope.showgraphdiv = false
+	$scope.showPage = function () {
+		$scope.showForm = true;
+		$scope.showGraphDiv = false
 	}
 	$scope.enableEdit = function (uuid, version) {
-		$scope.showApplicationPage()
+		$scope.showPage()
 		$state.go('adminListapplication', {
 			id: uuid,
 			version: version,
 			mode: 'false'
 		});
 	}
-	$scope.showview = function (uuid, version) {
-		$scope.showApplicationPage()
+	$scope.showView = function (uuid, version) {
+		$scope.showPage()
 		$state.go('adminListapplication', {
 			id: uuid,
 			version: version,
@@ -63,20 +59,16 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	var notify = {
 		type: 'success',
 		title: 'Success',
-		content: 'Dashboard deleted Successfully',
+		content: '',
 		timeout: 3000 //time in ms
 	};
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		console.log(fromParams)
+		//console.log(fromParams)
 		$sessionStorage.fromStateName = fromState.name
 		$sessionStorage.fromParams = fromParams
 
 	});
 
-	$scope.$watch("isshowmodel", function (newvalue, oldvalue) {
-		$scope.isshowmodel = newvalue
-		sessionStorage.isshowmodel = newvalue
-	})
 
 	$scope.applicationFormChange = function () {
 		if ($stateParams.mode == true) {
@@ -87,21 +79,19 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		}
 	}
 
-    $scope.selectType=function(){
-		MetadataApplicationSerivce.getDatasourceByType($scope.selectSourceType.toUpperCase()).then(function(response){onSuccessGetDatasourceByType(response.data)})
-		var onSuccessGetDatasourceByType=function(response){
+	$scope.selectType = function () {
+		MetadataApplicationSerivce.getDatasourceByType($scope.selectSourceType.toUpperCase()).then(function (response) { onSuccessGetDatasourceByType(response.data) })
+		var onSuccessGetDatasourceByType = function (response) {
 			console.log(JSON.stringify(response));
-			$scope.alldatasource=response;
-			$scope.selectDataSource=response[0];
+			$scope.alldatasource = response;
+			$scope.selectDataSource = response[0];
 
 		}
 	}
-	$scope.showApplicationGraph = function (uuid, version) {
-		$scope.showapplication = false;
-		$scope.showgraph = false
-		$scope.graphDataStatus = true
-		$scope.showgraphdiv = true;
-	}//End showApplicationGraph
+	$scope.showGraph = function (uuid, version) {
+		$scope.showForm = false;
+		$scope.showGraphDiv = true;
+	}//End showGraph
 
 
 
@@ -135,7 +125,6 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 
 
 	if (typeof $stateParams.id != "undefined") {
-
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
 		/*if($sessionStorage.fromParams.type !="application" && $sessionStorage.showgraph !=true){
@@ -175,18 +164,18 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.application.defaultVersion = defaultversion;
-			MetadataApplicationSerivce.getLatestDataSourceByUuid($scope.applicationdata.dataSource.ref.uuid,"datasource").then(function(response){onSuccessGetLatestDataSourceByUuid(response.data)});
-	        var onSuccessGetLatestDataSourceByUuid=function(response){
-				$scope.selectSourceType=response.type.toLowerCase();
-				MetadataApplicationSerivce.getDatasourceByType(response.type).then(function(response){onSuccessGetDatasourceByType(response.data)})
-				var onSuccessGetDatasourceByType=function(response){
-					$scope.alldatasource=response
-					var selectDataSource={};
-					selectDataSource.uuid=$scope.applicationdata.dataSource.ref.uuid;
-					selectDataSource.name="";
-		 			$scope.selectDataSource=selectDataSource
+			MetadataApplicationSerivce.getLatestDataSourceByUuid($scope.applicationdata.dataSource.ref.uuid, "datasource").then(function (response) { onSuccessGetLatestDataSourceByUuid(response.data) });
+			var onSuccessGetLatestDataSourceByUuid = function (response) {
+				$scope.selectSourceType = response.type.toLowerCase();
+				MetadataApplicationSerivce.getDatasourceByType(response.type).then(function (response) { onSuccessGetDatasourceByType(response.data) })
+				var onSuccessGetDatasourceByType = function (response) {
+					$scope.alldatasource = response
+					var selectDataSource = {};
+					selectDataSource.uuid = $scope.applicationdata.dataSource.ref.uuid;
+					selectDataSource.name = "";
+					$scope.selectDataSource = selectDataSource
 				}
-		 	}
+			}
 		}
 	}//End IF
 
@@ -204,41 +193,30 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		applicationJson.desc = $scope.applicationdata.desc
 		applicationJson.active = $scope.applicationdata.active;
 		applicationJson.published = $scope.applicationdata.published;
-		var datasource={};
-		var ref={};
-		ref.type="datasource";
-		ref.uuid=$scope.selectDataSource.uuid;
-		datasource.ref=ref;
-		applicationJson.dataSource=datasource;
-		
+		var datasource = {};
+		var ref = {};
+		ref.type = "datasource";
+		ref.uuid = $scope.selectDataSource.uuid;
+		datasource.ref = ref;
+		applicationJson.dataSource = datasource;
+
 		MetadataApplicationSerivce.submit(applicationJson, 'application').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
-			$scope.changemodelvalue();
-			//  if($scope.isshowmodel == "true"){
-			//     $('#applicationsave').modal({
-			//     backdrop: 'static',
-			//     keyboard: false
-			//   });
-			//  }//End If
 			notify.type = 'success',
-				notify.title = 'Success',
-				notify.content = 'Application Saved Successfully'
+			notify.title = 'Success',
+			notify.content = 'Application Saved Successfully'
 			$scope.$emit('notify', notify);
 			$scope.okapplicationsave();
 		}//End Submit Api
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}/*End SubmitApplication*/
-
-	$scope.changemodelvalue = function () {
-		$scope.isshowmodel = sessionStorage.isshowmodel
-	};
 
 	$scope.okapplicationsave = function () {
 		$('#applicationsave').css("dispaly", "none");

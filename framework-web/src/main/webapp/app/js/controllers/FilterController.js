@@ -265,11 +265,13 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 		filterJson.uuid = $scope.filterdata.uuid
 		filterJson.name = $scope.filterdata.name
 		var tagArray = [];
-		if ($scope.tags.length1 != 0) {
-			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
-				tagArray[counttag] = $scope.tags[counttag].text;
+		if($scope.tags){
+			if ($scope.tags.length != 0) {
+				for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
+					tagArray[counttag] = $scope.tags[counttag].text;
+				}
 			}
-		}
+	    }
 		filterJson.tags = tagArray
 		filterJson.desc = $scope.filterdata.desc
 		var dependsOn = {};
