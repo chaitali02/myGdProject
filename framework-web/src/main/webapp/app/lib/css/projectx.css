@@ -209,7 +209,14 @@ th, td{vertical-align: middle !important}
     background: rgba(20,20,20,0.9);
     color: white;
     border: 1px solid rgba(200,200,200,0.85);
-
+   
+    position:absolute;
+  }
+  .sidepanal{
+    top:0px;
+    right:3%;
+    height: 96%;
+    position:absolute;
   }
   .header-rule{
     height:1px;
