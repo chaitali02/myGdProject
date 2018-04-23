@@ -6,7 +6,7 @@ AdminModule.controller('AdminActivityController', function($state,$stateParams,$
 	$scope.activity.versions=[];
 	$scope.showactivity=true;
 	$scope.showgraphdiv=false;
-  $scope.isDependencyShow=false;
+  	$scope.isDependencyShow=false;
 	if($stateParams.mode =='true'){
 	$scope.isEdit=false;
 	$scope.isversionEnable=false;

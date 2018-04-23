@@ -21,10 +21,10 @@
   	$scope.iSSubmitEnable=false;
   	$scope.datasetversion={};
   	$scope.datasetversion.versions=[]
-  	$scope.showdatapod=true;
+  	$scope.showForm=true;
     $scope.data=null;
     $scope.showgraph=false
-  	$scope.showgraphdiv=false
+  	$scope.showGraphDiv=false
   	$scope.graphDataStatus=false
   	$scope.logicalOperator = [" ","OR", "AND"];
     $scope.SourceTypes=["datapod","relation"]
@@ -42,34 +42,36 @@
       $scope.privileges = privilegeSvc.privileges['dataset'] || [];
       $scope.isPrivlage=$scope.privileges.indexOf('Edit') == -1;
     });
-    /*Start showDatapodPage*/
-    $scope.showDatapodPage=function(){
+		
+		/*Start showPage*/
+    $scope.showPage=function(){
       $scope.isShowSimpleData=false
-      $scope.showdatapod=true;
-      $scope.showgraph=false
-      $scope.graphDataStatus=false;
-      $scope.showgraphdiv=false
-    }/*End showDatapodPage*/
+      $scope.showForm=true;
+      $scope.showGraphDiv=false
+		}/*End showPage*/
+		
     $scope.enableEdit=function (uuid,version) {
-      $scope.showDatapodPage()
+      $scope.showPage()
       $state.go('metaListdataset', {
         id: uuid,
         version: version,
         mode:'false'
       });
     }
-    $scope.showview=function (uuid,version) {
-      $scope.showDatapodPage()
-      $state.go('metaListdataset', {
-        id: uuid,
-        version: version,
-        mode:'true'
-      });
+    $scope.showView=function (uuid,version) {
+			if(!$scope.isEdit){
+				$scope.showPage()
+				$state.go('metaListdataset', {
+					id: uuid,
+					version: version,
+					mode:'true'
+				});
+		  }
     }
     var notify = {
       type: 'success',
       title: 'Success',
-      content: 'Dashboard deleted Successfully',
+      content: '',
       timeout: 3000 //time in ms
   };
     $scope.pagination={
@@ -77,7 +79,8 @@
       pageSize:10,
       paginationPageSizes:[10, 25, 50, 75, 100],
       maxSize:5,
-    }
+		}
+		
     $scope.gridOptions = dagMetaDataService.gridOptionsDefault;
     $scope.gridOptions={
       rowHeight: 40,
@@ -161,37 +164,32 @@
   	}
 
   	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-  	  console.log(fromParams)
+  	 // console.log(fromParams)
   		$sessionStorage.fromStateName=fromState.name
   		if(fromState.name !="matadata"){
   			$sessionStorage.fromParams=fromParams
   		}
   	});
 
-  	$scope.showDatapodGraph=function(uuid,version){
-  	   $scope.showdatapod=false;
-  	   $scope.showgraph=false
-  	   $scope.graphDataStatus=true
-  	   $scope.showgraphdiv=true;
+  	$scope.showGraph=function(uuid,version){
+  	   $scope.showForm=false;
+    	 $scope.showGraphDiv=true;
   	   $scope.isShowSimpleData=false
-  	}/*End ShowDatapodGraph*/
+  	}/*End ShowGraph*/
 
 
 
-    $scope.showDatasetSampleTable=function(data){
+    $scope.showSampleTable=function(data){
       $scope.isShowSimpleData=true
       $scope.isDataInpogress=true
       $scope.tableclass="centercontent";
-      $scope.showdatapod=false;
-      $scope.showgraph=false
-  		$scope.graphDataStatus=false;
-      $scope.showgraphdiv=false;
+      $scope.showForm=false;
+      $scope.showGraphDiv=false;
       $scope.spinner=true;
       MetadataDatasetSerivce.getDatasetSample(data).then(function(response){onSuccessGetDatasourceByType(response.data)},function(response){onError(response.data)})
   		var onSuccessGetDatasourceByType=function(response){
-  			console.log(JSON.stringify(response))
-  			// $scope.datsetsampledata=response;
-        $scope.gridOptions.columnDefs=[];
+  			//console.log(JSON.stringify(response))
+  			$scope.gridOptions.columnDefs=[];
   			$scope.isDataInpogress=false;
   			$scope.tableclass="";
         $scope.spinner=false;

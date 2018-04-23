@@ -87,7 +87,8 @@
         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
       </div>
     </div>
-  </div><!-- END PAGE HEADER-->
+  </div>
+  <!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
   <div class="row">
@@ -98,19 +99,19 @@
             <i class="fa fa-gift"></i>{{formuladata.name}}
           </div>
           <div class="tools">
-            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showformula==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
               data-placement="top" tooltip ng-click="enableEdit(formuladata.uuid,formuladata.version)" ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showformula==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-              ng-click="showview(formuladata.uuid,formuladata.version)" style="height:16px;" ng-hide="isAdd">
+            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'"
+              ng-click="showView(formuladata.uuid,formuladata.version)" style="height:16px;" ng-hide="isAdd">
               <i class="fa fa-file" style="color:white;"></i>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showformula==false)? 'currentpage':'notcurrentpage'"
-              data-ng-click="showFormulaGraph(formuladata.uuid,formuladata.version)" style="height:14px;">
+            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showFrom==false)? 'currentpage':'notcurrentpage'"
+              data-ng-click="showGraph(formuladata.uuid,formuladata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="genericClose($event,'formula')" data-ui-sref="metadata({type:'formula'})"
@@ -120,7 +121,7 @@
           </div>
         </div>
         <div class="portlet-body form">
-          <div class="form-body graph-body" ng-if="showgraphdiv">
+          <div class="form-body graph-body" ng-if="showGraphDiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
               <div class="bounce1"></div>
@@ -130,7 +131,7 @@
             <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="formuladata.uuid" version="formula.defaultVersion.version">
             </div>
           </div>
-          <div class="form-body" data-ng-show="showformula" style="padding-top:50px;">
+          <div class="form-body" data-ng-show="showFrom" style="padding-top:50px;">
             <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitFormula()" form-on-change="formulaFormChange()">
               <div class="form-group" ng-show="formuladata.uuid">
                 <label class="col-md-3 control-label">UUID</label>
@@ -275,7 +276,7 @@
                     <select select2 ng-model="sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"></select>
                   </div>
                   <div ng-show="isSourceAtributeParamlist">
-                    
+
                     <select select2 ng-model="sourceparamlist" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.dname for c in lodeParamlist"></select>
                   </div>
                 </div>
