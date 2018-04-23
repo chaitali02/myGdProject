@@ -36,23 +36,23 @@
                     </div>
 
                     <div class="tools">
-                        <a title="Edit" ng-disabled="isPrivlage" ng-class="(showfilter==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+                        <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
                             data-placement="top" tooltip ng-click="enableEdit(filterdata.uuid,filterdata.version)" ng-hide="isAdd"
                             style="height:16px;">
                             <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                         </a>
-                        <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showfilter==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-                            ng-click="showview(filterdata.uuid,filterdata.version)" ng-hide="isAdd" style="height:16px;">
+                        <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
+                            ng-click="showView(filterdata.uuid,filterdata.version)" ng-hide="isAdd" style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;">
                             </span>
                         </a>
 
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showfilter==false )? 'currentpage':'notcurrentpage'"
-                            data-ng-click="showFilterGraph(filterdata.uuid,filterdata.version)" style="height:14px;">
+                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false )? 'currentpage':'notcurrentpage'"
+                            data-ng-click="showGraph(filterdata.uuid,filterdata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
 
-                        <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+                        <a title="Refresh" ng-click="broadcastRefreshData()" ng-class="(showForm==true )? 'currentpage':'notcurrentpage'" data-toggle="tooltip" data-placement="top" tooltip>
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
 
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="portlet-body form">
-                    <div class="form-body graph-body" ng-if="showgraphdiv">
+                    <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
                             <div class="bounce1"></div>
@@ -75,7 +75,7 @@
                     </div>
 
 
-                    <div class="form-body" data-ng-show="showfilter" style="padding-top:50px;">
+                    <div class="form-body" data-ng-show="showForm" style="padding-top:50px;">
 
                         <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitFilter()" form-on-change="filterFormChange()">
 

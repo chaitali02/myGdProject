@@ -37,21 +37,21 @@
             <i class="fa fa-gift"></i>{{relationdata.name }}
           </div>
           <div class="tools">
-            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showrelation==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(relationdata.uuid,relationdata.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showrelation==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-              ng-click="showview(relationdata.uuid,relationdata.version)" ng-hide="isAdd" style="height:16px;">
+            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'"
+              ng-click="showView(relationdata.uuid,relationdata.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" tooltip ng-class="showrelation==false? 'currentpage':'notcurrentpage'"
-              data-ng-click="showRelationGraph(relationdata.uuid,relationdata.version)" style="height:14px;">
+            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" tooltip ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
+              data-ng-click="showGraph(relationdata.uuid,relationdata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
 
-            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showFrom==true? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
 
@@ -62,7 +62,7 @@
           </div>
         </div>
         <div class="portlet-body form">
-          <div class="form-body graph-body" ng-if="showgraphdiv">
+          <div class="form-body graph-body" ng-if="showGraphDiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
               <div class="bounce1"></div>
@@ -72,7 +72,7 @@
             <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="relationdata.uuid" version="relation.defaultVersion.version">
             </div>
           </div>
-          <div class="form-body" data-ng-show="showrelation" style="padding-top:50px;">
+          <div class="form-body" data-ng-show="showFrom" style="padding-top:50px;">
             <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitRelation()" form-on-change="relationFormChange()">
               <div class="form-group" ng-show="relationdata.uuid">
                 <label class="col-md-3 control-label">UUID</label>
@@ -163,7 +163,7 @@
                   </div>
                 </div>
               </div>
-             
+
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a ui-sref="metadata({type:'relation'})" class="btn btn-primary">Cancel</a>
@@ -191,8 +191,8 @@
                     <tr>
                       <th style="text-align: center; Vertical-align: middle;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectalljoin"
-                          ng-change="selectAllRow()"/>
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectalljoin" ng-change="selectAllRow()"
+                          />
                         </span>
                       </th>
                       <th style="text-align: center;width:50%;">Join Datapod</th>
@@ -208,13 +208,13 @@
                     <tr ng-repeat-start="data in  relationTableArray ">
                       <td style="text-align: center; Vertical-align: middle;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}"/>
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
                         </span>
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 ng-model="data.join" ng-options=" x  as x.name for x in alljoindatapod    track by x.uuid" ng-disabled="{{mode}}"
-                          class="form-control" ng-change="joinChange(data.join,$index)">
+                            class="form-control" ng-change="joinChange(data.join,$index)">
                           </select>
                         </span>
                       </td>
@@ -243,8 +243,8 @@
                             <tr>
                               <th style="text-align: center; Vertical-align: middle;width:5%;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="data.selectalljoinkey"
-                                  ng-change="selectAllSubRow($index)"/>
+                                  <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="data.selectalljoinkey" ng-change="selectAllSubRow($index)"
+                                  />
                                 </span>
                               </th>
                               <th style="text-align: center;width:17%;">Logical Operator</th>
@@ -263,8 +263,7 @@
                               </td>
                               <td>
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select ng-model="datajoinkye.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="$first || {{mode}}"
-                                  class="form-control"></select>
+                                  <select ng-model="datajoinkye.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="$first || {{mode}}" class="form-control"></select>
                                 </span>
                               </td>
                               <td style="width:35%;">
@@ -275,8 +274,8 @@
                               </td>
                               <td style="width:15%;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select ng-disabled="{{mode}}" ng-model="datajoinkye.relationOperator" ng-options="x for x in relationOperators"
-                                  ng-disabled="{{mode}}" class="form-control"></select>
+                                  <select ng-disabled="{{mode}}" ng-model="datajoinkye.relationOperator" ng-options="x for x in relationOperators" ng-disabled="{{mode}}"
+                                    class="form-control"></select>
                                 </span>
                               </td>
                               <td style="width:35%;">
@@ -299,5 +298,6 @@
         </div>
       </div>
     </div>
-  </div><!-- BEGIN MAIN JS-->
+  </div>
+  <!-- BEGIN MAIN JS-->
 </div>

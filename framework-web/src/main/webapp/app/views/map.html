@@ -37,19 +37,19 @@
 					</div>
 
 					<div class="tools">
-						<a title="Edit" ng-disabled="isPrivlage" ng-class="(showmap==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+						<a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
 						 data-placement="top" tooltip ng-click="enableEdit(mapdata.uuid,mapdata.version)" ng-hide="isAdd" style="height:16px;">
 							<i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
-						<a title="View" data-toggle="tooltip" data-placement="top" ng-class="(showmap==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-						 tooltip ng-click="showview(mapdata.uuid,mapdata.version)" ng-hide="isAdd" style="height:16px;">
+						<a title="View" data-toggle="tooltip" data-placement="top" ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'"
+						 tooltip ng-click="showView(mapdata.uuid,mapdata.version)" ng-hide="isAdd" style="height:16px;">
 							<span class="glyphicon glyphicon-file" style="color: white;"></span>
 						</a>
-						<a title="Show Dependencies" data-toggle="tooltip" ng-show="isDependencyShow" ng-class="showmap==false? 'currentpage':'notcurrentpage'"
-						 data-placement="top" tooltip data-ng-click="showMapGraph(mapdata.uuid,mapdata.version)" style="height:14px;">
+						<a title="Show Dependencies" data-toggle="tooltip" ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
+						 data-placement="top" tooltip data-ng-click="showGraph(mapdata.uuid,mapdata.version)" style="height:14px;">
 							<i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
 						</a>
-						<a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+						<a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showFrom==true? 'currentpage':'notcurrentpage'">
 							<i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
 						</a>
 						<a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="close()" style="height:14px;">
@@ -61,7 +61,7 @@
 				<div class="portlet-body form">
 
 					<!-- BEGIN FORM-->
-					<div class="form-body graph-body" ng-if="showgraphdiv">
+					<div class="form-body graph-body" ng-if="showGraphDiv">
 						<div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
 						<div class="spinner" id="graphloader">
 							<div class="bounce1"></div>
@@ -71,7 +71,7 @@
 						<div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="mapdata.uuid" version="map.defaultVersion.version"></div>
 					</div>
 
-					<div class="form-body" ng-show="showmap" style="padding-top: 50px;">
+					<div class="form-body" ng-show="showFrom" style="padding-top: 50px;">
 						<form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitMap()" form-on-change="mapFormChange()">
 							<div class="form-body">
 								<div class="form-group" ng-show="mapdata.uuid">
@@ -234,19 +234,19 @@
 												<td>
 													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 														<input type="text" ng-model="$index" ng-disabled="true" class="form-control">
-												    </span>
+													</span>
 												</td>
 												<td>
 													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 														<select ng-init="setDefaultAttributeType($index)" ng-model="mapTableArray[$index].sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
-													 	ng-change="onChangeSourceAttribute(mapTableArray[$index].sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
-													 	class="form-control"></select>
+														 ng-change="onChangeSourceAttribute(mapTableArray[$index].sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
+														 class="form-control"></select>
 													</span>
 												</td>
 												<td>
 													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 														<input type="text" class="form-control" ng-model="mapTableArray[$index].sourcesimple" ng-show="mapTableArray[$index].isSourceAtributeSimple"
-													 	ng-disabled="{{mode}}">
+														 ng-disabled="{{mode}}">
 													</span>
 													<div ng-show="mapTableArray[$index].isSourceAtributeDatapod">
 														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -256,27 +256,27 @@
 													<div ng-show="mapTableArray[$index].isSourceAtributeFormula">
 														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 															<select select2 ng-model="mapTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
-														 	style="font-family: 'FontAwesome', Helvetica;">
-															<!-- <option value="">Create New &#xf067;</option> -->
+															 style="font-family: 'FontAwesome', Helvetica;">
+																<!-- <option value="">Create New &#xf067;</option> -->
 															</select>
 														</span>
 													</div>
 													<div ng-show="mapTableArray[$index].isSourceAtributeExpression">
 														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 															<select select2 ng-model="mapTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
-													    </span>
+														</span>
 													</div>
 													<div ng-show="mapTableArray[$index].isSourceAtributeFunction">
 														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 															<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
-														 	ng-change="onChangeFunction(mapTableArray[$index].sourcefunction,$index)"></select>
-												        </span>	
+															 ng-change="onChangeFunction(mapTableArray[$index].sourcefunction,$index)"></select>
+														</span>
 													</div>
 												</td>
 												<td>
 													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 														<input type="text" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
-												    </span>
+													</span>
 												</td>
 											</tr>
 										</tbody>

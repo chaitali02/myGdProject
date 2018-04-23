@@ -38,20 +38,20 @@
                     </div>
 
                     <div class="tools">
-                        <a title="Edit" ng-disabled="isPrivlage" ng-class="(showexpression==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+                        <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
                             data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(expressiondata.uuid,expressiondata.version)"
                             ng-hide="isAdd" style="height:16px;">
                             <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                         </a>
-                        <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showexpression==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-                            ng-click="showview(expressiondata.uuid,expressiondata.version)" ng-hide="isAdd" style="height:16px;">
+                        <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
+                            ng-click="showView(expressiondata.uuid,expressiondata.version)" ng-hide="isAdd" style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a>
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showexpression==false)? 'currentpage':'notcurrentpage'"
-                            data-ng-click="showExpressionGraph(expressiondata.uuid,expressiondata.version)" style="height:14px;">
+                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false)? 'currentpage':'notcurrentpage'"
+                            data-ng-click="showGraph(expressiondata.uuid,expressiondata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
-                        <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+                        <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true)? 'currentpage':'notcurrentpage'">
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
                         <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="metadata({type:'expression'})" style="height:14px;">
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="portlet-body form">
-                    <div class="form-body graph-body" ng-if="showgraphdiv">
+                    <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
                             <div class="bounce1"></div>
@@ -72,7 +72,7 @@
                         </div>
                     </div>
 
-                    <div class="form-body" data-ng-show="showexpression" style="padding-top:50px;">
+                    <div class="form-body" data-ng-show="showForm" style="padding-top:50px;">
                         <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitexpression()" form-on-change="expressionFormChange()">
 
                             <div class="form-group" ng-show="expressiondata.uuid">
@@ -98,7 +98,7 @@
                                         ng-options="c.version as c.version for c in expression.versions">
                                         <option>-select-</option>
                                     </select>
-                                    
+
                                 </div>
                             </div>
 
@@ -125,7 +125,7 @@
                             <div class="form-group">
                                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                                 <div class="col-md-6">
-                                    
+
                                     <textarea class="form-control" ng-disabled="{{mode}}" ng-model="expressiondata.desc" rows="2" style="resize:none;"></textarea>
 
                                 </div>
@@ -169,7 +169,7 @@
                                     </div>
                                 </div>
                             </div>
-                         
+
                             <div class="form-group" style="padding-top: 10px;">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                     <a ui-sref="metadata({type:'expression'})" class="btn btn-primary">Cancel</a>
@@ -200,8 +200,8 @@
                                         <tr>
                                             <th style="text-align: center; Vertical-align: middle;width:5%;">
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                    <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}"
-                                                    ng-model="selectallrow" ng-change="selectAllRow()" />
+                                                    <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallrow" ng-change="selectAllRow()"
+                                                    />
                                                 </span>
                                             </th>
                                             <th style="width:11%;text-align:center;">Logical Operator</th>
@@ -216,8 +216,7 @@
                                         <tr ng-repeat="tabledata in expressionTableArray">
                                             <th style="text-align: center; Vertical-align: middle;width:5%;">
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                    <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}"
-                                                    ng-model="tabledata.selected" />
+                                                    <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="tabledata.selected" />
                                                 </span>
                                             </th>
                                             <td>
@@ -236,7 +235,7 @@
                                             <td>
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                     <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
-                                                    ng-show="tabledata.islhsSimple">
+                                                        ng-show="tabledata.islhsSimple">
                                                 </span>
                                                 <div ng-show="tabledata.islhsDatapod">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -248,7 +247,7 @@
                                                 <div ng-show="tabledata.islhsFormula">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                         <select select2 class="form-control" ng-change="selectmetlhsType()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
-                                                        ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula">
+                                                            ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula">
                                                         </select>
                                                     </span>
                                                 </div>
@@ -263,14 +262,14 @@
                                             <td>
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                     <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption for x in lshType track by x.text"
-                                                    ng-disabled=" {{mode}}" class="form-control">
+                                                        ng-disabled=" {{mode}}" class="form-control">
                                                     </select>
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                     <input type="text" ng-disabled="{{mode}}" class="form-control" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                                                    ng-show="tabledata.isrhsSimple">
+                                                        ng-show="tabledata.isrhsSimple">
                                                 </span>
                                                 <div ng-show="tabledata.isrhsDatapod">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -279,7 +278,7 @@
                                                     </span>
                                                 </div>
                                                 <div ng-show="tabledata.isrhsFormula">
-                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;"> 
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                         <select select2 class="form-control" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
                                                             ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula">
                                                         </select>
