@@ -24,7 +24,8 @@
 				<span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
 			</div>
 		</div>
-	</div><!-- END PAGE HEADER-->
+	</div>
+	<!-- END PAGE HEADER-->
 	<br>
 	<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
 	<div class="row">
@@ -124,7 +125,7 @@
 								<div class="form-group">
 									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
 									<div class="col-md-6">
-									
+
 										<textarea class="form-control" ng-disabled="{{mode}}" ng-model="mapdata.desc" rows="2" style="resize:none;"></textarea>
 									</div>
 								</div>
@@ -205,7 +206,7 @@
 										</span>
 									</div>
 								</div>
-							
+
 								<div class="x_title">
 									<button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="true" ng-click="removeRow()"></button>
 									<button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="true" ng-click="addRow()"></button>
@@ -231,44 +232,57 @@
 										<tbody>
 											<tr ng-repeat="tabledata in allMapTargetAttribute">
 												<td>
-													<input type="text" ng-model="$index" ng-disabled="true" class="form-control">
+													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+														<input type="text" ng-model="$index" ng-disabled="true" class="form-control">
+												    </span>
 												</td>
 												<td>
-													<select ng-init="setDefaultAttributeType($index)" ng-model="mapTableArray[$index].sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
-													 ng-change="onChangeSourceAttribute(mapTableArray[$index].sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
-													 class="form-control"></select>
+													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+														<select ng-init="setDefaultAttributeType($index)" ng-model="mapTableArray[$index].sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
+													 	ng-change="onChangeSourceAttribute(mapTableArray[$index].sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
+													 	class="form-control"></select>
+													</span>
 												</td>
 												<td>
-													<input type="text" class="form-control" ng-model="mapTableArray[$index].sourcesimple" ng-show="mapTableArray[$index].isSourceAtributeSimple"
-													 ng-disabled="{{mode}}">
+													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+														<input type="text" class="form-control" ng-model="mapTableArray[$index].sourcesimple" ng-show="mapTableArray[$index].isSourceAtributeSimple"
+													 	ng-disabled="{{mode}}">
+													</span>
 													<div ng-show="mapTableArray[$index].isSourceAtributeDatapod">
-														<select select2 class="form-control" ng-disabled="{{mode}}" ng-model="mapTableArray[$index].sourceattribute"
-														 ng-options="r as r.dname for r in allMapSourceAttribute track by r.uuid+r.attributeId"></select>
+														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+															<select select2 class="form-control" ng-disabled="{{mode}}" ng-model="mapTableArray[$index].sourceattribute" ng-options="r as r.dname for r in allMapSourceAttribute track by r.uuid+r.attributeId"></select>
+														</span>
 													</div>
 													<div ng-show="mapTableArray[$index].isSourceAtributeFormula">
-														<select select2 ng-model="mapTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
-														 style="font-family: 'FontAwesome', Helvetica;">
+														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+															<select select2 ng-model="mapTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
+														 	style="font-family: 'FontAwesome', Helvetica;">
 															<!-- <option value="">Create New &#xf067;</option> -->
-														</select>
+															</select>
+														</span>
 													</div>
 													<div ng-show="mapTableArray[$index].isSourceAtributeExpression">
-														<select select2 ng-model="mapTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control"
-														 ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
+														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+															<select select2 ng-model="mapTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
+													    </span>
 													</div>
 													<div ng-show="mapTableArray[$index].isSourceAtributeFunction">
-														<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control"
-														 ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid" ng-change="onChangeFunction(mapTableArray[$index].sourcefunction,$index)"></select>
+														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+															<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
+														 	ng-change="onChangeFunction(mapTableArray[$index].sourcefunction,$index)"></select>
+												        </span>	
 													</div>
 												</td>
 												<td>
-													<input type="text" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
+													<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+														<input type="text" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
+												    </span>
 												</td>
-
 											</tr>
 										</tbody>
 									</table>
 								</div>
-						    </form>
+						</form>
 						</div>
 					</div>
 				</div>
