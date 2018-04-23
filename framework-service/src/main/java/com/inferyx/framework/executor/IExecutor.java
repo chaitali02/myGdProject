@@ -234,8 +234,9 @@ public interface IExecutor {
 
 	/**
 	 * 
-	 * @param rsHolder TODO
+	 * @param tableName TODO
 	 * @param factorCovarianceDp
+	 * @param clientContext TODO
 	 * @return
 	 * @throws IOException
 	 * @throws IllegalAccessException
@@ -246,14 +247,15 @@ public interface IExecutor {
 	 * @throws NullPointerException
 	 * @throws ParseException
 	 */
-	double[][] twoDArrayFromDatapod(ResultSetHolder rsHolder, Datapod factorCovarianceDp)
+	double[][] twoDArrayFromDatapod(String tableName, Datapod factorCovarianceDp, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
 
 	/**
 	 * 
-	 * @param rsHolder 
+	 * @param tableName 
 	 * @param factorMeanDp
+	 * @param clientContext TODO
 	 * @return
 	 * @throws IOException
 	 * @throws IllegalAccessException
@@ -264,7 +266,7 @@ public interface IExecutor {
 	 * @throws NullPointerException
 	 * @throws ParseException
 	 */
-	double[] oneDArrayFromDatapod(ResultSetHolder rsHolder, Datapod factorMeanDp)
+	double[] oneDArrayFromDatapod(String tableName, Datapod factorMeanDp, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
 	
@@ -298,6 +300,6 @@ public interface IExecutor {
 	 * @param datasource
 	 * @return
 	 */
-	public ResultSetHolder readFile(String clientContext, Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo,
+	public String readFile(String clientContext, Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo,
 			Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception;
 }

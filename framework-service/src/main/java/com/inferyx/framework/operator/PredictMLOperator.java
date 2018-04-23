@@ -66,8 +66,6 @@ import com.inferyx.framework.writer.IWriter;
 public class PredictMLOperator {
 	
 	@Autowired
-	private SparkContext sparkContext;
-	@Autowired
 	private HDFSInfo hdfsInfo;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
@@ -82,8 +80,6 @@ public class PredictMLOperator {
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
-	private ModelServiceImpl modelServiceImpl; 
-	@Autowired
 	private FormulaOperator formulaOperator;
 	
 	static final Logger LOGGER = Logger.getLogger(PredictMLOperator.class);
@@ -94,8 +90,9 @@ public class PredictMLOperator {
 	public PredictMLOperator() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	@SuppressWarnings({ "unchecked", "unused" })
+
+	/********************** UNUSED **********************/
+	/*@SuppressWarnings({ "unchecked", "unused" })
 	public Object execute(Predict predict, Model model, Algorithm algorithm, Datapod targetDp, Dataset<Row> df, String[] fieldArray, TrainExec latestTrainExec,
 			String targetType, String tableName, String filePathUrl, String filePath, String clientContext) throws Exception {
 
@@ -150,15 +147,16 @@ public class PredictMLOperator {
 				IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 				datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
 				return filePathUrl + "/data";
-			/*} else {
-				if (modelServiceImpl.save(modelName, trainedModel, sparkContext, filePathUrl))
-					return filePathUrl + "/data";
-				else
-					return null;
-			}	*/
-	}
+//			} else {
+//				if (modelServiceImpl.save(modelName, trainedModel, sparkContext, filePathUrl))
+//					return filePathUrl + "/data";
+//				else
+//					return null;
+//			}	
+	}*/
 
-	public Object execute(String sql, String tableName,
+	/********************** UNUSED **********************/
+	/*public Object execute(String sql, String tableName,
 			String filePathUrl, String filePath, String uuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
@@ -169,13 +167,14 @@ public class PredictMLOperator {
 		IWriter datapodWriter = datasourceFactory.getDatapodWriter(null, daoRegister);
 		datapodWriter.write(resultDf, filePathUrl + "/data", null, SaveMode.Append.toString());
 		return filePathUrl  + "/data";
-	}
+	}*/
 	
-	public String parse(Predict predict, Model model, Dataset<Row> df, String[] fieldArray, String tableName,
-			String filePathUrl, String filePath) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String generateSql(Predict predict, String tableName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		String aliaseName = "";
 		builder.append("SELECT ");
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(predict.getDependsOn().getRef().getUuid(),
+				predict.getDependsOn().getRef().getVersion(), predict.getDependsOn().getRef().getType().toString());
 		MetaIdentifierHolder dependsOn = model.getDependsOn();
 		Object object = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
 		if(object instanceof Formula) {

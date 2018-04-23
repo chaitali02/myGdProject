@@ -261,7 +261,7 @@ public class HiveExecutor implements IExecutor{
 	}
 
 	@Override
-	public double[][] twoDArrayFromDatapod(ResultSetHolder rsHolder, Datapod factorCovarianceDp)
+	public double[][] twoDArrayFromDatapod(String tableName, Datapod factorCovarianceDp, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
@@ -269,7 +269,7 @@ public class HiveExecutor implements IExecutor{
 	}
 
 	@Override
-	public double[] oneDArrayFromDatapod(ResultSetHolder rsHolder, Datapod factorMeanDp)
+	public double[] oneDArrayFromDatapod(String tableName, Datapod factorMeanDp, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
@@ -290,7 +290,7 @@ public class HiveExecutor implements IExecutor{
 	}
 
 	@Override
-	public ResultSetHolder readFile(String clientContext, Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo,
+	public String readFile(String clientContext, Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo,
 			Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;

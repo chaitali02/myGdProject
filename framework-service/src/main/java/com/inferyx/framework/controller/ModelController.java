@@ -226,18 +226,8 @@ public class ModelController {
 					MetaType.predict.toString());
 
 			PredictExec predictExec = null;
-			if (execParams != null) {
-				List<ParamMap> paramMapList = new ArrayList<>();
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, predict.getDependsOn().getRef().getUuid(),
-						predict.getDependsOn().getRef().getVersion());
-				for (ParamMap paramMap : paramMapList) {
-					predictExec = modelServiceImpl.create(predict, execParams, paramMap, predictExec);
-					modelServiceImpl.predict(predict, execParams, predictExec);
-				}
-			} else {
-				predictExec = modelServiceImpl.create(predict, execParams, null, predictExec);
-				modelServiceImpl.predict(predict, execParams, predictExec);
-			}
+			predictExec = modelServiceImpl.create(predict, execParams, null, predictExec);
+			modelServiceImpl.predict(predict, execParams, predictExec);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -256,18 +246,8 @@ public class ModelController {
 					MetaType.simulate.toString());
 
 			SimulateExec simulateExec = null;
-			/*if (execParams != null) {
-				List<ParamMap> paramMapList = new ArrayList<>();
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, simulate.getDependsOn().getRef().getUuid(),
-						simulate.getDependsOn().getRef().getVersion());
-				for (ParamMap paramMap : paramMapList) {
-					simulateExec = modelServiceImpl.create(simulate, execParams, paramMap, simulateExec);
-					modelServiceImpl.simulate(simulate, execParams, simulateExec);
-				}
-			} else {*/
-				simulateExec = modelServiceImpl.create(simulate, execParams, null, simulateExec);
-				modelServiceImpl.simulate(simulate, execParams, simulateExec);
-			//}
+			simulateExec = modelServiceImpl.create(simulate, execParams, null, simulateExec);
+			modelServiceImpl.simulate(simulate, execParams, simulateExec);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
