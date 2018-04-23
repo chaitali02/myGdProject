@@ -11,6 +11,7 @@
             "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
         }
     },
+    "type" : "DEFAULT",
     "numIterations" : 1000,
     "featureInfo" : [ 
         {

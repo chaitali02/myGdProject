@@ -24,7 +24,26 @@ public class Simulate extends BaseEntity {
 	private List<FeatureRefHolder> featureInfo  = new ArrayList<FeatureRefHolder>();
 	private MetaIdentifierHolder distributionTypeInfo;
 	private MetaIdentifierHolder paramList;
+	private String type; //DEFAULT, MONTECARLO
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	/**
 	 * @Ganesh
 	 *

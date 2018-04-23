@@ -276,7 +276,7 @@ public interface IExecutor {
 	 * @param tableName
 	 * @return
 	 */
-	public ResultSetHolder generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) ;
+	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) ;
 	
 	/**
 	 * 
@@ -286,7 +286,7 @@ public interface IExecutor {
 	 * @param tableName
 	 * @return
 	 */
-	public ResultSetHolder generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName);
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName);
 	
 	/**
 	 * 

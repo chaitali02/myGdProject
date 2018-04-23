@@ -344,7 +344,7 @@
 	<bean id="simulateMLOperator" class="com.inferyx.framework.operator.SimulateMLOperator"/>
 	<bean id="predictMLOperator" class="com.inferyx.framework.operator.PredictMLOperator"/>
 	
-	<bean id="mlDistribution" class="com.inferyx.framework.datascience.MLDistribution"/>
+	<bean id="mlDistribution" class="com.inferyx.framework.datascience.Math3Distribution"/>
 		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>
@@ -352,6 +352,7 @@
 	<bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator"/> 
 	
 	<bean id="runBaseRuleService" class="com.inferyx.framework.service.RunBaseRuleService"/>
+	<bean id="monteCarloSimulation" class="com.inferyx.framework.datascience.MonteCarloSimulation"/>
 	
 	<bean id="graphController" class="com.inferyx.framework.controller.GraphController">
 		<property name="graphRegister" ref="registerGraph"></property>

@@ -32,13 +32,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.ml.param.ParamMap;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +55,9 @@ import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
-import com.inferyx.framework.datascience.MLDistribution;
+import com.inferyx.framework.datascience.Math3Distribution;
+import com.inferyx.framework.datascience.MonteCarloSimulation;
 import com.inferyx.framework.distribution.MultiNormalDist;
-import com.inferyx.framework.distribution.MultivariateMapFunction;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
@@ -81,7 +77,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Param;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ResultSetHolder;
@@ -92,6 +88,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.SimulationType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
@@ -157,8 +154,6 @@ public class ModelServiceImpl {
 	@Resource(name="taskThreadMap")
 	protected ConcurrentHashMap taskThreadMap;
 	@Autowired
-	private MultiNormalDist multiNormalDist;
-	@Autowired
 	private SimulateMLOperator simulateMLOperator;
 	@Autowired
 	DataSourceFactory dataSourceFactory;
@@ -175,7 +170,9 @@ public class ModelServiceImpl {
 	@Autowired
 	private ConnectionFactory connFactory;
 	@Autowired
-	private MLDistribution mlDistribution;
+	private Math3Distribution mlDistribution;
+	@Autowired
+	private MonteCarloSimulation monteCarloSimulation;
 	
 	//private ParamMap paramMap;
 
@@ -917,7 +914,7 @@ public class ModelServiceImpl {
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.InProgress);
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
 					simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-
+			
 			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
 					model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
 					MetaType.algorithm.toString());
@@ -935,87 +932,73 @@ public class ModelServiceImpl {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			
-			String appUuid = commonServiceImpl.getApp().getUuid();
-///
-			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-				if(simulate.getDistributionTypeInfo() != null) {
-					//int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
-					
-//					Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(1).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(1).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(1).getParamValue().getRef().getType().toString());
-//					DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
-//					ResultSetHolder meansRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorMeanDp, factorMeanDs, hdfsInfo, null, datasource);
-//					double[] factorMeans = exec.oneDArrayFromDatapod(meansRSHolder, factorMeanDp);
-//					
-//					Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(2).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(2).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(2).getParamValue().getRef().getType().toString());
-//					DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
-//					ResultSetHolder covsRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
-//					double[][] factorCovariances = exec.twoDArrayFromDatapod(covsRSHolder, factorCovarianceDp);
-
-					//MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
-					
-					Object object = mlDistribution.getDistribution(distribution, execParams);
-					
-					/*MetaIdentifierHolder dataSetHolder = simulate.getSource();
-					Datapod datasetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
-					DataStore datasetDs = dataStoreServiceImpl.findDataStoreByMeta(datasetDp.getUuid(), datasetDp.getVersion());
-					ResultSetHolder datasetRSHolder = exec.readFile(appUuid, datasetDp, datasetDs, hdfsInfo, null, datasource);*/
-					ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
-					sparkExecutor.assembleDataframe(fieldArray, dfRSHolder, tableName, true);
-					String sql = simulateMLOperator.generateSql(simulate, tableName);
-					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-					result = exec.executeRegisterAndPersist(sql, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
-				} else {
-					String query = simulateMLOperator.generateSql(simulate, tableName);
-					ResultSetHolder rsHolder = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
-					sparkExecutor.assembleDataframe(fieldArray, rsHolder, tableName, false);
-					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-					result = exec.executeRegisterAndPersist(query, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
-				}
-			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-				if(simulate.getDistributionTypeInfo() != null) {
-					//int seed = Integer.parseInt(""+execParams.getParamListInfo().get(0).getParamValue().getValue());
-//					
-//					Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(1).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(1).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(1).getParamValue().getRef().getType().toString());
-//					DataStore factorMeanDs = dataStoreServiceImpl.findDataStoreByMeta(factorMeanDp.getUuid(), factorMeanDp.getVersion());
-//					ResultSetHolder meansRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorMeanDp, factorMeanDs, hdfsInfo, null, datasource);
-//					double[] factorMeans = exec.oneDArrayFromDatapod(meansRSHolder, factorMeanDp);
-//					
-//					Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execParams.getParamListInfo().get(2).getParamValue().getRef().getUuid(), execParams.getParamListInfo().get(2).getParamValue().getRef().getVersion(), execParams.getParamListInfo().get(2).getParamValue().getRef().getType().toString());
-//					DataStore factorCovarianceDs = dataStoreServiceImpl.findDataStoreByMeta(factorCovarianceDp.getUuid(), factorCovarianceDp.getVersion());
-//					ResultSetHolder covsRSHolder = exec.readFile(commonServiceImpl.getApp().getUuid(), factorCovarianceDp, factorCovarianceDs, hdfsInfo, null, datasource);
-//					double[][] factorCovariances = exec.twoDArrayFromDatapod(covsRSHolder, factorCovarianceDp);
-
-					//MultivariateNormalDistribution multivariateNormal = multiNormalDist.generateMultivariateNormDist(seed, factorMeans, factorCovariances);
-					
-					Object object = mlDistribution.getDistribution(distribution, execParams);
-					/*MetaIdentifierHolder dataSetHolder = simulate.getSource();
-					Object source = commonServiceImpl.getOneByUuidAndVersion(dataSetHolder.getRef().getUuid(), dataSetHolder.getRef().getVersion(), dataSetHolder.getRef().getType().toString());
-					ResultSetHolder datasetRSHolder = getRSHolderBySource(source);
-					ResultSetHolder assembledDfHolder = sparkExecutor.assembleDataframe(fieldArray, datasetRSHolder, tableName, true);*/
-					ResultSetHolder dfRSHolder = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), tableName);
-					String[] customFldArr = new String[] {fieldArray[0]};
-					ResultSetHolder dfHolder = sparkExecutor.assembleDataframe(customFldArr, dfRSHolder, tableName, true);
-					
-					String sql = "SELECT * FROM " + tableName;
-					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-					result = exec.executeRegisterAndPersist(sql, tableName, filePath, null, SaveMode.Append.toString(), appUuid);
-				} else {
-					TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
-							model.getVersion());
-					if (latestTrainExec == null)
-						throw new Exception("Executed model not found.");
-					
-					MetaIdentifierHolder targetHolder = simulate.getTarget();
-					Datapod target = null;
-					if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
-						target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
-								targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
-					ResultSetHolder rsHolder = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
-					ResultSetHolder assembledDfHolder = sparkExecutor.assembleDataframe(fieldArray, rsHolder, tableName, false);
-					result = predictMLOperator.execute(null, model, algorithm, target, assembledDfHolder.getDataFrame(), fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, appUuid);
-					filePathUrl = filePathUrl + "/data";
+			ExecParams distExecParam = new ExecParams(); 
+			ExecParams simExecParam = new ExecParams(); 
+			
+			List<ParamListHolder> distParamHolderList = new ArrayList<>();
+			List<ParamListHolder> simParamHolderList= new ArrayList<>();
+			
+			List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+			for(ParamListHolder holder : paramListInfo) {
+				if(simulate.getParamList() != null && holder.getRef().getUuid().equalsIgnoreCase(simulate.getParamList().getRef().getUuid())) {
+					simParamHolderList.add(holder);
+				} else if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+					distParamHolderList.add(holder);
 				}
 			}
+			distExecParam.setParamListInfo(distParamHolderList);
+			simExecParam.setParamListInfo(simParamHolderList);
+
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			if(simulate.getType().equalsIgnoreCase(SimulationType.MONTECARLO.toString())) {
+				result = monteCarloSimulation.simulateMonteCarlo(simulate, simExecParam, distExecParam, filePathUrl);
+			} else if(simulate.getType().equalsIgnoreCase(SimulationType.DEFAULT.toString())) {
+				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+					if(simulate.getDistributionTypeInfo() != null) {					
+						Object object = mlDistribution.getDistribution(distribution, distExecParam);
+						
+						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
+						String tabName_2 = sparkExecutor.assembleDataframe(fieldArray, tabName_1, true, appUuid);
+						String sql = simulateMLOperator.generateSql(simulate, tabName_2);
+						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
+					} else {
+						String query = simulateMLOperator.generateSql(simulate, (tableName+"_"+"form_rand_df"));
+						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, (tableName+"_"+"form_rand_df"));
+						String tabName_2 = sparkExecutor.assembleDataframe(fieldArray, tabName_1, false, appUuid);
+						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+						result = exec.executeRegisterAndPersist(query, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
+					}
+				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+					if(simulate.getDistributionTypeInfo() != null) {
+						Object object = mlDistribution.getDistribution(distribution, distExecParam);
+						
+						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
+						String[] customFldArr = new String[] {fieldArray[0]};
+						String tabName_2 = sparkExecutor.assembleDataframe(customFldArr, tabName_1, true, appUuid);
+						
+						String sql = "SELECT * FROM " + tabName_2;
+						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
+					} else {
+						TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
+								model.getVersion());
+						if (latestTrainExec == null)
+							throw new Exception("Executed model not found.");
+						
+						MetaIdentifierHolder targetHolder = simulate.getTarget();
+						Datapod target = null;
+						if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
+							target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
+									targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
+						String tabName_2 = sparkExecutor.assembleDataframe(fieldArray, tabName_1, false, appUuid);
+						//result = predictMLOperator.execute(null, model, algorithm, target, assembledDfHolder.getDataFrame(), fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, appUuid);
+						filePathUrl = filePathUrl + "/data";
+					}
+				}
+			}
+			
 			
 			dataStoreServiceImpl.setRunMode(Mode.BATCH);
 
@@ -1030,11 +1013,9 @@ public class ModelServiceImpl {
 			if (result != null) {
 				isSuccess = true;
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Completed);
-
 			}else {
 				isSuccess = false;
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
-
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -1374,14 +1355,17 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 						return true;
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ioExp) {
 						ioExp.printStackTrace();
+						return false;
 					} catch (Exception e2) {
 						e2.printStackTrace();
+						return false;
 					}
 				}
 			}
 		} catch (NoSuchMethodException 
 				| SecurityException e) {
 			e.printStackTrace();
+			return false;
 		}
 
 		return false;

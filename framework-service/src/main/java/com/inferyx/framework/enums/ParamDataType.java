@@ -7,7 +7,8 @@ public enum ParamDataType {
 	STRING("String"),
 	DOUBLE("double"),
 	INTEGER("int"),
-	DATE("Date");
+	DATE("Date"),
+	LONG("long");
 	
 	String value = "";
 	private ParamDataType(String value) {
