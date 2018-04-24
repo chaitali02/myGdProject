@@ -1,5 +1,3 @@
-<!-- <script src="assets/pages/scripts/form-wizard.js" type="text/javascript">
-</script> -->
 
 <div data-ng-controller="DetailDataQualityController">
   <div class="row">
@@ -13,7 +11,6 @@
           </li>
           <li>
             <a ui-sref="viewdataquality">{{$state.current.data.pageTitle}}</a>
-            <!-- <span>{{$state.current.data.pageTitle}}</span> -->
             <i class="fa fa-circle"></i>
           </li>
           <li>
@@ -27,42 +24,6 @@
             <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
           </div>
         </div>
-        <!-- <div class="page-toolbar">
-                <div class="btn-group pull-right">
-                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" dropdown-menu-hover data-delay="1000" data-close-others="true"> Actions
-                        <i class="fa fa-angle-down"></i>
-                    </button>
-                    <ul class="dropdown-menu pull-right" role="menu">
-                        <li>
-                            <a href="#">
-                                <i class="icon-user"></i> New User </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="icon-present"></i> New Event
-                                <span class="badge badge-success">4</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="icon-basket"></i> New order </a>
-                        </li>
-                        <li class="divider"> </li>
-                        <li>
-                            <a href="#">
-                                <i class="icon-flag"></i> Pending Orders
-                                <span class="badge badge-danger">4</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="icon-users"></i> Pending Users
-                                <span class="badge badge-warning">12</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div> -->
       </div>
       <br>
       <!-- END PAGE HEADER-->
@@ -72,7 +33,7 @@
           <div class="caption">
             <i class=" icon-layers "></i>
             <span class="caption-subject  bold "> DQ Rules Wizard -
-                        <span class="step-title"> Step 1 of 4 </span>
+              <span class="step-title"> Step 1 of 4 </span>
             </span>
           </div>
 
@@ -96,29 +57,32 @@
                        <i class="fa fa-times" style="display: block;margin: 2px auto;color:white;"></i>
 
                     </a> -->
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showRule==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-              ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
-                <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+              tooltip ng-class="(showRule==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
+              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
-            <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showRule==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-              ng-hide="isAdd" data-ng-click="showview(dataqualitydata.uuid,dataqualitydata.version)">
-             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                 </a>
-            <a  class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" ng-show="isDependencyShow" ng-class="showRule==false? 'currentpage':'notcurrentpage'"
-              data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showRuleGraph(dataqualitydata.uuid,dataqualitydata.version)">
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
+              tooltip ng-class="(showRule==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dataqualitydata.uuid,dataqualitydata.version)">
+              <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" ng-show="isDependencyShow"
+              ng-class="showRule==false? 'currentpage':'notcurrentpage'" data-toggle="tooltip" data-placement="top" tooltip
+              data-ng-click="showRuleGraph(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0;"></i>
             </a>
-            <a  href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title="" title="">
+            <a href="javascript:;"  ng-class="showRule==true? 'currentpage':'notcurrentpage'" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title=""
+              title="" >
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
-            <a  class="btn btn-circle btn-icon-only btn-default" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top" tooltip>
+            <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
+              tooltip>
               <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-             </a>
+            </a>
           </div>
         </div>
         <div class="portlet-body form">
           <div class="form-body graph-body" ng-if="showgraphdiv">
-            <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader"></i> -->
+          
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
               <div class="bounce1"></div>
@@ -127,38 +91,38 @@
             </div>
             <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="dataqualitydata.uuid" version="dq.defaultVersion.version"></div>
           </div>
-          <!-- <form class="form-horizontal ng-pristine ng-valid"  name="myform" id="submit_form" method="POST" novalidate="novalidate" ng-show="showRuleForm"> -->
+          
           <div class="form-wizard" ng-show="showRuleForm">
             <div class="form-body" style="padding-top:20px;">
               <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
                 <li ng-class="{'active' : continueCount == 1,'done':continueCount>1}">
-                  <a href=""class="step" aria-expanded="true">
-    						            <span class="number"> 1 </span>
-    						            <span class="desc">
-    						                <i class="fa fa-check"></i> Rule Setup </span>
-    						        </a>
+                  <a href="" class="step" aria-expanded="true">
+                    <span class="number"> 1 </span>
+                    <span class="desc">
+                      <i class="fa fa-check"></i> Rule Setup </span>
+                  </a>
                 </li>
                 <li ng-class="{'active' : continueCount == 2,'done':continueCount>2}">
                   <a href="" class="step">
-                                        <span class="number"> 2 </span>
-                                        <span class="desc">
-                                            <i class="fa fa-check"></i> Rule Source
-                                        </span>
-                                    </a>
+                    <span class="number"> 2 </span>
+                    <span class="desc">
+                      <i class="fa fa-check"></i> Rule Source
+                    </span>
+                  </a>
                 </li>
                 <li ng-class="{'active' : continueCount == 3,'done':continueCount>3}">
                   <a href="" class="step active">
-                                        <span class="number"> 3 </span>
-                                        <span class="desc">
-                                            <i class="fa fa-check"></i> Rule Checks</span>
-                                    </a>
+                    <span class="number"> 3 </span>
+                    <span class="desc">
+                      <i class="fa fa-check"></i> Rule Checks</span>
+                  </a>
                 </li>
                 <li ng-class="{'active' : continueCount == 4,'done':continueCount>4}">
                   <a href="#tab4" data-toggle="tab" class="step">
-                                        <span class="number"> 4 </span>
-                                        <span class="desc">
-                                            <i class="fa fa-check"></i> Rule Execute </span>
-                                    </a>
+                    <span class="number"> 4 </span>
+                    <span class="desc">
+                      <i class="fa fa-check"></i> Rule Execute </span>
+                  </a>
                 </li>
               </ul>
 
@@ -183,8 +147,8 @@
                     </div>
                     <div class="form-group">
                       <label class="control-label col-md-3">Name
-                                        <span class="required" aria-required="true"> * </span>
-                                        </label>
+                        <span class="required" aria-required="true"> * </span>
+                      </label>
                       <div class="col-md-6">
                         <input required type="text" class="form-control" ng-disabled="{{mode}}" ng-model="dataqualitydata.name">
 
@@ -193,9 +157,10 @@
                     <div class="form-group" ng-show="dataqualitydata.uuid">
                       <label class="col-md-3 control-label">Version</label>
                       <div class="col-md-6">
-                        <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()" data-ng-model="dq.defaultVersion.version" ng-options="c.version as c.version for c in dq.versions">
-									               <option>-select-</option>
-									           </select>
+                        <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()" data-ng-model="dq.defaultVersion.version"
+                          ng-options="c.version as c.version for c in dq.versions">
+                          <option>-select-</option>
+                        </select>
                       </div>
                     </div>
                     <div class="form-group" ng-show="dataqualitydata.uuid">
@@ -245,11 +210,11 @@
                     <div class="row">
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4">
-                    <button type="submit" class="btn btn-outline green button-next"> Continue
-                                    <i class="fa fa-angle-right"></i>
-                                  </button>
+                        <button type="submit" class="btn btn-outline green button-next"> Continue
+                          <i class="fa fa-angle-right"></i>
+                        </button>
+                      </div>
                     </div>
-                  </div>
                   </form>
                 </div>
                 <!-- End Tab1-->
@@ -258,19 +223,21 @@
                   <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()" novalidate="novalidate">
                     <div class="form-group">
                       <label class="control-label col-md-3">Source Type
-                      <span class="required" aria-required="true"> * </span>
+                        <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <select class="form-control" data-ng-model="dataqualitysourceType" ng-options="r for r in sourceType" ng-disabled="{{mode}}" ng-change="OnSourceTypeChange()" required>
-					                       </select>
+                        <select class="form-control" data-ng-model="dataqualitysourceType" ng-options="r for r in sourceType" ng-disabled="{{mode}}"
+                          ng-change="OnSourceTypeChange()" required>
+                        </select>
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Source Name
-                      <span class="required" aria-required="true"> * </span>
+                        <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <select title="Source Name" select2 ng-model="selectDependsOn" ng-options="x as x.name for x in allDependsOn track by x.uuid" ng-change="dependsOnDataQuality()" class="form-control" ng-disabled="{{mode}}">
+                        <select title="Source Name" select2 ng-model="selectDependsOn" ng-options="x as x.name for x in allDependsOn track by x.uuid"
+                          ng-change="dependsOnDataQuality()" class="form-control" ng-disabled="{{mode}}">
                         </select>
 
                       </div>
@@ -278,9 +245,10 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Attributes</label>
                       <div class="col-md-6">
-                        <select class="form-control" select2 data-ng-model="dataqualityoption" ng-options="r as r.dname for r in dataqualityoptions track by r.uuid+r.attributeId" ng-disabled="{{mode}}" ng-change="onSourceAttributeChagne()">
-					                        <option value="">-select-</option>
-					                       </select>
+                        <select class="form-control" select2 data-ng-model="dataqualityoption" ng-options="r as r.dname for r in dataqualityoptions track by r.uuid+r.attributeId"
+                          ng-disabled="{{mode}}" ng-change="onSourceAttributeChagne()">
+                          <option value="">-select-</option>
+                        </select>
                       </div>
                     </div>
 
@@ -295,7 +263,8 @@
                         <div class="actions">
                           <div class="btn-group btn-group-devided" data-toggle="buttons">
                             <div class="x_title" style="padding:10px;">
-                              <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeFilterRow()" ng-disabled="isButtonEnaple"></button>
+                              <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeFilterRow()"
+                                ng-disabled="isButtonEnaple"></button>
                               <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addRowFilter();" ng-disabled="isButtonEnaple"></button>
 
 
@@ -321,7 +290,12 @@
                           <table class=" row-border hover table  table-striped table-bordered">
                             <thead>
                               <tr>
-                                <th style="text-align: center; Vertical-align: middle;width:10%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="checkAll" ng-click="checkAllFilterRow()" ng-disabled="{{mode}}" /></th>
+                                <th style="text-align: center; Vertical-align: middle;width:10%;">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="checkAll" ng-click="checkAllFilterRow()"
+                                      ng-disabled="{{mode}}" />
+                                  </span>
+                                </th>
                                 <th style="text-align: center; width:15%;">Logical Operator</th>
                                 <th style="text-align: center; width:30%;">LHS Attribute</th>
                                 <th style="text-align: center; width:15%;">Operator</th>
@@ -330,15 +304,33 @@
                             </thead>
                             <tbody>
                               <tr ng-repeat="data in filterTableArray">
-                                <td style="text-align: center; Vertical-align: middle;width:10%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" /></td>
-                                <td><select ng-model="data.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="{{mode}} || $first" class="form-control"></select></td>
-                                <td>
-                                  <select select2 ng-model="data.lhsFilter" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
-                                                               </select>
+                                <td style="text-align: center; Vertical-align: middle;width:10%;">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/>
+                                  </span>
                                 </td>
-                                <td><select ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator" ng-disabled="{{mode}}" class="form-control"></select></td>
                                 <td>
-                                  <input type="text" class="form-control" ng-model="data.filtervalue" ng-disabled="{{mode}}">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select ng-model="data.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="{{mode}} || $first"
+                                    class="form-control"></select>
+                                  </span>
+                                </td>
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select select2 ng-model="data.lhsFilter" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                    </select>
+                                  </span>
+                                </td>
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator"
+                                    ng-disabled="{{mode}}" class="form-control"></select>
+                                  </span>
+                                </td>
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <input type="text" class="form-control" ng-model="data.filtervalue" ng-disabled="{{mode}}">
+                                  </span>
                                 </td>
                               </tr>
                             </tbody>
@@ -350,13 +342,13 @@
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4">
                         <a href="javascript:;" class="btn default button-previous" ng-click="countBack()">
-                                            <i class="fa fa-angle-left"></i> Back </a>
-                    <button type="submit" class="btn btn-outline green button-next"> Continue
-                                    <i class="fa fa-angle-right"></i>
-                                  </button>
+                          <i class="fa fa-angle-left"></i> Back </a>
+                        <button type="submit" class="btn btn-outline green button-next"> Continue
+                          <i class="fa fa-angle-right"></i>
+                        </button>
 
+                      </div>
                     </div>
-                  </div>
                   </form>
                 </div>
                 <!--End Tab2-->
@@ -369,9 +361,9 @@
                       <div class="col-md-6">
                         <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.duplicateKeyCheck='N'">
                           <label class="mt-checkbox " style="margin-bottom:-1px;">
-                                                    <input type="checkbox"  ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
-                                                    <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}}"></span>
-                                                </label>
+                            <input type="checkbox" ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                            <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}}"></span>
+                          </label>
                         </div>
                       </div>
                     </div>
@@ -380,9 +372,10 @@
                       <div class="col-md-6">
                         <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.nullCheck='N'">
                           <label class="mt-checkbox " style="margin-bottom:-1px;">
-                                                    <input type="checkbox"  ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-true-value="'Y'" ng-false-value="'N'" ng-change="changeCheckboxExecution()">
-                                                    <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}} || !isSelectSoureceAttr"></span>
-                                                </label>
+                            <input type="checkbox" ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-true-value="'Y'"
+                              ng-false-value="'N'" ng-change="changeCheckboxExecution()">
+                            <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}} || !isSelectSoureceAttr"></span>
+                          </label>
                         </div>
                       </div>
                     </div>
@@ -396,27 +389,31 @@
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Range Check</label>
                       <div class="col-md-2 col-sm-2 col-xs-12 col2dqragecheck">
-                        <input title="Lower Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Lower Bound" type="text" class="form-control" ng-model="dataqualitydata.lowerBound" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        <input title="Lower Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Lower Bound" type="text" class="form-control"
+                          ng-model="dataqualitydata.lowerBound" ng-disabled="{{mode}} || !isSelectSoureceAttr">
                       </div>
                       <div class="col-md-1 col-sm-1 " style="width:1%;">
                         <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-3px;"></i>
                         <!--  <span class="bold"> </span> -->
                       </div>
                       <div class="col-md-2 col-sm-2 col-xs-12 col2dqragecheck">
-                        <input title="Upper Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Upper Bound" type="text" class="form-control" ng-model="dataqualitydata.upperBound" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        <input title="Upper Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Upper Bound" type="text" class="form-control"
+                          ng-model="dataqualitydata.upperBound" ng-disabled="{{mode}} || !isSelectSoureceAttr">
                       </div>
                     </div>
 
                     <div class="form-group">
                       <label class="control-label col-md-3">Data Type Check</label>
                       <div class="col-md-6">
-                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectDataType" ng-options="x for x in datatype | orderBy" class="form-control" ng-change="OnselectType()"></select>
+                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectDataType" ng-options="x for x in datatype | orderBy"
+                          class="form-control" ng-change="OnselectType()"></select>
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="control-label col-md-3">Date Format Check</label>
-                      <div class="col-md-6">
-                        <select ng-disabled="{{mode}} || selectType || !isSelectSoureceAttr" title="Type" ng-model="selectdatefromate" ng-options="x for x in datefromate" class="form-control"></select>
+                      <div class= " selectSimulationType col-md-6">
+                        <select ng-disabled="{{mode}} || selectType || !isSelectSoureceAttr" title="Type" ng-model="selectdatefromate" ng-options="x for x in datefromate"
+                          class="form-control"></select>
                       </div>
                     </div>
                     <!--   <div class="form-group">
@@ -435,14 +432,16 @@
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12 ">Length Check</label>
                       <div class="col-md-2 col-sm-2 col-xs-12 col2dqragecheck">
-                        <input title="Min Length" data-toggle="tooltip" ng-model="dataqualitydata.minLength" data-placement="top" tooltip placeholder="Min Length" type="text" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        <input title="Min Length" data-toggle="tooltip" ng-model="dataqualitydata.minLength" data-placement="top" tooltip placeholder="Min Length"
+                          type="text" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
                       </div>
                       <div class="col-md-1 col-sm-1 " style="width:1%;">
                         <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-3px;"></i>
                         <!-- <span class="bold"> <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;"></i></span> -->
                       </div>
                       <div class="col-md-3 col-sm-3 col-xs-12 col2dqragecheck">
-                        <input title="Max Length" data-toggle="tooltip" ng-model="dataqualitydata.maxLength" data-placement="top" tooltip placeholder="Max Length" type="text" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        <input title="Max Length" data-toggle="tooltip" ng-model="dataqualitydata.maxLength" data-placement="top" tooltip placeholder="Max Length"
+                          type="text" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
                       </div>
                     </div>
                     <!--   <div class="form-group">
@@ -463,110 +462,79 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Ref Integrity Check</label>
                       <div class="col-md-3 col-sm-3 col-xs-12">
                         <!-- style="width:21%; -->
-                        <select select2 title="Name" data-toggle="tooltip" data-placement="top" tooltip ng-model="selectrefIntegrityCheck" ng-options="x as x.name for x in refIntegrityCheck track by x.uuid" ng-change="onRefIntegrityCheck()" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
-                                            </select>
+                        <select select2 title="Name" data-toggle="tooltip" data-placement="top" tooltip ng-model="selectrefIntegrityCheck" ng-options="x as x.name for x in refIntegrityCheck track by x.uuid"
+                          ng-change="onRefIntegrityCheck()" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        </select>
                       </div>
 
                       <div class="col-md-3 col-sm-3 col-xs-12">
-                        <select select2 class="form-control" title="Attribute" data-toggle="tooltip" data-placement="top" tooltip data-ng-model="refIntegrityCheckoption" ng-options="r as r.name for r in refIntegrityCheckoptions  track by r.uuid+ r.attributeId" ng-disabled="{{mode}} || !isSelectSoureceAttr">
-					                       </select>
+                        <select select2 class="form-control" title="Attribute" data-toggle="tooltip" data-placement="top" tooltip data-ng-model="refIntegrityCheckoption"
+                          ng-options="r as r.name for r in refIntegrityCheckoptions  track by r.uuid+ r.attributeId" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        </select>
                       </div>
                     </div>
-                    <!-- <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">StdDev Check</label>
-                                        <div class="col-md-5 col-sm-5 col-xs-12">
-                                            <input type="text" class="form-control"  ng-model="dataqualitydata.stdDevCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr">
-                                         </div>
-                                    </div>
-                                    -->
-                  <div class="row">
-                    <label class="control-label col-md-3"></label>
-                    <div class="col-md-4">
-                      <a href="javascript:;" class="btn default button-previous" ng-click="countBack()">
-                      <i class="fa fa-angle-left"></i> Back </a>
-                    <button type="submit" class="btn btn-outline green button-next"> Continue
-                                    <i class="fa fa-angle-right"></i>
-                                  </button>
+                    <div class="row">
+                      <label class="control-label col-md-3"></label>
+                      <div class="col-md-4">
+                        <a href="javascript:;" class="btn default button-previous" ng-click="countBack()">
+                          <i class="fa fa-angle-left"></i> Back </a>
+                        <button type="submit" class="btn btn-outline green button-next"> Continue
+                          <i class="fa fa-angle-right"></i>
+                        </button>
 
+                      </div>
                     </div>
-                  </div>
                   </form>
-                </div>
-                <!--End Tab3-->
+                </div><!--End Tab3-->
 
                 <!-- Start Tab4 -->
-
                 <div class="tab-pane" id="tab4" ng-class="{'active' : continueCount == 4}">
                   <form class="form-horizontal" name="myform4" id="submit_form4" ng-submit="sbumitDataqulity()" novalidate="novalidate">
-                    <!-- BEGIN SAMPLE TABLE PORTLET-->
-                    <!-- <span us-spinner="{radius:30, width:8, length: 16}"></span> -->
-                    <!-- <div class="modal fade in" id="dataqualitysave" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content rulemodel">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                                                        <h4 class="modal-title">Info</h4>
-                                                    </div>
-                                                    <div class="modal-body">{{saveMessage}}</div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn green" data-dismiss="modal"  ng-disabled="{{mode}}" ng-click="okDQRuleSave()">OK</button>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-
                     <div class="form-group">
                       <label class="col-md-3 control-label">Run Immediately ?</label>
                       <div class="col-md-9">
                         <div class="mt-checkbox-list" style="margin-top:-7px" ng-init="checkboxModelexecution='NO'">
                           <label class="mt-checkbox mt-checkbox-outline">
-                                                    <input  ng-disabled="{{mode}}" type="checkbox"  ng-model="checkboxModelexecution" ng-true-value="'YES'" ng-false-value="'NO'" ng-change="changeCheckboxExecution()">
-                                                        <span  ng-disabled="{{mode}}"></span>
-                                                </label>
-
+                            <input ng-disabled="{{mode}}" type="checkbox" ng-model="checkboxModelexecution" ng-true-value="'YES'" ng-false-value="'NO'"
+                              ng-change="changeCheckboxExecution()">
+                            <span ng-disabled="{{mode}}"></span>
+                          </label>
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4">
-                    <a href="javascript:;" class="btn default button-previous" ng-click="countBack()">
-                                        <i class="fa fa-angle-left"></i> Back </a>
-                    <button type="submit" class="btn green" ng-disabled="{{mode}}" ng-show="isSubmitShow">Submit</button>
-                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                                          <div class="bounce1"></div>
-                                          <div class="bounce2"></div>
-                                          <div class="bounce3"></div>
-                                      </span>
-                  </div>
-                </div>
+                        <a href="javascript:;" class="btn default button-previous" ng-click="countBack()">
+                          <i class="fa fa-angle-left"></i> Back </a>
+                        <button type="submit" class="btn green" ng-disabled="{{mode}}" ng-show="isSubmitShow">Submit</button>
+                        <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                          <div class="bounce1"></div>
+                          <div class="bounce2"></div>
+                          <div class="bounce3"></div>
+                        </span>
+                      </div>
+                    </div>
                   </form>
-                </div>
-                <!-- End Tab4 -->
-              </div>
-              <!--End tab-content-->
-            </div>
-            <!--End form-body-->
+                </div> <!-- End Tab4 -->
+              </div> <!--End tab-content-->
+            </div><!--End form-body-->
             <div class="form-actions">
-
-                  <!-- <a href="javascript:;" class="btn green button-submit" style="display: none;"> Submit
-                                        <i class="fa fa-check"></i>
-                                    </a>-->
-                </div>
+              <!-- <a href="javascript:;" class="btn green button-submit" style="display: none;"> Submit
+                <i class="fa fa-check"></i>
+              </a>-->
+            </div>
           </div>
-          <!--End form-wizard-->
         </div>
       </div>
     </div>
-  </div>
-  <!--End Row-->
+  </div><!--End Row-->
 </div>
 
 <style>
   @media (min-width: 786px) {
     .col2dqragecheck {
-      width: 23.5% !impotandt;
+      width: 23.5% !important;
     }
   }
 
@@ -578,7 +546,7 @@
 
   @media (min-width: 786px) {
     .col2dqlengthcheck {
-      width: 20.8% !impotandt;
+      width: 20.8% !important;
     }
   }
 

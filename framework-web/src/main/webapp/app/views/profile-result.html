@@ -91,9 +91,9 @@
         </div>
         <div class="tools">
           <a  ng-click="downloadFile({uuid:ruleExecUuid,version:ruleExecVersion})" tooltip-placement="{{showtooltip}}" uib-tooltip="Download">
-            <i class=" fa fa-download" aria-hidden="true" style="display:block;margin:2px auto;color:white;"></i>
+            <i class=" fa fa-download" aria-hidden="true" style="display:block;margin:2px auto;color:white;" ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'"></i>
           </a>
-          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RuleEexecGraphShow==false? 'currentpage':'notcurrentpage'"  onClick="refreshResultfunction()" style="height:16px;">
+          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="isD3RuleEexecGraphShow==false? 'currentpage':'notcurrentpage'"  onClick="refreshResultfunction()" style="height:16px;">
             <span class="glyphicon glyphicon-file" style="color:white;"></span>
           </a>
           <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip  data-ng-click="ruleExecshowGraph()" ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'">

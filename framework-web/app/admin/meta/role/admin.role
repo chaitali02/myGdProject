@@ -4831,6 +4831,24 @@
 		            "name" : "DistributionAdd"
 				},
 				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "855e7bd7-cd06-4c1a-bbcc-261ac3f6a971",
+		 			"version" : null,
+		            "name" : "SessionView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "c4f395b0-c867-4534-8ba5-1dd271c8e0c7",
+		 			"version" : null,
+		            "name" : "SessionExport"
+				},
+				"value" : null
 		}
     ]
 }

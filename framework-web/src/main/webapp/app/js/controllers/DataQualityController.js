@@ -1,22 +1,22 @@
 /****/
 DataQualityModule = angular.module('DataQualityModule');
 
-DataQualityModule.controller('DetailDataQualityController', function($state, $stateParams, $location, $rootScope, $scope, DataqulityService,privilegeSvc) {
+DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc) {
   $scope.dataqualitydata = {};
   $scope.mode = "false";
-  if($stateParams.mode =='true'){
-	$scope.isEdit=false;
-	$scope.isversionEnable=false;
-	$scope.isAdd=false;
-	}
-	else if($stateParams.mode =='false'){
-	$scope.isEdit=true;
-	$scope.isversionEnable=true;
-	$scope.isAdd=false;
-	}
-	else{
-	$scope.isAdd=true;
-	}
+  if ($stateParams.mode == 'true') {
+    $scope.isEdit = false;
+    $scope.isversionEnable = false;
+    $scope.isAdd = false;
+  }
+  else if ($stateParams.mode == 'false') {
+    $scope.isEdit = true;
+    $scope.isversionEnable = true;
+    $scope.isAdd = false;
+  }
+  else {
+    $scope.isAdd = true;
+  }
   $scope.dq = {};
   $scope.dq.versions = []
   $scope.dataqualitycompare = null;
@@ -24,7 +24,7 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
   $scope.selectDataType = $scope.datatype[0];
   //$scope.sourceType=["datapod","dataset","relation"]
   $scope.sourceType = ["datapod"]
-  $scope.dataqualitysourceType=$scope.sourceType[0];
+  $scope.dataqualitysourceType = $scope.sourceType[0];
   $scope.logicalOperator = [" ", "OR", "AND"];
   $scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN"];
   $scope.selectType = true;
@@ -40,42 +40,48 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
   $scope.isshowmodel = false;
   $scope.privileges = [];
   $scope.privileges = privilegeSvc.privileges['dq'] || [];
-  $scope.isPrivlage=$scope.privileges.indexOf('Edit') == -1;
-  $scope.$on('privilegesUpdated',function (e,data) {
+  $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+  $scope.$on('privilegesUpdated', function (e, data) {
     $scope.privileges = privilegeSvc.privileges['dq'] || [];
-    $scope.isPrivlage=$scope.privileges.indexOf('Edit') == -1;
+    $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
   });
-  $scope.showRulePage = function() {
+
+  $scope.showRulePage = function () {
     $scope.showgraph = false;
     $scope.showRule = true;
     $scope.showRuleForm = true
     $scope.graphDataStatus = false;
     $scope.showgraphdiv = false
   }
-  $scope.enableEdit=function (uuid,version) {
+
+  $scope.enableEdit = function (uuid, version) {
     $scope.showRulePage()
     $state.go('createdataquality', {
       id: uuid,
       version: version,
-      mode:'false'
+      mode: 'false'
     });
   }
-  $scope.showview=function (uuid,version) {
-    $scope.showRulePage()
-    $state.go('createdataquality', {
-      id: uuid,
-      version: version,
-      mode:'true'
-    });
+
+  $scope.showview = function (uuid, version) {
+    if (!$scope.isEdit) {
+      $scope.showRulePage()
+      $state.go('createdataquality', {
+        id: uuid,
+        version: version,
+        mode: 'true'
+      });
+    }
   }
+
   var notify = {
     type: 'success',
     title: 'Success',
-    content: 'Dashboard deleted Successfully',
+    content: '',
     timeout: 3000 //time in ms
-};
+  };
 
-  $scope.close = function() {
+  $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -83,78 +89,72 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
       $state.go('viewdataquality')
     }
   }
-  $scope.$watch("isshowmodel", function(newvalue, oldvalue) {
+
+  $scope.$watch("isshowmodel", function (newvalue, oldvalue) {
     $scope.isshowmodel = newvalue
     sessionStorage.isshowmodel = newvalue
   })
-  $scope.OnselectType = function() {
 
+  $scope.OnselectType = function () {
     if ($scope.selectDataType == "Date") {
       $scope.selectType = false;
     } else {
       $scope.selectType = true;
     }
   }
-  $scope.showRuleGraph = function(uuid, version) {
 
+  $scope.showRuleGraph = function (uuid, version) {
     $scope.showRule = false;
     $scope.showRuleForm = false
     $scope.graphDataStatus = true
     $scope.showgraphdiv = true;
   }
 
-
-
-
-  $scope.countContinue = function() {
+  $scope.countContinue = function () {
     $scope.continueCount = $scope.continueCount + 1;
     if ($scope.continueCount >= 4) {
       $scope.isSubmitShow = true;
     } else {
-
       $scope.isSubmitShow = false;
     }
   }
-  $scope.countBack = function() {
 
+  $scope.countBack = function () {
     $scope.continueCount = $scope.continueCount - 1;
     $scope.isSubmitShow = false;
   }
-  DataqulityService.getAllLatestActive("datapod").then(function(response) {
+
+  DataqulityService.getAllLatestActive("datapod").then(function (response) {
     onSuccess(response.data)
   });
-  var onSuccess = function(response) {
+  var onSuccess = function (response) {
     //$scope.allDependsOn=response
-
     $scope.refIntegrityCheck = response
     $scope.allDependsOn = response
-    $scope.selectDependsOn=$scope.allDependsOn[0]
-      $scope.dependsOnDataQuality();
+    $scope.selectDependsOn = $scope.allDependsOn[0]
+    $scope.dependsOnDataQuality();
   }
 
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
-    $scope.showactive="true"
-
+    $scope.showactive = "true"
     $scope.isSelectSoureceAttr = false
     $scope.isDependencyShow = true;
-    DataqulityService.getAllVersionByUuid($stateParams.id, "dq").then(function(response) {
+    DataqulityService.getAllVersionByUuid($stateParams.id, "dq").then(function (response) {
       onGetAllVersionByUuid(response.data)
     });
-    var onGetAllVersionByUuid = function(response) {
+    var onGetAllVersionByUuid = function (response) {
       for (var i = 0; i < response.length; i++) {
         var dqversion = {};
         dqversion.version = response[i].version;
         $scope.dq.versions[i] = dqversion;
       }
-
     }
-    DataqulityService.getOneByUuidAndVersionDQView($stateParams.id,$stateParams.version, "dqview").then(function(response) {
+
+    DataqulityService.getOneByUuidAndVersionDQView($stateParams.id, $stateParams.version, "dqview").then(function (response) {
       onGetSuccess(response.data)
     });
-    var onGetSuccess = function(response) {
-
-
+    var onGetSuccess = function (response) {
       $scope.dataqualitycompare = response.dqdata;
       $scope.dataqualitydata = response.dqdata;
       $scope.tags = response.dqdata.tags;
@@ -179,7 +179,6 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
       selectDependsOn.name = response.dqdata.dependsOn.ref.name
       $scope.selectDependsOn = selectDependsOn
       var selectrefIntegrityCheck = {};
-      //alert(response.dqdata.refIntegrityCheck.ref)
       if (response.dqdata.refIntegrityCheck.ref != null) {
         selectrefIntegrityCheck.uuid = response.dqdata.refIntegrityCheck.ref.uuid;
         selectrefIntegrityCheck.name = response.dqdata.refIntegrityCheck.ref.name;
@@ -204,48 +203,47 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
       $scope.refIntegrityCheckoption = refIntegrityCheckoption
       $scope.selectrefIntegrityCheck = selectrefIntegrityCheck
       $scope.filterTableArray = response.filterInfo
-      DataqulityService.getAllLatestActive($scope.dataqualitysourceType).then(function(response) {
+      DataqulityService.getAllLatestActive($scope.dataqualitysourceType).then(function (response) {
         onSuccessgetAllLatest(response.data)
       });
-      var onSuccessgetAllLatest = function(response) {
+      var onSuccessgetAllLatest = function (response) {
 
         $scope.allDependsOn = response
-        DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function(response) {
+        DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
           onSuccess(response.data)
         });
-        var onSuccess = function(response) {
+        var onSuccess = function (response) {
           $scope.dataqualityoptions = response;
           $scope.lhsdatapodattributefilter = response;
         }
       }
       if (response.dqdata.refIntegrityCheck.ref != null) {
-        DataqulityService.getAttributeByDatapod(response.dqdata.refIntegrityCheck.ref.uuid).then(function(response) {
+        DataqulityService.getAttributeByDatapod(response.dqdata.refIntegrityCheck.ref.uuid).then(function (response) {
           onSuccess(response.data)
         });
-        var onSuccess = function(response) {
+        var onSuccess = function (response) {
           $scope.refIntegrityCheckoptions = response;
         }
       }
     }
   }
-  else{
-    $scope.showactive="false"
+  else {
+    $scope.showactive = "false"
   }
-  $scope.selectVersion = function() {
+
+  $scope.selectVersion = function () {
     $scope.isSelectSoureceAttr = false
     $scope.myform.$dirty = false;
-    DataqulityService.getOneByUuidAndVersionDQView($scope.dq.defaultVersion.uuid, $scope.dq.defaultVersion.version, "dqview").then(function(response) {
+    DataqulityService.getOneByUuidAndVersionDQView($scope.dq.defaultVersion.uuid, $scope.dq.defaultVersion.version, "dqview").then(function (response) {
       onGetSuccess(response.data)
     });
-    var onGetSuccess = function(response) {
+    var onGetSuccess = function (response) {
       $scope.dataqualitycompare = response.dqdata;
       $scope.dataqualitydata = response.dqdata;
-
       if (response.dqdata.tags.length > 0) {
         $scope.tags = response.dqdata.tags;
 
       }
-
       var defaultversion = {};
       defaultversion.version = response.dqdata.version;
       defaultversion.uuid = response.dqdata.uuid;
@@ -264,7 +262,6 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
       selectDependsOn.name = response.dqdata.dependsOn.ref.name
       $scope.selectDependsOn = selectDependsOn
       var selectrefIntegrityCheck = {};
-      //alert(response.dqdata.refIntegrityCheck.ref)
       if (response.dqdata.refIntegrityCheck.ref != null) {
         selectrefIntegrityCheck.uuid = response.dqdata.refIntegrityCheck.ref.uuid;
         selectrefIntegrityCheck.name = response.dqdata.refIntegrityCheck.ref.name;
@@ -274,15 +271,15 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
         refIntegrityCheckoption.name = response.dqdata.refIntegrityCheck.attrName
         refIntegrityCheckoption.attributeId = response.dqdata.refIntegrityCheck.attrId
       }
-      DataqulityService.getAllLatestActive($scope.dataqualitysourceType).then(function(response) {
+      DataqulityService.getAllLatestActive($scope.dataqualitysourceType).then(function (response) {
         onSuccessgetAllLatest(response.data)
       });
-      var onSuccessgetAllLatest = function(response) {
+      var onSuccessgetAllLatest = function (response) {
         $scope.allDependsOn = response
-        DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function(response) {
+        DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
           onSuccess(response.data)
         });
-        var onSuccess = function(response) {
+        var onSuccess = function (response) {
           //$scope.dataqualityoptions=response;
           $scope.lhsdatapodattributefilter = response;
         }
@@ -296,10 +293,10 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
         dataqualityoption.name = response.dqdata.attribute.attrName
         dataqualityoption.attributeId = response.dqdata.attribute.attrId
         $scope.dataqualityoption = dataqualityoption;
-        DataqulityService.getAllAttributeBySource(response.dqdata.attribute.ref.uuid, "datapod").then(function(response) {
+        DataqulityService.getAllAttributeBySource(response.dqdata.attribute.ref.uuid, "datapod").then(function (response) {
           onSuccessDataqualityoptions(response.data)
         });
-        var onSuccessDataqualityoptions = function(response) {
+        var onSuccessDataqualityoptions = function (response) {
           $scope.dataqualityoptions = response;
         }
 
@@ -311,10 +308,10 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
       $scope.filterTableArray = response.filterInfo
 
       if (response.dqdata.refIntegrityCheck.ref != null) {
-        DataqulityService.getAttributeByDatapod(response.dqdata.refIntegrityCheck.ref.uuid).then(function(response) {
+        DataqulityService.getAttributeByDatapod(response.dqdata.refIntegrityCheck.ref.uuid).then(function (response) {
           onSuccess(response.data)
         });
-        var onSuccess = function(response) {
+        var onSuccess = function (response) {
           $scope.refIntegrityCheckoptions = response;
         }
       }
@@ -339,36 +336,32 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
 			    }
 		    }
 	    }*/
-  $scope.dependsOnDataQuality = function() {
-    //alert("dfdfdf"+$scope.selectDependsOn.name)
+  $scope.dependsOnDataQuality = function () {
     $scope.dataqualityoptions;
-    DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function(response) {
+    DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
       onSuccess(response.data)
     });
-    var onSuccess = function(response) {
+    var onSuccess = function (response) {
 
       $scope.dataqualityoptions = response;
       $scope.lhsdatapodattributefilter = response;
     }
-    DataqulityService.getFormulaBytype($scope.selectDependsOn.uuid,$scope.dataqualitysourceType).then(function(response) {
+    DataqulityService.getFormulaBytype($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
       onSuccessFormula(response.data)
     });
-    var onSuccessFormula = function(response) {
+    var onSuccessFormula = function (response) {
 
       $scope.allFromula = response;
     }
   }
 
-  $scope.onSourceAttributeChagne = function() {
-
+  $scope.onSourceAttributeChagne = function () {
     if ($scope.dataqualityoption != null) {
       $scope.isSelectSoureceAttr = true
-
       $scope.dataqualitydata.nullCheck = 'Y';
-
-    } else {
+    } 
+    else {
       $scope.isSelectSoureceAttr = false
-
       $scope.dataqualitydata.nullCheck = 'N';
       $scope.dataqualitydata.valueCheck = ""
       $scope.dataqualitydata.lowerBound = "";
@@ -384,13 +377,13 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
 
   }
 
-  $scope.checkAllFilterRow = function() {
-    angular.forEach($scope.filterTableArray, function(filter) {
+  $scope.checkAllFilterRow = function () {
+    angular.forEach($scope.filterTableArray, function (filter) {
       filter.selected = $scope.checkAll;
     });
 
   }
-  $scope.addRowFilter = function() {
+  $scope.addRowFilter = function () {
     var filterinfo = {};
 
     if ($scope.filterTableArray == null) {
@@ -404,10 +397,10 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
 
 
   }
-  $scope.removeFilterRow = function() {
+  $scope.removeFilterRow = function () {
     var newDataList = [];
     $scope.checkAll = false;
-    angular.forEach($scope.filterTableArray, function(selected) {
+    angular.forEach($scope.filterTableArray, function (selected) {
       if (!selected.selected) {
         newDataList.push(selected);
       }
@@ -417,21 +410,21 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
 
 
   }
-  $scope.onRefIntegrityCheck = function() {
+  $scope.onRefIntegrityCheck = function () {
 
-    DataqulityService.getAttributeByDatapod($scope.selectrefIntegrityCheck.uuid).then(function(response) {
+    DataqulityService.getAttributeByDatapod($scope.selectrefIntegrityCheck.uuid).then(function (response) {
       onSuccess(response.data)
     });
-    var onSuccess = function(response) {
+    var onSuccess = function (response) {
       $scope.refIntegrityCheckoptions = response;
     }
 
   }
-  $scope.okDQRuleSave = function() {
+  $scope.okDQRuleSave = function () {
     $('#dataqualitysave').css("dispaly", "none");
     var hidemode = "yes";
     if (hidemode == 'yes') {
-      setTimeout(function() {
+      setTimeout(function () {
         $state.go('viewdataquality');
       }, 2000);
 
@@ -440,7 +433,7 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
 
   }
 
-  $scope.sbumitDataqulity = function() {
+  $scope.sbumitDataqulity = function () {
     var options = {}
     $scope.dataLoading = true;
     $scope.isshowmodel = true;
@@ -602,78 +595,66 @@ DataQualityModule.controller('DetailDataQualityController', function($state, $st
 
     }
     console.log(JSON.stringify(dataqualityjosn))
-    DataqulityService.submit(dataqualityjosn, "dqview").then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
-    var onSuccess = function(response) {
+    DataqulityService.submit(dataqualityjosn, "dqview").then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    var onSuccess = function (response) {
       $scope.dataLoading = false;
       $scope.changemodelvalue()
       if (options.execution == "YES") {
-        DataqulityService.getOneById(response.data, "dq").then(function(response) {
+        DataqulityService.getOneById(response.data, "dq").then(function (response) {
           onSuccessGetOneById(response.data)
         });
-        var onSuccessGetOneById = function(result) {
-          DataqulityService.executeDQRule(result.data.uuid, result.data.version).then(function(response) {
+        var onSuccessGetOneById = function (result) {
+          DataqulityService.executeDQRule(result.data.uuid, result.data.version).then(function (response) {
             onSuccess(response.data)
           });
-          var onSuccess = function(response) {
+          var onSuccess = function (response) {
             $scope.saveMessage = "DQ Rule Saved and Submitted Successfully";
-            // if ($scope.isshowmodel == "true") {
-            //   $('#dataqualitysave').modal({
-            //     backdrop: 'static',
-            //     keyboard: false
-            //   });
-            // } //End Innter If
-            notify.type='success',
-            notify.title= 'Success',
-           notify.content=$scope.saveMessage
-           $scope.$emit('notify', notify);
-           $scope.okDQRuleSave();
+            notify.type = 'success',
+            notify.title = 'Success',
+            notify.content = $scope.saveMessage
+            $scope.$emit('notify', notify);
+            $scope.okDQRuleSave();
           }
         } /*end onSuccessGetOneById */
       } /*End If*/
       else {
         $scope.saveMessage = "DQ Rule Saved Successfully";
-        // if ($scope.isshowmodel == "true") {
-        //   $('#dataqualitysave').modal({
-        //     backdrop: 'static',
-        //     keyboard: false
-        //   });
-        // } //End Innter If
-        notify.type='success',
-        notify.title= 'Success',
-       notify.content=$scope.saveMessage
-       $scope.$emit('notify', notify);
-       $scope.okDQRuleSave();
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = $scope.saveMessage
+        $scope.$emit('notify', notify);
+        $scope.okDQRuleSave();
       } //End Else
     } //End Submit Api Function
-    var onError = function(response) {
-       notify.type='error',
-       notify.title= 'Error',
-      notify.content="Some Error Occurred"
+    var onError = function (response) {
+      notify.type = 'error',
+      notify.title = 'Error',
+      notify.content = "Some Error Occurred"
       $scope.$emit('notify', notify);
     }
   } //End Submit Function
-  $scope.changemodelvalue = function() {
+  $scope.changemodelvalue = function () {
     $scope.isshowmodel = sessionStorage.isshowmodel
   };
 });
 
 
-DataQualityModule.controller('DetailDataqualityGroupController', function($state, $timeout, $filter,privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService) {
+DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService) {
   $scope.select = 'Rule Group';
-  //$scope.ruleGroupDetail=null;
-  if($stateParams.mode =='true'){
-	$scope.isEdit=false;
-	$scope.isversionEnable=false;
-	$scope.isAdd=false;
-	}
-	else if($stateParams.mode =='false'){
-	$scope.isEdit=true;
-	$scope.isversionEnable=true;
-	$scope.isAdd=false;
-	}
-	else{
-	$scope.isAdd=true;
-	}
+  if ($stateParams.mode == 'true') {
+    $scope.isEdit = false;
+    $scope.isversionEnable = false;
+    $scope.isAdd = false;
+  }
+  else if ($stateParams.mode == 'false') {
+    $scope.isEdit = true;
+    $scope.isversionEnable = true;
+    $scope.isAdd = false;
+  }
+  else {
+    $scope.isAdd = true;
+  }
+  $scope.showgraphdiv = false;
   $scope.mode = " ";
   $scope.dqgroup = {};
   $scope.dqgroup.versions = []
@@ -683,42 +664,46 @@ DataQualityModule.controller('DetailDataqualityGroupController', function($state
   $scope.isDependencyShow = false;
   $scope.privileges = [];
   $scope.privileges = privilegeSvc.privileges['dqgroup'] || [];
-  $scope.isPrivlage=$scope.privileges.indexOf('Edit') == -1;
-  $scope.$on('privilegesUpdated',function (e,data) {
+  $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+  $scope.$on('privilegesUpdated', function (e, data) {
     $scope.privileges = privilegeSvc.privileges['dqgroup'] || [];
-    $scope.isPrivlage=$scope.privileges.indexOf('Edit') == -1;
+    $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
   });
   var notify = {
     type: 'success',
     title: 'Success',
-    content: 'Dashboard deleted Successfully',
+    content: '',
     timeout: 3000 //time in ms
-};
-$scope.showRulGroupePage = function() {
+  };
 
-  $scope.showRuleGroup = true;
-  $scope.showgraphdiv = false;
-  $scope.graphDataStatus = false;
-  $scope.showRuleGroupForm = true;
+  $scope.showRulGroupePage = function () {
+    $scope.showRuleGroup = true;
+    $scope.showgraphdiv = false;
+    $scope.graphDataStatus = false;
+    $scope.showRuleGroupForm = true;
+  }
 
-}
-$scope.enableEdit=function (uuid,version) {
-  $scope.showRulGroupePage()
-  $state.go('createdataqualitygroup', {
-    id: uuid,
-    version: version,
-    mode:'false'
-  });
-}
-$scope.showview=function (uuid,version) {
-  $scope.showRulGroupePage()
-  $state.go('createdataqualitygroup', {
-    id: uuid,
-    version: version,
-    mode:'true'
-  });
-}
-  $scope.close = function() {
+  $scope.enableEdit = function (uuid, version) {
+    $scope.showRulGroupePage()
+    $state.go('createdataqualitygroup', {
+      id: uuid,
+      version: version,
+      mode: 'false'
+    });
+  }
+
+  $scope.showview = function (uuid, version) {
+    if (!$scope.isEdit) {
+      $scope.showRulGroupePage()
+      $state.go('createdataqualitygroup', {
+        id: uuid,
+        version: version,
+        mode: 'true'
+      });
+    }
+  }
+
+  $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -727,15 +712,15 @@ $scope.showview=function (uuid,version) {
     }
   }
 
-  $scope.$watch("isshowmodel", function(newvalue, oldvalue) {
+  $scope.$watch("isshowmodel", function (newvalue, oldvalue) {
     $scope.isshowmodel = newvalue
     sessionStorage.isshowmodel = newvalue
   })
-  DataqulityService.getAllLatest('dq').then(function(response) {
+
+  DataqulityService.getAllLatest('dq').then(function (response) {
     onSuccess(response.data)
   });
-  var onSuccess = function(response) {
-
+  var onSuccess = function (response) {
     var dqArray = [];
     for (var i = 0; i < response.length; i++) {
       var dqjosn = {};
@@ -745,11 +730,10 @@ $scope.showview=function (uuid,version) {
       dqjosn.version = response[i].version;
       dqArray[i] = dqjosn;
     }
-
     $scope.dqall = dqArray;
   }
 
-  $scope.showRuleGroupGraph = function(uuid, version) {
+  $scope.showRuleGroupGraph = function (uuid, version) {
     $scope.showRuleGroup = false;
     $scope.showgraphdiv = true;
     $scope.graphDataStatus = true;
@@ -757,16 +741,13 @@ $scope.showview=function (uuid,version) {
   }
 
 
-
-
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
-
     $scope.isDependencyShow = true;
-    DataqulityService.getAllVersionByUuid($stateParams.id, "dqgroup").then(function(response) {
+    DataqulityService.getAllVersionByUuid($stateParams.id, "dqgroup").then(function (response) {
       onGetAllVersionByUuid(response.data)
     });
-    var onGetAllVersionByUuid = function(response) {
+    var onGetAllVersionByUuid = function (response) {
       for (var i = 0; i < response.length; i++) {
         var dqgroupversion = {};
         dqgroupversion.version = response[i].version;
@@ -774,10 +755,10 @@ $scope.showview=function (uuid,version) {
       }
 
     }
-    DataqulityService.getOneByUuidAndVersion1($stateParams.id,$stateParams.version, 'dqgroup').then(function(response) {
+    DataqulityService.getOneByUuidAndVersion1($stateParams.id, $stateParams.version, 'dqgroup').then(function (response) {
       onsuccess(response.data)
     });
-    var onsuccess = function(response) {
+    var onsuccess = function (response) {
       //console.log(JSON.stringify(response))
       $scope.dqruleGroupDetail = response;
       var defaultversion = {};
@@ -804,12 +785,12 @@ $scope.showview=function (uuid,version) {
     }
   }
 
-  $scope.selectVersion = function() {
+  $scope.selectVersion = function () {
     $scope.myform.$dirty = false;
-    DataqulityService.getOneByUuidAndVersion($scope.dqgroup.defaultVersion.uuid, $scope.dqgroup.defaultVersion.version, 'dqgroup').then(function(response) {
+    DataqulityService.getOneByUuidAndVersion($scope.dqgroup.defaultVersion.uuid, $scope.dqgroup.defaultVersion.version, 'dqgroup').then(function (response) {
       onsuccess(response.data)
     });
-    var onsuccess = function(response) {
+    var onsuccess = function (response) {
       //console.log(JSON.stringify(response))
       $scope.dqruleGroupDetail = response.data;
       var defaultversion = {};
@@ -830,21 +811,21 @@ $scope.showview=function (uuid,version) {
       $scope.ruleTags = ruleTagArray
     }
   }
-  $scope.loadRules = function(query) {
-    return $timeout(function() {
+  $scope.loadRules = function (query) {
+    return $timeout(function () {
       return $filter('filter')($scope.dqall, query);
     });
   };
-  $scope.clear = function() {
+  $scope.clear = function () {
 
     $scope.ruleTags = null;
   }
 
-  $scope.okDqGroupSave = function() {
+  $scope.okDqGroupSave = function () {
     $('#dqrulegroupsave').css("dispaly", "none");
     var hidemode = "yes";
     if (hidemode == 'yes') {
-      setTimeout(function() {
+      setTimeout(function () {
         $state.go('viewdataqualitygroup');
       }, 2000);
 
@@ -852,7 +833,7 @@ $scope.showview=function (uuid,version) {
 
 
   }
-  $scope.sbumitRuleGroup = function() {
+  $scope.sbumitRuleGroup = function () {
     var dqruleGroupJson = {}
     $scope.dataLoading = true;
     $scope.isshowmodel = true;
@@ -884,20 +865,21 @@ $scope.showview=function (uuid,version) {
     dqruleGroupJson.ruleInfo = ruleInfoArray;
     dqruleGroupJson.inParallel = $scope.checkboxModelparallel
     console.log(JSON.stringify(dqruleGroupJson))
-    DataqulityService.submit(dqruleGroupJson, "dqgroup").then(function(response) {
-      onSuccess(response.data)},function(response){onError(response.data)});
-    var onSuccess = function(response) {
+    DataqulityService.submit(dqruleGroupJson, "dqgroup").then(function (response) {
+      onSuccess(response.data)
+    }, function (response) { onError(response.data) });
+    var onSuccess = function (response) {
       $scope.changemodelvalue();
 
       if (options.execution == "YES") {
-        DataqulityService.getOneById(response.data, 'dqgroup').then(function(response) {
+        DataqulityService.getOneById(response.data, 'dqgroup').then(function (response) {
           onSuccessGetOneById(response.data)
         });
-        var onSuccessGetOneById = function(response) {
-          DataqulityService.executeDQGroup(response.data.uuid, response.data.version).then(function(response) {
+        var onSuccessGetOneById = function (response) {
+          DataqulityService.executeDQGroup(response.data.uuid, response.data.version).then(function (response) {
             onSuccess(response.data)
           });
-          var onSuccess = function(response) {
+          var onSuccess = function (response) {
             $scope.dataLoading = false;
             $scope.saveMessage = "DQ Rule Group Saved and Submitted Successfully"
             // if ($scope.isshowmodel == "true") {
@@ -906,11 +888,11 @@ $scope.showview=function (uuid,version) {
             //     keyboard: false
             //   });
             // } //End Inner If
-            notify.type='success',
-            notify.title= 'Success',
-           notify.content=$scope.saveMessage
-           $scope.$emit('notify', notify);
-           $scope.okDqGroupSave();
+            notify.type = 'success',
+              notify.title = 'Success',
+              notify.content = $scope.saveMessage
+            $scope.$emit('notify', notify);
+            $scope.okDqGroupSave();
           }
         } //End onSuccessGetOneById
       } //End If
@@ -923,28 +905,28 @@ $scope.showview=function (uuid,version) {
         //     keyboard: false
         //   });
         // } //End Inner If
-        notify.type='success',
-        notify.title= 'Success',
-       notify.content=$scope.saveMessage
-       $scope.$emit('notify', notify);
-       $scope.okDqGroupSave();
+        notify.type = 'success',
+          notify.title = 'Success',
+          notify.content = $scope.saveMessage
+        $scope.$emit('notify', notify);
+        $scope.okDqGroupSave();
       } //End Else
     }
-    var onError = function(response) {
-       notify.type='error',
-       notify.title= 'Error',
-      notify.content="Some Error Occurred"
+    var onError = function (response) {
+      notify.type = 'error',
+        notify.title = 'Error',
+        notify.content = "Some Error Occurred"
       $scope.$emit('notify', notify);
     }
   } //End Submit Function
 
-  $scope.changemodelvalue = function() {
+  $scope.changemodelvalue = function () {
     $scope.isshowmodel = sessionStorage.isshowmodel
   };
 });
 
 
-DataQualityModule.controller('ResultDQController', function($http,dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2,CommonService) {
+DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService) {
 
   $scope.select = $stateParams.type;
   $scope.type = {
@@ -979,8 +961,8 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
     exporterMenuPdf: false,
     exporterPdfOrientation: 'landscape',
     exporterPdfPageSize: 'A4',
-    exporterPdfDefaultStyle: {fontSize: 9},
-    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
+    exporterPdfDefaultStyle: { fontSize: 9 },
+    exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
     useExternalPagination: true,
     enableSorting: true,
     useExternalSorting: true,
@@ -990,10 +972,10 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
     enableGridMenu: true,
     fastWatch: true,
     columnDefs: [],
-    onRegisterApi: function(gridApi) {
+    onRegisterApi: function (gridApi) {
       $scope.gridApiResule = gridApi;
       $scope.filteredRows = $scope.gridApiResule.core.getVisibleRows($scope.gridApiResule.grid);
-      $scope.gridApiResule.core.on.sortChanged($scope, function(grid, sortColumns) {
+      $scope.gridApiResule.core.on.sortChanged($scope, function (grid, sortColumns) {
         if (sortColumns.length > 0) {
           $scope.searchRequestId(sortColumns);
         }
@@ -1001,62 +983,62 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
     }
   };
 
-  $scope.getGridStyle = function() {
+  $scope.getGridStyle = function () {
     var style = {
       'margin-top': '10px',
       'margin-bottom': '10px',
     }
-    if ($scope.filteredRows && $scope.filteredRows.length >0) {
+    if ($scope.filteredRows && $scope.filteredRows.length > 0) {
       style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
     }
-    else{
-      style['height']="100px";
+    else {
+      style['height'] = "100px";
     }
     return style;
   }
-  $scope.refreshData = function() {
+  $scope.refreshData = function () {
     $scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
   };
 
-  $scope.selectPage = function(pageNo) {
+  $scope.selectPage = function (pageNo) {
     $scope.currentPage = pageNo;
   };
 
-  $scope.pageChanged = function() {
+  $scope.pageChanged = function () {
     $scope.getResults(null)
     //$log.log('Page changed to: ' + (($scope.currentPage - 1) * $scope.pageSize));
   };
 
-  $scope.onPerPageChange = function() {
+  $scope.onPerPageChange = function () {
     $scope.currentPage = 1;
     $scope.getResults(null)
   }
-  $scope.$watch("zoomSize", function(newData, oldData) {
+  $scope.$watch("zoomSize", function (newData, oldData) {
     $scope.$broadcast('zoomChange', newData);
   });
 
-  window.navigateTo = function(url) {
+  window.navigateTo = function (url) {
     var state = JSON.parse(url);
     $rootScope.previousState = {
       name: $state.current.name,
       params: $state.params
     };
-    var ispresent=false;
-    if(ispresent !=true){
-      var stateTab={};
-      stateTab.route=state.state;
-      stateTab.param=state.params;
-      stateTab.active=false;
-      $rootScope.$broadcast('onAddTab',stateTab);
+    var ispresent = false;
+    if (ispresent != true) {
+      var stateTab = {};
+      stateTab.route = state.state;
+      stateTab.param = state.params;
+      stateTab.active = false;
+      $rootScope.$broadcast('onAddTab', stateTab);
     }
     $state.go(state.state, state.params);
 
   }
-  $scope.toggleZoom = function() {
+  $scope.toggleZoom = function () {
     $scope.showZoom = !$scope.showZoom;
   }
 
-  $scope.onClickRuleResult = function() {
+  $scope.onClickRuleResult = function () {
     $scope.isRuleExec = true;
     $scope.isRuleResult = false;
     $scope.isD3RuleEexecGraphShow = false;
@@ -1067,7 +1049,7 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
       $scope.isRuleSelect = true;
     }
   }
-  $scope.searchRequestId = function(sortColumns) {
+  $scope.searchRequestId = function (sortColumns) {
     var sortBy = sortColumns[0].name;
     var order = sortColumns[0].sort.direction;
     var result = {};
@@ -1111,9 +1093,9 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
   }
 
 
-  $scope.getResults = function(params) {
+  $scope.getResults = function (params) {
     $scope.to = (($scope.currentPage - 1) * $scope.pageSize);
-    if ($scope.totalItems < ($scope.pageSize*$scope.currentPage)) {
+    if ($scope.totalItems < ($scope.pageSize * $scope.currentPage)) {
       $scope.from = $scope.totalItems;
     } else {
       $scope.from = (($scope.currentPage) * $scope.pageSize);
@@ -1138,15 +1120,15 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
       order = params.order;
 
     }
-    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order).then(function(response) {
+    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order).then(function (response) {
       getResult(response.data)
-    },function(response){OnError(response.data)});
-    var getResult = function(response) {
+    }, function (response) { OnError(response.data) });
+    var getResult = function (response) {
       $scope.isDataError = false;
-      angular.forEach(response.data[0], function(value, key) {
+      angular.forEach(response.data[0], function (value, key) {
         var attribute = {};
-        var hiveKey=["rownum","DatapodUUID","DatapodVersion"]
-        if (hiveKey.indexOf(key)!=-1) {
+        var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+        if (hiveKey.indexOf(key) != -1) {
           attribute.visible = false
         } else {
           attribute.visible = true
@@ -1161,16 +1143,16 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
       $scope.testgrid = true;
       $scope.showprogress = false;
     }
-    var OnError=function (response){
+    var OnError = function (response) {
       $scope.showprogress = false;
       $scope.isDataError = true;
       $scope.datamessage = "Some Error Occurred"
     }
   }
 
-  window.showResult = function(params) {
+  window.showResult = function (params) {
     App.scrollTop();
-    $scope.testgrid=false;
+    $scope.testgrid = false;
     $scope.selectGraphRuleExec = params.name
     $scope.isGraphRuleExec = true;
     $scope.isRuleGroupTitle = true;
@@ -1182,16 +1164,16 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
   }
 
 
-  $scope.refreshResultFunction = function() {
+  $scope.refreshResultFunction = function () {
     $scope.isD3RuleEexecGraphShow = false;
-    $scope.testgrid=false;
+    $scope.testgrid = false;
     $scope.getDqExec($scope.ruleexecdetail)
   }
-  $scope.ruleExecshowGraph = function() {
+  $scope.ruleExecshowGraph = function () {
     $scope.isD3RuleEexecGraphShow = true;
   }
 
-  $scope.getDqExec = function(data) {
+  $scope.getDqExec = function (data) {
     $scope.ruleexecdetail = data
     $scope.isRuleResult = true;
     $scope.isRuleExec = false;
@@ -1209,26 +1191,26 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
     dqexecjson.version = data.version;
     $scope.ruledata = data.name;
     $scope.dqexecdetail = dqexecjson
-    DataqulityService.getNumRowsbyExec(data.uuid, data.version, "dqexec").then(function(response) {
+    DataqulityService.getNumRowsbyExec(data.uuid, data.version, "dqexec").then(function (response) {
       onSuccessGetNumRowsbyExec(response.data)
     });
-    var onSuccessGetNumRowsbyExec = function(response) {
+    var onSuccessGetNumRowsbyExec = function (response) {
       $scope.totalItems = response.numRows;
       $scope.getResults(null);
     }
   } //End getDqExec Method
 
-  $scope.refreshRuleGroupExecFunction = function() {
+  $scope.refreshRuleGroupExecFunction = function () {
     $scope.isD3RGEexecGraphShow = false;
     $scope.dqGroupExec($scope.rulegroupdatail);
   }
 
-  $scope.rGExecshowGraph = function() {
+  $scope.rGExecshowGraph = function () {
     $scope.isGraphRuleGroupExec = false;
     $scope.isD3RGEexecGraphShow = true;
   }
 
-  $scope.dqGroupExec = function(data) {
+  $scope.dqGroupExec = function (data) {
     if ($scope.type.text == 'dq') {
       $scope.getDqExec(data);
       return;
@@ -1261,7 +1243,7 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
         "name": data.name
       }
     };
-    setTimeout(function() {
+    setTimeout(function () {
       $scope.$broadcast('generateGroupGraph', params);
     }, 500);
   } //End dqGroupExec
@@ -1272,60 +1254,62 @@ DataQualityModule.controller('ResultDQController', function($http,dagMetaDataSer
     version: $stateParams.version,
     name: $stateParams.name
   });
-  $scope.reGroupExecute=function() {
+  $scope.reGroupExecute = function () {
     $('#reExModal').modal({
       backdrop: 'static',
       keyboard: false
     });
 
   }
-  $scope.okReGroupExecute=function () {
+  $scope.okReGroupExecute = function () {
     $('#reExModal').modal('hide');
     $scope.executionmsg = "DQ Group Restarted Successfully"
-    notify.type='success',
-    notify.title= 'Success',
-    notify.content=$scope.executionmsg
+    notify.type = 'success',
+      notify.title = 'Success',
+      notify.content = $scope.executionmsg
     $rootScope.$emit('notify', notify);
-    CommonService.restartExec("dqgroupExec",$stateParams.id,$stateParams.version).then(function(response){onSuccess(response.data)});
-    var onSuccess=function(response) {
+    CommonService.restartExec("dqgroupExec", $stateParams.id, $stateParams.version).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
       //$scope.refreshRuleGroupExecFunction();
     }
     $scope.refreshRuleGroupExecFunction();
   }
-  $scope.downloadFile = function(data) {
-    
+  $scope.downloadFile = function (data) {
+    if($scope.isD3RuleEexecGraphShow){
+      return false;
+    }
     var uuid = data.uuid;
-    var version=data.version;
-    var url=$location.absUrl().split("app")[0]
+    var version = data.version;
+    var url = $location.absUrl().split("app")[0]
     $http({
       method: 'GET',
-      url:url+"dataqual/download?action=view&dataQualExecUUID="+uuid+"&dataQualExecVersion="+version,
+      url: url + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version,
       responseType: 'arraybuffer'
-    }).success(function(data, status, headers) {
+    }).success(function (data, status, headers) {
       headers = headers();
       var filename = headers['filename'];
       var contentType = headers['content-type'];
-    
+
       var linkElement = document.createElement('a');
       try {
-      var blob = new Blob([data], {
-        type: contentType
-      });
-      var url = window.URL.createObjectURL(blob);
-    
-      linkElement.setAttribute('href', url);
-      linkElement.setAttribute("download",filename);
-      var clickEvent = new MouseEvent("click", {
-        "view": window,
-        "bubbles": true,
-        "cancelable": false
-      });
-      linkElement.dispatchEvent(clickEvent);
+        var blob = new Blob([data], {
+          type: contentType
+        });
+        var url = window.URL.createObjectURL(blob);
+
+        linkElement.setAttribute('href', url);
+        linkElement.setAttribute("download", filename);
+        var clickEvent = new MouseEvent("click", {
+          "view": window,
+          "bubbles": true,
+          "cancelable": false
+        });
+        linkElement.dispatchEvent(clickEvent);
       } catch (ex) {
-      console.log(ex);
+        console.log(ex);
       }
-    }).error(function(data) {
+    }).error(function (data) {
       console.log(data);
     });
-    };
+  };
 }); //End DQRuleResultController
