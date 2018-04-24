@@ -97,7 +97,7 @@
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                       <select class="form-control" [(ngModel)]="dependsontype" name="dependsontype" (change)="selectType()" [disabled]="mode == 'true'">
-                          <option *ngFor="let app of depandsOnTypes" [ngValue]="app" >{{app}} </option>
+                          <option *ngFor="let app of depandsOnTypes" [ngValue]="app">{{app}} </option>
                         </select>
                   </div>
                 </div>
@@ -113,6 +113,7 @@
                     [style]="{'width':'100%','padding':'3px'}"
                     [filter]="true"
                     (onChange)="changeType()"
+                    placeholder="select"
                     >
                     </p-dropdown>
                   </div>

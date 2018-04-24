@@ -449,13 +449,13 @@ export class FormulaComponent {
   }
 
   selectType() {
-    debugger
     this._commonService.getAllLatest(this.dependsontype).subscribe(
       response => {
         this.onSuccesgetAllLatest(response)
       },
       error => console.log('Error :: ' + error)
     )
+    
   }
 
   onSuccesgetAllLatest(response) {
@@ -472,7 +472,6 @@ export class FormulaComponent {
   }
 
   changeType() {
-    debugger
     this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depandsOnTypes).subscribe(
       response => {
         this.OnSuccesgetAllAttributeBySource(response)
