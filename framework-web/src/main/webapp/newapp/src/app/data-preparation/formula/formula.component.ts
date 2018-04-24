@@ -444,11 +444,12 @@ export class FormulaComponent {
     const len = this.formulaarray.length;
     const fundataArr: Array<DataPreparationFormulaInfo> = [];
     this.formulaarray.push(new DataPreparationFormulaInfo(
-      'function', response[0]['uuid'], response[0]['category'], response[0]['functionInfo'].toUpperCase()
+      'function', response[0]['uuid'], response[0]['category'], response[0]['functionInfo'][0].name.toUpperCase()
     ));
   }
 
   selectType() {
+    debugger
     this._commonService.getAllLatest(this.dependsontype).subscribe(
       response => {
         this.onSuccesgetAllLatest(response)
@@ -471,6 +472,7 @@ export class FormulaComponent {
   }
 
   changeType() {
+    debugger
     this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depandsOnTypes).subscribe(
       response => {
         this.OnSuccesgetAllAttributeBySource(response)
