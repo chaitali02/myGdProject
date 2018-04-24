@@ -1,215 +1,211 @@
 <div data-ng-controller="AdminActivityController">
-   <!-- BEGIN PAGE HEADER-->
-   <div class="page-bar">
-     <ul class="page-breadcrumb">
-       <li>
-         <a ui-sref="home">Home</a>
-         <i class="fa fa-circle"></i>
-       </li>
-       <li>
-         <a  ui-sref="admin({type:'activity'})">Admin</a>
-         <i class="fa fa-circle"></i>
-       </li>
-       <li>
-         <a  ui-sref="admin({type:'activity'})">Activity</a>
-         <i class="fa fa-circle"></i>
-       </li>
-       <li>
-         <span>{{activitydata.name }}</span>
-       </li>
-     </ul>
-     <div class="page-toolbar">
-       <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
-         <i class="icon-calendar"></i>&nbsp;
-         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
-       </div>
-     </div>
-   </div>
+  <!-- BEGIN PAGE HEADER-->
+  <div class="page-bar">
+    <ul class="page-breadcrumb">
+      <li>
+        <a ui-sref="home">Home</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a ui-sref="admin({type:'activity'})">Admin</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a ui-sref="admin({type:'activity'})">Activity</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <span>{{activitydata.name }}</span>
+      </li>
+    </ul>
+    <div class="page-toolbar">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <i class="icon-calendar"></i>&nbsp;
+        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+      </div>
+    </div>
+  </div>
+  <br>
+  <!-- END PAGE HEADER-->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="portlet box green">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="fa fa-gift"></i>{{activitydata.name}}
+          </div>
 
-   <br>
-   <!-- END PAGE HEADER-->
+          <div class="tools">
+          
+            <a title="Edit"  ng-class="(showForm==true && isEdit==true && isPrivlage)? 'currentpage':'notcurrentpage'"
+              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(activitydata.uuid,activitydata.version)"
+              ng-hide="isAdd" style="height:16px;">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
+              ng-click="showView(activitydata.uuid,activitydata.version)" ng-hide="isAdd" style="height:16px;">
+              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            </a>
+            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+              ng-show="isDependencyShow" data-ng-click="showGraph(activitydata.uuid,activitydata.version)" style="height:14px;">
+              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+            </a>
 
-   <!-- BEGIN MAIN CONTENT -->
-   <div class="row" >
-     <div class="col-md-12">
-       <!-- BEGIN: ACCORDION DEMO -->
-       <div class="portlet box green">
-         <div class="portlet-title">
-           <div class="caption">
-             <i class="fa fa-gift"></i>{{activitydata.name}}
-           </div>
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showForm==true? 'currentpage':'notcurrentpage'">
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
 
-           <div class="tools">
-             <a title="Edit" ng-disabled="isPrivlage" ng-class="(showactivity==true && isEdit==true)? 'currentpage':'notcurrentpage'"  data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(activitydata.uuid,activitydata.version)" ng-hide="isAdd" style="height:16px;">
-               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-             </a>
-                <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showactivity==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-click="showview(activitydata.uuid,activitydata.version)" ng-hide="isAdd" style="height:16px;">
-                    <span class="glyphicon glyphicon-file" style="color:white;"></span>
-                </a>
-             <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showactivity==false? 'currentpage':'notcurrentpage'" ng-show="isDependencyShow" data-ng-click="showActivityGraph(activitydata.uuid,activitydata.version)" style="height:14px;">
-               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
-             </a>
-
-             <a  title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip"     data-placement="top" tooltip>
-               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-             </a>
-
-             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="admin({type:'activity'})" class="remove" style="height:14px;">
-               <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
-             </a>
-           </div>
-         </div>
-         <div class="portlet-body form" >
-           <!-- BEGIN FORM-->
-           <!-- ng-if="data !=null" -->
-           <div class="form-body graph-body" ng-if="showgraphdiv">
-             <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader"></i> -->
-             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-             <div class="spinner" id="graphloader">
-               <div class="bounce1"></div>
-               <div class="bounce2"></div>
-               <div class="bounce3"></div>
-             </div>
-             <div class="form-body show-graph-body"  id="graphWrapper" graph-directive uuid="activitydata.uuid" version="activity.defaultVersion.version">
-             </div>
-           </div>
-
-
-           <div class="form-body"   style="padding-top:50px;"  ng-show="showactivity">
-             <!-- <span us-spinner="{radius:30, width:8, length: 16}"></span> -->
-             <form  class="form-horizontal" novalidate="novalidate">
-
-               <div class="form-group" ng-show="activitydata.uuid">
-                 <label class="col-md-3 control-label">UUID</label>
-                 <div class="col-md-6">
-                   <input type="text" class="form-control" data-ng-disabled="true"  ng-model="activitydata.uuid">
-                 </div>
-               </div>
-
-               <div class="form-group">
-                 <label class="col-md-3 control-label">Name*</label>
-                 <div class="col-md-6">
-                   <input type="text" class="form-control"  ng-disabled="{{mode}}"  ng-model="activitydata.name" required="">
-                 </div>
-               </div>
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="admin({type:'activity'})" 
+              style="height:14px;">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+            </a>
+          </div>
+        </div>
+        <div class="portlet-body form">
+          <div class="form-body graph-body" ng-if="showGraphDiv">
+            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="activitydata.uuid" version="activity.defaultVersion.version">
+            </div>
+          </div>
 
 
-               <div class="form-group" ng-show="activitydata.uuid">
-                 <label class="col-md-3 control-label">Version</label>
-                 <div class="col-md-6">
-                   <select class="form-control" select2 name="version"
-                   ng-change="selectVersion()" data-ng-model="activity.defaultVersion.version" ng-options="c.version as c.version for c in activity.versions" ng-disabled="isversionEnable">
+          <div class="form-body" style="padding-top:50px;" ng-show="showForm">
+            <form class="form-horizontal" novalidate="novalidate">
+              <div class="form-group" ng-show="activitydata.uuid">
+                <label class="col-md-3 control-label">UUID</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="activitydata.uuid">
+                </div>
+              </div>
 
-                 </select>
-                 <!-- <input type="text" class="form-control"  ng-disabled="true"  ng-model="datapoddata.version"placeholder="Enter text"> -->
-               </div>
-             </div>
-
-             <div class="form-group" ng-show="activitydata.uuid">
-               <label class="col-md-3 control-label">CreatedBy</label>
-               <div class="col-md-6">
-                 <input type="text" class="form-control" ng-disabled="true"  ng-model="activitydata.createdBy.ref.name">
-               </div>
-             </div>
-
-             <div class="form-group" ng-show="activitydata.uuid">
-               <label class="col-md-3 control-label">CreatedOn</label>
-               <div class="col-md-6">
-                 <input type="text"  ng-model="activitydata.createdOn"  ng-disabled="true"  class="form-control">
-               </div>
-             </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Name*</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="activitydata.name" required="">
+                </div>
+              </div>
 
 
-             <div class="form-group taginput">
-               <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
-               <div class="col-md-6 col-sm-6 col-xs-12">
-                 <tags-input ng-model="activitydata.tags"  ng-disabled="{{mode}}" min-length="0"></tags-input>
-               </div>
-             </div>
+              <div class="form-group" ng-show="activitydata.uuid">
+                <label class="col-md-3 control-label">Version</label>
+                <div class="col-md-6">
+                  <select class="form-control" select2 name="version" ng-change="selectVersion()" data-ng-model="activity.defaultVersion.version"
+                    ng-options="c.version as c.version for c in activity.versions" ng-disabled="isversionEnable">
+                  </select>
+                </div>
+              </div>
 
-             <div class="form-group">
-               <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-               <div class="col-md-6">
-                 <!-- <input type="text" ng-model="activitydata.desc"
-                 class="form-control" ng-disabled="{{mode}}"> -->
-                 <textarea class="form-control" ng-disabled="{{mode}}" ng-model="activitydata.desc" rows="2"  style="resize:none;"></textarea>
-               </div>
-             </div>
-             <div class="form-group">
-               <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-               <div class="col-md-6 col-sm-6 col-xs-12">
-                 <div class="btn-group" >
-                   <label class="btn btn-default" ng-model="activitydata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                   <label class="btn btn-default" ng-model="activitydata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
-                 </div>
-               </div>
-             </div>
-             <div class="form-group">
-               <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-               <div class="col-md-6 col-sm-6 col-xs-12">
-                 <div class="btn-group" >
-                   <label class="btn btn-default" ng-model="activitydata.published" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                   <label class="btn btn-default" ng-model="activitydata.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
-                 </div>
-               </div>
-             </div>
-             <div class="form-group">
-               <label class="col-md-3 control-label">Status</label>
-               <div class="col-md-6">
-                 <input type="text"  ng-model="activitydata.status"  ng-disabled="{{mode}}" class="form-control">
-               </div>
-             </div>
+              <div class="form-group" ng-show="activitydata.uuid">
+                <label class="col-md-3 control-label">CreatedBy</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="true" ng-model="activitydata.createdBy.ref.name">
+                </div>
+              </div>
 
-             <div class="form-group" >
-               <label class="col-md-3 control-label">UserInfo</label>
-               <div class="col-md-6">
-                 <input type="text"  ng-model="activitydata.userInfo.ref.name"  ng-disabled="{{mode}}"  class="form-control">
-               </div>
-             </div>
+              <div class="form-group" ng-show="activitydata.uuid">
+                <label class="col-md-3 control-label">CreatedOn</label>
+                <div class="col-md-6">
+                  <input type="text" ng-model="activitydata.createdOn" ng-disabled="true" class="form-control">
+                </div>
+              </div>
 
-             <div class="form-group">
-               <label class="col-md-3 control-label">SessionId</label>
-               <div class="col-md-6">
-                 <input type="text"  ng-model="activitydata.sessionId"  ng-disabled="{{mode}}"  class="form-control">
-               </div>
-             </div>
 
-             <div class="form-group">
-               <label class="col-md-3 control-label">RequestUrl</label>
-               <div class="col-md-6">
-                 <input type="text"  ng-model="activitydata.requestUrl"  ng-disabled="{{mode}}"  class="form-control">
-               </div>
-             </div>
-             <div class="form-group">
-               <label class="control-label col-md-3 col-sm-3 col-xs-12">Meta Info
-               </label>
-               <div class="col-md-2 col-sm-2 col-xs-12">
-                <input type="text"  ng-model="activitydata.metaInfo.ref.type"  ng-disabled="{{mode}}"  class="form-control">
-               </div>
-               <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
-               </label>
-               <div class="col-md-3 col-sm-3 col-xs-12">
-                 <input type="text"  ng-model="activitydata.metaInfo.ref.name"  ng-disabled="{{mode}}"  class="form-control">
-             </div>
-           </div>
+              <div class="form-group taginput">
+                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <tags-input ng-model="activitydata.tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                </div>
+              </div>
 
-             <div class="form-group"  style="padding-top: 10px;">
-               <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                 <a data-ui-sref="admin({type:'activity'})"  class="btn btn-primary">Cancel</a>
-                 <input type="button" class="btn btn-success" value="Submit"name="submit" ng-disabled="(datasetHasChanged == false || mode == false)?false:true" ng-click="submitDatapod()" name="submit">
-                 <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                   <div class="bounce1"></div>
-                   <div class="bounce2"></div>
-                   <div class="bounce3"></div>
-                 </span>
-               </div>
-             </div>
-           </form>
-         </div>
-       </div>
-     </div>
-   </div>
- </div>
- <!-- END MAIN CONTENT -->
- <!-- BEGIN MAIN JS-->
- </div>
+              <div class="form-group">
+                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                <div class="col-md-6">
+                  <textarea class="form-control" ng-disabled="{{mode}}" ng-model="activitydata.desc" rows="2" style="resize:none;"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <label class="btn btn-default" ng-model="activitydata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="activitydata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <label class="btn btn-default" ng-model="activitydata.published" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                      uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="activitydata.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                      uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Status</label>
+                <div class="col-md-6">
+                  <input type="text" ng-model="activitydata.status" ng-disabled="{{mode}}" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">UserInfo</label>
+                <div class="col-md-6">
+                  <input type="text" ng-model="activitydata.userInfo.ref.name" ng-disabled="{{mode}}" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">SessionId</label>
+                <div class="col-md-6">
+                  <input type="text" ng-model="activitydata.sessionId" ng-disabled="{{mode}}" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">RequestUrl</label>
+                <div class="col-md-6">
+                  <input type="text" ng-model="activitydata.requestUrl" ng-disabled="{{mode}}" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Meta Info
+                </label>
+                <div class="col-md-2 col-sm-2 col-xs-12">
+                  <input type="text" ng-model="activitydata.metaInfo.ref.type" ng-disabled="{{mode}}" class="form-control">
+                </div>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                </label>
+                <div class="col-md-3 col-sm-3 col-xs-12">
+                  <input type="text" ng-model="activitydata.metaInfo.ref.name" ng-disabled="{{mode}}" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group" style="padding-top: 10px;">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                  <a data-ui-sref="admin({type:'activity'})" class="btn btn-primary">Cancel</a>
+                  <input type="button" class="btn btn-success" value="Submit" name="submit" ng-disabled="(datasetHasChanged == false || mode == false)?false:true"
+                    ng-click="submitDatapod()" name="submit">
+                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                  </span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END MAIN CONTENT -->
+  <!-- BEGIN MAIN JS-->
+</div>

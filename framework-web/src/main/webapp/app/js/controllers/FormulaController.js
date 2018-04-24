@@ -265,8 +265,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 
 	$scope.addAttribute = function () {
 		var len = $scope.formulainfoarray.length;
-		var data = {}
-       debugger;
+		var data = {};
 		if ($scope.attributeType.text == "datapod") {
 			if ($scope.attributeinfo != null) {
 				data.type = "datapod"
