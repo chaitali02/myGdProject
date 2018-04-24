@@ -251,7 +251,6 @@ public class Helper {
 				case recongroupExec : return "iReconGroupExecDao";
 				case distribution : return "iDistributionDao";
 				case appConfig : return "iAppConfigDao";
-				
 				default:
 					return null;
 			}
@@ -427,7 +426,7 @@ public class Helper {
 				case "recongroup" : return MetaType.recongroup;
 				case "recongroupexec" : return MetaType.recongroupExec;
 				case "distribution" : return MetaType.distribution;
-				case "appConfig" : return MetaType.appConfig;
+				case "appconfig" : return MetaType.appConfig;
 
 				default : return null;
 			}
