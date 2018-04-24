@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.awt.image.SampleModel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,13 +57,11 @@ import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
 import com.inferyx.framework.datascience.Math3Distribution;
 import com.inferyx.framework.datascience.MonteCarloSimulation;
-import com.inferyx.framework.distribution.MultiNormalDist;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
-import com.inferyx.framework.domain.DataFrameHolder;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -81,7 +78,6 @@ import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
@@ -94,7 +90,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -102,7 +97,6 @@ import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
-import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -160,9 +154,6 @@ public class ModelServiceImpl {
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	MetadataUtil commonActivity;
-	@Autowired
-	private SparkExecutor sparkExecutor;
-	@Autowired
 	private PredictMLOperator predictMLOperator;
 	@Autowired
 	private DatasetOperator datasetOperator;
@@ -793,8 +784,10 @@ public class ModelServiceImpl {
 		String title = "";
 		if(location.contains(hdfsInfo.getHdfsURL()))
 			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/stages");
-		if(location.contains(Helper.getPropertyValue("framework.model.train.path")))
+		if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/stages"))
 			location = StringUtils.substringBetween(location, Helper.getPropertyValue("framework.model.train.path"), "/stages");
+		else if(location.contains(Helper.getPropertyValue("framework.model.train.path")))
+			location = location.replaceAll(Helper.getPropertyValue("framework.model.train.path"), "");
 		
 		if(location.startsWith("/") && location.endsWith("/"))
 			title = location.substring(1, location.length()-1);
@@ -960,14 +953,14 @@ public class ModelServiceImpl {
 						Object object = mlDistribution.getDistribution(distribution, distExecParam);
 						
 						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
-						String tabName_2 = sparkExecutor.assembleRandomDF(fieldArray, tabName_1, true, appUuid);
+						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, true, appUuid);
 						String sql = simulateMLOperator.generateSql(simulate, tabName_2);
 						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
 					} else {
 						String query = simulateMLOperator.generateSql(simulate, (tableName+"_"+"form_rand_df"));
 						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, (tableName+"_"+"form_rand_df"));
-						String tabName_2 = sparkExecutor.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
+						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
 						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 						result = exec.executeRegisterAndPersist(query, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
 					}
@@ -977,7 +970,7 @@ public class ModelServiceImpl {
 						
 						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
 						String[] customFldArr = new String[] {fieldArray[0]};
-						String tabName_2 = sparkExecutor.assembleRandomDF(customFldArr, tabName_1, true, appUuid);
+						String tabName_2 = exec.assembleRandomDF(customFldArr, tabName_1, true, appUuid);
 						
 						String sql = "SELECT * FROM " + tabName_2;
 						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
@@ -994,7 +987,7 @@ public class ModelServiceImpl {
 							target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
 									targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
 						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
-						String tabName_2 = sparkExecutor.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
+						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
 						//result = predictMLOperator.execute(null, model, algorithm, target, assembledDfHolder.getDataFrame(), fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, appUuid);
 						filePathUrl = filePathUrl + "/data";
 					}
@@ -1556,9 +1549,9 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 				if (trainExec == null)
 					throw new Exception("Executed model not found.");
 				
-				String tabName = sparkExecutor.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
+				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
 				Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelName(), trainExec);
-				filePathUrl = sparkExecutor.executePredict(trainedModel, target, filePathUrl, tabName, appUuid);
+				filePathUrl = exec.executePredict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
 				result = filePathUrl;
 			}
 			
