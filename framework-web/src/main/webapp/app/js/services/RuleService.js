@@ -536,16 +536,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
 
     return deferred.promise;
   }
-  factory.getGraphData = function (uuid, version, degree) {
-    var deferred = $q.defer();
-    RuleFactory.findGraphData(uuid, version, degree).then(function (response) { onSuccess(response) });
-    var onSuccess = function (response) {
-      deferred.resolve({
-        data: response
-      })
-    }
-    return deferred.promise;
-  }
+  
 
   factory.getFormulaByType = function (uuid, type) {
     var deferred = $q.defer();

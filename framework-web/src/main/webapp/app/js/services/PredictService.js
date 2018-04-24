@@ -24,10 +24,10 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
 
 
   }
-  factory.findAllModelByType = function (flag,type) {
+  factory.findAllModelByType = function (flag, type) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "model/getAllModelByType?action=view&customFlag="+flag+"&type=" + type,
+      url: url + "model/getAllModelByType?action=view&customFlag=" + flag + "&type=" + type,
       method: "GET",
     }).then(function (response) { return response })
 
@@ -109,36 +109,46 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
       return response;
     })
   }
-  factory.findExecutePredict=function(uuid,version){
-    var url=$location.absUrl().split("app")[0]
+  factory.findExecutePredict = function (uuid, version) {
+    var url = $location.absUrl().split("app")[0]
     return $http({
-            url:url+"model/predict/execute?action=execute&uuid="+uuid+"&version="+version,
-            headers: {
-              'Accept':'*/*',
-              'content-Type' : "application/json",
-            },
-            method:"POST",
+      url: url + "model/predict/execute?action=execute&uuid=" + uuid + "&version=" + version,
+      headers: {
+        'Accept': '*/*',
+        'content-Type': "application/json",
+      },
+      method: "POST",
 
-          }).then(function(response){ return  response})
+    }).then(function (response) { return response })
   }
-  factory.findExecutePredictWithBody=function(uuid,version,data){
-    var url=$location.absUrl().split("app")[0]
+  factory.findExecutePredictWithBody = function (uuid, version, data) {
+    var url = $location.absUrl().split("app")[0]
     return $http({
-            url:url+"model/predict/execute?action=execute&uuid="+uuid+"&version="+version,
-            headers: {
-              'Accept':'*/*',
-              'content-Type' : "application/json",
-            },
-            method:"POST",
-            data:JSON.stringify(data),
-          }).then(function(response){ return  response})
+      url: url + "model/predict/execute?action=execute&uuid=" + uuid + "&version=" + version,
+      headers: {
+        'Accept': '*/*',
+        'content-Type': "application/json",
+      },
+      method: "POST",
+      data: JSON.stringify(data),
+    }).then(function (response) { return response })
   }
+  factory.findAttributesByRule = function (uuid, type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      method: 'GET',
+      url: url + "metadata/getAttributesByRule?action=view&uuid=" + uuid + "&type=" + type,
 
+    }).
+      then(function (response, status, headers) {
+        return response;
+      })
+  }
   return factory;
 })
 
 DatascienceModule.service("PredictService", function ($http, PredictFactory, $q, sortFactory) {
-  
+
   this.getAllModelByType = function (flag, type) {
     var deferred = $q.defer();
     PredictFactory.findAllModelByType(flag, type).then(function (response) { onSuccess(response.data) });
@@ -149,21 +159,21 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
     }
     return deferred.promise;
   }
-  this.getExecutePredict=function(uuid,version,data){
+  this.getExecutePredict = function (uuid, version, data) {
     var deferred = $q.defer();
-    if(data !=null){
-      PredictFactory.findExecutePredictWithBody(uuid,version,data).then(function(response){onSuccess(response.data)});
-      var onSuccess=function(response){
+    if (data != null) {
+      PredictFactory.findExecutePredictWithBody(uuid, version, data).then(function (response) { onSuccess(response.data) });
+      var onSuccess = function (response) {
         deferred.resolve({
-           data:response
+          data: response
         });
       }
     }
-    else{
-      PredictFactory.findExecutePredict(uuid,version).then(function(response){onSuccess(response.data)});
-      var onSuccess=function(response){
+    else {
+      PredictFactory.findExecutePredict(uuid, version).then(function (response) { onSuccess(response.data) });
+      var onSuccess = function (response) {
         deferred.resolve({
-           data:response
+          data: response
         });
       }
 
@@ -248,6 +258,24 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
         })
       }
 
+    }
+    if (type == "rule") {
+      PredictFactory.findAttributesByRule(uuid, type).then(function (response) { onSuccess(response.data) });
+      var onSuccess = function (response) {
+        var attributes = [];
+        for (var j = 0; j < response.length; j++) {
+          var attributedetail = {};
+          attributedetail.uuid = response[j].ref.uuid;
+          attributedetail.datapodname = response[j].ref.name;
+          attributedetail.name = response[j].attrName;
+          attributedetail.attributeId = response[j].attrId;
+          attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+          attributes.push(attributedetail)
+        }
+        deferred.resolve({
+          data: attributes
+        })
+      }
     }
 
     return deferred.promise;

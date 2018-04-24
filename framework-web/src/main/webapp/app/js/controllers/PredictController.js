@@ -55,7 +55,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   }
   
   $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-    console.log(fromParams)
+    //console.log(fromParams)
     $sessionStorage.fromStateName = fromState.name
     $sessionStorage.fromParams = fromParams
 
@@ -139,7 +139,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   $scope.getAllAttribute=function(){
     PredictService.getAllAttributeBySource($scope.selectSource.uuid,$scope.selectSourceType).then(function(response) { onGetAllAttributeBySource(response.data)});
     var onGetAllAttributeBySource = function(response) {
-      console.log(response)
+      //console.log(response)
       $scope.allTargetAttribute = response;
       
       
@@ -355,7 +355,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       }
     }
     predictJson.featureAttrMap=featureMap;
-    console.log(JSON.stringify(predictJson))
+    //console.log(JSON.stringify(predictJson))
     PredictService.submit(predictJson, 'predict').then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
     var onSuccess = function(response) {
       $scope.dataLoading = false;

@@ -18,11 +18,9 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 	$scope.formulaTypes=['simple','aggr','custom']
 	$scope.mode = "false"
 	$scope.formuladata;
-	$scope.showformula = true;
+	$scope.showFrom = true;
 	$scope.data = null;
-	$scope.showgraph = false
-	$scope.showgraphdiv = false
-	$scope.graphDataStatus = false
+	$scope.showGraphDiv = false
 	$scope.isSourceAtributeDatapod = true;
 	$scope.formula = {};
 	$scope.formula.versions = [];
@@ -37,14 +35,13 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
 
-	$scope.showFormulaPage = function () {
-		$scope.showformula = true;
-		$scope.showgraph = false
-		$scope.graphDataStatus = false;
-		$scope.showgraphdiv = false
+	$scope.showPage = function () {
+		$scope.showFrom = true;
+		$scope.showGraphDiv = false
 	}
+
 	$scope.enableEdit = function (uuid, version) {
-		$scope.showFormulaPage()
+		$scope.showPage()
 		$state.go('metaListformula', {
 			id: uuid,
 			version: version,
@@ -52,19 +49,22 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		});
 	}
 	$scope.showview = function (uuid, version) {
-		$scope.showFormulaPage()
-		$state.go('metaListformula', {
-			id: uuid,
-			version: version,
-			mode: 'true'
-		});
+		if(!$scope.isEdit){
+			$scope.showPage()
+			$state.go('metaListformula', {
+				id: uuid,
+				version: version,
+				mode: 'true'
+			});
+	    }
 	}
 	var notify = {
 		type: 'success',
 		title: 'Success',
-		content: 'Dashboard deleted Successfully',
+		content: '',
 		timeout: 3000 //time in ms
 	};
+
 	$scope.formulafuction = [
 		{ "type": "simple", "value": "+", "class": "frormula-btn formula_button btn btn-icon-only" },
 		{ "type": "simple", "value": "-", "class": "formula_button btn btn-icon-only frormula-btn" },
@@ -101,15 +101,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		{ "text": "function", "caption": "function" },
 	    { "text": "paramlist", "caption": "paramlist" }]
 	$scope.attributeType = $scope.attributeTypes[1]
-	$scope.$watch("isshowmodel", function (newvalue, oldvalue) {
-		$scope.isshowmodel = newvalue
-		sessionStorage.isshowmodel = newvalue
-	})
+	
 	$scope.formulaFormChange = function () {
-
 		if ($scope.mode == "true") {
 			$scope.formulaHasChanged = true;
-
 		}
 		else {
 			$scope.formulaHasChanged = false;
@@ -118,8 +113,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 	}
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 		$sessionStorage.fromStateName = fromState.name
-
-		console.log(fromParams)
+		//console.log(fromParams)
 		if (fromState.name != "matadata") {
 			$sessionStorage.fromParams = fromParams
 		}
@@ -130,15 +124,14 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		$scope.statename
 		$scope.formulaName = data;
 	}
+
 	$scope.formulainfoarray = [];
-	$scope.showFormulaGraph = function (uuid, version) {
-		$scope.showformula = false;
-		$scope.showgraph = false
-		$scope.graphDataStatus = true
-		$scope.showgraphdiv = true;
+	
+	$scope.showGraph = function (uuid, version) {
+		$scope.showFrom = false;
+		$scope.showGraphDiv = true;
 
 	}
-
 
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
@@ -272,8 +265,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 
 	$scope.addAttribute = function () {
 		var len = $scope.formulainfoarray.length;
-		var data = {}
-
+		var data = {};
 		if ($scope.attributeType.text == "datapod") {
 			if ($scope.attributeinfo != null) {
 				data.type = "datapod"
@@ -284,11 +276,11 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			}
 		}
 		else if ($scope.attributeType.text == "string") {
-
 			data.type = "string"
 			data.value = $scope.sourcesimple
 			$scope.sourcesimple = null
 		}
+
 		else if ($scope.attributeType.text == "formula") {
 			data.type = $scope.attributeType.text
 			data.value = $scope.sourceformula.name
@@ -305,7 +297,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		else if ($scope.attributeType.text == "function") {
 			CommonService.getOneByUuidAndVersion($scope.sourcefunction.uuid, $scope.sourcefunction.version, 'function').then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-				console.log(JSON.stringify($scope.sourcefunction))
+				//console.log(JSON.stringify($scope.sourcefunction))
 				data.type = $scope.attributeType.text
 				data.value = response.functionInfo[0].name.toUpperCase();
 				data.uuid = $scope.sourcefunction.uuid;
@@ -537,7 +529,6 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
 			$scope.formulaHasChanged = true;
-			$scope.changemodelvalue()
 			notify.type = 'success',
 			notify.title = 'Success',
 			notify.content = 'Formula Saved Successfully'
@@ -552,9 +543,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		}
 	}//End Submit
 
-	$scope.changemodelvalue = function () {
-		$scope.isshowmodel = sessionStorage.isshowmodel
-	};
+	
 
 	$scope.okdatasetsave = function () {
 		$scope.stageName = $sessionStorage.fromStateName;

@@ -57,13 +57,11 @@ import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
 import com.inferyx.framework.datascience.Math3Distribution;
 import com.inferyx.framework.datascience.MonteCarloSimulation;
-import com.inferyx.framework.distribution.MultiNormalDist;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
-import com.inferyx.framework.domain.DataFrameHolder;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -80,7 +78,6 @@ import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
@@ -93,7 +90,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -101,7 +97,6 @@ import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
-import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -159,9 +154,6 @@ public class ModelServiceImpl {
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	MetadataUtil commonActivity;
-	@Autowired
-	private SparkExecutor sparkExecutor;
-	@Autowired
 	private PredictMLOperator predictMLOperator;
 	@Autowired
 	private DatasetOperator datasetOperator;
@@ -792,8 +784,10 @@ public class ModelServiceImpl {
 		String title = "";
 		if(location.contains(hdfsInfo.getHdfsURL()))
 			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/stages");
-		if(location.contains(Helper.getPropertyValue("framework.model.train.path")))
+		if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/stages"))
 			location = StringUtils.substringBetween(location, Helper.getPropertyValue("framework.model.train.path"), "/stages");
+		else if(location.contains(Helper.getPropertyValue("framework.model.train.path")))
+			location = location.replaceAll(Helper.getPropertyValue("framework.model.train.path"), "");
 		
 		if(location.startsWith("/") && location.endsWith("/"))
 			title = location.substring(1, location.length()-1);
@@ -850,7 +844,8 @@ public class ModelServiceImpl {
 
 	}
 
-	public boolean predict(Predict predict, ExecParams execParams, PredictExec predictExec) throws Exception {	
+	/********************** UNUSED **********************/
+	/*public boolean predict(Predict predict, ExecParams execParams, PredictExec predictExec) throws Exception {	
 
 		boolean isSuccess = false;
 		try {
@@ -905,7 +900,7 @@ public class ModelServiceImpl {
 			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
 		}
 		return isSuccess;
-	}
+	}*/
 
 	public boolean simulate(Simulate simulate, ExecParams execParams, SimulateExec simulateExec) throws Exception {
 		boolean isSuccess = false;
@@ -958,14 +953,14 @@ public class ModelServiceImpl {
 						Object object = mlDistribution.getDistribution(distribution, distExecParam);
 						
 						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
-						String tabName_2 = sparkExecutor.assembleDataframe(fieldArray, tabName_1, true, appUuid);
+						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, true, appUuid);
 						String sql = simulateMLOperator.generateSql(simulate, tabName_2);
 						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
 					} else {
 						String query = simulateMLOperator.generateSql(simulate, (tableName+"_"+"form_rand_df"));
 						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, (tableName+"_"+"form_rand_df"));
-						String tabName_2 = sparkExecutor.assembleDataframe(fieldArray, tabName_1, false, appUuid);
+						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
 						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 						result = exec.executeRegisterAndPersist(query, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
 					}
@@ -975,7 +970,7 @@ public class ModelServiceImpl {
 						
 						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
 						String[] customFldArr = new String[] {fieldArray[0]};
-						String tabName_2 = sparkExecutor.assembleDataframe(customFldArr, tabName_1, true, appUuid);
+						String tabName_2 = exec.assembleRandomDF(customFldArr, tabName_1, true, appUuid);
 						
 						String sql = "SELECT * FROM " + tabName_2;
 						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
@@ -992,7 +987,7 @@ public class ModelServiceImpl {
 							target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
 									targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
 						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
-						String tabName_2 = sparkExecutor.assembleDataframe(fieldArray, tabName_1, false, appUuid);
+						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
 						//result = predictMLOperator.execute(null, model, algorithm, target, assembledDfHolder.getDataFrame(), fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, appUuid);
 						filePathUrl = filePathUrl + "/data";
 					}
@@ -1456,7 +1451,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return factorCovariances;
 	}*/
 	
-	public ResultSetHolder getRSHolderBySource(Object source) throws Exception {  
+	public String getSQLBySource(Object source) throws Exception {  
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		if (source instanceof Datapod) {
@@ -1466,26 +1461,129 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 				logger.error("Datastore is not available for this datapod");
 				throw new Exception();
 			}
-			IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+			//IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
 			IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 			ConnectionHolder conHolder = conn.getConnection();
 			Object obj = conHolder.getStmtObject();
-			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
-			ResultSetHolder rsHolder = new ResultSetHolder();
-			rsHolder.setDataFrame(dataFrameHolder.getDataframe());
-			return rsHolder;
+			//DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
+			String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), datapod, datastore, hdfsInfo, obj, datasource);
+			String sql = "SELECT * FROM "+tableName;
+			return sql;
 		} else if (source instanceof DataSet) {
 			DataSet dataset = (DataSet) source;
 			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, Mode.BATCH);
-			ResultSetHolder rsHolder = exec.executeSql(sql);
-			return rsHolder;
+			return sql;
 		} else if (source instanceof Rule) {
 			Rule rule = (Rule) source;
 			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, Mode.BATCH);
-			ResultSetHolder rsHolder = exec.executeSql(sql);
-			return rsHolder;
+			return sql;
 		}
 		return null;
 	}
 
+	public Object getTrainedModelByTrainExec(String modelClassName, TrainExec trainExec) throws JsonProcessingException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Class<?> modelClass = Class.forName(modelClassName);
+
+		MetaIdentifierHolder datastoreHolder = trainExec.getResult();
+		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreHolder.getRef().getUuid(),
+				datastoreHolder.getRef().getVersion(), datastoreHolder.getRef().getType().toString());
+		if (dataStore == null)
+			throw new NullPointerException("No datastore available");
+		String location = dataStore.getLocation();
+
+		if (location.contains("/data"))
+			location = location.replaceAll("/data", "");
+		
+		location = hdfsInfo.getHdfsURL() + location;
+
+		Object trainedModel = modelClass.getMethod("load", String.class).invoke(modelClass, location);
+		return trainedModel;
+	}
+
+	public boolean predict(Predict predict, ExecParams execParams, PredictExec predictExec) throws Exception {
+		boolean isSuccess = false;
+		try {
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.InProgress);
+			
+			MetaIdentifierHolder modelHolder = predict.getDependsOn();
+			MetaIdentifierHolder sourceHolder = predict.getSource();
+			MetaIdentifierHolder targetHolder = predict.getTarget();
+
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelHolder.getRef().getUuid(),
+					modelHolder.getRef().getVersion(), modelHolder.getRef().getType().toString());
+			Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+					sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+			Datapod target = null;
+			if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
+				target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
+						targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+			
+			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
+					model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
+					MetaType.algorithm.toString());
+
+			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
+			String filePath = "/predict"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
+			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
+
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+
+			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+			Object result = null;
+			
+			String[] fieldArray = modelExecServiceImpl.getAttributeNames(predict);
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			
+			String sql = getSQLBySource(source);
+			exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
+			
+			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+				String predictQuery = predictMLOperator.generateSql(predict, (tableName+"_pred_data"));
+				result = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, target, SaveMode.Append.toString(), appUuid);
+			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+				TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
+						model.getVersion());
+				if (trainExec == null)
+					throw new Exception("Executed model not found.");
+				
+				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
+				Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelName(), trainExec);
+				filePathUrl = exec.executePredict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
+				result = filePathUrl;
+			}
+			
+			dataStoreServiceImpl.setRunMode(Mode.BATCH);
+
+			dataStoreServiceImpl.create(filePathUrl, modelName,
+					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
+					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
+					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+
+			predictExec.setLocation(filePathUrl);
+			predictExec.setResult(resultRef);
+			commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
+			if (result != null) {
+				isSuccess = true;
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Completed);
+			}else {
+				isSuccess = false;
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.");
+			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
+		}
+		return isSuccess;
+	}
 }
