@@ -10,13 +10,18 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
+import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.SaveMode;
 
@@ -640,17 +645,60 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 
 				String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
-				String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(),
-						trainExec.getVersion());
-				String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(),
-						trainExec.getVersion());
+				String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+				String filePath = "/train"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+				String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
+
+				String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 
 				Datasource datasource = commonServiceImpl.getDatasourceByApp();
 				IExecutor exec = execFactory.getExecutor(datasource.getType());
-				result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath,
-						paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
+
+				String appUuid = commonServiceImpl.getApp().getUuid();
+				
+				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
+						train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
+				String sql = modelServiceImpl.getSQLBySource(source);
+				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
+				
+				//Object va = exec.assembleDF(fieldArray, (tableName+"_train_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
+				
+				PipelineModel trngModel = exec.trainModel(paramMap, fieldArray, model.getLabel(), algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				result = trngModel;
+				
+				List<String> customDirectories = new ArrayList<>();
+				Transformer[] transformers = trngModel.stages();
+				for (int i = 0; i < transformers.length; i++) {
+					customDirectories.add(i + "_" + transformers[i].uid());
+				}
+
+				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, sparkContext, filePathUrl);
+				if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
+					try {
+						String filePathUrl_2 = null;
+						if(filePathUrl.contains(hdfsInfo.getHdfsURL()))
+							filePathUrl_2 = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
+						String pmmlLocation = filePathUrl_2 + "/" + model.getUuid() + "_" + model.getVersion() + "_"
+								+ (filePathUrl_2.substring(filePathUrl_2.lastIndexOf("/") + 1)) + ".pmml";
+						boolean isSaved = exec.savePMML(trngModel, "trainedDataSet", pmmlLocation, appUuid);
+						if(isSaved)
+							logger.info("PMML saved at location: "+pmmlLocation);
+						else
+							logger.info("PMML not saved.");
+					 }catch (JAXBException e) {
+						e.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				if (isModelSved)
+					filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
+				else
+					filePathUrl = null;
+				
+				//result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath, paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
 				dataStoreServiceImpl.setRunMode(Mode.BATCH);
-				dataStoreServiceImpl.create((String) result, trainName,
+				dataStoreServiceImpl.create(filePathUrl, trainName,
 						new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()),
 						new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
 						trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
@@ -687,6 +735,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution failed.");
 			throw new RuntimeException((message != null) ? message : "Train execution failed.");			 		
 		}		

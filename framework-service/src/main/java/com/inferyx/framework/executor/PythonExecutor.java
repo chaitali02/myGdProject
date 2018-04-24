@@ -23,9 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -316,6 +319,42 @@ public class PythonExecutor implements IExecutor {
 			Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String assembleRandomDF(String[] fieldArray, String tableName, boolean isDistribution, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object assembleDF(String[] fieldArray, String tableName, String trainName, String label,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext)
+			throws IOException, JAXBException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
