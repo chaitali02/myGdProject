@@ -32,10 +32,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.GraphInfo;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
+import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
 import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
@@ -364,7 +364,18 @@ public class GraphRegister<T> {
 	IReconExecDao iReconExecDao;
 	@Autowired
 	IDistributionDao iDistributionDao;
+	@Autowired
+	IAppConfigDao iAppConfigDao;
 	
+
+	public IAppConfigDao getiAppConfigDao() {
+		return iAppConfigDao;
+	}
+
+	public void setiAppConfigDao(IAppConfigDao iAppConfigDao) {
+		this.iAppConfigDao = iAppConfigDao;
+	}
+
 
 	/**
 	 * @Ganesh

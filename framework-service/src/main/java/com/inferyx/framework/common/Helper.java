@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
+import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseEntity;
@@ -249,6 +250,7 @@ public class Helper {
 				case recongroup : return "iReconGroupDao";
 				case recongroupExec : return "iReconGroupExecDao";
 				case distribution : return "iDistributionDao";
+				case appConfig : return "iAppConfigDao";
 				
 				default:
 					return null;
@@ -351,6 +353,7 @@ public class Helper {
 		case recongroup : return ReconGroup.class;
 		case recongroupExec : return ReconGroupExec.class;
 		case distribution : return Distribution.class;
+		case appConfig : return AppConfig.class;
 
 		default:
 			return null;
@@ -424,6 +427,7 @@ public class Helper {
 				case "recongroup" : return MetaType.recongroup;
 				case "recongroupexec" : return MetaType.recongroupExec;
 				case "distribution" : return MetaType.distribution;
+				case "appConfig" : return MetaType.appConfig;
 
 				default : return null;
 			}

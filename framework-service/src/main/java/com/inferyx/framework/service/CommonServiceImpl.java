@@ -60,6 +60,7 @@ import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
+import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
 import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
@@ -157,7 +158,6 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-
 public class CommonServiceImpl <T> {
 
 	@Autowired
@@ -380,7 +380,17 @@ public class CommonServiceImpl <T> {
 	ReconGroupExecServiceImpl reconGroupExecServiceImpl;
 	@Autowired
 	IDistributionDao iDistributionDao;
+	@Autowired
+	IAppConfigDao iAppConfigDao;
 	
+
+	public IAppConfigDao getiAppConfigDao() {
+		return iAppConfigDao;
+	}
+
+	public void setiAppConfigDao(IAppConfigDao iAppConfigDao) {
+		this.iAppConfigDao = iAppConfigDao;
+	}
 
 	/**
 	 * @Ganesh
