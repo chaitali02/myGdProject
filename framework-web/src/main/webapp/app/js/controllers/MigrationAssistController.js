@@ -672,6 +672,9 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
   }
 
   $scope.selectButtonClick=function(row, $event){
+    if(typeof $stateParams.id != "undefined"){
+      return false;
+    }
     $scope.isValidate=true;
     $scope.isSubmitEnable=false;
     $scope.gridOptionsDatapod.data[row.id].status=" "
