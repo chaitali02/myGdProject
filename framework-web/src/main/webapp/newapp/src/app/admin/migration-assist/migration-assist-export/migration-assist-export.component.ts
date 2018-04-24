@@ -5,10 +5,11 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
+import { MigrationAssistService } from '../../../metadata/services/migration-assist.services';
+
 @Component({
   selector: 'app-migration-assist-export',
-  templateUrl: './migration-assist-export.component.html',
-  styleUrls: ['./migration-assist-export.component.css']
+  templateUrl: './migration-assist-export.template.html'
 })
 export class MigrationAssistExportComponent implements OnInit {
 
@@ -39,7 +40,7 @@ export class MigrationAssistExportComponent implements OnInit {
   includeDep: any;
   location: any;
 
-  constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
+  constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, private router: Router, private _commonService: CommonService, private _migrationAssist : MigrationAssistService) {
     this.showExportData = true;
     this.exportData = {};
     this.exportData["active"] = true
@@ -47,10 +48,10 @@ export class MigrationAssistExportComponent implements OnInit {
 
     this.breadcrumbDataFrom = [{
       "caption": "Admin",
-      "routeurl": "/app/list/application"
+      "routeurl": "/app/list"
     },
     {
-      "caption": "Application",
+      "caption": "Migration Assist",
       "routeurl": "/app/list/migration-assist"
     },
     {
@@ -169,7 +170,7 @@ export class MigrationAssistExportComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    this.breadcrumbDataFrom[2].caption = response.name;
+    this.breadcrumbDataFrom[3].caption = response.name;
     this.exportData = response;
     this.createdBy = response.createdBy.ref.name;
     this.uuid = response.uuid;
@@ -261,10 +262,10 @@ export class MigrationAssistExportComponent implements OnInit {
     }
     exportJson["metaInfo"] = metaInfoNew;
 
-    exportJson["active"] = this.exportData.active == true ? 'Y' : "N"
+    //exportJson["active"] = this.exportData.active == true ? 'Y' : "N"
     exportJson["includeDep"] = this.exportData.includeDep;
     console.log(JSON.stringify(exportJson));
-    this._commonService.submit("export", exportJson).subscribe(
+    this._migrationAssist.exportSubmit("export", exportJson).subscribe( 
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
@@ -281,7 +282,6 @@ export class MigrationAssistExportComponent implements OnInit {
   }
 
   public goBack() {
-    //  this._location.back();
-    this.router.navigate(['app/admin/migration-assist']);
+      this._location.back();
   }
 }

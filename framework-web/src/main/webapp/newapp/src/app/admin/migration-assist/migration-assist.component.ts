@@ -12,7 +12,7 @@ import { Http } from '@angular/http';
 
 @Component({
   selector: 'app-migration-assist',
-  templateUrl: './migration-assist.component.html',
+  templateUrl: './migration-assist.template.html',
 })
 
 export class MigrationAssistComponent implements OnInit {
@@ -28,7 +28,8 @@ export class MigrationAssistComponent implements OnInit {
   status: any;
   rowData1: any;
   cols: any;
-  items: any;
+  itemsExport: any;
+  itemsImport : any;
   gridTitle: any;
   username: any;
   endDate: any;
@@ -119,7 +120,7 @@ export class MigrationAssistComponent implements OnInit {
   ];
 
   constructor(private activatedRoute: ActivatedRoute, private config: AppConfig, public router: Router, private _commonService: CommonService, private _location: Location, private _commonListService: CommonListService, public metaconfig: AppMetadata, private activeroute: ActivatedRoute) {
-
+    this.rowData1 = null;
     this.breadcrumbDataFrom = [
       {
         "caption": "Admin",
@@ -129,6 +130,7 @@ export class MigrationAssistComponent implements OnInit {
         "caption": "Migration Assist",
         "routeurl": ""
       }
+      
     ]
     this.cols = [
       //  {field: 'uuid', header: 'UUID'},
@@ -138,7 +140,7 @@ export class MigrationAssistComponent implements OnInit {
       { field: 'createdOn', header: 'Created On' },
       // {field: 'status', header: 'Status'},
     ];
-    this.items = [
+    this.itemsExport = [
       {
         label: 'View', icon: 'fa fa-eye', command: (onclick) => {
           this.view(this.rowUUid, this.rowVersion);
@@ -150,10 +152,22 @@ export class MigrationAssistComponent implements OnInit {
         }
       },
       {
-        label: 'Download Archive', icon: 'fa fa-file-pdf-o', command: (onclick) => {
+        label: 'Download Archive', icon: 'fa fa-file-archive-o', command: (onclick) => {
           this.download(this.row)
         }
       }
+    ]
+    this.itemsImport = [
+      {
+        label: 'View', icon: 'fa fa-eye', command: (onclick) => {
+          this.view(this.rowUUid, this.rowVersion);
+        }
+      },
+      {
+        label: 'Export', icon: 'fa fa-file-pdf-o', command: (onclick) => {
+          this.export(this.rowUUid, this.rowName)
+        }
+      }          
     ]
   }
 
@@ -174,6 +188,7 @@ export class MigrationAssistComponent implements OnInit {
     this.getAllLatestUser();
     this.getBaseEntityByCriteria("export");
     this.gridTitle = "Export Details"
+   // this.breadcrumbDataFrom[2].caption = this.moduleType;
   }
 
   onClickMenu(data) {
@@ -215,19 +230,11 @@ export class MigrationAssistComponent implements OnInit {
   }
  
   download(rowDownload) {
+    
     this.uuidAPI = rowDownload.uuid;
-   
-    alert(this.uuidAPI)
     this._commonService.downloadExport(this.uuidAPI)
     .subscribe(
-    response => { this.onSucessdownloadExport(response) 
-  
-      // var jsonobj = JSON.stringify(this.row);
-      // const filename = this.uuidAPI + '.zip';
-      // const blob = new Blob([jsonobj], { type: 'application/json;charset=utf-8' });
-      // saveAs(blob, filename);
-      // this.msgs = [];
-      // this.msgs.push({ severity: 'success', summary: 'Success Message', detail: this.gridTitle + ' Downloaded Successfully' });
+    response => { this.onSucessdownloadExport(response)   
     },
       
     error => console.log("Error :: error found" + error)
@@ -235,32 +242,31 @@ export class MigrationAssistComponent implements OnInit {
   }
  
   onSucessdownloadExport(response) {
-    console.log('api call success')
-    console.log(response.headers)
-   // headers = headers();
+    let headersLocal = new Headers();
+    let filename = headersLocal['filename'];
+    let contentType = 'application/zip'//headersLocal['content-type'];
+    let linkElement = document.createElement('a');
+    try {
+    //  let jsonobj = JSON.stringify(response["_body"]);
+      const blob = new Blob([response], {
+        type: contentType
+      });
+      console.log(blob)
+      //saveAs(blob, filename);
+      let url = window.URL.createObjectURL(blob);
 
+      linkElement.setAttribute('href', url);
+      linkElement.setAttribute('download', this.uuidAPI+'.zip');
 
-    // let filename = 's.z'//this.headers['filename'];
-    // let contentType ="application/json"// this.headers['content-type'];
-    // let linkElement = document.createElement('a');
-    // try {
-    //   let blob = new Blob([this.row], {
-    //     type: contentType
-    //   });
-    //   let url = window.URL.createObjectURL(blob);
-
-    //   linkElement.setAttribute('href', url);
-    //   linkElement.setAttribute("download", this.uuidAPI + ".zip");
-
-    //   let clickEvent = new MouseEvent("click", {
-    //     "view": window,
-    //     "bubbles": true,
-    //     "cancelable": false
-    //   });
-    //   linkElement.dispatchEvent(clickEvent);
-    // }catch (ex) {
-    //   console.log(ex);
-    // }
+      let clickEvent = new MouseEvent("click", {
+        "view": window,
+        "bubbles": true,
+        "cancelable": false
+      });
+      linkElement.dispatchEvent(clickEvent);
+    }catch (ex) {
+      console.log(ex);
+    }
   }
 
 
@@ -340,6 +346,7 @@ export class MigrationAssistComponent implements OnInit {
 
   onTabChange(event) {
     if (event.index == "0") {
+      
       this.clear();
       this.moduleType = "export"
       this.cols = [
@@ -356,13 +363,13 @@ export class MigrationAssistComponent implements OnInit {
       console.log('hello1')
     }
     else if (event.index == "1") {
-
+      
       this.clear()
       this.moduleType = "import"
       this.cols = [
         //{field: 'appName', header: 'Name'},
         //{field: 'type', header: 'Meta'},
-        { field: 'app', header: 'Name' },
+        { field: 'name', header: 'Name' },
         { field: 'version', header: 'Version' },
         { field: 'createdBy.ref.name', header: 'Created By' },
         { field: 'createdOn', header: 'Created On' },
@@ -389,7 +396,8 @@ export class MigrationAssistComponent implements OnInit {
       )
   }
 
-  onSuccessgetBaseEntityByCriteria(response) {
+  onSuccessgetBaseEntityByCriteria(response){
+    
     this.rowData1 = response;
    // console.log(JSON.stringify(this.rowData1));
   }

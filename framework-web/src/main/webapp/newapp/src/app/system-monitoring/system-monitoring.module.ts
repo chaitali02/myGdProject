@@ -7,14 +7,13 @@ import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { MessagesModule} from 'primeng/primeng';
 import { MessageModule} from 'primeng/primeng';
-import {NgSelectModule, NgOption} from '@ng-select/ng-select';
 import {DropdownModule,SelectItem} from 'primeng/primeng';
 import {DataTableModule,SharedModule} from 'primeng/primeng';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { SystemMonitoringComponent} from './system-monitoring.component';
 import {GrowlModule} from 'primeng/primeng';
-import { DatePickerModule } from 'angular-io-datepicker';
-import { OverlayModule } from 'angular-io-overlay';
+// import { DatePickerModule } from 'angular-io-datepicker';
+// import { OverlayModule } from 'angular-io-overlay';
 import { BsDropdownModule } from 'ngx-bootstrap';
 import {TabViewModule} from 'primeng/primeng';
 import { routing1 } from './system-monitoring-routing.module';
@@ -34,21 +33,19 @@ import { SystemMonitoringService } from '../metadata/services/systemMonitoring.s
         TagInputModule,
         MessagesModule,
         MessageModule,
-        NgSelectModule,
+        //NgSelectModule,
         DropdownModule,
         DataTableModule,
         SharedModule,
         GrowlModule ,
         TagInputModule,
-        DatePickerModule,
-        OverlayModule,
+      //  DatePickerModule,
+      //  OverlayModule,
         BsDropdownModule,
         TabViewModule,
         MenuModule,
         ButtonModule,
         CalendarModule,
-        
-        //SelectModule
 
         
     ],

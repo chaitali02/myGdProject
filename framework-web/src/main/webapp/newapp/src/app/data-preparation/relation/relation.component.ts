@@ -323,7 +323,7 @@ onChangePublish(event) {
     this.relationData.published = 'N';
   }
 }
-selectAllSubRow(index){
+selectAllSubRow(index){debugger
   (this.relationTableArray[index].joinKey).forEach(joinkey => {
     joinkey.selected = this.relationTableArray[index].selectalljoinkey;
   });

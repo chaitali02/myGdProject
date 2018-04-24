@@ -442,7 +442,7 @@ export class CommonListComponent {
         "functionName":"okRestart()"
         }
     }
-    upload(uuid,name) {
+    upload(uuid,name) {debugger
         this.UploadId=uuid;
         this.uploadName=name;
         jQuery(this.fileupload.nativeElement).modal('show');

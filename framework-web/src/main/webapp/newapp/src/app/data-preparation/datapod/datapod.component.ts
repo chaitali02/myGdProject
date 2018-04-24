@@ -1,4 +1,4 @@
-import { version } from './../../../../../../../../target/framework/app/bower_components/moment/moment.d';
+// import { version } from './../../../../../../../../target/framework/app/bower_components/moment/moment.d';
 import { NgModule, Component, ViewEncapsulation, Input } from '@angular/core';
 import { MetaDataDataPodService } from './datapod.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';

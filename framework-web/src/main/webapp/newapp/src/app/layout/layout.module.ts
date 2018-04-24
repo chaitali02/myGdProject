@@ -6,12 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular/main';
 import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
-import { DatePickerModule } from 'angular-io-datepicker';
-import { OverlayModule } from 'angular-io-overlay';
+// import { DatePickerModule } from 'angular-io-datepicker';
+// import { OverlayModule } from 'angular-io-overlay';
 import { BsDropdownModule } from 'ngx-bootstrap';
 import {GrowlModule} from 'primeng/primeng';
 import { PaginationModule } from 'ngx-bootstrap';
-import {SelectModule} from 'ng-select';
+// import {SelectModule} from 'ng-select';
 import {DataTableModule,SharedModule} from 'primeng/primeng';
 import {MenuModule,MenuItem} from 'primeng/primeng';
 import {ButtonModule} from 'primeng/primeng';
@@ -58,14 +58,14 @@ import {OrderByMeta} from '../metadata-navigator/pipes/orderBy';
         UiSwitchModule,
         TagInputModule,
         routing1,
-        DatePickerModule,
-        OverlayModule,
+        // DatePickerModule,
+        // OverlayModule,
         BsDropdownModule.forRoot(),
         MessagesModule,
         MessageModule,
         ProjectSharedModule,
         PaginationModule.forRoot(),
-        SelectModule,
+        //SelectModule,
         DataTableModule,
         SharedModule,
         MenuModule,
