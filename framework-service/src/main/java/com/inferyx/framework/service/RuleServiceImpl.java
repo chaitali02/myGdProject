@@ -61,6 +61,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Rule;
@@ -400,9 +401,13 @@ public class RuleServiceImpl extends RuleTemplate {
 	public RuleExec create(String ruleUUID, String ruleVersion, RuleExec ruleExec,
 			java.util.Map<String, MetaIdentifier> refKeyMap, ExecParams execParams, List<String> datapodList,
 			DagExec dagExec) throws Exception {
-		try {
+		try {			
 			ruleExec = (RuleExec) super.create(ruleUUID, ruleVersion, MetaType.rule, MetaType.ruleExec, ruleExec,
 					refKeyMap, datapodList, dagExec);
+			if(execParams != null) {
+				ruleExec.setExecParams(execParams);
+				commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -743,7 +748,12 @@ public class RuleServiceImpl extends RuleTemplate {
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule = (Rule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule.toString());
-		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, null, usedRefKeySet, null, runMode));
+		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, null, usedRefKeySet, ruleExec.getExecParams(), runMode));
+		if(rule.getParamList() != null) {
+			MetaIdentifier mi = rule.getParamList().getRef();
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString());
+			usedRefKeySet.add(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+		}
 		ruleExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		logger.info("sql_generated: " + ruleExec.getExec());
 		synchronized (ruleExec.getUuid()) {
