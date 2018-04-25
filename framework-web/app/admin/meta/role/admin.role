@@ -4849,6 +4849,87 @@
 		            "name" : "SessionExport"
 				},
 				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "3c8948ba-1616-4841-bd56-0a942ddfa5c2",
+		 			"version" : null,
+		            "name" : "AppConfigView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "e9fff3ad-f556-49dd-be2d-4c795776310a",
+		 			"version" : null,
+		            "name" : "AppConfigUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2c7c3c0c-0a5e-4703-b5ee-3650c418c5f4",
+		 			"version" : null,
+		            "name" : "AppConfigRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "ab163df0-91a6-413d-ad82-b32e5cb7ca7c",
+		 			"version" : null,
+		            "name" : "AppConfigPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "4fc3fe19-3de5-4a04-ab99-0a705d4389d7",
+		 			"version" : null,
+		            "name" : "AppConfigExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "16da94c5-4d12-480a-add0-4eb95ee707a7",
+		 			"version" : null,
+		            "name" : "AppConfigEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "1beaff02-19c1-4564-8f64-d7d55b2bd75b",
+		 			"version" : null,
+		            "name" : "AppConfigDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "46da8cde-64d5-4a40-b7b5-e3237a8c8b7f",
+		 			"version" : null,
+		            "name" : "AppConfigClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "88ce6434-5e9c-4ea0-ab5f-fdfa44150dbf",
+		 			"version" : null,
+		            "name" : "AppConfigAdd"
+				},
+				"value" : null
 		}
     ]
 }
