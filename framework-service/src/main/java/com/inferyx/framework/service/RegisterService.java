@@ -4322,7 +4322,7 @@ public class RegisterService {
 		}
 		return result;
 	}
-	public List<RuleExec> getRuleExecByRule(String ruleUuid, String startDate, String endDate, String type, String action) {
+	public List<RuleExec> getRuleExecByRule(String ruleUuid, String startDate, String endDate, String type, String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		Query query = new Query();
 		query.fields().include("statusList");
 		query.fields().include("dependsOn");
@@ -4343,6 +4343,10 @@ public class RegisterService {
 		try {
 			if ((startDate != null	&& !StringUtils.isEmpty(startDate))
 				&& (endDate != null	&& !StringUtils.isEmpty(endDate)))
+
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y")); 
+			
 			query.addCriteria(Criteria.where("createdOn").gt(simpleDateFormat.parse(startDate))
 						.lte(simpleDateFormat.parse(endDate)));
 			
