@@ -1540,6 +1540,19 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState : '',
       childMenu:[],
       allowInChildMenu : false,
+    },
+    'appconfig':{
+      name : 'appconfig',
+      caption :'App Config',
+      execType:'', 
+      metaType:'appConfig',
+      color : '#c6ff00',
+      iconCaption:'',
+      detailState: 'createappconfig',
+      allowInMenu :false,
+      listState : '',
+      childMenu:[],
+      allowInChildMenu : false,
 	  }
   };
 

@@ -243,7 +243,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException {
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		return registerService.getRuleExecByRule(ruleUuid, startDate, endDate, type, action);
 	}
 	
