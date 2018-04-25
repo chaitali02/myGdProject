@@ -6,13 +6,19 @@ var notify = {
   title: 'Success',
   timeout: 3000 //time in ms
 };
-AdminModule.controller('settingsController', function ($scope, $window, SettingsService,dagMetaDataService,CommonService,FileSaver,Blob,$filter,$state,privilegeSvc) {
+AdminModule.controller('settingsController', function ($scope,$stateParams,$window, SettingsService,dagMetaDataService,CommonService,FileSaver,Blob,$filter,$state,privilegeSvc) {
 
-  $scope.activeForm = 0
-  
+
+  $scope.activeForm = 0;
   $scope.go = function (index) {
     $scope.tabIndex = index
   }
+  if (typeof $stateParams.index != "undefined") {
+  $scope.activeForm=$stateParams.index;
+  $scope.activeForm =  parseInt($stateParams.index);
+  $scope.go($stateParams.index);
+  }
+ 
 
 
   //*******************************************Start General,Rule,Meta Engin********************************************************** 
@@ -178,10 +184,10 @@ $scope.caption= dagMetaDataService.elementDefs['appconfig'].caption;
 $scope.detailState = dagMetaDataService.elementDefs[$scope.selectType.toLowerCase()].detailState;
 $scope.gridOptions = dagMetaDataService.gridOptions;
 $scope.privileges = [];
-$scope.privileges = privilegeSvc.privileges[$scope.selectType] || [];
+$scope.privileges = privilegeSvc.privileges[$scope.selectType.toLowerCase()] || [];
  
 $scope.$on('privilegesUpdated', function (e, data) {
-  $scope.privileges = privilegeSvc.privileges[$scope.selectType] || [];  
+  $scope.privileges = privilegeSvc.privileges[$scope.selectType.toLowerCase()] || [];  
 });
 
 $scope.filteredRows = [];
