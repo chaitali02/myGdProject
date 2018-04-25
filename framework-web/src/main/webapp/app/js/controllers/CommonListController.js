@@ -312,7 +312,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       // $rootScope.refreshSearchResults();
       //$scope.originalData.splice($scope.originalData.indexOf(data),1);
       data.published = unpublish ? 'N' : 'Y';
-
       $scope.publishmessage = $scope.caption + (unpublish ? " Unpublished" : " Published") + " Successfully";
       //  $('#showMsgModel').modal('show');
     }
@@ -327,7 +326,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.$emit('notify', notify);
     });
   }
-    
   $('#publishedConfModal').modal({
     backdrop: 'static',
     keyboard: false
@@ -355,7 +353,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.createCopy = function (data) {
-
     $scope.setActivity(data.uuid, data.version, $scope.select, "clone");
     var uuid = data.uuid;
     var version = data.version;
@@ -393,6 +390,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.$emit('notify', notify);
     }
   }
+  
   $scope.getAllLatest=function(){
     CommonService.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
 		var onSuccessGetAllLatest = function (response) {
