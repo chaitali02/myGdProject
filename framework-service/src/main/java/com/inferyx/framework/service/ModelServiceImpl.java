@@ -154,6 +154,7 @@ public class ModelServiceImpl {
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	MetadataUtil commonActivity;
+	@Autowired
 	private PredictMLOperator predictMLOperator;
 	@Autowired
 	private DatasetOperator datasetOperator;
