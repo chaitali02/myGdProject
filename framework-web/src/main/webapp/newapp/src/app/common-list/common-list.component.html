@@ -1,13 +1,13 @@
-<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
 <br>
-<p-growl [(value)]="msgs" ></p-growl>
+<p-growl [(value)]="msgs"></p-growl>
 <div class="portlet box green">
   <div class="portlet-title">
     <div class="caption">
       <i class="icon-magnifier"></i>Search Criteria
     </div>
     <div class="tools">
-      <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refershGrid()" data-original-title=""  title="">
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refershGrid()" data-original-title="" title="">
         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
       </a>
       <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
@@ -22,12 +22,10 @@
               <label class="control-label col-md-3 col-sm-3 col-xs-6">Type</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
                 <label class="control-label" style="padding-right: 5%;">
-                  <input type="radio"  ng-control="selectedType" (change)="onChange(types[0].value)" [checked]="true" name="selectedType" [value]="types[0].value" >
-                  {{types[0].caption}}
+                  <input type="radio" ng-control="selectedType" (change)="onChange(types[0].value)" [checked]="true" name="selectedType" [value]="types[0].value"> {{types[0].caption}}
                 </label>
                 <label class="control-label">
-                  <input type="radio"  ng-control="selectedType"  (change)="onChange(types[1].value)"  name="selectedType" [value]="types[1].value">
-                  {{types[1].caption}}
+                  <input type="radio" ng-control="selectedType" (change)="onChange(types[1].value)" name="selectedType" [value]="types[1].value"> {{types[1].caption}}
                 </label>
               </div>
 
@@ -37,15 +35,12 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="col-md-4 col-sm-6 col-xs-12 custpadding" >
+          <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6">Name</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                  <ng-select 
-                  [options]="allExecName"
-                  [(ngModel)]="execname"
-                  placeholder="--Select--"
-                  name="execname" style="z-index:100"></ng-select>
+                <p-dropdown [options]="allExecName" [(ngModel)]="execname" name="execname" [style]="{'width':'100%','padding':'3px'}" [filter]="true">
+                </p-dropdown>
               </div>
             </div>
           </div>
@@ -60,7 +55,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-3 col-sm-6 col-xs-12 custpadding" >
+          <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Tags</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
@@ -74,13 +69,10 @@
         <div class="col-md-12">
           <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select" >User</label>
+              <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select">User</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                  <ng-select 
-                  [options]="allUserName"
-                  [(ngModel)]="username"
-                  placeholder="--Select--"
-                  name="username" style="z-index:100"></ng-select>
+                <p-dropdown [options]="allUserName" [(ngModel)]="username" name="username" [style]="{'width':'100%','padding':'3px'}" [filter]="true">
+                </p-dropdown>
               </div>
             </div>
           </div>
@@ -89,31 +81,26 @@
               <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
               <div class="col-md-9 col-sm-9 col-xs-9">
                 <form #form="ngForm">
-                  <!-- <date-picker mode="datetime" format="ddd MMM D HH:mm:ss YYYY" [(ngModel)]="endDate" name="endDate"></date-picker> -->
                   <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="endDate" name="endDate" [showTime]="true" [utc]="true" [showIcon]="true"></p-calendar>
                 </form>
               </div>
             </div>
           </div>
-          <div class="col-md-3 col-sm-6 col-xs-12 custpadding" >
+          <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
             <div class="form-group" *ngIf="isExec=='false'">
               <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Status</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                  <ng-select 
-                  [options]="allActive"
-                  [(ngModel)]="active"
-                  placeholder="All"
-                  name="active" style="z-index:99"></ng-select>
+                <p-dropdown [options]="allActive" [(ngModel)]="active" name="active" placeholder="All" [style]="{'width':'100%','padding':'3px'}"
+                  [filter]="true">
+                </p-dropdown>
               </div>
             </div>
             <div class="form-group" *ngIf="isExec=='true'">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                  <ng-select 
-                  [options]="allStatus"
-                  [(ngModel)]="status"
-                  placeholder="All"
-                  name="status" style="z-index:99"></ng-select>
+                <p-dropdown [options]="allStatus" [(ngModel)]="status" name="status" placeholder="All" [style]="{'width':'100%','padding':'3px'}"
+                  [filter]="true">
+                </p-dropdown>
               </div>
             </div>
           </div>
@@ -122,7 +109,7 @@
 
       <div class="row">
         <div class="col-md-12">
-          <div class="col-md-4 col-sm-6 col-xs-12 custpadding" >
+          <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
               <div class="col-md-9 col-sm-9 col-xs-6">
@@ -130,7 +117,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-3 col-sm-6 col-xs-12 custpadding" >
+          <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
 
           </div>
         </div>
@@ -139,157 +126,166 @@
   </div>
 </div>
 <div class="portlet box green">
-<div class="portlet-title">
-<div class="caption">
-  <i class="fa fa-cogs"></i><span [innerHTML]="gridTitle"></span></div>
-<div class="actions">
-  <a *ngIf="isExec=='false'" (click)="add()" class="btn btn-default btn-sm">
-    <i class="fa fa-plus" ></i> Add </a>
-    <div class="btn-group" dropdown style="text-align:center" *ngIf="isExec=='false'">
-      <button dropdownToggle type="button" class="btn btn-default btn-sm dropdown-toggle">
-      Export <span class="caret"></span>
-      </button>
-      <ul *dropdownMenu class="dropdown-menu" role="menu">
-      <li><a (click)="dt.exportCSV()"> Export All (.csv) </a></li>
-      <li><a (click)="dt.exportCSV({selectionOnly:true})"> Export Selected (.csv)</a></li>
-    </ul>
+  <div class="portlet-title">
+    <div class="caption">
+      <i class="fa fa-cogs"></i>
+      <span [innerHTML]="gridTitle"></span>
+    </div>
+    <div class="actions">
+      <a *ngIf="isExec=='false'" (click)="add()" class="btn btn-default btn-sm">
+        <i class="fa fa-plus"></i> Add </a>
+      <div class="btn-group" dropdown style="text-align:center" *ngIf="isExec=='false'">
+        <button dropdownToggle type="button" class="btn btn-default btn-sm dropdown-toggle">
+          Export
+          <span class="caret"></span>
+        </button>
+        <ul *dropdownMenu class="dropdown-menu" role="menu">
+          <li>
+            <a (click)="dt.exportCSV()"> Export All (.csv) </a>
+          </li>
+          <li>
+            <a (click)="dt.exportCSV({selectionOnly:true})"> Export Selected (.csv)</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="tools" *ngIf="isExec=='true'">
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="refreshSearchResults()">
+        <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
+        </i>
+      </a>
+      <a href="javascript:;" class="collapse aSize" style="height:14px;">
+      </a>
+    </div>
   </div>
-</div>
-<div class="tools" *ngIf="isExec=='true'">
-  <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="refreshSearchResults()">
-    <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
-    </i>
-  </a>
-  <a href="javascript:;" class="collapse aSize" style="height:14px;">
-  </a>
-  </div>
-  </div>
-  <div class="portlet-body" > 
-      <div class="row">
-          <div class="col-md-12 col-sm-12">
-            <div class="col-md-3 col-md-offset-9" style="padding:4px 10px;border-bottom: 0 none">
-                <i class="fa fa-search" style="margin-left: 12%; margin-top: 2%;"></i>
-                <input #gb type="text" style="float:right;" pInputText  placeholder="Search">
-              </div>
-          </div>
+  <div class="portlet-body">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="col-md-3 col-md-offset-9" style="padding:4px 10px;border-bottom: 0 none">
+          <i class="fa fa-search" style="margin-left: 12%; margin-top: 2%;"></i>
+          <input #gb type="text" style="float:right;" pInputText placeholder="Search">
         </div>
-      <br>
-  <div class="row">
+      </div>
+    </div>
+    <br>
+    <div class="row">
       <div class="col-md-12" *ngIf="rowData1">
-          <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData"  (onRowSelect)="onRowSelect($event)" selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
-              <!-- <p-column field="uuid" header="UUID" [sortable]="true"></p-column> -->
-              <p-column field="name" header="Name" [sortable]="true"></p-column>
-              <p-column field="version" header="Version" [sortable]="true"></p-column>
-              <p-column field="createdBy.ref.name" header="Created By" [sortable]="true"></p-column>
-              <p-column field="createdOn" header="Created On" [sortable]="true"></p-column>
-              <p-column field="active" [hidden]="isExec=='true'" header="Active" [sortable]="true" [style]="{'text-align':'center'}">
-                <ng-template let-colactive let-active="rowData" pTemplate="body">
-                  {{formatActive(active[colactive.field])}}
-                </ng-template>
-              </p-column>
-              <p-column field="status.stage" [hidden]="isExec=='false'"   header="Status" [sortable]="true" [style]="{'text-align':'center'}">
-                <ng-template let-colstatus let-statused="rowData" pTemplate="body">                            
-                  <div class="label-sm label-success" *ngIf="statused.status!=null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':statused.status.color}">{{statused.status.stage}}</div>
-                  <div class="label-sm label-success" *ngIf="statused.status==null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#36c6d3'}">-N-A-</div>
-                </ng-template>
-              </p-column>
-              <!-- <p-column field="status.stage" *ngIf="status==null" [hidden]="isExec=='false'"   header="Status" [sortable]="true" [style]="{'text-align':'center'}">
+        <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" (onRowSelect)="onRowSelect($event)"
+          selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
+          [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
+          <!-- <p-column field="uuid" header="UUID" [sortable]="true"></p-column> -->
+          <p-column field="name" header="Name" [sortable]="true"></p-column>
+          <p-column field="version" header="Version" [sortable]="true"></p-column>
+          <p-column field="createdBy.ref.name" header="Created By" [sortable]="true"></p-column>
+          <p-column field="createdOn" header="Created On" [sortable]="true"></p-column>
+          <p-column field="active" [hidden]="isExec=='true'" header="Active" [sortable]="true" [style]="{'text-align':'center'}">
+            <ng-template let-colactive let-active="rowData" pTemplate="body">
+              {{formatActive(active[colactive.field])}}
+            </ng-template>
+          </p-column>
+          <p-column field="status.stage" [hidden]="isExec=='false'" header="Status" [sortable]="true" [style]="{'text-align':'center'}">
+            <ng-template let-colstatus let-statused="rowData" pTemplate="body">
+              <div class="label-sm label-success" *ngIf="statused.status!=null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':statused.status.color}">{{statused.status.stage}}</div>
+              <div class="label-sm label-success" *ngIf="statused.status==null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#36c6d3'}">-N-A-</div>
+            </ng-template>
+          </p-column>
+          <!-- <p-column field="status.stage" *ngIf="status==null" [hidden]="isExec=='false'"   header="Status" [sortable]="true" [style]="{'text-align':'center'}">
                   <ng-template let-colstatus let-statused="rowData" pTemplate="body">                            
                   -N-A-
                   </ng-template>
                 </p-column> -->
-              <p-column field="published" [hidden]="isExec=='true'" header="Published" [sortable]="true" [style]="{'text-align':'center'}">
-                <ng-template let-colpublished let-published="rowData" pTemplate="body">
-                  {{formatPublish(published[colpublished.field])}}
-                  
-                </ng-template>
-              </p-column>
-              <p-column  header="Action">
-                  <ng-template let-col let-car="rowData" pTemplate="body">
-                      <p-menu #menu popup="popup" [model]="items" appendTo="body"></p-menu>
-                      <div style="text-align: center;">
-                      <button type="button" pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(car);"></button>  
-                    </div>                      
-                    </ng-template>
-              </p-column>                    
-          </p-dataTable>
-        </div>
+          <p-column field="published" [hidden]="isExec=='true'" header="Published" [sortable]="true" [style]="{'text-align':'center'}">
+            <ng-template let-colpublished let-published="rowData" pTemplate="body">
+              {{formatPublish(published[colpublished.field])}}
+
+            </ng-template>
+          </p-column>
+          <p-column header="Action">
+            <ng-template let-col let-car="rowData" pTemplate="body">
+              <p-menu #menu popup="popup" [model]="items" appendTo="body"></p-menu>
+              <div style="text-align: center;">
+                <button type="button" pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(car);"></button>
+              </div>
+            </ng-template>
+          </p-column>
+        </p-dataTable>
       </div>
     </div>
   </div>
-  <div *ngIf="isModel=='true'" class="model">
-  <app-model [ModelData]="ModelDataFrom" (parentFunction)="ok($event)" ></app-model>
-    </div>
-    <div class="paramModel">
-    <div #ParamsModel id="ParamsModel" class="modal fade bs-modal-lg in   " tabindex="-1" aria-hidden="true" style="display: none;">
-      <div class="modal-dialog">
-        <div class="modal-content" style="resize: both;overflow: auto;">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-            <h4 class="modal-title">{{gridTitle}} Execution</h4>
-          </div>
-          <div class="modal-body">
-            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 300px;">
-              <div class="scroller" style="height: 300px; overflow: hidden; width: auto;" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-                <div class="row">
-                  <div class="col-md-12">
-                    <br>
-                    <form class="form-horizontal">
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set
-                          </label>
-                        <div class="col-md-6">
-                            <p-dropdown [options]="allparamset"          
-                            [(ngModel)]="paramsetdata"
-                            name="paramsetdata"
-                            [disabled]="mode == 'true'"
-                            [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true"
-                            (onChange)="onSelectparamSet()"
-                            >
-                            </p-dropdown>
-                          <!-- <select class="form-control" [(ngModel)]="paramsetdata" name="paramsetdata" (ngModelChange)="onSelectparamSet()">
+</div>
+<div *ngIf="isModel=='true'" class="model">
+  <app-model [ModelData]="ModelDataFrom" (parentFunction)="ok($event)"></app-model>
+</div>
+<div class="paramModel">
+  <div #ParamsModel id="ParamsModel" class="modal fade bs-modal-lg in   " tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content" style="resize: both;overflow: auto;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">{{gridTitle}} Execution</h4>
+        </div>
+        <div class="modal-body">
+          <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 300px;">
+            <div class="scroller" style="height: 300px; overflow: hidden; width: auto;" data-always-visible="1" data-rail-visible1="1"
+              data-initialized="1">
+              <div class="row">
+                <div class="col-md-12">
+                  <br>
+                  <form class="form-horizontal">
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set
+                      </label>
+                      <div class="col-md-6">
+                        <p-dropdown [options]="allparamset" [(ngModel)]="paramsetdata" name="paramsetdata" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                          [filter]="true" (onChange)="onSelectparamSet()">
+                        </p-dropdown>
+                        <!-- <select class="form-control" [(ngModel)]="paramsetdata" name="paramsetdata" (ngModelChange)="onSelectparamSet()">
                               <option *ngFor="let app of allparamset;" [ngValue]="app">{{app.name}}</option>
                             </select> -->
-                        </div>
                       </div>
-                    </form>
-                    <br>
-                    <div *ngIf="isTabelShow ==true" style="overflow-x: auto;">
-                      <table class=" row-border hover table  table-striped table-bordered">
-                        <thead>
-                          <tr>
-                            <th style="text-align:center;Vertical-align: middle;width:5%;">
-                              <input style="width:16px;height:16px;" type="checkbox" [disabled]="false" [(ngModel)]="selectallattribute" (ngModelChange)="selectAllRow()"/><!--onChange="selectAllRow()"-->
-                            </th>
-                            <th style="width:6%;text-align:center">ID</th>
-                            <th class="text-center" *ngFor="let tablecol of paramtablecol">{{tablecol.paramName}}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let tabledata of paramtable">
-                            <td style="text-align:center;Vertical-align:middle;width:5%;">
-                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="tabledata.selected" /></td>
-                            <td style="width:6%;"><input type="text" [(ngModel)]="tabledata.paramSetId" name="tabledata.paramSetId" [disabled]="true" class="form-control">
-                            </td>
-                            <td style="width:20%;" *ngFor="let tablecol of tabledata.paramSetVal"><input type="text" [(ngModel)]="tablecol.value" name="tablecol.value" [disabled]="true" class="form-control">
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
                     </div>
+                  </form>
+                  <br>
+                  <div *ngIf="isTabelShow ==true" style="overflow-x: auto;">
+                    <table class=" row-border hover table  table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th style="text-align:center;Vertical-align: middle;width:5%;">
+                            <input style="width:16px;height:16px;" type="checkbox" [disabled]="false" [(ngModel)]="selectallattribute" (ngModelChange)="selectAllRow()"/>
+                            <!--onChange="selectAllRow()"-->
+                          </th>
+                          <th style="width:6%;text-align:center">ID</th>
+                          <th class="text-center" *ngFor="let tablecol of paramtablecol">{{tablecol.paramName}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let tabledata of paramtable">
+                          <td style="text-align:center;Vertical-align:middle;width:5%;">
+                            <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="tabledata.selected" />
+                          </td>
+                          <td style="width:6%;">
+                            <input type="text" [(ngModel)]="tabledata.paramSetId" name="tabledata.paramSetId" [disabled]="true"
+                              class="form-control">
+                          </td>
+                          <td style="width:20%;" *ngFor="let tablecol of tabledata.paramSetVal">
+                            <input type="text" [(ngModel)]="tablecol.value" name="tablecol.value" [disabled]="true" class="form-control">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-            <button type="button" class="btn green" (click)="executeWithExecParams()">Submit</button>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+          <button type="button" class="btn green" (click)="executeWithExecParams()">Submit</button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 
 <div #fileupload id="fileupload" class="modal fade bs-modal-lg in" tabindex="-1" aria-hidden="true" style="display: none;">
@@ -303,16 +299,16 @@
         <div class="slimScrollDiv" style="padding-top:30px;">
           <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
             <div class="row">
-              <div class="col-md-2"style="margin-top:5px;">
+              <div class="col-md-2" style="margin-top:5px;">
                 <label style="margin-left:4px;">Select</label>
               </div>
               <div class="col-md-10">
-                  <!-- <label class="input-group-btn" style="width:auto">
+                <!-- <label class="input-group-btn" style="width:auto">
                       <span class="btn btn-outline">
                           Upload &hellip; <input id="csv_file" class="jfilestyle" (change)="readURL($event);" type="file" [(ngModel)]="file" accept=".csv"style="display:none">
                       </span>
                   </label> -->
-                  <input id="csv_file" class="jfilestyle" (change)="readURL($event);" type="file" [(ngModel)]="file" accept=".csv" style="float:left;margin-left:4px;margin-top:3px">
+                <input id="csv_file" class="jfilestyle" (change)="readURL($event);" type="file" [(ngModel)]="file" accept=".csv" style="float:left;margin-left:4px;margin-top:3px">
                 <!-- <input type="file"  id="csv_file" class="jfilestyle" accept=".csv" data-buttonText="<span class='glyphicon glyphicon-folder-open'style='color:#94A0B2;'></span>" style="float:left;margin-left:4px;"> -->
               </div>
             </div>
@@ -326,4 +322,3 @@
     </div>
   </div>
 </div>
-  
