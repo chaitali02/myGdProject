@@ -48,6 +48,7 @@ import {FilterMetaPipe} from '../metadata-navigator/pipes/search-pipe';
 import {OrderBy} from '../data-discovery/pipes/orderBy';
 import {OrderByJob} from '../job-monitoring/pipes/orderBy';
 import {OrderByMeta} from '../metadata-navigator/pipes/orderBy';
+import { CalendarModule } from 'primeng/components/calendar/calendar';
 // import { SystemMonitoringService } from '../metadata/services/systemMonitoring.service';
 // import { SystemMonitoringComponent } from '../system-monitoring/system-monitoring.component'
 @NgModule({
@@ -71,7 +72,8 @@ import {OrderByMeta} from '../metadata-navigator/pipes/orderBy';
         MenuModule,
         ButtonModule,
         GrowlModule,
-        DropdownModule
+        DropdownModule,
+        CalendarModule
                 
     ],
     declarations: [

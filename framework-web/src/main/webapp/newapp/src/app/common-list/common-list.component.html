@@ -55,6 +55,7 @@
               <div class="col-md-9 col-sm-9 col-xs-9">
                 <form #form="ngForm">
                   <!-- <date-picker mode="datetime" format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="startDate" name="startDate"></date-picker> -->
+                  <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="startDate" name="startDate" [showTime]="true" [utc]="true" [showIcon]="true"></p-calendar>
                 </form>
               </div>
             </div>
@@ -79,7 +80,7 @@
                   [options]="allUserName"
                   [(ngModel)]="username"
                   placeholder="--Select--"
-                  name="username" style="z-index:99"></ng-select>
+                  name="username" style="z-index:100"></ng-select>
               </div>
             </div>
           </div>
@@ -89,6 +90,7 @@
               <div class="col-md-9 col-sm-9 col-xs-9">
                 <form #form="ngForm">
                   <!-- <date-picker mode="datetime" format="ddd MMM D HH:mm:ss YYYY" [(ngModel)]="endDate" name="endDate"></date-picker> -->
+                  <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="endDate" name="endDate" [showTime]="true" [utc]="true" [showIcon]="true"></p-calendar>
                 </form>
               </div>
             </div>
