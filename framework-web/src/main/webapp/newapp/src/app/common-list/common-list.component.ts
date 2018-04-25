@@ -168,7 +168,7 @@ export class CommonListComponent {
         this.active=" ";
         this.status=" ";
         this.rowData1=null;
-        this.execname="";
+        this.execname={};
         this.startDate="";
         this.tags="";
         this.endDate="";
@@ -271,7 +271,8 @@ export class CommonListComponent {
         this.active="";
         this.status="";
         this.rowData1=null;
-        this.execname="";
+        this.execname={ };
+
         this.startDate="";
         this.tags="";
         this.endDate="";
@@ -972,17 +973,21 @@ export class CommonListComponent {
 
     }
     OnSucessgetAllLatest(response){
-        //this.allExecName=response;
-        this.allExecName = [];
+       
+        this.allExecName=[]
+        let temp = []
         for (const i in response) {
           let allName={};
           allName["label"]=response[i]['name'];
-          allName["value"]=response[i]['name']
-          //allName["uuid"]=response[i]['uuid']
-          this.allExecName[i]=allName;
+          allName["value"]={};
+          allName["value"]["label"]=response[i]['name'];      
+          allName["value"]["uuid"]=response[i]['uuid']; 
+          temp[i]=allName;
         }
+        this.allExecName=temp
+
         this.allExecName.splice(0,0,{
-            'label':'--Select--',
+            'label':'Select',
             'value':''
         });
     }
@@ -996,16 +1001,30 @@ export class CommonListComponent {
     }
     OnSucessgetAllLatestUser(response){
         //this.allUserName=response;
-        this.allUserName = [];
+
+        // this.allUserName = [];
+        // for (const i in response) {
+        //   let allName={};
+        //   allName["label"]=response[i]['name'];
+        //   allName["value"]=response[i]['name']
+        //   //allName["uuid"]=response[i]['uuid']
+        //   this.allUserName[i]=allName;
+        // }
+
+        this.allUserName=[]
+        let temp = []
         for (const i in response) {
           let allName={};
           allName["label"]=response[i]['name'];
-          allName["value"]=response[i]['name']
-          //allName["uuid"]=response[i]['uuid']
-          this.allUserName[i]=allName;
+          allName["value"]={};
+          allName["value"]["label"]=response[i]['name'];      
+          allName["value"]["uuid"]=response[i]['uuid']; 
+          temp[i]=allName;
         }
+        this.allUserName=temp
+
         this.allUserName.splice(0,0,{
-            'label':'--Select--',
+            'label':'Select',
             'value':''
         });
     }
@@ -1021,7 +1040,7 @@ export class CommonListComponent {
      debugger
         let startDateUtcStr="";
         let endDateUtcStr="";
-        console.log(this.execname);
+        console.log(this.execname.label);
         if(this.startDate !=""){
             console.log(this.startDate);
             let startDateUtc= new Date(this.startDate.getUTCFullYear(), this.startDate.getUTCMonth(), this.startDate.getUTCDate(),  this.startDate.getUTCHours(), this.startDate.getUTCMinutes(), this.startDate.getUTCSeconds())
@@ -1035,9 +1054,10 @@ export class CommonListComponent {
         console.log(endDateUtcStr);
         console.log(startDateUtcStr);
         console.log(this.tags);
-        console.log(this.username);
+        console.log(this.username.label);
+        console.log(this.execname.label);
         console.log(this.active);
-        this._commonListService.getBaseEntityByCriteria(this.type,this.execname,startDateUtcStr,this.tags,this.username,endDateUtcStr,this.active,this.status)
+        this._commonListService.getBaseEntityByCriteria(this.type,this.execname.label || "" ,startDateUtcStr,this.tags,this.username.label,endDateUtcStr,this.active,this.status)
             .subscribe(
             response =>{this.getGrid(response) },
             error => console.log("Error :: " + error)
