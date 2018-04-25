@@ -6,7 +6,6 @@ import {Message} from 'primeng/components/common/api';
 import {MessageService} from 'primeng/components/common/messageservice';
 import{ CommonService} from '../../metadata/services/common.service'
 import { Location } from '@angular/common';
-import {IOption} from 'ng-select';
 import{ Version } from '../../shared/version'
 import { SelectItem } from 'primeng/primeng';
 import{ DependsOn } from './dependsOn'

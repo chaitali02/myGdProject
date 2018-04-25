@@ -11,7 +11,6 @@ import { TagInputModule } from 'ngx-chips';
 import { BsDropdownModule } from 'ngx-bootstrap';
 import {GrowlModule} from 'primeng/primeng';
 import { PaginationModule } from 'ngx-bootstrap';
-// import {SelectModule} from 'ng-select';
 import {DataTableModule,SharedModule} from 'primeng/primeng';
 import {MenuModule,MenuItem} from 'primeng/primeng';
 import {ButtonModule} from 'primeng/primeng';
