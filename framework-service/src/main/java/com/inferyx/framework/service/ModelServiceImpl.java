@@ -10,6 +10,11 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +44,8 @@ import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -62,6 +69,7 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -154,6 +162,7 @@ public class ModelServiceImpl {
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	MetadataUtil commonActivity;
+	@Autowired
 	private PredictMLOperator predictMLOperator;
 	@Autowired
 	private DatasetOperator datasetOperator;
@@ -165,6 +174,8 @@ public class ModelServiceImpl {
 	private Math3Distribution mlDistribution;
 	@Autowired
 	private MonteCarloSimulation monteCarloSimulation;
+	@Autowired
+	private MetadataServiceImpl metadataServiceImpl;
 	
 	//private ParamMap paramMap;
 
@@ -1366,24 +1377,52 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return false;
 	}
 
-	public List<Model> getAllModelByType(String customFlag, String modelType) {
-		Query query = new Query();
-		query.fields().include("uuid");
-		query.fields().include("version");
-		query.fields().include("name");
-		query.fields().include("type");
-		query.fields().include("createdOn");
-		query.fields().include("appInfo");
+	public List<Model> getAllModelByType(String customFlag, String modelType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Criteria criteria = new Criteria();
+		List<Criteria> criteriaList = new ArrayList<Criteria>();
 
 		try {
-			query.addCriteria(Criteria.where("customFlag").is(customFlag));
-			
+			criteriaList.add(where("active").is("Y"));
+			criteriaList.add(where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			criteriaList.add(where("customFlag").is(customFlag));		
 			if(modelType != null)
-				query.addCriteria(Criteria.where("dependsOn.ref.type").is(modelType));
+				criteriaList.add(where("dependsOn.ref.type").is(modelType));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return (List<Model>) mongoTemplate.find(query, Model.class);
+		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+		Aggregation ruleExecAggr;
+		if (criteriaList.size() > 0) {
+			ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
+		} else {
+			ruleExecAggr = newAggregation(group("uuid").max("version").as("version"));
+		}
+		AggregationResults<Model> ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.model.toString(), Model.class);
+
+		List<Model> modelList = new ArrayList<>();
+		for (Model metaObject : (List<Model>)ruleExecResults.getMappedResults()) {
+			Model model = new Model();
+			Model modelTemp = (Model) commonServiceImpl.getLatestByUuid(metaObject.getId(), MetaType.model.toString()); 
+			model.setId(modelTemp.getId());
+			model.setUuid(modelTemp.getUuid());
+			model.setVersion(modelTemp.getVersion());
+			model.setName(modelTemp.getName());
+			model.setDesc(modelTemp.getDesc());
+			model.setCreatedBy(modelTemp.getCreatedBy());
+			model.setCreatedOn(modelTemp.getCreatedOn());
+			model.setTags(modelTemp.getTags());
+			model.setActive(modelTemp.getActive());
+			model.setPublished(modelTemp.getPublished());
+			model.setAppInfo(modelTemp.getAppInfo());
+			model.setType(modelTemp.getType());
+			model.setDependsOn(modelTemp.getDependsOn());
+			model.setLabel(modelTemp.getLabel());
+			model.setFeatures(modelTemp.getFeatures());
+			model.setScriptName(modelTemp.getScriptName());
+			model.setCustomFlag(modelTemp.getCustomFlag());
+			modelList.add(model);
+		}
+		return modelList;
 	}
 	
 	/**
