@@ -672,7 +672,7 @@ public class MetadataServiceImpl {
 			ruleExecAggr = newAggregation(group("uuid").max("version").as("version"));
 		}
 
-		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, type, className);
+		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, type.toLowerCase(), className);
 		metaObjectList = ruleExecResults.getMappedResults();
 
 		List<BaseEntity> baseEntityList = new ArrayList<>();
