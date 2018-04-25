@@ -8,7 +8,6 @@ import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { MessagesModule, MessageModule, MenuItem, TabMenuModule, TabViewModule, GrowlModule} from 'primeng/primeng';
-import { SelectModule } from 'ng-select';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
@@ -49,7 +48,6 @@ import { MigrationAssistService } from '../metadata/services/migration-assist.se
         TagInputModule,
         MessagesModule,
         MessageModule,
-        SelectModule,
         AngularMultiSelectModule,
         TabViewModule,  
         GrowlModule,  

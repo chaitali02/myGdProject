@@ -69,14 +69,16 @@ export class RegisterSourceComponent implements OnInit {
     for (const i in response) {
       let allNameType={};
       allNameType["label"]=response[i]['name'];
-      allNameType["value"]=response[i]['uuid'];
-      allNameType["version"]=response[i]['version']
+      //allNameType["value"]=response[i]['uuid'];
+      allNameType["value"]={}
+      allNameType["value"]["uuid"]=response[i]['uuid'];
+      allNameType["value"]["version"]=response[i]['version']
       this.allNamesTypes[i]=allNameType;                      
     } 
   }
 
   ChangeTableData() {
-    this._commonService.getRegistryByDatasource(this.allNamesTypes[0]["value"]).subscribe(
+    this._commonService.getRegistryByDatasource(this.allNamesTypes[0]["value"]["uuid"]).subscribe(
       response => { this.onSuccessGetRegistryByDatasource(response)},
       error => console.log('Error :: ' + error)
     ) 
@@ -129,7 +131,7 @@ export class RegisterSourceComponent implements OnInit {
     }
     console.log(JSON.stringify(this.registerArray))
     
-    this._regiSourceService.getRegister(this.allNamesTypes[0]["value"],this.allNamesTypes[0]["version"],this.registerArray,this.type).subscribe(
+    this._regiSourceService.getRegister(this.allNamesTypes[0]["value"]["uuid"],this.allNamesTypes[0]["uuid"]["version"],this.registerArray,this.type).subscribe(
     response => { this.OnSuccessubmit(response)},
     error => console.log('Error :: ' + error)
     )}

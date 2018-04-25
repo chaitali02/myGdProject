@@ -178,8 +178,9 @@ export class GroupComponent implements OnInit {
      for(const j in response){
       let rolerefObj = {};
       rolerefObj["label"]=response[j]['name'];
-      rolerefObj["value"]=response[j]['name'];
-      rolerefObj["name"]=response[j]['name'];
+      rolerefObj["value"]={}
+      rolerefObj["value"]["label"]=response[j]['name'];
+      rolerefObj["value"]["name"]=response[j]['name'];
 
       this.roleIdArray[j]=rolerefObj;
     }
@@ -206,8 +207,9 @@ export class GroupComponent implements OnInit {
      for(const i in response){
        let appref = {};
        appref["label"]=response[i]['name'];
-       appref["value"]=response[i]['name'];
-       appref["name"]=response[i]['name'];
+       appref["value"]={}
+       appref["value"]["label"]=response[i]['name'];
+       appref["value"]["name"]=response[i]['name'];
 
        this.appIdArray[i]=appref;
      }
