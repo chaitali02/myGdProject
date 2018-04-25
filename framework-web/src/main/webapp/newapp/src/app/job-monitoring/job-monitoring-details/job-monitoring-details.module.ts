@@ -8,7 +8,6 @@ import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../../shared/module/shared.module';
 import { MessagesModule, MessageModule } from 'primeng/primeng';
-import { SelectModule } from 'ng-select';
 import { CheckboxModule} from 'primeng/primeng';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
@@ -42,7 +41,6 @@ import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
         TagInputModule,
         MessagesModule,
         MessageModule,
-        SelectModule,
         AngularMultiSelectModule,
         MultiSelectModule,
         DropdownModule,

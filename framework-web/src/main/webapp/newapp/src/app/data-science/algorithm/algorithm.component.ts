@@ -146,8 +146,9 @@ export class AlgorithmComponent implements OnInit {
     for(const i in response){
       let refParam = {};
       refParam["label"] = response[i]['name'];
-      refParam["value"] = response[i]['name'];
-      refParam["name"] = response[i]['name'];
+      refParam["value"] = {}      
+      refParam["value"]['name'] = response[i]['name'];
+      refParam["value"]['label'] = response[i]['label'];
       this.arrayParamList[i] = refParam;
     }    
   }
