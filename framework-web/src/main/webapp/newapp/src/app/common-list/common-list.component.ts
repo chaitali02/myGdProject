@@ -442,7 +442,7 @@ export class CommonListComponent {
         "functionName":"okRestart()"
         }
     }
-    upload(uuid,name) {
+    upload(uuid,name) {debugger
         this.UploadId=uuid;
         this.uploadName=name;
         jQuery(this.fileupload.nativeElement).modal('show');
@@ -1018,18 +1018,18 @@ export class CommonListComponent {
         this.gridOptions.api.selectAll();
     }
     onSearchCriteria(){
-     
+     debugger
         let startDateUtcStr="";
         let endDateUtcStr="";
         console.log(this.execname);
         if(this.startDate !=""){
             console.log(this.startDate);
-            let startDateUtc= new Date(this.startDate._d.getUTCFullYear(), this.startDate._d.getUTCMonth(), this.startDate._d.getUTCDate(),  this.startDate._d.getUTCHours(), this.startDate._d.getUTCMinutes(), this.startDate._d.getUTCSeconds())
+            let startDateUtc= new Date(this.startDate.getUTCFullYear(), this.startDate.getUTCMonth(), this.startDate.getUTCDate(),  this.startDate.getUTCHours(), this.startDate.getUTCMinutes(), this.startDate.getUTCSeconds())
             console.log(startDateUtc);
             startDateUtcStr=this.datePipe.transform(startDateUtc,"EEE MMM dd hh:mm:ss yyyy").toString()+" UTC"//startDateUtc.toString().split("GMT")[0]+"UTC";
         }
         if(this.endDate !=""){
-            let endDateUtc= new Date(this.endDate._d.getUTCFullYear(), this.endDate._d.getUTCMonth(), this.endDate._d.getUTCDate(),  this.endDate._d.getUTCHours(), this.endDate._d.getUTCMinutes(), this.endDate._d.getUTCSeconds())
+            let endDateUtc= new Date(this.endDate.getUTCFullYear(), this.endDate.getUTCMonth(), this.endDate.getUTCDate(),  this.endDate.getUTCHours(), this.endDate.getUTCMinutes(), this.endDate.getUTCSeconds())
             endDateUtcStr=this.datePipe.transform(endDateUtc,"EEE MMM dd hh:mm:ss yyyy").toString()+" UTC"//endDateUtc.toString().split("GMT")[0]+"UTC";
         }
         console.log(endDateUtcStr);

@@ -9,7 +9,7 @@ import { CommonService } from '../../metadata/services/common.service';
 import { Version } from './../../metadata/domain/version'
 import{ DependsOn } from './../dependsOn'
 import { AttributeHolder } from './../../metadata/domain/domain.attributeHolder'
-
+import * as $ from 'jquery';
 @Component({
     selector: 'app-dashboard-detail',
     styleUrls: [],

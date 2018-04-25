@@ -824,10 +824,12 @@ export class AppMetadata {
                 metaType:'import',
                 color : '#EB54C3',
                 allowInMenu :false,
-                listState : '',
+                listState : 'import',
                 moduleCaption:'Admin',
-                detailState :'detaitimport'
+                moduleState : 'admin',
+                detailState :'migration-assist'
               },
+
               'recon':{
                 name : 'recon',
                 caption : 'Rule',

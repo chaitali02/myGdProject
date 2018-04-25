@@ -15,6 +15,7 @@ import { RegisterSourceComponent } from './registerSource/registerSource.compone
 import { SettingsComponent } from './settings/settings.component';
 import { MigrationAssistComponent } from './migration-assist/migration-assist.component';
 import { MigrationAssistExportComponent } from './migration-assist/migration-assist-export/migration-assist-export.component';
+import { MigrationAssistImportComponent } from './migration-assist/migration-assist-import/migration-assist-import.component';
 
 const routes: Routes = [
     {
@@ -61,6 +62,10 @@ const routes: Routes = [
             {path: 'migration-assist/export/:id/:version/:mode', component: MigrationAssistExportComponent,pathMatch:'full' },
             {path: 'migration-assist/migration-assist/export/:id/:version/:mode', component:MigrationAssistExportComponent, pathMatch: 'full'},  
             {path: 'migration-assist/export', component: MigrationAssistExportComponent, pathMatch: 'full'},
+            
+            {path: 'migration-assist/import/:id/:version/:mode', component: MigrationAssistImportComponent,pathMatch:'full' },
+            {path: 'migration-assist/migration-assist/import/:id/:version/:mode', component:MigrationAssistImportComponent, pathMatch: 'full'},  
+            {path: 'migration-assist/import', component: MigrationAssistImportComponent, pathMatch: 'full'},
             
         ]
     }

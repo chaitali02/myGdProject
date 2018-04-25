@@ -6,8 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular/main';
 import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
-import { DatePickerModule } from 'angular-io-datepicker';
-import { OverlayModule } from 'angular-io-overlay';
+// import { DatePickerModule } from 'angular-io-datepicker';
+// import { OverlayModule } from 'angular-io-overlay';
 import { BsDropdownModule } from 'ngx-bootstrap';
 import {GrowlModule} from 'primeng/primeng';
 import { PaginationModule } from 'ngx-bootstrap';
@@ -48,6 +48,7 @@ import {FilterMetaPipe} from '../metadata-navigator/pipes/search-pipe';
 import {OrderBy} from '../data-discovery/pipes/orderBy';
 import {OrderByJob} from '../job-monitoring/pipes/orderBy';
 import {OrderByMeta} from '../metadata-navigator/pipes/orderBy';
+import { CalendarModule } from 'primeng/components/calendar/calendar';
 // import { SystemMonitoringService } from '../metadata/services/systemMonitoring.service';
 // import { SystemMonitoringComponent } from '../system-monitoring/system-monitoring.component'
 @NgModule({
@@ -58,8 +59,8 @@ import {OrderByMeta} from '../metadata-navigator/pipes/orderBy';
         UiSwitchModule,
         TagInputModule,
         routing1,
-        DatePickerModule,
-        OverlayModule,
+        // DatePickerModule,
+        // OverlayModule,
         BsDropdownModule.forRoot(),
         MessagesModule,
         MessageModule,
@@ -71,7 +72,8 @@ import {OrderByMeta} from '../metadata-navigator/pipes/orderBy';
         MenuModule,
         ButtonModule,
         GrowlModule,
-        DropdownModule
+        DropdownModule,
+        CalendarModule
                 
     ],
     declarations: [

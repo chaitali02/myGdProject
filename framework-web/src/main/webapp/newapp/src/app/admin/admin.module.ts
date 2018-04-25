@@ -35,6 +35,8 @@ import { CommonListService } from '../common-list/common-list.service';
 import { MenuModule } from 'primeng/components/menu/menu';
 import { DataTableModule } from 'primeng/components/datatable/datatable';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
+import { MigrationAssistImportComponent } from './migration-assist/migration-assist-import/migration-assist-import.component';
+import { MigrationAssistService } from '../metadata/services/migration-assist.services';
 
 @NgModule({
     imports:[
@@ -71,7 +73,8 @@ import { CalendarModule } from 'primeng/components/calendar/calendar';
         RegisterSourceComponent,
         SettingsComponent,
         MigrationAssistComponent,
-        MigrationAssistExportComponent
+        MigrationAssistExportComponent,
+        MigrationAssistImportComponent
         
     ],
     providers:[
@@ -80,7 +83,8 @@ import { CalendarModule } from 'primeng/components/calendar/calendar';
         DatapodService,
         SettingsService,
         RegisterSourceService,
-        CommonListService
+        CommonListService,
+        MigrationAssistService
     ]
 })
  

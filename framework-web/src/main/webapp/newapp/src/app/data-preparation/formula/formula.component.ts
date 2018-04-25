@@ -444,7 +444,7 @@ export class FormulaComponent {
     const len = this.formulaarray.length;
     const fundataArr: Array<DataPreparationFormulaInfo> = [];
     this.formulaarray.push(new DataPreparationFormulaInfo(
-      'function', response[0]['uuid'], response[0]['category'], response[0]['functionInfo'].toUpperCase()
+      'function', response[0]['uuid'], response[0]['category'], response[0]['functionInfo'][0].name.toUpperCase()
     ));
   }
 
@@ -455,6 +455,7 @@ export class FormulaComponent {
       },
       error => console.log('Error :: ' + error)
     )
+    
   }
 
   onSuccesgetAllLatest(response) {
