@@ -165,6 +165,7 @@ public class GraphServiceImpl {
 		keywordList.add("groupInfo");
 		keywordList.add("refKeyList");
 		keywordList.add("featureAttrMap");
+		keywordList.add("configInfo");
 		}
 
 	/*
@@ -904,7 +905,7 @@ public class GraphServiceImpl {
 								|| key.equalsIgnoreCase("attributeMap") || key.equalsIgnoreCase("paramInfo")
 								|| key.equalsIgnoreCase("features") || key.equalsIgnoreCase("stages")
 								|| key.equalsIgnoreCase("tasks") || key.equalsIgnoreCase("operators") 
-								|| key.equalsIgnoreCase("featureAttrMap")) {
+								|| key.equalsIgnoreCase("featureAttrMap") || key.equalsIgnoreCase("configInfo")) {
 							String attr = "";
 							Map<String, String> map = new HashMap<String, String>();
 							map.put("attributes", "name");
@@ -914,7 +915,7 @@ public class GraphServiceImpl {
 							map.put("sectionInfo", "name");
 							map.put("stages", "name");
 							map.put("tasks", "name");
-							//map.put("refKeyList", "name");
+							map.put("configInfo", "configName");
 
 							if (map.containsKey(key))
 								attr = childObj.optString(map.get(key));

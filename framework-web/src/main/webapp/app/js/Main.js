@@ -1954,7 +1954,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
     })
     
     .state('settings', {
-        url:"/Admin/Settings",
+        url:"/Admin/Settings?index",
         templateUrl: "views/settings.html",
         data: { pageTitle: 'Admin'},
         controller: "",
@@ -2795,8 +2795,26 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
 				});
 			}]
 		}
+    })
+    .state('createappconfig', {
+		url: "/AppConfig?id&mode&returnBack&version",
+		templateUrl: "views/appconfig.html",
+	    data: { pageTitle: 'Admin'},
+		//controller: "BlankController",
+		resolve: {
+			deps: ['$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					name: 'InferyxApp',
+					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+					files: [
+                        'js/controllers/AppConfigController.js',
+						'js/services/AppConfigService.js',
+					]
+				});
+			}]
+		}
 	})
-
+    
  }]);
 
 
