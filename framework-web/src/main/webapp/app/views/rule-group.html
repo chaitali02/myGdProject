@@ -185,14 +185,14 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Rules
                   <span class="required" aria-required="true"> * </span>
                 </label>
-                <div class="col-md-6">
-                  <tags-input class="tag-scroll" ng-model="ruleTags" ng-disabled="{{mode}}" display-property="name" key-property="id" add-from-autocomplete-only="true"
-                    ng-focus="onTagFocuse()" required="">
+                <div class="col-md-6" >
+                  <tags-input name="tagRule" allow-leftover-text="false" class="tag-scroll"  min-tags="0" ng-model="ruleTags" ng-disabled="{{mode}}" display-property="name" key-property="id" add-from-autocomplete-only="true"
+                    ng-focus="onTagFocuse()" ng-required="true">
                     <auto-complete source="loadRules($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
-                      load-on-empty="true" required="">
+                      load-on-empty="true" >
                     </auto-complete>
                   </tags-input>
-
+                  <!-- <input type="hidden"  class="form-control" ng-disabled="{{mode}}" name ="tagRule" ng-model="ruleTagse[0].id" required=""> -->
                 </div>
                 <div class="col-md-1">
                   <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip

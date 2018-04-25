@@ -289,6 +289,7 @@ public class ModelController {
 					trainExec = modelServiceImpl.create(train, model, execParams, paramMap, trainExec);
 					Thread.sleep(1000); // Should be parameterized in a class
 					modelServiceImpl.train(train, model, trainExec, execParams, paramMap);
+					trainExec = null;
 				}
 			} else {
 				trainExec = modelServiceImpl.create(train, model, execParams, null, trainExec);
