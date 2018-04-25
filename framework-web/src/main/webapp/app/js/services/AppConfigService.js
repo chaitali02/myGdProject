@@ -27,7 +27,7 @@ AdminModule.factory('AppConfigFactory',function($http,$location){
     factory.findOneByUuidandVersion=function(uuid,version,type){
       var url=$location.absUrl().split("app")[0]
       return $http({
-        url:url+"metadata/getOneByUuidAndVersion?action=view&uuid="+uuid+"&version="+version+"&type="+type,
+        url:url+"common/getOneByUuidAndVersion?action=view&uuid="+uuid+"&version="+version+"&type="+type,
         method: "GET",
 
         }).then(function(response){ return  response})
@@ -49,7 +49,7 @@ AdminModule.factory('AppConfigFactory',function($http,$location){
     factory.findOneById=function(id,type){
       var url=$location.absUrl().split("app")[0]
       return $http({
-        url:url+"metadata/getOneById?action=view&id="+id+"&type="+type,
+        url:url+"common/getOneById?action=view&id="+id+"&type="+type,
         method: "GET"
         }).then(function(response){ return  response})
     }

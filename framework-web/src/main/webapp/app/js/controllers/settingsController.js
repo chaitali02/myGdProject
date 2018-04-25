@@ -6,7 +6,7 @@ var notify = {
   title: 'Success',
   timeout: 3000 //time in ms
 };
-AdminModule.controller('settingsController', function ($scope,$stateParams,$window, SettingsService,dagMetaDataService,CommonService,FileSaver,Blob,$filter,$state,privilegeSvc) {
+AdminModule.controller('settingsController', function (cacheService,$scope,$stateParams,$window, SettingsService,dagMetaDataService,CommonService,FileSaver,Blob,$filter,$state,privilegeSvc) {
 
 
   $scope.activeForm = 0;
@@ -225,10 +225,12 @@ $scope.refreshData = function (searchtext) {
   $scope.gridOptions.data = $filter('filter')($scope.originalData, searchtext, undefined);
 };
 $scope.addMode = function () {
+  cacheService.searchCriteria = {};
   $state.go($scope.detailState);
 }
 
 $scope.action = function (data, mode, privilege) {
+  cacheService.searchCriteria = {};
   $scope.setActivity(data.uuid, data.version, $scope.selectType, mode);
   if($scope.detailState)
     $state.go($scope.detailState, {
