@@ -1,12 +1,9 @@
 /**
  * 
  */
-package com.inferyx.framework.operator;
+package com.inferyx.framework.domain;
 
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.ParamList;
 
 /**
  * @author Ganesh
