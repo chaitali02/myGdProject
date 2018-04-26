@@ -26,7 +26,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
  // console.log(privilegeSvc.privileges)
  
   $scope.$on('privilegesUpdated', function (e, data) {
-    $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
+  $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
    // console.log($scope.privileges)
   //  console.log(privilegeSvc.privileges)
     
@@ -67,7 +67,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $sessionStorage.fromParams = fromParams
   });
 
-  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution'];
+  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype'];
   $scope.isExecutable = $scope.nonExecTypes.indexOf($scope.select);
   $scope.isUpload = ($scope.select == 'datapod' ? 0 : -1)
   
@@ -574,7 +574,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     if ($scope.select == 'rule' || $scope.select == 'train') {
       $scope.getExecParamsSet();
     }
-    else if($scope.select == 'simulate'){
+    else if($scope.select == 'simulate' || $scope.select == 'operator' ){
       $scope.getExecParamList();
     }
     else if($scope.select == 'predict'){

@@ -79,6 +79,7 @@ import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.PredictExec;
@@ -4022,6 +4023,13 @@ public class RegisterService {
 		if (reconGroupExec != null) {
 			countHolder.add(addToCount(MetaType.recongroupExec.toString(), reconGroupExecCount,
 					reconGroupExec.getCreatedBy().getRef().getName(), reconGroupExec.getCreatedOn()));
+		}
+        
+		int operatorExecCount = commonServiceImpl.findAllLatest(MetaType.operatorExec).size();
+		OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getLatest(MetaType.operatorExec.toString());
+		if (operatorExec != null) {
+			countHolder.add(addToCount(MetaType.operatorExec.toString(), operatorExecCount,
+					operatorExec.getCreatedBy().getRef().getName(), operatorExec.getCreatedOn()));
 		}
 
 
