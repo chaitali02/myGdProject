@@ -73,6 +73,7 @@ import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
@@ -1082,14 +1083,12 @@ public class MetadataServiceImpl {
 			paramListHolder.setParamId(param.getParamId());
 			paramListHolder.setParamName(param.getParamName());
 			paramListHolder.setParamType(param.getParamType());
-			if(param.getParamType().equalsIgnoreCase("ROW")) {
-				
+			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
-			}
-			else {
+			else 
 				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
-				
-			}
+			
 			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());
 			holderList.add(paramListHolder);
@@ -1138,14 +1137,12 @@ public class MetadataServiceImpl {
 				paramListHolder.setParamId(param.getParamId());
 				paramListHolder.setParamName(param.getParamName());
 				paramListHolder.setParamType(param.getParamType());
-				if(param.getParamType().equalsIgnoreCase("ROW")) {
-				
+				if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+						|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 					paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
-				}
-				else {
+				else
 					paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
-					
-				}
+		
 				paramListHolder.setRef(
 						new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 				paramListHolder.getRef().setName(paramList.getName());
@@ -1155,7 +1152,6 @@ public class MetadataServiceImpl {
 		return holderList;
 	}
 	
-	@SuppressWarnings("unlikely-arg-type")
 	public List<ParamListHolder> getParamListBySimulate(String simulateUuid) throws JsonProcessingException {
 
 		Simulate simulate = (Simulate) commonServiceImpl.getLatestByUuid(simulateUuid, MetaType.simulate.toString(),
@@ -1187,15 +1183,14 @@ public class MetadataServiceImpl {
 					paramListHolder.setParamId(param.getParamId());
 					paramListHolder.setParamName(param.getParamName());
 					paramListHolder.setParamType(param.getParamType());
-					if (param.getParamType().equalsIgnoreCase("ROW")) {
-
+					if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+							|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 						paramListHolder.setParamValue(
 								new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));
-					} else {
+					 else 
 						paramListHolder.setParamValue(new MetaIdentifierHolder(
 								new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
-
-					}
+					
 					paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramListDistribution.getUuid(),
 							paramListDistribution.getVersion()));
 					paramListHolder.getRef().setName(paramListDistribution.getName());
@@ -1207,15 +1202,14 @@ public class MetadataServiceImpl {
 					paramListHolder.setParamId(param.getParamId());
 					paramListHolder.setParamName(param.getParamName());
 					paramListHolder.setParamType(param.getParamType());
-					if (param.getParamType().equalsIgnoreCase("ROW")) {
-
+					if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+							|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 						paramListHolder.setParamValue(
 								new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));
-					} else {
+					else 
 						paramListHolder.setParamValue(new MetaIdentifierHolder(
 								new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
 
-					}
 					paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramListSimulate.getUuid(),
 							paramListSimulate.getVersion()));
 					paramListHolder.getRef().setName(paramListSimulate.getName());
@@ -1235,26 +1229,23 @@ public class MetadataServiceImpl {
 		
 		OperatorType operatorType = (OperatorType) commonServiceImpl.getLatestByUuid(operator.getOperatorType().getRef().getUuid(), MetaType.operatortype.toString(),"N");			
 			
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(
-				operatorType.getParamList().getUuid(), MetaType.paramlist.toString(), "N");
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operatorType.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
 	
 		for(Param param : paramList.getParams()) {
 			ParamListHolder paramListHolder = new ParamListHolder();
 			paramListHolder.setParamId(param.getParamId());
 			paramListHolder.setParamName(param.getParamName());
 			paramListHolder.setParamType(param.getParamType());
-			if(param.getParamType().equalsIgnoreCase("ROW")) {
-				
+			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
-			}
-			else {
+			else 
 				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
-				
-			}
+			
 			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, operatorType.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());
 			holderList.add(paramListHolder);
 		}
 		return holderList;
-		}	
+	}	
 }
