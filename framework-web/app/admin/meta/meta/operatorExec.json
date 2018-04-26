@@ -1,7 +1,7 @@
 {
 
       "uuid": "9d365196-4925-11e8-842f-0ed5f89f718b",
-      "name": "OperatorExec",
+      "name": "operatorexec",
       "version": "1465454441",
       "createdBy": {
 		"ref": {
