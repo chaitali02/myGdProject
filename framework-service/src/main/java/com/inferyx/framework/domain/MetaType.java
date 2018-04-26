@@ -20,7 +20,8 @@ public enum MetaType {
 	profilegroup, profilegroupExec, relation, role, rule, ruleExec, rulegroup, rulegroupExec, session, user,
 	vizpod, vizExec, usergroup, simple, file, /*hive,*/ matrixmult, mapiter, dqview, ruleview, datasetview,
 	meta, dashboardview, Import, export, message, log, downloadExec, uploadExec, predict, predictExec, simulate,
-	simulateExec, train, trainExec, recon, reconExec, recongroup, recongroupExec, reconview, distribution, appConfig;
+	simulateExec, train, trainExec, recon, reconExec, recongroup, recongroupExec, reconview, distribution, 
+	appConfig, operatortype, operatorExec;
 
 	public static List<MetaType> getMetaList() {
 		return Arrays.asList(MetaType.activity, MetaType.algorithm, MetaType.application, MetaType.condition,
@@ -35,14 +36,15 @@ public enum MetaType {
 				MetaType.Import, MetaType.export, MetaType.message, MetaType.log, MetaType.downloadExec,
 				MetaType.uploadExec, MetaType.predict, MetaType.predictExec, MetaType.simulate, MetaType.simulateExec,
 				MetaType.train, MetaType.trainExec, MetaType.recon, MetaType.reconExec, MetaType.recongroup, 
-				MetaType.recongroupExec, MetaType.distribution, MetaType.appConfig);
+				MetaType.recongroupExec, MetaType.distribution, MetaType.appConfig, MetaType.operatortype, MetaType.operatorExec);
 	}
 
 	public static List<MetaType> getMetaExecList() {
 		return Arrays.asList(MetaType.dagExec, MetaType.dqExec, MetaType.dqgroupExec, MetaType.loadExec,
 				MetaType.mapExec, MetaType.modelExec, MetaType.profileExec, MetaType.profilegroupExec,
 				MetaType.ruleExec, MetaType.rulegroupExec, MetaType.vizExec, MetaType.downloadExec, MetaType.uploadExec,
-				MetaType.predictExec, MetaType.simulateExec, MetaType.trainExec, MetaType.reconExec, MetaType.recongroupExec);
+				MetaType.predictExec, MetaType.simulateExec, MetaType.trainExec, MetaType.reconExec, MetaType.recongroupExec,
+				MetaType.operatorExec);
 	}
 
 	public static List<MetaType> getMetaAdminList() {

@@ -72,6 +72,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
@@ -105,6 +106,7 @@ import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.executor.ExecContext;
+import com.inferyx.framework.operator.OperatorType;
 
 @Component
 public class Helper {
@@ -251,6 +253,8 @@ public class Helper {
 				case recongroupExec : return "iReconGroupExecDao";
 				case distribution : return "iDistributionDao";
 				case appConfig : return "iAppConfigDao";
+				case operatortype : return "iOperatorTypeDao";
+				case operatorExec : return "iOperatorExecDao";
 				default:
 					return null;
 			}
@@ -353,6 +357,8 @@ public class Helper {
 		case recongroupExec : return ReconGroupExec.class;
 		case distribution : return Distribution.class;
 		case appConfig : return AppConfig.class;
+		case operatortype : return OperatorType.class;
+		case operatorExec : return OperatorExec.class;
 
 		default:
 			return null;
@@ -427,6 +433,8 @@ public class Helper {
 				case "recongroupexec" : return MetaType.recongroupExec;
 				case "distribution" : return MetaType.distribution;
 				case "appconfig" : return MetaType.appConfig;
+				case "operatortype" : return MetaType.operatortype;
+				case "operatorexec" : return MetaType.operatorExec;
 
 				default : return null;
 			}
