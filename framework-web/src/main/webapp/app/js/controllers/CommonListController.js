@@ -58,7 +58,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.addMode = function () {
     cacheService.searchCriteria = {};
-    debugger
     $state.go($scope.detailState);
   }
   
