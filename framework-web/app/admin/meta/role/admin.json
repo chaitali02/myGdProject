@@ -4930,6 +4930,268 @@
 		            "name" : "AppConfigAdd"
 				},
 				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d365718-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d36589e-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d365a2e-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d365bfa-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d365e2a-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d365f92-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d36649c-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d366622-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d36674e-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "798f8732-8558-4f1a-bf94-551cdfa2661d",
+		 			"version" : null,
+		            "name" : "OperatorTypeView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "858789f7-a70e-4681-b6e9-70052d200167",
+		 			"version" : null,
+		            "name" : "OperatorTypeUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "56d379dd-712f-4e54-852d-58c532ef777a",
+		 			"version" : null,
+		            "name" : "OperatorTypeRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "c7720429-a1d1-4eb0-aa32-7acc7b2134a0",
+		 			"version" : null,
+		            "name" : "OperatorTypePublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2181c4ab-b978-4c7c-acac-3c764a7c4708",
+		 			"version" : null,
+		            "name" : "OperatorTypeExport"
+				},
+				"value" : null
+		},		
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "d050bcdd-4b3e-49e7-b992-61b7e10b039c",
+		 			"version" : null,
+		            "name" : "OperatorTypeExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "cca1c0fd-faca-4fc2-9928-8fcd700c9dc3",
+		 			"version" : null,
+		            "name" : "OperatorTypeEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "506dd029-ff5a-4791-b1bc-c0474d5718fa",
+		 			"version" : null,
+		            "name" : "OperatorTypeDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "c27acd9a-961b-4c3f-b23c-79d0f13f10c8",
+		 			"version" : null,
+		            "name" : "OperatorTypeClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "7caf7b82-3add-4150-8958-6546aa90363a",
+		 			"version" : null,
+		            "name" : "OperatorTypeAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0500c55c-4937-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0500c1d8-4937-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0500c0ac-4937-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0500bf62-4937-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "0500bcd8-4937-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExport"
+				},
+				"value" : null
+		},		
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d36709a-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d366c62-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d366adc-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d36699c-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9d36687a-4925-11e8-842f-0ed5f89f718b",
+		 			"version" : null,
+		            "name" : "OperatorAdd"
+				},
+				"value" : null
 		}
+
     ]
 }
