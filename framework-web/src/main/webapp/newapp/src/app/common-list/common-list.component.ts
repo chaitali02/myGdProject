@@ -443,7 +443,7 @@ export class CommonListComponent {
         "functionName":"okRestart()"
         }
     }
-    upload(uuid,name) {debugger
+    upload(uuid,name) {
         this.UploadId=uuid;
         this.uploadName=name;
         jQuery(this.fileupload.nativeElement).modal('show');
@@ -1037,7 +1037,7 @@ export class CommonListComponent {
         this.gridOptions.api.selectAll();
     }
     onSearchCriteria(){
-     debugger
+     
         let startDateUtcStr="";
         let endDateUtcStr="";
         console.log(this.execname.label);
