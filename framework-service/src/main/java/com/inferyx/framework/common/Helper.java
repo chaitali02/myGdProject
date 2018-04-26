@@ -29,6 +29,7 @@ import org.apache.lucene.analysis.util.CharArrayMap.EntrySet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AppConfig;
@@ -73,6 +74,7 @@ import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.OperatorExec;
+import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
@@ -106,7 +108,6 @@ import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.operator.OperatorType;
 
 @Component
 public class Helper {
@@ -255,6 +256,8 @@ public class Helper {
 				case appConfig : return "iAppConfigDao";
 				case operatortype : return "iOperatorTypeDao";
 				case operatorExec : return "iOperatorExecDao";
+				case operator : return "iOperatorDao";
+				
 				default:
 					return null;
 			}
@@ -359,6 +362,7 @@ public class Helper {
 		case appConfig : return AppConfig.class;
 		case operatortype : return OperatorType.class;
 		case operatorExec : return OperatorExec.class;
+		case operator : return Operator.class;
 
 		default:
 			return null;
@@ -435,6 +439,7 @@ public class Helper {
 				case "appconfig" : return MetaType.appConfig;
 				case "operatortype" : return MetaType.operatortype;
 				case "operatorexec" : return MetaType.operatorExec;
+				case "operator" : return MetaType.operator;
 
 				default : return null;
 			}

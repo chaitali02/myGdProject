@@ -95,6 +95,7 @@ import com.inferyx.framework.dao.IMessageDao;
 import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
+import com.inferyx.framework.dao.IOperatorDao;
 import com.inferyx.framework.dao.IOperatorExecDao;
 import com.inferyx.framework.dao.IOperatorTypeDao;
 import com.inferyx.framework.dao.IParamListDao;
@@ -388,7 +389,27 @@ public class CommonServiceImpl <T> {
 	IOperatorTypeDao iOperatorTypeDao;
 	@Autowired
 	IOperatorExecDao iOperatorExecDao;
+	@Autowired
+	IOperatorDao iOperatorDao;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iOperatorDao
+	 */
+	public IOperatorDao getiOperatorDao() {
+		return iOperatorDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iOperatorDao the iOperatorDao to set
+	 */
+	public void setiOperatorDao(IOperatorDao iOperatorDao) {
+		this.iOperatorDao = iOperatorDao;
+	}
+
 	/**
 	 * @Ganesh
 	 *
