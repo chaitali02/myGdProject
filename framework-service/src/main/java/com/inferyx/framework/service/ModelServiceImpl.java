@@ -1672,7 +1672,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 						DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(), datapod.getVersion());
 						exec.readFile(appUuid, datapod, datastore, hdfsInfo, null, datasource);
 						String sql = transposeOperator.generateSql(datapod);
-						exec.executeRegisterAndPersist(sql, datapod.getName(), filePathUrl, datapod, SaveMode.Append.toString(), appUuid);
+						exec.executeRegisterAndPersist(sql, datapod.getName(), filePath, datapod, SaveMode.Append.toString(), appUuid);
 					}
 				}
 			}
