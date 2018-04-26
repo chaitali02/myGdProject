@@ -574,7 +574,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     if ($scope.select == 'rule' || $scope.select == 'train') {
       $scope.getExecParamsSet();
     }
-    else if($scope.select == 'simulate'){
+    else if($scope.select == 'simulate' || $scope.select == 'operator' ){
       $scope.getExecParamList();
     }
     else if($scope.select == 'predict'){

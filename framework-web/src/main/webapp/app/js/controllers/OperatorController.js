@@ -97,7 +97,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.Operator.defaultVersion = defaultversion;
-			if($scope.OperatorData.operatortype !=null){
+			if($scope.OperatorData.operatorType !=null){
 				OperatorService.getAllLatest("operatortype").then(function (response) { onSuccessGetAllLatestoperatortype(response.data) });
 				var onSuccessGetAllLatestoperatortype = function (response) {
 					$scope.allOperatorType = response;
@@ -131,7 +131,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			defaultversion.uuid = response.uuid;
 			$scope.Operator.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
-			if($scope.OperatorData.operatortype !=null){
+			if($scope.OperatorData.operatorType !=null){
 				OperatorService.getAllLatest("operatortype").then(function (response) { onSuccessGetAllLatestoperatortype(response.data) });
 				var onSuccessGetAllLatestoperatortype = function (response) {
 					$scope.allOperatorType = response;

@@ -437,6 +437,9 @@
       if (type == "simulate") {
         url = "metadata/getParamListBySimulate?uuid=" + uuid+"&type="+type;
       }
+      else if(type == "operator"){
+        url = "metadata/getParamListByOperator?uuid=" + uuid+"&type="+type;
+      }
       url += '&action=view'
       CommonFactory.httpGet(url).then(function(response) {
         onSuccess(response.data)
