@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMetaDao;
+import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
@@ -62,6 +63,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
@@ -1225,4 +1227,34 @@ public class MetadataServiceImpl {
 		return holderList;
 	}
 
+	
+	public List<ParamListHolder> getParamListByOperator(String operatorUuid) throws JsonProcessingException {	
+		List<ParamListHolder> holderList = new ArrayList<>();
+			
+		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorUuid, MetaType.operator.toString(),"N");			
+		
+		OperatorType operatorType = (OperatorType) commonServiceImpl.getLatestByUuid(operator.getOperatorType().getRef().getUuid(), MetaType.operatortype.toString(),"N");			
+			
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(
+				operatorType.getParamList().getUuid(), MetaType.paramlist.toString(), "N");
+	
+		for(Param param : paramList.getParams()) {
+			ParamListHolder paramListHolder = new ParamListHolder();
+			paramListHolder.setParamId(param.getParamId());
+			paramListHolder.setParamName(param.getParamName());
+			paramListHolder.setParamType(param.getParamType());
+			if(param.getParamType().equalsIgnoreCase("ROW")) {
+				
+				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
+			}
+			else {
+				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+				
+			}
+			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, operatorType.getUuid(), paramList.getVersion()));
+			paramListHolder.getRef().setName(paramList.getName());
+			holderList.add(paramListHolder);
+		}
+		return holderList;
+		}	
 }
