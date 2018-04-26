@@ -5,6 +5,8 @@ package com.inferyx.framework.operator;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
@@ -14,7 +16,7 @@ import com.inferyx.framework.domain.Datapod;
  *
  */
 public class TransposeOperator {
-
+	static final Logger LOGGER = Logger.getLogger(TransposeOperator.class);
 	/**
 	 * 
 	 */
@@ -93,6 +95,7 @@ public class TransposeOperator {
 				sb = sb.append(ConstantsUtil.UNION_ALL);
 			}
 		}
+		LOGGER.info("query: "+sb.toString());
 		return sb.toString();
 	}
 	

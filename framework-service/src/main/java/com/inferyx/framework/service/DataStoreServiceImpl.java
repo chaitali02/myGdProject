@@ -307,16 +307,13 @@ public class DataStoreServiceImpl {
 		Query query =new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
-		
-		if(appUuid != null)
-			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));
 
-		if(version != null)
+		if(appUuid != null && version != null)
 			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid).andOperator(Criteria.where("metaId.ref.version").is(version)));
-		else
-			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid));
+		else if(appUuid != null)
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));
+		
 		query.with(new Sort(Sort.Direction.DESC, "version"));
-
 		query.addCriteria(Criteria.where("active").is("Y"));
 		
 		List<DataStore> datastoreList = mongoTemplate.find(query, DataStore.class);
