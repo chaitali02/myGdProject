@@ -129,7 +129,7 @@ public class DataQualController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException {        
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {        
         return dataQualExecServiceImpl.findDataQualExecByDataqual(dataQualUUID, startDate, endDate, type, action);
     }
     
@@ -161,7 +161,7 @@ public class DataQualController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException {
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
         return dataQualExecServiceImpl.finddqExecByDatapod(datapodUUID, startDate, endDate, type);
     }
 

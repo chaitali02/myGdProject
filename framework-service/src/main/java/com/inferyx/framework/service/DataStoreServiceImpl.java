@@ -302,7 +302,7 @@ public class DataStoreServiceImpl {
 		return dataStore;
 	}
 */
-	public DataStore findDataStoreByMeta(String uuid, String version) {
+	public DataStore findDataStoreByMeta(String uuid, String version) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		Query query =new Query();
 		query.fields().include("uuid");
@@ -316,6 +316,9 @@ public class DataStoreServiceImpl {
 		else
 			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid));
 		query.with(new Sort(Sort.Direction.DESC, "version"));
+
+		query.addCriteria(Criteria.where("active").is("Y"));
+		
 		List<DataStore> datastoreList = mongoTemplate.find(query, DataStore.class);
 		DataStore dataStore = null;
 		try {

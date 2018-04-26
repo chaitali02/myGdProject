@@ -4030,7 +4030,7 @@ public class RegisterService {
 		
 	}
 
-	public long getMetaStatsByType() {
+	public long getMetaStatsByType() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return datapodServiceImpl.count();
 	}
 

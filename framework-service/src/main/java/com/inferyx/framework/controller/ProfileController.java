@@ -124,7 +124,7 @@ public class ProfileController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException {
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
         return profileExecServiceImpl.findProfileExecByProfile(profileUUID, startDate, endDate, type);
     }
 	@RequestMapping(value = "/getProfileExecByDatapod", method = RequestMethod.GET)
@@ -139,7 +139,7 @@ public class ProfileController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException {
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
         return profileExecServiceImpl.findProfileExecByDatapod(datapodUUID, startDate, endDate, type);
     }
     @RequestMapping(value = "/getProfileGroupExecByProfileGroup", method = RequestMethod.GET)
