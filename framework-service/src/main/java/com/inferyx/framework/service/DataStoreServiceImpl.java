@@ -51,6 +51,7 @@ import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
+import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -613,6 +614,22 @@ public class DataStoreServiceImpl {
 					tableName = Helper.genTableName(filePath);
 				else
 					tableName = datasource_2.getDbname() + "." + reconName;
+		} else if (metaType == MetaType.operator) {
+			Operator recon = (Operator) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.operator.toString());
+			String operatorName = recon.getName();
+			if(operatorName.toLowerCase().contains("operator_"))
+				operatorName = operatorName.replace("operator_", "");
+			
+			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+				tableName = Helper.genTableName(filePath);
+			} else if(runMode != null && runMode.equals(Mode.ONLINE)) {
+				tableName = Helper.genTableName(filePath);
+			}else
+			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+					tableName = Helper.genTableName(filePath);
+				else
+					tableName = datasource_2.getDbname() + "." + operatorName;
 		}
 		return tableName;
 	}
