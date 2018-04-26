@@ -486,9 +486,13 @@
       else if(type=='simulate'){
         url = "model/simulate/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
       }
+      else if ( type =='operator'){
+        url = "model/operator/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+      }
       else{
         url = "" + type + "/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
       }
+
      
       CommonFactory.httpPost(url, data).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
       var onSuccess = function(response) {
