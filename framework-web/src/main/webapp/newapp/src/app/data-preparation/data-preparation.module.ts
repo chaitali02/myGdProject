@@ -27,7 +27,6 @@ import { DatasetService } from '../metadata/services/dataset.service';
 import {RelationService} from './relation/relation.service';
 
 import { routing1 } from './data-preparation-routing.module';
-// import { SelectModule } from 'ng-select';
 import { FunctionComponent } from './function/function.component';
 import { MapComponent } from './map/map.component';
 import { RelationComponent } from './relation/relation.component';
@@ -48,10 +47,7 @@ import { RelationComponent } from './relation/relation.component';
         DropdownModule,
         DataTableModule,
         SharedModule,
-        GrowlModule
-        //SelectModule
-
-        
+        GrowlModule        
     ],
     declarations: [
         DataPreparationComponent,

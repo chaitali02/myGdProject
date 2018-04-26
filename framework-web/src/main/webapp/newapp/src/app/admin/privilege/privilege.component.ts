@@ -143,9 +143,10 @@ export class PrivilegeComponent implements OnInit {
     
     for (const i in response){
       let meta = {};
-      meta["label"]=response[i]['name'];
-      meta["value"]=response[i]['name'];
-      meta["name"]=response[i]['name'];
+      meta["label"]=response[i]['name'];    
+      meta["value"] = {}
+      meta["value"]["name"]=response[i]['name'];
+      meta["value"]["label"]=response[i]['label'];
       this.metaOptions[i]=meta;
     }
   }

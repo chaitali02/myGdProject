@@ -37,7 +37,6 @@
     "jointjs": "^1.0.3",
     "jquery": "^3.2.1",
     "lodash": "^3.10.1",
-    "ng-select": "^1.0.0-rc.3",
     "ng2-dnd": "^4.2.0",
     "ng2-right-click-menu": "0.0.16",
     "ngx-bootstrap": "^1.9.3",

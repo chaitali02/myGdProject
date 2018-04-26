@@ -126,10 +126,12 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <ng-select 
-                  [options]="typesOption"
-                  [(ngModel)]="algorithm.type"[disabled]="mode == 'true'"
-                  name="type"  style="z-index:100"></ng-select>
+                  <p-dropdown [options]="typesOption"          
+                    [(ngModel)]="algorithm.type"
+                    name="type"
+                    [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                    [disabled]="mode == 'true'">
+                  </p-dropdown>
                 </div>
               </div> 
 
@@ -138,10 +140,12 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <ng-select 
-                  [options]="librarytypesOption"
-                  [(ngModel)]="algorithm.library"[disabled]="mode == 'true'"
-                  name="library"  style="z-index:99"></ng-select>
+                  <p-dropdown [options]="librarytypesOption"          
+                    [(ngModel)]="algorithm.library"
+                    name="library"
+                    [style]="{'width':'100%','padding':'3px','z-index':'99'}"
+                    [disabled]="mode == 'true'">
+                  </p-dropdown>
                 </div>
               </div> 
 
@@ -175,10 +179,12 @@
               <div class="form-group" >
                 <label class="col-md-3 control-label">Parameter List</label>
                 <div class="col-md-6">
-                  <ng-select 
-                  [options]="arrayParamList"
-                  [(ngModel)]="paramList" [disabled]="mode == 'true'"
-                  name="paramList"  style="z-index:100"></ng-select>
+                  <p-dropdown [options]="arrayParamList"          
+                    [(ngModel)]="paramList"
+                    name="type"
+                    [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                    [disabled]="mode == 'true'">
+                </p-dropdown>
                 </div>
               </div>
 

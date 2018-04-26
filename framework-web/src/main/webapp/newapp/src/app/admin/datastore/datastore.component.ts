@@ -216,7 +216,9 @@ export class DatastoreComponent implements OnInit {
     for (const i in response) {
       let allName={};
       allName["label"]=response[i]['name'];
-      allName["value"]=response[i]['uuid']
+      allName["value"]={};
+      allName["value"]["name"]=response[i]['name']
+      allName["value"]["uuid"]=response[i]['uuid']
       //allName["uuid"]=response[i]['uuid']
       this.allNamesExecId[i]=allName;
     }
