@@ -11,14 +11,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection="operatortype")
 public class OperatorType extends BaseEntity {
-	private ParamList paramList;
+	private MetaIdentifierHolder paramList;
 
 	/**
 	 * @Ganesh
 	 *
 	 * @return the paramList
 	 */
-	public ParamList getParamList() {
+	public MetaIdentifierHolder getParamList() {
 		return paramList;
 	}
 
@@ -27,7 +27,7 @@ public class OperatorType extends BaseEntity {
 	 *
 	 * @param paramList the paramList to set
 	 */
-	public void setParamList(ParamList paramList) {
+	public void setParamList(MetaIdentifierHolder paramList) {
 		this.paramList = paramList;
 	}
 	

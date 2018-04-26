@@ -52,7 +52,7 @@
             <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showForm==true? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="distribution" style="height:14px;">
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="operatortype" style="height:14px;">
               <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
             </a>
           </div>
@@ -65,7 +65,7 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="OperatorTypeData.uuid" version="distribution.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="OperatorTypeData.uuid" version="OperatorType.defaultVersion.version">
             </div>
           </div>
 
@@ -164,7 +164,7 @@
 
               <div class="form-group" style="padding-top:10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a ui-sref="distribution" class="btn btn-primary">Cancel</a>
+                  <a ui-sref="operatortype" class="btn btn-primary">Cancel</a>
                   <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="isSubmitEnable || {{mode}}">
                   <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="isSubmitInProgress">
                     <div class="bounce1"></div>

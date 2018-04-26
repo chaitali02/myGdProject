@@ -27,10 +27,10 @@ DatascienceModule.controller('OperatorTypeDetailController', function (CommonSer
 	$scope.OperatorType.versions = [];
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
-	$scope.privileges = privilegeSvc.privileges['Operatortype'] || [];
+	$scope.privileges = privilegeSvc.privileges['operatortype'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	$scope.$on('privilegesUpdated', function (e, data) {
-		$scope.privileges = privilegeSvc.privileges['Operatortype'] || [];
+		$scope.privileges = privilegeSvc.privileges['operatortype'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
 	
@@ -40,22 +40,21 @@ DatascienceModule.controller('OperatorTypeDetailController', function (CommonSer
 	}
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage();
-		$state.go('createOperatortype', {
+		$state.go('createoperatortype', {
 			id: uuid,
 			version: version,
 			mode: 'false'
 		});
 	}
 	$scope.showView = function (uuid, version) {
-		if(isEdit){
-			return false;
-		}
-		$scope.showPage()
-		$state.go('createOperatortype', {
-			id: uuid,
-			version: version,
-			mode: 'true'
-		});
+		if(!$scope.isEdit){
+			$scope.showPage()
+			$state.go('createoperatortype', {
+				id: uuid,
+				version: version,
+				mode: 'true'
+			});
+	    }
 	}
 	var notify = {
 		type: 'success',

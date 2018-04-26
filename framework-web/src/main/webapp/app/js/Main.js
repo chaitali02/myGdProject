@@ -420,6 +420,7 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
                 {"name":"paramlist","type":"paramlist","uuid":"null","caption":"Parameter List"},
                 {"name":"paramset","type":"paramset","uuid":"null","caption":"Parameter Set"},
                 {"name":"operatortype","type":"operatortype","uuid":"null","caption":"Operator Type"},
+                {"name":"operator","type":"operator","uuid":"null","caption":"Operator"},
                 {"name":"train","type":"train","uuid":"null","caption":"Training"},
                 {"name":"predict","type":"predict","uuid":"null","caption":"Prediction"},
                 {"name":"simulate","type":"simulate","uuid":"null","caption":"Simulation"},
@@ -2824,7 +2825,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
 
     .state('createoperatortype', {
 		url: "/Datascience/OperatorType?id&mode&returnBack&version",
-		templateUrl: "views/OperatorType.html",
+		templateUrl: "views/operatorType.html",
 	    data: { pageTitle: 'Data Science'},
 		//controller: "BlankController",
 		resolve: {
@@ -2834,12 +2835,37 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
 					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
 					files: [
                        'js/controllers/OperatorTypeController.js',
-						'js/services/operatorTypeService.js',
+						'js/services/OperatorTypeService.js',
 					]
 				});
 			}]
 		}
-	})
+    })
+    .state('operator', {
+        url:"/Datascience/OperatorList",
+        templateUrl:"views/common-list.html",
+        data: { pageTitle: 'Data Science'},
+        params:{type:'operator'}
+    })
+
+    .state('createoperator', {
+		url: "/Datascience/Operator?id&mode&returnBack&version",
+		templateUrl: "views/operator.html",
+	    data: { pageTitle: 'Data Science'},
+		//controller: "BlankController",
+		resolve: {
+			deps: ['$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					name: 'InferyxApp',
+					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+					files: [
+                       'js/controllers/OperatorController.js',
+						'js/services/OperatorService.js',
+					]
+				});
+			}]
+		}
+    })
     
  }]);
 

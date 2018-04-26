@@ -20,13 +20,13 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   $scope.isJobExec = $stateParams.isJobExec;
   $scope.isExec = $stateParams.isExec;
   $scope.handleGroup = -1;
-  $scope.privileges = ['Add'];
-  //$scope.privileges = privilegeSvc.privileges[$scope.select] || [];
+  $scope.privileges = [];
+  $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
   //console.log($scope.privileges)
  // console.log(privilegeSvc.privileges)
  
   $scope.$on('privilegesUpdated', function (e, data) {
-    //$scope.privileges = privilegeSvc.privileges[$scope.select] || [];
+  $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
    // console.log($scope.privileges)
   //  console.log(privilegeSvc.privileges)
     
@@ -68,7 +68,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $sessionStorage.fromParams = fromParams
   });
 
-  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution'];
+  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype'];
   $scope.isExecutable = $scope.nonExecTypes.indexOf($scope.select);
   $scope.isUpload = ($scope.select == 'datapod' ? 0 : -1)
   
