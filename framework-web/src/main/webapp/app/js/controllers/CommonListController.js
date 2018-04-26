@@ -20,13 +20,13 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   $scope.isJobExec = $stateParams.isJobExec;
   $scope.isExec = $stateParams.isExec;
   $scope.handleGroup = -1;
-  $scope.privileges = [];
-  $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
+  $scope.privileges = ['Add'];
+  //$scope.privileges = privilegeSvc.privileges[$scope.select] || [];
   //console.log($scope.privileges)
  // console.log(privilegeSvc.privileges)
  
   $scope.$on('privilegesUpdated', function (e, data) {
-    $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
+    //$scope.privileges = privilegeSvc.privileges[$scope.select] || [];
    // console.log($scope.privileges)
   //  console.log(privilegeSvc.privileges)
     
@@ -58,6 +58,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.addMode = function () {
     cacheService.searchCriteria = {};
+    debugger
     $state.go($scope.detailState);
   }
   

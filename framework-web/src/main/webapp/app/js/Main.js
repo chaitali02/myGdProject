@@ -417,9 +417,9 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
                 {"name":"algorithm","type":"algorithm","uuid":"null","caption":"Algorithm"},
                 {"name":"distribution","type":"distribution","uuid":"null","caption":"Distribution"},
                 {"name":"model","type":"model","uuid":"null","caption":"Model"},
-                // {"name":"model","type":"model","uuid":"null","caption":"Model2"},
                 {"name":"paramlist","type":"paramlist","uuid":"null","caption":"Parameter List"},
                 {"name":"paramset","type":"paramset","uuid":"null","caption":"Parameter Set"},
+                {"name":"operatortype","type":"operatortype","uuid":"null","caption":"Operator Type"},
                 {"name":"train","type":"train","uuid":"null","caption":"Training"},
                 {"name":"predict","type":"predict","uuid":"null","caption":"Prediction"},
                 {"name":"simulate","type":"simulate","uuid":"null","caption":"Simulation"},
@@ -2809,6 +2809,32 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
 					files: [
                         'js/controllers/AppConfigController.js',
 						'js/services/AppConfigService.js',
+					]
+				});
+			}]
+		}
+    })
+
+    .state('operatortype', {
+        url:"/Datascience/OperatorTypeList",
+        templateUrl:"views/common-list.html",
+        data: { pageTitle: 'Data Science'},
+        params:{type:'operatortype'}
+    })
+
+    .state('createoperatortype', {
+		url: "/Datascience/OperatorType?id&mode&returnBack&version",
+		templateUrl: "views/OperatorType.html",
+	    data: { pageTitle: 'Data Science'},
+		//controller: "BlankController",
+		resolve: {
+			deps: ['$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					name: 'InferyxApp',
+					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+					files: [
+                       'js/controllers/OperatorTypeController.js',
+						'js/services/operatorTypeService.js',
 					]
 				});
 			}]

@@ -1553,6 +1553,19 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState : '',
       childMenu:[],
       allowInChildMenu : false,
+    },
+    'operatortype':{
+      name : 'operatortype',
+      caption :'operator Type',
+      execType:'', 
+      metaType:'operatortype',
+      color : '#c6ff00',
+      iconCaption:'',
+      detailState: 'createoperatortype',
+      allowInMenu :false,
+      listState : 'operatortype',
+      childMenu:[],
+      allowInChildMenu : false,
 	  }
   };
 
