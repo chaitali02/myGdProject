@@ -412,4 +412,13 @@ public class ModelController {
 		}
 	}
 
+	@RequestMapping(value = "/operator/getResults", method = RequestMethod.GET)
+	List<Map<String, Object>> getOperatorResults(@RequestParam("uuid") String operatorExecUuid,
+			@RequestParam("version") String operatorExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
+		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+		return modelExecServiceImpl.getOperatorResults(operatorExecUuid, operatorExecVersion, rowLimit);
+	}
 }

@@ -69,6 +69,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ProfileExec;
@@ -747,5 +748,30 @@ public class ModelExecServiceImpl {
 		return (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(),
 				train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param operatorExecUuid
+	 * @param operatorExecVersion
+	 * @param rowLimit
+	 * @return
+	 * @throws Exception 
+	 */
+	public List<Map<String, Object>> getOperatorResults(String operatorExecUuid, String operatorExecVersion,
+			int rowLimit) throws Exception {
+		List<Map<String, Object>> data = null;
+		
+		OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExecUuid, operatorExecVersion,
+				MetaType.operatorExec.toString());
+
+		DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
+				operatorExec.getResult().getRef().getUuid(), operatorExec.getResult().getRef().getVersion(),
+				MetaType.datastore.toString());
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		data = exec.fetchResults(datastore, null, rowLimit, commonServiceImpl.getApp().getUuid());
+		return data;
 	}
 }
