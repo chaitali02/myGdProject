@@ -51,6 +51,10 @@ export class MapExecComponent {
   source:any
   LoadTargetType:any;
   loadTargetType:any;
+  results : any;
+  
+
+
 
   constructor(private datePipe: DatePipe,private _location: Location,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
   this.mapData={};
@@ -109,6 +113,10 @@ export class MapExecComponent {
     this.mapData=response
     this.createdBy=this.mapData.createdBy.ref.name;
     this.dependsOn=this.mapData.dependsOn.ref.name;
+    if(this.mapData.result !== null){
+      this.results=this.mapData.result.ref.name;
+      }
+  
     var d
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
@@ -117,13 +125,20 @@ export class MapExecComponent {
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
     this.statusList = statusList;
-    var refkeylist = [];
-    if (response.refKeyList.length > 0) {
-      for (let j = 0; j < response.refKeyList.length; j++) {
-        refkeylist[j] = response.refKeyList[j].type + "-" + response.refKeyList[j].name;
+    // 
+    let refKeyListObj = [];
+    if(response.refKeyList  != null){
+      for(let i=0;i<response.refKeyList.length;i++){
 
+        let ref = {};
+          ref["type"] = response.refKeyList[i].type;
+          ref["uuid"] = response.refKeyList[i].uuid;
+          ref["name"] = response.refKeyList[i].name;
+          
+          refKeyListObj[i] = ref["type"]+"-"+ref["name"];        
       }
-      this.refkeylist = refkeylist
+    
+      this.refkeylist =refKeyListObj;
     }
     this.published = response['published'];
     if(this.published === 'Y') { this.published = true; } else { this.published = false; }
