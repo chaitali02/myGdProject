@@ -28,7 +28,7 @@ public class TransposeOperator {
 	 * 
 	 * @param dp
 	 * @return
-	 */
+	 *//*
 	public String generateCollectSql(Datapod dp) {
 		List<Attribute> srcAttrs = dp.getAttributes();
 		StringBuilder sb = new StringBuilder(ConstantsUtil.SELECT);
@@ -49,14 +49,14 @@ public class TransposeOperator {
 		sb = sb.append(ConstantsUtil.FROM);
 		sb = sb.append(dp.getName());
 		return sb.toString();		
-	}
+	}*/
 	
 	/**
 	 * 
 	 * @param dp
 	 * @param attrindex
 	 * @return
-	 */
+	 *//*
 	public String generateAttrSql(Datapod dp, int attrindex) {
 		StringBuilder sb = new StringBuilder(ConstantsUtil.SELECT);
 		List<Attribute> srcAttrs = dp.getAttributes();
@@ -79,13 +79,13 @@ public class TransposeOperator {
 				.append(ConstantsUtil.AS)
 				.append(srcAttrs.get(attrindex).getName());
 		return sb.toString();		
-	}
+	}*/
 	
 	/**
 	 * 
 	 * @param dp
 	 * @return
-	 */
+	 *//*
 	public String generateSql(Datapod dp) {
 		List<Attribute> srcAttrs = dp.getAttributes();
 		StringBuilder sb = new StringBuilder();
@@ -97,7 +97,76 @@ public class TransposeOperator {
 		}
 		LOGGER.info("query: "+sb.toString());
 		return sb.toString();
+	}*/
+	
+	/**
+	 * 
+	 * @param dp
+	 * @return
+	 */
+	public String generateSql(Datapod dp, String tableName) {
+		String query = generateAttrSql(dp, tableName);
+		LOGGER.info("query: "+query);
+		return query;
 	}
 	
+	/**
+	 * 
+	 * @param dp
+	 * @param attrindex
+	 * @return
+	 */
+	public String generateAttrSql(Datapod dp, String tableName) {
+		StringBuilder sb = new StringBuilder(ConstantsUtil.SELECT);
+		List<Attribute> srcAttrs = dp.getAttributes();
+		// Pick up the pivot
+		Attribute pivotAttr = srcAttrs.get(0);
+		sb = sb.append(pivotAttr.getName())
+			   .append(ConstantsUtil.COMMA)
+			   .append("key")
+			   .append(ConstantsUtil.COMMA)
+			   .append("value");		
+		sb = sb.append(ConstantsUtil.FROM);		
+		sb = sb.append("(")
+			   .append(generateMapQuery(dp, tableName))
+			   .append(")")
+			   .append(" tab_transpose ");
+		sb = sb.append(" LATERAL VIEW explode(")
+		       .append("trialDp")
+			   .append(")")
+			   .append(" explode_tab ")
+			   .append(ConstantsUtil.AS)
+			   .append("key")
+			   .append(ConstantsUtil.COMMA)
+			   .append("value");
+		return sb.toString();		
+	}
 	
+	public String generateMapQuery(Datapod datapod, String tableName) {
+		List<Attribute> srcAttrs = datapod.getAttributes();
+		StringBuilder sb = new StringBuilder(ConstantsUtil.SELECT);
+		// Pick up the pivot
+		Attribute pivotAttr = srcAttrs.get(0);
+		sb = sb.append(pivotAttr.getName())
+			   .append(ConstantsUtil.COMMA);
+		sb = sb.append("MAP")
+			   .append("(");
+		for (int i = 1; i < srcAttrs.size(); i++) {
+			sb = sb.append("'")
+					.append(srcAttrs.get(i).getName())
+					.append("'");
+			sb = sb.append(",");
+			sb = sb.append(srcAttrs.get(i).getName());
+			if(i < srcAttrs.size()-1)
+				sb = sb.append(",");
+		}
+		sb = sb.append(")")
+			   .append(ConstantsUtil.AS)
+			   .append(" trialDp ")
+			   .append(ConstantsUtil.FROM)
+			   .append(" ")
+			   .append(tableName);
+		
+		return sb.toString();		
+	}
 }
