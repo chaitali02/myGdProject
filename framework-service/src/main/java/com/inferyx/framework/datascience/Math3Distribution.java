@@ -97,7 +97,7 @@ public class Math3Distribution {
 		
 		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getParamValue().getRef().getUuid(), paramListHolder.getParamValue().getRef().getVersion(), paramListHolder.getParamValue().getRef().getType().toString());
 		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-		String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, hdfsInfo, null, datasource);
+		String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
 		double[][] params = exec.twoDArrayFromDatapod(tableName, paramDp, commonServiceImpl.getApp().getUuid());
 		return params;
 	}
@@ -108,7 +108,7 @@ public class Math3Distribution {
 		
 		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getParamValue().getRef().getUuid(), paramListHolder.getParamValue().getRef().getVersion(), paramListHolder.getParamValue().getRef().getType().toString());
 		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-		String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, hdfsInfo, null, datasource);
+		String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
 		double[] params = exec.oneDArrayFromDatapod(tableName, paramDp, commonServiceImpl.getApp().getUuid());
 		return params;
 	}
