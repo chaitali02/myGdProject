@@ -63,6 +63,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
@@ -470,6 +471,10 @@ public class MetadataServiceImpl {
 				ReconGroupExec execObject = new ReconGroupExec();
 				execObject = (ReconGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+			} else if(type.equalsIgnoreCase(MetaType.operatorExec.toString())){
+				OperatorExec operatorExec = new OperatorExec();
+				operatorExec = (OperatorExec) metaObject;
+				execStatus = (List<Status>) operatorExec.getStatusList();	
 			}
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
