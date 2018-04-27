@@ -1509,7 +1509,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			ConnectionHolder conHolder = conn.getConnection();
 			Object obj = conHolder.getStmtObject();
 			//DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
-			String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), datapod, datastore, hdfsInfo, obj, datasource);
+			String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), datapod, datastore, null, hdfsInfo, obj, datasource);
 			String sql = "SELECT * FROM "+tableName;
 			return sql;
 		} else if (source instanceof DataSet) {
@@ -1670,9 +1670,9 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 						MetaIdentifierHolder datapodHolder = holder.getParamValue();
 						Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodHolder.getRef().getUuid(), datapodHolder.getRef().getVersion(), datapodHolder.getRef().getType().toString());
 						DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(), datapod.getVersion());
-						exec.readFile(appUuid, datapod, datastore, hdfsInfo, null, datasource);
-						String sql = transposeOperator.generateSql(datapod);
-						exec.executeRegisterAndPersist(sql, datapod.getName(), filePath, datapod, SaveMode.Append.toString(), appUuid);
+						String tabName = exec.readFile(appUuid, datapod, datastore, tableName, hdfsInfo, null, datasource);
+						String sql = transposeOperator.generateSql(datapod, tabName);
+						result = exec.executeRegisterAndPersist(sql, tabName, filePath, datapod, SaveMode.Append.toString(), appUuid);
 					}
 				}
 			}

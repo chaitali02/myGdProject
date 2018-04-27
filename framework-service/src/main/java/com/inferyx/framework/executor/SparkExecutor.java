@@ -286,8 +286,11 @@ public class SparkExecutor implements IExecutor {
 	 * @throws Exception
 	 */
 	@Override
-	public String readFile(String clientContext, Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo,
-			Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
+	public String readFile(String clientContext, Datapod datapod, DataStore datastore, String tableName,
+			HDFSInfo hdfsInfo, Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
+		if(tableName == null)
+			tableName = datapod.getName();
+		
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		Object obj = conHolder.getStmtObject();
@@ -300,8 +303,8 @@ public class SparkExecutor implements IExecutor {
 		if (obj instanceof SparkSession) {
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 			DataFrameHolder dfHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
-			sparkSession.sqlContext().registerDataFrameAsTable(dfHolder.getDataframe(), datapod.getName());
-			return datapod.getName();
+			sparkSession.sqlContext().registerDataFrameAsTable(dfHolder.getDataframe(), tableName);
+			return tableName;
 		} /*
 			 * else if (obj instanceof LivyClient) { LivyClient client = (LivyClient)
 			 * conHolder.getStmtObject(); // Need to think of persist return
@@ -706,6 +709,7 @@ public class SparkExecutor implements IExecutor {
 		// Execute SQL
 		logger.info("inside SparkExecutor for the quiery: " + sql);
 		Dataset<Row> df = sparkSession.sql(sql).coalesce(10);
+		df.show(Integer.parseInt(""+df.count()));
 		df.persist(StorageLevel.MEMORY_AND_DISK());
 		// df.cache();
 
