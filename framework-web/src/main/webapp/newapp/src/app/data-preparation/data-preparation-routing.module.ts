@@ -36,6 +36,7 @@ const routes: Routes = [
         {path: 'filter/:id/:version/:mode', component: FilterComponent, pathMatch: 'full'},
         {path: 'filter/filter/:id/:version/:mode', component: FilterComponent, pathMatch: 'full'},
         {path: 'filter', component: FilterComponent, pathMatch: 'full'},
+        {path: 'function', component: FunctionComponent, pathMatch: 'full'},
         {path: 'function/:id/:version/:mode', component: FunctionComponent, pathMatch: 'full'},
         {path: 'function/function/:id/:version/:mode', component:FunctionComponent, pathMatch: 'full'},
         {path: 'map/:id/:version/:mode', component: MapComponent, pathMatch: 'full'},
