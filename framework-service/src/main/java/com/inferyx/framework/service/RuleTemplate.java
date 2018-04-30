@@ -234,6 +234,7 @@ public abstract class RuleTemplate {
 		runBaseRuleService.setConnFactory(connFactory);
 		runBaseRuleService.setEngine(engine);
 		runBaseRuleService.setHelper(helper);
+		runBaseRuleService.setExecParams(execParams);
 
 		if (metaExecutor == null) {
 			runBaseRuleService.execute();
