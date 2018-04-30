@@ -14,13 +14,10 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,12 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -42,21 +36,15 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.Engine;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IDataQualDao;
 import com.inferyx.framework.dao.IDataQualExecDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
@@ -66,8 +54,8 @@ import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
-import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -402,19 +390,19 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 	
 	public DataQualExec execute(String dataqualUUID, String dataqualVersion, DataQualExec dataqualExec,
-			DataQualGroupExec dataqualGroupExec, Mode runMode) throws Exception {
-		execute(dataqualUUID, dataqualVersion, null, dataqualExec, dataqualGroupExec, null, runMode);
+			DataQualGroupExec dataqualGroupExec, ExecParams execParams, Mode runMode) throws Exception {
+		execute(dataqualUUID, dataqualVersion, null, dataqualExec, dataqualGroupExec, null, execParams, runMode);
 		return dataqualExec;
 	}
 
 	public DataQualExec execute(String dataqualUUID, String dataqualVersion,
-			ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, DataQualGroupExec dataqualGroupExec, List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, DataQualGroupExec dataqualGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
 		Datapod targetDatapod = (Datapod) daoRegister
 				.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
 		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 				targetDatapod.getVersion());		
 		try {
-			return (DataQualExec) super.execute(dataqualUUID, dataqualVersion, MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec, dataqualGroupExec, targetDatapodKey, taskList, runMode);
+			return (DataQualExec) super.execute(dataqualUUID, dataqualVersion, MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec, dataqualGroupExec, targetDatapodKey, taskList, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -431,8 +419,8 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	@Override
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
-			List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
-			return execute(uuid, version, metaExecutor, (DataQualExec) baseRuleExec, (DataQualGroupExec)baseGroupExec, taskList, runMode);
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			return execute(uuid, version, metaExecutor, (DataQualExec) baseRuleExec, (DataQualGroupExec)baseGroupExec, taskList, execParams, runMode);
 	}
 	
 	
@@ -810,7 +798,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		mi.setVersion(dataQualExec.getDependsOn().getRef().getVersion());
 		return mi;
 	}
-	public void restart(String type,String uuid,String version, Mode runMode) throws JsonProcessingException{
+	public void restart(String type,String uuid,String version, ExecParams execParams, Mode runMode) throws JsonProcessingException{
 		//DataQualExec dataQualExec= dataQualExecServiceImpl.findOneByUuidAndVersion(uuid,version);
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.dqExec.toString());
 //		try {
@@ -820,7 +808,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 //		}
 		try {
 			dataQualExec = (DataQualExec) parse(uuid,version, null, null, null, runMode);
-			execute(dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion(),dataQualExec,null, runMode);
+			execute(dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion(),dataQualExec,null, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
