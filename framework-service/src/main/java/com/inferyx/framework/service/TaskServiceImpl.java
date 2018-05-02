@@ -25,6 +25,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
@@ -44,8 +45,8 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
@@ -780,7 +781,22 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} 	// End else
+		} 	 else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.operator)) {
+			logger.info("Going to operatorServiceImpl.execute");
+			try {
+				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
+				OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.operatorExec.toString());
+				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
+				operatorServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, operatorExec, null, execParams, runMode);
+				
+				if (Helper.getLatestStatus(operatorExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		}  // End else
 		return datapodTableName;
 	}// End executeTask
 
@@ -913,7 +929,11 @@ public class TaskServiceImpl implements Callable<String> {
 				|| operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS) == null) {
 			return null;
 		}
-		return (ExecParams) operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS);
+		logger.info("ExecParams : " + operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS));
+		ObjectMapper mapper = new ObjectMapper();
+		ExecParams execParams = mapper.convertValue(operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS), ExecParams.class);
+//		return (ExecParams) operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS);
+		return execParams;
 	}
 
 
