@@ -70,7 +70,7 @@ public class ReconController {
 		ReconExec reconExec = reconServiceImpl.create(reconUuid, reconVersion, null, null, null);
 		reconExec = (ReconExec) reconServiceImpl.parse(reconExec.getUuid(), reconExec.getVersion(), null, null, null,
 				runMode);
-		reconExec = reconServiceImpl.execute(reconUuid, reconVersion, metaExecutor, reconExec, null, taskList, runMode);
+		reconExec = reconServiceImpl.execute(reconUuid, reconVersion, metaExecutor, reconExec, null, taskList, null, runMode);
 		commonServiceImpl.completeTaskThread(taskList);
 		return reconExec;
 	}
@@ -82,7 +82,7 @@ public class ReconController {
 		try {
 			Mode runMode = Helper.getExecutionMode(mode);
 			if (type.equalsIgnoreCase(MetaType.reconExec.toString())) {
-				reconServiceImpl.restart(type, uuid, version, runMode);
+				reconServiceImpl.restart(type, uuid, version, null, runMode);
 			} else {
 				reconGroupServiceImpl.restart(type, uuid, version, runMode);
 			}

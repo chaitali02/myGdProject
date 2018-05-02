@@ -1638,7 +1638,6 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 	 * @return 
 	 * @throws Exception 
 	 */
-	@SuppressWarnings("unused")
 	public boolean operator(Operator operator, ExecParams execParams, OperatorExec operatorExec) throws Exception {
 		boolean isSuccess = false;
 		Object result = null;

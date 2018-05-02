@@ -10,8 +10,20 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
+import java.util.HashMap;
+import java.util.Set;
+
+import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.Mode;
+
 public interface Operator {
 	
-	
+	public void execute(com.inferyx.framework.datascience.Operator operator, 
+			ExecParams execParams, 
+			java.util.Map<String, MetaIdentifier> refKeyMap, 
+			HashMap<String, String> otherParams, 
+			Set<MetaIdentifier> usedRefKeySet, 
+			Mode runMode) throws Exception;
 	
 }

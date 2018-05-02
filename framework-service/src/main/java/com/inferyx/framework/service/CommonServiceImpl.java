@@ -2092,6 +2092,7 @@ public class CommonServiceImpl <T> {
 	
 	@SuppressWarnings("unused")
 	public List<MetaStatsHolder> getMetaStats(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, JsonProcessingException {
+		logger.info("Inside getMetaStats - type : " + type);
 		String appUuid = null;
 //		if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 //			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
