@@ -34,6 +34,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.parser.TaskParser;
@@ -133,9 +134,8 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		}
 
 		@Override
-		public void execute(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
-				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-				Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+		public void execute(OperatorType operatorType, ExecParams execParams, Map<String, MetaIdentifier> refKeyMap,
+				HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
 			// TODO Auto-generated method stub
 			
 		}

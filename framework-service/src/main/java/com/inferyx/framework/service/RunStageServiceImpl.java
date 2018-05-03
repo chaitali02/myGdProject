@@ -706,7 +706,7 @@ public class RunStageServiceImpl implements Callable<String> {
 							|| operationInfoHolder.getRef().getType().equals(MetaType.simulate) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
-							|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
+							|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype))) {
 					continue;
 					}
 				}

@@ -56,23 +56,23 @@ public class OperatorServiceImpl {
 			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
 		logger.info("Inside OperatorServiceImpl.create ");
 		List<Status> statusList = null;
-		Operator operator = null;
+		OperatorType operatorType = null;
 		if (StringUtils.isBlank(uuid)) {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
 			return null;
 		}
-		operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type.toString());
-		if (operator == null || type == null || execType == null) {
+		operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type.toString());
+		if (operatorType == null || type == null || execType == null) {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
 			return null;
 		}
-		MetaIdentifierHolder baseRuleMeta = new MetaIdentifierHolder(new MetaIdentifier(type, operator.getUuid(), operator.getVersion()));
+		MetaIdentifierHolder baseRuleMeta = new MetaIdentifierHolder(new MetaIdentifier(type, operatorType.getUuid(), operatorType.getVersion()));
 		if (operatorExec == null) {
 			operatorExec = new OperatorExec();
 			operatorExec.setDependsOn(baseRuleMeta);
 			operatorExec.setBaseEntity();
-			operatorExec.setName(operator.getName());
-			operatorExec.setAppInfo(operator.getAppInfo());
+			operatorExec.setName(operatorType.getName());
+			operatorExec.setAppInfo(operatorType.getAppInfo());
 			synchronized (operatorExec.getUuid()) {
 				commonServiceImpl.save(execType.toString(), operatorExec);
 			}
@@ -106,18 +106,15 @@ public class OperatorServiceImpl {
 						Mode runMode) throws Exception {
 		logger.info("Inside OperatorServiceImpl.execute");
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.NotStarted);
-		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
+		OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
 																				operatorExec.getDependsOn().getRef().getVersion(), 
-																				MetaType.operator.toString());
-		OperatorType operatorType = (OperatorType)commonServiceImpl.getOneByUuidAndVersion(operator.getOperatorType().getRef().getUuid(), 
-																							operator.getOperatorType().getRef().getVersion(), 
-																							MetaType.operatortype.toString());
+																				MetaType.operatortype.toString());
 		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(operatorType.getName());
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.InProgress);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
-		newOperator.execute(operator, execParams, null, null, new HashSet<>(), runMode);
+		newOperator.execute(operatorType, execParams, null, null, new HashSet<>(), runMode);
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Completed);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
