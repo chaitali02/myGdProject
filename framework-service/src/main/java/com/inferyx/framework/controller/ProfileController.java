@@ -78,7 +78,7 @@ public class ProfileController {
 		ProfileExec profileExec = profileServiceImpl.create(profileUUID, profileVersion,null,null, null, null);
 		profileExec = (ProfileExec) profileServiceImpl.parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null, runMode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
-		profileExec = profileServiceImpl.execute(profileUUID, profileVersion, profileExec,metaExecutor,null, taskList, runMode);
+		profileExec = profileServiceImpl.execute(profileUUID, profileVersion, profileExec,metaExecutor,null, taskList, null, runMode);
 		commonServiceImpl.completeTaskThread(taskList);
 		return profileExec;
 	}
@@ -183,7 +183,7 @@ public class ProfileController {
 			try {
 				Mode runMode = Helper.getExecutionMode(mode);
 				if(type.equalsIgnoreCase(MetaType.profileExec.toString())){
-					profileServiceImpl.restart(type,uuid,version, runMode);
+					profileServiceImpl.restart(type,uuid,version, null, runMode);
 				}
 				else{
 					profileGroupServiceImpl.restart(type,uuid,version, runMode);

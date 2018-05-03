@@ -17,8 +17,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,24 +47,20 @@ import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
-
 import com.inferyx.framework.domain.DataStore;
-import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Message;
-
-import com.inferyx.framework.domain.ReconExec;
-import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Recon;
+import com.inferyx.framework.domain.ReconExec;
+import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
-import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -172,8 +166,8 @@ public class ReconServiceImpl extends RuleTemplate {
 	@Override
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
-			List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
-		return execute(uuid, version, metaExecutor, (ReconExec)baseRuleExec, (ReconGroupExec)baseGroupExec, taskList, runMode);
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+		return execute(uuid, version, metaExecutor, (ReconExec)baseRuleExec, (ReconGroupExec)baseGroupExec, taskList, execParams, runMode);
 	}
 	
 	public ReconExec create(String reconUuid, String reconVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception{
@@ -187,14 +181,14 @@ public class ReconServiceImpl extends RuleTemplate {
 	}
 	
 	public ReconExec execute(String reconUuid, String reconVersion,
-			ThreadPoolTaskExecutor metaExecutor, ReconExec reconExec, ReconGroupExec reconGroupExec, List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, ReconExec reconExec, ReconGroupExec reconGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
 		logger.info("Inside reconServiceImpl.execute");
 		try {
 			Datapod targetDatapod = (Datapod) daoRegister
 					.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));
 			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 					targetDatapod.getVersion());
-			reconExec = (ReconExec) super.execute(reconUuid, reconVersion, MetaType.recon, MetaType.reconExec, metaExecutor, reconExec, reconGroupExec, targetDatapodKey, taskList, runMode);
+			reconExec = (ReconExec) super.execute(reconUuid, reconVersion, MetaType.recon, MetaType.reconExec, metaExecutor, reconExec, reconGroupExec, targetDatapodKey, taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (reconExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Failed);
@@ -204,8 +198,8 @@ public class ReconServiceImpl extends RuleTemplate {
 	}
 	
 	public ReconExec execute(String reconUuid, String reconVersion, ReconExec reconExec,
-			ReconGroupExec reconGroupExec, Mode runMode) throws Exception {
-		execute(reconUuid, reconVersion, null, reconExec, reconGroupExec, null, runMode);
+			ReconGroupExec reconGroupExec, ExecParams  execParams, Mode runMode) throws Exception {
+		execute(reconUuid, reconVersion, null, reconExec, reconGroupExec, null, execParams, runMode);
 		return reconExec;
 	}
 	
@@ -366,11 +360,11 @@ public class ReconServiceImpl extends RuleTemplate {
 		return data;
 	}
 
-	public void restart(String type, String uuid, String version, Mode runMode) throws JsonProcessingException {
+	public void restart(String type, String uuid, String version, ExecParams  execParams, Mode runMode) throws JsonProcessingException {
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.reconExec.toString());
 		try {
 			reconExec = (ReconExec) parse(uuid,version, null, null, null, runMode);
-			execute(reconExec.getDependsOn().getRef().getUuid(),reconExec.getDependsOn().getRef().getVersion(),reconExec,null, runMode);
+			execute(reconExec.getDependsOn().getRef().getUuid(),reconExec.getDependsOn().getRef().getVersion(),reconExec,null, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	

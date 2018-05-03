@@ -28,6 +28,7 @@ import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -66,6 +67,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	ConnectionFactory connFactory;
 	protected Engine engine;
 	protected Helper helper;
+	protected ExecParams execParams;
 	
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);	
 	
@@ -380,6 +382,24 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 */
 	public void setHelper(Helper helper) {
 		this.helper = helper;
+	}
+
+
+
+	/**
+	 * @return the execParams
+	 */
+	public ExecParams getExecParams() {
+		return execParams;
+	}
+
+
+
+	/**
+	 * @param execParams the execParams to set
+	 */
+	public void setExecParams(ExecParams execParams) {
+		this.execParams = execParams;
 	}
 
 
