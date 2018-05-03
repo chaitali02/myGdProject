@@ -45,6 +45,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
                     uuid:"stage_0",version:"N/a"
                   }
                 }
+                
               }],
               isTemplate:true
             },

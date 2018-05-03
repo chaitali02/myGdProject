@@ -437,6 +437,9 @@
       if (type == "simulate") {
         url = "metadata/getParamListBySimulate?uuid=" + uuid+"&type="+type;
       }
+      else if(type == "operator"){
+        url = "metadata/getParamListByOperator?uuid=" + uuid+"&type="+type;
+      }
       url += '&action=view'
       CommonFactory.httpGet(url).then(function(response) {
         onSuccess(response.data)
@@ -457,8 +460,10 @@
             if(type.indexOf(response[i].paramType) == -1){
               paramList.isParamType="simple";
               paramList.paramValue=response[i].paramValue.value;
+              paramList.selectedParamValueType='simple'
             }else{
               paramList.isParamType="datapod";
+              paramList.selectedParamValueType='datapod'
               paramList.paramValue=response[i].paramValue;    
             }
            
@@ -483,9 +488,13 @@
       else if(type=='simulate'){
         url = "model/simulate/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
       }
+      else if ( type =='operator'){
+        url = "model/operator/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+      }
       else{
         url = "" + type + "/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
       }
+
      
       CommonFactory.httpPost(url, data).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
       var onSuccess = function(response) {

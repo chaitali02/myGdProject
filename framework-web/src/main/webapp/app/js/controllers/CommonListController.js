@@ -26,7 +26,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
  // console.log(privilegeSvc.privileges)
  
   $scope.$on('privilegesUpdated', function (e, data) {
-    $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
+  $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
    // console.log($scope.privileges)
   //  console.log(privilegeSvc.privileges)
     
@@ -67,7 +67,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $sessionStorage.fromParams = fromParams
   });
 
-  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution'];
+  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype'];
   $scope.isExecutable = $scope.nonExecTypes.indexOf($scope.select);
   $scope.isUpload = ($scope.select == 'datapod' ? 0 : -1)
   
@@ -312,7 +312,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       // $rootScope.refreshSearchResults();
       //$scope.originalData.splice($scope.originalData.indexOf(data),1);
       data.published = unpublish ? 'N' : 'Y';
-
       $scope.publishmessage = $scope.caption + (unpublish ? " Unpublished" : " Published") + " Successfully";
       //  $('#showMsgModel').modal('show');
     }
@@ -327,7 +326,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.$emit('notify', notify);
     });
   }
-    
   $('#publishedConfModal').modal({
     backdrop: 'static',
     keyboard: false
@@ -355,7 +353,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.createCopy = function (data) {
-
     $scope.setActivity(data.uuid, data.version, $scope.select, "clone");
     var uuid = data.uuid;
     var version = data.version;
@@ -393,6 +390,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.$emit('notify', notify);
     }
   }
+  
   $scope.getAllLatest=function(){
     CommonService.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
 		var onSuccessGetAllLatest = function (response) {
@@ -576,7 +574,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     if ($scope.select == 'rule' || $scope.select == 'train') {
       $scope.getExecParamsSet();
     }
-    else if($scope.select == 'simulate'){
+    else if($scope.select == 'simulate' || $scope.select == 'operator' ){
       $scope.getExecParamList();
     }
     else if($scope.select == 'predict'){

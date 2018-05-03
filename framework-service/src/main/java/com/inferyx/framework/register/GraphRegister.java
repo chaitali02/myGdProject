@@ -32,10 +32,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.GraphInfo;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
+import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
 import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
@@ -70,6 +70,9 @@ import com.inferyx.framework.dao.IMessageDao;
 import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
+import com.inferyx.framework.dao.IOperatorDao;
+import com.inferyx.framework.dao.IOperatorExecDao;
+import com.inferyx.framework.dao.IOperatorTypeDao;
 import com.inferyx.framework.dao.IParamListDao;
 import com.inferyx.framework.dao.IParamSetDao;
 import com.inferyx.framework.dao.IPredictDao;
@@ -364,7 +367,78 @@ public class GraphRegister<T> {
 	IReconExecDao iReconExecDao;
 	@Autowired
 	IDistributionDao iDistributionDao;
+	@Autowired
+	IAppConfigDao iAppConfigDao;
+	@Autowired
+	IOperatorTypeDao iOperatorTypeDao;
+	@Autowired
+	IOperatorExecDao iOperatorExecDao;
+	@Autowired
+	IOperatorDao iOperatorDao;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iOperatorDao
+	 */
+	public IOperatorDao getiOperatorDao() {
+		return iOperatorDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iOperatorDao the iOperatorDao to set
+	 */
+	public void setiOperatorDao(IOperatorDao iOperatorDao) {
+		this.iOperatorDao = iOperatorDao;
+	}
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iOperatorTypeDao
+	 */
+	public IOperatorTypeDao getiOperatorTypeDao() {
+		return iOperatorTypeDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iOperatorTypeDao the iOperatorTypeDao to set
+	 */
+	public void setiOperatorTypeDao(IOperatorTypeDao iOperatorTypeDao) {
+		this.iOperatorTypeDao = iOperatorTypeDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iOperatorExecDao
+	 */
+	public IOperatorExecDao getiOperatorExecDao() {
+		return iOperatorExecDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iOperatorExecDao the iOperatorExecDao to set
+	 */
+	public void setiOperatorExecDao(IOperatorExecDao iOperatorExecDao) {
+		this.iOperatorExecDao = iOperatorExecDao;
+	}
+	
+
+	public IAppConfigDao getiAppConfigDao() {
+		return iAppConfigDao;
+	}
+
+	public void setiAppConfigDao(IAppConfigDao iAppConfigDao) {
+		this.iAppConfigDao = iAppConfigDao;
+	}
+
 
 	/**
 	 * @Ganesh

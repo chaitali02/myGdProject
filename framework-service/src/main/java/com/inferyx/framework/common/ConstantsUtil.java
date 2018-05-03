@@ -41,8 +41,10 @@ public class ConstantsUtil {
 	public static final String ATTRIBUTE_ID = "AttributeId";
 	public static final String ATTRIBUTE_VAL = "AttributeValue";
 	public static final String ROWNUM = "RowNumber";
+	public static final String UNION_ALL = " UNION ALL ";
 	// Datastore
 	public static final String PERSIST_MODE_MEMORY_ONLY = "MEMORY_ONLY";
 	public static final String PERSIST_MODE_DISK_ONLY = "DISK_ONLY";
-
+	// Operator
+	public static final String EXEC_PARAMS = "EXEC_PARAMS";
 }

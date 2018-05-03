@@ -417,9 +417,10 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
                 {"name":"algorithm","type":"algorithm","uuid":"null","caption":"Algorithm"},
                 {"name":"distribution","type":"distribution","uuid":"null","caption":"Distribution"},
                 {"name":"model","type":"model","uuid":"null","caption":"Model"},
-                // {"name":"model","type":"model","uuid":"null","caption":"Model2"},
                 {"name":"paramlist","type":"paramlist","uuid":"null","caption":"Parameter List"},
                 {"name":"paramset","type":"paramset","uuid":"null","caption":"Parameter Set"},
+                {"name":"operatortype","type":"operatortype","uuid":"null","caption":"Operator Type"},
+                {"name":"operator","type":"operator","uuid":"null","caption":"Operator"},
                 {"name":"train","type":"train","uuid":"null","caption":"Training"},
                 {"name":"predict","type":"predict","uuid":"null","caption":"Prediction"},
                 {"name":"simulate","type":"simulate","uuid":"null","caption":"Simulation"},
@@ -1954,7 +1955,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
     })
     
     .state('settings', {
-        url:"/Admin/Settings",
+        url:"/Admin/Settings?index",
         templateUrl: "views/settings.html",
         data: { pageTitle: 'Admin'},
         controller: "",
@@ -2758,7 +2759,26 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
             }]
         }
     })
+    .state('jobexecutorlistoperatorexec', {
+        url: "/JobMonitoringList/OperatorEXec?id&mode&returnBack",
+        templateUrl: "views/operator-exec.html",
+        data: {pageTitle: 'Job Monitoring'},
+        //controller: "BlankController",
+        resolve: {
+            deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name: 'InferyxApp',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                    files: [
 
+                       'js/controllers/OperatorExecController.js',
+                       'js/services/JobMonitoringService.js',
+                    ]
+                });
+            }]
+        }
+    })
+    
 	.state('commonlistpage', {
 		url: "/list?type",
 	    templateUrl: "views/common-list.html",
@@ -2795,8 +2815,77 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
 				});
 			}]
 		}
-	})
+    })
+    .state('createappconfig', {
+		url: "/AppConfig?id&mode&returnBack&version",
+		templateUrl: "views/appconfig.html",
+	    data: { pageTitle: 'Admin'},
+		//controller: "BlankController",
+		resolve: {
+			deps: ['$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					name: 'InferyxApp',
+					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+					files: [
+                        'js/controllers/AppConfigController.js',
+						'js/services/AppConfigService.js',
+					]
+				});
+			}]
+		}
+    })
 
+    .state('operatortype', {
+        url:"/Datascience/OperatorTypeList",
+        templateUrl:"views/common-list.html",
+        data: { pageTitle: 'Data Science'},
+        params:{type:'operatortype'}
+    })
+
+    .state('createoperatortype', {
+		url: "/Datascience/OperatorType?id&mode&returnBack&version",
+		templateUrl: "views/operatorType.html",
+	    data: { pageTitle: 'Data Science'},
+		//controller: "BlankController",
+		resolve: {
+			deps: ['$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					name: 'InferyxApp',
+					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+					files: [
+                       'js/controllers/OperatorTypeController.js',
+						'js/services/OperatorTypeService.js',
+					]
+				});
+			}]
+		}
+    })
+    .state('operator', {
+        url:"/Datascience/OperatorList",
+        templateUrl:"views/common-list.html",
+        data: { pageTitle: 'Data Science'},
+        params:{type:'operator'}
+    })
+
+    .state('createoperator', {
+		url: "/Datascience/Operator?id&mode&returnBack&version",
+		templateUrl: "views/operator.html",
+	    data: { pageTitle: 'Data Science'},
+		//controller: "BlankController",
+		resolve: {
+			deps: ['$ocLazyLoad', function($ocLazyLoad) {
+				return $ocLazyLoad.load({
+					name: 'InferyxApp',
+					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+					files: [
+                       'js/controllers/OperatorController.js',
+						'js/services/OperatorService.js',
+					]
+				});
+			}]
+		}
+    })
+    
  }]);
 
 

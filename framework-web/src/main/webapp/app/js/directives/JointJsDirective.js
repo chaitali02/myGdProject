@@ -1090,17 +1090,17 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
            } //End Link
          };
   });
-DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,graphService,dagValidationSvc,$location,$http,dagMetaDataService, MetadataDagSerivce) {
- return {
-   restrict: 'AE',
-   scope : {
+DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,graphService,dagValidationSvc,$location,$http,dagMetaDataService,CommonService,MetadataDagSerivce) {
+  return {
+    restrict: 'AE',
+    scope : {
      execMode : '=',
      editMode : '=',
      addMode:'=',
      graph : '=',
      isTemplate:'=',
-   },
-   link: function ($scope, element, attrs) {
+    },
+    link: function ($scope, element, attrs) {
     
      $rootScope.showGrid=false;
      $rootScope.showGroupDowne=false;
@@ -1427,7 +1427,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var chidernItems=[]
              console.log(element.name)
              menuItemsObj.image=element.iconPath;
-             menuItemsObj.title =element.iconCaption;
+             menuItemsObj.title =element.parentIconCaption;
              menuItemsObj.id =element.name + '-add';
              menuItemsObj.type =element.name;
              menuItemsObj.menutype ="parent";
@@ -1438,7 +1438,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                  var item=element.childMenu[i]
                  if(dagMetaDataService.elementDefs[item].allowInChildMenu ==true){
                    var childitem={};
-                   childitem.title=dagMetaDataService.elementDefs[item].iconCaption;
+                   childitem.title=dagMetaDataService.elementDefs[item].childIconCaption;
                    childitem.id =dagMetaDataService.elementDefs[item].name + '-add';
                    childitem.type =dagMetaDataService.elementDefs[item].name;
                    childitem.menutype ="child";
@@ -1691,12 +1691,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        } finally {}
      });
 
-     $scope.$on('closeSubTabs',function (e) {
-       $scope.closeSubTabs();
-     });
+      $scope.$on('closeSubTabs',function (e) {
+        $scope.closeSubTabs();
+      });
          
-     $scope.closeSubTabs = function () {
-       debugger;
+       $scope.closeSubTabs = function () {
+
        App.scrollTop();
        if($scope.showResults){
          $scope.showResults = false;
@@ -1791,29 +1791,45 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $('#namepop').val(name);
        };
          
-       $scope.savePop = function (popupModel) {
-         var cell = $scope.graph.getCell(popupModel.id);
-         if(!cell) {
-          //$("#right-side-test").animate({'left' : '2000px'},function() {$("#right-side-test").hide();});
-          $("#right-side-test").animate({'right' : '3%'},function() {$("#right-side-test").hide();});
-          
-          return;
-         }
-         if(!popupModel.selectedType){
-           cell.remove();
-         // $("#right-side-test").animate({'left' : '2000px'},function() {$("#right-side-test").hide();});
-         $("#right-side-test").animate({'right' : '3%'},function() {$("#right-side-test").hide();});
-           
-         return;
-         }
-         var temp = popupModel.selectedType.split('|');
-         popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-         popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
-         cell.attr('text', { text: popupModel.modelData.name});
-         $("#right-side-test").animate({'right' : '3%'},function() {$("#right-side-test").hide();});
-   
-          // $("#right-side-test").animate({'left' : '2000px'},function() {$("#right-side-test").hide();});
-       };
+      $scope.savePop = function (popupModel) {
+        var cell = $scope.graph.getCell(popupModel.id);
+        if(!cell) {
+        //$("#right-side-test").animate({'left' : '2000px'},function() {$("#right-side-test").hide();});
+        $("#right-side-test").animate({'right' : '3%'},function() {$("#right-side-test").hide();});
+        
+        return;
+        }
+        if(!popupModel.selectedType){
+          cell.remove();
+        // $("#right-side-test").animate({'left' : '2000px'},function() {$("#right-side-test").hide();});
+        $("#right-side-test").animate({'right' : '3%'},function() {$("#right-side-test").hide();});  
+        return;
+        }
+        var temp = popupModel.selectedType.split('|');
+        popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
+        popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+        var objDetail={}
+        objDetail.uuid=temp[0];
+        objDetail.version="";
+        var type = popupModel.modelData.operators[0].operatorInfo.ref.type;
+        objDetail.type=type;
+        cell.attr('text', { text: popupModel.modelData.name});
+
+        $("#right-side-test").animate({'right' : '3%'},function() {$("#right-side-test").hide();});
+        var typeParamSetArray=["train"];
+        var typeParamListArray=["simulate","operator"];
+        if(typeParamSetArray.indexOf(type) != -1){
+          $scope.getExecParamsSet(objDetail,popupModel);
+        }
+      
+        if(typeParamListArray.indexOf(type) != -1){
+          $scope.getExecParamList(objDetail,popupModel);
+        }
+       
+        //$("#right-side-test").animate({'left' : '2000px'},function() {$("#right-side-test").hide();});
+      };
+
+
        $scope.$on('registerJqueryEvents',function (e,d) {
        $scope.paper.on('link:connect', function(evt, cellView, magnet, arrowhead) {
          var s = evt.sourceView;
@@ -2089,7 +2105,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                  name : '',
                  type : operator,
                }
-             }
+             },
+             operatorParams:null
            }]
          },
          position: { x: localPoint.x, y : localPoint.y }, size: { width: 50, height: 50 },
@@ -2118,256 +2135,115 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            }
          },
          elementType : operator,
-           attrs: {
-             "model-data": {
-             name : 'new '+operator,
-             operators : [ {
-               operatorInfo : {
-                 ref : {
-                   name : '',
-                   type : operator,
-                 }
-               }
-             }]
-           },
+          attrs: {
+            "model-data": {
+              name : 'new '+operator,
+              operators : [ {
+                operatorInfo : {
+                  ref : {
+                    name : '',
+                    type : operator,
+                  }
+                },
+                operatorParams:{}
+              }]
+            },
            '.body': {
-               elementType : operator,
-               'active':true,
-               "model-data": "{}",
-               x:"0", y:"0",height:"50px", width:"50px",
-               "xlink:href": $scope.elementDefs[operator].iconPath
-             },
-             '.remove': {
-               x:"55", y:"-20",height:"25px", width:"25px",
-               "xlink:href": "assets/layouts/layout/img/delete.png"
-             },
-           text:{text:''},
-           magnet:true,
-           text: { text: 'new '+operator,y:'60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } }
+              elementType : operator,
+              'active':true,
+              "model-data": "{}",
+              x:"0", y:"0",height:"50px", width:"50px",
+              "xlink:href": $scope.elementDefs[operator].iconPath
+            },
+            '.remove': {
+              x:"55", y:"-20",height:"25px", width:"25px",
+              "xlink:href": "assets/layouts/layout/img/delete.png"
+            },
+            text:{text:''},
+            magnet:true,
+            text: { text: 'new '+operator,y:'60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } }
+          }
+        });
+        $scope.graph.addCell(cell);
+        dblClickFn(e,cell);
+      };
+
+     /*function contextMenu() {
+       var height,
+       width,
+       margin = 0.1, // fraction of width
+       items = [],
+       rescale = false,
+       style = {
+         'rect': {
+           'mouseout': {
+             'fill': 'rgb(0,0,0)',
+             'opacity':'0.8',
+             'stroke': 'white',
+             'stroke-width': '1px'
+           },
+           'mouseover': {
+             'fill': '#32c5d2'
+           }
+         },
+         'text': {
+           'fill': 'white',
+           'font-size': '13',
+           'font-family': 'Open Sans'
          }
-       });
-       $scope.graph.addCell(cell);
-       dblClickFn(e,cell);
-     };
+       };
 
-     // function contextMenu() {
-     //   var height,
-     //   width,
-     //   margin = 0.1, // fraction of width
-     //   items = [],
-     //   rescale = false,
-     //   style = {
-     //     'rect': {
-     //       'mouseout': {
-     //         'fill': 'rgb(0,0,0)',
-     //         'opacity':'0.8',
-     //         'stroke': 'white',
-     //         'stroke-width': '1px'
-     //       },
-     //       'mouseover': {
-     //         'fill': '#32c5d2'
-     //       }
-     //     },
-     //     'text': {
-     //       'fill': 'white',
-     //       'font-size': '13',
-     //       'font-family': 'Open Sans'
-     //     }
-     //   };
+       function menu(x, y) {
+         d3.select('.context-menu').remove();
+         scaleItems();
+         // Draw the menu
+         d3.select('svg')
+           .append('g').attr('class', 'context-menu')
+           .selectAll('tmp')
+           .data(items).enter()
+           .append('g').attr('class', 'menu-entry')
+           .style({'cursor': 'pointer'})
+           .on('mouseover', function(){
+             d3.select(this).select('rect').style(style.rect.mouseover) })
+           .on('mouseout', function(){
+             d3.select(this).select('rect').style(style.rect.mouseout) });
+           d3.selectAll('.menu-entry')
+             .append('rect')
+             .attr('x', x)
+             .attr('y', function(d, i){ return y + (i * height); })
+             .attr('id', function(d){ return d.id; })
+             .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
+             .attr('width', width+50)
+             .attr('height', height)
+             .style(style.rect.mouseout);
 
-     //   function menu(x, y) {
-     //     d3.select('.context-menu').remove();
-     //     scaleItems();
-     //     // Draw the menu
-     //     d3.select('svg')
-     //       .append('g').attr('class', 'context-menu')
-     //       .selectAll('tmp')
-     //       .data(items).enter()
-     //       .append('g').attr('class', 'menu-entry')
-     //       .style({'cursor': 'pointer'})
-     //       .on('mouseover', function(){
-     //         d3.select(this).select('rect').style(style.rect.mouseover) })
-     //       .on('mouseout', function(){
-     //         d3.select(this).select('rect').style(style.rect.mouseout) });
-     //       d3.selectAll('.menu-entry')
-     //         .append('rect')
-     //         .attr('x', x)
-     //         .attr('y', function(d, i){ return y + (i * height); })
-     //         .attr('id', function(d){ return d.id; })
-     //         .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
-     //         .attr('width', width+50)
-     //         .attr('height', height)
-     //         .style(style.rect.mouseout);
-
-     //       d3.selectAll('.menu-entry')
-     //         .append('image')
-     //         .attr('x', x+10)
-     //         .attr('y', function(d, i){ return y + 10 + (i * height); })
-     //         .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
-     //         .attr('width','15')
-     //         .attr('height','15')
-     //         .attr('stroke-width','1')
-     //         .attr('stroke','#ccc')
-     //         .attr('xmlns:xlink',"http://www.w3.org/1999/xlink")
-     //         .attr('xlink:href',function(d){return d.image;});
+           d3.selectAll('.menu-entry')
+             .append('image')
+             .attr('x', x+10)
+             .attr('y', function(d, i){ return y + 10 + (i * height); })
+             .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
+             .attr('width','15')
+             .attr('height','15')
+             .attr('stroke-width','1')
+             .attr('stroke','#ccc')
+             .attr('xmlns:xlink',"http://www.w3.org/1999/xlink")
+             .attr('xlink:href',function(d){return d.image;});
                   
-     //         d3.selectAll('.menu-entry')
-     //           .append('text')
-     //           .text(function(d){ return d.title; })
-     //           .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
-     //           .attr('x', x+25)
-     //           .attr('y', function(d, i){ return y + (i * height); })
-     //           .attr('dy', height - 10 - margin / 2)
-     //           .attr('dx', margin)
-     //           .style(style.text);
-     //         // Other interactions
+             d3.selectAll('.menu-entry')
+               .append('text')
+               .text(function(d){ return d.title; })
+               .attr('onclick', function(d){return "addelement(event,'"+d.type+"');"})
+               .attr('x', x+25)
+               .attr('y', function(d, i){ return y + (i * height); })
+               .attr('dy', height - 10 - margin / 2)
+               .attr('dx', margin)
+               .style(style.text);
+             // Other interactions
              
-     //         d3.select('body')
-     //           .on('click', function() {
-     //             d3.select('.context-menu').remove();
-     //           });
-     //         }
-
-     //         menu.items = function(argumentItems) {
-     //           if (!argumentItems.length) return items;
-     //             for (i in argumentItems) items.push(argumentItems[i]);
-     //               rescale = true;
-     //               return menu;
-     //         }
-
-     //         // Automatically set width, height, and margin;
-     //         function scaleItems() {
-     //           if (rescale) {
-     //             d3.select('svg').selectAll('tmp')
-     //               .data(items).enter()
-     //               .append('text')
-     //               .text(function(d){ return d.title; })
-     //               .style(style.text)
-     //               .attr('x', -1000)
-     //               .attr('y', -1000)
-     //               .attr('class', 'tmp');
-                     
-     //             var z = d3.selectAll('.tmp')[0]
-     //               .map(function(x){ return x.getBBox(); });
-     //               width = d3.max(z.map(function(x){ return x.width; }));
-     //               margin = margin * width;
-     //               width =  width + 2 * margin;
-     //               height = d3.max(z.map(function(x){ return x.height+ 15 + margin / 2; }));
-     //               // cleanup
-     //             d3.selectAll('.tmp').remove();
-     //             rescale = false;
-     //           }
-     //         }
-     //       return menu;
-     //     }
-
-     //     var menuitems = [];
-     //     angular.forEach(dagMetaDataService.elementDefs,function (element,type) {
-     //       if(element.allowInMenu){
-     //         menuitems.push({
-     //           image : element.iconPath,
-     //           title : element.name,
-     //           id : element.name + '-add',
-     //           type : type
-     //         })
-     //       }
-     //     });
-     //     var menu = contextMenu().items(menuitems);
-
-         function iconContextMenu() {
-           var height,
-           width,
-           margin = 0.1, // fraction of width
-           items = [],
-           rescale = false,
-             style = {
-               'rect': {
-                 'mouseout': {
-                   'fill': 'rgb(0,0,0)',
-                   'opacity':'0.8',
-                   'stroke': 'white',
-                   'stroke-width': '1px'
-                 },
-                 'mouseover': {
-                   'fill': '#32c5d2'
-                 }
-               },
-               'text': {
-                 'fill': 'white',
-                 'font-size': '13',
-                 'font-family': 'Open Sans'
-               }
-             };
-
-             function menu(x, y, url,resultParams) {
-               d3.select('.context-menu').remove();
-               scaleItems();
-               // Draw the menu
-               d3.select('svg')
-                 .append('g').attr('class', 'context-menu')
-                 .selectAll('tmp')
-                 .data(items).enter()
-                 .append('g').attr('class', 'menu-entry')
-                 .style({'cursor': 'pointer'})
-                 .on('mouseover', function(){
-                   d3.select(this).select('rect').style(style.rect.mouseover) })
-                 .on('mouseout', function(){
-                   d3.select(this).select('rect').style(style.rect.mouseout) });
-               d3.selectAll('.menu-entry')
-                 .append('rect')
-                 .attr('x', x)
-                 .attr('y', function(d, i){ return y + (i * height); })
-                 .attr('onclick', function(d){
-                   if(d.type == 'results'){
-                     return 'showResult('+resultParams+')'
-                   }
-                   else if(d.type == 'element'){
-                     return "navigateTo('"+url+"');"
-                   }
-                   else if(d.type == 'onhold'){
-                     return 'setStatus('+resultParams+',"OnHold")'
-                   }
-                   else if(d.type == 'resume'){
-                     return 'setStatus('+resultParams+',"Resume")'
-                   }
-                   else if(d.type == 'killexecution'){
-                     return 'setStatus('+resultParams+',"Killed")'
-                   }
-                 })
-                 .attr('width', width+50)
-                 .attr('height', height)
-                 .style(style.rect.mouseout);
-
-               d3.selectAll('.menu-entry')
-                 .append('text')
-                 .text(function(d){ return d.title; })
-                 .attr('onclick', function(d){
-                   if(d.type == 'results'){
-                     return 'showResult('+resultParams+')'
-                   }
-                   else if(d.type == 'element'){
-                     return "navigateTo('"+url+"');"
-                   }
-                   else if(d.type == 'onhold'){
-                     return 'setStatus('+resultParams+',"OnHold")'
-                   }
-                   else if(d.type == 'resume'){
-                     return 'setStatus('+resultParams+',"Resume")'
-                   }
-                   else if(d.type == 'killexecution'){
-                     return 'setStatus('+resultParams+',"Killed")'
-                   }
-                 })
-                 .attr('x', x+25)
-                 .attr('y', function(d, i){ return y + (i * height); })
-                 .attr('dy', height - 10 - margin / 2)
-                 .attr('dx', margin)
-                 .style(style.text);
-                 // Other interactions
-               d3.select('body')
-                 .on('click', function() {
-                   d3.select('.context-menu').remove();
-                 });
+             d3.select('body')
+               .on('click', function() {
+                 d3.select('.context-menu').remove();
+               });
              }
 
              menu.items = function(argumentItems) {
@@ -2377,45 +2253,388 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                    return menu;
              }
 
-             menu.resetItems = function(argumentItems) {
-               if (!argumentItems.length) return items;
-                 items = [];
-                 for (i in argumentItems) items.push(argumentItems[i]);
-                 //  rescale = true;
-               return menu;
-             }
-
              // Automatically set width, height, and margin;
              function scaleItems() {
                if (rescale) {
                  d3.select('svg').selectAll('tmp')
-                 .data(items).enter()
-                 .append('text')
-                 .text(function(d){ return d.title; })
-                 .style(style.text)
-                 .attr('x', -1000)
-                 .attr('y', -1000)
-                 .attr('class', 'tmp');
-                    
+                   .data(items).enter()
+                   .append('text')
+                   .text(function(d){ return d.title; })
+                   .style(style.text)
+                   .attr('x', -1000)
+                   .attr('y', -1000)
+                   .attr('class', 'tmp');
+                     
                  var z = d3.selectAll('.tmp')[0]
-                 .map(function(x){ return x.getBBox(); });
-                 width = d3.max(z.map(function(x){ return x.width; }));
-                 margin = margin * width;
-                 width =  (width + 2 * margin) < 100 ? 100 : (width + 2 * margin);
-                 height = d3.max(z.map(function(x){ return x.height+ 15 + margin / 2; }));
-                 // cleanup
+                   .map(function(x){ return x.getBBox(); });
+                   width = d3.max(z.map(function(x){ return x.width; }));
+                   margin = margin * width;
+                   width =  width + 2 * margin;
+                   height = d3.max(z.map(function(x){ return x.height+ 15 + margin / 2; }));
+                   // cleanup
                  d3.selectAll('.tmp').remove();
                  rescale = false;
                }
              }
            return menu;
          }
-          
-         var iconMenuItems = [{title:'Show Details', type : 'element'}];
-         if($scope.execMode){
-         }
-         var iconMenu = iconContextMenu().items(iconMenuItems);
-       }, //End of link Fn
-       templateUrl: 'views/jointgraph.html',
-     };
- });
+
+         var menuitems = [];
+         angular.forEach(dagMetaDataService.elementDefs,function (element,type) {
+           if(element.allowInMenu){
+             menuitems.push({
+               image : element.iconPath,
+               title : element.name,
+               id : element.name + '-add',
+               type : type
+             })
+           }
+         });
+         var menu = contextMenu().items(menuitems);*/
+
+      function iconContextMenu() {
+        var height,
+        width,
+        margin = 0.1, // fraction of width
+        items = [],
+        rescale = false,
+          style = {
+            'rect': {
+              'mouseout': {
+                'fill': 'rgb(0,0,0)',
+                'opacity':'0.8',
+                'stroke': 'white',
+                'stroke-width': '1px'
+              },
+              'mouseover': {
+                'fill': '#32c5d2'
+              }
+            },
+            'text': {
+              'fill': 'white',
+              'font-size': '13',
+              'font-family': 'Open Sans'
+            }
+          };
+
+          function menu(x, y, url,resultParams) {
+            d3.select('.context-menu').remove();
+            scaleItems();
+            // Draw the menu
+            d3.select('svg')
+              .append('g').attr('class', 'context-menu')
+              .selectAll('tmp')
+              .data(items).enter()
+              .append('g').attr('class', 'menu-entry')
+              .style({'cursor': 'pointer'})
+              .on('mouseover', function(){
+                d3.select(this).select('rect').style(style.rect.mouseover) })
+              .on('mouseout', function(){
+                d3.select(this).select('rect').style(style.rect.mouseout) });
+            d3.selectAll('.menu-entry')
+              .append('rect')
+              .attr('x', x)
+              .attr('y', function(d, i){ return y + (i * height); })
+              .attr('onclick', function(d){
+                if(d.type == 'results'){
+                  return 'showResult('+resultParams+')'
+                }
+                else if(d.type == 'element'){
+                  return "navigateTo('"+url+"');"
+                }
+                else if(d.type == 'onhold'){
+                  return 'setStatus('+resultParams+',"OnHold")'
+                }
+                else if(d.type == 'resume'){
+                  return 'setStatus('+resultParams+',"Resume")'
+                }
+                else if(d.type == 'killexecution'){
+                  return 'setStatus('+resultParams+',"Killed")'
+                }
+              })
+              .attr('width', width+50)
+              .attr('height', height)
+              .style(style.rect.mouseout);
+
+            d3.selectAll('.menu-entry')
+              .append('text')
+              .text(function(d){ return d.title; })
+              .attr('onclick', function(d){
+                if(d.type == 'results'){
+                  return 'showResult('+resultParams+')'
+                }
+                else if(d.type == 'element'){
+                  return "navigateTo('"+url+"');"
+                }
+                else if(d.type == 'onhold'){
+                  return 'setStatus('+resultParams+',"OnHold")'
+                }
+                else if(d.type == 'resume'){
+                  return 'setStatus('+resultParams+',"Resume")'
+                }
+                else if(d.type == 'killexecution'){
+                  return 'setStatus('+resultParams+',"Killed")'
+                }
+              })
+              .attr('x', x+25)
+              .attr('y', function(d, i){ return y + (i * height); })
+              .attr('dy', height - 10 - margin / 2)
+              .attr('dx', margin)
+              .style(style.text);
+              // Other interactions
+            d3.select('body')
+              .on('click', function() {
+                d3.select('.context-menu').remove();
+              });
+          }//end Function
+
+          menu.items = function(argumentItems) {
+            if (!argumentItems.length) return items;
+              for (i in argumentItems) items.push(argumentItems[i]);
+                rescale = true;
+                return menu;
+          }
+
+          menu.resetItems = function(argumentItems) {
+            if (!argumentItems.length) return items;
+              items = [];
+              for (i in argumentItems) items.push(argumentItems[i]);
+              //  rescale = true;
+            return menu;
+          }
+
+          // Automatically set width, height, and margin;
+          function scaleItems() {
+            if (rescale) {
+              d3.select('svg').selectAll('tmp')
+              .data(items).enter()
+              .append('text')
+              .text(function(d){ return d.title; })
+              .style(style.text)
+              .attr('x', -1000)
+              .attr('y', -1000)
+              .attr('class', 'tmp');
+                
+              var z = d3.selectAll('.tmp')[0]
+              .map(function(x){ return x.getBBox(); });
+              width = d3.max(z.map(function(x){ return x.width; }));
+              margin = margin * width;
+              width =  (width + 2 * margin) < 100 ? 100 : (width + 2 * margin);
+              height = d3.max(z.map(function(x){ return x.height+ 15 + margin / 2; }));
+              // cleanup
+              d3.selectAll('.tmp').remove();
+              rescale = false;
+            }
+          }
+        return menu;
+      }
+      
+      var iconMenuItems = [{title:'Show Details', type : 'element'}];
+      if($scope.execMode){
+      }
+      var iconMenu = iconContextMenu().items(iconMenuItems);
+      
+      $scope.getExecParamsSet = function (data) {
+        $scope.paramtablecol = null
+        $scope.paramtable = null;
+        $scope.isTabelShow = false;
+        CommonService.getParamSetByType(data.type,data.uuid,data.version).then(function (response) {
+          onSuccessGetExecuteModel(response.data)
+        });
+        var onSuccessGetExecuteModel = function (response) {
+         
+          $('#responsive').modal({
+            backdrop: 'static',
+            keyboard: false
+          });
+          $scope.allparamset = response;
+          if($scope.popupModel.modelData.operators[0].operatorParams !=null){
+            for(var i=0;i< response.length;i++){
+              if(response[i].uuid == $scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramInfo[0].ref.uuid){
+                $scope.paramsetdata=response[i];
+                $scope.onSelectparamSet($scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramInfo);    
+                break;
+              
+              }s
+            }
+          }
+        }
+      }
+
+      $scope.onSelectparamSet = function (selectedParamInfo) {
+        var paramSetjson = {};
+        var paramInfoArray = [];
+        $scope.selectallattribute=false;
+        var selectedParamIdArray=[];
+        if(selectedParamInfo !=null){
+          for(var i=0;i<selectedParamInfo.length;i++){
+            selectedParamIdArray[i]=selectedParamInfo[i].paramSetId;
+          }
+        }
+        if ($scope.paramsetdata != null) {
+          for (var i = 0; i < $scope.paramsetdata.paramInfo.length; i++) {
+            var paramInfo = {};
+            paramInfo.paramSetId = $scope.paramsetdata.paramInfo[i].paramSetId;
+            if(selectedParamIdArray.length >0 && selectedParamIdArray.indexOf(paramInfo.paramSetId) != -1){
+              paramInfo.selected=true;
+              if($scope.paramsetdata.paramInfo.length == selectedParamIdArray.length){
+                $scope.selectallattribute=true;
+              }
+            }
+            var paramSetValarray = [];
+            for (var j = 0; j < $scope.paramsetdata.paramInfo[i].paramSetVal.length; j++) {
+              var paramSetValjson = {};
+              
+              paramSetValjson.paramId = $scope.paramsetdata.paramInfo[i].paramSetVal[j].paramId;
+              paramSetValjson.paramName = $scope.paramsetdata.paramInfo[i].paramSetVal[j].paramName;
+              paramSetValjson.value = $scope.paramsetdata.paramInfo[i].paramSetVal[j].value;
+              paramSetValjson.ref = $scope.paramsetdata.paramInfo[i].paramSetVal[j].ref;
+              paramSetValarray[j] = paramSetValjson;
+              paramInfo.paramSetVal = paramSetValarray;
+              paramInfo.value = $scope.paramsetdata.paramInfo[i].paramSetVal[j].value;
+            }
+            paramInfoArray[i] = paramInfo;
+          }
+          $scope.paramtablecol = paramInfoArray[0].paramSetVal;
+          $scope.paramtable = paramInfoArray;
+          paramSetjson.paramInfoArray = paramInfoArray;
+          $scope.isTabelShow = true;
+        } else {
+          $scope.isTabelShow = false;
+        }
+      }
+      
+      $scope.selectAllRow = function () {
+        angular.forEach($scope.paramtable, function (stage) {
+          stage.selected = $scope.selectallattribute;
+        });
+      }
+      
+      $scope.executeWithExecParams = function () {
+        $scope.newDataList = [];
+        $scope.selectallattribute = false;
+        angular.forEach($scope.paramtable, function (selected) {
+          if (selected.selected) {
+            $scope.newDataList.push(selected);
+          }
+        });
+        var paramInfoArray = [];
+        if ($scope.newDataList.length > 0) {
+          var execParams = {}
+          var ref = {}
+          ref.uuid = $scope.paramsetdata.uuid;
+          ref.version = $scope.paramsetdata.version;
+          ref.type = 'paramset';
+          for (var i = 0; i < $scope.newDataList.length; i++) {
+            var paraminfo = {};
+            paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
+            paraminfo.ref = ref;
+            paramInfoArray[i] = paraminfo;
+          }
+        }
+        if (paramInfoArray.length > 0) {
+          var EXEC_PARAMS={};
+          EXEC_PARAMS.paramInfo = paramInfoArray;
+          execParams.EXEC_PARAMS=EXEC_PARAMS;
+        } else {
+          execParams = null
+        }
+        $('#responsive').modal('hide');
+       // $('.modal-open').css('overflow-y', 'auto !important');
+        console.log(JSON.stringify(execParams));
+        $scope.popupModel.modelData.operators[0].operatorParams=execParams;
+      }
+
+      $scope.onChangeOperatorInfo=function(){
+        $scope.popupModel.modelData.operators[0].operatorParams=null;
+      }
+      $scope.getExecParamList=function(data){
+        $scope.paramValueTypes=["simple",'datapod','relation'];
+        CommonService.getParamListByType(data.type,data.uuid,data.version).then(function (response) {
+          onSuccessGetExecuteModel(response.data)
+        });
+        var onSuccessGetExecuteModel = function (response) {
+          if(response.length ==0){
+            $scope.executeWithParams(null);
+          }else{
+            $('#executeParamList').modal({
+              backdrop: 'static',
+              keyboard: false
+            });
+          //  $scope.getAllLatest(null,null,false);
+            $scope.paramListHolder = response;
+            if($scope.popupModel.modelData.operators[0].operatorParams !=null){
+              var paramListInfo=$scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo
+              for(var i=0;i<paramListInfo.length;i++){
+                var selectedParamValue={};
+                selectedParamValue.type=paramListInfo[i].paramValue.ref.type;
+                selectedParamValue.uuid=paramListInfo[i].paramValue.ref.uuid;
+                $scope.paramListHolder[i].selectedParamValueType=paramListInfo[i].paramValue.ref.type;
+                $scope.paramListHolder[i].selectedParamValue=selectedParamValue
+              }
+            }
+          }
+        }
+    
+      }
+
+      $scope.getAllLatest=function(type,index,defaultValue){
+        CommonService.getAllLatest(type || "datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
+        var onSuccessGetAllLatest = function (response) {
+          if(type =="datapod"){
+            $scope.allDatapod=response;
+          }
+          else if(type =="relation"){
+            $scope.allRelation=response;
+          }
+          if(type !=null && response !=null && defaultValue ==true)
+          $scope.paramListHolder[index].selectedParamValue=response[0];
+        }
+      }
+
+      $scope.onChangeParamValueType=function(type,index){
+        $scope.getAllLatest(type,index,true)
+      }
+
+      $scope.executeWithExecParamList=function(){
+        $('#executeParamList').modal('hide');
+        var execParams={};
+        var paramListInfo=[];
+        if($scope.paramListHolder.length>0){
+          for(var i=0;i<$scope.paramListHolder.length;i++){
+            var paramList={};
+            paramList.paramId=$scope.paramListHolder[i].paramId;
+            paramList.paramName=$scope.paramListHolder[i].paramName;
+            paramList.paramType=$scope.paramListHolder[i].paramType;
+            paramList.ref=$scope.paramListHolder[i].ref;
+            var ref={};
+            var type=["ONEDARRAY","TWODARRAY"]
+            var paramValue={};  
+            if(type.indexOf($scope.paramListHolder[i].paramType.toUpperCase()) ==-1){
+              ref.type="simple";
+              paramValue.ref=ref;
+              paramValue.value=$scope.paramListHolder[i].paramValue;  
+            }
+            else{
+              ref.type=$scope.paramListHolder[i].selectedParamValueType;
+              ref.uuid=$scope.paramListHolder[i].selectedParamValue.uuid;  
+              paramValue.ref=ref;
+            }
+            paramList.paramValue=paramValue;
+            paramListInfo[i]=paramList;
+          }
+          var EXEC_PARAMS={};
+          EXEC_PARAMS.paramListInfo = paramListInfo;
+          execParams.EXEC_PARAMS=EXEC_PARAMS;
+          //execParams.paramListInfo=paramListInfo;
+        }
+        else{
+          execParams=null;
+        }
+        console.log(JSON.stringify(execParams))
+        $scope.popupModel.modelData.operators[0].operatorParams=execParams;
+      }
+    },//End of link Fn
+    templateUrl: 'views/jointgraph.html',
+  };
+});

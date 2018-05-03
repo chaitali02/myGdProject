@@ -508,8 +508,6 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		console.log(JSON.stringify(profileGroupJson))
 		ProfileService.submit(profileGroupJson, "profilegroup").then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			$scope.changemodelvalue();
-
 			if (options.execution == "YES") {
 				ProfileService.getOneById(response.data, 'profilegroup').then(function (response) { onSuccessGetOneById(response.data) });
 				var onSuccessGetOneById = function (response) {
@@ -517,15 +515,9 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 					var onSuccess = function (response) {
 						$scope.dataLoading = false;
 						$scope.saveMessage = "Profile Rule Group Saved and Submitted Successfully"
-						//  if($scope.isshowmodel == "true"){
-						// 	   $('#profilegroupsave').modal({
-						//       backdrop: 'static',
-						//       keyboard: false
-						//    });
-						//  }//End Inner If
 						notify.type = 'success',
-							notify.title = 'Success',
-							notify.content = $scope.saveMessage
+						notify.title = 'Success',
+						notify.content = $scope.saveMessage
 						$scope.$emit('notify', notify);
 						$scope.okProfileGroupSave();
 					}
@@ -534,30 +526,20 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 			else {
 				$scope.dataLoading = false;
 				$scope.saveMessage = "Profile Rule Group Saved Successfully"
-				// if($scope.isshowmodel == "true"){
-				//   	   $('#profilegroupsave').modal({
-				// 	      backdrop: 'static',
-				// 	      keyboard: false
-				//      });
-				//    }//End Inner If
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = $scope.saveMessage
+				notify.title = 'Success',
+				notify.content = $scope.saveMessage
 				$scope.$emit('notify', notify);
 				$scope.okProfileGroupSave();
 			}//End Else
 		}//End Submit Api Function
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}//End Submit Function
-
-	$scope.changemodelvalue = function () {
-		$scope.isshowmodel = sessionStorage.isshowmodel
-	};
 
 });
 
@@ -575,7 +557,7 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 	var notify = {
 		type: 'success',
 		title: 'Success',
-		content: 'Dashboard deleted Successfully',
+		content: '',
 		timeout: 3000 //time in ms
 	};
 	$scope.getGridStyle = function () {
@@ -584,28 +566,26 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 			'height': '40px'
 		}
 		if ($scope.filteredRows) {
-
 			style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 80) + 'px';
 		}
-
 		return style;
 	}
+
 	$scope.filteredRows = [];
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
 	};
+
 	$scope.refreshRuleExecData = function () {
-
 		$scope.gridOptionsRule.data = $filter('filter')($scope.orignalRuleExecData, $scope.searchruletext, undefined);
-
 	}
+
 	$scope.refreshRGExecData = function () {
-
 		$scope.gridOptionsRuleGroup.data = $filter('filter')($scope.orignalRGExecData, $scope.searchrGtext, undefined);
-
 	}
 	// ui grid
+	
 	//For Breadcrum
 	$scope.$on('daggroupExecChanged', function (e, groupExecName) {
 		$scope.daggroupExecName = groupExecName;
@@ -640,6 +620,7 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 	$scope.onClickRuleResult = function () {
 		$scope.isRuleExec = true;
 		$scope.isRuleResult = false;
+		$scope.isD3RuleEexecGraphShow=false;
 		$scope.$emit('resultExecChanged', false);//Update Breadcrum
 	}
 
@@ -674,7 +655,6 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 
 	window.showResult = function (params) {
 		App.scrollTop();
-
 		$scope.lastParams = params;
 		if (params.type.slice(-5).toLowerCase() == 'group') {
 			$scope.isRuleExec = true;
@@ -698,8 +678,8 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 	$scope.refreshData = function (searchtext) {
 		$scope.gridOptions.data = $filter('filter')($scope.originalData, searchtext, undefined);
 	};
-	window.refreshResultfunction = function () {
 
+	window.refreshResultfunction = function () {
 		$scope.isD3RuleEexecGraphShow = false;
 		window.showResult($scope.lastParams);
 	}
@@ -707,6 +687,7 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 	$scope.ruleExecshowGraph = function () {
 		$scope.isD3RuleEexecGraphShow = true;
 	}
+
 	$scope.rGExecshowGraph = function () {
 		$scope.isProfileGroupExec = false;
 		$scope.isD3RGEexecGraphShow = true;
@@ -755,8 +736,8 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		$('#reExModal').modal('hide');
 		$scope.executionmsg = "Profile Group Restarted Successfully"
 		notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = $scope.executionmsg
+		notify.title = 'Success',
+		notify.content = $scope.executionmsg
 		$rootScope.$emit('notify', notify);
 		CommonService.restartExec("profilegroupExec", $stateParams.id, $stateParams.version).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
@@ -764,6 +745,7 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		}
 		$scope.refreshRuleGroupExecFunction();
 	}
+
 	$scope.refreshRuleGroupExecFunction = function () {
 		$scope.isD3RGEexecGraphShow = false;
 		$scope.profileGroupExec($scope.profileGroupLastParams);
@@ -774,7 +756,9 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 	}
 
 	$scope.downloadFile = function (data) {
-
+        if($scope.isD3RuleEexecGraphShow){
+			return false;
+		}
 		var uuid = data.uuid;
 		var version = data.version;
 		var url = $location.absUrl().split("app")[0]

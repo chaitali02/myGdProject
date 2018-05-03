@@ -20,7 +20,11 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
     {   "index":"2",
         "name":"simulate",
         "caption":"Simulation"
-    }
+    },
+    {  "index":"3",
+        "name":"operator",
+        "caption":"Operator"
+    } 
     ];
     $scope.searchForm.modelType=$scope.allModelType[0].name;
     $scope.searchForm.modelTypeObj=$scope.allModelType[0]
@@ -290,6 +294,7 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
             $scope.originalData = response;
         }
     }
+
     $scope.getSubultateResult=function(data){
         $scope.showProgress = true;
         $scope.isTableShow=false;
@@ -316,6 +321,33 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
         }
     }
 
+    $scope.getOperatorResult=function(data){
+        $scope.showProgress = true;
+        $scope.isTableShow=false;
+        var uuid = data.uuid;
+        var version = data.version;
+        $scope.modelDetail={};
+        $scope.modelDetail.uuid=uuid;
+        $scope.modelDetail.version=version;
+
+        ModelService.getOperatorResult(uuid, version).then(function(response){ onSuccessGetOperatorResult(response.data)},function(response){OnError(response.data)});
+        var onSuccessGetOperatorResult= function(response) {
+            $scope.showProgress = false;
+            $scope.isTableShow=true;
+            $scope.isDataError =false;
+            $scope.gridOptions.data=$scope.getResults($scope.pagination,response);
+            $scope.gridOptions.columnDefs=$scope.getColumnData(response);
+            $scope.originalData = response;
+        }
+        var OnError = function(response){
+            scope.showProgress = false;
+            $scope.isTableShow=false;
+            $scope.isDataError =true;
+            $scope.dataMessage = "Some Error Occurred"
+        }
+    }
+
+
     $scope.refreshData = function(searchtext) {
        var data = $filter('filter')($scope.originalData,searchtext, undefined);
        $scope.gridOptions.data=$scope.getResults($scope.pagination,data);
@@ -329,6 +361,9 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
     }
     else if($stateParams.type =="simulate"){
         $scope.getSubultateResult({uuid:$stateParams.id,version:$stateParams.version});
+    }
+    else if($stateParams.type == 'operator'){
+        $scope.getOperatorResult({uuid:$stateParams.id,version:$stateParams.version})
     }
     $scope.refreshMoldeResult=function(){
        

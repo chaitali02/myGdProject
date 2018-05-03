@@ -17,12 +17,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import javax.xml.bind.JAXBException;
+
+import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
 import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.DataStore;
@@ -36,7 +38,6 @@ import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
-import com.inferyx.framework.reader.IReader;
 
 public interface IExecutor {
 
@@ -234,8 +235,9 @@ public interface IExecutor {
 
 	/**
 	 * 
-	 * @param rsHolder TODO
+	 * @param tableName TODO
 	 * @param factorCovarianceDp
+	 * @param clientContext TODO
 	 * @return
 	 * @throws IOException
 	 * @throws IllegalAccessException
@@ -246,14 +248,15 @@ public interface IExecutor {
 	 * @throws NullPointerException
 	 * @throws ParseException
 	 */
-	double[][] twoDArrayFromDatapod(ResultSetHolder rsHolder, Datapod factorCovarianceDp)
+	double[][] twoDArrayFromDatapod(String tableName, Datapod factorCovarianceDp, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
 
 	/**
 	 * 
-	 * @param rsHolder 
+	 * @param tableName 
 	 * @param factorMeanDp
+	 * @param clientContext TODO
 	 * @return
 	 * @throws IOException
 	 * @throws IllegalAccessException
@@ -264,7 +267,7 @@ public interface IExecutor {
 	 * @throws NullPointerException
 	 * @throws ParseException
 	 */
-	double[] oneDArrayFromDatapod(ResultSetHolder rsHolder, Datapod factorMeanDp)
+	double[] oneDArrayFromDatapod(String tableName, Datapod factorMeanDp, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
 	
@@ -293,11 +296,68 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @param datapod
 	 * @param datastore
+	 * @param tableName TODO
 	 * @param hdfsInfo
 	 * @param conObject
 	 * @param datasource
 	 * @return
 	 */
-	public ResultSetHolder readFile(String clientContext, Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo,
-			Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception;
+	public String readFile(String clientContext, Datapod datapod, DataStore datastore, String tableName,
+			HDFSInfo hdfsInfo, Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception;
+	
+	/**
+	 * 
+	 * @param fieldArray
+	 * @param tableName
+	 * @param isDistribution
+	 * @param clientContext
+	 * @return
+	 */
+	public String assembleRandomDF(String[] fieldArray, String tableName, boolean isDistribution, String clientContext) throws IOException;
+	
+	/**
+	 * 
+	 * @param fieldArray
+	 * @param tableName
+	 * @param trainName
+	 * @param label
+	 * @param clientContext
+	 * @return
+	 */
+	public Object assembleDF(String[] fieldArray, String tableName, String trainName, String label, String clientContext) throws IOException;
+	
+	/**
+	 * 
+	 * @param fieldArray
+	 * @param tableName
+	 * @param trainName
+	 * @param label
+	 * @param clientContext
+	 * @return
+	 */
+	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException ;
+	
+	/**
+	 * 
+	 * @param paramMap
+	 * @param fieldArray TODO
+	 * @param label
+	 * @param trainName
+	 * @param trainPercent
+	 * @param valPercent
+	 * @param tableName
+	 * @param clientContext
+	 * @return 
+	 */
+	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException;
+	
+	/**
+	 * 
+	 * @param trngModel
+	 * @param trainedDSName
+	 * @param pmmlLocation
+	 * @param clientContext
+	 * @return is pmml saved or not
+	 */
+	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext) throws IOException, JAXBException;
 }

@@ -297,9 +297,9 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 						logger.info("Executing rule : " + baseRule.getUuid() + ":" + baseRule.getName());
 		
 						if (baseGroup.getInParallel() != null && baseGroup.getInParallel().equalsIgnoreCase("true")) {
-							baseRuleExec = baseRuleService.execute(baseRule.getUuid(), baseRule.getVersion(), metaExecutor, baseRuleExec, baseGroupExec, null, taskList, runMode);
+							baseRuleExec = baseRuleService.execute(baseRule.getUuid(), baseRule.getVersion(), metaExecutor, baseRuleExec, baseGroupExec, null, taskList, null, runMode);
 						} else {
-							baseRuleExec = baseRuleService.execute(baseRule.getUuid(), baseRule.getVersion(), null, baseRuleExec, baseGroupExec, null, null, runMode);
+							baseRuleExec = baseRuleService.execute(baseRule.getUuid(), baseRule.getVersion(), null, baseRuleExec, baseGroupExec, null, null, null, runMode);
 						}
 					} catch (Exception e) {
 						synchronized (baseGroupExec.getUuid()) {

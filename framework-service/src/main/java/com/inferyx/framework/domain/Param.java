@@ -19,6 +19,7 @@ public class Param {
 	String paramName; // param1, param2
 	String paramType; // string, date, double
 	String paramValue;
+	MetaIdentifier paramRef;
 	
 	public String getParamId() {
 		return paramId;
@@ -43,5 +44,17 @@ public class Param {
 	}
 	public void setParamValue(String paramValue) {
 		this.paramValue = paramValue;
+	}
+	/**
+	 * @return the paramRef
+	 */
+	public MetaIdentifier getParamRef() {
+		return paramRef;
+	}
+	/**
+	 * @param paramRef the paramRef to set
+	 */
+	public void setParamRef(MetaIdentifier paramRef) {
+		this.paramRef = paramRef;
 	}
 }

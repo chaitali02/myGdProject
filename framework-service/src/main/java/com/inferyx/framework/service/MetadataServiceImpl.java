@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMetaDao;
+import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
@@ -62,6 +63,8 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.OperatorExec;
+import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
@@ -71,6 +74,7 @@ import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
@@ -467,6 +471,10 @@ public class MetadataServiceImpl {
 				ReconGroupExec execObject = new ReconGroupExec();
 				execObject = (ReconGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+			} else if(type.equalsIgnoreCase(MetaType.operatorExec.toString())){
+				OperatorExec operatorExec = new OperatorExec();
+				operatorExec = (OperatorExec) metaObject;
+				execStatus = (List<Status>) operatorExec.getStatusList();	
 			}
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
@@ -672,7 +680,7 @@ public class MetadataServiceImpl {
 			ruleExecAggr = newAggregation(group("uuid").max("version").as("version"));
 		}
 
-		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, type, className);
+		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, type.toLowerCase(), className);
 		metaObjectList = ruleExecResults.getMappedResults();
 
 		List<BaseEntity> baseEntityList = new ArrayList<>();
@@ -1080,14 +1088,12 @@ public class MetadataServiceImpl {
 			paramListHolder.setParamId(param.getParamId());
 			paramListHolder.setParamName(param.getParamName());
 			paramListHolder.setParamType(param.getParamType());
-			if(param.getParamType().equalsIgnoreCase("ROW")) {
-				
+			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
-			}
-			else {
+			else 
 				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
-				
-			}
+			
 			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());
 			holderList.add(paramListHolder);
@@ -1136,14 +1142,12 @@ public class MetadataServiceImpl {
 				paramListHolder.setParamId(param.getParamId());
 				paramListHolder.setParamName(param.getParamName());
 				paramListHolder.setParamType(param.getParamType());
-				if(param.getParamType().equalsIgnoreCase("ROW")) {
-				
+				if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+						|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 					paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
-				}
-				else {
+				else
 					paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
-					
-				}
+		
 				paramListHolder.setRef(
 						new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 				paramListHolder.getRef().setName(paramList.getName());
@@ -1153,7 +1157,6 @@ public class MetadataServiceImpl {
 		return holderList;
 	}
 	
-	@SuppressWarnings("unlikely-arg-type")
 	public List<ParamListHolder> getParamListBySimulate(String simulateUuid) throws JsonProcessingException {
 
 		Simulate simulate = (Simulate) commonServiceImpl.getLatestByUuid(simulateUuid, MetaType.simulate.toString(),
@@ -1185,15 +1188,14 @@ public class MetadataServiceImpl {
 					paramListHolder.setParamId(param.getParamId());
 					paramListHolder.setParamName(param.getParamName());
 					paramListHolder.setParamType(param.getParamType());
-					if (param.getParamType().equalsIgnoreCase("ROW")) {
-
+					if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+							|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 						paramListHolder.setParamValue(
 								new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));
-					} else {
+					 else 
 						paramListHolder.setParamValue(new MetaIdentifierHolder(
 								new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
-
-					}
+					
 					paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramListDistribution.getUuid(),
 							paramListDistribution.getVersion()));
 					paramListHolder.getRef().setName(paramListDistribution.getName());
@@ -1205,15 +1207,14 @@ public class MetadataServiceImpl {
 					paramListHolder.setParamId(param.getParamId());
 					paramListHolder.setParamName(param.getParamName());
 					paramListHolder.setParamType(param.getParamType());
-					if (param.getParamType().equalsIgnoreCase("ROW")) {
-
+					if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+							|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 						paramListHolder.setParamValue(
 								new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));
-					} else {
+					else 
 						paramListHolder.setParamValue(new MetaIdentifierHolder(
 								new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
 
-					}
 					paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramListSimulate.getUuid(),
 							paramListSimulate.getVersion()));
 					paramListHolder.getRef().setName(paramListSimulate.getName());
@@ -1225,4 +1226,30 @@ public class MetadataServiceImpl {
 		return holderList;
 	}
 
+	
+	public List<ParamListHolder> getParamListByOperator(String operatorUuid) throws JsonProcessingException {	
+		List<ParamListHolder> holderList = new ArrayList<>();
+			
+		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorUuid, MetaType.operator.toString(),"N");			
+		
+		OperatorType operatorType = (OperatorType) commonServiceImpl.getLatestByUuid(operator.getOperatorType().getRef().getUuid(), MetaType.operatortype.toString(),"N");			
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operatorType.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
+	
+		for(Param param : paramList.getParams()) {
+			ParamListHolder paramListHolder = new ParamListHolder();
+			paramListHolder.setParamId(param.getParamId());
+			paramListHolder.setParamName(param.getParamName());
+			paramListHolder.setParamType(param.getParamType());
+			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
+				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
+			else 
+				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+			
+			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, operatorType.getUuid(), paramList.getVersion()));
+			paramListHolder.getRef().setName(paramList.getName());
+			holderList.add(paramListHolder);
+		}
+		return holderList;
+	}	
 }

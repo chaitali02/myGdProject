@@ -10,10 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +18,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.param.DoubleParam;
 import org.apache.spark.ml.param.IntParam;
 import org.apache.spark.ml.param.LongParam;
@@ -32,9 +27,6 @@ import org.apache.spark.ml.param.ParamPair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,7 +37,6 @@ import com.inferyx.framework.dao.IParamListDao;
 import com.inferyx.framework.dao.IParamSetDao;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -533,7 +524,14 @@ public class ParamSetServiceImpl {
 		}
 		return paramMapCombined;	
 	}
-	
+	/**
+	 * 
+	 * @param execParams
+	 * @param attributeId
+	 * @param ref
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	public String getParamValue(ExecParams execParams,  
 									Integer attributeId, 
 									MetaIdentifier ref) throws JsonProcessingException {
@@ -561,7 +559,7 @@ public class ParamSetServiceImpl {
 				} else {
 					ParamList paramList = (ParamList)daoRegister.getRefObject(paramListHolder.getRef());
 					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
-						if (param.getParamId().equals(attributeId)) {
+						if (param.getParamId().equals(attributeId+"")) {
 							value = param.getParamValue();
 							return value;
 						}
@@ -571,4 +569,41 @@ public class ParamSetServiceImpl {
 		}
 		return "''";
 	}// End method	
+	
+	/**
+	 * 
+	 * @param execParams
+	 * @param paramName
+	 * @return
+	 */
+	public ParamListHolder getParamByName (ExecParams execParams, String paramName) {
+		if (execParams == null || execParams.getParamListInfo() == null || execParams.getParamListInfo().isEmpty() || StringUtils.isBlank(paramName)) {
+			return null;
+		}
+		for (ParamListHolder param : execParams.getParamListInfo()) {
+			if (param.getParamName().equals(paramName)) {
+				return param;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param execParams
+	 * @param paramName
+	 * @return
+	 */
+	public ParamListHolder getParamById (ExecParams execParams, String paramId) {
+		if (execParams == null || execParams.getParamListInfo() == null || execParams.getParamListInfo().isEmpty() || StringUtils.isBlank(paramId)) {
+			return null;
+		}
+		for (ParamListHolder param : execParams.getParamListInfo()) {
+			if (param.getParamId().equals(paramId)) {
+				return param;
+			}
+		}
+		return null;
+	}
+
 }

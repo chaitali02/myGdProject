@@ -50,31 +50,32 @@
             </div>
             <div class="tools">
 
-              <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showDatasetSampleTable(dataset)"
+              <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showSampleTable(dataset)"
                 style="height:16px;" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
                 <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
               </a>
-              <a title="Edit" ng-disabled="isPrivlage" ng-class="(showdatapod==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"
+              <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"
                 data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(dataset.uuid,dataset.version)" ng-hide="isAdd"
                 style="height:16px;">
                 <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
               </a>
-              <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdatapod==true && isShowSimpleData==false && isEdit==false)? 'currentpage':'notcurrentpage'"
-                ng-click="showview(dataset.uuid,dataset.version)" ng-hide="isAdd" style="height:16px;">
+              <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true && isShowSimpleData==false || isEdit==true)? 'currentpage':'notcurrentpage'"
+                ng-click="showView(dataset.uuid,dataset.version)" ng-hide="isAdd" style="height:16px;">
                 <span class="glyphicon glyphicon-file" style="color:white;"></span>
               </a>
-              <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showdatapod==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
-                data-ng-click="showDatapodGraph(dataset.uuid,dataset.version)" style="height:14px;">
+              <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+                data-ng-click="showGraph(dataset.uuid,dataset.version)" style="height:14px;">
                 <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
               </a>
-              <a title="Refresh" ng-click="isShowSimpleData ? showDatasetSampleTable(dataset) : broadcastRefreshData()" data-toggle="tooltip"
+              <a title="Refresh"  ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(dataset) : broadcastRefreshData()" data-toggle="tooltip"
                 data-placement="top" tooltip>
                 <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
               </a>
               <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="genericClose($event,'dataset')" data-ui-sref="metadata({type:'dataset'})"
-                class="remove" style="height:14px;">
-                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+              style="height:14px;">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
               </a>
+              
             </div>
           </div>
           <!--End Protlet-title-->
@@ -126,7 +127,7 @@
                 </div>
               </div>
             </div>
-            <div class="form-body graph-body" ng-if="showgraphdiv">
+            <div class="form-body graph-body" ng-if="showGraphDiv">
               <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
               <div class="spinner" id="graphloader">
                 <div class="bounce1"></div>
@@ -136,7 +137,7 @@
               <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="dataset.uuid" version="datasetversion.defaultVersion.version">
               </div>
             </div>
-            <div class="form-body" data-ng-show="showdatapod">
+            <div class="form-body" data-ng-show="showForm">
               <div class="form-body">
                 <div class="form-group" ng-show="dataset.uuid">
                   <label class="col-md-3 control-label">UUID</label>
@@ -248,7 +249,7 @@
         </div>
         <!--End portlet box green 1-->
 
-        <div class="portlet box green" data-ng-show="showdatapod">
+        <div class="portlet box green" data-ng-show="showForm">
           <div class="portlet-title">
             <div class="caption">
               <i class="fa fa-gift"></i>Filter
@@ -321,7 +322,7 @@
         </div>
         <!--End portlet box green 2-->
 
-        <div class="portlet box green" data-ng-show="showdatapod">
+        <div class="portlet box green" data-ng-show="showForm">
           <div class="portlet-title">
             <div class="caption">
               <i class="fa fa-gift"></i>Source Attribute

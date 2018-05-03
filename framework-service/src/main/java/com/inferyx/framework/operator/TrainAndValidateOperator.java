@@ -10,36 +10,11 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
-import org.apache.spark.ml.Pipeline;
-import org.apache.spark.ml.PipelineModel;
-import org.apache.spark.ml.PipelineStage;
-import org.apache.spark.ml.Transformer;
-import org.apache.spark.ml.feature.StringIndexer;
-import org.apache.spark.ml.feature.VectorAssembler;
-import org.apache.spark.ml.param.ParamMap;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.dmg.pmml.PMML;
-import org.jpmml.model.MetroJAXBUtil;
-import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.domain.Algorithm;
-import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.service.ModelServiceImpl;
 
 /**
@@ -48,9 +23,7 @@ import com.inferyx.framework.service.ModelServiceImpl;
  */
 @Component
 public class TrainAndValidateOperator {
-	
-	@Autowired
-	private SparkContext sparkContext;
+
 	@Autowired
 	private HDFSInfo hdfsInfo;
 	@Autowired
@@ -64,8 +37,9 @@ public class TrainAndValidateOperator {
 	public TrainAndValidateOperator() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public Object execute(Train train, Model model, Algorithm algorithm,String modelClassName, String modelName, Dataset<Row> df, VectorAssembler va,
+
+	/********************** UNUSED **********************/
+	/*public Object execute(Train train, Model model, Algorithm algorithm,String modelClassName, String modelName, Dataset<Row> df, VectorAssembler va,
 			ParamMap paramMap, String filePathUrl,String filePath) throws Exception {
 		PipelineModel trngModel = null;
 		List<String> customDirectories = new ArrayList<>();
@@ -92,10 +66,10 @@ public class TrainAndValidateOperator {
 			StringIndexer labelIndexer = null;
 			@SuppressWarnings("unused")
 			String labelColName = (modelClassName.contains("classification")) ? "indexedLabel" : "label";
-			/*
+			
 			 * labelIndexer = new StringIndexer() .setInputCol("label")
 			 * .setOutputCol(labelColName);
-			 */
+			 
 
 			Class<?> dynamicClass = Class.forName(modelClassName);
 			Object obj = dynamicClass.newInstance();
@@ -109,7 +83,7 @@ public class TrainAndValidateOperator {
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
 			Pipeline pipeline = new Pipeline()
-					.setStages(new PipelineStage[] { /* labelIndexer, */va, (PipelineStage) obj });
+					.setStages(new PipelineStage[] {  labelIndexer, va, (PipelineStage) obj });
 			if (null != paramMap) {
 				trngModel = pipeline.fit(trainingDf, paramMap);
 			} else {
@@ -126,10 +100,10 @@ public class TrainAndValidateOperator {
 				customDirectories.add(i + "_" + transformers[i].uid());
 			}
 
-			/*
+			
 			 * List<Row> rowList = trainedDataSet.takeAsList(1); Vector vec = (Vector)
 			 * rowList.get(0).get(4); vec = vec.compressed();
-			 */
+			 
 
 			// Vector features = new DenseVector(values)
 			boolean result = modelServiceImpl.save(modelName, trngModel, sparkContext, filePathUrl);
@@ -178,7 +152,7 @@ public class TrainAndValidateOperator {
 		} 
 
 		return null;
-	}
+	}*/
 
 
 }

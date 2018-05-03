@@ -36,12 +36,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
+import com.inferyx.framework.datascience.Operator;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
-
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.Simulate;
@@ -226,18 +228,8 @@ public class ModelController {
 					MetaType.predict.toString());
 
 			PredictExec predictExec = null;
-			if (execParams != null) {
-				List<ParamMap> paramMapList = new ArrayList<>();
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, predict.getDependsOn().getRef().getUuid(),
-						predict.getDependsOn().getRef().getVersion());
-				for (ParamMap paramMap : paramMapList) {
-					predictExec = modelServiceImpl.create(predict, execParams, paramMap, predictExec);
-					modelServiceImpl.predict(predict, execParams, predictExec);
-				}
-			} else {
-				predictExec = modelServiceImpl.create(predict, execParams, null, predictExec);
-				modelServiceImpl.predict(predict, execParams, predictExec);
-			}
+			predictExec = modelServiceImpl.create(predict, execParams, null, predictExec);
+			modelServiceImpl.predict(predict, execParams, predictExec);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -246,7 +238,8 @@ public class ModelController {
 	}
 
 	@RequestMapping(value = "/simulate/execute", method = RequestMethod.POST)
-	public boolean simulate(@RequestParam("uuid") String simulateUUID, @RequestParam("version") String simulateVersion,
+	public boolean simulate(@RequestParam("uuid") String simulateUUID, 
+			@RequestParam("version") String simulateVersion,
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
@@ -256,25 +249,15 @@ public class ModelController {
 					MetaType.simulate.toString());
 
 			SimulateExec simulateExec = null;
-			/*if (execParams != null) {
-				List<ParamMap> paramMapList = new ArrayList<>();
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, simulate.getDependsOn().getRef().getUuid(),
-						simulate.getDependsOn().getRef().getVersion());
-				for (ParamMap paramMap : paramMapList) {
-					simulateExec = modelServiceImpl.create(simulate, execParams, paramMap, simulateExec);
-					modelServiceImpl.simulate(simulate, execParams, simulateExec);
-				}
-			} else {*/
-				simulateExec = modelServiceImpl.create(simulate, execParams, null, simulateExec);
-				modelServiceImpl.simulate(simulate, execParams, simulateExec);
-			//}
+			simulateExec = modelServiceImpl.create(simulate, execParams, null, simulateExec);
+			return modelServiceImpl.simulate(simulate, execParams, simulateExec);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			throw new RuntimeException(e.getMessage());
+			
 		}
-		return true;
 	}
-
+	
 	@RequestMapping(value = "/getAllModelByType", method = RequestMethod.GET)
 	public List<Model> getAllModelByType(@RequestParam("customFlag") String customFlag,
 			@RequestParam(value = "action", required = false) String action,
@@ -309,6 +292,7 @@ public class ModelController {
 					trainExec = modelServiceImpl.create(train, model, execParams, paramMap, trainExec);
 					Thread.sleep(1000); // Should be parameterized in a class
 					modelServiceImpl.train(train, model, trainExec, execParams, paramMap);
+					trainExec = null;
 				}
 			} else {
 				trainExec = modelServiceImpl.create(train, model, execParams, null, trainExec);
@@ -408,5 +392,33 @@ public class ModelController {
 		Mode runMode = Helper.getExecutionMode(mode);
 		response = modelServiceImpl.downloadLog(trainExecUUID, trainExecVersion, response, runMode);
 	}
-	
+
+	@RequestMapping(value = "/operator/execute", method = RequestMethod.POST)
+	public boolean operator(@RequestParam("uuid") String operatorUuid, 
+			@RequestParam("version") String operatorVersion,
+			@RequestBody(required = false) ExecParams execParams,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		try {
+			Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(operatorUuid, operatorVersion,
+					MetaType.operator.toString());
+			OperatorExec operatorExec = null;
+			operatorExec = modelServiceImpl.create(operator, execParams, null, operatorExec);
+			return modelServiceImpl.operator(operator, execParams, operatorExec);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+		}
+	}
+
+	@RequestMapping(value = "/operator/getResults", method = RequestMethod.GET)
+	List<Map<String, Object>> getOperatorResults(@RequestParam("uuid") String operatorExecUuid,
+			@RequestParam("version") String operatorExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
+		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+		return modelExecServiceImpl.getOperatorResults(operatorExecUuid, operatorExecVersion, rowLimit);
+	}
 }

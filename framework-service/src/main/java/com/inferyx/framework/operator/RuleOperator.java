@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,6 +139,14 @@ public class RuleOperator implements Operator {
 			return filterOperator.generateSql(rule.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
 		}
 		return ConstantsUtil.BLANK;
+	}
+
+	@Override
+	public void execute(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
+			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		
 	} 
 
 }

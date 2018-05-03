@@ -79,6 +79,7 @@ import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.PredictExec;
@@ -4023,6 +4024,13 @@ public class RegisterService {
 			countHolder.add(addToCount(MetaType.recongroupExec.toString(), reconGroupExecCount,
 					reconGroupExec.getCreatedBy().getRef().getName(), reconGroupExec.getCreatedOn()));
 		}
+        
+		int operatorExecCount = commonServiceImpl.findAllLatest(MetaType.operatorExec).size();
+		OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getLatest(MetaType.operatorExec.toString());
+		if (operatorExec != null) {
+			countHolder.add(addToCount(MetaType.operatorExec.toString(), operatorExecCount,
+					operatorExec.getCreatedBy().getRef().getName(), operatorExec.getCreatedOn()));
+		}
 
 
 		return countHolder;
@@ -4030,7 +4038,7 @@ public class RegisterService {
 		
 	}
 
-	public long getMetaStatsByType() {
+	public long getMetaStatsByType() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return datapodServiceImpl.count();
 	}
 
@@ -4322,7 +4330,7 @@ public class RegisterService {
 		}
 		return result;
 	}
-	public List<RuleExec> getRuleExecByRule(String ruleUuid, String startDate, String endDate, String type, String action) {
+	public List<RuleExec> getRuleExecByRule(String ruleUuid, String startDate, String endDate, String type, String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		Query query = new Query();
 		query.fields().include("statusList");
 		query.fields().include("dependsOn");
@@ -4343,6 +4351,10 @@ public class RegisterService {
 		try {
 			if ((startDate != null	&& !StringUtils.isEmpty(startDate))
 				&& (endDate != null	&& !StringUtils.isEmpty(endDate)))
+
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y")); 
+			
 			query.addCriteria(Criteria.where("createdOn").gt(simpleDateFormat.parse(startDate))
 						.lte(simpleDateFormat.parse(endDate)));
 			

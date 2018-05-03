@@ -103,7 +103,7 @@ public class RuleController {
 		try {
 			ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion, MetaType.ruleExec.toString());
 			ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
-			ruleExec = ruleServiceImpl.execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(), metaExecutor, ruleExec, null, taskList, runMode);
+			ruleExec = ruleServiceImpl.execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(), metaExecutor, ruleExec, null, taskList, execParams, runMode);
 		} catch (Exception e) {
 			try {
 				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
@@ -130,15 +130,22 @@ public class RuleController {
 		MetaIdentifierHolder ruleExecMeta = new MetaIdentifierHolder();
 		MetaIdentifier ruleExecInfo = new MetaIdentifier(MetaType.rule, ruleUUID, ruleVersion);
 		ruleExecMeta.setRef(ruleExecInfo);
-		if (execParams != null && execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
-			for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-				execParams.setParamSetHolder(paramSetHolder);
-			}
-		} 
-		ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);
 		try {
-			ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
-			ruleExec = ruleServiceImpl.execute(ruleUUID, ruleVersion, metaExecutor, ruleExec, null, taskList, runMode);
+			if (execParams != null && execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
+				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
+					MetaIdentifier ref = paramSetHolder.getRef();
+					ref.setType(MetaType.paramset);
+					paramSetHolder.setRef(ref);
+					execParams.setParamSetHolder(paramSetHolder);
+					ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
+					ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
+					ruleExec = ruleServiceImpl.execute(ruleUUID, ruleVersion, metaExecutor, ruleExec, null, taskList, execParams, runMode);
+				}
+			} else {
+				ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
+				ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
+				ruleExec = ruleServiceImpl.execute(ruleUUID, ruleVersion, metaExecutor, ruleExec, null, taskList, execParams, runMode);
+			}
 		} catch (Exception e) {
 			try {
 				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
@@ -236,7 +243,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException {
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		return registerService.getRuleExecByRule(ruleUuid, startDate, endDate, type, action);
 	}
 	
@@ -282,7 +289,7 @@ public class RuleController {
 			try {
 				List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 				if(type.equalsIgnoreCase(MetaType.ruleExec.toString())){
-					ruleServiceImpl.restart(type,uuid,version, taskList, metaExecutor, runMode);
+					ruleServiceImpl.restart(type,uuid,version, taskList, metaExecutor, null, runMode);
 					commonServiceImpl.completeTaskThread(taskList);
 				}
 				else{

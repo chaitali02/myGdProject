@@ -156,4 +156,12 @@ public class MapOperator implements Operator {
 		return builder.toString();
 	}
 
+	@Override
+	public void execute(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
