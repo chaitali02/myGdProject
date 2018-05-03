@@ -16,10 +16,11 @@ import java.util.Set;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.OperatorType;
 
 public interface Operator {
 	
-	public void execute(com.inferyx.framework.datascience.Operator operator, 
+	public void execute(OperatorType operatorType, 
 			ExecParams execParams, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 
 			HashMap<String, String> otherParams, 
