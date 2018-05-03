@@ -228,7 +228,7 @@
                                     </td>
                                     <td  ng-repeat="tablecol in tabledata.paramSetVal">
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                        <input style="width:{{paramtablecol[$index].paramName.split('').length + 100}}px" type="text" ng-model="tablecol.value" ng-disabled="true" class="form-control">
+                                        <input style="width:{{paramtablecol.length}} < 3?0:{{paramtablecol[$index].paramName.split('').length + 100}}px"type="text" ng-model="tablecol.value" ng-disabled="true" class="form-control">
                                       </span>
                                     </td>
                                   </tr>
