@@ -12,13 +12,13 @@
             <i class="fa fa-gift"></i>{{functionData.name}}
           </div>
           <div class="tools">
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
+            <a title="Edit" (click)="enableEdit(functionData.uuid,functionData.version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
+            <a title="View" data-toggle="tooltip" (click)="showview(functionData.uuid,functionData.version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip style="height:14px;" *ngIf="mode">
+            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(functionData.uuid,functionData.version)" data-placement="top" tooltip style="height:14px;" *ngIf="mode">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
             <a  title="Refresh"  data-toggle="tooltip" data-placement="top" tooltip>
@@ -44,7 +44,7 @@
           </div>
 
           <div class="form-body"  style="padding-top:50px;">
-            <form  class="form-horizontal"  name="myform" novalidate="novalidate" >
+            <form  class="form-horizontal"  name="myform" novalidate="novalidate" (ngSubmit)="submitFunction()" #myNewForm = "ngForm" >
               <div class="form-group" >
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
@@ -102,12 +102,54 @@
                   <textarea [disabled]="mode == 'true'" [(ngModel)]="functionData.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
+              <div class="form-group">
+								<label class="control-label col-md-3 col-sm-3 col-xs-12">FunctionType
+									<span class="required" aria-required="true"> * </span>
+								</label>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+                    <p-dropdown [options]="funcType"          
+                    [(ngModel)]="selectFunctionType"
+                    name="functionType"        
+                    [disabled]="mode == 'true'"
+                    [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true">
+                  </p-dropdown>
+									<!-- <select title="Type" [(ngModel)]="selectFunctionType" ng-options="x for x in funcType" class="form-control" [(disabled)]="{{mode}}"
+									 required="">
+									</select> -->
+								</div>
+							</div>
 
+							<div class="form-group">
+								<label class="control-label col-md-3 col-sm-3 col-xs-12">Category
+									<span class="required" aria-required="true"> * </span>
+								</label>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+                    <p-dropdown [options]="category"          
+                    [(ngModel)]="selectCatogory"
+                    name="functionType"        
+                    [disabled]="mode == 'true'"
+                    [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true">
+                  </p-dropdown>
+									<!-- <select title="Type" [(ngModel)]="selectCatogory" ng-options="x for x in catogory" class="form-control" [(disabled)]="{{mode}}"
+									 required="">
+									</select> -->
+								</div>
+							</div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Input Flag</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChangeInputFlag($event)" [disabled]="mode == 'true'" [(ngModel)]="functionData.inputReq" name="inputFlag" [checked]="inputFlag" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="functionData.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="functionData.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -116,7 +158,7 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="functionData.published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangePublish($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="functionData.published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -129,7 +171,102 @@
 
                 </div>
               </div>
-
+              <div class="x_title">
+                  <button type="Button" class=" btn btn-danger fa fa-minus pull-right" (click)="removeRow()"  [disabled]="mode == 'true'"></button>
+                  <button type="Button" class=" btn btn-success fa fa-plus pull-right" (click)="addRow()"  [disabled]="mode == 'true'"></button>
+                  <h4><strong>Details</strong></h4>
+                 <hr>
+              </div>
+                <table class=" row-border hover table  table-striped table-bordered">
+                    <thead class="">
+                        <tr>
+                          <th style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox"[disabled]="mode == 'true'"[(ngModel)]="selectallrow" (change)="selectAllRow()" name="selectallrow"/></th>
+                          <th style="text-align: center;width:50%;">Type</th>
+                          <th style="text-align: center;">Name</th>
+                          <th style="width:5%;">
+                            <div (click)="expandAll(allExpanded = !allExpanded)" style="display:flex;justify-content:center;margin:3px auto;">
+                              <i [ngClass]="allExpanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;" aria-hidden="true"></i>
+                            </div>
+                          </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <template ngFor let-data [ngForOf]="functionTableArray" let-i="index">
+                      <tr>
+                        <td style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox"[(ngModel)]="data.selected" name="selected" [disabled]="mode == 'true'"/></td>
+                        <td>
+                            <p-dropdown [options]="allTypes"          
+                            [(ngModel)]="data.type"
+                            name="type+{{i}}"
+                            [disabled]="mode == 'true'"
+                            [style]="{'width':'100%','padding':'3px'}"
+                            [filter]="true"                        
+                            >
+                            </p-dropdown>
+                        </td>
+                        <td >
+                            <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="data.name" name="DataName+{{i}}">
+                        </td>
+                        <td>
+                          <div  (click)="data.expanded = !data.expanded" expand style="display:flex;justify-content:center;margin:3px auto;">
+                            <i [ngClass]="expanded ? 'fa fa-chevron-circle-up' : 'fa fa-chevron-circle-down'" style="opacity:0.7;"></i>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      <tr *ngIf="data.expanded" >
+                        <td colspan="3" style="padding: 0px 17px;">
+                          <div class="x_title" style="padding:10px;" >
+                          <button type="Button" class=" btn btn-danger fa fa-minus pull-right" (click)="removeJoinSubRow(i)"[disabled]="mode == 'true'"></button>
+                          <button type="Button" class=" btn btn-success fa fa-plus pull-right" (click)="addJoinSubRow(i)"[disabled]="mode == 'true'"></button>
+                         </div>
+                      <br><br>
+                         <table class=" row-border hover table  table-striped table-bordered">
+                            <thead class="theadborder">
+                              <tr>
+                                <th style="text-align: center; Vertical-align: middle;width:5%;">
+                                <input style="width: 16px;height:16px;" type="checkbox"[disabled]="mode == 'true'"[(ngModel)]="data.selectalljoinkey" name="selectalljoinkey" (change)="selectAllSubRow(i)" /></th>
+                                <th style="text-align: center;width:17%;">Parameter Id</th>
+                                <th style="text-align: center;width:30%;">Parameter Reqd</th>
+                                <th style="text-align: center;width:15%;">Parameter Type</th>
+                                <th style="text-align: center;width:33%;">Parameter Name</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                               <tr *ngFor="let paramInfo of data.paramInfoHolder let j=index ">
+            
+                                <td style="text-align: center; Vertical-align: middle;"><input style="width: 16px;height:16px;" type="checkbox"[(ngModel)]="paramInfo.selected" name="selected+{{i}}"[disabled]="mode == 'true'">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="paramInfo.paramId" name="paramIde+{{i}}">
+                                 </td>
+                                <td style="width:35%;">
+                                    <input type="checkbox" style="width: 16px; margin-left: 41%" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="paramInfo.paramReq" name="paramReq+{{i}}"
+                                    value=false>
+                                </td>
+                                <td style="width:15%;">
+                                    <p-dropdown 
+                                    [options]="allParamType"          
+                                    [(ngModel)]="paramInfo.paramType"
+                                    name="paramType+{{i}}"                                
+                                    [disabled]="mode == 'true'"
+                                    [style]="{'width':'100%','padding':'3px'}"
+                                    [filter]="true"
+                                    >
+                                  </p-dropdown>
+                                </td>
+                                <td style="width:35%;">
+                                    <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="paramInfo.paramName" name="paramName+{{i}}">
+                                </td>
+                              </tr> 
+                            </tbody>
+                          </table>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </template>
+                    </tbody>
+                </table>
             </form>
           </div>
 

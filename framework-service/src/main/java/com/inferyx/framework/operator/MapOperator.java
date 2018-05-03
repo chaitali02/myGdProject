@@ -29,6 +29,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
@@ -154,6 +155,14 @@ public class MapOperator implements Operator {
 			return builder.toString().replaceAll("\"\\$DAGEXEC_VERSION\"", otherParams.get($DAGEXEC_VERSION));
 		}
 		return builder.toString();
+	}
+
+	@Override
+	public void execute(OperatorType operatorType, ExecParams execParams,
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

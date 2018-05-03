@@ -296,13 +296,14 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @param datapod
 	 * @param datastore
+	 * @param tableName TODO
 	 * @param hdfsInfo
 	 * @param conObject
 	 * @param datasource
 	 * @return
 	 */
-	public String readFile(String clientContext, Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo,
-			Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception;
+	public String readFile(String clientContext, Datapod datapod, DataStore datastore, String tableName,
+			HDFSInfo hdfsInfo, Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception;
 	
 	/**
 	 * 

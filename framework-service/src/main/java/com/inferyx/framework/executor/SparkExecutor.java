@@ -29,7 +29,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
@@ -77,14 +76,8 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
-import com.inferyx.framework.operator.DatasetOperator;
-import com.inferyx.framework.operator.PredictMLOperator;
-import com.inferyx.framework.operator.RuleOperator;
-import com.inferyx.framework.operator.SimulateMLOperator;
-import com.inferyx.framework.operator.TrainAndValidateOperator;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
@@ -117,10 +110,6 @@ public class SparkExecutor implements IExecutor {
 	@Autowired
 	ModelExecServiceImpl modelExecServiceImpl;
 	@Autowired
-	private DatasetOperator datasetOperator;
-	@Autowired
-	private DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
 	private ConnectionFactory connFactory;
 	/*
 	 * @Autowired HiveContext hiveContext;
@@ -131,16 +120,6 @@ public class SparkExecutor implements IExecutor {
 	private MetadataUtil daoRegister;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
-	@Autowired
-	private RuleOperator ruleOperator;
-	@Autowired
-	private PredictMLOperator predictMLOperator;
-	@Autowired
-	private SimulateMLOperator simulateMLOperator ;
-	@Autowired
-	private TrainAndValidateOperator trainAndValidateOperator ;
-	@Autowired
-	private JavaSparkContext javaSparkContext;
 	
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
@@ -307,8 +286,11 @@ public class SparkExecutor implements IExecutor {
 	 * @throws Exception
 	 */
 	@Override
-	public String readFile(String clientContext, Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo,
-			Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
+	public String readFile(String clientContext, Datapod datapod, DataStore datastore, String tableName,
+			HDFSInfo hdfsInfo, Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
+		if(tableName == null)
+			tableName = datapod.getName();
+		
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		Object obj = conHolder.getStmtObject();
@@ -321,8 +303,8 @@ public class SparkExecutor implements IExecutor {
 		if (obj instanceof SparkSession) {
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 			DataFrameHolder dfHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
-			sparkSession.sqlContext().registerDataFrameAsTable(dfHolder.getDataframe(), datapod.getName());
-			return datapod.getName();
+			sparkSession.sqlContext().registerDataFrameAsTable(dfHolder.getDataframe(), tableName);
+			return tableName;
 		} /*
 			 * else if (obj instanceof LivyClient) { LivyClient client = (LivyClient)
 			 * conHolder.getStmtObject(); // Need to think of persist return
@@ -727,6 +709,7 @@ public class SparkExecutor implements IExecutor {
 		// Execute SQL
 		logger.info("inside SparkExecutor for the quiery: " + sql);
 		Dataset<Row> df = sparkSession.sql(sql).coalesce(10);
+		df.show(Integer.parseInt(""+df.count()));
 		df.persist(StorageLevel.MEMORY_AND_DISK());
 		// df.cache();
 
@@ -1223,6 +1206,7 @@ public class SparkExecutor implements IExecutor {
 	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
 				.invoke(trainedModel, df);
 		predictionDf.show();

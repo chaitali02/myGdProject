@@ -59,7 +59,7 @@ export class metadataNavigatorComponent {
     for (let i = 0; i < response.length; i++) {
       let patt = new RegExp("exec");
       let res = patt.exec(response[i].type);
-      if (res == null && response[i].type!='condition' && response[i].type!='dimension'&& response[i].type!='message' && response[i].type!='log' && response[i].type!='measure') {
+      if (res == null && response[i].type!='condition'&&response[i].type!='appconfig' && response[i].type!='dimension'&& response[i].type!='message' && response[i].type!='log' && response[i].type!='measure') {
             let metajson = {};
             metajson["type"] = response[i].type;
             metajson["count"] = response[i].count;

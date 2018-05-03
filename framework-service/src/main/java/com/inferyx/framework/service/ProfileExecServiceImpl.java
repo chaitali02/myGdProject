@@ -14,6 +14,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -374,7 +375,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 	
 	
 	
-	public List<ProfileExec> findProfileExecByProfile(String profileUuid, String startDate, String endDate, String type, String action){		
+	public List<ProfileExec> findProfileExecByProfile(String profileUuid, String startDate, String endDate, String type, String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException{		
 		Query query = new Query();
 		query.fields().include("statusList");
 		query.fields().include("dependsOn");
@@ -408,6 +409,8 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 			
 			query.addCriteria(Criteria.where("statusList.stage").in("Completed"));
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(profileUuid));
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -418,7 +421,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		return profileExecObjList;		
 	}
 	
-	public List<ProfileExec> findProfileExecByDatapod(String datapodUUID, String startDate, String endDate, String type){
+	public List<ProfileExec> findProfileExecByDatapod(String datapodUUID, String startDate, String endDate, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException{
 		List<ProfileExec> profileExecObjList = new ArrayList<>();
 		List<ProfileExec> execObjList = new ArrayList<>();
 
@@ -471,7 +474,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		return resolvedProfileExecList;
 	}
 	
-	public List<ProfileExec> findProfileExecByProfile(String profileUUID, String startDate, String endDate, String type){
+	public List<ProfileExec> findProfileExecByProfile(String profileUUID, String startDate, String endDate, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException{
 		List<ProfileExec> profileExecObjList = new ArrayList<>();
 		List<ProfileExec> execObjList = new ArrayList<>();
 		

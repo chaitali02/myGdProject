@@ -281,7 +281,7 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 		return resolvedDataQualExecList;
 	}
 	
-	public List<DataQualExec> findDataQualExecByDataqual(String dataqualUuid, String startDate, String endDate, String type, String action){		
+	public List<DataQualExec> findDataQualExecByDataqual(String dataqualUuid, String startDate, String endDate, String type, String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException{		
 		Query query = new Query();
 		query.fields().include("statusList");
 		query.fields().include("dependsOn");
@@ -315,6 +315,8 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 			
 			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(dataqualUuid));
+		    query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -471,7 +473,7 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 		return result;
 	}
 	
-	public List<DataQualExec> finddqExecByDatapod(String datapodUUID, String startDate, String endDate, String type){
+	public List<DataQualExec> finddqExecByDatapod(String datapodUUID, String startDate, String endDate, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException{
 		List<DataQualExec> DataQualExecObjList = new ArrayList<>();
 		List<DataQualExec> ExecObjList = new ArrayList<>();
 
@@ -487,6 +489,9 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 		try {
 			if ((datapodUUID != null && !StringUtils.isEmpty(datapodUUID)))
 				query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(datapodUUID));
+
+		    	query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+		    	query.addCriteria(Criteria.where("active").is("Y"));
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

@@ -149,7 +149,7 @@
                 <label class="control-label col-md-3 col-sm-1 col-xs-12" for="select">Meta Info</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                  
-                  <tags-input  class="tag-scroll" ng-model="metaNameTags" add-from-autocomplete-only="true" display-property="name" key-property="id">
+                  <tags-input  ng-disabled="{{mode}}"  class="tag-scroll" ng-model="metaNameTags" add-from-autocomplete-only="true" display-property="name" key-property="id">
                       <auto-complete source="loadAllMetaName($query)" min-length="1"   highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
                         </auto-complete>
                     </tags-input>

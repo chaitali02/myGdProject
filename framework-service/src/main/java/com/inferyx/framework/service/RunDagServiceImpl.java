@@ -175,7 +175,7 @@ public class RunDagServiceImpl implements Callable<String> {
 	@SuppressWarnings("finally")
 	public String parseAndExecute() throws Exception {
 		try {
-
+			logger.info(" Inside RunDagServiceImpl.parseAndExecute ");
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
 			//Check if parsing has happ or not. If not then parse.
 			dagServiceImpl.setRunMode(runMode);

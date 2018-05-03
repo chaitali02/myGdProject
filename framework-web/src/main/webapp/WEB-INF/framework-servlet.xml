@@ -345,6 +345,7 @@
 	<bean id="predictMLOperator" class="com.inferyx.framework.operator.PredictMLOperator"/>
 	
 	<bean id="mlDistribution" class="com.inferyx.framework.datascience.Math3Distribution"/>
+	<bean id="transposeOperator" class="com.inferyx.framework.operator.TransposeOperator"/>
 		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>
