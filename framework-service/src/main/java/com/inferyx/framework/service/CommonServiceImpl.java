@@ -95,6 +95,9 @@ import com.inferyx.framework.dao.IMessageDao;
 import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
+import com.inferyx.framework.dao.IOperatorDao;
+import com.inferyx.framework.dao.IOperatorExecDao;
+import com.inferyx.framework.dao.IOperatorTypeDao;
 import com.inferyx.framework.dao.IParamListDao;
 import com.inferyx.framework.dao.IParamSetDao;
 import com.inferyx.framework.dao.IPredictDao;
@@ -382,7 +385,66 @@ public class CommonServiceImpl <T> {
 	IDistributionDao iDistributionDao;
 	@Autowired
 	IAppConfigDao iAppConfigDao;
+	@Autowired
+	IOperatorTypeDao iOperatorTypeDao;
+	@Autowired
+	IOperatorExecDao iOperatorExecDao;
+	@Autowired
+	IOperatorDao iOperatorDao;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iOperatorDao
+	 */
+	public IOperatorDao getiOperatorDao() {
+		return iOperatorDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iOperatorDao the iOperatorDao to set
+	 */
+	public void setiOperatorDao(IOperatorDao iOperatorDao) {
+		this.iOperatorDao = iOperatorDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iOperatorTypeDao
+	 */
+	public IOperatorTypeDao getiOperatorTypeDao() {
+		return iOperatorTypeDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iOperatorTypeDao the iOperatorTypeDao to set
+	 */
+	public void setiOperatorTypeDao(IOperatorTypeDao iOperatorTypeDao) {
+		this.iOperatorTypeDao = iOperatorTypeDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iOperatorExecDao
+	 */
+	public IOperatorExecDao getiOperatorExecDao() {
+		return iOperatorExecDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iOperatorExecDao the iOperatorExecDao to set
+	 */
+	public void setiOperatorExecDao(IOperatorExecDao iOperatorExecDao) {
+		this.iOperatorExecDao = iOperatorExecDao;
+	}
 
 	public IAppConfigDao getiAppConfigDao() {
 		return iAppConfigDao;
@@ -2028,22 +2090,32 @@ public class CommonServiceImpl <T> {
 		return resolveBaseEntityList(baseEntityList);
 	}
 	
+	@SuppressWarnings("unused")
 	public List<MetaStatsHolder> getMetaStats(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, JsonProcessingException {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+		logger.info("Inside getMetaStats - type : " + type);
+		String appUuid = null;
+//		if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+//			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
+//			&& !type.equalsIgnoreCase(MetaType.application.toString()))) {
+			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+//		}
 		List<MetaStatsHolder> countHolder = new ArrayList<>();
 		List<MetaType> metaTypes = MetaType.getMetaList();
 		if(type == null){
-			for(MetaType mType : metaTypes){
+			for(MetaType mType : metaTypes){//logger.info("MetaType: "+mType+"\n");
 				long count = 0;
 				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase()))).invoke(this);
 				if (appUuid == null) {
-					count = (long) iDao.getClass().getMethod("count").invoke(iDao);
+					//count = (long) iDao.getClass().getMethod("count").invoke(iDao);
+					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
+
 				}else{
 					/*Query query = new Query();
 					query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));    
 					count = mongoTemplate.count(query, Helper.getDomainClass(Helper.getMetaType(mType.toString().toLowerCase())));*/
 					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
+					//count = getAllLatest(mType.toString(), "Y").size();
 				}
 				if(count > 0){
 					Object metaObj = iDao.getClass().getMethod("findLatest", Sort.class).invoke(iDao, new Sort(Sort.Direction.DESC, "version"));
@@ -2053,9 +2125,6 @@ public class CommonServiceImpl <T> {
 					String nameLastUpdatedBy = (String) ref.getClass().getMethod("getName").invoke(ref);
 					String lastUpdatedOn = (String) metaobjNew.getClass().getMethod("getCreatedOn").invoke(metaobjNew);
 					countHolder.add(new MetaStatsHolder(mType.toString().toLowerCase(), Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
-				}else{
-					countHolder.add(new MetaStatsHolder(mType.toString().toLowerCase(), Long.toString(count), null,null));
-
 				}				
 			}
 		}else{

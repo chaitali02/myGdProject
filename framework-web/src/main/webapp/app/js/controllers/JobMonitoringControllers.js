@@ -138,6 +138,11 @@
             metajson.icon = "fa fa-compress"
             metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
             break;
+            case "operatorExec":
+        	  metajson.caption = dagMetaDataService.elementDefs[type].caption;
+            metajson.icon = "fa fa-flask"
+            metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
+            break;
             
         }
         metaarray[i] = metajson

@@ -37,17 +37,13 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IDagDao;
-import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
-import com.inferyx.framework.domain.DataQualGroup;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
@@ -56,8 +52,8 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
@@ -77,7 +73,6 @@ import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
-import com.inferyx.framework.domain.User;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -136,6 +131,8 @@ public class DagServiceImpl {
 	private ReconServiceImpl reconServiceImpl;
 	@Autowired
 	private ReconGroupServiceImpl reconGroupServiceImpl;
+	@Autowired
+	private OperatorServiceImpl operatorServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DagServiceImpl.class);
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -799,6 +796,7 @@ public class DagServiceImpl {
 		// Iterate the task and set it
 		for (Task indvTask : dagTasks) {
 			TaskExec taskExec = new TaskExec(indvTask);
+			taskExec.getOperators().get(0).setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
 			refKeys = DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()); // Get
 																						// refKeys
 																						// placeholder
@@ -953,6 +951,7 @@ public class DagServiceImpl {
 						execParams.setParamSetHolder(paramSetHolderList.get(0));
 					}
 				}
+				operator.setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
 				if (ref.getType().equals(MetaType.map)) {
 					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
 							.convertRefKeyListToMap(execParams.getRefKeyList());
@@ -1435,7 +1434,41 @@ public class DagServiceImpl {
 						statusList.add(failedStatus);
 						e.printStackTrace();
 					}
+				} else if (ref.getType().equals(MetaType.operatortype)) {
+					logger.info("Inside parseDagExec : MetaType operatorType ");
+					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
+							.convertRefKeyListToMap(execParams.getRefKeyList());
+					OperatorExec operatorExec = new OperatorExec();
+					MetaIdentifier operatorTypeIdentifier = new MetaIdentifier(MetaType.operatortype, ref.getUuid(),
+							ref.getVersion());
+					operatorExec.setDependsOn(new MetaIdentifierHolder(operatorTypeIdentifier));
+					operatorExec.setName(ref.getName());
+					operatorExec.setBaseEntity();
+					MetaIdentifier operatorExecIdentifier = new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(),
+							operatorExec.getVersion());
+					try {
+						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(operatorExecIdentifier);
+						operatorExec = operatorServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.operatortype, MetaType.operatorExec, operatorExec, 
+								refKeyMap, datapodList, dagExec);
+						commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
+//						operatorExec = reconGroupServiceImpl.parse(operatorExec.getUuid(), operatorExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+						
+						if (operatorExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
+							throw new Exception();
+						}
+					} catch (Exception e) {
+						logger.error("Exception while creating operatorExec : " + operatorExec);
+						Status failedStatus = new Status(Status.Stage.Failed, new Date());
+						List<Status> statusList = indvExecTask.getStatusList();
+						if (statusList == null) {
+							statusList = new ArrayList<Status>();
+						}
+						statusList.remove(failedStatus);
+						statusList.add(failedStatus);
+						e.printStackTrace();
+					}
 				}
+
 
 				/*if (builder == null) {
 					continue;
