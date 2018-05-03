@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.parser.TaskParser;
@@ -129,6 +131,13 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		
 		public String generateGroupBy (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(dataset.getAttributeInfo()), refKeyMap, otherParams, execParams);
+		}
+
+		@Override
+		public void execute(OperatorType operatorType, ExecParams execParams, Map<String, MetaIdentifier> refKeyMap,
+				HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			// TODO Auto-generated method stub
+			
 		}
 
 }

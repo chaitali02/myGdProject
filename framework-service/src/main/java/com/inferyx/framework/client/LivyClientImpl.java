@@ -142,7 +142,7 @@ public class LivyClientImpl {
 	public Dataset<Row> readFile(String clientContext, String filePath) throws InterruptedException, ExecutionException, Exception {
 		return getClient(clientContext).submit(new FileReadJob(filePath)).get();
 	}
-	
+		
 	private Properties getSessionParams(String sessionParams) throws IOException {
 		final Properties p = new Properties();
 		if (sessionParams == null) {

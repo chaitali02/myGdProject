@@ -213,6 +213,14 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
       method: "GET",
     }).then(function(response){ return  response})
   }
+
+  factory.findOperatorResult = function (uuid, version) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      method: 'GET',
+      url: url + "model/operator/getResults?action=view&uuid=" + uuid + "&version=" + version,
+    }).then(function (response, status, headers) { return response; })
+  }
   
   return factory;
 })
@@ -554,6 +562,16 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
     var url = "common/upload?action=edit&extension=" + extension + "&fileType=" + fileType
     var deferred = $q.defer();
     ModelFactory.uploadFile(url, data).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
+  this.getOperatorResult = function (uuid, version) {
+    var deferred = $q.defer();
+    ModelFactory.findOperatorResult(uuid, version).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response

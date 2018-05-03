@@ -62,7 +62,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 			}
 
 			if (status) {
-
 				UserDetails user = new User(session.getUserInfo().getRef().getUuid(), sessionId, true, true, true, true,
 						getAuthorities("Admin"));
 				return user;

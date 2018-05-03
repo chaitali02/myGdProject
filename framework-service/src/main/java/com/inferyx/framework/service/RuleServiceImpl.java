@@ -371,7 +371,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 */
 
 	public void restart(String type, String uuid, String version, List<FutureTask<TaskHolder>> taskList,
-			ThreadPoolTaskExecutor metaExecutor, Mode runMode) throws JsonProcessingException {
+			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, Mode runMode) throws JsonProcessingException {
 		// RuleExec ruleExec= ruleExecServiceImpl.findOneByUuidAndVersion(uuid,
 		// version);
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
@@ -379,7 +379,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		try {
 			ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
 			execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(),
-					metaExecutor, ruleExec, null, taskList, runMode);
+					metaExecutor, ruleExec, null, taskList, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -450,11 +450,11 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * @throws Exception
 	 */
 	public RuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor, RuleExec ruleExec,
-			RuleGroupExec ruleGroupExec, List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
+			RuleGroupExec ruleGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
 		logger.info("Inside ruleServiceImpl.execute");
 		try {
 			ruleExec = (RuleExec) super.execute(uuid, version, MetaType.rule, MetaType.ruleExec, metaExecutor, ruleExec,
-					ruleGroupExec, ruleExec.getDependsOn().getRef(), taskList, runMode);
+					ruleGroupExec, ruleExec.getDependsOn().getRef(), taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (ruleExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
@@ -771,8 +771,8 @@ public class RuleServiceImpl extends RuleTemplate {
 	@Override
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
-			List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
-		return execute(uuid, version, metaExecutor, (RuleExec) baseRuleExec, (RuleGroupExec) baseGroupExec, taskList,
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+		return execute(uuid, version, metaExecutor, (RuleExec) baseRuleExec, (RuleGroupExec) baseGroupExec, taskList, execParams, 
 				runMode);
 	}
 	

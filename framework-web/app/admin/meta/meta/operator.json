@@ -1,7 +1,7 @@
 {
 
-      "uuid": "9d365196-4925-11e8-842f-0ed5f89f718b",
-      "name": "OperatorExec",
+      "uuid": "0500c69c-4937-11e8-842f-0ed5f89f718b",
+      "name": "operator",
       "version": "1465454441",
       "createdBy": {
 		"ref": {
@@ -13,7 +13,7 @@
       "active": "Y",
       "appInfo" : [{"ref" : {"type" : "application","uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"}}
     			],
-      "desc": "Meta for OperatorExec",
+      "desc": "Meta for Operator",
       "menu":""
 
 }
