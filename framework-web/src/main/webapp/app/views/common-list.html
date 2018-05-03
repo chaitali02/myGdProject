@@ -205,28 +205,36 @@
                           </form>
                           <br>
                           <div ng-show="isTabelShow" style="overflow-x: auto;">
-                            <table class=" row-border hover table  table-striped table-bordered">
-                              <thead>
-                                <tr>
-                                  <th style="text-align:center;Vertical-align: middle;width:5%;">
-                                    <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()" />
-                                  </th>
-                                  <th style="width:6%;text-align:center">ID</th>
-                                  <th class="text-center" ng-repeat="tablecol in paramtablecol">{{tablecol.paramName}}</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr ng-repeat="tabledata in paramtable">
-                                  <td style="text-align:center;Vertical-align:middle;width:5%;">
-                                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" /></td>
-                                  <td style="width:6%;"><input type="text" ng-model="tabledata.paramSetId" ng-disabled="true" class="form-control">
-                                  </td>
-                                  <td style="width:20%;" ng-repeat="tablecol in tabledata.paramSetVal"><input type="text" ng-model="tablecol.value" ng-disabled="true" class="form-control">
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
+                              <table class=" row-border hover table  table-striped table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th style="text-align:center;Vertical-align: middle;width:5%;">
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                          <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()" />
+                                        </span>
+                                    </th>
+                                    <th class="text-center" > ID </th>
+                                    <th  class="text-center" ng-repeat="tablecol in paramtablecol">  {{tablecol.paramName}}  </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr ng-repeat="tabledata in paramtable">
+                                    <td style="text-align:center;Vertical-align:middle;width:5%;">
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <input style="width:16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                                      </span>
+                                    </td>
+                                    <td ><input style="width:50px"  type="text" ng-model="tabledata.paramSetId" ng-disabled="true" class="form-control">
+                                    </td>
+                                    <td  ng-repeat="tablecol in tabledata.paramSetVal">
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <input style="width:{{paramtablecol[$index].paramName.split('').length + 100}}px" type="text" ng-model="tablecol.value" ng-disabled="true" class="form-control">
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                         </div>
                       </div>
                     </div>
