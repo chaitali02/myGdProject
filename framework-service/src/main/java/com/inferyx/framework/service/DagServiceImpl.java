@@ -1434,21 +1434,21 @@ public class DagServiceImpl {
 						statusList.add(failedStatus);
 						e.printStackTrace();
 					}
-				} else if (ref.getType().equals(MetaType.operator)) {
-					logger.info("Inside parseDagExec : MetaType operator ");
+				} else if (ref.getType().equals(MetaType.operatortype)) {
+					logger.info("Inside parseDagExec : MetaType operatorType ");
 					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
 							.convertRefKeyListToMap(execParams.getRefKeyList());
 					OperatorExec operatorExec = new OperatorExec();
-					MetaIdentifier operatorExecIdentifier = new MetaIdentifier(MetaType.operator, ref.getUuid(),
+					MetaIdentifier operatorTypeIdentifier = new MetaIdentifier(MetaType.operatortype, ref.getUuid(),
 							ref.getVersion());
-					operatorExec.setDependsOn(new MetaIdentifierHolder(operatorExecIdentifier));
+					operatorExec.setDependsOn(new MetaIdentifierHolder(operatorTypeIdentifier));
 					operatorExec.setName(ref.getName());
 					operatorExec.setBaseEntity();
-					operatorExecIdentifier = new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(),
+					MetaIdentifier operatorExecIdentifier = new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(),
 							operatorExec.getVersion());
 					try {
 						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(operatorExecIdentifier);
-						operatorExec = operatorServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.operator, MetaType.operatorExec, operatorExec, 
+						operatorExec = operatorServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.operatortype, MetaType.operatorExec, operatorExec, 
 								refKeyMap, datapodList, dagExec);
 						commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 //						operatorExec = reconGroupServiceImpl.parse(operatorExec.getUuid(), operatorExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);

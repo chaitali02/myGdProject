@@ -10,10 +10,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -45,7 +45,7 @@ public class JoinTablesOperator implements com.inferyx.framework.operator.Operat
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void execute(Operator operator, 
+	public void execute(OperatorType operatorType, 
 						ExecParams execParams, 
 						java.util.Map<String, MetaIdentifier> refKeyMap, 
 						HashMap<String, String> otherParams, 

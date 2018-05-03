@@ -736,6 +736,7 @@ public class TaskServiceImpl implements Callable<String> {
 				Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateExec.getDependsOn().getRef().getUuid(), simulateExec.getDependsOn().getRef().getVersion(), MetaType.simulate.toString());
 				//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(), simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 				//ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
+				ExecParams execParams = getExecParams(operator);
 				modelServiceImpl.simulate(simulate, execParams, simulateExec);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -781,7 +782,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} 	 else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.operator)) {
+		} 	 else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.operatortype)) {
 			logger.info("Going to operatorServiceImpl.execute");
 			try {
 				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
