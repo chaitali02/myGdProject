@@ -23,7 +23,7 @@ export class CommonService{
   }
 
   getAll(type:String): Observable<any[]> {
-    let url ='common/getAll?action=view&type='+type;
+    let url ='common/getAll?type='+type;
     return this._sharedService.getCall(url)
     .map((response: Response) => {
       return <any[]>response.json();
@@ -48,16 +48,6 @@ export class CommonService{
   })
   .catch(this.handleError);
   }
-
-  // downloadExport(uuid:Number): Observable<any[]> {
-  //   debugger
-  //   let url ='admin/export/download?uuid='+uuid;
-  //   return this._sharedService.getCall(url)
-  //   .map((response: Response) => {
-  //     return <any[]>response.json();
-  // })
-  //  .catch(this.handleError);
-  // }
 
   downloadExport(uuid:Number): Observable<any> {
     let url ='admin/export/download?uuid='+uuid;

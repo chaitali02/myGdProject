@@ -126,7 +126,7 @@ export class RoleComponent implements OnInit {
       privilegeInfoNew[i]=privilegetag;
     }
       this.privilegeInfoTags=privilegeInfoNew;
-      console.log('getOneByUuidAndVersion is end');
+      console.log(JSON.stringify(this.privilegeInfoTags));
   }
 
   OnSuccesgetAllVersionByUuid(response) {

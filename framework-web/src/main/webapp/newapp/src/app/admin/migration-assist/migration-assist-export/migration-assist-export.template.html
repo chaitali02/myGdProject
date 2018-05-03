@@ -121,18 +121,19 @@
               <div class="form-group" *ngIf="!mode">
                 <label class="col-md-3 control-label">Meta Type </label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="metaTypes" [(ngModel)]="metaType" name="metaType" placeholder="Select" [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" [disabled]="mode == 'true'" (onChange)="getAll()">
-                  </p-dropdown>
+                  <angular2-multiselect [data]="metaTypeArray" [(ngModel)]="metaType" name="metaType"  [settings]="dropdownSettingsMetaType"
+                    (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
+                    (onDeSelectAll)="onDeSelectAll($event)" [style]="{'width':'50%','padding':'3px'}" >
+                  </angular2-multiselect>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-md-3 control-label">Meta Info</label>
                 <div class="col-md-6">
-                  <angular2-multiselect [data]="metaInfoArray" [(ngModel)]="metaInfo" name="metaInfo" [disabled]=true [settings]="dropdownSettingsMeta"
-                    (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
-                    (onDeSelectAll)="onDeSelectAll($event)">
+                  <angular2-multiselect [data]="allMataList" [(ngModel)]="metaInfo" name="metaInfo"  [settings]="dropdownSettingsMetaInfo"
+                    (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
+                    (onDeSelectAll)="onDeSelectAll($event)" >
                   </angular2-multiselect>
                 </div>
               </div>
@@ -140,8 +141,7 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">Include Dependencies ?</label>
                 <div class="col-md-6">
-                  <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="exportData.includeDep" name="includeDep" (change)="onChangeCheckbox($event)"
-                  />
+                  <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="exportData.includeDep" name="includeDep" (change)="onChangeCheckbox($event)" [disabled]="mode == 'true'"/>
                 </div>
               </div>
 
@@ -149,7 +149,7 @@
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
 
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="mode == false">
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="mode == 'true'"/>
 
                 </div>
               </div>
