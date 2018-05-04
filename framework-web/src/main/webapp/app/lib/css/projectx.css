@@ -129,10 +129,10 @@ th, td{vertical-align: middle !important}
 /*Start Metadata*/
 
 /*Start DatapodDetailPage*/
-   .taginput {
+  .taginput {
    /* margin-top: -8px;
     margin-bottom: 6px; */
-}
+  }
 /*End DatapodDEetailPage*/
 
 .theadborder{
@@ -159,7 +159,7 @@ th, td{vertical-align: middle !important}
   display: flex;
   height: 100%;
   justify-content: center;
-  align-items: center;"
+  align-items: center;
 }
  .graph-loding{
 	position: absolute;
@@ -209,7 +209,14 @@ th, td{vertical-align: middle !important}
     background: rgba(20,20,20,0.9);
     color: white;
     border: 1px solid rgba(200,200,200,0.85);
-
+    position:absolute;
+  }
+  
+  .sidepanal{
+    top:0px;
+    right:3%;
+    height: 96%;
+    position:absolute;
   }
   .header-rule{
     height:1px;
@@ -297,9 +304,10 @@ th, td{vertical-align: middle !important}
 
 .context-menu ul li:hover {
   background-color: #4677f8;
-  color: white//#fefefe;
+  color: white; /*#fefefe*/  
 }
-  @media screen and (max-width: 768px) {
+  
+@media screen and (max-width: 768px) {
    .graph-svg{width:100%; height:100%; min-height: 500px; margin: -100px;}
  }
 
@@ -615,7 +623,7 @@ vertical-align: middle;
 }
 .grid{
   z-index:99;
-  position:relative;"
+  position:relative;
 }
 .dropdown-menu-grid{
   left:auto !important;
@@ -729,11 +737,12 @@ vertical-align: middle;
     margin-left: 35px;
   }
   #avatar-change-btn .btn {
-    color: #fff;  borderless{
-  border:0px solid transparent!important;
-  }
+    color: #fff;  
     width: 200px;
   }
+  borderless{
+    border:0px solid transparent!important;
+    }
 
   #avatar-preview-wrapper{
     text-align: center;

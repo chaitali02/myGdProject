@@ -1,0 +1,41 @@
+{
+    "id" : ObjectId("5ae7db3593cb388f3bdd2a26"),
+    "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc196c",
+    "version" : "1495325960",
+    "name" : "JOIN_TABLES",
+    "desc" : "Join for Customer and Address datapods.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : null,
+            "name" : "ypalrecha"
+        },
+        "value" : null
+    },
+    "createdOn" : ISODate("2018-04-28T07:46:18.669Z"),
+    "tags" : [ 
+        "DEV", 
+        "0.1.0"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196",
+                "name" : "Data Warehouse"
+            },
+            "value" : null
+        }
+    ],
+    "paramList" : {
+        "ref" : {
+            "uuid" : "57c548cb-e54d-419a-af1d-a95acab57212",
+            "version" : 1523349270,
+            "type" : "paramlist"
+        }
+    }
+}

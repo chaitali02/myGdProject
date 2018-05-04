@@ -1,0 +1,82 @@
+{
+    "id" : ObjectId("5ae666d04f2be9708fd6574f"),
+    "xPos" : 140,
+    "yPos" : 90,
+    "templateFlg" : "N",
+    "stages" : [ 
+        {
+            "stageId" : "86e91f2e-1956-49df-ba04-e4e2f2a98b49",
+            "xPos" : 510,
+            "yPos" : 90,
+            "dependsOn" : [],
+            "name" : "Demonstrate sample operator",
+            "tasks" : [ 
+                {
+                    "taskId" : "1966db49-64a6-455e-8612-35ac9a6c86b9",
+                    "xPos" : 860,
+                    "yPos" : 90,
+                    "dependsOn" : [],
+                    "name" : "operator_sample_demo",
+                    "operators" : [ 
+                        {
+                            "operatorId" : "6430c7a3-1ad5-414c-902e-7cfbcdff8069",
+                            "dependsOn" : [],
+                            "operatorInfo" : {
+                                "ref" : {
+                                    "type" : "operatortype",
+                                    "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc196c",
+                                    "version" : "1495325960"
+                                }
+                            },
+                            "operatorParams" : {
+                                "EXEC_PARAMS" : {
+                                    "paramListInfo" : [ 
+                                        {
+                                            "paramId" : 0,
+                                            "paramName" : "RELATION",
+                                            "paramType" : "double",
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc196b",
+                                                    "version" : "1495325960",
+                                                    "type" : "relation"
+                                                }
+                                            }
+                                        }, 
+                                        {
+                                            "paramId" : 1,
+                                            "paramName" : "JOIN_TABLE_NAME",
+                                            "paramType" : "string",
+                                            "value" : "table1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "filterInfo" : []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "uuid" : "e3a509ff-ed79-45e4-b903-6839c1da1a8g",
+    "version" : "1488620439",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+        }
+    },
+    "createdOn" : ISODate("2018-04-28T07:46:16.135Z"),
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }
+    ],
+    "name" : "ppl_operator_sample_demo"
+}
