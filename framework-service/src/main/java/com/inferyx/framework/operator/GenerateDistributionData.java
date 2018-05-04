@@ -37,7 +37,7 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
 public class GenerateDistributionData implements Operator {
 	
 	@Autowired
-	CommonServiceImpl commonServiceImpl;
+	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
