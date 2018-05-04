@@ -981,9 +981,10 @@ public class SparkExecutor implements IExecutor {
 					//double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
 					Object obj = object.getClass().getMethod("sample").invoke(object);
 					Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
-					if(returnType.isArray()) {
+					/*if(returnType.isArray()) {*/
 						double[] trial = (double[]) obj;
-					for(double val : trial)
+						rowList.add(RowFactory.create(trial));
+					/*for(double val : trial)
 						totalVal +=val;
 					} else if(returnType.isPrimitive()) {
 						if(!returnType.getName().equalsIgnoreCase("double"))
@@ -991,13 +992,12 @@ public class SparkExecutor implements IExecutor {
 						else
 							totalVal = (Double) obj;
 					}
-					colList.add(totalVal);
+					colList.add(totalVal);*/
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 						| NoSuchMethodException | SecurityException e) {
 					e.printStackTrace();
 				}
 			}
-			rowList.add(RowFactory.create(colList.toArray()));
 		}
 		
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
