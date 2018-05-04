@@ -965,7 +965,7 @@ public class SparkExecutor implements IExecutor {
 		StructField[] fieldArray = new StructField[features.size()];
 		int count = 0;
 		for(Feature feature : features){
-			StructField field = new StructField(feature.getName(), DataTypes.DoubleType, true, Metadata.empty());
+			StructField field = new StructField(feature.getName(), DataTypes.createArrayType(DataTypes.DoubleType), true, Metadata.empty());
 			
 			fieldArray[count] = field;
 			count ++;
@@ -1001,8 +1001,8 @@ public class SparkExecutor implements IExecutor {
 		}
 		
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
-		df.show();
 		df.printSchema();
+		df.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		return tableName;
 	}
