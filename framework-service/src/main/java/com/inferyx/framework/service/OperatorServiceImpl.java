@@ -114,7 +114,7 @@ public class OperatorServiceImpl {
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
-		newOperator.execute(operatorType, execParams, null, null, new HashSet<>(), runMode);
+		newOperator.execute(operatorType, execParams, operatorExec, null, null, new HashSet<>(), runMode);
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Completed);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);

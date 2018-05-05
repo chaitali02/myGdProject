@@ -1,0 +1,41 @@
+{
+    "id" : ObjectId("5aebbc62364b6a6433287dbc"),
+    "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
+    "version" : "1495325960",
+    "name" : "GENERATE_DIST_DATA",
+    "desc" : "Generate Distribution.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : null,
+            "name" : "ypalrecha"
+        },
+        "value" : null
+    },
+    "createdOn" : ISODate("2018-04-28T07:46:18.669Z"),
+    "tags" : [ 
+        "DEV", 
+        "0.1.0"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196",
+                "name" : "Data Warehouse"
+            },
+            "value" : null
+        }
+    ],
+    "paramList" : {
+        "ref" : {
+            "uuid" : "c3b75dcc-dada-43d0-b0fc-f180240e55d2",
+            "version" : "1525425731",
+            "type" : "paramlist"
+        }
+    }
+}

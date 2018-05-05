@@ -460,8 +460,10 @@
             if(type.indexOf(response[i].paramType) == -1){
               paramList.isParamType="simple";
               paramList.paramValue=response[i].paramValue.value;
+              paramList.selectedParamValueType='simple'
             }else{
               paramList.isParamType="datapod";
+              paramList.selectedParamValueType='datapod'
               paramList.paramValue=response[i].paramValue;    
             }
            

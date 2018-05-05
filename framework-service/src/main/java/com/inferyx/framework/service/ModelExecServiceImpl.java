@@ -75,6 +75,7 @@ import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
@@ -762,16 +763,29 @@ public class ModelExecServiceImpl {
 	public List<Map<String, Object>> getOperatorResults(String operatorExecUuid, String operatorExecVersion,
 			int rowLimit) throws Exception {
 		List<Map<String, Object>> data = null;
-		
-		OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExecUuid, operatorExecVersion,
-				MetaType.operatorExec.toString());
+		try {
+			OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExecUuid, operatorExecVersion,
+					MetaType.operatorExec.toString());
 
-		DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
-				operatorExec.getResult().getRef().getUuid(), operatorExec.getResult().getRef().getVersion(),
-				MetaType.datastore.toString());
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		data = exec.fetchResults(datastore, null, rowLimit, commonServiceImpl.getApp().getUuid());
+			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
+					operatorExec.getResult().getRef().getUuid(), operatorExec.getResult().getRef().getVersion(),
+					MetaType.datastore.toString());
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			data = exec.fetchResults(datastore, null, rowLimit, commonServiceImpl.getApp().getUuid());
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.");
+			throw new RuntimeException((message != null) ? message : "No data found.");
+		}
+		
 		return data;
 	}
 }

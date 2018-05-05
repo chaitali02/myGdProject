@@ -34,6 +34,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Simulate;
@@ -235,41 +236,27 @@ public interface IExecutor {
 
 	/**
 	 * 
-	 * @param tableName TODO
-	 * @param factorCovarianceDp
+	 * @param paramListHolder
 	 * @param clientContext TODO
 	 * @return
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws ParseException
+	 * @throws InterruptedException TODO
+	 * @throws ExecutionException TODO
+	 * @throws Exception TODO
 	 */
-	double[][] twoDArrayFromDatapod(String tableName, Datapod factorCovarianceDp, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+	double[][] twoDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+			throws InterruptedException, ExecutionException, Exception;
 
 	/**
 	 * 
-	 * @param tableName 
-	 * @param factorMeanDp
+	 * @param paramListHolder
 	 * @param clientContext TODO
 	 * @return
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws ParseException
+	 * @throws InterruptedException TODO
+	 * @throws ExecutionException TODO
+	 * @throws Exception TODO
 	 */
-	double[] oneDArrayFromDatapod(String tableName, Datapod factorMeanDp, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+	double[] oneDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+			throws InterruptedException, ExecutionException, Exception;
 	
 	/**
 	 * 
