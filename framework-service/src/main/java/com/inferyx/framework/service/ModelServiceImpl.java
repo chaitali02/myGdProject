@@ -1536,8 +1536,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 
 		if (location.contains("/data"))
 			location = location.replaceAll("/data", "");
-		
-		location = hdfsInfo.getHdfsURL() + location;
+		if(!location.contains(hdfsInfo.getHdfsURL()))
+			location = hdfsInfo.getHdfsURL() + location;
 
 		Object trainedModel = modelClass.getMethod("load", String.class).invoke(modelClass, location);
 		return trainedModel;
