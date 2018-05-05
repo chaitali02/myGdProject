@@ -135,7 +135,7 @@ export class TrainingComponent implements OnInit {
 
  getAllLatestModel(IsDefault){
 
-    this._commonService.getAllLatest('algorithm')
+    this._commonService.getAllLatest('model')
     .subscribe(
     response =>{
       this.OnSuccessgetAllLatestModel(response,IsDefault)},
@@ -199,9 +199,14 @@ onVersionChange(){
     this.onSuccessgetOneByUuidAndVersion(response)},
   error => console.log("Error :: " + error)); 
 }
-changeAlgorithm(){
+changeModel(){
   this.getLatestModel(this.selectmodel["uuid"],true);
 }
+
+
+
+
+
 
  onSuccessgetOneByUuidAndVersion(response){
 
@@ -216,19 +221,17 @@ changeAlgorithm(){
   this.train.active=response["active"] == 'Y' ? true : false
   // this.model=response.model.ref.name
   let modeltemp: DependsOn = new DependsOn
+  modeltemp.label=response.model.ref.name;
+  modeltemp.uuid =response.mode.uuid
+  modeltemp.version =response.model.ref.version
+  this.selectmodel=modeltemp
+
+  this.breadcrumbDataFrom[2].caption=this.train.name
+  console.log('Data is' + response)
 
 
 
 
-
-
-  // let algorithmTemp: DependsOn = new DependsOn();
-  // algorithmTemp.label = response["algorithm"]["ref"]["name"];
-  // algorithmTemp.uuid = response["algorithm"]["ref"]["uuid"];
-  // algorithmTemp.version = response["algorithm"]["ref"]["version"];
-  // this.selectAlgorithm=algorithmTemp;
-  // this.breadcrumbDataFrom[2].caption=this.train.name;
-  // console.log('Data is' + response);
 
 
  }
