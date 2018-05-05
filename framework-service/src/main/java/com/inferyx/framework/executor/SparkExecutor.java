@@ -592,9 +592,11 @@ public class SparkExecutor implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		Dataset<Row> dfTmp = sparkSession.read().format("com.databricks.spark.csv").option("inferSchema", "true")
-				.option("header", "true").load(load.getSource().getValue());
-		long count = dfTmp.count();
+		Dataset<Row> dfTmp = sparkSession.read().format("com.databricks.spark.csv")
+												.option("dateFormat", "dd-MM-yyyy")
+												.option("inferSchema", "false")
+												.option("header", "true").load(load.getSource().getValue());
+										long count = dfTmp.count();
 		// sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
 		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, "dfLoadTemp");
 		ResultSetHolder rsHolder = executeSql(
