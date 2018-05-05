@@ -978,10 +978,23 @@ public class SparkExecutor implements IExecutor {
 
 	@Override
 	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
-		StructField[] fieldArray = new StructField[features.size()];
+		StructField[] fieldArray = new StructField[features.size()+1];
 		int count = 0;
+		
+		try {
+			double[] trialTemp = (double[]) object.getClass().getMethod("sample").invoke(object);
+			if(features.size() != trialTemp.length)
+				throw new RuntimeException("Insufficient number of columns.");
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
+		fieldArray[count] = idField;
+		count++;
 		for(Feature feature : features){
-			StructField field = new StructField(feature.getName(), DataTypes.createArrayType(DataTypes.DoubleType), true, Metadata.empty());
+			StructField field = new StructField(feature.getName(), /*DataTypes.createArrayType(*/DataTypes.DoubleType/*)*/, true, Metadata.empty());
 			
 			fieldArray[count] = field;
 			count ++;
@@ -991,6 +1004,7 @@ public class SparkExecutor implements IExecutor {
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<numIterations; i++) {
 			List<Double> colList = new ArrayList<>();
+			int genId = i;
 			for(int j=0; j<features.size(); j++) {	
 				try {
 					Double totalVal = 0.0;
@@ -999,7 +1013,13 @@ public class SparkExecutor implements IExecutor {
 					Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
 					/*if(returnType.isArray()) {*/
 						double[] trial = (double[]) obj;
-						rowList.add(RowFactory.create(trial));
+						List<Object> datasetList = new ArrayList<>();
+						datasetList.add(genId);
+						for(double val : trial)
+							datasetList.add(val);
+						//rowList.add(RowFactory.create(genId, trial[0], trial[1], trial[2]));
+						rowList.add(RowFactory.create(datasetList.toArray()));
+						genId++;
 					/*for(double val : trial)
 						totalVal +=val;
 					} else if(returnType.isPrimitive()) {
@@ -1020,18 +1040,6 @@ public class SparkExecutor implements IExecutor {
 		df.printSchema();
 		df.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
-		String sql = "SELECT * FROM " + tableName;
-		try {
-			ResultSetHolder holder = executeSql(sql, commonServiceImpl.getApp().getUuid());
-			Dataset<Row> df_2 = holder.getDataFrame();
-			df_2.printSchema();
-			df_2.show(false);
-			System.out.println();
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | IOException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return tableName;
 	}
 
