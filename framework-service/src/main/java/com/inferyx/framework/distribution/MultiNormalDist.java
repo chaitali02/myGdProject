@@ -83,13 +83,14 @@ public class MultiNormalDist {
 	public MultiNormalDist() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	/********************** UNUSED **********************/
 	/**
 	 * 
 	 * @param distribution
 	 * @return
 	 * @throws JsonProcessingException
-	 */
+	 *//*
 	public Row getInstruments(List<Param> params) throws JsonProcessingException {
 		Row dataset = null;
 		
@@ -101,8 +102,9 @@ public class MultiNormalDist {
 			datasetList.add(Double.parseDouble(split));
 		dataset = RowFactory.create(datasetList.toArray());
 		return dataset;
-	}
-	
+	}*/
+
+	/********************** UNUSED **********************/
 	/**
 	 * 
 	 * @param factorMeansInfo
@@ -115,7 +117,7 @@ public class MultiNormalDist {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 * @throws IOException 
-	 */
+	 *//*
 	public double[] getMeans(MetaIdentifierHolder factorMeansInfo) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		Datapod factorMeanDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(factorMeansInfo.getRef().getUuid(), factorMeansInfo.getRef().getVersion(), factorMeansInfo.getRef().getType().toString());
@@ -140,8 +142,9 @@ public class MultiNormalDist {
 		double[] factorMeans = ArrayUtils.toPrimitive(meansValList.toArray(new Double[meansValList.size()]));
 		return factorMeans;
 		
-	}
-	
+	}*/
+
+	/********************** UNUSED **********************/
 	/**
 	 * 
 	 * @param factorCovariancesInfo
@@ -154,7 +157,7 @@ public class MultiNormalDist {
 	 * @throws NullPointerException
 	 * @throws ParseException
 	 * @throws IOException
-	 */
+	 *//*
 	public double[][] getCovs(MetaIdentifierHolder factorCovariancesInfo) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		Datapod factorCovarianceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(factorCovariancesInfo.getRef().getUuid(), factorCovariancesInfo.getRef().getVersion(), factorCovariancesInfo.getRef().getType().toString());
@@ -180,8 +183,9 @@ public class MultiNormalDist {
 		
 		double[][] factorCovariances = covarsRowList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
 		return factorCovariances;
-	}
-	
+	}*/
+
+	/********************** UNUSED **********************/
 	/**
 	 * 
 	 * @param distribution
@@ -200,7 +204,7 @@ public class MultiNormalDist {
 	 * @throws InvocationTargetException
 	 * @throws NullPointerException
 	 * @throws ParseException
-	 */
+	 *//*
 	public Dataset<Row> executeDistribution(Distribution distribution, int numTrials, long seed, MetaIdentifierHolder factorMeansInfo, MetaIdentifierHolder factorCovariancesInfo) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, NullPointerException, ParseException {
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(distribution.getParamList().getRef().getUuid(), distribution.getParamList().getRef().getVersion(), distribution.getParamList().getRef().getType().toString());
 		List<Param> params = paramList.getParams();
@@ -230,8 +234,9 @@ public class MultiNormalDist {
 	    
 		
 		return sparkSession.sqlContext().createDataset(trialsRdd.rdd(), Encoders.DOUBLE()).toDF();
-	}
+	}*/
 
+	/********************** UNUSED **********************/
 	/**
 	 * 
 	 * @param seed
@@ -240,7 +245,7 @@ public class MultiNormalDist {
 	 * @param factorMeans
 	 * @param factorCovariances
 	 * @return
-	 */
+	 *//*
 	public static double[] trialValues(long seed, int numTrials, Row instruments, 
 			double[] factorMeans, double[][] factorCovariances) {
 
@@ -256,22 +261,24 @@ public class MultiNormalDist {
 		});
 		
 		return trialValues;
-	}
-	
+	}*/
+
+	/********************** UNUSED **********************/
 	/**
 	 * Calculate the full value of the portfolio under particular trial conditions.
-	 */
+	 *//*
 	public static double trialValue(double[] trial, Row instruments) {
 		double totalValue = 0;
 		for (int i = 0; i < instruments.length(); i++) {
 			totalValue += instrumentTrialValue((Double)instruments.get(i), trial);
 		}
 		return totalValue;
-	}
-	
+	}*/
+
+	/********************** UNUSED **********************/
 	 /**
 	  * Calculate the value of a particular instrument under particular trial conditions.
-	  */
+	  *//*
 	public static double instrumentTrialValue(Double instrument, double[] trial) {
 		double instrumentTrialValue = 0;
 		int i=0;
@@ -281,19 +288,20 @@ public class MultiNormalDist {
 		}
 //		return Math.min(Math.max(instrumentTrialValue, instrument.getMinValue()), instrument.getMaxValue());
 		return instrumentTrialValue;
-	}
-	
+	}*/
+
+	/********************** UNUSED **********************/
 	/**
 	 * 
 	 * @param seed
 	 * @param factorMeans
 	 * @param factorCovariances
 	 * @return
-	 */
+	 *//*
 	public MultivariateNormalDistribution generateMultivariateNormDist(int seed, double[] factorMeans, double[][] factorCovariances) {
 		MersenneTwister rand = new MersenneTwister();
 		MultivariateNormalDistribution multivariateNormal = new MultivariateNormalDistribution(rand, factorMeans, factorCovariances);
 
 		return multivariateNormal;
-	}
+	}*/
 }

@@ -21,11 +21,23 @@ public class ParamListHolder extends MetaIdentifierHolder{
 	private String paramName;
 	private String paramType;
 	private MetaIdentifierHolder paramValue;
-    private List<AttributeRefHolder> attributeInfo;
-    
+	private List<AttributeRefHolder> attributeInfo;
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the attributeInfo
+	 */
+
 	public List<AttributeRefHolder> getAttributeInfo() {
 		return attributeInfo;
 	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param attributeInfo the attributeInfo to set
+	 */
 
 	public void setAttributeInfo(List<AttributeRefHolder> attributeInfo) {
 		this.attributeInfo = attributeInfo;

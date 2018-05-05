@@ -56,8 +56,18 @@ public class Math3Distribution {
 									type[j] = double[][].class;
 									j++;
 									break;
-				case ONEDARRAY :	 double[] oneDArray = getOneDArray(holder); 
+				case ONEDARRAY :	double[] oneDArray = getOneDArray(holder); 
 									obj[j] = oneDArray;
+									type[j] = double[].class;
+									j++;
+									break;
+				case ATTRIBUTES : 	double[][] attributesArray = getTwoDArray(holder); 
+									obj[j] = attributesArray;
+									type[j] = double[][].class;
+									j++;
+									break;
+				case ATTRIBUTE :	double[] attributeArray = getOneDArray(holder); 
+									obj[j] = attributeArray;
 									type[j] = double[].class;
 									j++;
 									break;
@@ -95,21 +105,15 @@ public class Math3Distribution {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		
-		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getParamValue().getRef().getUuid(), paramListHolder.getParamValue().getRef().getVersion(), paramListHolder.getParamValue().getRef().getType().toString());
-		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-		String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
-		double[][] params = exec.twoDArrayFromDatapod(tableName, paramDp, commonServiceImpl.getApp().getUuid());
+		double[][] params = exec.twoDArrayFromParamListHolder(paramListHolder, commonServiceImpl.getApp().getUuid());
 		return params;
 	}
 	
 	private double[] getOneDArray(ParamListHolder paramListHolder) throws InterruptedException, ExecutionException, Exception {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		IExecutor exec = execFactory.getExecutor(datasource.getType());		
 		
-		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getParamValue().getRef().getUuid(), paramListHolder.getParamValue().getRef().getVersion(), paramListHolder.getParamValue().getRef().getType().toString());
-		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-		String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
-		double[] params = exec.oneDArrayFromDatapod(tableName, paramDp, commonServiceImpl.getApp().getUuid());
+		double[] params = exec.oneDArrayFromParamListHolder(paramListHolder, commonServiceImpl.getApp().getUuid());
 		return params;
 	}
 	

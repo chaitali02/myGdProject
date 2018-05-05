@@ -1029,7 +1029,7 @@ public class ModelServiceImpl {
 				isSuccess = false;
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
 			try {

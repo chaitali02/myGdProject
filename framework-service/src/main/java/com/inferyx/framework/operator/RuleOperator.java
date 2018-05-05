@@ -33,7 +33,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
@@ -144,7 +143,7 @@ public class RuleOperator implements Operator {
 	}
 
 	@Override
-	public void execute(OperatorType operatorType, ExecParams execParams, OperatorExec operatorExec,
+	public void execute(OperatorType operatorType, ExecParams execParams, Object metaExec,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
 		// TODO Auto-generated method stub
 		

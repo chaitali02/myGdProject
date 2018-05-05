@@ -32,70 +32,59 @@
                                     "paramListInfo" : [ 
                                         {
                                             "paramId" : 0,
-                                            "paramName" : "SIMULATE_INFO",
-                                            "paramType" : "double",
+                                            "paramName" : "means",
+                                            "paramType" : "ATTRIBUTE",
                                             "ref" : {
-                                                "uuid" : "c3b75dcc-dada-43d0-b0fc-f180240e55d2",
-                                                "version" : "1525425731",
+                                                "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
+                                                "version" : "1523604347",
                                                 "type" : "paramlist"
                                             },
-                                            "paramValue" : {
-                                                "ref" : {
-                                                    "uuid" : "00c1af72-5815-4e52-b452-1c781961d040",
-                                                    "version" : "1524064947",
-                                                    "type" : "simulate"
+                                            "attributeInfo" : [ 
+                                                {
+                                                    "attrId" : "0",
+                                                    "ref" : {
+                                                        "uuid" : "3a47402e-6ba5-4ca7-b3a4-7e01fd4dcdd9",
+                                                        "version" : "1523275811",
+                                                        "type" : "datapod"
+                                                    }
                                                 }
-                                            }
-                                        }, 
-                                        {
-                                            "paramId" : 1,
-                                            "paramName" : "TABLE_NAME",
-                                            "paramType" : "string",
-                                            "ref" : {
-                                                "uuid" : "c3b75dcc-dada-43d0-b0fc-f180240e55d2",
-                                                "version" : "1525425731",
-                                                "type" : "paramlist"
-                                            },
-                                            "paramValue" : {
-                                                "ref" : {
-                                                    "type" : "simple"
-                                                },
-                                                "value" : "table2"
-                                            }
+                                            ]
                                         }, 
                                         {
                                             "paramId" : 0,
-                                            "paramName" : "means",
-                                            "paramType" : "ONEDARRAY",
-                                            "ref" : {
-                                                "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                                                "version" : "1523604347",
-                                                "type" : "paramlist"
-                                            },
-                                            "paramValue" : {
-                                                "ref" : {
-                                                    "uuid" : "3a47402e-6ba5-4ca7-b3a4-7e01fd4dcdd9",
-                                                    "version" : "1523275811",
-                                                    "type" : "datapod"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "paramId" : 1,
                                             "paramName" : "covarience",
-                                            "paramType" : "TWODARRAY",
+                                            "paramType" : "ATTRIBUTES",
                                             "ref" : {
                                                 "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
                                                 "version" : "1523604347",
                                                 "type" : "paramlist"
                                             },
-                                            "paramValue" : {
-                                                "ref" : {
-                                                    "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
-                                                    "version" : "1523276166",
-                                                    "type" : "datapod"
+                                            "attributeInfo" : [ 
+                                                {
+                                                    "attrId" : "0",
+                                                    "ref" : {
+                                                        "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
+                                                        "version" : "1523276166",
+                                                        "type" : "datapod"
+                                                    }
+                                                }, 
+                                                {
+                                                    "attrId" : "1",
+                                                    "ref" : {
+                                                        "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
+                                                        "version" : "1523276166",
+                                                        "type" : "datapod"
+                                                    }
+                                                }, 
+                                                {
+                                                    "attrId" : "2",
+                                                    "ref" : {
+                                                        "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
+                                                        "version" : "1523276166",
+                                                        "type" : "datapod"
+                                                    }
                                                 }
-                                            }
+                                            ]
                                         }, 
                                         {
                                             "paramId" : 0,
@@ -117,19 +106,22 @@
                                         {
                                             "paramId" : 19,
                                             "paramName" : "LOCATION_INFO",
-                                            "paramType" : "datapod",
+                                            "paramType" : "attribute",
                                             "ref" : {
                                                 "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9g4",
                                                 "version" : "1523604347",
                                                 "type" : "paramlist"
                                             },
-                                            "paramValue" : {
-                                                "ref" : {
-                                                    "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-                                                    "version" : "1488623458",
-                                                    "type" : "datapod"
+                                            "attributeInfo" : [ 
+                                                {
+                                                    "attrId" : "19",
+                                                    "ref" : {
+                                                        "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+                                                        "version" : "1488623458",
+                                                        "type" : "datapod"
+                                                    }
                                                 }
-                                            }
+                                            ]
                                         }, 
                                         {
                                             "paramId" : 0,
