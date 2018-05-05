@@ -689,13 +689,15 @@ public class Helper {
 	public static ParamDataType resolveParamDataType(String paramDataType) {
 		if(paramDataType != null && !StringUtils.isBlank(paramDataType))
 			switch(paramDataType.toLowerCase()) {
-			case "twodarray" : return ParamDataType.TWODARRAY;
-			case "onedarray" : return ParamDataType.ONEDARRAY;
-			case "double" : return ParamDataType.DOUBLE;
-			case "integer" : return ParamDataType.INTEGER;
-			case "long" : return ParamDataType.LONG;
-			case "string" : return ParamDataType.STRING;
-			case "date" : return ParamDataType.DATE;
+				case "twodarray" : return ParamDataType.TWODARRAY;
+				case "onedarray" : return ParamDataType.ONEDARRAY;
+				case "double" : return ParamDataType.DOUBLE;
+				case "integer" : return ParamDataType.INTEGER;
+				case "long" : return ParamDataType.LONG;
+				case "string" : return ParamDataType.STRING;
+				case "date" : return ParamDataType.DATE;
+				case "attribute" : return ParamDataType.ATTRIBUTE;
+				case "attributes" : return ParamDataType.ATTRIBUTES;
 			}
 		return null;
 	}
