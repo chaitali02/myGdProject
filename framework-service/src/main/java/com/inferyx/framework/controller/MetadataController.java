@@ -881,4 +881,12 @@ public class MetadataController {
 		return metadataServiceImpl.getParamListByOperator(operatorUuid);
 	}
 	
+	@RequestMapping(value = "/getParamListByOperatorType", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamListByOperatorType(
+			@RequestParam(value = "uuid") String operatorTypeUuid ,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
+		return metadataServiceImpl.getParamListByOperatorType(operatorTypeUuid);
+	}
+	
+	
 }

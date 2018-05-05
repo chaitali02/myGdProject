@@ -150,16 +150,21 @@
 </div>
 
 <div id="responsive" class="modal  right fade bs-modal-lg in"  style="display: none;">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width:70%">
       <div class="modal-content" style="resize: both;overflow: auto;">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"  ng-click="savePop(popupModel)"></button>
+          <div class="form-group row">
+              <div class="col-md-6">
           <div class="col-md-1">
-            <div style="width:16px;height:16px" ng-style="{'background-color' : popupModel.headers.color || ''}"></div>
+            <div style="width:16px;height:16px;margin-top: 5px;" ng-style="{'background-color' : popupModel.headers.color || ''}"></div>
           </div>
           <div class="col-md-5">
-            {{popupModel.headers.title || ''}}
+              <div style="font-family:Open Sans, sans-serif;
+              font-weight: 300; font-size:18px;">{{popupModel.headers.title || ''}}</div>
+              </div>
           </div>
+        </div>
         </div>
         <form class="form-horizontal" name="myform3" id="submit_formParamList" ng-submit="isExecParamList ==true ? executeWithExecParamList():executeWithExecParams()" novalidate="novalidate">
         <div class="modal-body">
@@ -181,13 +186,12 @@
                         </select>
                       </div>
                     </div>
-                
-                   <!--Start Param Set--> 
-                  <div ng-show="isExecParamSet==true">
                     <div class=" form-group row modal-header">
                         <h4 class="modal-title">Run Params</h4>
                     </div>
                     <br>
+                   <!--Start Param Set--> 
+                  <div ng-show="isExecParamSet==true">
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set
                         </label>
@@ -230,67 +234,179 @@
                       </table>
                     </div>
                   </div><!--End Param Set-->
-
+                
                  <div ng-show="isExecParamList==true">
-                    <div class=" form-group row modal-header">
-                        <h4 class="modal-title">Run Params</h4>
-                    </div>
-                    <br>
-                    <div  style="overflow-x: auto;">
-                      <table class=" row-border hover table  table-striped table-bordered">
+                  
+                    
+                    <div  style="overflow-x: auto;" style="width:100%;">
+                        <table class=" row-border hover table  table-striped table-bordered">
+                            <thead>
+                              <tr>
+                              
+                                <th  class="text-center" > ID </th>
+                                <th  class="text-center">Param Name</th>
+                                <th  class="text-center">Param Type</th>
+                                <th  class="text-center">Type</th>
+                                <th  class="text-center">Param Value</th>
+                                <th  class="text-center">Param Attributes </th>
+                                
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr ng-repeat="listHolder in paramListHolder">
+                               
+                                  <td>
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                     <input  style="width:60px;" type="text" ng-model="$index" ng-disabled="true" class="form-control"></span>
+                                  </td>
+                                  <td >
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <input style="width:120px;" type="text" ng-model="listHolder.paramName" ng-disabled="true" class="form-control">
+                                      </span>
+                                  </td>
+                                  <td>
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <input style="width:100px;" type="text" ng-model="listHolder.paramType" ng-disabled="true" class="form-control">
+                                      </span>
+                                  </td>
+                                  <td>
+                                    <div ng-if="['simple','distribution'].indexOf(listHolder.selectedParamValueType) !=-1">
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <input style="width:120px;" type="text" ng-model="listHolder.paramType" ng-disabled="true" class="form-control">
+                                      </span>
+                                    </div>
+                                    <div ng-if="['attribute','attributes','datapod','rule','dataset'].indexOf(listHolder.selectedParamValueType) !=-1">
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                            <select  style="width:120px;"  class="form-control"  name ="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValueType" ng-change="onChangeParamValueType(listHolder.selectedParamValueType,$index)" ng-options="r  for r in attributeTypes "  required  disable-validation-message="">
+                                            </select>
+                                        </span>
+                                      </div>
+                                  </td>
+                                   
+                                    <td >
+                                      <div style="width:150px;" ng-if="listHolder.selectedParamValueType =='simple'">
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                          <input ng-if="listHolder.paramType !='integer'" type="text" ng-model="listHolder.paramValue"  class="form-control"  disable-validation-message="">
+                                          <input ng-if="listHolder.paramType =='integer'" type="text " ng-model="listHolder.paramValue"   class="form-control"  disable-validation-message=""s>
+                                        </span>
+                                      </div>
+                                      <div style="width:150px;"  ng-if="listHolder.selectedParamValueType =='datapod'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                          <select  select2 class="form-control"  name ="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValue" ng-change="onChangeForAttributeInfo(listHolder.selectedParamValue,listHolder.selectedParamValueType,$index)" ng-options="r as r.name for r in allDatapod track by r.uuid"  required  disable-validation-message="">
+                                          </select >
+                                          <input name ="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required  disable-validation-message=""/>
+                                        </span>
+                                      </div>
+                                      <div style="width:150px;" ng-if="listHolder.selectedParamValueType =='distribution'" ng-init="getAllLatest('distribution',$index,false)">
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                          <select  select2 class="form-control"  name ="paramValue{{$index}}"  ng-change="onChangeDistribution(listHolder.selectedParamValue,$index)" data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDistribution track by r.uuid"  required  disable-validation-message="">
+                                          </select> 
+                                          <input name ="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required  disable-validation-message=""/>
+                                        </span>
+                                    </div>
+                                    <div style="width:150px;text-align:center;" ng-if="['datapod','rule','dataset','distribution','simple'].indexOf(listHolder.selectedParamValueType) ==-1">
+                                       NA
+                                    </div>
+                                    </td>
+                                    <td>
+                                      <div style="width:200px;" ng-if="listHolder.paramType=='attribute'" ng-init="getAllAttributeBySource(listHolder.attributeInfo,listHolder.selectedParamValueType,$index)">
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <select  select2 class="form-control"  name ="paramattributeinfo{{$index}}" data-ng-model="listHolder.attributeInfo"  ng-options="r as r.dname for r in listHolder.allAttributeinto track by r.uuid+r.attributeId"  required  disable-validation-message="">
+                                        </select>
+                                        
+                                        <input name ="paramattributeinfo{{$index}}" type="hidden" ng-model="listHolder.attributeInfo" required  disable-validation-message=""/>
+                                      </span>
+                                      </div>
+                                      <div style="width:200px;overflow-y:auto;height:35px;" ng-if="listHolder.paramType=='attributes'" ng-init="getAllAttributeBySource(listHolder.attributeInfoTag[0],listHolder.selectedParamValueType,$index)">
+                                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <select  select2 class="form-control"  name ="paramattributeinfo{{$index}}" data-ng-model="listHolder.attributeInfoTag" multiple="multiple" ng-options="r as r.dname for r in listHolder.allAttributeinto track by r.uuid+r.attributeId"  required  disable-validation-message="">
+                                        </select>
+                                       
+                                        <input name ="paramattributeinfo{{$index}}" type="hidden" ng-model="listHolder.attributeInfoTag" required  disable-validation-message=""/>
+                                      </span>
+                                      </div>
+                                      <div style="width:200px;text-align:center;" ng-if="['attribute','attributes'].indexOf(listHolder.paramType)== -1">
+                                          NA
+                                      </div>
+                                    </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                      <!-- <table class=" row-border hover table table-striped table-bordered">
                         <thead>
                           <tr>
                           
-                            <th style="width:6%;text-align:center">ID</th>
-                            <th class="text-center">Param Name</th>
-                            <th class="text-center">Type</th>
-                            <th style="width:25%;"class="text-center">Param Value</th>
+                            <th style="text-align:center">ID</th>
+                            <th style=""class="text-center">Param Name</th>
+                            <th style=""class="text-center">Param Type</th>
+                            <th style=""class="text-center">Type</th>
+                            <th style=""class="text-center">Param Value</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr ng-repeat="listHolder in paramListHolder">
                             
-                            <td style="width:6%;">
+                            <td style="width:50px;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                   <input type="text" ng-model="$index" ng-disabled="true" class="form-control"></span>
                             </td>
-                            <td style="width:15%;">
+                            <td style="width:60px;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                   <input type="text" ng-model="listHolder.paramName" ng-disabled="true" class="form-control">
                                 </span>
                             </td>
-                            <td  style="width:15%;">
+                            <td style="width:60px;">
                               <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                <select class="form-control" ng-disabled="listHolder.isParamType =='simple'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index)" ng-change="onChangeParamValueType(listHolder.selectedParamValueType,$index)" data-ng-model="listHolder.selectedParamValueType" ng-options="r for r in paramValueTypes"
-                                  required="">
-                                </select>
+                                <input type="text" ng-model="listHolder.paramType" ng-disabled="true" class="form-control">
                               </span>
-                            </td>
+                          </td>
+                          <td style="width:60px;">
+                            <div ng-if="['simple','distribution'].indexOf(listHolder.selectedParamValueType) !=-1">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="text" ng-model="listHolder.paramType" ng-disabled="true" class="form-control">
+                              </span>
+                            </div>
+                            <div ng-if="['attribute','attributes'].indexOf(listHolder.selectedParamValueType) !=-1">
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select   class="form-control"  name ="paramValue{{$index}}"    data-ng-model="listHolder.selectedType" ng-options="r  for r in attributeTypes "  required  disable-validation-message="">
+                                    </select>
+                                </span>
+                              </div>
+                          </td>
+                           
                             <td style="width:25%;">
-                              <div ng-if="listHolder.isParamType =='simple'">
+                              <div ng-if="listHolder.selectedParamValueType =='simple'">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <input ng-if="listHolder.paramType !='integer'" type="text" ng-model="listHolder.paramValue"  class="form-control" required disable-validation-message="">
-                                  <input ng-if="listHolder.paramType =='integer'" type="text " ng-model="listHolder.paramValue"   class="form-control" required disable-validation-message=""s>
+                                  <input ng-if="listHolder.paramType !='integer'" type="text" ng-model="listHolder.paramValue"  class="form-control"  disable-validation-message="">
+                                  <input ng-if="listHolder.paramType =='integer'" type="text " ng-model="listHolder.paramValue"   class="form-control"  disable-validation-message=""s>
                                 </span>
                                 </div>
                               <div ng-if="listHolder.selectedParamValueType =='datapod'">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <select  select2 class="form-control"  name ="paramValue{{$index}}"    data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDatapod track by r.uuid"  required  disable-validation-message="">
+                                    <select  select2 class="form-control"  name ="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDatapod track by r.uuid"  required  disable-validation-message="">
                                     </select >
                                     <input name ="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required  disable-validation-message=""/>
                                   </span>
                               </div>
-                              <div ng-if="listHolder.selectedParamValueType =='relation'">
+                              <div ng-if="listHolder.selectedParamValueType =='distribution'" ng-init="getAllLatest('distribution',$index,false)">
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <select  select2 class="form-control"  name ="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDistribution track by r.uuid"  required  disable-validation-message="">
+                                  </select> 
+                                  <input name ="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required  disable-validation-message=""/>
+                                </span>
+                            </div>
+                               <div ng-if="listHolder.selectedParamValueType =='relation'">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <select  select2 class="form-control"  name ="paramValue{{$index}}"    data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allRelation track by r.uuid"  required  disable-validation-message="">
-                                    </select >
+                                    </select>
                                     <input name ="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required  disable-validation-message=""/>
                                   </span>
                               </div>
+                             
                             </td>
                           </tr>
                         </tbody>
-                      </table>
+                      </table> -->
                       </div>
                     </div>
                 </div>

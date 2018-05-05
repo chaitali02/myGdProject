@@ -1,0 +1,54 @@
+{
+  "id": "5aed92bbb1dfe345884c1066",
+  "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
+  "version": "1525519035",
+  "name": "paramlist_generate_dist",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat May 05 16:47:15 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "DISTRIBUTION_INFO",
+      "paramType": "distribution",
+      "paramValue": null,
+      "paramRef": null
+    },
+    {
+      "paramId": "1",
+      "paramName": "LOCATION_INFO",
+      "paramType": "attribute",
+      "paramValue": null,
+      "paramRef": null
+    },
+    {
+      "paramId": "2",
+      "paramName": "NUMITERATIONS_INFO",
+      "paramType": "integer",
+      "paramValue": "1000",
+      "paramRef": null
+    }
+  ]
+}

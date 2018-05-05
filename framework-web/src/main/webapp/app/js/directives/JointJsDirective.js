@@ -84,7 +84,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
          var mode=res.data.runMode;
         
          var url;
-         if(params.type == "train" || params.type == "predict" || params.type == "simulate" ){
+         if(params.type == "train" || params.type == "predict" || params.type == "simulate"){
            url=baseurl+"model/"+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
          }else{
            url=baseurl+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
@@ -1106,7 +1106,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
            } //End Link
          };
   });
-DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,graphService,dagValidationSvc,$location,$http,dagMetaDataService,CommonService,MetadataDagSerivce) {
+DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,graphService,dagValidationSvc,$location,$http,dagMetaDataService,CommonService,MetadataDagSerivce,$timeout,$filter) {
   return {
     restrict: 'AE',
     scope : {
@@ -1345,11 +1345,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            return;
          }
          $scope.dagData=data;
-         console.log('graph data', data);
+        // console.log('graph data', data);
          $scope.uuid = data.uuid;
          $scope.version = data.version;
          var paperEl = $('#paper');
-         console.log(paperEl);
+        // console.log(paperEl);
          if(paperEl.length == 0){
            setTimeout(function () {
              paperEl = $('#paper');
@@ -1441,7 +1441,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            if(element.allowInMenu){
              var menuItemsObj={}
              var chidernItems=[]
-             console.log(element.name)
+             //console.log(element.name)
              menuItemsObj.image=element.iconPath;
              menuItemsObj.title =element.parentIconCaption;
              menuItemsObj.id =element.name + '-add';
@@ -1469,7 +1469,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              menuItems.push(menuItemsObj)
            }
          });
-         console.log(menuItems)
+         //console.log(menuItems)
          d3.selectAll('#paper').on('contextmenu', d3.contextMenu(menuItems));
        }
        
@@ -1676,6 +1676,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                train : {name:'train', label: 'Train'},
                predict : {name:'predict', label: 'Predict'},
                simulate : {name:'simulate', label: 'Simulate'},
+               operator : {name:'operator', label: 'Operator'},
                rule : {name:'rule', label: 'Rule'},
                rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                recon : {name:'recon', label: 'Recon'},
@@ -1812,9 +1813,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
        
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
-        var typeParamListArray=["simulate","operator"];
+        var typeParamListArray=["simulate","operatortype"];
         var typeParamSetArray=["train"];
-        debugger;
         if(typeParamSetArray.indexOf(type) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=true;
           var temp = $scope.popupModel.selectedType.split('|');
@@ -2146,6 +2146,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        //create sub elements on this event
        $scope.isExecParamList=false;    
        $scope.isExecParamSet=false;
+       $scope.paramListHolder=null;
        var localPoint = $scope.paper.clientToLocalPoint(e.clientX, e.clientY);
        var operator = operator || 'dqgroup';
        var cell = new joint.shapes.devs.Model({
@@ -2502,7 +2503,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
         objDetail.type=type;
         var typeParamSetArray=["train"];
-        var typeParamListArray=["simulate","operator"];
+        var typeParamListArray=["simulate","operatortype"];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;
@@ -2633,14 +2634,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
 
      
       $scope.getExecParamList=function(data){
-
-        $scope.paramValueTypes=["simple",'datapod','relation'];
+        $scope.attributeTypes=['datapod','dataset','rule'];
         CommonService.getParamListByType(data.type,data.uuid,data.version).then(function (response) {
           onSuccessGetExecuteModel(response.data)
         });
         var onSuccessGetExecuteModel = function (response) {
           if(response.length ==0){
-            $scope.executeWithParams(null);
+            //$scope.executeWithParams(null);
           }else{
             $('#responsive').modal({
               backdrop: 'static',
@@ -2648,22 +2648,80 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             });
           //  $scope.getAllLatest(null,null,false);
             $scope.paramListHolder = response;
+            $scope.opringinalparamListHolder=$scope.paramListHolder
+            var paramListHolder=[]
             if($scope.popupModel.modelData.operators[0].operatorParams !=null){
               var paramListInfo=$scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo
-              for(var i=0;i<paramListInfo.length;i++){
+              for(var i=0;i<paramListInfo.length;i++){ 
+                var paramList={};
+                paramList.uuid=paramListInfo[i].ref.uuid;
+                paramList.type=paramListInfo[i].ref.type;
+                paramList.paramId=paramListInfo[i].paramId;
+                paramList.paramType=paramListInfo[i].paramType.toLowerCase();
+                paramList.paramName=paramListInfo[i].paramName;
+                paramList.ref=paramListInfo[i].ref;      
+                if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type =='distribution'){
+                var paramValue={}
                 var selectedParamValue={};
                 selectedParamValue.type=paramListInfo[i].paramValue.ref.type;
                 selectedParamValue.uuid=paramListInfo[i].paramValue.ref.uuid;
-                $scope.paramListHolder[i].selectedParamValueType=paramListInfo[i].paramValue.ref.type;
-                $scope.paramListHolder[i].selectedParamValue=selectedParamValue
+                paramValue.selectedParamValue=selectedParamValue;
+                paramList.paramValue=paramValue;
+                paramList.selectedParamValue=selectedParamValue;
+                paramList.selectedParamValueType=paramListInfo[i].paramValue.ref.type
+                paramListHolder[i]=paramList
+               }else if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type== "simple"){
+                var paramValue={}
+                paramValue.paramValue=paramListInfo[i].paramValue.value
+                paramValue.selectedParamValueType=paramListInfo[i].paramValue.ref.type;
+                paramValue.selectedParamValue=selectedParamValue
+                paramList.selectedParamValueType=paramListInfo[i].paramValue.ref.type
+                paramList.paramValue=paramListInfo[i].paramValue.value;
+                paramListHolder[i]=paramList
+               }
+               else if(paramListInfo[i].paramType == "attribute"){
+                var selectedParamValue={}
+                var attributeInfo={}
+                paramList.selectedParamValueType=paramListInfo[i].attributeInfo[0].ref.type;
+                selectedParamValue.uuid=paramListInfo[i].attributeInfo[0].ref.uuid;
+                selectedParamValue.type=paramListInfo[i].attributeInfo[0].ref.type;
+                paramList.selectedParamValue=selectedParamValue
+                attributeInfo.uuid=paramListInfo[i].attributeInfo[0].ref.uuid;
+                attributeInfo.type=paramListInfo[i].attributeInfo[0].ref.type;
+                attributeInfo.attributeId=paramListInfo[i].attributeInfo[0].attrId;
+                paramList.attributeInfo=attributeInfo
+                paramListHolder[i]=paramList
+               }
+               else if(paramListInfo[i].paramType == "attributes"){
+                var selectedParamValue={}
+                paramList.selectedParamValueType=paramListInfo[i].attributeInfo[0].ref.type;
+                selectedParamValue.uuid=paramListInfo[i].attributeInfo[0].ref.uuid;
+                selectedParamValue.type=paramListInfo[i].attributeInfo[0].ref.uuid;
+                paramList.selectedParamValue=selectedParamValue
+                var attributeInfoArray=[]
+                debugger
+                for(var j=0;j < paramListInfo[i].attributeInfo.length;j++){
+                var attributeInfo={}
+                attributeInfo.uuid=paramListInfo[i].attributeInfo[j].ref.uuid;
+                attributeInfo.type=paramListInfo[i].attributeInfo[j].ref.type;
+                attributeInfo.attributeId=paramListInfo[i].attributeInfo[j].attrId;
+                attributeInfoArray[j]=attributeInfo
+                }
+                paramList.attributeInfoTag=attributeInfoArray
+                paramListHolder[i]=paramList
+               }
+                
               }
+              console.log(paramListHolder )
+              $scope.paramListHolder = paramListHolder;
+              $scope.opringinalparamListHolder=$scope.paramListHolder
             }
           }
         }
     
       }
 
-      $scope.getAllLatest=function(type,index,defaultValue){
+      $scope.getAllLatest=function(type,index,defaultValue){  
         CommonService.getAllLatest(type || "datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
         var onSuccessGetAllLatest = function (response) {
           if(type =="datapod"){
@@ -2672,44 +2730,116 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           else if(type =="relation"){
             $scope.allRelation=response;
           }
-          if(type !=null && response !=null && defaultValue ==true)
-          $scope.paramListHolder[index].selectedParamValue=response[0];
+          else if(type =="distribution"){
+            $scope.allDistribution=response;
+          }
+         
         }
       }
 
       $scope.onChangeParamValueType=function(type,index){
-        $scope.getAllLatest(type,index,true)
+        if(type !='simple'){
+          $scope.getAllLatest(type,index,true);
+        }else{
+          $scope.paramListHolder[index].paramValue="";
+        }
       }
+      
+      $scope.onChangeForAttributeInfo=function(data,type,index){
+        $scope.getAllAttributeBySource(data,type,index);
 
+      }
+      
+      $scope.getAllAttributeBySource=function(data,type,index,defaultValue){ 
+        if(data !=null){ 
+          CommonService.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
+          var onSuccessGetAllAttributeBySource = function (response) {
+            $scope.paramListHolder[index].allAttributeinto=response
+          
+          }
+        }
+      }
+      $scope.onChangeDistribution=function(data,index){
+        CommonService.getParamListByType('distribution',data.uuid,data.version).then(function (response){ onSuccessGetParamListByType(response.data)});
+        var onSuccessGetParamListByType = function (response) {
+          if($scope.paramListHolder.length == $scope.opringinalparamListHolder.length){
+            $scope.opringinalparamListHolder=$scope.paramListHolder;
+          }
+          else{
+            $scope.paramListHolder=$scope.paramListHolder.slice(0,$scope.opringinalparamListHolder.length);
+          }
+          var paramList
+          paramList = $scope.paramListHolder.concat(response);
+          $scope.paramListHolder=paramList;
+        }
+      }
+      $scope.loadAttributes = function(query,index) {
+        return $timeout(function () {
+          return $filter('filter')($scope.paramListHolder[index].allAttributeinto, query);
+        });
+       };
       $scope.executeWithExecParamList=function(){
         $scope.isExecParamList=false;    
         $scope.isExecParamSet=false;
+       console.log(JSON.stringify($scope.paramListHolder))
         var cell = $scope.graph.getCell($scope.popupModel.id);
         cell.attr('text', { text: $scope.popupModel.modelData.name});
         $('#responsive').modal('hide');
         var execParams={};
         var paramListInfo=[];
         if($scope.paramListHolder.length>0){
+          debugger
           for(var i=0;i<$scope.paramListHolder.length;i++){
             var paramList={};
             paramList.paramId=$scope.paramListHolder[i].paramId;
             paramList.paramName=$scope.paramListHolder[i].paramName;
             paramList.paramType=$scope.paramListHolder[i].paramType;
             paramList.ref=$scope.paramListHolder[i].ref;
-            var ref={};
-            var type=["ONEDARRAY","TWODARRAY"]
-            var paramValue={};  
-            if(type.indexOf($scope.paramListHolder[i].paramType.toUpperCase()) ==-1){
-              ref.type="simple";
-              paramValue.ref=ref;
-              paramValue.value=$scope.paramListHolder[i].paramValue;  
+            if($scope.paramListHolder[i].paramType =='attribute'){
+              var attributeInfoArray=[];
+              var attributeInfo={};
+              var attributeInfoRef={}
+              attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
+              attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfo.uuid;
+              attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
+              attributeInfo.ref=attributeInfoRef;
+              attributeInfo.attrId=$scope.paramListHolder[i].attributeInfo.attributeId;
+              attributeInfoArray[0]=attributeInfo
+              paramList.attributeInfo=attributeInfoArray;
+
             }
-            else{
+            if($scope.paramListHolder[i].paramType =='attributes'){
+              var attributeInfoArray=[];
+              for(var j=0;j<$scope.paramListHolder[i].attributeInfoTag.length;j++){
+                var attributeInfo={};
+                var attributeInfoRef={}
+                attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
+                attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfoTag[j].uuid
+                attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].name
+                attributeInfo.ref=attributeInfoRef;
+                attributeInfo.attrId=$scope.paramListHolder[i].attributeInfoTag[j].attributeId;
+                attributeInfoArray[j]=attributeInfo
+              }
+              paramList.attributeInfo=attributeInfoArray;
+            }
+            else if($scope.paramListHolder[i].paramType=='distribution'){
+              var ref={};
+              var paramValue={};  
               ref.type=$scope.paramListHolder[i].selectedParamValueType;
               ref.uuid=$scope.paramListHolder[i].selectedParamValue.uuid;  
               paramValue.ref=ref;
+              paramList.paramValue=paramValue;
             }
-            paramList.paramValue=paramValue;
+            else if($scope.paramListHolder[i].selectedParamValueType =="simple"){
+              var ref={};
+              var paramValue={};  
+              ref.type=$scope.paramListHolder[i].selectedParamValueType;
+              paramValue.ref=ref;
+              paramValue.value=$scope.paramListHolder[i].paramValue
+              paramList.paramValue=paramValue;
+              
+            }
+           
             paramListInfo[i]=paramList;
           }
           var EXEC_PARAMS={};

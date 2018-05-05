@@ -28,6 +28,7 @@ public class ParamListHolder extends MetaIdentifierHolder{
 	 *
 	 * @return the attributeInfo
 	 */
+
 	public List<AttributeRefHolder> getAttributeInfo() {
 		return attributeInfo;
 	}
@@ -37,6 +38,7 @@ public class ParamListHolder extends MetaIdentifierHolder{
 	 *
 	 * @param attributeInfo the attributeInfo to set
 	 */
+
 	public void setAttributeInfo(List<AttributeRefHolder> attributeInfo) {
 		this.attributeInfo = attributeInfo;
 	}

@@ -27,123 +27,126 @@
                                     "version" : "1495325960"
                                 }
                             },
-                            "operatorParams" : {
-                                "EXEC_PARAMS" : {
-                                    "paramListInfo" : [ 
-                                        {
-                                            "paramId" : 0,
-                                            "paramName" : "means",
-                                            "paramType" : "ATTRIBUTE",
-                                            "ref" : {
-                                                "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                                                "version" : "1523604347",
-                                                "type" : "paramlist"
-                                            },
-                                            "attributeInfo" : [ 
-                                                {
-                                                    "attrId" : "0",
-                                                    "ref" : {
-                                                        "uuid" : "3a47402e-6ba5-4ca7-b3a4-7e01fd4dcdd9",
-                                                        "version" : "1523275811",
-                                                        "type" : "datapod"
-                                                    }
-                                                }
-                                            ]
-                                        }, 
-                                        {
-                                            "paramId" : 0,
-                                            "paramName" : "covarience",
-                                            "paramType" : "ATTRIBUTES",
-                                            "ref" : {
-                                                "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                                                "version" : "1523604347",
-                                                "type" : "paramlist"
-                                            },
-                                            "attributeInfo" : [ 
-                                                {
-                                                    "attrId" : "0",
-                                                    "ref" : {
-                                                        "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
-                                                        "version" : "1523276166",
-                                                        "type" : "datapod"
-                                                    }
-                                                }, 
-                                                {
-                                                    "attrId" : "1",
-                                                    "ref" : {
-                                                        "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
-                                                        "version" : "1523276166",
-                                                        "type" : "datapod"
-                                                    }
-                                                }, 
-                                                {
-                                                    "attrId" : "2",
-                                                    "ref" : {
-                                                        "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
-                                                        "version" : "1523276166",
-                                                        "type" : "datapod"
-                                                    }
-                                                }
-                                            ]
-                                        }, 
-                                        {
-                                            "paramId" : 0,
-                                            "paramName" : "DISTRIBUTION_INFO",
-                                            "paramType" : "distribution",
-                                            "ref" : {
-                                                "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9ag4",
-                                                "version" : "1523604730",
-                                                "type" : "paramlist"
-                                            },
-                                            "paramValue" : {
-                                                "ref" : {
-                                                    "uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050",
-                                                    "version" : "1523604730",
-                                                    "type" : "distribution"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "paramId" : 19,
-                                            "paramName" : "LOCATION_INFO",
-                                            "paramType" : "attribute",
-                                            "ref" : {
-                                                "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9g4",
-                                                "version" : "1523604347",
-                                                "type" : "paramlist"
-                                            },
-                                            "attributeInfo" : [ 
-                                                {
-                                                    "attrId" : "19",
-                                                    "ref" : {
-                                                        "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-                                                        "version" : "1488623458",
-                                                        "type" : "datapod"
-                                                    }
-                                                }
-                                            ]
-                                        }, 
-                                        {
-                                            "paramId" : 0,
-                                            "paramName" : "NUMITERATIONS_INFO",
-                                            "paramType" : "string",
-                                            "ref" : {
-                                                "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9g4",
-                                                "version" : "1523604347",
-                                                "type" : "paramlist"
-                                            },
-                                            "paramValue" : {
-                                                "ref" : {
-                                                    "type" : "simple"
-                                                },
-                                                "value" : "1000"
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "filterInfo" : []
+                             "operatorParams": {
+                "EXEC_PARAMS": {
+                  "paramListInfo": [
+                    {
+                      "paramId": "0",
+                      "paramName": "DISTRIBUTION_INFO",
+                      "paramType": "distribution",
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                        "version": "1525519035",
+                        "name": "test_operatror_type"
+                      },
+                      "paramValue": {
+                        "ref": {
+                          "type": "distribution",
+                          "uuid": "aea101dd-fb99-45c8-a4af-c753e457f050"
                         }
+                      }
+                    },
+                    {
+                      "paramId": "1",
+                      "paramName": "LOCATION_INFO",
+                      "paramType": "attribute",
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                        "version": "1525519035",
+                        "name": "test_operatror_type"
+                      },
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+                            "name": "interest_rate"
+                          },
+                          "attrId": "19"
+                        }
+                      ]
+                    },
+                    {
+                      "paramId": "2",
+                      "paramName": "NUMITERATIONS_INFO",
+                      "paramType": "integer",
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                        "version": "1525519035",
+                        "name": "test_operatror_type"
+                      },
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple"
+                        },
+                        "value": "1000"
+                      }
+                    },
+                    {
+                      "paramId": "1",
+                      "paramName": "factormeans",
+                      "paramType": "attribute",
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
+                        "version": "1525519141",
+                        "name": "paramlist_multivariate_normal_distribution"
+                      },
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "3a47402e-6ba5-4ca7-b3a4-7e01fd4dcdd9",
+                            "name": "mean"
+                          },
+                          "attrId": "0"
+                        }
+                      ]
+                    },
+                    {
+                      "paramId": "2",
+                      "paramName": "factorvarience",
+                      "paramType": "attributes",
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
+                        "version": "1525519141",
+                        "name": "paramlist_multivariate_normal_distribution"
+                      },
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
+                            "name": "covar1"
+                          },
+                          "attrId": "0"
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
+                            "name": "covar2"
+                          },
+                          "attrId": "1"
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "47b9c712-bb76-489a-b26d-34a40b7cdb2a",
+                            "name": "covar3"
+                          },
+                          "attrId": "2"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
                     ]
                 }
             ]

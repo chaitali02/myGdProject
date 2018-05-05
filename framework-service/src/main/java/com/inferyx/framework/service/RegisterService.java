@@ -3888,7 +3888,10 @@ public class RegisterService {
 				break;
 			case "recongroupexec":
 				result = ow.writeValueAsString(reconGroupServiceImpl.getMetaIdByExecId(execUuid, execVersion));
-				break;				
+				break;	
+			case "operatorexec" : 
+				result = ow.writeValueAsString(modelExecServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
+				break;
 			}
 		}
 		return result;
@@ -4325,6 +4328,9 @@ public class RegisterService {
 			
 			case "mapexec":
 				result = ow.writeValueAsString(mapExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
+			case "operatorexec":
+				result = ow.writeValueAsString(modelExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
 				break;
 			}
 		}
