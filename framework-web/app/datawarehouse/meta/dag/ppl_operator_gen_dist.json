@@ -50,7 +50,7 @@
                     {
                       "paramId": "1",
                       "paramName": "LOCATION_INFO",
-                      "paramType": "attribute",
+                      "paramType": "attributes",
                       "ref": {
                         "type": "paramlist",
                         "uuid": "9f0063af-86b4-4610-bf6e-047d74fc197d",
