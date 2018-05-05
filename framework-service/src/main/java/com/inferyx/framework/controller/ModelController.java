@@ -393,32 +393,5 @@ public class ModelController {
 		response = modelServiceImpl.downloadLog(trainExecUUID, trainExecVersion, response, runMode);
 	}
 
-	@RequestMapping(value = "/operator/execute", method = RequestMethod.POST)
-	public boolean operator(@RequestParam("uuid") String operatorUuid, 
-			@RequestParam("version") String operatorVersion,
-			@RequestBody(required = false) ExecParams execParams,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
-		try {
-			Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(operatorUuid, operatorVersion,
-					MetaType.operator.toString());
-			OperatorExec operatorExec = null;
-			operatorExec = modelServiceImpl.create(operator, execParams, null, operatorExec);
-			return modelServiceImpl.operator(operator, execParams, operatorExec);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e.getMessage());
-		}
-	}
-
-	@RequestMapping(value = "/operator/getResults", method = RequestMethod.GET)
-	List<Map<String, Object>> getOperatorResults(@RequestParam("uuid") String operatorExecUuid,
-			@RequestParam("version") String operatorExecVersion,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
-		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
-		return modelExecServiceImpl.getOperatorResults(operatorExecUuid, operatorExecVersion, rowLimit);
-	}
+	
 }

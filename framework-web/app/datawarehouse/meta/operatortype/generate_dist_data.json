@@ -8,8 +8,8 @@
         "ref" : {
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : null,
-            "name" : "ypalrecha"
+            "version" : null
+           
         },
         "value" : null
     },
@@ -25,17 +25,19 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196",
-                "name" : "Data Warehouse"
+                "version" : "1464977196"
+               
             },
             "value" : null
         }
     ],
-    "paramList" : {
-        "ref" : {
-            "uuid" : "c3b75dcc-dada-43d0-b0fc-f180240e55d2",
-            "version" : "1525425731",
-            "type" : "paramlist"
-        }
-    }
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
+      "version": null
+      
+    },
+    "value": null
+  }
 }

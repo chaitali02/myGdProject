@@ -26,18 +26,20 @@
       "value": null
     }
   ],
-  "params": [
+    "params": [
     {
       "paramId": "1",
       "paramName": "factormeans",
-      "paramType": "ONEDARRAY",
-      "paramValue": ""
+      "paramType": "attribute",
+      "paramValue": "",
+      "paramRef": null
     },
     {
       "paramId": "2",
       "paramName": "factorvarience",
-      "paramType": "TWODARRAY",
-      "paramValue": ""
+      "paramType": "attributes",
+      "paramValue": "",
+      "paramRef": null
     }
   ]
 }

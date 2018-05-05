@@ -1,8 +1,8 @@
 {
-  "id": "5aec264327505245039d82ea",
-  "uuid": "c3b75dcc-dada-43d0-b0fc-f180240e55d2",
-  "version": "1525425731",
-  "name": "paramlist_sim_dist_transpose",
+  "id": "5aed92bbb1dfe345884c1066",
+  "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
+  "version": "1525519035",
+  "name": "paramlist_generate_dist",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri May 04 14:52:11 IST 2018",
+  "createdOn": "Sat May 05 16:47:15 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -31,16 +31,23 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "TABLE_NAME",
-      "paramType": "string",
-      "paramValue": "table2",
+      "paramName": "DISTRIBUTION_INFO",
+      "paramType": "distribution",
+      "paramValue": null,
       "paramRef": null
     },
     {
       "paramId": "1",
-      "paramName": "SIMULATE_INFO",
-      "paramType": "double",
+      "paramName": "LOCATION_INFO",
+      "paramType": "attribute",
       "paramValue": null,
+      "paramRef": null
+    },
+    {
+      "paramId": "2",
+      "paramName": "NUMITERATIONS_INFO",
+      "paramType": "integer",
+      "paramValue": "1000",
       "paramRef": null
     }
   ]

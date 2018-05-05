@@ -150,16 +150,21 @@
 </div>
 
 <div id="responsive" class="modal  right fade bs-modal-lg in"  style="display: none;">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width:70%">
       <div class="modal-content" style="resize: both;overflow: auto;">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"  ng-click="savePop(popupModel)"></button>
+          <div class="form-group row">
+              <div class="col-md-6">
           <div class="col-md-1">
-            <div style="width:16px;height:16px" ng-style="{'background-color' : popupModel.headers.color || ''}"></div>
+            <div style="width:16px;height:16px;margin-top: 5px;" ng-style="{'background-color' : popupModel.headers.color || ''}"></div>
           </div>
           <div class="col-md-5">
-            {{popupModel.headers.title || ''}}
+              <div style="font-family:Open Sans, sans-serif;
+              font-weight: 300; font-size:18px;">{{popupModel.headers.title || ''}}</div>
+              </div>
           </div>
+        </div>
         </div>
         <form class="form-horizontal" name="myform3" id="submit_formParamList" ng-submit="isExecParamList ==true ? executeWithExecParamList():executeWithExecParams()" novalidate="novalidate">
         <div class="modal-body">
@@ -181,13 +186,12 @@
                         </select>
                       </div>
                     </div>
-                
-                   <!--Start Param Set--> 
-                  <div ng-show="isExecParamSet==true">
                     <div class=" form-group row modal-header">
                         <h4 class="modal-title">Run Params</h4>
                     </div>
                     <br>
+                   <!--Start Param Set--> 
+                  <div ng-show="isExecParamSet==true">
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set
                         </label>
@@ -232,10 +236,8 @@
                   </div><!--End Param Set-->
                 
                  <div ng-show="isExecParamList==true">
-                    <div class=" form-group row modal-header">
-                        <h4 class="modal-title">Run Params</h4>
-                    </div>
-                    <br>
+                  
+                    
                     <div  style="overflow-x: auto;" style="width:100%;">
                         <table class=" row-border hover table  table-striped table-bordered">
                             <thead>

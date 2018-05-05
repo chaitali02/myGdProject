@@ -84,7 +84,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
          var mode=res.data.runMode;
         
          var url;
-         if(params.type == "train" || params.type == "predict" || params.type == "simulate" ){
+         if(params.type == "train" || params.type == "predict" || params.type == "simulate"){
            url=baseurl+"model/"+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
          }else{
            url=baseurl+params.type+"/getResults?action=view&uuid="+params.id+"&version="+params.version+"&mode="+mode+"&requestId=";
@@ -1676,6 +1676,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                train : {name:'train', label: 'Train'},
                predict : {name:'predict', label: 'Predict'},
                simulate : {name:'simulate', label: 'Simulate'},
+               operator : {name:'operator', label: 'Operator'},
                rule : {name:'rule', label: 'Rule'},
                rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                recon : {name:'recon', label: 'Recon'},
@@ -2749,17 +2750,18 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
 
       }
       
-      $scope.getAllAttributeBySource=function(data,type,index,defaultValue){  
-        CommonService.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
-        var onSuccessGetAllAttributeBySource = function (response) {
-          $scope.paramListHolder[index].allAttributeinto=response
-         
+      $scope.getAllAttributeBySource=function(data,type,index,defaultValue){ 
+        if(data !=null){ 
+          CommonService.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
+          var onSuccessGetAllAttributeBySource = function (response) {
+            $scope.paramListHolder[index].allAttributeinto=response
+          
+          }
         }
       }
       $scope.onChangeDistribution=function(data,index){
         CommonService.getParamListByType('distribution',data.uuid,data.version).then(function (response){ onSuccessGetParamListByType(response.data)});
         var onSuccessGetParamListByType = function (response) {
-          debugger
           if($scope.paramListHolder.length == $scope.opringinalparamListHolder.length){
             $scope.opringinalparamListHolder=$scope.paramListHolder;
           }
