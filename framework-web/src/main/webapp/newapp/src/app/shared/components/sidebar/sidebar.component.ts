@@ -130,7 +130,7 @@ export class SidebarComponent {
       ]
     };
     this.DataScienceMenu = {
-      id:5,
+      id:6,
       subMenu: [{
         name: "Algorithm",
         type: "algorithm"
@@ -150,7 +150,12 @@ export class SidebarComponent {
       {
         name: "Results",
         type: "modelexec"
-      }
+      },
+      {
+        name:"Training",
+        type:"train"
+      },
+
       ]
     };
     
