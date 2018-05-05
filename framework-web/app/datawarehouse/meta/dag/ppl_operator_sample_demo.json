@@ -47,7 +47,12 @@
                                             "paramId" : 1,
                                             "paramName" : "JOIN_TABLE_NAME",
                                             "paramType" : "string",
-                                            "value" : "table1"
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "type" : "simple"
+                                                },
+                                                "value" : "table1"
+                                            }
                                         }
                                     ]
                                 }

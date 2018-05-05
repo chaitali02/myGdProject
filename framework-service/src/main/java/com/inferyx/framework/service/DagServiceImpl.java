@@ -947,8 +947,14 @@ public class DagServiceImpl {
 						&& execParams.getParamSetHolder() == null) {
 					List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(0)
 							.getOperatorParams().get(MetaType.paramset.toString());
+					List<ParamSetHolder> paramSetHolders = new ArrayList<>();
+					ObjectMapper mapper = new ObjectMapper();
+					for(Object obj : paramSetHolderList) {
+						paramSetHolders.add(mapper.convertValue(obj, ParamSetHolder.class));
+					}
 					if (paramSetHolderList != null && !paramSetHolderList.isEmpty()) {
-						execParams.setParamSetHolder(paramSetHolderList.get(0));
+						execParams.setParamInfo(paramSetHolders);
+						execParams.setParamSetHolder(paramSetHolders.get(0));
 					}
 				}
 				operator.setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
