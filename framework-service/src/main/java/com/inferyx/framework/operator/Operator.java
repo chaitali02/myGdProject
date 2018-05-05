@@ -16,14 +16,13 @@ import java.util.Set;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Mode;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 
 public interface Operator {
 	
 	public void execute(OperatorType operatorType, 
 			ExecParams execParams, 
-			OperatorExec operatorExec, 
+			Object metaExec, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 
 			HashMap<String, String> otherParams, 
 			Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception;

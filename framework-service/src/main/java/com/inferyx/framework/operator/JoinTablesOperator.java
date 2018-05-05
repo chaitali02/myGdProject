@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Mode;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
@@ -49,7 +48,7 @@ public class JoinTablesOperator implements com.inferyx.framework.operator.Operat
 	@Override
 	public void execute(OperatorType operatorType, 
 						ExecParams execParams, 
-						OperatorExec operatorExec, 
+						Object metaExec, 
 						java.util.Map<String, MetaIdentifier> refKeyMap, 
 						HashMap<String, String> otherParams, 
 						Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
