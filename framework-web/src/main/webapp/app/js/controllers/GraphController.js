@@ -614,7 +614,7 @@ $scope.countContinue=function(){
    setTimeout(function () {
      $scope.isGraphRenderEdit=true;
      $scope.dagdata.name=$scope.pipelineName;
-     console.log('scope dagResp',$scope.dagdata);
+     //console.log('scope dagResp',$scope.dagdata);
      $scope.$broadcast('createGraph',$scope.dagdata);
    },0);
  }

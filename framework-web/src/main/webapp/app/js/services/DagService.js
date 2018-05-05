@@ -452,7 +452,7 @@ MetadataModule.service('MetadataDagSerivce',function($q,sortFactory,MetadataDagF
 				   stagesarray[i]=stagesjson;
 				  }
 				  dagjson.stage=stagesarray;
-				 console.log(JSON.stringify(dagjson.stage))
+				// console.log(JSON.stringify(dagjson.stage))
 			      deferred.resolve({
 			                  data:dagjson
 			              })

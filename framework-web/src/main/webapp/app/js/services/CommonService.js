@@ -431,7 +431,6 @@
       return deferred.promise;
     }
     this.getParamListByType = function(type, uuid, version) {
-     
       var deferred = $q.defer();
       var url;
       if (type == "simulate") {
@@ -440,13 +439,19 @@
       else if(type == "operator"){
         url = "metadata/getParamListByOperator?uuid=" + uuid+"&type="+type;
       }
+     
+      else if(type == "operatortype"){
+        url = "metadata/getParamListByOperatorType?uuid=" + uuid+"&type="+type;
+      }
       url += '&action=view'
       CommonFactory.httpGet(url).then(function(response) {
         onSuccess(response.data)
       });
       var onSuccess = function(response) {
         var paramListHolder=[];
-        var type=["ONEDARRAY","TWODARRAY"]
+        debugger
+        var type=["ONEDARRAY","TWODARRAY"];
+        var type1=['distribution','attribute','attributes'];
         if(response.length >0){
           for(var i=0;i<response.length;i++){
             var paramList={};
@@ -456,11 +461,15 @@
             paramList.paramType=response[i].paramType.toLowerCase();
             paramList.paramName=response[i].paramName;
             paramList.ref=response[i].ref;
-           
-            if(type.indexOf(response[i].paramType) == -1){
+            if(type1.indexOf(response[i].paramType) == -1 ){
               paramList.isParamType="simple";
               paramList.paramValue=response[i].paramValue.value;
               paramList.selectedParamValueType='simple'
+            }else if(type1.indexOf(response[i].paramType) != -1){
+              paramList.isParamType=response[i].paramType;
+              paramList.selectedParamValueType=response[i].paramType;
+              paramList.paramValue=response[i].paramValue;    
+          
             }else{
               paramList.isParamType="datapod";
               paramList.selectedParamValueType='datapod'

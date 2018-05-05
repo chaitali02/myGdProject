@@ -1161,15 +1161,16 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
    'operator':{
     name : 'operator',
     caption :'Operator',
-    execType:'',
-    metaType:'',
+    execType:'Operatorexec',
+    metaType:'Operator',
     iconPath : 'assets/layouts/layout/img/operator.svg',
     color : '#DCEDC8',
     parentIconCaption:'Operator',
+    childIconCaption:'',
     allowInMenu :true,
     listState : 'operator',
     detailState :'createoperator',
-    childMenu:['map'],
+    childMenu:['map','generatedata','transpose'],
     allowInChildMenu : false,
   },
   'operatorexec':{
@@ -1602,16 +1603,48 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       metaType:'operatortype',
       color : '#c6ff00',
       parentIconCaption:'',
+      childIconCaption:'Operator Type',
+      iconPath : 'assets/layouts/layout/img/operator.svg',
       detailState: 'createoperatortype',
       allowInMenu :false,
       listState : 'operatortype',
       childMenu:[],
       allowInChildMenu : false,
+    },
+    'generatedata':{
+      name : 'operatortype',
+      caption :'Generate Data',
+      execType:'', 
+      metaType:'operatortype',
+      color : '#c6ff00',
+      parentIconCaption:'',
+      childIconCaption:'Generate Data',
+      iconPath : 'assets/layouts/layout/img/operator.svg',
+      detailState: 'createoperatortype',
+      allowInMenu :false,
+      listState : 'operatortype',
+      childMenu:[],
+      allowInChildMenu : true,
+    },
+    'transpose':{
+      name : 'operatortype',
+      caption :'Transpose',
+      execType:'', 
+      metaType:'operatortype',
+      color : '#c6ff00',
+      parentIconCaption:'',
+      childIconCaption:'Transpose',
+      iconPath : 'assets/layouts/layout/img/operator.svg',
+      detailState: 'createoperatortype',
+      allowInMenu :false,
+      listState : 'operatortype',
+      childMenu:[],
+      allowInChildMenu : true,
 	  }
   };
 
-  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup'];
-  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup'];
+  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype'];
+  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype'];
   var defaultElement = {
     markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /><g class="inPorts"/><g class="outPorts"/></g>',
     size: { width: 50, height: 50 },
@@ -1801,6 +1834,16 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '.body': {
           elementType : 'rule',
           "xlink:href": obj.elementDefs['rule'].iconPath
+        }
+      }
+    }),
+    
+    'operatortype' : angular.merge({},defaultElement,{
+      elementType:'operatortype',
+      attrs: {
+        '.body': {
+          elementType : 'operatortype',
+          "xlink:href": obj.elementDefs['operatortype'].iconPath
         }
       }
     }),

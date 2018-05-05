@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +21,15 @@ public class ParamListHolder extends MetaIdentifierHolder{
 	private String paramName;
 	private String paramType;
 	private MetaIdentifierHolder paramValue;
+    private List<AttributeRefHolder> attributeInfo;
+    
+	public List<AttributeRefHolder> getAttributeInfo() {
+		return attributeInfo;
+	}
+
+	public void setAttributeInfo(List<AttributeRefHolder> attributeInfo) {
+		this.attributeInfo = attributeInfo;
+	}
 
 	/**
 	 * @Ganesh

@@ -1345,11 +1345,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            return;
          }
          $scope.dagData=data;
-         console.log('graph data', data);
+        // console.log('graph data', data);
          $scope.uuid = data.uuid;
          $scope.version = data.version;
          var paperEl = $('#paper');
-         console.log(paperEl);
+        // console.log(paperEl);
          if(paperEl.length == 0){
            setTimeout(function () {
              paperEl = $('#paper');
@@ -1441,7 +1441,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            if(element.allowInMenu){
              var menuItemsObj={}
              var chidernItems=[]
-             console.log(element.name)
+             //console.log(element.name)
              menuItemsObj.image=element.iconPath;
              menuItemsObj.title =element.parentIconCaption;
              menuItemsObj.id =element.name + '-add';
@@ -1469,7 +1469,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              menuItems.push(menuItemsObj)
            }
          });
-         console.log(menuItems)
+         //console.log(menuItems)
          d3.selectAll('#paper').on('contextmenu', d3.contextMenu(menuItems));
        }
        
@@ -1812,9 +1812,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
        
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
-        var typeParamListArray=["simulate","operator"];
+        var typeParamListArray=["simulate","operatortype"];
         var typeParamSetArray=["train"];
-        debugger;
         if(typeParamSetArray.indexOf(type) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=true;
           var temp = $scope.popupModel.selectedType.split('|');
@@ -2146,6 +2145,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        //create sub elements on this event
        $scope.isExecParamList=false;    
        $scope.isExecParamSet=false;
+       $scope.paramListHolder=null;
        var localPoint = $scope.paper.clientToLocalPoint(e.clientX, e.clientY);
        var operator = operator || 'dqgroup';
        var cell = new joint.shapes.devs.Model({
@@ -2502,7 +2502,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
         objDetail.type=type;
         var typeParamSetArray=["train"];
-        var typeParamListArray=["simulate","operator"];
+        var typeParamListArray=["simulate","operatortype"];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;
@@ -2633,14 +2633,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
 
      
       $scope.getExecParamList=function(data){
-
-        $scope.paramValueTypes=["simple",'datapod','relation'];
+        $scope.attributeTypes=['datapod','dataset','rule'];
         CommonService.getParamListByType(data.type,data.uuid,data.version).then(function (response) {
           onSuccessGetExecuteModel(response.data)
         });
         var onSuccessGetExecuteModel = function (response) {
           if(response.length ==0){
-            $scope.executeWithParams(null);
+            //$scope.executeWithParams(null);
           }else{
             $('#responsive').modal({
               backdrop: 'static',
@@ -2648,12 +2647,17 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             });
           //  $scope.getAllLatest(null,null,false);
             $scope.paramListHolder = response;
+            $scope.opringinalparamListHolder=$scope.paramListHolder
             if($scope.popupModel.modelData.operators[0].operatorParams !=null){
               var paramListInfo=$scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo
               for(var i=0;i<paramListInfo.length;i++){
                 var selectedParamValue={};
+                if(paramListInfo[i].paramValue.ref.type !='simple'){
                 selectedParamValue.type=paramListInfo[i].paramValue.ref.type;
                 selectedParamValue.uuid=paramListInfo[i].paramValue.ref.uuid;
+               }else{
+                $scope.paramListHolder[i].paramValue=paramListInfo[i].paramValue.value
+               }
                 $scope.paramListHolder[i].selectedParamValueType=paramListInfo[i].paramValue.ref.type;
                 $scope.paramListHolder[i].selectedParamValue=selectedParamValue
               }
@@ -2663,7 +2667,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
     
       }
 
-      $scope.getAllLatest=function(type,index,defaultValue){
+      $scope.getAllLatest=function(type,index,defaultValue){  
         CommonService.getAllLatest(type || "datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
         var onSuccessGetAllLatest = function (response) {
           if(type =="datapod"){
@@ -2672,15 +2676,29 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           else if(type =="relation"){
             $scope.allRelation=response;
           }
-          if(type !=null && response !=null && defaultValue ==true)
-          $scope.paramListHolder[index].selectedParamValue=response[0];
+          else if(type =="distribution"){
+            $scope.allDistribution=response;
+          }
+          // else if(type == "simulate"){
+          //   $scope.allSimulate=response;
+          // }
+          // if(type !=null && response !=null && defaultValue ==true)
+          // $scope.paramListHolder[index].selectedParamValue=response[0];
         }
       }
 
       $scope.onChangeParamValueType=function(type,index){
-        $scope.getAllLatest(type,index,true)
+        if(type !='simple'){
+          $scope.getAllLatest(type,index,true);
+        }else{
+          $scope.paramListHolder[index].paramValue="";
+        }
       }
+       $scope.onChangeSimulateion=function(index){
+        $scope.paramListHolder[index].issimulate=true;
 
+        console.log($scope.paramListHolder)
+       }
       $scope.executeWithExecParamList=function(){
         $scope.isExecParamList=false;    
         $scope.isExecParamSet=false;

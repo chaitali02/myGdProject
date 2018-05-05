@@ -1251,5 +1251,29 @@ public class MetadataServiceImpl {
 			holderList.add(paramListHolder);
 		}
 		return holderList;
+	}
+	
+	public List<ParamListHolder> getParamListByOperatorType(String operatorTypeUuid) throws JsonProcessingException {	
+		List<ParamListHolder> holderList = new ArrayList<>();
+			
+		OperatorType operatorType = (OperatorType) commonServiceImpl.getLatestByUuid(operatorTypeUuid, MetaType.operatortype.toString(),"N");			
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operatorType.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
+	
+		for(Param param : paramList.getParams()) {
+			ParamListHolder paramListHolder = new ParamListHolder();
+			paramListHolder.setParamId(param.getParamId());
+			paramListHolder.setParamName(param.getParamName());
+			paramListHolder.setParamType(param.getParamType());
+			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
+				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
+			else 
+				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+			
+			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, operatorType.getUuid(), paramList.getVersion()));
+			paramListHolder.getRef().setName(paramList.getName());
+			holderList.add(paramListHolder);
+		}
+		return holderList;
 	}	
 }
