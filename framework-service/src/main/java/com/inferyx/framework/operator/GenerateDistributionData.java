@@ -26,11 +26,9 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
-import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.ParamListHolder;
-import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -86,8 +84,7 @@ public class GenerateDistributionData implements Operator {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		ExecParams distExecParam = new ExecParams();
-		//Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(distributionTypeInfo.getRef().getUuid(), distributionTypeInfo.getRef().getVersion(), distributionTypeInfo.getRef().getType().toString());
-		
+
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 		for(ParamListHolder holder : paramListInfo) {
 			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
