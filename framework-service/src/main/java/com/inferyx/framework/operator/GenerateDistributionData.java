@@ -95,27 +95,52 @@ public class GenerateDistributionData implements Operator {
 		Object object = mlDistribution.getDistribution(distribution, distExecParam);
 		
 		List<Feature> features = new ArrayList<>();
+		
+		List<Attribute> attributes = new ArrayList<Attribute>();
+		int attributeId = 0;
+		Attribute attribute2 = new Attribute();
+		attribute2.setActive("Y");
+		attribute2.setAttributeId(attributeId);
+		attribute2.setDesc("id");
+		attribute2.setDispName("id");
+		attribute2.setName("id");
+		attribute2.setPartition("N");
+		attribute2.setType("integer");
+		attributes.add(attribute2);
+		attributeId++;
 		for(Attribute attribute : datapod.getAttributes()) {
 			for(AttributeRefHolder attributeRefHolder : locationInfo.getAttributeInfo())
 				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
 					Feature feature = new Feature();
 					feature.setName(attribute.getName());
 					features.add(feature);
+					attribute.setAttributeId(attributeId);
+					attributeId++;
+					attributes.add(attribute);
 				}			
 		}
+		
+
+		Datapod dp = new Datapod();
+		dp.setBaseEntity();
+		dp.setName("distribution_"+datapod.getName());
+		dp.setAttributes(attributes);
+		dp.setDatasource(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion())));
+		commonServiceImpl.save(MetaType.datapod.toString(), dp);
 		
 		String tabName = exec.generateFeatureData(object, features, numIterations, ("tempDistributionTable"));
 		String sql = "SELECT * FROM " + tabName;
 		
-		String filePath = "/"+datapod.getUuid() + "/" + datapod.getVersion() + "/" + operatorExec.getVersion();
-		String fileName = String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), operatorExec.getVersion());
+		String filePath = "/"+dp.getUuid() + "/" + dp.getVersion() + "/" + operatorExec.getVersion();
+		String fileName = String.format("%s_%s_%s", dp.getUuid().replace("-", "_"), dp.getVersion(), operatorExec.getVersion());
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
-		exec.executeRegisterAndPersist(sql, tabName, filePath, datapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		//dp.seta
+		exec.executeRegisterAndPersist(sql, tabName, filePath, dp, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, fileName, 
-				new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion()) 
+				new MetaIdentifier(MetaType.datapod, dp.getUuid(), dp.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()) ,
 				operatorExec.getAppInfo(), operatorExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
 		operatorExec.setResult(resultRef);
