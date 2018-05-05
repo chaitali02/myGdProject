@@ -17,6 +17,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +90,7 @@ import com.inferyx.framework.writer.IWriter;
 
 import scala.collection.Iterator;
 import scala.collection.Seq;
+import scala.collection.mutable.WrappedArray;
 
 @Component
 public class SparkExecutor implements IExecutor {
@@ -946,13 +949,18 @@ public class SparkExecutor implements IExecutor {
 			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
 			df = dataFrameHolder.getDataframe();
 		}
+		df.printSchema();
 		df.show(false);
 		String[] columns = df.columns();
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
+			//Double[] obj2 = (Double[]) ((WrappedArray<?>)row.get(0)).array();
 			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			//Map<String, Object> object2 = new LinkedHashMap<String, Object>(columns.length);
 			for (String column : columns) {
-				object.put(column, (row.getAs(column)==null ? "":row.getAs(column).toString()) );
+				object.put(column, (row.getAs(column)==null ? "":
+					(row.getAs(column) instanceof WrappedArray<?>) ? Arrays.toString((Double[])((WrappedArray<?>)row.getAs(column)).array()) : row.getAs(column).toString()) );
+				//object2.put(column, Arrays.toString(obj2));
 			}
 			data.add(object);
 		}
@@ -1010,6 +1018,18 @@ public class SparkExecutor implements IExecutor {
 		df.printSchema();
 		df.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		String sql = "SELECT * FROM " + tableName;
+		try {
+			ResultSetHolder holder = executeSql(sql, commonServiceImpl.getApp().getUuid());
+			Dataset<Row> df_2 = holder.getDataFrame();
+			df_2.printSchema();
+			df_2.show(false);
+			System.out.println();
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | IOException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return tableName;
 	}
 
