@@ -1,0 +1,40 @@
+{
+  "id": "5aedc13ab1dfe37d8ec87c01",
+  "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+  "version": "1525530938",
+  "name": "operator_transpose",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat May 05 20:05:38 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
+      "version": null,
+      "name": "paramlist_transpose"
+    },
+    "value": null
+  }
+}
