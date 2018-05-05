@@ -51,6 +51,7 @@ import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
+import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -302,20 +303,20 @@ public class DataStoreServiceImpl {
 		return dataStore;
 	}
 */
-	public DataStore findDataStoreByMeta(String uuid, String version) {
+	public DataStore findDataStoreByMeta(String uuid, String version) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		Query query =new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
-		
-		if(appUuid != null)
-			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));
 
-		if(version != null)
+		if(appUuid != null && version != null)
 			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid).andOperator(Criteria.where("metaId.ref.version").is(version)));
-		else
-			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid));
+		else if(appUuid != null)
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));
+		
 		query.with(new Sort(Sort.Direction.DESC, "version"));
+		query.addCriteria(Criteria.where("active").is("Y"));
+		
 		List<DataStore> datastoreList = mongoTemplate.find(query, DataStore.class);
 		DataStore dataStore = null;
 		try {
@@ -613,6 +614,22 @@ public class DataStoreServiceImpl {
 					tableName = Helper.genTableName(filePath);
 				else
 					tableName = datasource_2.getDbname() + "." + reconName;
+		} else if (metaType == MetaType.operator) {
+			Operator recon = (Operator) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.operator.toString());
+			String operatorName = recon.getName();
+			if(operatorName.toLowerCase().contains("operator_"))
+				operatorName = operatorName.replace("operator_", "");
+			
+			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+				tableName = Helper.genTableName(filePath);
+			} else if(runMode != null && runMode.equals(Mode.ONLINE)) {
+				tableName = Helper.genTableName(filePath);
+			}else
+			if ((dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+					tableName = Helper.genTableName(filePath);
+				else
+					tableName = datasource_2.getDbname() + "." + operatorName;
 		}
 		return tableName;
 	}

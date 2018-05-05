@@ -161,14 +161,15 @@ public class DatapodServiceImpl {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public long count() {
+	public long count() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
 		if (appUuid == null) {
 		return idatapodDao.count();
 		}
 	   Query query = new Query();
-	   query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));    
+	    query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+		query.addCriteria(Criteria.where("active").is("Y"));    
 	   return mongoTemplate.count(query, Datapod.class);
 	}
 
@@ -876,12 +877,6 @@ public class DatapodServiceImpl {
 		for (Datasource dsrc : dsList) {
 			dsMap.put(dsrc.getUuid(), dsrc.getName());
 		}
-		
-		
-		
-
-		
-		
 		for (Datapod dp : datapodList) {
 
 			DatapodStatsHolder dsh = new DatapodStatsHolder();
@@ -903,6 +898,8 @@ public class DatapodServiceImpl {
 				query.fields().include("createdOn");
 				query.fields().include("appInfo"); 
 				
+				query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+				query.addCriteria(Criteria.where("active").is("Y")); 
 				query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(dp.getUuid()));
 				//query.addCriteria(Criteria.where("dependsOn.ref.version").is(dp.getVersion()));
 				query.with(new Sort(Sort.Direction.DESC, "version"));
@@ -929,6 +926,8 @@ public class DatapodServiceImpl {
 					query2.fields().include("statusList");
 					query2.fields().include("appInfo");
 					
+					query2.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+					query2.addCriteria(Criteria.where("active").is("Y")); 
 					query2.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
 					query2.addCriteria(Criteria.where("dependsOn.ref.uuid").is(profileObjectList.get(0).getUuid()));
 					//query2.addCriteria(Criteria.where("dependsOn.ref.version").is(profileObjectList.get(0).getVersion()));

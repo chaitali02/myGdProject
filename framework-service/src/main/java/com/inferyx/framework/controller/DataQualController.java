@@ -84,7 +84,7 @@ public class DataQualController {
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		DataQualExec dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, null, null, null);
 		dataQualExec = (DataQualExec) dataQualServiceImpl.parse(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, runMode);
-		dataQualExec = dataQualServiceImpl.execute(dataQualUUID, dataQualVersion, metaExecutor, dataQualExec, null, taskList, runMode);
+		dataQualExec = dataQualServiceImpl.execute(dataQualUUID, dataQualVersion, metaExecutor, dataQualExec, null, taskList, null, runMode);
 		commonServiceImpl.completeTaskThread(taskList);
 		return dataQualExec;
 	}
@@ -129,7 +129,7 @@ public class DataQualController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException {        
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {        
         return dataQualExecServiceImpl.findDataQualExecByDataqual(dataQualUUID, startDate, endDate, type, action);
     }
     
@@ -161,7 +161,7 @@ public class DataQualController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException {
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
         return dataQualExecServiceImpl.finddqExecByDatapod(datapodUUID, startDate, endDate, type);
     }
 
@@ -189,7 +189,7 @@ public class DataQualController {
    			try {
    				Mode runMode = Helper.getExecutionMode(mode);
    				if(type.equalsIgnoreCase(MetaType.dqExec.toString())){
-   	   				dataQualServiceImpl.restart(type,uuid,version, runMode);
+   	   				dataQualServiceImpl.restart(type,uuid,version, null, runMode);
    	   			}
    	   			else{
    	   				dataQualGroupServiceImpl.restart(type,uuid,version, runMode);

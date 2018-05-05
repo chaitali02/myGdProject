@@ -78,7 +78,7 @@ public class ProfileController {
 		ProfileExec profileExec = profileServiceImpl.create(profileUUID, profileVersion,null,null, null, null);
 		profileExec = (ProfileExec) profileServiceImpl.parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null, runMode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
-		profileExec = profileServiceImpl.execute(profileUUID, profileVersion, profileExec,metaExecutor,null, taskList, runMode);
+		profileExec = profileServiceImpl.execute(profileUUID, profileVersion, profileExec,metaExecutor,null, taskList, null, runMode);
 		commonServiceImpl.completeTaskThread(taskList);
 		return profileExec;
 	}
@@ -124,7 +124,7 @@ public class ProfileController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException {
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
         return profileExecServiceImpl.findProfileExecByProfile(profileUUID, startDate, endDate, type);
     }
 	@RequestMapping(value = "/getProfileExecByDatapod", method = RequestMethod.GET)
@@ -139,7 +139,7 @@ public class ProfileController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam("startDate") String startDate,
-			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException {
+			@RequestParam("endDate") String endDate) throws JsonProcessingException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
         return profileExecServiceImpl.findProfileExecByDatapod(datapodUUID, startDate, endDate, type);
     }
     @RequestMapping(value = "/getProfileGroupExecByProfileGroup", method = RequestMethod.GET)
@@ -183,7 +183,7 @@ public class ProfileController {
 			try {
 				Mode runMode = Helper.getExecutionMode(mode);
 				if(type.equalsIgnoreCase(MetaType.profileExec.toString())){
-					profileServiceImpl.restart(type,uuid,version, runMode);
+					profileServiceImpl.restart(type,uuid,version, null, runMode);
 				}
 				else{
 					profileGroupServiceImpl.restart(type,uuid,version, runMode);

@@ -18,9 +18,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.BaseRuleExec;
+import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
@@ -53,11 +54,11 @@ public class BaseRuleBridgeService {
 	}
 	
 	public BaseRuleExec execute(String uuid, String version, MetaType type, MetaType execType, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
 		if (baseRuleExec == null) {
 			return null;
 		}
-		return baseRuleServiceImpl.execute(uuid, version, type, execType, metaExecutor, baseRuleExec, baseGroupExec, null, taskList, runMode);
+		return baseRuleServiceImpl.execute(uuid, version, type, execType, metaExecutor, baseRuleExec, baseGroupExec, null, taskList, execParams, runMode);
 	}
 	
 	public BaseRuleExec createAndParse (String uuid, String version, MetaType type, MetaType execType, BaseRuleExec inputBaseRuleExec, 
@@ -71,13 +72,13 @@ public class BaseRuleBridgeService {
 	}
 	
 	public BaseRuleExec parseAndExecute(String uuid, String version, MetaType type, MetaType execType, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
 		baseRuleExec = baseRuleServiceImpl.parse(uuid, version, null, null, null, null);
 		if (baseRuleExec == null) {
 			logger.info(" no Exec. So cannot proceed to execute ");
 			return null;
 		}
-		return baseRuleServiceImpl.execute(uuid, version, type, execType, metaExecutor, baseRuleExec, baseGroupExec, null, taskList, runMode);
+		return baseRuleServiceImpl.execute(uuid, version, type, execType, metaExecutor, baseRuleExec, baseGroupExec, null, taskList, execParams, runMode);
 	}
 
 }

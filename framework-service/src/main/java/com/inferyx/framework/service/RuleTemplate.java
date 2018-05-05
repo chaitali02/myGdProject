@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,8 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
@@ -36,11 +33,11 @@ import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Mode;
-import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -172,7 +169,7 @@ public abstract class RuleTemplate {
 	 * @throws Exception
 	 */
 	public abstract BaseRuleExec execute(String uuid, String version, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception;
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception;
 	
 	/**
 	 * Defines sample execute. Should be overridden if required.
@@ -189,7 +186,7 @@ public abstract class RuleTemplate {
 	 */
 	@SuppressWarnings({ "unchecked", "static-access" })
 	public BaseRuleExec execute(String uuid, String version, MetaType type, MetaType execType, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
 		logger.info("Inside BaseRuleExec.execute ");
 		BaseRule baseRule = null;
 		
@@ -237,6 +234,7 @@ public abstract class RuleTemplate {
 		runBaseRuleService.setConnFactory(connFactory);
 		runBaseRuleService.setEngine(engine);
 		runBaseRuleService.setHelper(helper);
+		runBaseRuleService.setExecParams(execParams);
 
 		if (metaExecutor == null) {
 			runBaseRuleService.execute();

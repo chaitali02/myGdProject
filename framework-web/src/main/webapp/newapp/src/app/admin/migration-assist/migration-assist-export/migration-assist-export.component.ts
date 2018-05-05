@@ -1,4 +1,3 @@
-//import { version } from './../../../../../bower_components/moment/moment.d';
 import { Component, OnInit } from '@angular/core';
 import { AppConfig } from '../../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -32,15 +31,16 @@ export class MigrationAssistExportComponent implements OnInit {
   allName: any;
   msgs: any;
   isSubmitEnable: any;
-  metaTypes: any[];
-  metaType: any
-  metaInfoArray: any[];
-  dropdownSettingsMeta: any;
+  metaTypeArray: any[];
+  metaType: any;
+  dropdownSettingsMetaInfo: any;
+  dropdownSettingsMetaType: any;
   metaInfo: any;
   includeDep: any;
   location: any;
-
-  constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, private router: Router, private _commonService: CommonService, private _migrationAssist : MigrationAssistService) {
+  type: any;
+  allMataList : any;
+  constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, private router: Router, private _commonService: CommonService, private _migrationAssist: MigrationAssistService) {
     this.showExportData = true;
     this.exportData = {};
     this.exportData["active"] = true
@@ -63,12 +63,19 @@ export class MigrationAssistExportComponent implements OnInit {
       "routeurl": null
     }
     ]
-    this.dropdownSettingsMeta = {
+    this.dropdownSettingsMetaInfo = {
       singleSelection: false,
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       enableSearchFilter: true,
-      disable: true
+      disabled: false
+    };
+    this.dropdownSettingsMetaType = {
+      singleSelection: false,
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      enableSearchFilter: true,
+      disabled: false
     };
   }
 
@@ -80,15 +87,15 @@ export class MigrationAssistExportComponent implements OnInit {
 
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion();
-        this.dropdownSettingsMeta.disabled = "this.mode !== undefined" ? false : true
-        // this.getAllVersionByUuid();
+        this.dropdownSettingsMetaInfo.disabled = "this.mode === true" ? true : false;      
       }
       else {
         this.getAll();
-      }
+      }     
     })
-    this.metaType = {};
-    this.metaInfoArray = null;
+    this.metaTypeArray = [];
+    this.metaType = [];
+    this.allMataList = []
   }
 
   getAll() {
@@ -102,186 +109,193 @@ export class MigrationAssistExportComponent implements OnInit {
   onSuccessGetAll(response) {
     var temp = []
     for (const i in response) {
+
       let meta = {};
-      meta["label"] = response[i]['name'];
-      meta["value"] = {};
-      meta["value"]["label"] = response[i]['name'];
-      meta["value"]["uuid"] = response[i]['uuid'];
-      //allName["uuid"]=response[i]['uuid']
+      meta["id"] = response[i]['uuid'];
+      meta["itemName"] = response[i]['name'];
+
       temp[i] = meta;
     }
-    this.metaTypes = temp
-    this.getAllLatest();
+    this.metaTypeArray = temp
   }
 
-  getAllLatest() {
-    this._commonService.getAllLatest(this.metaType.label)
+  getAllByMetaList() {
+
+    this.type = []
+    for (const i in this.metaType) {
+      this.type[i] = this.metaType[i].itemName;
+    }
+    console.log(this.type)
+    this._migrationAssist.getAllByMetaList(this.type)
       .subscribe(
       response => {
-        this.onSuccessGetAllLatest(response)
+        this.onSuccessGetAllByMetaList(response)
       },
       error => console.log("Error :: " + error));
   }
 
-  onSuccessGetAllLatest(response) {
-    this.metaInfoArray = [];
-
-    for (const i in response) {
-      let metaref = {};
-      metaref["id"] = response[i]['uuid'];
-      metaref["itemName"] = response[i]['name'];
-      metaref["version"] = response[i]['version'];
-     // metaref["type"] = response[i]['type'];
-      this.metaInfoArray[i] = metaref;
-    }
-  }
-
-  onItemSelect(item: any) {
-    //console.log(item);
-    // console.log(this.selectedItems);
-  }
-  OnItemDeSelect(item: any) {
-    // console.log(item);
-    // console.log(this.selectedItems);
-  }
-  onSelectAll(items: any) {
-    // console.log(items);
-  }
-  onDeSelectAll(items: any) {
-    // console.log(items);
-  }
-
-  getOneByUuidAndVersion() {
-    this._commonService.getOneByUuidAndVersion(this.id, this.version, 'export')
-      .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
-  }
-
-  getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('export', this.id)
-      .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
-  }
-
-  onSuccessgetOneByUuidAndVersion(response) {
-    this.breadcrumbDataFrom[3].caption = response.name;
-    this.exportData = response;
-    this.createdBy = response.createdBy.ref.name;
-    this.uuid = response.uuid;
-    this.version = response['version'];
-    // this.published = response['published'];
-    // if(this.published === 'Y') { this.published = true; } else { this.published = false; }
-    this.active = response['active'];
-    if (this.active === 'Y') { this.active = true; } else { this.active = false; }
-
-    //this.application.published=response["published"] == 'Y' ? true : false
-    this.exportData.active = response["active"] == 'Y' ? true : false
-    let metaInfoArray1 = [];
-
-    for (const i in response.metaInfo) {
-      let metaInfo = {}
-      metaInfo["id"] = response.metaInfo[i].ref.uuid;
-      metaInfo["itemName"] = response.metaInfo[i].ref.name;
-      metaInfo["version"] = response.metaInfo[i].ref.version;
-      metaInfo["type"] = response.metaInfo[i].ref.type;
-      metaInfoArray1[i] = metaInfo;
-    }
-    this.metaInfo = metaInfoArray1;
-
-    this.location = response.location;
-    this.includeDep = response.includeDep;
-    this.getAll();
-  }
-
-  OnSuccesgetAllVersionByUuid(response) {
-    this.versions = [];
-    for (const i in response) {
-      let version = {};
-      version["label"] = response[i]['version'];
-      version["value"] = response[i]['version'];
-      version["uuid"] = response[i]['uuid'];
-      this.versions[i] = version;
-    }
-  }
-
-  onChangeActive(event) {
-    if (event === true) {
-      this.exportData.active = 'Y';
-    }
-    else {
-      this.exportData.active = 'N';
-    }
-  }
-
-  onChangeCheckbox(event) {
-    if (event === true) {
-      this.exportData.includeDep = 'Y';
-    }
-    else {
-      this.exportData.includeDep = 'N';
-    }
-  }
-
-  submitExport() {
-    let exportJson = {};
-
-    // exportJson["uuid"]=this.exportData.uuid;
-    exportJson["name"] = this.exportData.name;
-    //let tagArray=[];
-    const tagstemp = [];
-    for (const t in this.tags) {
-      tagstemp.push(this.tags[t]["value"]);
-    }
-    // if(this.tags.length > 0){
-    //   for(let counttag=0;counttag < this.tags.length;counttag++){
-    //     tagArray[counttag]=this.tags[counttag]["value"];
-    //   }
-    // }
-    exportJson["tags"] = tagstemp;
-    exportJson["desc"] = this.exportData.desc;
-
-    let metaInfoNew = [];
-    if (this.metaInfo != null) {
-      for (const c in this.metaInfo) {
-        let metaInfoObj = {};
-        let refMetaInfo = {}
-        refMetaInfo["type"] = this.metaType.label
-        refMetaInfo["uuid"] = this.metaInfo[c].id
-        refMetaInfo["name"] = this.metaInfo[c].itemName
-        refMetaInfo["version"] = this.metaInfo[c].version
-
-        metaInfoObj["ref"] = refMetaInfo;
-        metaInfoNew[c] = metaInfoObj
+  onSuccessGetAllByMetaList(response) {
+    console.log(JSON.stringify(response))
+    this.allMataList = []
+    var count = 0;
+    for (var i = 0; i < this.type.length; i++) {
+      var result = response[this.type[i]]
+      for (var j = 0; j < result.length; j++) {
+        var metaList = {};
+        metaList["type"] = this.type[i];
+        metaList["itemName"] = metaList["type"] + "-" + result[j].name;
+        metaList["uuid"] = result[j].uuid
+        metaList["id"] = result[j].uuid
+        this.allMataList[count] = metaList;
+        count = count + 1
       }
     }
-    exportJson["metaInfo"] = metaInfoNew;
-
-    //exportJson["active"] = this.exportData.active == true ? 'Y' : "N"
-    exportJson["includeDep"] = this.exportData.includeDep;
-    console.log(JSON.stringify(exportJson));
-    this._migrationAssist.exportSubmit("export", exportJson).subscribe( 
-      response => { this.OnSuccessubmit(response) },
-      error => console.log('Error :: ' + error)
-    )
   }
+    getMetaInfo() { 
+      if(this.metaType !== null)
+      {this.getAllByMetaList();}
+    }
 
+    onItemSelect(item: any) {
+      this.getAllByMetaList()
+      //console.log(item);
+      // console.log(this.selectedItems);
+    }
+    OnItemDeSelect(item: any) {
+      // console.log(item);
+      // console.log(this.selectedItems);
+    }
+    onSelectAll(items: any) {
+      // console.log(items);
+    }
+    onDeSelectAll(items: any) {
+      // console.log(items);
+    }
 
-  OnSuccessubmit(response) {
-    console.log(response)
-    this.msgs = [];
-    this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Export Submitted Successfully' });
-    setTimeout(() => {
-      this.goBack()
-    }, 1000);
-  }
+    getOneByUuidAndVersion() {
+      this._commonService.getOneByUuidAndVersion(this.id, this.version, 'export')
+        .subscribe(
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
+    }
+
+    getAllVersionByUuid() {
+      this._commonService.getAllVersionByUuid('export', this.id)
+        .subscribe(
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
+    }
+
+    onSuccessgetOneByUuidAndVersion(response) {
+      this.breadcrumbDataFrom[3].caption = response.name;
+      this.exportData = response;
+      this.createdBy = response.createdBy.ref.name;
+      this.uuid = response.uuid;
+      this.version = response['version'];
+      // this.published = response['published'];
+      // if(this.published === 'Y') { this.published = true; } else { this.published = false; }
+      this.active = response['active'];
+      if (this.active === 'Y') { this.active = true; } else { this.active = false; }
+
+      //this.application.published=response["published"] == 'Y' ? true : false
+      this.exportData.active = response["active"] == 'Y' ? true : false
+      let metaInfoArray = [];
+
+      for (const i in response.metaInfo) {
+        let metaInfo = {}
+        metaInfo["id"] = response.metaInfo[i].ref.uuid;
+        metaInfo["itemName"] = response.metaInfo[i].ref.name;
+        metaInfo["type"] = response.metaInfo[i].ref.type;
+        metaInfoArray[i] = metaInfo;
+      }
+      this.metaInfo = metaInfoArray;
+      console.log(JSON.stringify(this.metaInfo));
+      this.location = response.location;
+      this.includeDep = response.includeDep;
+    }
+
+    OnSuccesgetAllVersionByUuid(response) {
+      this.versions = [];
+      for (const i in response) {
+        let version = {};
+        version["label"] = response[i]['version'];
+        version["value"] = response[i]['version'];
+        version["uuid"] = response[i]['uuid'];
+        this.versions[i] = version;
+      }
+    }
+
+    onChangeActive(event) {
+      if (event === true) {
+        this.exportData.active = 'Y';
+      }
+      else {
+        this.exportData.active = 'N';
+      }
+    }
+
+    onChangeCheckbox(event) {
+      if (event === true) {
+        this.exportData.includeDep = 'Y';
+      }
+      else {
+        this.exportData.includeDep = 'N';
+      }
+    }
+
+    submitExport() {
+      let exportJson = {};     
+      exportJson["name"] = this.exportData.name;
+      //let tagArray=[];
+      const tagstemp = [];
+      for (const t in this.tags) {
+        tagstemp.push(this.tags[t]["value"]);
+      }
+      // if(this.tags.length > 0){
+      //   for(let counttag=0;counttag < this.tags.length;counttag++){
+      //     tagArray[counttag]=this.tags[counttag]["value"];
+      //   }
+      // }
+      exportJson["tags"] = tagstemp;
+      exportJson["desc"] = this.exportData.desc;
+
+      let metaInfoNew = [];
+      if (this.metaInfo != null) {
+        for (const c in this.metaInfo) {
+          let metaInfoObj = {};
+          let refMetaInfo = {}
+          refMetaInfo["type"] = this.metaInfo[c].type
+          refMetaInfo["uuid"] = this.metaInfo[c].uuid
+         // refMetaInfo["name"] = this.metaInfo[c].itemName
+          refMetaInfo["version"] = this.metaInfo[c].version
+
+          metaInfoObj["ref"] = refMetaInfo;
+          metaInfoNew[c] = metaInfoObj
+        }
+      }
+      exportJson["metaInfo"] = metaInfoNew;     
+      exportJson["includeDep"] = this.exportData.includeDep;
+      console.log(JSON.stringify(exportJson));
+      this._migrationAssist.exportSubmit("export", exportJson).subscribe(
+        response => { this.OnSuccessubmit(response) },
+        error => console.log('Error :: ' + error)
+      )
+    }
+
+    OnSuccessubmit(response) {
+      console.log(response)
+      this.msgs = [];
+      this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Export Submitted Successfully' });
+      setTimeout(() => {
+        this.goBack()
+      }, 1000);
+    }
 
   public goBack() {
-      this._location.back();
+    this._location.back();
   }
 }

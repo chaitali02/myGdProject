@@ -13,16 +13,12 @@ package com.inferyx.framework.service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +27,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.codehaus.jettison.json.JSONException;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -48,24 +40,15 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.gson.Gson;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ProfileInfo;
-import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
-import com.inferyx.framework.domain.Application;
-import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
@@ -73,7 +56,7 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Message;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -82,7 +65,6 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.domain.User;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -414,15 +396,15 @@ public class ProfileServiceImpl extends RuleTemplate {
 	}
 
 	public ProfileExec execute(String profileUUID, String profileVersion, ProfileExec profileExec,
-			ThreadPoolTaskExecutor metaExecutor, ProfileGroupExec profileGroupexec, Mode runMode) throws Exception {
-		return execute(profileUUID, profileVersion, profileExec, null, profileGroupexec, null, runMode);
+			ThreadPoolTaskExecutor metaExecutor, ProfileGroupExec profileGroupexec, ExecParams execParams, Mode runMode) throws Exception {
+		return execute(profileUUID, profileVersion, profileExec, null, profileGroupexec, null, execParams, runMode);
 	}
 
 	public ProfileExec execute(String profileUUID, String profileVersion, ProfileExec profileExec,
 			ThreadPoolTaskExecutor metaExecutor, ProfileGroupExec profileGroupExec,
-			List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
 		return (ProfileExec) execute(profileUUID, profileVersion, metaExecutor, profileExec, profileGroupExec, null,
-				taskList, runMode);
+				taskList, execParams, runMode);
 	}
 
 	public List<Map<String, Object>> getProfileResults(String profileExecUUID, String profileExecVersion, int offset,
@@ -487,7 +469,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 		return data;
 	}
 
-	public void restart(String type, String uuid, String version, Mode runMode)
+	public void restart(String type, String uuid, String version, ExecParams execParams, Mode runMode)
 			throws Exception {
 		// ProfileExec profileExec= profileExecServiceImpl.findOneByUuidAndVersion(uuid,
 		// version);
@@ -504,7 +486,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			profileExec = (ProfileExec) parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null,
 					runMode);
 			execute(profileExec.getDependsOn().getRef().getUuid(), profileExec.getDependsOn().getRef().getVersion(),
-					profileExec, null, null, runMode);
+					profileExec, null, null, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (profileExec.getUuid()) {
 				try {
@@ -578,14 +560,14 @@ public class ProfileServiceImpl extends RuleTemplate {
 	@Override
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
-			List<FutureTask<TaskHolder>> taskList, Mode runMode) throws Exception {
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
 		try {
 			Datapod targetDatapod = (Datapod) daoRegister
 					.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
 			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 					targetDatapod.getVersion());
 			return super.execute(uuid, version, MetaType.profile, MetaType.profileExec, metaExecutor, baseRuleExec,
-					baseGroupExec, targetDatapodKey, taskList, runMode);			
+					baseGroupExec, targetDatapodKey, taskList, execParams, runMode);			
 		}catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
