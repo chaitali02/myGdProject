@@ -26,6 +26,8 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.util.CharArrayMap.EntrySet;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -70,7 +72,6 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.OperatorExec;
@@ -107,6 +108,7 @@ import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.enums.ParamDataType;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 
 @Component
@@ -184,6 +186,18 @@ public class Helper {
 		return fileName;
 	}	
 
+	public static DataType getDataType(String dataType) throws NullPointerException {
+		if(dataType == null)
+			return null;
+			switch (dataType.toLowerCase()) {
+				case "integer": return DataTypes.IntegerType;
+				case "double": return DataTypes.DoubleType;
+				case "date": return DataTypes.DateType;
+				case "string": return DataTypes.StringType;
+	            default: return null;
+		}
+	}
+				
 	public static String getDaoClass(MetaType type) throws NullPointerException {
 		if(type == null)
 			return null;
@@ -574,10 +588,10 @@ public class Helper {
 		else
 			return null;
 	}	
-	public static Mode getExecutionMode(String mode) {
+	public static RunMode getExecutionMode(String mode) {
 		switch(mode.toLowerCase()) {
-		case "batch": return Mode.BATCH;
-		case "online": return Mode.ONLINE;
+		case "batch": return RunMode.BATCH;
+		case "online": return RunMode.ONLINE;
 		default: return null;
 		}
 	}

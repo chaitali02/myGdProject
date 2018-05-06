@@ -260,12 +260,13 @@ public interface IExecutor {
 	
 	/**
 	 * 
+	 * @param object
 	 * @param features
-	 * @param numIterations
-	 * @param fieldArray TODO
+	 * @param numIterations TODO
 	 * @param tableName
 	 * @return
 	 */
+	
 	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) ;
 	
 	/**
@@ -275,8 +276,18 @@ public interface IExecutor {
 	 * @param numIterations
 	 * @param tableName
 	 * @return
+	 */	
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) ;
+	
+	/**
+	 * 
+	 * @param object
+	 * @param features
+	 * @param numIterations
+	 * @param tableName
+	 * @return
 	 */
-	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName);
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion);
 	
 	/**
 	 * 
@@ -347,4 +358,8 @@ public interface IExecutor {
 	 * @return is pmml saved or not
 	 */
 	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext) throws IOException, JAXBException;
+
+	ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath, Datapod datapod, String saveMode,
+			String clientContext) throws IOException;
+
 }

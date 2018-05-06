@@ -45,7 +45,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.RunStatusHolder;
 import com.inferyx.framework.domain.SessionContext;
@@ -54,6 +53,7 @@ import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 
@@ -296,7 +296,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			return new ArrayList<String>(strSet);
 		}
 
-		public DagExec createDagExecBatch(Dag dag, DagExec dagExec, Mode runMode) {
+		public DagExec createDagExecBatch(Dag dag, DagExec dagExec, RunMode runMode) {
 			List<FutureTask> taskList = new ArrayList<FutureTask>();
 			List<StageExec> depStageExecs = new ArrayList<>();
 			if (dagExec == null) {
@@ -538,7 +538,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 
 	
 	
-		public void setStageAndSubmit(DagExec dagExec, StageExec indvStg, Stage stage, ExecParams execParams, Dag dag, List<FutureTask> taskList, Mode runMode) {
+		public void setStageAndSubmit(DagExec dagExec, StageExec indvStg, Stage stage, ExecParams execParams, Dag dag, List<FutureTask> taskList, RunMode runMode) {
 			RunStageServiceImpl indivStageExe = new RunStageServiceImpl();
 			logger.info("Map name of uuid_version:" + dagExec.getUuid() + "_"
 					+ indvStg.getStageId());

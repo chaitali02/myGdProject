@@ -272,12 +272,6 @@ public class ImpalaExecutor implements IExecutor {
 		return null;
 	}
 	@Override
-	public String generateFeatureData(Object object, List<Feature> features, int numIterations,
-			String tableName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
 	public String readFile(String clientContext, Datapod datapod, DataStore datastore, String tableName,
 			HDFSInfo hdfsInfo, Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
@@ -313,5 +307,21 @@ public class ImpalaExecutor implements IExecutor {
 			throws IOException, JAXBException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	@Override
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath,
+			Datapod datapod, String saveMode, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

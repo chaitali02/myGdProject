@@ -20,13 +20,13 @@ import org.springframework.stereotype.Component;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.enums.RunMode;
 
 @Component
 public class MapIterOperator extends MapOperator{
 	
 	public String generateSql(Map map, java.util.Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, HashMap<String, Object> operatorParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			HashMap<String, String> otherParams, HashMap<String, Object> operatorParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		StringBuilder finalBuilder = new StringBuilder();
 		StringBuilder selectScopeBuilder = new StringBuilder();

@@ -32,11 +32,11 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 @Component
@@ -56,7 +56,7 @@ public class RuleOperator implements Operator {
 	DataStoreServiceImpl datastoreServiceImpl;
 	
 	public String generateSql(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap,HashMap<String, String> otherParams, 
-								Set<MetaIdentifier> usedRefKeySet,	ExecParams execParams, Mode runMode) throws Exception {
+								Set<MetaIdentifier> usedRefKeySet,	ExecParams execParams, RunMode runMode) throws Exception {
 		return generateSelect(rule, refKeyMap, otherParams, execParams, runMode)
 				.concat(getFrom())
 				.concat(generateFrom(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
@@ -85,7 +85,7 @@ public class RuleOperator implements Operator {
 		return attrMapList;
 	}
 	
-	public String generateSelect(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Mode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String generateSelect(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// return ConstantsUtil.SELECT.concat("row_number() over (partition by 1) as rownum, ").concat(attributeMapOperator.generateSql(createAttrMap (rule, refKeyMap), rule.getSource(), refKeyMap, null));
 		attributeMapOperator.setRunMode(runMode);
 		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(createAttrMap (rule, refKeyMap), rule.getSource(), refKeyMap, otherParams, execParams));
@@ -96,7 +96,7 @@ public class RuleOperator implements Operator {
 	}
  	
 	public String generateFrom(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, Mode runMode) throws Exception {
+								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		Relation relation = null;
 		usedRefKeySet.add(rule.getSource().getRef());
@@ -144,7 +144,7 @@ public class RuleOperator implements Operator {
 
 	@Override
 	public void execute(OperatorType operatorType, ExecParams execParams, Object metaExec,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
 		
 	} 

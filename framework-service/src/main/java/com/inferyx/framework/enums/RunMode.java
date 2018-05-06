@@ -8,8 +8,8 @@
  *
  * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
  *******************************************************************************/
-package com.inferyx.framework.domain;
+package com.inferyx.framework.enums;
 
-public enum Mode {
+public enum RunMode {
 	ONLINE, BATCH
 }

@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
+import com.inferyx.framework.enums.RunMode;
 
 @Component
 public class ProfileOracleOperator extends ProfileOperator {
@@ -29,7 +29,7 @@ public class ProfileOracleOperator extends ProfileOperator {
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
-			String attrName, Mode runMode)
+			String attrName, RunMode runMode)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String sql = "";

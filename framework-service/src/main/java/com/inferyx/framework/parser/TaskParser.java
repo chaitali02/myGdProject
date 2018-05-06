@@ -21,9 +21,9 @@ import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.enums.RunMode;
 
 @Component
 public class TaskParser {
@@ -43,7 +43,7 @@ public class TaskParser {
 	}
 
 	public StringBuilder parseTask(DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList,
-			ExecParams execParams, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode)
+			ExecParams execParams, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;

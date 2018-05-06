@@ -37,8 +37,8 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.factory.RuleExecFactory;
@@ -153,7 +153,7 @@ public abstract class RuleTemplate {
 		return inputBaseRuleExec;
 	}
 	
-	public abstract BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, Mode runMode) throws Exception;
+	public abstract BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception;
 	
 	/**
 	 * Defines sample execute. Should be overridden if required.
@@ -169,7 +169,7 @@ public abstract class RuleTemplate {
 	 * @throws Exception
 	 */
 	public abstract BaseRuleExec execute(String uuid, String version, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception;
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception;
 	
 	/**
 	 * Defines sample execute. Should be overridden if required.
@@ -186,7 +186,7 @@ public abstract class RuleTemplate {
 	 */
 	@SuppressWarnings({ "unchecked", "static-access" })
 	public BaseRuleExec execute(String uuid, String version, MetaType type, MetaType execType, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside BaseRuleExec.execute ");
 		BaseRule baseRule = null;
 		

@@ -77,7 +77,6 @@ import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamList;
@@ -105,6 +104,7 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -3571,7 +3571,7 @@ public class RegisterService {
 
 	}
 
-	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, Mode runMode)
+	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode)
 			throws Exception {
 		if (type.equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return csvRegister.register(uuid, version, registryList, runMode);

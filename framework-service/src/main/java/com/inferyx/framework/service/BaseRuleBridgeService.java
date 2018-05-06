@@ -24,7 +24,7 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.enums.RunMode;
 
 /**
  * Defines how rule should be created, parsed and executed
@@ -54,7 +54,7 @@ public class BaseRuleBridgeService {
 	}
 	
 	public BaseRuleExec execute(String uuid, String version, MetaType type, MetaType execType, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		if (baseRuleExec == null) {
 			return null;
 		}
@@ -72,7 +72,7 @@ public class BaseRuleBridgeService {
 	}
 	
 	public BaseRuleExec parseAndExecute(String uuid, String version, MetaType type, MetaType execType, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		baseRuleExec = baseRuleServiceImpl.parse(uuid, version, null, null, null, null);
 		if (baseRuleExec == null) {
 			logger.info(" no Exec. So cannot proceed to execute ");

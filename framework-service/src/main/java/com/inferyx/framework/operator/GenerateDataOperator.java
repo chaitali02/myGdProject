@@ -25,10 +25,11 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.ParamListHolder;
+import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -40,7 +41,7 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
  *
  */
 @Service
-public class GenerateDistributionData implements Operator {
+public class GenerateDataOperator implements Operator {
 	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
@@ -53,12 +54,12 @@ public class GenerateDistributionData implements Operator {
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	
-	static final Logger logger = Logger.getLogger(JoinTablesOperator.class);
+	static final Logger logger = Logger.getLogger(GenerateDataOperator.class);
 
 	/**
 	 * 
 	 */
-	public GenerateDistributionData() {
+	public GenerateDataOperator() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -67,17 +68,17 @@ public class GenerateDistributionData implements Operator {
 	 */
 	@Override
 	public void execute(OperatorType operatorType, ExecParams execParams, Object metaExec,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 	
 		OperatorExec operatorExec = (OperatorExec) metaExec;
 		
-		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "DISTRIBUTION_INFO");
-		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "LOCATION_INFO");
-		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "NUMITERATIONS_INFO");
+		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "distribution");
+		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
+		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
 		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
 		MetaIdentifier datapodIdentifier = locationInfo.getAttributeInfo().get(0).getRef();
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
 		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(distributionInfo.getParamValue().getRef().getUuid(), distributionInfo.getParamValue().getRef().getVersion(), distributionInfo.getParamValue().getRef().getType().toString()); 
 		
 		List<ParamListHolder> distParamHolderList = new ArrayList<>();
@@ -92,57 +93,35 @@ public class GenerateDistributionData implements Operator {
 			}
 		}
 		distExecParam.setParamListInfo(distParamHolderList);
-		Object object = mlDistribution.getDistribution(distribution, distExecParam);
-		
-		List<Feature> features = new ArrayList<>();
+		Object distributionObject = mlDistribution.getDistribution(distribution, distExecParam);
 		
 		List<Attribute> attributes = new ArrayList<Attribute>();
 		int attributeId = 0;
-		Attribute attribute2 = new Attribute();
-		attribute2.setActive("Y");
-		attribute2.setAttributeId(attributeId);
-		attribute2.setDesc("id");
-		attribute2.setDispName("id");
-		attribute2.setName("id");
-		attribute2.setPartition("N");
-		attribute2.setType("integer");
-		attributes.add(attribute2);
-		attributeId++;
-		for(Attribute attribute : datapod.getAttributes()) {
-			for(AttributeRefHolder attributeRefHolder : locationInfo.getAttributeInfo())
-				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
-					Feature feature = new Feature();
-					feature.setName(attribute.getName());
-					features.add(feature);
+		for(Attribute attribute : locationDatapod.getAttributes()) {
+//			for(AttributeRefHolder attributeRefHolder : locationInfo.getAttributeInfo())
+//				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
 					attribute.setAttributeId(attributeId);
 					attributeId++;
 					attributes.add(attribute);
-				}			
-		}
+//				}			
+		}		
 		
-
-		Datapod dp = new Datapod();
-		dp.setBaseEntity();
-		dp.setName("distribution_"+datapod.getName());
-		dp.setAttributes(attributes);
-		dp.setDatasource(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion())));
-		commonServiceImpl.save(MetaType.datapod.toString(), dp);
+		String tableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
+		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, attributes, numIterations, operatorExec.getVersion());
 		
-		String tabName = exec.generateFeatureData(object, features, numIterations, ("tempDistributionTable"));
-		String sql = "SELECT * FROM " + tabName;
-		
-		String filePath = "/"+dp.getUuid() + "/" + dp.getVersion() + "/" + operatorExec.getVersion();
-		String fileName = String.format("%s_%s_%s", dp.getUuid().replace("-", "_"), dp.getVersion(), operatorExec.getVersion());
+		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + operatorExec.getVersion();
+		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
 		//dp.seta
-		exec.executeAndPersist(sql, filePath, datapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		exec.registerAndPersist(resultSetHolder, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, fileName, 
-				new MetaIdentifier(MetaType.datapod, dp.getUuid(), dp.getVersion()) 
+				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()) ,
-				operatorExec.getAppInfo(), operatorExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+				operatorExec.getAppInfo(), operatorExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+
 		operatorExec.setResult(resultRef);
 		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
 	}

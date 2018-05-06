@@ -37,7 +37,7 @@ import com.inferyx.framework.domain.DagWithParamsHolder;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DagExecServiceImpl;
 import com.inferyx.framework.service.DagServiceImpl;
 import com.inferyx.framework.service.RegisterService;
@@ -65,7 +65,7 @@ public class DagController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return dagServiceImpl.submitDag(uuid, execParams, MetaType.dag.toString(), runMode);
 	}
 	
@@ -94,7 +94,7 @@ public class DagController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return dagServiceImpl.submitDag(dagWithParams.getDag(), null, dagWithParams.getExecParams(), runMode);
 	}
 	
@@ -104,7 +104,7 @@ public class DagController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return dagServiceImpl.submitDagWithParamset(uuid, version, execParams, runMode);
 	}
 	
@@ -115,7 +115,7 @@ public class DagController {
     		@RequestBody(required=false)ExecParams execParams,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return dagServiceImpl.submitDag(dagExecUuid, dagExecVersion, execParams, type, runMode);
 	}
 	/*
@@ -246,7 +246,7 @@ public class DagController {
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
 		try {
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			dagServiceImpl.restart(dagExecUuid,dagExecVersion, runMode);
 		}catch (Exception e) {
 			e.printStackTrace();

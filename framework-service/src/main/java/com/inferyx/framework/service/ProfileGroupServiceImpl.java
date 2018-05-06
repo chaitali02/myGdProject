@@ -39,11 +39,11 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileGroup;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -380,7 +380,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 	 * @return
 	 * @throws Exception
 	 */
-	public MetaIdentifier execute(String profileGroupUUID, String profileGroupVersion,ExecParams execParams, ProfileGroupExec profileGroupExec, Mode runMode) throws Exception {
+	public MetaIdentifier execute(String profileGroupUUID, String profileGroupVersion,ExecParams execParams, ProfileGroupExec profileGroupExec, RunMode runMode) throws Exception {
 		return super.execute(profileGroupUUID, profileGroupVersion, MetaType.profilegroup, MetaType.profilegroupExec, MetaType.profile, MetaType.profileExec, execParams, profileGroupExec, runMode);
 	}
 	
@@ -392,7 +392,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 	 * @return
 	 * @throws Exception
 	 */
-	public BaseRuleGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, Mode runMode) throws Exception {
+	public BaseRuleGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		return super.parse(execUuid, execVersion, MetaType.profilegroup, MetaType.profilegroupExec, MetaType.profile, MetaType.profileExec, refKeyMap, datapodList, dagExec, runMode);
 	}
 	
@@ -403,7 +403,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 	 * @param version
 	 * @throws Exception
 	 */
-	public void restart(String type,String uuid,String version, Mode runMode) throws Exception{
+	public void restart(String type,String uuid,String version, RunMode runMode) throws Exception{
 		//ProfileGroupExec profileGroupExec= profileGroupExecServiceImpl.findOneByUuidAndVersion(uuid, version);
 		ProfileGroupExec profileGroupExec = (ProfileGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.profilegroupExec.toString());
 		profileGroupExec = (ProfileGroupExec) parse(profileGroupExec.getUuid(), profileGroupExec.getVersion(), null, null, null, runMode);

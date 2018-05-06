@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DatapodStatsHolder;
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 
@@ -54,7 +54,7 @@ public class DatapodController {
 				@RequestParam(value="requestId") String requestId, 
 				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
 	    		{
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 	    	return datastoreServiceImpl.getDatapodResults(dataStoreUUID, dataStoreVersion,format,offset,limit,response,rows,sortBy,order,requestId, runMode);
 	   	
 	   }
@@ -75,7 +75,7 @@ public class DatapodController {
 				@RequestParam(value="requestId",required = false) String requestId, 
 				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
 	    		{
-		    Mode runMode = Helper.getExecutionMode(mode);
+		    RunMode runMode = Helper.getExecutionMode(mode);
     	    response = datapodServiceImpl.download(datapodUUID, datapodVersion, format, offset, limit, response, rows,sortBy, order, requestId, runMode);
     	    return null;
 		
@@ -88,7 +88,7 @@ public class DatapodController {
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action, 
 				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception{
-		 	Mode runMode = Helper.getExecutionMode(mode);
+		 	RunMode runMode = Helper.getExecutionMode(mode);
 	    	return datastoreServiceImpl.getDatapodSample(datapodUUID,datapodVersion,rows, runMode);	   	
 	   }
 

@@ -46,7 +46,6 @@ import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
@@ -59,6 +58,7 @@ import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.DataSourceFactory;
 
 public class RunStageServiceImpl implements Callable<String> {
@@ -112,7 +112,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	MetadataUtil daoRegister;
 	DagExec dagExec;
 	Stage stage;
-	private Mode runMode;
+	private RunMode runMode;
 	private SessionContext sessionContext;
 	private ReconServiceImpl reconServiceImpl;
 	private ReconGroupServiceImpl reconGroupServiceImpl;
@@ -585,14 +585,14 @@ public class RunStageServiceImpl implements Callable<String> {
 	/**
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
 	/**
 	 * @param runMode the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 
@@ -1077,7 +1077,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	 * @param taskList
 	 * @throws JsonProcessingException 
 	 */
-	public void setTaskAndSubmit(TaskExec indvTaskExec, OrderKey datapodKey, Task indvTask, MetaIdentifierHolder operationInfoHolder, List<FutureTask> taskList, Mode runMode) throws JsonProcessingException {
+	public void setTaskAndSubmit(TaskExec indvTaskExec, OrderKey datapodKey, Task indvTask, MetaIdentifierHolder operationInfoHolder, List<FutureTask> taskList, RunMode runMode) throws JsonProcessingException {
 		TaskServiceImpl indivTaskExe = new TaskServiceImpl();
 		if (!dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.OnHold) 
 				&& !dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, indvTaskExec.getTaskId()).equals(Status.Stage.OnHold)) {

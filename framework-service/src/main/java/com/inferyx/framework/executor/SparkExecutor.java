@@ -45,6 +45,7 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
@@ -58,6 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
@@ -79,6 +81,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.reader.IReader;
@@ -128,8 +131,7 @@ public class SparkExecutor implements IExecutor {
 	@Autowired
 	private DataSourceFactory datasourceFactory;
 	@Autowired
-	private DataStoreServiceImpl dataStoreServiceImpl;
-	
+	private DataStoreServiceImpl dataStoreServiceImpl;	
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 
@@ -349,6 +351,32 @@ public class SparkExecutor implements IExecutor {
 		return rsHolder;
 	}
 
+	@Override
+	public ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath, Datapod datapod, String saveMode,
+			String clientContext) throws IOException {
+		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		Object obj = conHolder.getStmtObject();
+		Dataset<Row> df = null;
+		IWriter datapodWriter = null;
+		if (obj instanceof SparkSession) {
+			df = rsHolder.getDataFrame();
+			registerTempTable(df, tableName);
+			logger.info("temp table registered: " + tableName);
+			try {
+				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new IOException("Can not write data.");
+			}
+			datapodWriter.write(df, filePathUrl, datapod, saveMode);
+		}
+		return rsHolder;
+	}
+	
 	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
 			String saveMode, String clientContext) throws IOException {
@@ -978,6 +1006,65 @@ public class SparkExecutor implements IExecutor {
 	}*/
 
 	@Override
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) {
+		StructField[] fieldArray = new StructField[attributes.size()];
+		int count = 0;
+		
+		try {
+			double[] trialSample = (double[]) distributionObject.getClass().getMethod("sample").invoke(distributionObject);
+			int expectedNumcols = trialSample.length + 2;
+			if(attributes.size() < expectedNumcols)
+				throw new RuntimeException("Insufficient number of columns.");
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+//		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
+//		fieldArray[count] = idField;
+//		count++;
+		for(Attribute attribute : attributes){						
+			StructField field = new StructField(attribute.getName(), Helper.getDataType(attribute.getType()), true, Metadata.empty());
+//			StructField field = new StructField(attribute.getName(), DataTypes.DoubleType, true, Metadata.empty());
+			fieldArray[count] = field;
+			count ++;
+		}
+		StructType schema = new StructType(fieldArray);
+		
+		List<Row> rowList = new ArrayList<>();
+		for(int i=0; i<numIterations; i++) {
+			int genId = i+1;
+			Object obj;
+			try {
+				obj = distributionObject.getClass().getMethod("sample").invoke(distributionObject);
+				double[] trial = (double[]) obj;
+				List<Object> datasetList = new ArrayList<>();
+				datasetList.add(genId);
+				for(double val : trial) {
+					datasetList.add(val);
+				}
+				datasetList.add(execVersion);
+				rowList.add(RowFactory.create(datasetList.toArray()));
+				genId++;
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
+		df.printSchema();
+		df.show(false);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setDataFrame(df);
+		rsHolder.setType(ResultType.dataframe);	
+		rsHolder.setCountRows(df.count());
+		return rsHolder;
+	}
+
+	@Override
 	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
 		StructField[] fieldArray = new StructField[features.size()+1];
 		int count = 0;
@@ -1043,7 +1130,7 @@ public class SparkExecutor implements IExecutor {
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		return tableName;
 	}
-
+	
 	@Override
 	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
 		Dataset<Row> df = null;
@@ -1211,7 +1298,7 @@ public class SparkExecutor implements IExecutor {
 		for(Row row : covarsDf.collectAsList()) {
 			List<Double> covarsValList = new ArrayList<>();
 				for(String col : columnList)
-					covarsValList.add(row.getAs(col));
+					covarsValList.add(Double.parseDouble(row.getAs(col)));
 				covarsRowList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
 		}
 		
@@ -1228,10 +1315,14 @@ public class SparkExecutor implements IExecutor {
 		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
 		//Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getParamValue().getRef().getUuid(), paramListHolder.getParamValue().getRef().getVersion(), paramListHolder.getParamValue().getRef().getType().toString());
 		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-		String tableName = readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
+		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
+		logger.info("Table name:" + tableName);
+
+//		String tableName = readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
 		String sql = "SELECT * FROM " + tableName;
 		
 		Dataset<Row> meansDf = executeSql(sql, clientContext).getDataFrame();
+		meansDf.printSchema();
 		meansDf.show(false);
 
 		List<String> columnList = new ArrayList<>();
@@ -1245,7 +1336,7 @@ public class SparkExecutor implements IExecutor {
 		List<Double> meansValList = new ArrayList<>();
 		for(Row row : meansDf.collectAsList()) {
 				for(String col : columnList)
-					meansValList.add(row.getAs(col));
+					meansValList.add(Double.parseDouble(row.getAs(col)));
 		}		
 		double[] oneDArray = ArrayUtils.toPrimitive(meansValList.toArray(new Double[meansValList.size()]));
 		return oneDArray;
@@ -1372,4 +1463,5 @@ public class SparkExecutor implements IExecutor {
 		MetroJAXBUtil.marshalPMML(pmml, new FileOutputStream(new File(pmmlLocation), true));					
 		return true;
 	}
+
 }

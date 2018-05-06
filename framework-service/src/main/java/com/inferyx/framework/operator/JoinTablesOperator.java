@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.OperatorUtilServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
@@ -51,7 +51,7 @@ public class JoinTablesOperator implements com.inferyx.framework.operator.Operat
 						Object metaExec, 
 						java.util.Map<String, MetaIdentifier> refKeyMap, 
 						HashMap<String, String> otherParams, 
-						Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+						Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 //		OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(operator.getOperatorType().getRef().getUuid(), operator.getOperatorType().getRef().getVersion(), operator.getOperatorType().getRef().getType().toString());
 		ParamListHolder relationIdentifier = paramSetServiceImpl.getParamByName(execParams, "RELATION");
 		Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(relationIdentifier.getParamValue().getRef().getUuid(), relationIdentifier.getParamValue().getRef().getVersion(), relationIdentifier.getParamValue().getRef().getType().toString());

@@ -1,0 +1,58 @@
+{
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+            "version" : "1464977196"
+        }
+    },
+    "cache" : "Y",
+    "attributes" : [ 
+        {
+            "attributeId" : 0,
+            "name" : "id",
+            "type" : "integer",
+            "desc" : "id",
+            "dispName" : "id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 1,
+            "name" : "mean",
+            "type" : "integer",
+            "desc" : "mean",
+            "dispName" : "mean",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 2,
+            "name" : "version",
+            "type" : "String",
+            "desc" : "version",
+            "dispName" : "version",
+            "active" : "Y"
+        }
+    ],
+    "uuid" : "d7d39f87-faa1-4175-a952-bc8bab52465a",
+    "version" : "1525636303",
+    "name" : "industry_mean",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196"
+        }
+    },
+    "createdOn" : ISODate("2018-05-06T19:51:43.000Z"),
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

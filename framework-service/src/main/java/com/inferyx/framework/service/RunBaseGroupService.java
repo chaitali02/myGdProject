@@ -30,9 +30,9 @@ import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 
 /**
  * @author joy
@@ -51,7 +51,7 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 	protected MetaType execType;
 	protected MetaType groupExecType;
 	protected SessionContext sessionContext;
-	protected Mode runMode;
+	protected RunMode runMode;
 	
 	static final Logger logger = Logger.getLogger(RunBaseGroupService.class);
 
@@ -260,7 +260,7 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 	/**
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
@@ -268,7 +268,7 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 	/**
 	 * @param runMode the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 

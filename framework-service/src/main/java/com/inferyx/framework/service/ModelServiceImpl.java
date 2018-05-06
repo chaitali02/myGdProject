@@ -82,7 +82,6 @@ import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
@@ -98,6 +97,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SimulationType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -110,7 +110,7 @@ import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
-import com.inferyx.framework.operator.TransposeOperator;
+import com.inferyx.framework.operator.TransposeOldOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -153,7 +153,7 @@ public class ModelServiceImpl {
 	private AlgorithmServiceImpl algorithmServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	private Mode runMode;
+	private RunMode runMode;
 	@Autowired
 	private DataFrameService dataFrameService;
 	@Autowired
@@ -180,8 +180,6 @@ public class ModelServiceImpl {
 	private Math3Distribution mlDistribution;
 	@Autowired
 	private MonteCarloSimulation monteCarloSimulation;
-	@Autowired
-	private TransposeOperator transposeOperator;
 	
 	//private ParamMap paramMap;
 
@@ -245,14 +243,14 @@ public class ModelServiceImpl {
 	/**
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
 	/**
 	 * @param runMode the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 
@@ -794,7 +792,7 @@ public class ModelServiceImpl {
 		return logList;
 	}
 	
-	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,Mode runMode) throws Exception {
+	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,RunMode runMode) throws Exception {
 		
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(execUuid, execVersion);
 		String location = datastore.getLocation();
@@ -1012,7 +1010,7 @@ public class ModelServiceImpl {
 			}
 			
 			
-			dataStoreServiceImpl.setRunMode(Mode.BATCH);
+			dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 
 			dataStoreServiceImpl.create(filePathUrl, modelName,
 					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
@@ -1284,7 +1282,7 @@ public class ModelServiceImpl {
 		return trainExec;
 	}
 	
-public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVersion, HttpServletResponse response,Mode runMode) throws Exception {
+public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVersion, HttpServletResponse response,RunMode runMode) throws Exception {
 
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion,
 				MetaType.trainExec.toString());
@@ -1514,11 +1512,11 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			return sql;
 		} else if (source instanceof DataSet) {
 			DataSet dataset = (DataSet) source;
-			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, Mode.BATCH);
+			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, RunMode.BATCH);
 			return sql;
 		} else if (source instanceof Rule) {
 			Rule rule = (Rule) source;
-			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, Mode.BATCH);
+			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, RunMode.BATCH);
 			return sql;
 		}
 		return null;
@@ -1598,7 +1596,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 				result = filePathUrl;
 			}
 			
-			dataStoreServiceImpl.setRunMode(Mode.BATCH);
+			dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 			dataStoreServiceImpl.create(filePathUrl, modelName,
 					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
 					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),

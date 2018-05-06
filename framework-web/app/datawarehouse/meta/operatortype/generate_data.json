@@ -1,15 +1,12 @@
 {
-    "id" : ObjectId("5aebbc62364b6a6433287dbc"),
     "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
     "version" : "1495325960",
-    "name" : "GENERATE_DIST_DATA",
-    "desc" : "Generate Distribution.",
+    "name" : "Generate Data",
+    "desc" : "Generate Data using distribution.",
     "createdBy" : {
         "ref" : {
             "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : null
-           
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
         },
         "value" : null
     },
@@ -27,17 +24,13 @@
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
                 "version" : "1464977196"
                
-            },
-            "value" : null
+            }
         }
     ],
   "paramList": {
     "ref": {
       "type": "paramlist",
-      "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
-      "version": null
-      
-    },
-    "value": null
+      "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7"
+    }
   }
 }

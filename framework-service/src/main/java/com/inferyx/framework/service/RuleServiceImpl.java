@@ -60,7 +60,6 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
@@ -69,6 +68,7 @@ import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -371,7 +371,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 */
 
 	public void restart(String type, String uuid, String version, List<FutureTask<TaskHolder>> taskList,
-			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, Mode runMode) throws JsonProcessingException {
+			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, RunMode runMode) throws JsonProcessingException {
 		// RuleExec ruleExec= ruleExecServiceImpl.findOneByUuidAndVersion(uuid,
 		// version);
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
@@ -450,7 +450,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * @throws Exception
 	 */
 	public RuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor, RuleExec ruleExec,
-			RuleGroupExec ruleGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			RuleGroupExec ruleGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside ruleServiceImpl.execute");
 		try {
 			ruleExec = (RuleExec) super.execute(uuid, version, MetaType.rule, MetaType.ruleExec, metaExecutor, ruleExec,
@@ -513,7 +513,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	
 	
 	public List<Map<String, Object>> getRuleResults(String ruleExecUUID, String ruleExecVersion, int offset, int limit,
-			String sortBy, String order, String requestId, Mode runMode) throws Exception {
+			String sortBy, String order, String requestId, RunMode runMode) throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			limit = offset + limit;
@@ -737,7 +737,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 */
 	@Override
 	public RuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
-			List<String> datapodList, DagExec dagExec, Mode runMode) throws Exception {
+			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		logger.info("Inside ruleServiceImpl.parse");
 		Rule rule = null;
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
@@ -771,7 +771,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	@Override
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
-			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		return execute(uuid, version, metaExecutor, (RuleExec) baseRuleExec, (RuleGroupExec) baseGroupExec, taskList, execParams, 
 				runMode);
 	}
@@ -779,7 +779,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	
 	public HttpServletResponse download(String ruleExecUUID, String ruleExecVersion, String format, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 		
 		List<Map<String, Object>> results =getRuleResults(ruleExecUUID,ruleExecVersion,offset,limit,sortBy,order,requestId, runMode);
 		response = commonServiceImpl.download(ruleExecUUID, ruleExecVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec,ruleExecUUID,ruleExecVersion)));

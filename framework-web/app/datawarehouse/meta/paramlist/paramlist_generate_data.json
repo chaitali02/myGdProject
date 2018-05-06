@@ -1,9 +1,8 @@
 {
-  "id": "5aed92bbb1dfe345884c1066",
   "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
   "version": "1525519035",
-  "name": "paramlist_generate_dist",
-  "desc": null,
+  "name": "paramlist_generate_data",
+  "desc": "Generate Data Paramlist",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -13,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat May 05 16:47:15 IST 2018",
+  "createdOn" : ISODate("2018-04-28T07:46:18.669Z"),
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -31,23 +30,23 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "DISTRIBUTION_INFO",
+      "paramName": "distribution",
       "paramType": "distribution",
       "paramValue": null,
       "paramRef": null
     },
     {
       "paramId": "1",
-      "paramName": "LOCATION_INFO",
-      "paramType": "attribute",
-      "paramValue": null,
+      "paramName": "numIterations",
+      "paramType": "integer",
+      "paramValue": "1000",
       "paramRef": null
     },
     {
       "paramId": "2",
-      "paramName": "NUMITERATIONS_INFO",
-      "paramType": "integer",
-      "paramValue": "1000",
+      "paramName": "saveLocation",
+      "paramType": "attribute",
+      "paramValue": null,
       "paramRef": null
     }
   ]

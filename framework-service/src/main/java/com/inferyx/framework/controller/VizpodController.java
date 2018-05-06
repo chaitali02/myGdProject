@@ -31,8 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inferyx.framework.domain.VizpodDetailsHolder;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.VizpodResultHolder;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DagExecServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.VizpodServiceImpl;
@@ -93,7 +93,7 @@ public class VizpodController {
 			@RequestParam(value="requestId", required=false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		Mode runMode = Mode.BATCH;
+		RunMode runMode = RunMode.BATCH;
 		VizpodResultHolder resultHolder = vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, rows, offset, limit, sortBy, order, requestId, runMode);
 		if (resultHolder == null) {
 			return null;	
@@ -114,7 +114,7 @@ public class VizpodController {
 			@RequestParam(value="requestId", required=false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		Mode runMode = Mode.BATCH;
+		RunMode runMode = RunMode.BATCH;
 		VizpodDetailsHolder resultHolder = vizpodServiceImpl.getVizpodDetails(vizpodUUID, vizpodVersion, execParams, rows, offset, limit, sortBy, order, requestId, runMode);
 		if (resultHolder.getVizpodDetailsDataList() == null) {
 			return null;
@@ -161,7 +161,7 @@ public HttpServletResponse  download(@RequestParam(value= "vizpodUUID") String v
 			@RequestParam(value="requestId",required = false) String requestId, 
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
     		{
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		vizpodServiceImpl.download(vizpodUUID, vizpodVersion,format,execParams,download,offset,limit,response,rows,sortBy,order,requestId, runMode);
     	return null;
    }

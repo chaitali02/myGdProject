@@ -45,13 +45,13 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
@@ -59,7 +59,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.factory.OperatorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
-import com.inferyx.framework.operator.TransposeOperator;
+import com.inferyx.framework.operator.TransposeOldOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -112,7 +112,7 @@ public class OperatorServiceImpl {
 	@Autowired
 	MetadataUtil commonActivity;
 	@Autowired
-	private TransposeOperator transposeOperator;
+	private TransposeOldOperator transposeOldOperator;
 	
 	static final Logger logger = Logger.getLogger(OperatorServiceImpl.class);
 	
@@ -168,7 +168,7 @@ public class OperatorServiceImpl {
 						OperatorExec operatorExec, 
 						List<FutureTask<TaskHolder>> taskList, 
 						ExecParams execParams, 
-						Mode runMode) throws Exception {
+						RunMode runMode) throws Exception {
 		logger.info("Inside OperatorServiceImpl.execute");
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.NotStarted);
 		OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
@@ -276,13 +276,13 @@ public class OperatorServiceImpl {
 						Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodHolder.getRef().getUuid(), datapodHolder.getRef().getVersion(), datapodHolder.getRef().getType().toString());
 						DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(), datapod.getVersion());
 						String tabName = exec.readFile(appUuid, datapod, datastore, tableName, hdfsInfo, null, datasource);
-						String sql = transposeOperator.generateSql(datapod, tabName);
+						String sql = transposeOldOperator.generateSql(datapod, tabName);
 						result = exec.executeRegisterAndPersist(sql, tabName, filePath, datapod, SaveMode.Append.toString(), appUuid);
 					}
 				}
 			}
 			
-			dataStoreServiceImpl.setRunMode(Mode.BATCH);
+			dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 			dataStoreServiceImpl.create(filePathUrl, operatorName,
 					new MetaIdentifier(MetaType.operator, operator.getUuid(), operator.getVersion()),
 					new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()),
