@@ -136,7 +136,7 @@ public class GenerateDistributionData implements Operator {
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
 		//dp.seta
-		exec.executeRegisterAndPersist(sql, tabName, filePath, dp, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		exec.executeAndPersist(sql, filePath, datapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, fileName, 

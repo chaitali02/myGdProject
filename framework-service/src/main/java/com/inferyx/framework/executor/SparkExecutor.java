@@ -153,6 +153,7 @@ public class SparkExecutor implements IExecutor {
 				if (obj instanceof SparkSession) {
 					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 					Dataset<Row> df = sparkSession.sql(sql);
+					df.show();
 					rsHolder.setDataFrame(df);
 					rsHolder.setType(ResultType.dataframe);
 				}
