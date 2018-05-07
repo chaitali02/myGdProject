@@ -33,10 +33,10 @@ import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -61,7 +61,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected String name;
 	protected MetaType ruleExecType;
 	protected SessionContext sessionContext;
-	protected Mode runMode;
+	protected RunMode runMode;
 	protected Datasource datasource;
 	protected DatapodRegister datapodRegister;
 	ConnectionFactory connFactory;
@@ -335,7 +335,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	/**
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
@@ -344,7 +344,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	/**
 	 * @param runMode the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 
@@ -461,7 +461,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @param resultRef
 	 * @throws Exception
 	 */
-	protected void persistDatastore(String tableName, String filePath, MetaIdentifierHolder resultRef,MetaIdentifier datapodKey, long countRows, Mode runMode) throws Exception {
+	protected void persistDatastore(String tableName, String filePath, MetaIdentifierHolder resultRef,MetaIdentifier datapodKey, long countRows, RunMode runMode) throws Exception {
 		/*DataStore ds = new DataStore();
 		ds.setCreatedBy(baseRuleExec.getCreatedBy());*/
 		dataStoreServiceImpl.setRunMode(runMode);
@@ -510,7 +510,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			ExecContext execContext = null;
 			String appUuid = null;
 			
-			if (runMode == null || runMode.equals(Mode.ONLINE)) {
+			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
 				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
 						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
 				appUuid = commonServiceImpl.getApp().getUuid();
@@ -523,7 +523,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			Datapod datapod = null;
 			ResultSetHolder rsHolder = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
-			if (runMode!= null && runMode.equals(Mode.BATCH)) {
+			if (runMode!= null && runMode.equals(RunMode.BATCH)) {
 				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
 				if(execContext.equals(ExecContext.FILE)
 						|| execContext.equals(ExecContext.livy_spark)

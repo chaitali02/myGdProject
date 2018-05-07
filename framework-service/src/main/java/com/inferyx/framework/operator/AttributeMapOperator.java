@@ -38,9 +38,9 @@ import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.DatasetServiceImpl;
@@ -67,7 +67,7 @@ public class AttributeMapOperator {
 	@Autowired
 	protected FunctionOperator functionOperator;
 	@Autowired protected ParamSetServiceImpl paramSetServiceImpl;
-	private Mode runMode;
+	private RunMode runMode;
 	
 	static final Logger logger = Logger.getLogger(AttributeMapOperator.class);
 
@@ -76,7 +76,7 @@ public class AttributeMapOperator {
 	 *
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
@@ -85,7 +85,7 @@ public class AttributeMapOperator {
 	 *
 	 * @param runMode the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 

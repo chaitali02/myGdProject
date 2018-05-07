@@ -30,10 +30,10 @@ import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FormulaType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.domain.Vizpod.AttributeDetails;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.ExpressionOperator;
 import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.FormulaOperator;
@@ -75,7 +75,7 @@ public class VizpodParser {
 
 	static final Logger logger = Logger.getLogger(VizpodParser.class);
 
-	public String toSql(Vizpod vizpod, String tableName, Set<MetaIdentifier> usedRefKeySet, Mode runMode,boolean flag) throws Exception {
+	public String toSql(Vizpod vizpod, String tableName, Set<MetaIdentifier> usedRefKeySet, RunMode runMode,boolean flag) throws Exception {
 		// Formation of SQL query
 		StringBuilder selectBuilder = new StringBuilder();
 		StringBuilder fromBuilder = new StringBuilder();

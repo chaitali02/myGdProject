@@ -36,12 +36,12 @@ import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -67,7 +67,7 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	protected MapExecServiceImpl mapExecServiceImpl;
 	protected CommonServiceImpl<?> commonServiceImpl;
 	private SecurityServiceImpl securityServiceImpl;
-	private Mode runMode;
+	private RunMode runMode;
 	private	Engine engine;
 	protected Helper helper;
 	protected SessionContext sessionContext;
@@ -143,14 +143,14 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	/**
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
 	/**
 	 * @param runMode the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 

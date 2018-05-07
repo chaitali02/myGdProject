@@ -79,12 +79,12 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.UploadExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
@@ -403,7 +403,7 @@ public class DatapodServiceImpl {
 
 	}
 
-	public MetaIdentifierHolder createAndLoad(String csvFileName, Mode runMode) throws Exception {		
+	public MetaIdentifierHolder createAndLoad(String csvFileName, RunMode runMode) throws Exception {		
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
 		// Check if datapod exists
@@ -518,7 +518,7 @@ public class DatapodServiceImpl {
 		//Create Load exec and datastore
 		LoadExec loadExec = null;
 		loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), null/*, null*/, Mode.BATCH);
+		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), null/*, null*/, RunMode.BATCH);
 		
 		return new MetaIdentifierHolder(loadExec.getRef(MetaType.loadExec));
 	}
@@ -1106,7 +1106,7 @@ public class DatapodServiceImpl {
 			LoadExec loadExec = null;
 			loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
 			
-			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), null/*, null*/, Mode.BATCH);
+			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), null/*, null*/, RunMode.BATCH);
 		
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
@@ -1120,7 +1120,7 @@ public class DatapodServiceImpl {
 
 	public HttpServletResponse download(String uuid, String version, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 		datastoreServiceImpl.setRunMode(runMode);
 		DataStore ds = datastoreServiceImpl.findDataStoreByMeta(uuid, version);
 		if (ds == null) {

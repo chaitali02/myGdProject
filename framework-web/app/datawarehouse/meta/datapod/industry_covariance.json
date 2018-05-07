@@ -1,0 +1,74 @@
+{
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+            "version" : "1464977196"
+        }
+    },
+    "cache" : "Y",
+    "attributes" : [ 
+        {
+            "attributeId" : 0,
+            "name" : "id",
+            "type" : "integer",
+            "desc" : "id",
+            "dispName" : "id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 1,
+            "name" : "automobile",
+            "type" : "double",
+            "desc" : "automobile",
+            "dispName" : "automobile",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 2,
+            "name" : "pharma",
+            "type" : "double",
+            "desc" : "pharma",
+            "dispName" : "pharma",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 3,
+            "name" : "finance",
+            "type" : "double",
+            "desc" : "finance",
+            "dispName" : "finance",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 4,
+            "name" : "version",
+            "type" : "String",
+            "desc" : "version",
+            "dispName" : "version",
+            "active" : "Y"
+        }
+    ],
+    "uuid" : "5b3c8a96-ea4f-430c-866f-36e9cf06eec8",
+    "version" : "1525636110",
+    "name" : "industry_covariance",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196"
+        }
+    },
+    "createdOn" : ISODate("2018-05-06T19:48:30.000Z"),
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

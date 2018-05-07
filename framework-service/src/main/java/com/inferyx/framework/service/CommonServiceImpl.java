@@ -143,7 +143,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -155,6 +154,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -2900,7 +2900,7 @@ public class CommonServiceImpl <T> {
 
 		public HttpServletResponse download(String uuid, String version, String format, int offset,
 				int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-				Mode runMode, List<Map<String, Object>> results,MetaType metaType, MetaIdentifierHolder dependsOn) throws Exception {
+				RunMode runMode, List<Map<String, Object>> results,MetaType metaType, MetaIdentifierHolder dependsOn) throws Exception {
 			
 			String downloadPath = Helper.getPropertyValue("framework.file.download.path");
 	       DownloadExec downloadExec=new DownloadExec();

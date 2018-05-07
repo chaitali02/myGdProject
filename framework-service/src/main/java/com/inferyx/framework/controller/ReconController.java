@@ -32,10 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.RuleGroupExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
@@ -65,7 +65,7 @@ public class ReconController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		ReconExec reconExec = reconServiceImpl.create(reconUuid, reconVersion, null, null, null);
 		reconExec = (ReconExec) reconServiceImpl.parse(reconExec.getUuid(), reconExec.getVersion(), null, null, null,
@@ -80,7 +80,7 @@ public class ReconController {
 			@RequestParam("type") String type, @RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			if (type.equalsIgnoreCase(MetaType.reconExec.toString())) {
 				reconServiceImpl.restart(type, uuid, version, null, runMode);
 			} else {
@@ -123,7 +123,7 @@ public class ReconController {
 			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		reconServiceImpl.download(reconExecUUID, reconExecVersion, format, download, offset, limit, response, rows,
 				sortBy, order, requestId, runMode);
 		return null;
@@ -148,7 +148,7 @@ public class ReconController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, SQLException, JSONException {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return reconServiceImpl.getReconResults(reconExecUuid, reconExecVersion, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
@@ -159,7 +159,7 @@ public class ReconController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		ReconGroupExec reconGroupExec = null;
 		reconGroupExec = reconGroupServiceImpl.create(reconGroupUUID, reconGroupVersion, execParams, null, null, null);
 		reconGroupExec = reconGroupServiceImpl.parse(reconGroupExec.getUuid(), reconGroupExec.getVersion(), null, null, null, runMode);

@@ -37,9 +37,9 @@ import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.ProfileOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ProfileExecServiceImpl;
@@ -74,7 +74,7 @@ public class ProfileController {
 	public ProfileExec execute(@RequestParam("uuid") String profileUUID, 
 			@RequestParam("version") String profileVersion, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		ProfileExec profileExec = profileServiceImpl.create(profileUUID, profileVersion,null,null, null, null);
 		profileExec = (ProfileExec) profileServiceImpl.parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null, runMode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
@@ -90,7 +90,7 @@ public class ProfileController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		ProfileGroupExec profileGroupExec = profileGroupServiceImpl.create(profileGroupUUID, profileGroupVersion, execParams, null, null);
 		profileGroupExec = (ProfileGroupExec) profileGroupServiceImpl.parse(profileGroupExec.getUuid(), profileGroupExec.getVersion(), null, null, null, runMode);
 		return profileGroupServiceImpl.execute(profileGroupUUID, profileGroupVersion, execParams, profileGroupExec, runMode);
@@ -108,7 +108,7 @@ public class ProfileController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return profileServiceImpl.getProfileResults(profileExecUUID, profileExecVersion, offset, limit, sortBy, order,
 				requestId, runMode);
 	}
@@ -181,7 +181,7 @@ public class ProfileController {
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 			try {
-				Mode runMode = Helper.getExecutionMode(mode);
+				RunMode runMode = Helper.getExecutionMode(mode);
 				if(type.equalsIgnoreCase(MetaType.profileExec.toString())){
 					profileServiceImpl.restart(type,uuid,version, null, runMode);
 				}
@@ -208,7 +208,7 @@ public class ProfileController {
 				@RequestParam(value="requestId",required = false) String requestId, 
 				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode, HttpServletResponse response) throws Exception
 	    		{
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			profileServiceImpl.download(profileExecUUID, profileExecVersion,format,download,offset,limit,response,rows,sortBy,order,requestId, runMode);
 	    	return null;
 	   }
@@ -227,7 +227,7 @@ public class ProfileController {
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws IOException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, SQLException, JSONException {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return profileServiceImpl.getProfileResults(datapodUuid, datapodVersion, attributeId, profileAttrType, numDays,
 				startDate, endDate);
 	}

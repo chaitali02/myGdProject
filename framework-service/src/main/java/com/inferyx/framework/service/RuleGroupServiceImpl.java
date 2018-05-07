@@ -42,11 +42,11 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleGroup;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -280,7 +280,7 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 							MetaType.ruleExec, execParams, datapodList, ruleGroupExec, dagExec);
 	}	
 	
-	public MetaIdentifier execute(String ruleGroupUUID, String ruleGroupVersion, ExecParams execParams, RuleGroupExec ruleGroupExec, Mode runMode) throws Exception {
+	public MetaIdentifier execute(String ruleGroupUUID, String ruleGroupVersion, ExecParams execParams, RuleGroupExec ruleGroupExec, RunMode runMode) throws Exception {
 		return super.execute(ruleGroupUUID, ruleGroupVersion, MetaType.rulegroup, MetaType.rulegroupExec, MetaType.rule, MetaType.ruleExec, execParams, ruleGroupExec, runMode);
 	}
 
@@ -309,7 +309,7 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 		return refMeta;
 	}*/
 	
-	public void restart(String type,String uuid,String version, Mode runMode) throws Exception{
+	public void restart(String type,String uuid,String version, RunMode runMode) throws Exception{
 		//RuleGroupExec ruleGroupExec= ruleGroupExecServiceImpl.findOneByUuidAndVersion(uuid, version);
 		RuleGroupExec ruleGroupExec = (RuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.rulegroupExec.toString());
 //		try {
@@ -322,7 +322,7 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 		
 	}
 
-	public RuleGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, Mode runMode)
+	public RuleGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		return (RuleGroupExec) super.parse(execUuid, execVersion, MetaType.rulegroup, MetaType.rulegroupExec, MetaType.rule, MetaType.ruleExec, refKeyMap, datapodList, dagExec, runMode);
 	}

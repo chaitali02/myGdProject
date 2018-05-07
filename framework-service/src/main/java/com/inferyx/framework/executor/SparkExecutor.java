@@ -17,6 +17,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,7 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
@@ -56,11 +59,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataFrameHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -68,22 +73,27 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
+import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
 import scala.collection.Iterator;
 import scala.collection.Seq;
+import scala.collection.mutable.WrappedArray;
 
 @Component
 public class SparkExecutor implements IExecutor {
@@ -120,7 +130,8 @@ public class SparkExecutor implements IExecutor {
 	private MetadataUtil daoRegister;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
-	
+	@Autowired
+	private DataStoreServiceImpl dataStoreServiceImpl;	
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 
@@ -144,6 +155,7 @@ public class SparkExecutor implements IExecutor {
 				if (obj instanceof SparkSession) {
 					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 					Dataset<Row> df = sparkSession.sql(sql);
+					df.show();
 					rsHolder.setDataFrame(df);
 					rsHolder.setType(ResultType.dataframe);
 				}
@@ -340,6 +352,32 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
+	public ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath, Datapod datapod, String saveMode,
+			String clientContext) throws IOException {
+		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		Object obj = conHolder.getStmtObject();
+		Dataset<Row> df = null;
+		IWriter datapodWriter = null;
+		if (obj instanceof SparkSession) {
+			df = rsHolder.getDataFrame();
+			registerTempTable(df, tableName);
+			logger.info("temp table registered: " + tableName);
+			try {
+				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new IOException("Can not write data.");
+			}
+			datapodWriter.write(df, filePathUrl, datapod, saveMode);
+		}
+		return rsHolder;
+	}
+	
+	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
 			String saveMode, String clientContext) throws IOException {
 		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
@@ -354,7 +392,7 @@ public class SparkExecutor implements IExecutor {
 			// hiveContext = (HiveContext) conHolder.getStmtObject();
 			rsHolder = executeAndRegister(sql, tableName, clientContext);
 			df = rsHolder.getDataFrame();
-			df.show();
+			df.show(false);
 			try {
 				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -575,7 +613,7 @@ public class SparkExecutor implements IExecutor {
 			df = dataFrameHolder.getDataframe();
 		}
 		df.printSchema();
-		df.show();
+		df.show(false);
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
 			strList.add(row.toString());
@@ -586,9 +624,11 @@ public class SparkExecutor implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		Dataset<Row> dfTmp = sparkSession.read().format("com.databricks.spark.csv").option("inferSchema", "true")
-				.option("header", "true").load(load.getSource().getValue());
-		long count = dfTmp.count();
+		Dataset<Row> dfTmp = sparkSession.read().format("com.databricks.spark.csv")
+												.option("dateFormat", "dd-MM-yyyy")
+												.option("inferSchema", "false")
+												.option("header", "true").load(load.getSource().getValue());
+										long count = dfTmp.count();
 		// sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
 		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, "dfLoadTemp");
 		ResultSetHolder rsHolder = executeSql(
@@ -894,7 +934,7 @@ public class SparkExecutor implements IExecutor {
 				
 				VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 				Dataset<Row> assembledDf = va.transform(df);
-				assembledDf.show();
+				assembledDf.show(false);
 				sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 				String sql = simulateMLOperator.parse(simulate, model, assembledDf, fieldArray, tableName, filePathUrl, filePath);
 				logger.info("Parsed sql : " + sql);
@@ -909,7 +949,7 @@ public class SparkExecutor implements IExecutor {
 				Dataset<Row> df = simulateMLOperator.generateDataframe(simulate, model, tableName);
 				VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 				Dataset<Row> assembledDf = va.transform(df);
-				assembledDf.show();
+				assembledDf.show(false);
 				
 				return simulateMLOperator.execute(simulate, model, algorithm, target, latestTrainExec, fieldArray,
 						targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, assembledDf, clientContext);
@@ -940,13 +980,18 @@ public class SparkExecutor implements IExecutor {
 			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
 			df = dataFrameHolder.getDataframe();
 		}
-		df.show();
+		df.printSchema();
+		df.show(false);
 		String[] columns = df.columns();
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
+			//Double[] obj2 = (Double[]) ((WrappedArray<?>)row.get(0)).array();
 			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			//Map<String, Object> object2 = new LinkedHashMap<String, Object>(columns.length);
 			for (String column : columns) {
-				object.put(column, (row.getAs(column)==null ? "":row.getAs(column).toString()) );
+				object.put(column, (row.getAs(column)==null ? "":
+					(row.getAs(column) instanceof WrappedArray<?>) ? Arrays.toString((Double[])((WrappedArray<?>)row.getAs(column)).array()) : row.getAs(column).toString()) );
+				//object2.put(column, Arrays.toString(obj2));
 			}
 			data.add(object);
 		}
@@ -961,11 +1006,83 @@ public class SparkExecutor implements IExecutor {
 	}*/
 
 	@Override
-	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
-		StructField[] fieldArray = new StructField[features.size()];
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) {
+		StructField[] fieldArray = new StructField[attributes.size()];
 		int count = 0;
+		
+		try {
+			double[] trialSample = (double[]) distributionObject.getClass().getMethod("sample").invoke(distributionObject);
+			int expectedNumcols = trialSample.length + 2;
+			if(attributes.size() < expectedNumcols)
+				throw new RuntimeException("Insufficient number of columns.");
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+//		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
+//		fieldArray[count] = idField;
+//		count++;
+		for(Attribute attribute : attributes){						
+			StructField field = new StructField(attribute.getName(), Helper.getDataType(attribute.getType()), true, Metadata.empty());
+//			StructField field = new StructField(attribute.getName(), DataTypes.DoubleType, true, Metadata.empty());
+			fieldArray[count] = field;
+			count ++;
+		}
+		StructType schema = new StructType(fieldArray);
+		
+		List<Row> rowList = new ArrayList<>();
+		for(int i=0; i<numIterations; i++) {
+			int genId = i+1;
+			Object obj;
+			try {
+				obj = distributionObject.getClass().getMethod("sample").invoke(distributionObject);
+				double[] trial = (double[]) obj;
+				List<Object> datasetList = new ArrayList<>();
+				datasetList.add(genId);
+				for(double val : trial) {
+					datasetList.add(val);
+				}
+				datasetList.add(execVersion);
+				rowList.add(RowFactory.create(datasetList.toArray()));
+				genId++;
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
+		df.printSchema();
+		df.show(false);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setDataFrame(df);
+		rsHolder.setType(ResultType.dataframe);	
+		rsHolder.setCountRows(df.count());
+		return rsHolder;
+	}
+
+	@Override
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
+		StructField[] fieldArray = new StructField[features.size()+1];
+		int count = 0;
+		
+		try {
+			double[] trialTemp = (double[]) object.getClass().getMethod("sample").invoke(object);
+			if(features.size() != trialTemp.length)
+				throw new RuntimeException("Insufficient number of columns.");
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
+		fieldArray[count] = idField;
+		count++;
 		for(Feature feature : features){
-			StructField field = new StructField(feature.getName(), DataTypes.DoubleType, true, Metadata.empty());
+			StructField field = new StructField(feature.getName(), /*DataTypes.createArrayType(*/DataTypes.DoubleType/*)*/, true, Metadata.empty());
 			
 			fieldArray[count] = field;
 			count ++;
@@ -975,15 +1092,23 @@ public class SparkExecutor implements IExecutor {
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<numIterations; i++) {
 			List<Double> colList = new ArrayList<>();
+			int genId = i;
 			for(int j=0; j<features.size(); j++) {	
 				try {
 					Double totalVal = 0.0;
 					//double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
 					Object obj = object.getClass().getMethod("sample").invoke(object);
 					Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
-					if(returnType.isArray()) {
+					/*if(returnType.isArray()) {*/
 						double[] trial = (double[]) obj;
-					for(double val : trial)
+						List<Object> datasetList = new ArrayList<>();
+						datasetList.add(genId);
+						for(double val : trial)
+							datasetList.add(val);
+						//rowList.add(RowFactory.create(genId, trial[0], trial[1], trial[2]));
+						rowList.add(RowFactory.create(datasetList.toArray()));
+						genId++;
+					/*for(double val : trial)
 						totalVal +=val;
 					} else if(returnType.isPrimitive()) {
 						if(!returnType.getName().equalsIgnoreCase("double"))
@@ -991,22 +1116,21 @@ public class SparkExecutor implements IExecutor {
 						else
 							totalVal = (Double) obj;
 					}
-					colList.add(totalVal);
+					colList.add(totalVal);*/
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 						| NoSuchMethodException | SecurityException e) {
 					e.printStackTrace();
 				}
 			}
-			rowList.add(RowFactory.create(colList.toArray()));
 		}
 		
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
-		df.show();
 		df.printSchema();
+		df.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		return tableName;
 	}
-
+	
 	@Override
 	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
 		Dataset<Row> df = null;
@@ -1024,7 +1148,7 @@ public class SparkExecutor implements IExecutor {
 		
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		df = sparkSession.sqlContext().sql(query);
-		df.show();
+		df.show(false);
 		return tableName;
 	}
 	
@@ -1036,7 +1160,7 @@ public class SparkExecutor implements IExecutor {
 			df = df.withColumnRenamed(df.columns()[0], fieldArray[0]);
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> assembledDf = va.transform(df);
-		assembledDf.show();
+		assembledDf.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 		return tableName;
 	}
@@ -1063,7 +1187,7 @@ public class SparkExecutor implements IExecutor {
 			transformedDf = va.transform(df);
 		}
 		transformedDf.printSchema();
-		transformedDf.show();
+		transformedDf.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(transformedDf, tableName);
 		return va;
 	}
@@ -1093,7 +1217,7 @@ public class SparkExecutor implements IExecutor {
 		DataFrameHolder covsHolder = datapodReader.read(factorCovarianceDp, factorCovarianceDs, hdfsInfo, sparkSession, datasource);
 		
 		Dataset<Row> covarsDf = covsHolder.getDataframe();
-		covarsDf.show();
+		covarsDf.show(false);
 		
 		List<String> covarColList = new ArrayList<>();
 		for(int i=0; i<factorCovarianceDp.getAttributes().size(); i++) {
@@ -1120,14 +1244,6 @@ public class SparkExecutor implements IExecutor {
 	 * @param factorMeanDs
 	 * @param hdfsInfo
 	 * @return
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws ParseException
 	 *//*
 	@Override
 	public double[] oneDArrayFromDatapod (Datapod factorMeanDp, DataStore factorMeanDs, HDFSInfo hdfsInfo) 
@@ -1138,7 +1254,7 @@ public class SparkExecutor implements IExecutor {
 		IReader datapodReader = dataSourceFactory.getDatapodReader(factorMeanDp, commonActivity);
 		DataFrameHolder meansHolder = datapodReader.read(factorMeanDp, factorMeanDs, hdfsInfo, sparkSession, datasource);
 		Dataset<Row> meansDf = meansHolder.getDataframe();
-		meansDf.show();
+		meansDf.show(false);
 		
 		for(int i=0; i<factorMeanDp.getAttributes().size(); i++) {
 			meanColList.add(factorMeanDp.getAttributes().get(i).getName());
@@ -1155,51 +1271,75 @@ public class SparkExecutor implements IExecutor {
 	}*/
 	
 	@Override
-	public double[][] twoDArrayFromDatapod(String tableName, Datapod factorCovarianceDp, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public double[][] twoDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+			throws InterruptedException, ExecutionException, Exception {
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		
+		MetaIdentifier datapodIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
+		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
+		//Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getParamValue().getRef().getUuid(), paramListHolder.getParamValue().getRef().getVersion(), paramListHolder.getParamValue().getRef().getType().toString());
+		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
+		String tableName = readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
+		
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> covarsDf = executeSql(sql, clientContext).getDataFrame();
-		covarsDf.show();
+		covarsDf.show(false);
 		
 		
-		List<String> covarColList = new ArrayList<>();
-		for(int i=0; i<factorCovarianceDp.getAttributes().size(); i++) {
-				covarColList.add(factorCovarianceDp.getAttributes().get(i).getName());
-		}	
+		List<String> columnList = new ArrayList<>();
+		for(Attribute attribute : paramDp.getAttributes())
+			for(AttributeRefHolder attributeRefHolder : paramListHolder.getAttributeInfo()) {
+				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
+					columnList.add(attribute.getName());
+				}
+			}	
 		
 		List<double[]> covarsRowList = new ArrayList<>();
 		for(Row row : covarsDf.collectAsList()) {
 			List<Double> covarsValList = new ArrayList<>();
-				for(String col : covarColList)
-					covarsValList.add(row.getAs(col));
+				for(String col : columnList)
+					covarsValList.add(Double.parseDouble(row.getAs(col)));
 				covarsRowList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
 		}
 		
-		double[][] factorCovariances = covarsRowList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
-		return factorCovariances;
+		double[][] twoDArray = covarsRowList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
+		return twoDArray;
 	}
 
 	@Override
-	public double[] oneDArrayFromDatapod(String tableName, Datapod factorMeanDp, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String sql = "SELECT * FROM " + tableName;
-		Dataset<Row> meansDf = executeSql(sql, clientContext).getDataFrame();
-		meansDf.show();
+	public double[] oneDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+			throws InterruptedException, ExecutionException, Exception {
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		
+		MetaIdentifier datapodIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
+		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
+		//Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getParamValue().getRef().getUuid(), paramListHolder.getParamValue().getRef().getVersion(), paramListHolder.getParamValue().getRef().getType().toString());
+		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
+		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
+		logger.info("Table name:" + tableName);
 
-		List<String> meanColList = new ArrayList<>();
-		for(int i=0; i<factorMeanDp.getAttributes().size(); i++) {
-			meanColList.add(factorMeanDp.getAttributes().get(i).getName());
-		}			
+//		String tableName = readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
+		String sql = "SELECT * FROM " + tableName;
+		
+		Dataset<Row> meansDf = executeSql(sql, clientContext).getDataFrame();
+		meansDf.printSchema();
+		meansDf.show(false);
+
+		List<String> columnList = new ArrayList<>();
+		for(Attribute attribute : paramDp.getAttributes())
+			for(AttributeRefHolder attributeRefHolder : paramListHolder.getAttributeInfo()) {
+				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
+					columnList.add(attribute.getName());
+				}
+			}			
 		
 		List<Double> meansValList = new ArrayList<>();
 		for(Row row : meansDf.collectAsList()) {
-				for(String col : meanColList)
-					meansValList.add(row.getAs(col));
+				for(String col : columnList)
+					meansValList.add(Double.parseDouble(row.getAs(col)));
 		}		
-		double[] factorMeans = ArrayUtils.toPrimitive(meansValList.toArray(new Double[meansValList.size()]));
-		return factorMeans;
+		double[] oneDArray = ArrayUtils.toPrimitive(meansValList.toArray(new Double[meansValList.size()]));
+		return oneDArray;
 	}
 	
 	@Override
@@ -1209,7 +1349,7 @@ public class SparkExecutor implements IExecutor {
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
 				.invoke(trainedModel, df);
-		predictionDf.show();
+		predictionDf.show(false);
 
 		String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
 
@@ -1236,7 +1376,7 @@ public class SparkExecutor implements IExecutor {
 			dfTask.cache();
 
 			sqlContext.registerDataFrameAsTable(dfTask, tableName);
-			dfTask.show();
+			dfTask.show(false);
 			dfTask.printSchema();
 			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 			datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
@@ -1295,7 +1435,7 @@ public class SparkExecutor implements IExecutor {
 			
 			trainedDataSet = trngModel.transform(validateDf);
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-			trainedDataSet.show();
+			trainedDataSet.show(false);
 			return trngModel;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -1323,4 +1463,5 @@ public class SparkExecutor implements IExecutor {
 		MetroJAXBUtil.marshalPMML(pmml, new FileOutputStream(new File(pmmlLocation), true));					
 		return true;
 	}
+
 }

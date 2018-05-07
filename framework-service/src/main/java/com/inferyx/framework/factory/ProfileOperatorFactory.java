@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.operator.ProfileHiveOperator;
 import com.inferyx.framework.operator.ProfileImpalaOperator;
@@ -63,7 +63,7 @@ public class ProfileOperatorFactory /*extends OperatorFactory*/ {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public ProfileOperator getOperator(Mode runMode) {
+	public ProfileOperator getOperator(RunMode runMode) {
 		
 		Datasource datasource = null;
 		try {
@@ -75,7 +75,7 @@ public class ProfileOperatorFactory /*extends OperatorFactory*/ {
 		}
 		String datasourceName = datasource.getType();
 		String sql = "";
-		if (runMode.equals(Mode.ONLINE)) {
+		if (runMode.equals(RunMode.ONLINE)) {
 			if(datasourceName.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 				datasourceName = ExecContext.MYSQL.toString();
 			}

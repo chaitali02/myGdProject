@@ -16,7 +16,7 @@ import org.apache.spark.sql.SaveMode;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.enums.RunMode;
 
 public class RunRuleServiceImpl extends RunBaseRuleService {
 
@@ -31,7 +31,7 @@ public class RunRuleServiceImpl extends RunBaseRuleService {
 	 * @throws Exception
 	 */
 	@Override
-	protected void persistDatastore(String tableName, String filePath, MetaIdentifierHolder resultRef,MetaIdentifier datapodKey, long countRows, Mode runMode) throws Exception {
+	protected void persistDatastore(String tableName, String filePath, MetaIdentifierHolder resultRef,MetaIdentifier datapodKey, long countRows, RunMode runMode) throws Exception {
 		/*DataStore ds = new DataStore();
 		ds.setCreatedBy(baseRuleExec.getCreatedBy());*/
 		dataStoreServiceImpl.setRunMode(runMode);

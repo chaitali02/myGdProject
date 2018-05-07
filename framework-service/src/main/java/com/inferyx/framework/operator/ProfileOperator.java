@@ -25,10 +25,10 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.FuncType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -45,12 +45,12 @@ public class ProfileOperator {
 
 	static final Logger logger = Logger.getLogger(ProfileOperator.class);
 	Datapod dp;
-	Mode runMode;
+	RunMode runMode;
 
 	/**
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
@@ -58,12 +58,12 @@ public class ProfileOperator {
 	 * @param runMode
 	 *            the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String attrId, List<String> datapodList,
-			DagExec dagExec, Mode runMode) throws NumberFormatException, Exception {
+			DagExec dagExec, RunMode runMode) throws NumberFormatException, Exception {
 		if (profile == null) {
 			return null;
 		}
@@ -80,13 +80,13 @@ public class ProfileOperator {
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
-			String attrName, Mode runMode)
+			String attrName, RunMode runMode)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		String datasourceName = datasource.getType();
 		String sql = "";
-		if (runMode.equals(Mode.ONLINE)) {
+		if (runMode.equals(RunMode.ONLINE)) {
 			if (datasourceName.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 				datasourceName = ExecContext.MYSQL.toString();
 			} else if (datasourceName.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
@@ -163,7 +163,7 @@ public class ProfileOperator {
 	}
 
 	private String getTableName(Datapod dp, ProfileExec profileExec, List<String> datapodList, DagExec dagExec,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 		if (datapodList != null && datapodList.contains(dp.getUuid())) {
 			return String.format("%s_%s_%s", dp.getUuid().replaceAll("-", "_"), dp.getVersion(), dagExec.getVersion());
 		}

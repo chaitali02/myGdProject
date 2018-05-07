@@ -45,9 +45,9 @@ import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
@@ -241,7 +241,7 @@ public class LoadServiceImpl {
 	 */
 
 	public void executeSql(LoadExec loadExec, String dagExecVer, String datapodTableName, OrderKey datapodKey,
-			DataStore dataStore/*, Dataset<Row> dfTask*/, Mode runMode)
+			DataStore dataStore/*, Dataset<Row> dfTask*/, RunMode runMode)
 			throws JsonProcessingException, JSONException, ParseException {
 		List<Status> statusList = new ArrayList<>();
 		Status status = new Status(Status.Stage.NotStarted, new Date());
@@ -401,7 +401,7 @@ public class LoadServiceImpl {
 	 */
 
 	public List<java.util.Map<String, Object>> getLoadResults(String loadExecUUID, String loadExecVersion, int offset,
-			int limit, String sortBy, String order, String requestId, Mode runMode)
+			int limit, String sortBy, String order, String requestId, RunMode runMode)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 

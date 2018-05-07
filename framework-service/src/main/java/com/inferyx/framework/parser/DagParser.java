@@ -30,13 +30,13 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.TaskParserFactory;
 import com.inferyx.framework.service.DagExecServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -276,7 +276,7 @@ public class DagParser {
 				MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
 				
 				TaskParser taskParser = taskParserFactory.getTaskParser(ref.getType());
-				StringBuilder builder = taskParser.parseTask(dagExec, stage, indvExecTask, datapodList, execParams, new HashMap<String, String>(), null, Mode.BATCH);
+				StringBuilder builder = taskParser.parseTask(dagExec, stage, indvExecTask, datapodList, execParams, new HashMap<String, String>(), null, RunMode.BATCH);
 				
 				if (builder == null) {
 					continue;
