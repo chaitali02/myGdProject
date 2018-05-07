@@ -18,21 +18,12 @@ import { ResponseOptions } from '@angular/http/src/base_response_options';
   templateUrl: './training.template.html',
 })
 export class TrainingComponent implements OnInit {
-  IsLableSelected: boolean;
   selectallattribute: any;
-  isTabelShow: boolean;
   ishowExecutionparam: boolean;
   model :any;
-  checkboxtrainexecution: boolean;
-  selectedlabel: any;
   dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
-  allAttribute: any[];
-  selectmodel: any;
-  sources: string[];
   createdBy: any;
-  allNames: any[];
   name:any;
-  sourcedata: any;
   version: any;
   breadcrumbDataFrom : any;
   showTrain : any;
@@ -43,32 +34,18 @@ export class TrainingComponent implements OnInit {
   uuid: any;
   active: any;
   published: any;
-  depends: any;
   continueCount : any;
   progressbarWidth:any;
   isSubmit:any
   selectedVersion: Version;
   VersionList: SelectItem[] = [];
-  msgs: any[];
-  source : string;
-  allModel: any[];
-  allSourceAttribute : any[];
-  featuresArray : any[];
-  featuresTags : any[];
-  featureResponse : any;
-  nameResponse : any;
-  labelTags : any;
-  labelResponse : any;
-  allSourceLabel : any;
-  labelArray : any;
+  
 
   constructor( config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService,private _location:Location,private _modelService:TrainingService) {
     this.showTrain = true;
     this.train = {};
     this.train["active"]=true;
     this.continueCount=1;
-    this.isSubmit="false";
-    this.IsLableSelected=false
     this.progressbarWidth=25*this.continueCount+"%";
     this.dropdownSettings = { 
       singleSelection: false, 
@@ -94,8 +71,7 @@ export class TrainingComponent implements OnInit {
     }
     ];
 
-    this.sources = ["datapod","dataset"];
-    this.source=this.sources[0];
+   
    }
 
   ngOnInit() {
@@ -106,12 +82,9 @@ export class TrainingComponent implements OnInit {
       if(this.mode !== undefined) {
         this.getOneByUuidAndVersion();
         this.getAllVersionByUuid();
-        this.getAllLatestModel(false);
+        
              }
-             else{
-              //this.getAllLatest(true);
-              this.getAllLatestModel(true);
-            }
+             
          })
        }
  getOneByUuidAndVersion()
@@ -133,49 +106,6 @@ export class TrainingComponent implements OnInit {
    )
  }
 
- getAllLatestModel(IsDefault){
-
-    this._commonService.getAllLatest('model')
-    .subscribe(
-    response =>{
-      this.OnSuccessgetAllLatestModel(response,IsDefault)},
-    error => console.log("Error :: " + error))
-  }
-
- OnSuccessgetAllLatestModel(response,IsDefault){
-  let temp=[]
-   
-    if(this.mode == undefined || IsDefault == true) {
-      let modelTemp: DependsOn = new DependsOn();
-      modelTemp.label = response[0]["name"];
-      modelTemp.uuid = response[0]["uuid"];
-      modelTemp.version = response[0]["version"];
-      this.selectmodel=modelTemp;
-      this.getLatestModel(response[0]["uuid"],true);
-  }
-    for (const n in response) {
-        let allname={};
-        allname["label"]=response[n]['name'];
-        allname["value"]={};
-        allname["value"]["label"]=response[n]['name'];      
-        allname["value"]["uuid"]=response[n]['uuid'];
-        allname["value"]["version"]=response[n]['version'];
-        temp[n]=allname;
-    }
-    this.allModel = temp
-  }
-
-  getLatestModel(uuid,IsDefault){
-    this._commonService.getLatestByUuid(uuid,'model')
-   .subscribe(
-    response =>{
-      this.OnSuccesGetLatestModel(response,IsDefault)},
-  error => console.log("Error :: " + error));
-  }
- 
-  OnSuccesGetLatestModel(response,IsDefault){
-
-  }
 
 
  
@@ -199,10 +129,6 @@ onVersionChange(){
     this.onSuccessgetOneByUuidAndVersion(response)},
   error => console.log("Error :: " + error)); 
 }
-changeModel(){
-  this.getLatestModel(this.selectmodel["uuid"],true);
-}
-
 
 
 
@@ -219,13 +145,6 @@ changeModel(){
   this.createdBy =response.createdBy.ref.name
   this.train.published=response["published"] == 'Y' ? true : false
   this.train.active=response["active"] == 'Y' ? true : false
-  // this.model=response.model.ref.name
-  let modeltemp: DependsOn = new DependsOn
-  modeltemp.label=response.model.ref.name;
-  modeltemp.uuid =response.mode.uuid
-  modeltemp.version =response.model.ref.version
-  this.selectmodel=modeltemp
-
   this.breadcrumbDataFrom[2].caption=this.train.name
   console.log('Data is' + response)
 

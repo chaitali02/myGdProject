@@ -148,13 +148,14 @@ export class SidebarComponent {
         type: "paramset"
       },
       {
-        name: "Results",
-        type: "modelexec"
-      },
-      {
         name:"Training",
         type:"train"
       },
+      {
+        name: "Results",
+        type: "modelexec"
+      },
+      
 
       ]
     };
