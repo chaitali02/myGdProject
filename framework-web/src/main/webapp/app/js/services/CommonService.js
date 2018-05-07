@@ -453,7 +453,7 @@
       var onSuccess = function(response) {
         var paramListHolder=[];
         var type=["ONEDARRAY","TWODARRAY"];
-        var type1=['distribution','attribute','attributes'];
+        var type1=['distribution','attribute','attributes','datapod'];
         if(response.length >0){
           for(var i=0;i<response.length;i++){
             var paramList={};

@@ -1170,6 +1170,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     allowInMenu :true,
     listState : 'operator',
     detailState :'createoperator',
+    state: 'createoperatortype',
     childMenu:['map','generatedata','transpose'],
     allowInChildMenu : false,
   },

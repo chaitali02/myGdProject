@@ -1,13 +1,13 @@
 {
     "id" : ObjectId("5ae666d04f2be9708fd6574f"),
-    "xPos" : 140,
-    "yPos" : 90,
+    "xPos" : 0.0,
+    "yPos" : 90.0,
     "templateFlg" : "N",
     "stages" : [ 
         {
             "stageId" : "86e91f2e-1956-49df-ba04-e4e2f2a98b49",
-            "xPos" : 510,
-            "yPos" : 90,
+            "xPos" : 460.0,
+            "yPos" : 90.0,
             "dependsOn" : [],
             "name" : "Demonstrate sample operator",
             "tasks" : [ 
@@ -72,7 +72,7 @@
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
         }
     },
-    "createdOn" : ISODate("2018-04-28T07:46:16.135Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "active" : "Y",
     "published" : "N",
     "appInfo" : [ 

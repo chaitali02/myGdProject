@@ -1476,12 +1476,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        function onMenuClick(elm, d, i){
          var item=dagMetaDataService.elementDefs[elm.type]
          if(item.childMenu.length ==0)
-           addelement(event,elm.type)
+           addelement(event,elm)
        }
 
        function onChildMenuClick(elm, d, i){
          if(elm.menutype=="child")
-           addelement(event,elm.type)
+           addelement(event,elm)
        }
 
        function createGraph(data) {
@@ -1686,7 +1686,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId};
              var url=$location.absUrl().split("app")[0];
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
-               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
+              state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
                iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
              });
            }//End If if(isExec || isGroupExec)
@@ -1732,7 +1732,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        }
      }
 
-     var dblClickFn = function(e,newCell) {
+     var dblClickFn = function(e,newCell,elemt) {
        if(!$scope.editMode || $scope.isTemplate){
          return;
        }
@@ -1744,7 +1744,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          var jointElement = $(this).closest(".joint-element");
          var id = jointElement.attr('model-id');
        }
-
        var thisModel = newCell || $scope.graph.getCell(id);
        var elementType = thisModel.attributes.elementType;
        if(!$scope.editMode || elementType == "stage" || elementType == "dag"){
@@ -1783,6 +1782,18 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          
          var GetAllLatesMap=function(response){
            $scope.operatorinfoMapInfo = response;
+           $scope.popupModel.type=elementType
+           if(elementType =="operatortype" && newCell){
+            for(var i=0;i< response.length;i++){
+               if(response[i].name == elemt.title){
+                $scope.popupModel.selectedType=response[i].uuid +"|"+ response[i].name;
+                $scope.onChangeOperatorInfo();
+               
+                break;
+               }
+            }
+           }
+           
          }
            
          var xPercent = e.clientX / $( window ).width() * 100;
@@ -1806,7 +1817,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         $("#typeOprator").text(text);
         $("#elementTypeText").html(text);
         $("#savePop").attr("data-id", id);
-        $('#namepop').val(name);
+      //  $('#namepop').val(name);
         $('#responsive').modal({
           backdrop: 'static',
           keyboard: false
@@ -2142,7 +2153,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        });
      });
           
-     window.addelement = function(e,operator){
+     window.addelement = function(e,elemt){
+       var operator=elemt.type
        //create sub elements on this event
        $scope.isExecParamList=false;    
        $scope.isExecParamSet=false;
@@ -2155,7 +2167,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          elementType: operator,
          parentStage: '',
          "model-data": {
-           name : 'new '+operator,
+           name : 'New '+operator,
            operators : [ {
              operatorInfo : {
                ref : {
@@ -2194,7 +2206,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          elementType : operator,
           attrs: {
             "model-data": {
-              name : 'new '+operator,
+              name : 'New '+operator,
               operators : [ {
                 operatorInfo : {
                   ref : {
@@ -2218,11 +2230,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             },
             text:{text:''},
             magnet:true,
-            text: { text: 'new '+operator,y:'60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } }
+            text: { text: 'New '+operator,y:'60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray; text-transform: capitalize' } }
           }
         });
         $scope.graph.addCell(cell);
-        dblClickFn(e,cell);
+        dblClickFn(e,cell,elemt);
       };
 
      /*function contextMenu() {
@@ -2660,7 +2672,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 paramList.paramType=paramListInfo[i].paramType.toLowerCase();
                 paramList.paramName=paramListInfo[i].paramName;
                 paramList.ref=paramListInfo[i].ref;      
-                if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type =='distribution'){
+                if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type =='distribution' ||
+                paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type =='datapod'){
                 var paramValue={}
                 var selectedParamValue={};
                 selectedParamValue.type=paramListInfo[i].paramValue.ref.type;
@@ -2699,7 +2712,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 selectedParamValue.type=paramListInfo[i].attributeInfo[0].ref.uuid;
                 paramList.selectedParamValue=selectedParamValue
                 var attributeInfoArray=[]
-                debugger
                 for(var j=0;j < paramListInfo[i].attributeInfo.length;j++){
                 var attributeInfo={}
                 attributeInfo.uuid=paramListInfo[i].attributeInfo[j].ref.uuid;
@@ -2714,6 +2726,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               }
               console.log(paramListHolder )
               $scope.paramListHolder = paramListHolder;
+              $scope.opringinalparamListHolder=$scope.paramListHolder
+            }else{
+              $scope.paramListHolder = response;
               $scope.opringinalparamListHolder=$scope.paramListHolder
             }
           }
@@ -2788,7 +2803,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var execParams={};
         var paramListInfo=[];
         if($scope.paramListHolder.length>0){
-          debugger
           for(var i=0;i<$scope.paramListHolder.length;i++){
             var paramList={};
             paramList.paramId=$scope.paramListHolder[i].paramId;
@@ -2822,7 +2836,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               }
               paramList.attributeInfo=attributeInfoArray;
             }
-            else if($scope.paramListHolder[i].paramType=='distribution'){
+            else if($scope.paramListHolder[i].paramType=='distribution' || $scope.paramListHolder[i].paramType=='datapod'){
               var ref={};
               var paramValue={};  
               ref.type=$scope.paramListHolder[i].selectedParamValueType;
