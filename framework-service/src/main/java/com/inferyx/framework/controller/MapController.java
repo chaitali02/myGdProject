@@ -34,8 +34,8 @@ import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MapServiceImpl;
 
@@ -90,7 +90,7 @@ public class MapController {
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) {
 		MapExec mapExec = null;
 		try {
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			mapExec = mapServiceImpl.generateSql(uuid, version, null, null, null, null, null, null, null, execParams, runMode);
 			/*com.inferyx.framework.domain.Map map = mapServiceImpl.findLatestByUuid(uuid);*/
 			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) commonServiceImpl.getLatestByUuid(uuid, "map");
@@ -115,7 +115,7 @@ public class MapController {
 				@RequestParam(value="requestId",required = false) String requestId, 
 				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
 	    		{
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			response = mapServiceImpl.download(mapExecUUID, mapExecVersion,format,offset,limit,response,rows,sortBy,order,requestId, runMode);
 			return null;
 			
@@ -131,7 +131,7 @@ public class MapController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
-		Mode runMode = Helper.getExecutionMode((mode.equals("undefined")) ? mode="BATCH" : mode);
+		RunMode runMode = Helper.getExecutionMode((mode.equals("undefined")) ? mode="BATCH" : mode);
 		return mapServiceImpl.getMapResults(mapExecUUID, mapExecVersion, offset, limit, sortBy, order, requestId, runMode);
 	}
 }

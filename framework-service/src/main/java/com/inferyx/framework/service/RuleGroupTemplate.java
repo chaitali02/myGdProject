@@ -35,8 +35,8 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.factory.RuleExecFactory;
@@ -359,7 +359,7 @@ public abstract class RuleGroupTemplate {
 								Map<String, MetaIdentifier> refKeyMap, 
 								List<String> datapodList, 
 								DagExec dagExec, 
-								Mode runMode) throws Exception {
+								RunMode runMode) throws Exception {
 		BaseRuleGroupExec baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, groupExecType.toString());
 		BaseRuleExec ruleExec = null;
 		RuleTemplate baseRuleService = serviceFactory.getRuleService(ruleType);
@@ -392,7 +392,7 @@ public abstract class RuleGroupTemplate {
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes", "static-access" })
-	public MetaIdentifier execute(String baseGroupUUID, String baseGroupVersion, MetaType groupType, MetaType groupExecType, MetaType ruleType, MetaType ruleExecType, ExecParams execParams, BaseRuleGroupExec baseGroupExec, Mode runMode) throws Exception {
+	public MetaIdentifier execute(String baseGroupUUID, String baseGroupVersion, MetaType groupType, MetaType groupExecType, MetaType ruleType, MetaType ruleExecType, ExecParams execParams, BaseRuleGroupExec baseGroupExec, RunMode runMode) throws Exception {
 		BaseRuleGroup baseGroup = (BaseRuleGroup) commonServiceImpl.getOneByUuidAndVersion(baseGroupExec.getDependsOn().getRef().getUuid(), baseGroupExec.getDependsOn().getRef().getVersion(), groupType.toString());
 		List<FutureTask> taskList = new ArrayList<FutureTask>();
 		RuleTemplate baseRuleService = serviceFactory.getRuleService(ruleType);

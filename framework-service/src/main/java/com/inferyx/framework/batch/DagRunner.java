@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.DagStatusHolder;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DagServiceImpl;
 import com.inferyx.framework.service.FrameworkThreadServiceImpl;
@@ -278,7 +278,7 @@ public class DagRunner {
 			}
 		}
 		try {
-			metaIdentifierHolder = dagServiceImpl.submitDag(uuid, version, null, metaType, Mode.BATCH);
+			metaIdentifierHolder = dagServiceImpl.submitDag(uuid, version, null, metaType, RunMode.BATCH);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

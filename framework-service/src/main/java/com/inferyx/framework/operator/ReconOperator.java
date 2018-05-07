@@ -38,13 +38,13 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.FunctionCategory;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -77,7 +77,7 @@ public class ReconOperator {
 	 *
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
@@ -87,13 +87,13 @@ public class ReconOperator {
 	 * @param runMode
 	 *            the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 	
 
 	Datapod datapod;
-	Mode runMode;
+	RunMode runMode;
 
 	private String CASE_WHEN = " CASE WHEN ";
 	private String THEN = " THEN 'PASS' ELSE 'FAIL' END AS ";
@@ -110,12 +110,12 @@ public class ReconOperator {
 
 	public String generateSql(Recon recon, ReconExec reconExec, List<String> datapodList, DagExec dagExec,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		String sql = "";
 		try {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			String datasourceName = datasource.getType();
-			if (runMode.equals(Mode.ONLINE)) {
+			if (runMode.equals(RunMode.ONLINE)) {
 				if (datasourceName.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 					datasourceName = ExecContext.MYSQL.toString();
 				} else if (datasourceName.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
@@ -318,7 +318,7 @@ public class ReconOperator {
 		return val.toString();
 	}
 	
-	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, Mode runMode)
+	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		if (datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),

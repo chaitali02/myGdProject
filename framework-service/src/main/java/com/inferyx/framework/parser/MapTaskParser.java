@@ -30,13 +30,13 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.RelationInfo;
 import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.MapIterOperator;
 import com.inferyx.framework.operator.MapOperator;
@@ -60,7 +60,7 @@ public class MapTaskParser extends TaskParser {
 
 	@Override
 	public StringBuilder parseTask(DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList,
-			ExecParams execParams, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			ExecParams execParams, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 
 		java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList());
 		Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
@@ -172,7 +172,7 @@ public class MapTaskParser extends TaskParser {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapodVersion,
 					dagExecVersion);
 		} else {
-			return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), Mode.BATCH);
+			return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 		}
 	}
 	

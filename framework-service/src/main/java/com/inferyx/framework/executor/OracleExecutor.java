@@ -49,6 +49,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -261,30 +262,21 @@ public class OracleExecutor implements IExecutor {
 	}
 
 	@Override
-	public double[][] twoDArrayFromDatapod(String tableName, Datapod factorCovarianceDp, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public double[][] twoDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+			throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public double[] oneDArrayFromDatapod(String tableName, Datapod factorMeanDp, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public double[] oneDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+			throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String generateFeatureData(Object object, List<Feature> features, int numIterations,
-			String tableName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -330,6 +322,25 @@ public class OracleExecutor implements IExecutor {
 			throws IOException, JAXBException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath,
+			Datapod datapod, String saveMode, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

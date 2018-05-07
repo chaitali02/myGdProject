@@ -83,6 +83,16 @@
                     "uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
                 }
             }
+        }, 
+        {
+            "attrSourceId" : "7",
+            "attrSourceName" : "load_id",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
+                }
+            }
         }
     ],
 	"uuid": "424decc0-f29d-4dbd-ae74-476335ca6f8f",

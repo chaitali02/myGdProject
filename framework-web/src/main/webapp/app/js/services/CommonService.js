@@ -431,7 +431,6 @@
       return deferred.promise;
     }
     this.getParamListByType = function(type, uuid, version) {
-     
       var deferred = $q.defer();
       var url;
       if (type == "simulate") {
@@ -440,13 +439,21 @@
       else if(type == "operator"){
         url = "metadata/getParamListByOperator?uuid=" + uuid+"&type="+type;
       }
+     
+      else if(type == "operatortype"){
+        url = "metadata/getParamListByOperatorType?uuid=" + uuid+"&type="+type;
+      }
+      else if(type =='distribution'){
+        url="metadata/getParamListByDistribution?uuid=" + uuid+"&type="+type;
+      }
       url += '&action=view'
       CommonFactory.httpGet(url).then(function(response) {
         onSuccess(response.data)
       });
       var onSuccess = function(response) {
         var paramListHolder=[];
-        var type=["ONEDARRAY","TWODARRAY"]
+        var type=["ONEDARRAY","TWODARRAY"];
+        var type1=['distribution','attribute','attributes'];
         if(response.length >0){
           for(var i=0;i<response.length;i++){
             var paramList={};
@@ -456,12 +463,19 @@
             paramList.paramType=response[i].paramType.toLowerCase();
             paramList.paramName=response[i].paramName;
             paramList.ref=response[i].ref;
-           
-            if(type.indexOf(response[i].paramType) == -1){
+            paramList.attributeInfo;
+            if(type1.indexOf(response[i].paramType) == -1 ){
               paramList.isParamType="simple";
               paramList.paramValue=response[i].paramValue.value;
+              paramList.selectedParamValueType='simple'
+            }else if(type1.indexOf(response[i].paramType) != -1){
+              paramList.isParamType=response[i].paramType;
+              paramList.selectedParamValueType=response[i].paramType=="distribution" ?response[i].paramType:"datapod";
+              paramList.paramValue=response[i].paramValue;    
+          
             }else{
               paramList.isParamType="datapod";
+              paramList.selectedParamValueType='datapod'
               paramList.paramValue=response[i].paramValue;    
             }
            
@@ -557,6 +571,99 @@
       }
 
 
+      return deferred.promise;
+    }
+
+    this.getAllAttributeBySource = function (uuid, type) {
+      var deferred = $q.defer();
+  
+      if (type == "relation") {
+        CommonFactory.findDatapodByRelation(uuid, type).then(function (response) { onSuccess(response.data) });
+        var onSuccess = function (response) {
+          var attributes = [];
+          for (var j = 0; j < response.length; j++) {
+            for (var i = 0; i < response[j].attributes.length; i++) {
+              var attributedetail = {};
+              attributedetail.uuid = response[j].uuid;
+              attributedetail.datapodname = response[j].name;
+              attributedetail.name = response[j].attributes[i].name;
+              attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
+              attributedetail.attributeId = response[j].attributes[i].attributeId;
+              attributes.push(attributedetail)
+            }
+          }
+  
+          console.log(JSON.stringify(attributes))
+          deferred.resolve({
+            data: attributes
+          })
+        }
+      }
+      if (type == "dataset") {
+        CommonFactory.findDatapodByDataset(uuid, type).then(function (response) { onSuccess(response.data) });
+        var onSuccess = function (response) {
+          var attributes = [];
+          for (var j = 0; j < response.length; j++) {
+            var attributedetail = {};
+            attributedetail.uuid = response[j].ref.uuid;
+            attributedetail.datapodname = response[j].ref.name;
+            attributedetail.name = response[j].attrName;
+            attributedetail.attributeId = response[j].attrId;
+            attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
+            attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+            attributes.push(attributedetail)
+          }
+          deferred.resolve({
+            data: attributes
+          })
+        }
+  
+  
+      }
+      if (type == "datapod") {
+        var url= "metadata/getAttributesByDatapod?action=view&uuid=" + uuid + "&type=datapod"
+        CommonFactory.httpGet(url).then(function (response) { onSuccess(response.data) });
+        var onSuccess = function (response) {
+          var attributes = [];
+          for (var j = 0; j < response.length; j++) {
+            var attributedetail = {};
+            attributedetail.uuid = response[j].ref.uuid;
+            attributedetail.datapodname = response[j].ref.name;
+            attributedetail.name = response[j].attrName;
+            attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+            attributedetail.attributeId = response[j].attrId;
+            attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
+            attributes.push(attributedetail)
+          }
+          deferred.resolve({
+            data: attributes
+          })
+        }
+  
+      }
+      if (type == "rule") {
+  
+        CommonFactory.findDatapodByRule(uuid, type).then(function (response) { onSuccess(response.data) });
+        var onSuccess = function (response) {
+          var attributes = [];
+          for (var j = 0; j < response.length; j++) {
+            var attributedetail = {};
+            attributedetail.uuid = response[j].ref.uuid;
+            attributedetail.datapodname = response[j].ref.name;
+            attributedetail.name = response[j].attrName;
+            attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+            attributedetail.attributeId = response[j].attrId;
+            attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
+            attributes.push(attributedetail)
+          }
+          deferred.resolve({
+            data: attributes
+          })
+          //console.log(JSON.stringify(response))
+        }
+  
+      }
+  
       return deferred.promise;
     }
   });

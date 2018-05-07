@@ -37,8 +37,8 @@ import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.ProfileExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataQualExecServiceImpl;
@@ -80,7 +80,7 @@ public class DataQualController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		DataQualExec dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, null, null, null);
 		dataQualExec = (DataQualExec) dataQualServiceImpl.parse(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, runMode);
@@ -96,7 +96,7 @@ public class DataQualController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		DataQualGroupExec dataQualGroupExec = dataQualGroupServiceImpl.create(dataQualGroupUUID, dataQualGroupVersion, execParams, null, null, null);
 		dataQualGroupExec = dataQualGroupServiceImpl.parse(dataQualGroupExec.getRef(MetaType.dqgroupExec), null, null, null, runMode);
 		return dataQualGroupServiceImpl.execute(dataQualGroupUUID, dataQualGroupVersion, execParams, dataQualGroupExec, runMode);
@@ -113,7 +113,7 @@ public class DataQualController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return dataQualServiceImpl.getDQResults(dataQualExecUUID, dataQualExecVersion,offset,limit,sortBy,order,requestId, runMode);
 	}
 	
@@ -187,7 +187,7 @@ public class DataQualController {
    			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {   			
    			try {
-   				Mode runMode = Helper.getExecutionMode(mode);
+   				RunMode runMode = Helper.getExecutionMode(mode);
    				if(type.equalsIgnoreCase(MetaType.dqExec.toString())){
    	   				dataQualServiceImpl.restart(type,uuid,version, null, runMode);
    	   			}
@@ -215,7 +215,7 @@ public class DataQualController {
 				@RequestParam(value="requestId", required = false) String requestId, 
 				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode, HttpServletResponse response) throws Exception
 	    		{
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			dataQualServiceImpl.download(dataQualExecUUID, dataQualExecVersion,format,download,offset,limit,response,rows,sortBy,order,requestId, runMode);
 	    	return null;
 	   }
@@ -225,7 +225,7 @@ public class DataQualController {
 	    		@RequestParam(value= "dataQualExecVersion") String dataQualExecVersion,  
 				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode, HttpServletResponse response) throws Exception
 	    		{
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			return dataQualServiceImpl.getDataQualSummary(dataQualExecUUID, dataQualExecVersion, runMode);
 	   }
 	

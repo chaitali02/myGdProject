@@ -27,10 +27,10 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.RelationInfo;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DataStoreServiceImpl;
  
@@ -48,7 +48,7 @@ public class RelationOperator {
 	
 	public String generateSql(Relation relation
 			, java.util.Map<String, MetaIdentifier> refKeyMap
-			, HashMap<String, String> otherParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			, HashMap<String, String> otherParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		Map<String, Short> datapodTracker = new HashMap<>(); 
 		StringBuilder builder = new StringBuilder();
 		List<RelationInfo> relInfoList = relation.getRelationInfo();

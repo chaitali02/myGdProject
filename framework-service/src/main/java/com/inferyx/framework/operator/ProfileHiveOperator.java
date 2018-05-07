@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
+import com.inferyx.framework.enums.RunMode;
 
 @Component
 public class ProfileHiveOperator extends ProfileOperator {
@@ -30,7 +30,7 @@ public class ProfileHiveOperator extends ProfileOperator {
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String profileTableName, String attrId,
-			String attrName, Mode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			String attrName, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			String sql = "";
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());

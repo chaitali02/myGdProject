@@ -34,9 +34,9 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -111,7 +111,7 @@ public class DQOperator {
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,
-			Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		Datapod srcDP = null;
 		DataSet dataset = null;
 		if (dataQual == null) {
@@ -150,7 +150,7 @@ public class DQOperator {
 		return null;
 	}
 
-	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, Mode runMode)
+	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		if (datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
@@ -204,7 +204,7 @@ public class DQOperator {
 	}
 
 	private String generateFrom(DataQual dq, MetaIdentifier ref, List<String> datapodList, DagExec dagExec,
-			Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		Datapod srcDP = null;
 		String resp = null;
 		Relation relation = null;
@@ -340,7 +340,7 @@ public class DQOperator {
 	}
 
 	private String generateRefIntFrom(DataQual dq, String tableName, String attributeName, List<String> datapodList,
-			DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		String refIntStr = null;
 		if (dq == null || dq.getRefIntegrityCheck() == null || dq.getRefIntegrityCheck().getRef() == null) {
 			return EMPTY;
@@ -418,7 +418,7 @@ public class DQOperator {
 	}
 
 	public String generateSql(DataQual dq, String tableName, String attributeName, List<String> datapodList,
-			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, Mode runMode)
+			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, RunMode runMode)
 			throws Exception {
 		String select = generateSelect(dq, dataQualExec, tableName, attributeName);
 		logger.info("Select for dataQual : " + dq.getUuid() + " : " + StringUtils.isBlank(select));

@@ -60,11 +60,11 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -396,19 +396,19 @@ public class ProfileServiceImpl extends RuleTemplate {
 	}
 
 	public ProfileExec execute(String profileUUID, String profileVersion, ProfileExec profileExec,
-			ThreadPoolTaskExecutor metaExecutor, ProfileGroupExec profileGroupexec, ExecParams execParams, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, ProfileGroupExec profileGroupexec, ExecParams execParams, RunMode runMode) throws Exception {
 		return execute(profileUUID, profileVersion, profileExec, null, profileGroupexec, null, execParams, runMode);
 	}
 
 	public ProfileExec execute(String profileUUID, String profileVersion, ProfileExec profileExec,
 			ThreadPoolTaskExecutor metaExecutor, ProfileGroupExec profileGroupExec,
-			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		return (ProfileExec) execute(profileUUID, profileVersion, metaExecutor, profileExec, profileGroupExec, null,
 				taskList, execParams, runMode);
 	}
 
 	public List<Map<String, Object>> getProfileResults(String profileExecUUID, String profileExecVersion, int offset,
-			int limit, String sortBy, String order, String requestId, Mode runMode) throws Exception {
+			int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			limit = offset + limit;
@@ -469,7 +469,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 		return data;
 	}
 
-	public void restart(String type, String uuid, String version, ExecParams execParams, Mode runMode)
+	public void restart(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
 			throws Exception {
 		// ProfileExec profileExec= profileExecServiceImpl.findOneByUuidAndVersion(uuid,
 		// version);
@@ -518,7 +518,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 
 	@Override
 	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
-			List<String> datapodList, DagExec dagExec, Mode runMode) throws Exception {
+			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		ProfileExec profileExec =null;
 		try {
 			Profile profile = null;
@@ -560,7 +560,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 	@Override
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
-			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
 			Datapod targetDatapod = (Datapod) daoRegister
 					.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
@@ -583,7 +583,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 
 	public HttpServletResponse download(String uuid, String version, String format, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 
 		List<Map<String, Object>> results = getProfileResults(uuid, version, offset, limit, sortBy, order, requestId,
 				runMode);
@@ -717,7 +717,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 				IExecutor exec = null;
 				// String sql = null;
 				String appUuid = null;
-				if (runMode.equals(Mode.ONLINE)) {
+				if (runMode.equals(RunMode.ONLINE)) {
 					execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
 							|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
 									? helper.getExecutorContext(engine.getExecEngine())

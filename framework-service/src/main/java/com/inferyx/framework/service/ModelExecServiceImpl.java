@@ -66,7 +66,6 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.OperatorExec;
@@ -75,9 +74,11 @@ import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -724,7 +725,7 @@ public class ModelExecServiceImpl {
 	
 	public HttpServletResponse download(String execUUID, String execVersion, String format, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy,String type, String order, String requestId,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 		if(type.equalsIgnoreCase(MetaType.predictExec.toString())) {
 			List<Map<String, Object>> results =getPredictResults(execUUID, execVersion, rowLimit);
 			response = commonServiceImpl.download(execUUID, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.predict,execUUID,execVersion)));
@@ -750,28 +751,5 @@ public class ModelExecServiceImpl {
 
 	}
 
-	/**
-	 * @Ganesh
-	 *
-	 * @param operatorExecUuid
-	 * @param operatorExecVersion
-	 * @param rowLimit
-	 * @return
-	 * @throws Exception 
-	 */
-	public List<Map<String, Object>> getOperatorResults(String operatorExecUuid, String operatorExecVersion,
-			int rowLimit) throws Exception {
-		List<Map<String, Object>> data = null;
-		
-		OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExecUuid, operatorExecVersion,
-				MetaType.operatorExec.toString());
-
-		DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
-				operatorExec.getResult().getRef().getUuid(), operatorExec.getResult().getRef().getVersion(),
-				MetaType.datastore.toString());
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		data = exec.fetchResults(datastore, null, rowLimit, commonServiceImpl.getApp().getUuid());
-		return data;
-	}
+	
 }

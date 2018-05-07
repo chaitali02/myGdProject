@@ -40,8 +40,8 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -284,7 +284,7 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		return (DataQualGroupExec) super.create(dataQualGroupUUID, dataQualGroupVersion, MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, execParams, datapodList, dataQualGroupExec, dagExec); 
 	}
 	
-	public DataQualGroupExec parse(MetaIdentifier dqGroupExec, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, Mode runMode) {
+	public DataQualGroupExec parse(MetaIdentifier dqGroupExec, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) {
 		try {
 			return (DataQualGroupExec) super.parse(dqGroupExec.getUuid(), dqGroupExec.getVersion(), MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, refKeyMap, datapodList, dagExec, runMode);
 		} catch (Exception e) {
@@ -294,7 +294,7 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		return null;
 	}
 	
-	public MetaIdentifier execute(String dataQualGroupUUID, String dataQualGroupVersion, ExecParams execParams, DataQualGroupExec dataQualGroupExec, Mode runMode) throws Exception {
+	public MetaIdentifier execute(String dataQualGroupUUID, String dataQualGroupVersion, ExecParams execParams, DataQualGroupExec dataQualGroupExec, RunMode runMode) throws Exception {
 				return super.execute(dataQualGroupUUID, dataQualGroupVersion, MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, execParams, dataQualGroupExec, runMode);
 	}	
 
@@ -360,7 +360,7 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		return baseEntityList;
 	}*/
 	
-	public void restart(String type,String uuid,String version, Mode runMode) throws Exception{
+	public void restart(String type,String uuid,String version, RunMode runMode) throws Exception{
 		//DataQualGroupExec dataQualGroupExec= dataQualGroupExecServiceImpl.findOneByUuidAndVersion(uuid,version);
 		DataQualGroupExec dataQualGroupExec = (DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dqgroupExec.toString());
 		//dataQualGroupExec = create(dataQualGroupExec.getDependsOn().getRef().getUuid(),dataQualGroupExec.getDependsOn().getRef().getVersion(), null, null, dataQualGroupExec, null);
