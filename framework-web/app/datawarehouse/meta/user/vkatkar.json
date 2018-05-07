@@ -1,8 +1,8 @@
 {
-    "firstName" : "Chanakya",
-    "lastName" : "Shah",
-    "emailId" : "cshah@gtpltech.com",
-    "password" : "cshah",
+    "firstName" : "Vaibhav",
+    "lastName" : "Katkar",
+    "emailId" : "vkatkar@gtpltech.com",
+    "password" : "vkatkar",
     "groupInfo" : [ 
         {
             "ref" : {
@@ -37,9 +37,9 @@
         
         
         ],
-    "uuid" : "c1788476-10f1-491d-879d-64ac3b689049",
+    "uuid" : "a93baed0-51c9-11e8-9c2d-fa7ae01bbebc",
     "version" : "1521430702",
-    "name" : "cshah",
+    "name" : "vkatkar",
     "createdBy" : {
         "ref" : {
             "type" : "user",

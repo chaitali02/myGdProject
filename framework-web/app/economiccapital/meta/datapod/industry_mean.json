@@ -18,30 +18,14 @@
         }, 
         {
             "attributeId" : 1,
-            "name" : "automobile",
-            "type" : "double",
-            "desc" : "automobile",
-            "dispName" : "automobile",
+            "name" : "mean",
+            "type" : "integer",
+            "desc" : "mean",
+            "dispName" : "mean",
             "active" : "Y"
         }, 
         {
             "attributeId" : 2,
-            "name" : "pharma",
-            "type" : "double",
-            "desc" : "pharma",
-            "dispName" : "pharma",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 3,
-            "name" : "finance",
-            "type" : "double",
-            "desc" : "finance",
-            "dispName" : "finance",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 4,
             "name" : "version",
             "type" : "String",
             "desc" : "version",
@@ -49,9 +33,9 @@
             "active" : "Y"
         }
     ],
-    "uuid" : "5b3c8a96-ea4f-430c-866f-36e9cf06eec8",
-    "version" : "1525636110",
-    "name" : "industry_covariance",
+    "uuid" : "d7d39f87-faa1-4175-a952-bc8bab52465a",
+    "version" : "1525636303",
+    "name" : "industry_mean",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -59,15 +43,15 @@
             "version" : "1464977196"
         }
     },
-    "createdOn" : ISODate("2018-05-06T19:48:30.000Z"),
+    "createdOn" : ISODate("2018-05-06T19:51:43.000Z"),
     "active" : "Y",
     "published" : "N",
     "appInfo" : [ 
-        {
+            {
             "ref" : {
                 "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+                "version" : "1521430822"
             }
         }
     ]

@@ -8,9 +8,9 @@
             "dependsOn" : [],
             "tasks" : [ 
                 {
-                    "taskId" : "2efb019b-803f-4caf-a03f-a71c4d8f6d62",
+                    "taskId" : "b9cc1d58-218c-47db-94ce-090451fa25b4",
                     "dependsOn" : [],
-                    "name" : "Generate PD Data",
+                    "name" : "Generate Data",
                     "operators" : [ 
                         {
                             "dependsOn" : [],
@@ -55,7 +55,7 @@
                                                 "ref" : {
                                                     "type" : "simple"
                                                 },
-                                                "value" : "1000"
+                                                "value" : "100"
                                             }
                                         }, 
                                         {
@@ -146,114 +146,6 @@
                     "yPos" : 250.0,
                     "active" : "Y",
                     "statusList" : []
-                }, 
-                {
-                    "taskId" : "aa177bdc-7e39-454d-965b-909ecbab827a",
-                    "dependsOn" : [ 
-                        "2efb019b-803f-4caf-a03f-a71c4d8f6d62"
-                    ],
-                    "name" : "Transpose PD data",
-                    "operators" : [ 
-                        {
-                            "dependsOn" : [],
-                            "operatorInfo" : {
-                                "ref" : {
-                                    "type" : "operatortype",
-                                    "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                                    "name" : "Transpose"
-                                }
-                            },
-                            "operatorParams" : {
-                                "EXEC_PARAMS" : {
-                                    "paramListInfo" : [ 
-                                        {
-                                            "paramId" : "0",
-                                            "paramName" : "sourceDatapod",
-                                            "paramType" : "attributes",
-                                            "ref" : {
-                                                "type" : "paramlist",
-                                                "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                                                "version" : "1525530897",
-                                                "name" : "paramlist_transpose"
-                                            },
-                                            "attributeInfo" : [ 
-                                                {
-                                                    "ref" : {
-                                                        "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
-                                                        "name" : "automobile"
-                                                    },
-                                                    "attrId" : "1"
-                                                }, 
-                                                {
-                                                    "ref" : {
-                                                        "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
-                                                        "name" : "pharma"
-                                                    },
-                                                    "attrId" : "2"
-                                                }, 
-                                                {
-                                                    "ref" : {
-                                                        "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
-                                                        "name" : "finance"
-                                                    },
-                                                    "attrId" : "3"
-                                                }
-                                            ]
-                                        }, 
-                                        {
-                                            "paramId" : "1",
-                                            "paramName" : "key",
-                                            "paramType" : "attribute",
-                                            "ref" : {
-                                                "type" : "paramlist",
-                                                "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                                                "version" : "1525530897",
-                                                "name" : "paramlist_transpose"
-                                            },
-                                            "attributeInfo" : [ 
-                                                {
-                                                    "ref" : {
-                                                        "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
-                                                        "name" : "id"
-                                                    },
-                                                    "attrId" : "0"
-                                                }
-                                            ]
-                                        }, 
-                                        {
-                                            "paramId" : "2",
-                                            "paramName" : "saveLocation",
-                                            "paramType" : "attribute",
-                                            "ref" : {
-                                                "type" : "paramlist",
-                                                "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                                                "version" : "1525530897",
-                                                "name" : "paramlist_transpose"
-                                            },
-                                            "attributeInfo" : [ 
-                                                {
-                                                    "ref" : {
-                                                        "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4c",
-                                                        "name" : "id"
-                                                    },
-                                                    "attrId" : "0"
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    ],
-                    "xPos" : 560.0,
-                    "yPos" : 250.0,
-                    "active" : "Y",
-                    "statusList" : []
                 }
             ],
             "name" : "new stage",
@@ -264,18 +156,19 @@
         }
     ],
     "statusList" : [],
-    "uuid" : "6b94e288-4d9d-4d2d-8e2a-20df31401b72",
-    "version" : "1525647564",
-    "name" : "ppl_regulatory_capital_simulation",
-    "desc" : "Pipeline to simulate regulatory capital calculations",
+    "uuid" : "eb47203c-6357-4c64-9af8-345299b1f75e",
+    "version" : "1525639781",
+    "name" : "ppl_populate_industry_pd",
+    "desc" : "Populate Industry PD using Generate Data operator",
     "createdBy" : {
         "ref" : {
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196"
+            "version" : "1464977196",
+            "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-06T22:59:24.000Z"),
+    "createdOn" : ISODate("2018-05-06T20:49:41.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "Y",
@@ -283,8 +176,8 @@
         {
             "ref" : {
                 "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+                "version" : "1521430822"
             }
         }
     ]

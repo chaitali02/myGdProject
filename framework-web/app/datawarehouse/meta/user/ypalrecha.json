@@ -46,7 +46,19 @@
 				"type": "group",
 				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c3"
 			}
-		}
+		},
+         {
+            "ref" : {
+                "type" : "group",
+                "uuid" : "a93bac6e-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }, 
+         {
+            "ref" : {
+                "type" : "group",
+                "uuid" : "a93baa3e-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
 	],
 	"roleInfo": [
 		{
