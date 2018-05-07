@@ -51,11 +51,12 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"double","caption":"double"},
 	 	{"name":"date","caption":"date"}, 
 		{"name":"integer","caption":"integer"},
-		{"name":"ONEDARRAY","caption":"double [ ]"},
-		{"name":"TWODARRAY","caption":"double [ ][ ]"},
+		// {"name":"ONEDARRAY","caption":"double [ ]"},
+		// {"name":"TWODARRAY","caption":"double [ ][ ]"},
 		{"name":"attribute","caption":"attribute"},
 		{"name":"attributes","caption":"attribute[s]"},
-	    {"name":"distribution","caption":"distribution"}];
+		{"name":"distribution","caption":"distribution"},
+		{"name":"datapod","caption":"datapod"}];
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['paramlist'] || [];

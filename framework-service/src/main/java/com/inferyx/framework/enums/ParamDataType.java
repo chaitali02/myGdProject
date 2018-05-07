@@ -10,7 +10,9 @@ public enum ParamDataType {
 	DATE("Date"),
 	LONG("long"),
 	ATTRIBUTE("[]"),
-	ATTRIBUTES("[]");
+	ATTRIBUTES("[]"),
+	DISTRIBUTION("distribution"),
+	DATAPOD("datapod");
 	
 	String value = "";
 	private ParamDataType(String value) {
