@@ -1,6 +1,6 @@
 {
     "_id" : ObjectId("5aee9ebba7986c221eb70cc1"),
-    "xPos" : 140.0,
+    "xPos" : 10.0,
     "yPos" : 90.0,
     "templateFlg" : "N",
     "stages" : [ 
@@ -157,7 +157,7 @@
                             }
                         }
                     ],
-                    "xPos" : 860.0,
+                    "xPos" : 770.0,
                     "yPos" : 90.0,
                     "active" : "Y",
                     "statusList" : []
@@ -244,14 +244,14 @@
                             }
                         }
                     ],
-                    "xPos" : 1040.0,
-                    "yPos" : 110.0,
+                    "xPos" : 1050.0,
+                    "yPos" : 90.0,
                     "active" : "Y",
                     "statusList" : []
                 }
             ],
             "name" : "Demonstrate generate distribution operator",
-            "xPos" : 510.0,
+            "xPos" : 450.0,
             "yPos" : 90.0,
             "active" : "Y",
             "statusList" : []
@@ -269,7 +269,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-06T06:20:43.000Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

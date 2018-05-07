@@ -142,14 +142,14 @@
                             }
                         }
                     ],
-                    "xPos" : 390.0,
+                    "xPos" : 990.0,
                     "yPos" : 250.0,
                     "active" : "Y",
                     "statusList" : []
                 }
             ],
             "name" : "new stage",
-            "xPos" : 220.0,
+            "xPos" : 510.0,
             "yPos" : 250.0,
             "active" : "Y",
             "statusList" : []
@@ -168,7 +168,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-06T20:49:41.000Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "Y",

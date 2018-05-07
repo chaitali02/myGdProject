@@ -1,5 +1,5 @@
 {
-    "xPos" : 30.0,
+    "xPos" : 10.0,
     "yPos" : 250.0,
     "templateFlg" : "N",
     "stages" : [ 
@@ -142,7 +142,7 @@
                             }
                         }
                     ],
-                    "xPos" : 390.0,
+                    "xPos" : 730.0,
                     "yPos" : 250.0,
                     "active" : "Y",
                     "statusList" : []
@@ -250,14 +250,14 @@
                             }
                         }
                     ],
-                    "xPos" : 560.0,
+                    "xPos" : 1020.0,
                     "yPos" : 250.0,
                     "active" : "Y",
                     "statusList" : []
                 }
             ],
             "name" : "new stage",
-            "xPos" : 220.0,
+            "xPos" : 450.0,
             "yPos" : 250.0,
             "active" : "Y",
             "statusList" : []
@@ -275,7 +275,7 @@
             "version" : "1464977196"
         }
     },
-    "createdOn" : ISODate("2018-05-06T22:59:24.000Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "Y",
