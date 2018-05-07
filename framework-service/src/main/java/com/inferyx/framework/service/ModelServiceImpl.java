@@ -107,6 +107,7 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.GenerateDataOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
@@ -180,6 +181,8 @@ public class ModelServiceImpl {
 	private Math3Distribution mlDistribution;
 	@Autowired
 	private MonteCarloSimulation monteCarloSimulation;
+	@Autowired
+	private GenerateDataOperator generateDataOperator;
 	
 	//private ParamMap paramMap;
 
@@ -964,48 +967,28 @@ public class ModelServiceImpl {
 				result = monteCarloSimulation.simulateMonteCarlo(simulate, simExecParam, distExecParam, filePathUrl);
 			} else if(simulate.getType().equalsIgnoreCase(SimulationType.DEFAULT.toString())) {
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-					if(simulate.getDistributionTypeInfo() != null) {					
-						Object object = mlDistribution.getDistribution(distribution, distExecParam);
+					
+					//generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.operatorExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, RunMode.BATCH);
+					
+					Object object = mlDistribution.getDistribution(distribution, distExecParam);
 						
-						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
-						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, true, appUuid);
-						String sql = simulateMLOperator.generateSql(simulate, tabName_2);
-						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-					} else {
-						String query = simulateMLOperator.generateSql(simulate, (tableName+"_"+"form_rand_df"));
-						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, (tableName+"_"+"form_rand_df"));
-						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
-						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-						result = exec.executeRegisterAndPersist(query, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-					}
+					String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
+					String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, true, appUuid);
+					String sql = simulateMLOperator.generateSql(simulate, tabName_2);
+					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);					
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-					if(simulate.getDistributionTypeInfo() != null) {
-						Object object = mlDistribution.getDistribution(distribution, distExecParam);
-						
-						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
-						String[] customFldArr = new String[] {fieldArray[0]};
-						String tabName_2 = exec.assembleRandomDF(customFldArr, tabName_1, true, appUuid);
-						
-						String sql = "SELECT * FROM " + tabName_2;
-						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-					} else {
-						TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
-								model.getVersion());
-						if (latestTrainExec == null)
-							throw new Exception("Executed model not found.");
-						
-						MetaIdentifierHolder targetHolder = simulate.getTarget();
-						Datapod target = null;
-						if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
-							target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
-									targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
-						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
-						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
-						//result = predictMLOperator.execute(null, model, algorithm, target, assembledDfHolder.getDataFrame(), fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, appUuid);
-						filePathUrl = filePathUrl + "/data";
-					}
+					Object object = mlDistribution.getDistribution(distribution, distExecParam);
+					
+					//generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.operatorExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, RunMode.BATCH);
+					
+					String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
+					String[] customFldArr = new String[] {fieldArray[0]};
+					String tabName_2 = exec.assembleRandomDF(customFldArr, tabName_1, true, appUuid);
+					
+					String sql = "SELECT * FROM " + tabName_2;
+					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);				
 				}
 			}
 			
