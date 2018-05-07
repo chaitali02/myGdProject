@@ -1,5 +1,5 @@
 {
-    "xPos" : 120.0,
+    "xPos" : 10.0,
     "yPos" : 250.0,
     "templateFlg" : "N",
     "stages" : [ 
@@ -24,8 +24,8 @@
                             "operatorParams" : {}
                         }
                     ],
-                    "xPos" : 630.0,
-                    "yPos" : 100.0,
+                    "xPos" : 590.0,
+                    "yPos" : 160.0,
                     "statusList" : []
                 }, 
                 {
@@ -45,8 +45,8 @@
                             "operatorParams" : {}
                         }
                     ],
-                    "xPos" : 620.0,
-                    "yPos" : 390.0,
+                    "xPos" : 590.0,
+                    "yPos" : 340.0,
                     "statusList" : []
                 }, 
                 {
@@ -69,8 +69,8 @@
                             "operatorParams" : {}
                         }
                     ],
-                    "xPos" : 840.0,
-                    "yPos" : 240.0,
+                    "xPos" : 830.0,
+                    "yPos" : 250.0,
                     "statusList" : []
                 }, 
                 {
@@ -121,7 +121,7 @@
                 }
             ],
             "name" : "new stage",
-            "xPos" : 330.0,
+           "xPos" : 350.0,
             "yPos" : 250.0,
             "statusList" : []
         }

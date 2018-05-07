@@ -24,14 +24,14 @@
 		"B"
 	],
 	"desc": "Populate warehouse dimensions and fact tables",
-	"xPos": 70,
-	"yPos": 370,
+	 "xPos" : 10.0,
+    "yPos" : 370.0,
 	"templateFlg" : "N",
 	"stages": [
 		{
 			"stageId": "675b1e14-e3d1-4dbe-b73c-5404fbbec142",
-			"xPos": 330,
-			"yPos": 370,
+			"xPos" : 360.0,
+            "yPos" : 370.0,
 			"dependsOn": [],
 			"name": "Populate dimensions,fact and aggregated facts",
 			"tasks": [
