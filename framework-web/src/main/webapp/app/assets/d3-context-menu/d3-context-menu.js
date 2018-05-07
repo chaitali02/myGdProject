@@ -43,7 +43,9 @@ d3.contextMenu = function (menu, openCallback) {
 			.on('click', function(d, i) {
 				d.onMenuClick(d, data, index);
 				if(d.chidernItems.length>0){ 
+				
 					d3.select('.d3-context-menu').selectAll("ul li").selectAll("ul").remove();
+					
                     d3.select(this)
 						.append("ul")
 					    //.style("top",d3.event.pageY-y-10+ "px")
@@ -95,6 +97,7 @@ d3.contextMenu = function (menu, openCallback) {
             .on('mouseenter',function(d,i){
 				//d.onMouseOver(elm,data,index);
 				//d3.select('.d3-context-menu').selectAll("ul li").selectAll("ul").remove();
+				
 			})
 			
             .on('mouseleave',function(d,i){

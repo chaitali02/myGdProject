@@ -20,8 +20,8 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Registry;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.DatasourceServiceImpl;
@@ -43,7 +43,7 @@ public class CSVRegister extends DataSourceRegister {
 				.option("header", "true").load(filePath);
 	}*/
 
-	public List<Registry> register(String uuid, String version, List<Registry> registryList, Mode runMode) throws Exception {
+	public List<Registry> register(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
 		//Datasource ds = datasourceServiceImpl.findOneByUuidAndVersion(uuid, version);
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
 		String filepath = hdfsInfo.getHdfsURL()+ds.getPath();

@@ -50,7 +50,6 @@ import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
@@ -73,6 +72,7 @@ import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -126,7 +126,7 @@ public class DagServiceImpl {
 	ConcurrentHashMap<String, FutureTask<String>> taskThreadMap;
 	@Autowired
 	private SessionHelper sessionHelper;
-	private Mode runMode;
+	private RunMode runMode;
 	@Autowired
 	private ReconServiceImpl reconServiceImpl;
 	@Autowired
@@ -137,11 +137,11 @@ public class DagServiceImpl {
 	static final Logger logger = Logger.getLogger(DagServiceImpl.class);
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 	
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 
@@ -316,7 +316,7 @@ public class DagServiceImpl {
 	 * @return
 	 * @throws Exception
 	 */
-	public MetaIdentifierHolder submitDag(MetaIdentifier dagRef, ExecParams execParams, Mode runMode) throws Exception {
+	public MetaIdentifierHolder submitDag(MetaIdentifier dagRef, ExecParams execParams, RunMode runMode) throws Exception {
 		Dag dag = null;
 		if (dagRef == null) {
 			logger.info("No ref object. Aborting submitDAG");
@@ -337,7 +337,7 @@ public class DagServiceImpl {
 	 * @return
 	 * @throws Exception
 	 */
-	public MetaIdentifierHolder submitDag(@RequestBody Dag dag, Mode runMode) throws Exception {
+	public MetaIdentifierHolder submitDag(@RequestBody Dag dag, RunMode runMode) throws Exception {
 		return submitDag(dag, null, null, runMode);
 	}
 
@@ -353,7 +353,7 @@ public class DagServiceImpl {
 	 * @return
 	 * @throws Exception
 	 */
-	public MetaIdentifierHolder submitDag(String uuid, String version, ExecParams execParams, String metaType, Mode runMode)
+	public MetaIdentifierHolder submitDag(String uuid, String version, ExecParams execParams, String metaType, RunMode runMode)
 			throws Exception {
 		Dag dag = null;
 		DagExec dagExec = null;
@@ -380,7 +380,7 @@ public class DagServiceImpl {
 		return submitDag(dag, dagExec, execParams, runMode);
 	}
 
-	public List<MetaIdentifierHolder> submitDagWithParamset(String dagUuid, String version, ExecParams execParams, Mode runMode)
+	public List<MetaIdentifierHolder> submitDagWithParamset(String dagUuid, String version, ExecParams execParams, RunMode runMode)
 			throws Exception {
 		Dag dag = null;
 		if (StringUtils.isBlank(dagUuid)) {
@@ -408,7 +408,7 @@ public class DagServiceImpl {
 	 * @return
 	 * @throws Exception
 	 */
-	public MetaIdentifierHolder submitDag(String dagUuid, ExecParams execParams, String inputType, Mode runMode) throws Exception {
+	public MetaIdentifierHolder submitDag(String dagUuid, ExecParams execParams, String inputType, RunMode runMode) throws Exception {
 		Dag dag = null;
 		DagExec dagExec = null;
 		if (dagUuid == null) {
@@ -433,7 +433,7 @@ public class DagServiceImpl {
 		return submitDag(dag, dagExec, execParams, runMode);
 	}
 
-	public List<MetaIdentifierHolder> submitDagWithParamset(@RequestBody Dag dag, ExecParams execParams, Mode runMode)
+	public List<MetaIdentifierHolder> submitDagWithParamset(@RequestBody Dag dag, ExecParams execParams, RunMode runMode)
 			throws Exception {
 		MetaIdentifierHolder mHolder = new MetaIdentifierHolder();
 		MetaIdentifier mIdentifier = new MetaIdentifier();
@@ -495,7 +495,7 @@ public class DagServiceImpl {
 	 * @return
 	 * @throws Exception
 	 */
-	public MetaIdentifierHolder submitDag(@RequestBody Dag dag, DagExec dagExec, ExecParams execParams, Mode runMode)
+	public MetaIdentifierHolder submitDag(@RequestBody Dag dag, DagExec dagExec, ExecParams execParams, RunMode runMode)
 			throws Exception {
 		MetaIdentifierHolder mHolder = new MetaIdentifierHolder();
 		MetaIdentifier mIdentifier = new MetaIdentifier();
@@ -947,8 +947,14 @@ public class DagServiceImpl {
 						&& execParams.getParamSetHolder() == null) {
 					List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(0)
 							.getOperatorParams().get(MetaType.paramset.toString());
+					List<ParamSetHolder> paramSetHolders = new ArrayList<>();
+					ObjectMapper mapper = new ObjectMapper();
+					for(Object obj : paramSetHolderList) {
+						paramSetHolders.add(mapper.convertValue(obj, ParamSetHolder.class));
+					}
 					if (paramSetHolderList != null && !paramSetHolderList.isEmpty()) {
-						execParams.setParamSetHolder(paramSetHolderList.get(0));
+						execParams.setParamInfo(paramSetHolders);
+						execParams.setParamSetHolder(paramSetHolders.get(0));
 					}
 				}
 				operator.setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
@@ -966,7 +972,7 @@ public class DagServiceImpl {
 								mapExec.getVersion());
 						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(mapExecIdentifier);
 						mapExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), mapExec, dagExec, stage,
-								indvExecTask, datapodList, refKeyMap, otherParams, execParams, Mode.BATCH);
+								indvExecTask, datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
 						mapExec.setRefKeyList(execParams.getRefKeyList());
 						builder = new StringBuilder(mapExec.getExec());
 						if (mapExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
@@ -1662,7 +1668,7 @@ public class DagServiceImpl {
 
 	}*/
 	
-	public void restart(String dagExecUuid,String dagExecVersion, Mode runMode) throws Exception{
+	public void restart(String dagExecUuid,String dagExecVersion, RunMode runMode) throws Exception{
 		DagExec dagExec=prepareDagExec(dagExecUuid, dagExecVersion,null,MetaType.dagExec.toString());
 		submitDag(dagExec.getUuid(), dagExec.getVersion(),null,MetaType.dagExec.toString(), runMode);		
 	}

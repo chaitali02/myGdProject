@@ -54,7 +54,6 @@ import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.RelationInfo;
@@ -63,6 +62,7 @@ import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -131,7 +131,7 @@ public class MapServiceImpl {
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	private Mode runMode;
+	private RunMode runMode;
 	@Autowired
 	Engine engine;
 	@Autowired
@@ -145,12 +145,12 @@ public class MapServiceImpl {
 	
 	java.util.Map<String, String> requestMap = new HashMap<String, String>();
 
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
 
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 
@@ -489,7 +489,7 @@ public class MapServiceImpl {
 	protected String getTableName(Datapod datapod, Task indvTask, List<String> datapodList, DagExec dagExec,
 			HashMap<String, String> otherParams) throws Exception {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		if(runMode != null && runMode.equals(Mode.ONLINE)) {
+		if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 			if (indvTask.getDependsOn().size() > 0 && datapodList.contains(datapod.getUuid())) {
 				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
 						dagExec.getVersion());
@@ -661,7 +661,7 @@ public class MapServiceImpl {
 	public MapExec generateSql(String uuid, String version, MapExec mapExec, 
 			DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-			ExecParams execParams, Mode runMode) throws Exception {
+			ExecParams execParams, RunMode runMode) throws Exception {
 		try {
 			Map map = null;
 			MetaIdentifierHolder mapRef = new MetaIdentifierHolder();
@@ -780,7 +780,7 @@ public class MapServiceImpl {
 		return builder;
 	}// End method
 */	
-	public MapExec executeSql(MapExec mapExec, String dagExecVer, OrderKey datapodKey, DataStore dataStore, Mode runMode) throws Exception {
+	public MapExec executeSql(MapExec mapExec, String dagExecVer, OrderKey datapodKey, DataStore dataStore, RunMode runMode) throws Exception {
 		//String sql = null;
 		if(mapExec == null)	{
 			mapExec = new MapExec();
@@ -853,7 +853,7 @@ public class MapServiceImpl {
 	}
 	
 	public List<java.util.Map<String, Object>> getMapResults(String mapExecUUID, String mapExecVersion, int offset, int limit,
-			String sortBy, String order, String requestId, Mode runMode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+			String sortBy, String order, String requestId, RunMode runMode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
 		String appUuid = commonServiceImpl.getApp().getUuid();
 		List<java.util.Map<String, Object>> data = new ArrayList<>();
 		limit = offset + limit;
@@ -945,7 +945,7 @@ public class MapServiceImpl {
 	
 	public HttpServletResponse download(String uuid, String version, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 		//datastoreServiceImpl.setRunMode(runMode);
 		/*DataStore ds = datastoreServiceImpl.findDataStoreByMeta(uuid, version);
 		if (ds == null) {
