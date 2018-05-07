@@ -319,7 +319,7 @@ export class CommonListComponent {
     }
 
     add() {
-        debugger
+        
         if(this.type != "activity"){
         let _moduleUrl=this.metaconfig.getMetadataDefs(this.type)['moduleState']
         this.routerUrl=this.metaconfig.getMetadataDefs(this.type)['detailState']
