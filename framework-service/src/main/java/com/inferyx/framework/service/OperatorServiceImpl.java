@@ -179,7 +179,8 @@ public class OperatorServiceImpl {
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
-		newOperator.execute(operatorType, execParams, operatorExec, null, null, new HashSet<>(), runMode);
+		newOperator.execute(operatorType, execParams, new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()), null, null, new HashSet<>(), runMode);
+		operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getUuid(), operatorExec.getVersion(), MetaType.operatorExec.toString());
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Completed);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
