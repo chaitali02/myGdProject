@@ -23,10 +23,12 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.DataType;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -34,7 +36,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Simulate;
@@ -236,26 +237,30 @@ public interface IExecutor {
 
 	/**
 	 * 
-	 * @param paramListHolder
+	 * @param sql
+	 * @param paramDp TODO
+	 * @param attributeInfo TODO
 	 * @param clientContext TODO
 	 * @return
 	 * @throws InterruptedException TODO
 	 * @throws ExecutionException TODO
 	 * @throws Exception TODO
 	 */
-	double[][] twoDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+	List<double[]> twoDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception;
 
 	/**
 	 * 
-	 * @param paramListHolder
+	 * @param sql
+	 * @param paramDp TODO
+	 * @param attributeInfo TODO
 	 * @param clientContext TODO
 	 * @return
 	 * @throws InterruptedException TODO
 	 * @throws ExecutionException TODO
 	 * @throws Exception TODO
 	 */
-	double[] oneDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+	List<Double> oneDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception;
 	
 	/**
@@ -361,5 +366,12 @@ public interface IExecutor {
 
 	ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException;
+	
+	/**
+	 * 
+	 * @param dataType
+	 * @return dataType
+	 */
+	public Object getDataType(String dataType) throws NullPointerException;
 
 }
