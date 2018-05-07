@@ -1,19 +1,19 @@
 {
-	"xPos": 140,
-	"yPos": 90,
+	"xPos" : 20.0,
+    "yPos" : 90.0,
 	"templateFlg" : "N",
 	"stages": [
 		{
 			"stageId": "32609a10-c0a4-405c-87a1-ae43b090d656",
-			"xPos": 510,
-			"yPos": 90,
+			"xPos" : 470.0,
+            "yPos" : 90.0,
 			"dependsOn": [],
 			"name": "Populate dim_transaction_type",
 			"tasks": [
 				{
 					"taskId": "459517d9-9429-48da-b6d5-796cb8c6ddfe",
-					"xPos": 860,
-					"yPos": 90,
+					"xPos" : 860.0,
+                    "yPos" : 90.0,
 					"dependsOn": [],
 					"name": "map_dim_transaction_type",
 					"operators": [
