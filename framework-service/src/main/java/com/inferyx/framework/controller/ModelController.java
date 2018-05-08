@@ -243,14 +243,15 @@ public class ModelController {
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
 		try {
+			RunMode runMode = Helper.getExecutionMode(mode);
 			Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateUUID, simulateVersion,
 					MetaType.simulate.toString());
 
 			SimulateExec simulateExec = null;
 			simulateExec = modelServiceImpl.create(simulate, execParams, null, simulateExec);
-			return modelServiceImpl.simulate(simulate, execParams, simulateExec);
+			return modelServiceImpl.simulate(simulate, execParams, simulateExec, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
