@@ -30,7 +30,7 @@
                                             "paramType" : "distribution",
                                             "ref" : {
                                                 "type" : "paramlist",
-                                                "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                                                "uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f7",
                                                 "version" : "1525519035",
                                                 "name" : "paramlist_generate_data"
                                             },
@@ -47,7 +47,7 @@
                                             "paramType" : "integer",
                                             "ref" : {
                                                 "type" : "paramlist",
-                                                "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                                                "uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f7",
                                                 "version" : "1525519035",
                                                 "name" : "paramlist_generate_data"
                                             },
@@ -61,23 +61,20 @@
                                         {
                                             "paramId" : "2",
                                             "paramName" : "saveLocation",
-                                            "paramType" : "attribute",
+                                            "paramType" : "datapod",
                                             "ref" : {
                                                 "type" : "paramlist",
-                                                "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                                                "uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f7",
                                                 "version" : "1525519035",
                                                 "name" : "paramlist_generate_data"
                                             },
-                                            "attributeInfo" : [ 
-                                                {
-                                                    "ref" : {
-                                                        "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
-                                                        "name" : "id"
-                                                    },
-                                                    "attrId" : "0"
+                                            "paramValue" : {
+                                                "ref" : {
+                                                    "type" : "datapod",
+                                                    "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
+                                                    "version" : "1525625326"
                                                 }
-                                            ]
+                                            }
                                         }, 
                                         {
                                             "paramId" : "1",
@@ -168,7 +165,7 @@
             "name" : "ypalrecha"
         }
     },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "createdOn" : ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "Y",
