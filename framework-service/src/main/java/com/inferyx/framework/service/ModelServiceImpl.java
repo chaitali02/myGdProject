@@ -959,9 +959,9 @@ public class ModelServiceImpl {
 					simParamHolderList.add(holder);
 				} else if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
 					distParamHolderList.add(holder);
-					if(holder.getParamName().equalsIgnoreCase("saveLocation")) {
-						tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(holder.getParamValue().getRef().getUuid(), holder.getParamValue().getRef().getVersion()), runMode);
-					}
+				}
+				if(holder.getParamName().equalsIgnoreCase("saveLocation")) {
+					tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(holder.getParamValue().getRef().getUuid(), holder.getParamValue().getRef().getVersion()), runMode);
 				}
 			}
 			distExecParam.setParamListInfo(distParamHolderList);
@@ -1480,9 +1480,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return factorCovariances;
 	}*/
 	
-	public String getSQLBySource(Object source) throws Exception {  
+	public String generateSQLBySource(Object source) throws Exception {  
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		if (source instanceof Datapod) {
 			Datapod datapod = (Datapod) source;
 			DataStore datastore = dataStoreServiceImpl.findLatestByMeta(datapod.getUuid(), datapod.getVersion());
@@ -1494,8 +1493,11 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 			ConnectionHolder conHolder = conn.getConnection();
 			Object obj = conHolder.getStmtObject();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			//DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
-			String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), datapod, datastore, null, hdfsInfo, obj, datasource);
+			
+			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			//String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), datapod, datastore, null, hdfsInfo, obj, datasource);
 			String sql = "SELECT * FROM "+tableName;
 			return sql;
 		} else if (source instanceof DataSet) {
@@ -1566,7 +1568,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
-			String sql = getSQLBySource(source);
+			String sql = generateSQLBySource(source);
 			exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
 			
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
