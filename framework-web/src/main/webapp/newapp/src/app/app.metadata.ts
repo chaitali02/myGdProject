@@ -435,7 +435,7 @@ export class AppMetadata {
               },
                'dqexec':{
                 name : 'dq',
-                caption : 'Data Quality Exce',
+                caption : 'Data Quality Exec',
                 execType:'dqexec',
                 metaType:'dqexec',
                 color : '#EB54C3',
@@ -907,7 +907,8 @@ export class AppMetadata {
                 iconCaption:'',
                 allowInMenu : false,
                 listState : 'distribution',
-                detailState:'createdistribution',
+                moduleState :'dataScience',
+                detailState:'distribution',
                 moduleCaption:'Distribution',
                 childMenu:[],
                 allowInChildMenu : false,

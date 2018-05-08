@@ -29,6 +29,8 @@ import { ModelService } from './../metadata/services/model.service';
 import { ResultsComponent } from './results/results.component';
 import {TrainingComponent } from './training/training.component';
 import { TrainingService } from '../metadata/services/training.service';
+import { DistributionComponent } from './distribution/distribution.component';
+import { DistributionService } from '../metadata/services/distribution.service';
 
 @NgModule({
     imports:[
@@ -57,13 +59,15 @@ import { TrainingService } from '../metadata/services/training.service';
         ParamsetComponent,
         ResultsComponent,
         TrainingComponent,
+        DistributionComponent,
       
         
     ],
     providers:[
         CommonService,
         ModelService,
-        TrainingService
+        TrainingService,
+        DistributionService
     ]
 })
  
