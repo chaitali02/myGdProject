@@ -159,7 +159,7 @@ public class MapOperator implements Operator {
 
 	@Override
 	public void execute(OperatorType operatorType, ExecParams execParams,
-			Object metaExec, java.util.Map<String, MetaIdentifier> refKeyMap,
+			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
 		

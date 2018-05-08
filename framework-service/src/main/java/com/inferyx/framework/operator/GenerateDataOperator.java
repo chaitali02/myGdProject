@@ -16,18 +16,16 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.datascience.Math3Distribution;
 import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.enums.RunMode;
@@ -68,11 +66,9 @@ public class GenerateDataOperator implements Operator {
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
 	 */
 	@Override
-	public void execute(OperatorType operatorType, ExecParams execParams, Object metaExec,
+	public void execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 	
-		//OperatorExec operatorExec = (OperatorExec) metaExec;
-		MetaIdentifier execIdentifier = (MetaIdentifier) metaExec;
 		String execUuid = execIdentifier.getUuid();
 		String execVersion = execIdentifier.getVersion();
 		
@@ -81,8 +77,8 @@ public class GenerateDataOperator implements Operator {
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
 		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
-		MetaIdentifier datapodIdentifier = locationInfo.getAttributeInfo().get(0).getRef();
-		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
+		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(distributionInfo.getParamValue().getRef().getUuid(), distributionInfo.getParamValue().getRef().getVersion(), distributionInfo.getParamValue().getRef().getType().toString()); 
 		
 		List<ParamListHolder> distParamHolderList = new ArrayList<>();
@@ -99,7 +95,7 @@ public class GenerateDataOperator implements Operator {
 		distExecParam.setParamListInfo(distParamHolderList);
 		Object distributionObject = mlDistribution.getDistribution(distribution, distExecParam);
 		
-		List<Attribute> attributes = new ArrayList<Attribute>();
+		/*List<Attribute> attributes = new ArrayList<Attribute>();
 		int attributeId = 0;
 		for(Attribute attribute : locationDatapod.getAttributes()) {
 //			for(AttributeRefHolder attributeRefHolder : locationInfo.getAttributeInfo())
@@ -108,22 +104,21 @@ public class GenerateDataOperator implements Operator {
 					attributeId++;
 					attributes.add(attribute);
 //				}			
-		}		
+		}*/		
 		
-		//String tableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
 		String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
-		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, attributes, numIterations, execVersion);
+		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion);
 		
 		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
 		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
-		//dp.seta
 		exec.registerAndPersist(resultSetHolder, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
-		Object mtaexec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
-		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) mtaexec.getClass().getMethod("getCreatedBy").invoke(mtaexec);
-		List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) mtaexec.getClass().getMethod("getAppInfo").invoke(mtaexec);
+		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
+		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
+		@SuppressWarnings("unchecked")
+		List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) metaExec.getClass().getMethod("getAppInfo").invoke(metaExec);
 		
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, fileName, 
@@ -131,8 +126,8 @@ public class GenerateDataOperator implements Operator {
 				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
 				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
 		
-		mtaexec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(mtaexec, resultRef);
-		commonServiceImpl.save(execIdentifier.getType().toString(), mtaexec);
+		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
+		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
 	}
 
 }

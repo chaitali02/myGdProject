@@ -48,7 +48,7 @@ public class JoinTablesOperator implements com.inferyx.framework.operator.Operat
 	@Override
 	public void execute(OperatorType operatorType, 
 						ExecParams execParams, 
-						Object metaExec, 
+						MetaIdentifier execIdentifier, 
 						java.util.Map<String, MetaIdentifier> refKeyMap, 
 						HashMap<String, String> otherParams, 
 						Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
