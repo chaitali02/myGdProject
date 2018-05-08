@@ -1733,6 +1733,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
 
      var dblClickFn = function(e,newCell,elemt) {
+       
        if(!$scope.editMode || $scope.isTemplate){
          return;
        }
