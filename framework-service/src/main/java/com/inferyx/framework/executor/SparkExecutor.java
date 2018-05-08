@@ -59,7 +59,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
@@ -75,7 +74,6 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -1025,7 +1023,7 @@ public class SparkExecutor implements IExecutor {
 //		fieldArray[count] = idField;
 //		count++;
 		for(Attribute attribute : attributes){						
-			StructField field = new StructField(attribute.getName(), Helper.getDataType(attribute.getType()), true, Metadata.empty());
+			StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
 //			StructField field = new StructField(attribute.getName(), DataTypes.DoubleType, true, Metadata.empty());
 			fieldArray[count] = field;
 			count ++;
@@ -1271,75 +1269,77 @@ public class SparkExecutor implements IExecutor {
 	}*/
 	
 	@Override
-	public double[][] twoDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+	public List<double[]> twoDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		
+//		MetaIdentifier datapodIdentifier = sql.getAttributeInfo().get(0).getRef();
+//		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
+//		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
+//		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
+//		logger.info("Table name:" + tableName);
+//		
+//		String tableName = readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);		
+//		String sql = "SELECT * FROM " + tableName;
 		
-		MetaIdentifier datapodIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
-		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
-		//Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getParamValue().getRef().getUuid(), paramListHolder.getParamValue().getRef().getVersion(), paramListHolder.getParamValue().getRef().getType().toString());
-		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-		String tableName = readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
-		
-		String sql = "SELECT * FROM " + tableName;
-		Dataset<Row> covarsDf = executeSql(sql, clientContext).getDataFrame();
-		covarsDf.show(false);
+		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		df.show(false);
 		
 		
 		List<String> columnList = new ArrayList<>();
 		for(Attribute attribute : paramDp.getAttributes())
-			for(AttributeRefHolder attributeRefHolder : paramListHolder.getAttributeInfo()) {
+			for(AttributeRefHolder attributeRefHolder : attributeInfo) {
 				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
 					columnList.add(attribute.getName());
 				}
 			}	
 		
-		List<double[]> covarsRowList = new ArrayList<>();
-		for(Row row : covarsDf.collectAsList()) {
+		List<double[]> valueList = new ArrayList<>();
+		for(Row row : df.collectAsList()) {
 			List<Double> covarsValList = new ArrayList<>();
 				for(String col : columnList)
 					covarsValList.add(Double.parseDouble(row.getAs(col)));
-				covarsRowList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
+				valueList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
 		}
 		
-		double[][] twoDArray = covarsRowList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
-		return twoDArray;
+		//double[][] twoDArray = valueList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
+		return valueList;
 	}
 
 	@Override
-	public double[] oneDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+	public List<Double> oneDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		
-		MetaIdentifier datapodIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
-		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
-		//Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getParamValue().getRef().getUuid(), paramListHolder.getParamValue().getRef().getVersion(), paramListHolder.getParamValue().getRef().getType().toString());
-		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
-		logger.info("Table name:" + tableName);
-
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		
+//		MetaIdentifier datapodIdentifier = sql.getAttributeInfo().get(0).getRef();
+//		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
+//		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
+//		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
+//		logger.info("Table name:" + tableName);
+//
 //		String tableName = readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
-		String sql = "SELECT * FROM " + tableName;
+//		String sql = "SELECT * FROM " + tableName;
 		
-		Dataset<Row> meansDf = executeSql(sql, clientContext).getDataFrame();
-		meansDf.printSchema();
-		meansDf.show(false);
+		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		df.printSchema();
+		df.show(false);
 
 		List<String> columnList = new ArrayList<>();
 		for(Attribute attribute : paramDp.getAttributes())
-			for(AttributeRefHolder attributeRefHolder : paramListHolder.getAttributeInfo()) {
+			for(AttributeRefHolder attributeRefHolder : attributeInfo) {
 				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
 					columnList.add(attribute.getName());
 				}
 			}			
 		
-		List<Double> meansValList = new ArrayList<>();
-		for(Row row : meansDf.collectAsList()) {
-				for(String col : columnList)
-					meansValList.add(Double.parseDouble(row.getAs(col)));
-		}		
-		double[] oneDArray = ArrayUtils.toPrimitive(meansValList.toArray(new Double[meansValList.size()]));
-		return oneDArray;
+		List<Double> valueList = new ArrayList<>();
+		for(Row row : df.collectAsList()) 
+			for(String col : columnList)
+				valueList.add(Double.parseDouble(row.getAs(col)));
+				
+//		double[] oneDArray = ArrayUtils.toPrimitive(valueList.toArray(new Double[valueList.size()]));
+		return valueList;
 	}
 	
 	@Override
@@ -1462,6 +1462,19 @@ public class SparkExecutor implements IExecutor {
 		PMML pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)trngModel);
 		MetroJAXBUtil.marshalPMML(pmml, new FileOutputStream(new File(pmmlLocation), true));					
 		return true;
+	}
+
+	@Override
+	public Object getDataType(String dataType) throws NullPointerException {
+		if(dataType == null)
+			return null;
+			switch (dataType.toLowerCase()) {
+				case "integer": return DataTypes.IntegerType;
+				case "double": return DataTypes.DoubleType;
+				case "date": return DataTypes.DateType;
+				case "string": return DataTypes.StringType;
+	            default: return null;
+		}
 	}
 
 }

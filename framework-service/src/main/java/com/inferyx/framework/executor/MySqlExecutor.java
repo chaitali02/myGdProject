@@ -43,6 +43,7 @@ import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -50,7 +51,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -261,14 +261,14 @@ public class MySqlExecutor implements IExecutor {
 	}
 
 	@Override
-	public double[][] twoDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+	public List<double[]> twoDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public double[] oneDArrayFromParamListHolder(ParamListHolder paramListHolder, String clientContext)
+	public List<Double> oneDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;
@@ -338,6 +338,15 @@ public class MySqlExecutor implements IExecutor {
 
 	@Override
 	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#getDataType(java.lang.String)
+	 */
+	@Override
+	public Object getDataType(String dataType) throws NullPointerException {
 		// TODO Auto-generated method stub
 		return null;
 	}

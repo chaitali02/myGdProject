@@ -21,7 +21,24 @@ public class ResultSetHolder {
 	private ResultSet resultSet;
 	private Dataset<Row> dataFrame;
 	private long countRows;
+	private String tableName;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the tableName
+	 */
+	public String getTableName() {
+		return tableName;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param tableName the tableName to set
+	 */
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
 	/**
 	 * @return the countRows
 	 */

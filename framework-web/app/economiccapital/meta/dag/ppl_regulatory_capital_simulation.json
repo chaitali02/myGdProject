@@ -1,27 +1,24 @@
 {
-    "_id" : ObjectId("5aee9ebba7986c221eb70cc1"),
     "xPos" : 10.0,
-    "yPos" : 90.0,
+    "yPos" : 250.0,
     "templateFlg" : "N",
     "stages" : [ 
         {
-            "stageId" : "86e91f2e-1956-49df-ba04-e4e2f2a98b50",
+            "stageId" : "stage_0",
             "dependsOn" : [],
             "tasks" : [ 
                 {
-                    "taskId" : "1966db49-64a6-455e-8612-35ac9a6c86c9",
+                    "taskId" : "2efb019b-803f-4caf-a03f-a71c4d8f6d62",
                     "dependsOn" : [],
-                    "name" : "operator_gen_dist",
+                    "name" : "Generate PD Data",
                     "operators" : [ 
                         {
-                            "operatorId" : "6430c7a3-1ad5-414c-902e-7cfbcdff8070",
                             "dependsOn" : [],
                             "operatorInfo" : {
                                 "ref" : {
                                     "type" : "operatortype",
                                     "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
-                                    "version" : "1495325960",
-                                    "name" : "GENERATE_DIST_DATA"
+                                    "name" : "Generate Data"
                                 }
                             },
                             "operatorParams" : {
@@ -29,13 +26,13 @@
                                     "paramListInfo" : [ 
                                         {
                                             "paramId" : "0",
-                                            "paramName" : "DISTRIBUTION_INFO",
+                                            "paramName" : "distribution",
                                             "paramType" : "distribution",
                                             "ref" : {
                                                 "type" : "paramlist",
                                                 "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
                                                 "version" : "1525519035",
-                                                "name" : "test_operatror_type"
+                                                "name" : "paramlist_generate_data"
                                             },
                                             "paramValue" : {
                                                 "ref" : {
@@ -46,50 +43,13 @@
                                         }, 
                                         {
                                             "paramId" : "1",
-                                            "paramName" : "LOCATION_INFO",
-                                            "paramType" : "attributes",
-                                            "ref" : {
-                                                "type" : "paramlist",
-                                                "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
-                                                "version" : "1525519035",
-                                                "name" : "test_operatror_type"
-                                            },
-                                            "attributeInfo" : [ 
-                                                {
-                                                    "ref" : {
-                                                        "type" : "datapod",
-                                                        "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-                                                        "name" : "opening_balance"
-                                                    },
-                                                    "attrId" : "13"
-                                                }, 
-                                                {
-                                                    "ref" : {
-                                                        "type" : "datapod",
-                                                        "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-                                                        "name" : "current_balance"
-                                                    },
-                                                    "attrId" : "14"
-                                                }, 
-                                                {
-                                                    "ref" : {
-                                                        "type" : "datapod",
-                                                        "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-                                                        "name" : "interest_rate"
-                                                    },
-                                                    "attrId" : "19"
-                                                }
-                                            ]
-                                        }, 
-                                        {
-                                            "paramId" : "2",
-                                            "paramName" : "NUMITERATIONS_INFO",
+                                            "paramName" : "numIterations",
                                             "paramType" : "integer",
                                             "ref" : {
                                                 "type" : "paramlist",
                                                 "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
                                                 "version" : "1525519035",
-                                                "name" : "test_operatror_type"
+                                                "name" : "paramlist_generate_data"
                                             },
                                             "paramValue" : {
                                                 "ref" : {
@@ -99,56 +59,81 @@
                                             }
                                         }, 
                                         {
-                                            "paramId" : "1",
-                                            "paramName" : "factormeans",
+                                            "paramId" : "2",
+                                            "paramName" : "saveLocation",
                                             "paramType" : "attribute",
                                             "ref" : {
                                                 "type" : "paramlist",
-                                                "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                                                "version" : "1525519141",
-                                                "name" : "paramlist_multivariate_normal_distribution"
+                                                "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                                                "version" : "1525519035",
+                                                "name" : "paramlist_generate_data"
                                             },
                                             "attributeInfo" : [ 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "3a47402e-6ba5-4ca7-b3a4-7e01fd4dcdd9"
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
+                                                        "name" : "id"
                                                     },
                                                     "attrId" : "0"
                                                 }
                                             ]
                                         }, 
                                         {
-                                            "paramId" : "2",
-                                            "paramName" : "factorvarience",
-                                            "paramType" : "attributes",
+                                            "paramId" : "1",
+                                            "paramName" : "factorMeans",
+                                            "paramType" : "attribute",
                                             "ref" : {
                                                 "type" : "paramlist",
                                                 "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                                                "version" : "1525519141",
+                                                "version" : "1523604347",
                                                 "name" : "paramlist_multivariate_normal_distribution"
                                             },
                                             "attributeInfo" : [ 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a"
+                                                        "uuid" : "d7d39f87-faa1-4175-a952-bc8bab52465a",
+                                                        "name" : "mean"
                                                     },
-                                                    "attrId" : "0"
-                                                }, 
+                                                    "attrId" : "1"
+                                                }
+                                            ]
+                                        }, 
+                                        {
+                                            "paramId" : "2",
+                                            "paramName" : "factorCovariance",
+                                            "paramType" : "attributes",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
+                                                "version" : "1523604347",
+                                                "name" : "paramlist_multivariate_normal_distribution"
+                                            },
+                                            "attributeInfo" : [ 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a"
+                                                        "uuid" : "5b3c8a96-ea4f-430c-866f-36e9cf06eec8",
+                                                        "name" : "automobile"
                                                     },
                                                     "attrId" : "1"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "47b9c712-bb76-489a-b26d-34a40b7cdb2a"
+                                                        "uuid" : "5b3c8a96-ea4f-430c-866f-36e9cf06eec8",
+                                                        "name" : "pharma"
                                                     },
                                                     "attrId" : "2"
+                                                }, 
+                                                {
+                                                    "ref" : {
+                                                        "type" : "datapod",
+                                                        "uuid" : "5b3c8a96-ea4f-430c-866f-36e9cf06eec8",
+                                                        "name" : "finance"
+                                                    },
+                                                    "attrId" : "3"
                                                 }
                                             ]
                                         }
@@ -157,17 +142,17 @@
                             }
                         }
                     ],
-                    "xPos" : 770.0,
-                    "yPos" : 90.0,
+                    "xPos" : 730.0,
+                    "yPos" : 250.0,
                     "active" : "Y",
                     "statusList" : []
                 }, 
                 {
-                    "taskId" : "62af7826-0650-4400-ae8d-678abbd908f9",
+                    "taskId" : "aa177bdc-7e39-454d-965b-909ecbab827a",
                     "dependsOn" : [ 
-                        "1966db49-64a6-455e-8612-35ac9a6c86c9"
+                        "2efb019b-803f-4caf-a03f-a71c4d8f6d62"
                     ],
-                    "name" : "Transpose dist",
+                    "name" : "Transpose PD data",
                     "operators" : [ 
                         {
                             "dependsOn" : [],
@@ -175,7 +160,7 @@
                                 "ref" : {
                                     "type" : "operatortype",
                                     "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                                    "name" : "operator_transpose"
+                                    "name" : "Transpose"
                                 }
                             },
                             "operatorParams" : {
@@ -183,7 +168,7 @@
                                     "paramListInfo" : [ 
                                         {
                                             "paramId" : "0",
-                                            "paramName" : "transpose_dataset",
+                                            "paramName" : "sourceDatapod",
                                             "paramType" : "attributes",
                                             "ref" : {
                                                 "type" : "paramlist",
@@ -195,24 +180,24 @@
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "f835c657-9bd0-4c34-beef-cb08b95f71b4",
-                                                        "name" : "opening_balance"
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
+                                                        "name" : "automobile"
                                                     },
                                                     "attrId" : "1"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "f835c657-9bd0-4c34-beef-cb08b95f71b4",
-                                                        "name" : "current_balance"
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
+                                                        "name" : "pharma"
                                                     },
                                                     "attrId" : "2"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "f835c657-9bd0-4c34-beef-cb08b95f71b4",
-                                                        "name" : "interest_rate"
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
+                                                        "name" : "finance"
                                                     },
                                                     "attrId" : "3"
                                                 }
@@ -232,7 +217,28 @@
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "fc929c7e-5bef-43c2-8626-5877c69bb90e",
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
+                                                        "name" : "id"
+                                                    },
+                                                    "attrId" : "0"
+                                                }
+                                            ]
+                                        }, 
+                                        {
+                                            "paramId" : "2",
+                                            "paramName" : "saveLocation",
+                                            "paramType" : "attribute",
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+                                                "version" : "1525530897",
+                                                "name" : "paramlist_transpose"
+                                            },
+                                            "attributeInfo" : [ 
+                                                {
+                                                    "ref" : {
+                                                        "type" : "datapod",
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4c",
                                                         "name" : "id"
                                                     },
                                                     "attrId" : "0"
@@ -244,41 +250,41 @@
                             }
                         }
                     ],
-                    "xPos" : 1050.0,
-                    "yPos" : 90.0,
+                    "xPos" : 1020.0,
+                    "yPos" : 250.0,
                     "active" : "Y",
                     "statusList" : []
                 }
             ],
-            "name" : "Demonstrate generate distribution operator",
+            "name" : "new stage",
             "xPos" : 450.0,
-            "yPos" : 90.0,
+            "yPos" : 250.0,
             "active" : "Y",
             "statusList" : []
         }
     ],
     "statusList" : [],
-    "uuid" : "e3a509ff-ed79-45e4-b903-6839c1da1a9h",
-    "version" : "1525587643",
-    "name" : "ppl_operator_gen_dist",
+    "uuid" : "6b94e288-4d9d-4d2d-8e2a-20df31401b72",
+    "version" : "1525647564",
+    "name" : "ppl_regulatory_capital_simulation",
+    "desc" : "Pipeline to simulate regulatory capital calculations",
     "createdBy" : {
         "ref" : {
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
+            "version" : "1464977196"
         }
     },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
-    "published" : "N",
+    "published" : "Y",
     "appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+                "version" : "1521430822"
             }
         }
     ]

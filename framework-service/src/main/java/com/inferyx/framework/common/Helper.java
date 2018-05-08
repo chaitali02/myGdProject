@@ -26,8 +26,6 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.util.CharArrayMap.EntrySet;
-import org.apache.spark.sql.types.DataType;
-import org.apache.spark.sql.types.DataTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -186,18 +184,6 @@ public class Helper {
 		return fileName;
 	}	
 
-	public static DataType getDataType(String dataType) throws NullPointerException {
-		if(dataType == null)
-			return null;
-			switch (dataType.toLowerCase()) {
-				case "integer": return DataTypes.IntegerType;
-				case "double": return DataTypes.DoubleType;
-				case "date": return DataTypes.DateType;
-				case "string": return DataTypes.StringType;
-	            default: return null;
-		}
-	}
-				
 	public static String getDaoClass(MetaType type) throws NullPointerException {
 		if(type == null)
 			return null;

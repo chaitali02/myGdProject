@@ -27,6 +27,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
+import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.enums.RunMode;
@@ -70,7 +71,10 @@ public class GenerateDataOperator implements Operator {
 	public void execute(OperatorType operatorType, ExecParams execParams, Object metaExec,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 	
-		OperatorExec operatorExec = (OperatorExec) metaExec;
+		//OperatorExec operatorExec = (OperatorExec) metaExec;
+		MetaIdentifier execIdentifier = (MetaIdentifier) metaExec;
+		String execUuid = execIdentifier.getUuid();
+		String execVersion = execIdentifier.getVersion();
 		
 		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "distribution");
 		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
@@ -106,24 +110,29 @@ public class GenerateDataOperator implements Operator {
 //				}			
 		}		
 		
-		String tableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
-		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, attributes, numIterations, operatorExec.getVersion());
+		//String tableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
+		String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
+		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, attributes, numIterations, execVersion);
 		
-		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + operatorExec.getVersion();
-		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
+		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
+		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
 		//dp.seta
 		exec.registerAndPersist(resultSetHolder, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
+		Object mtaexec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
+		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) mtaexec.getClass().getMethod("getCreatedBy").invoke(mtaexec);
+		List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) mtaexec.getClass().getMethod("getAppInfo").invoke(mtaexec);
+		
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, fileName, 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
-				, new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()) ,
-				operatorExec.getAppInfo(), operatorExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
-
-		operatorExec.setResult(resultRef);
-		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
+				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+		
+		mtaexec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(mtaexec, resultRef);
+		commonServiceImpl.save(execIdentifier.getType().toString(), mtaexec);
 	}
 
 }
