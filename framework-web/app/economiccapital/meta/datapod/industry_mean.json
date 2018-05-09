@@ -36,11 +36,10 @@
     "uuid" : "d7d39f87-faa1-4175-a952-bc8bab52465a",
     "version" : "1525636303",
     "name" : "industry_mean",
-    "createdBy" : {
+   "createdBy" : {
         "ref" : {
             "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196"
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
