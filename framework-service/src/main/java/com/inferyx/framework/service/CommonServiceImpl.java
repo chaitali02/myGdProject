@@ -1600,7 +1600,7 @@ public class CommonServiceImpl <T> {
 										DataSet dataSet = (DataSet) attrRefObj;
 										
 										for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
-											if(attributeSource.getAttrSourceId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
+											if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
 												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
 											}
 										}
@@ -1608,7 +1608,7 @@ public class CommonServiceImpl <T> {
 										Rule rule = (Rule) attrRefObj;
 
 										for(AttributeSource attributeSource : rule.getAttributeInfo()) {
-											if(attributeSource.getAttrSourceId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
+											if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
 												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
 											}
 											
