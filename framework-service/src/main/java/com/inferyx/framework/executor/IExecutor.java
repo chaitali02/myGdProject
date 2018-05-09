@@ -238,7 +238,6 @@ public interface IExecutor {
 	/**
 	 * 
 	 * @param sql
-	 * @param paramDp TODO
 	 * @param attributeInfo TODO
 	 * @param clientContext TODO
 	 * @return
@@ -246,13 +245,12 @@ public interface IExecutor {
 	 * @throws ExecutionException TODO
 	 * @throws Exception TODO
 	 */
-	List<double[]> twoDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	List<double[]> twoDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception;
 
 	/**
 	 * 
 	 * @param sql
-	 * @param paramDp TODO
 	 * @param attributeInfo TODO
 	 * @param clientContext TODO
 	 * @return
@@ -260,7 +258,7 @@ public interface IExecutor {
 	 * @throws ExecutionException TODO
 	 * @throws Exception TODO
 	 */
-	List<Double> oneDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	List<Double> oneDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception;
 	
 	/**

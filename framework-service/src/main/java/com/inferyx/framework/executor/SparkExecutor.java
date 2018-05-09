@@ -1269,29 +1269,19 @@ public class SparkExecutor implements IExecutor {
 	}*/
 	
 	@Override
-	public List<double[]> twoDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	public List<double[]> twoDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
-//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-//		
-//		MetaIdentifier datapodIdentifier = sql.getAttributeInfo().get(0).getRef();
-//		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
-//		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-//		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
-//		logger.info("Table name:" + tableName);
-//		
-//		String tableName = readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);		
-//		String sql = "SELECT * FROM " + tableName;
-		
+
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		df.show(false);
 		
 		
 		List<String> columnList = new ArrayList<>();
-		for(Attribute attribute : paramDp.getAttributes())
+//		for(Attribute attribute : paramDp.getAttributes())
 			for(AttributeRefHolder attributeRefHolder : attributeInfo) {
-				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
-					columnList.add(attribute.getName());
-				}
+//				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
+					columnList.add(attributeRefHolder.getAttrName());
+				//}
 			}
 		
 		List<double[]> valueList = new ArrayList<>();
@@ -1302,35 +1292,23 @@ public class SparkExecutor implements IExecutor {
 				valueList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
 		}
 		
-		//double[][] twoDArray = valueList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
 		return valueList;
 	}
 
 	@Override
-	public List<Double> oneDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	public List<Double> oneDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
-		
-//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		
-//		MetaIdentifier datapodIdentifier = sql.getAttributeInfo().get(0).getRef();
-//		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
-//		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-//		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
-//		logger.info("Table name:" + tableName);
-//
-//		String tableName = readFile(commonServiceImpl.getApp().getUuid(), paramDp, paramDs, null, hdfsInfo, null, datasource);
-//		String sql = "SELECT * FROM " + tableName;
-		
+			
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		df.printSchema();
 		df.show(false);
 
 		List<String> columnList = new ArrayList<>();
-		for(Attribute attribute : paramDp.getAttributes())
+		//for(Attribute attribute : paramDp.getAttributes())
 			for(AttributeRefHolder attributeRefHolder : attributeInfo) {
-				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
-					columnList.add(attribute.getName());
-				}
+				//if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
+					columnList.add(attributeRefHolder.getAttrName());
+				//}
 			}			
 		
 		List<Double> valueList = new ArrayList<>();
@@ -1338,7 +1316,6 @@ public class SparkExecutor implements IExecutor {
 			for(String col : columnList)
 				valueList.add(Double.parseDouble(row.getAs(col)));
 				
-//		double[] oneDArray = ArrayUtils.toPrimitive(valueList.toArray(new Double[valueList.size()]));
 		return valueList;
 	}
 	
