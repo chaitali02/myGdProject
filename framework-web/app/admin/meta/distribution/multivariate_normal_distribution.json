@@ -1,27 +1,15 @@
 {
-    "_id" : ObjectId("5aef5c0fd44ef1078263eb3b"),
-    "metaId" : {
+    "library" : "SPARKML",
+    "className" : "org.apache.commons.math3.distribution.MultivariateNormalDistribution",
+    "paramList" : {
         "ref" : {
-            "type" : "datapod",
-            "uuid" : "5b3c8a96-ea4f-430c-866f-36e9cf06eec8",
-            "version" : "1525636110"
+            "type" : "paramlist",
+            "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4"
         }
     },
-    "execId" : {
-        "ref" : {
-            "type" : "loadExec",
-            "uuid" : "60969324-a3af-4378-a28c-845fd65e11d7",
-            "version" : "1525636110"
-        }
-    },
-    "location" : "/5b3c8a96-ea4f-430c-866f-36e9cf06eec8/1525636110/1525636110",
-    "persistMode" : "DISK_ONLY",
-    "numRows" : NumberLong(3),
-    "runMode" : "BATCH",
-    "uuid" : "9818c08a-290f-4ed8-96b6-3933285c9ffb",
-    "version" : "1525636111",
-    "name" : "industry_covariance",
-    "desc" : "Creating datastore for industry_covariance",
+    "uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050",
+    "version" : "1523604730",
+    "name" : "multivariate_normal_distribution",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -31,6 +19,7 @@
         }
     },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "tags" : [],
     "active" : "Y",
     "published" : "N",
     "appInfo" : [ 

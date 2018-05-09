@@ -2,25 +2,25 @@
     "metaId" : {
         "ref" : {
             "type" : "datapod",
-            "uuid" : "d7d39f87-faa1-4175-a952-bc8bab52465a",
-            "version" : "1525636303"
+            "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
+            "version" : "1525625326"
         }
     },
     "execId" : {
         "ref" : {
             "type" : "loadExec",
-            "uuid" : "9b081995-1d30-4e58-8117-13163dc0ca4d",
-            "version" : "1525636303"
+            "uuid" : "2ebaeb83-5ede-4e3a-ac77-d7aeb399ce0c",
+            "version" : "1525625326"
         }
     },
-    "location" : "/d7d39f87-faa1-4175-a952-bc8bab52465a/1525636303/1525636303",
+    "location" : "/ceb4f8ea-e02e-44f7-8083-2808cd8bde4b/1525625326/1525625326",
     "persistMode" : "DISK_ONLY",
-    "numRows" : NumberLong(3),
+    "numRows" : NumberLong(4),
     "runMode" : "BATCH",
-    "uuid" : "b8699bda-a6fa-4da3-bbb6-5d140e5ba233",
-    "version" : "1525636304",
-    "name" : "industry_mean",
-    "desc" : "Creating datastore for industry_mean",
+    "uuid" : "fb6e3b2e-3e2e-46df-839e-7d5c98769c2f",
+    "version" : "1525625327",
+    "name" : "industry_pd",
+    "desc" : "Creating datastore for industry_pd",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -33,13 +33,6 @@
     "active" : "Y",
     "published" : "N",
     "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
-            }
-        },
         {
             "ref" : {
                 "type" : "application",
