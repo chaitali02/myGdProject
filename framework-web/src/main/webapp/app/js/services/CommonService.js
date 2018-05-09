@@ -602,7 +602,8 @@
         }
       }
       if (type == "dataset") {
-        CommonFactory.findDatapodByDataset(uuid, type).then(function (response) { onSuccess(response.data) });
+        var url= "metadata/getAttributesByDataset?action=view&uuid=" + uuid + "&type=dataset"
+        CommonFactory.httpGet(url).then(function (response) { onSuccess(response.data) });
         var onSuccess = function (response) {
           var attributes = [];
           for (var j = 0; j < response.length; j++) {
@@ -644,8 +645,8 @@
   
       }
       if (type == "rule") {
-  
-        CommonFactory.findDatapodByRule(uuid, type).then(function (response) { onSuccess(response.data) });
+        var url= "metadata/getAttributesByRule?action=view&uuid=" + uuid + "&type=rule"
+        CommonFactory.httpGet(url).then(function (response) { onSuccess(response.data) });
         var onSuccess = function (response) {
           var attributes = [];
           for (var j = 0; j < response.length; j++) {

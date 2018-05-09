@@ -2667,6 +2667,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             $scope.paramListHolder = response;
             $scope.opringinalparamListHolder=$scope.paramListHolder
             var paramListHolder=[]
+            debugger
             if($scope.popupModel.modelData.operators[0].operatorParams !=null){
               var paramListInfo=$scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo
               for(var i=0;i<paramListInfo.length;i++){ 
