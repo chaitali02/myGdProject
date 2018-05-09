@@ -17,8 +17,7 @@
                             "operatorInfo" : {
                                 "ref" : {
                                     "type" : "operatortype",
-                                    "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                                    "name" : "Transpose"
+                                    "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a"
                                 }
                             },
                             "operatorParams" : {
@@ -26,36 +25,29 @@
                                     "paramListInfo" : [ 
                                         {
                                             "paramId" : "0",
-                                            "paramName" : "sourceDatapod",
-                                            "paramType" : "attributes",
                                             "ref" : {
                                                 "type" : "paramlist",
-                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                                                "version" : "1525530897",
-                                                "name" : "paramlist_transpose"
+                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21"
                                             },
                                             "attributeInfo" : [ 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
-                                                        "name" : "automobile"
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b"
                                                     },
                                                     "attrId" : "1"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
-                                                        "name" : "pharma"
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b"
                                                     },
                                                     "attrId" : "2"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
-                                                        "name" : "finance"
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b"
                                                     },
                                                     "attrId" : "3"
                                                 }
@@ -63,20 +55,15 @@
                                         }, 
                                         {
                                             "paramId" : "1",
-                                            "paramName" : "key",
-                                            "paramType" : "attribute",
                                             "ref" : {
                                                 "type" : "paramlist",
-                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                                                "version" : "1525530897",
-                                                "name" : "paramlist_transpose"
+                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21"
                                             },
                                             "attributeInfo" : [ 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b",
-                                                        "name" : "id"
+                                                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4b"
                                                     },
                                                     "attrId" : "0"
                                                 }
@@ -84,19 +71,14 @@
                                         }, 
                                         {
                                             "paramId" : "2",
-                                            "paramName" : "saveLocation",
-                                            "paramType" : "datapod",
                                             "ref" : {
                                                 "type" : "paramlist",
-                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                                                "version" : "1525530897",
-                                                "name" : "paramlist_transpose"
+                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21"
                                             },
                                             "paramValue" : {
                                                 "ref" : {
                                                     "type" : "datapod",
-                                                    "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4c",
-                                                    "version" : "1525625326"
+                                                    "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bde4c"
                                                 }
                                             }
                                         }
