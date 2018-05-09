@@ -1733,6 +1733,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
 
      var dblClickFn = function(e,newCell,elemt) {
+       
        if(!$scope.editMode || $scope.isTemplate){
          return;
        }
@@ -2606,6 +2607,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       }
       
       $scope.executeWithExecParams = function () {
+       
         var cell = $scope.graph.getCell($scope.popupModel.id);
         cell.attr('text', { text: $scope.popupModel.modelData.name});
         $scope.isExecParamList=false;    
@@ -2646,6 +2648,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
 
      
       $scope.getExecParamList=function(data){
+        $scope.cars = [{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"transaction_id","dname":"transaction.transaction_id","attributeId":"0","id":"49fc0656-109d-46a2-a826-c09e92895035_0"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"transaction_type_id","dname":"transaction.transaction_type_id","attributeId":"1","id":"49fc0656-109d-46a2-a826-c09e92895035_1"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"account_id","dname":"transaction.account_id","attributeId":"2","id":"49fc0656-109d-46a2-a826-c09e92895035_2"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"transaction_date","dname":"transaction.transaction_date","attributeId":"3","id":"49fc0656-109d-46a2-a826-c09e92895035_3"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"from_account","dname":"transaction.from_account","attributeId":"4","id":"49fc0656-109d-46a2-a826-c09e92895035_4"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"to_account","dname":"transaction.to_account","attributeId":"5","id":"49fc0656-109d-46a2-a826-c09e92895035_5"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"amount_base_curr","dname":"transaction.amount_base_curr","attributeId":"6","id":"49fc0656-109d-46a2-a826-c09e92895035_6"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"amount_usd","dname":"transaction.amount_usd","attributeId":"7","id":"49fc0656-109d-46a2-a826-c09e92895035_7"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"currency_code","dname":"transaction.currency_code","attributeId":"8","id":"49fc0656-109d-46a2-a826-c09e92895035_8"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"currency_rate","dname":"transaction.currency_rate","attributeId":"9","id":"49fc0656-109d-46a2-a826-c09e92895035_9"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"notes","dname":"transaction.notes","attributeId":"10","id":"49fc0656-109d-46a2-a826-c09e92895035_10"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"load_date","dname":"transaction.load_date","attributeId":"11","id":"49fc0656-109d-46a2-a826-c09e92895035_11"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"load_id","dname":"transaction.load_id","attributeId":"12","id":"49fc0656-109d-46a2-a826-c09e92895035_12"},{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","datapodname":"transaction","name":"version","dname":"transaction.version","attributeId":"13","id":"49fc0656-109d-46a2-a826-c09e92895035_13"}] 
+        $scope.selectedCar = [{"uuid":"49fc0656-109d-46a2-a826-c09e92895035","id":"49fc0656-109d-46a2-a826-c09e92895035_0","datapodname":"transaction","name":"transaction_id","dname":"transaction.transaction_id","attributeId":"0"}];
+    
         $scope.attributeTypes=['datapod','dataset','rule'];
         CommonService.getParamListByType(data.type,data.uuid,data.version).then(function (response) {
           onSuccessGetExecuteModel(response.data)
@@ -2662,6 +2667,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             $scope.paramListHolder = response;
             $scope.opringinalparamListHolder=$scope.paramListHolder
             var paramListHolder=[]
+            debugger
             if($scope.popupModel.modelData.operators[0].operatorParams !=null){
               var paramListInfo=$scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo
               for(var i=0;i<paramListInfo.length;i++){ 
@@ -2715,11 +2721,17 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 for(var j=0;j < paramListInfo[i].attributeInfo.length;j++){
                 var attributeInfo={}
                 attributeInfo.uuid=paramListInfo[i].attributeInfo[j].ref.uuid;
-                attributeInfo.type=paramListInfo[i].attributeInfo[j].ref.type;
+               
+               // attributeInfo.type=paramListInfo[i].attributeInfo[j].ref.type;
+                attributeInfo.datapodname=paramListInfo[i].attributeInfo[j].ref.name;
+                attributeInfo.name=paramListInfo[i].attributeInfo[j].attrName;
+                attributeInfo.dname=paramListInfo[i].attributeInfo[j].ref.name+"."+paramListInfo[i].attributeInfo[j].attrName;
                 attributeInfo.attributeId=paramListInfo[i].attributeInfo[j].attrId;
+                attributeInfo.id=paramListInfo[i].attributeInfo[j].ref.uuid+"_"+paramListInfo[i].attributeInfo[j].attrId;
                 attributeInfoArray[j]=attributeInfo
                 }
                 paramList.attributeInfoTag=attributeInfoArray
+                paramList.allAttributeinto=[];
                 paramListHolder[i]=paramList
                }
                 
@@ -2747,6 +2759,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           }
           else if(type =="distribution"){
             $scope.allDistribution=response;
+          }
+          else if(type =="dataset"){
+            $scope.allDataset=response;
+          }
+          else if(type =="rule"){
+            $scope.allRule=response;
           }
          
         }
@@ -2806,8 +2824,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           for(var i=0;i<$scope.paramListHolder.length;i++){
             var paramList={};
             paramList.paramId=$scope.paramListHolder[i].paramId;
-            paramList.paramName=$scope.paramListHolder[i].paramName;
-            paramList.paramType=$scope.paramListHolder[i].paramType;
+          //  paramList.paramName=$scope.paramListHolder[i].paramName;
+          //  paramList.paramType=$scope.paramListHolder[i].paramType;
             paramList.ref=$scope.paramListHolder[i].ref;
             if($scope.paramListHolder[i].paramType =='attribute'){
               var attributeInfoArray=[];
@@ -2815,7 +2833,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               var attributeInfoRef={}
               attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
               attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfo.uuid;
-              attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
+            //  attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
               attributeInfo.ref=attributeInfoRef;
               attributeInfo.attrId=$scope.paramListHolder[i].attributeInfo.attributeId;
               attributeInfoArray[0]=attributeInfo
@@ -2829,9 +2847,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 var attributeInfoRef={}
                 attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
                 attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfoTag[j].uuid
-                attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].name
+               // attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
                 attributeInfo.ref=attributeInfoRef;
                 attributeInfo.attrId=$scope.paramListHolder[i].attributeInfoTag[j].attributeId;
+             ///   attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
                 attributeInfoArray[j]=attributeInfo
               }
               paramList.attributeInfo=attributeInfoArray;

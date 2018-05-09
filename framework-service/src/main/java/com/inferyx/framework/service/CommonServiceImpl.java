@@ -129,13 +129,16 @@ import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.dao.IVizpodExecDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Log;
 import com.inferyx.framework.domain.Message;
@@ -149,6 +152,7 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
@@ -1483,9 +1487,9 @@ public class CommonServiceImpl <T> {
 							if (innerMethod.getName().startsWith(SET + "Attr") /*|| innerMethod.getName().startsWith(SET + "Attribute")*/ && innerMethod.getName().contains("Name")) {
 								innerMethod.invoke(object, resolveAttributeName(attrId, object));
 							}
-						}
-						
-					}
+						}	
+					}					
+					
 					if(object instanceof ParamSet) {
 						ParamSet paramSet = (ParamSet) object;
 						List<ParamInfo> paramInfo = paramSet.getParamInfo();
@@ -1507,6 +1511,12 @@ public class CommonServiceImpl <T> {
 						}
 						paramSet.setParamInfo(paramInfos);
 						object = paramSet;
+					}
+					
+					if (method.getName().contains("OperatorParams") && method.getName().startsWith(GET))  {
+						HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
+						if(operatorParams != null)
+							object = resolveOperatorParams(operatorParams, object);
 					}
 					
 					Object invokedObj = method.invoke(object);
@@ -1546,6 +1556,61 @@ public class CommonServiceImpl <T> {
 		return object;
 	}
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @param operatorParams
+	 * @return
+	 * @throws JsonProcessingException 
+	 */
+	private Object resolveOperatorParams(HashMap<String, Object> operatorParams, Object object) throws JsonProcessingException {
+			if(operatorParams.containsKey("EXEC_PARAMS")) {
+				ObjectMapper mapper = new ObjectMapper();
+				ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+				List<ParamListHolder> paramListInfo= execParams.getParamListInfo();
+				
+				if(paramListInfo != null)
+					for(ParamListHolder holder : paramListInfo) {
+						MetaIdentifier ref = holder.getRef();
+						if(ref != null) {
+							ParamList paramList = (ParamList) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							for(Param param : paramList.getParams())
+								if(param.getParamId().equalsIgnoreCase(holder.getParamId())) {
+									holder.setParamName(param.getParamName());
+									holder.setParamType(param.getParamType());
+								}
+						}
+						List<AttributeRefHolder> attributeInfo = holder.getAttributeInfo();
+						if(attributeInfo != null) {
+							for(AttributeRefHolder attributeRefHolder : attributeInfo) {
+								MetaIdentifier attrRef = attributeRefHolder.getRef();
+								if(attrRef != null) {
+									Object attrRefObj = getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString());
+									if(attrRefObj instanceof Datapod) {
+										Datapod datapod = (Datapod) attrRefObj;
+										for(Attribute attribute : datapod.getAttributes()) {
+											if(attribute.getAttributeId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
+												attributeRefHolder.setAttrName(attribute.getName());
+											}
+										}
+										attributeRefHolder.getRef().setName(datapod.getName());
+									} else if(attrRefObj instanceof DataSet) {
+										DataSet dataSet = (DataSet) attrRefObj;
+										
+									} else if(attrRefObj instanceof Rule) {
+										Rule rule = (Rule) attrRefObj;
+										
+									}
+									
+								}
+							}
+						}
+					}
+				operatorParams.put("EXEC_PARAMS", execParams);
+			}
+		return object;
+	}
+
 	public T resolveName(String uuid, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
 		return getAllByUuid(uuid, type);
 	}
