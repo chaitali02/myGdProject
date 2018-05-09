@@ -130,6 +130,7 @@ import com.inferyx.framework.dao.IVizpodExecDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
@@ -1588,6 +1589,7 @@ public class CommonServiceImpl <T> {
 									Object attrRefObj = getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString());
 									if(attrRefObj instanceof Datapod) {
 										Datapod datapod = (Datapod) attrRefObj;
+										
 										for(Attribute attribute : datapod.getAttributes()) {
 											if(attribute.getAttributeId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
 												attributeRefHolder.setAttrName(attribute.getName());
@@ -1597,9 +1599,20 @@ public class CommonServiceImpl <T> {
 									} else if(attrRefObj instanceof DataSet) {
 										DataSet dataSet = (DataSet) attrRefObj;
 										
+										for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
+											if(attributeSource.getAttrSourceId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
+												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
+											}
+										}
 									} else if(attrRefObj instanceof Rule) {
 										Rule rule = (Rule) attrRefObj;
-										
+
+										for(AttributeSource attributeSource : rule.getAttributeInfo()) {
+											if(attributeSource.getAttrSourceId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
+												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
+											}
+											
+										}
 									}
 									
 								}
