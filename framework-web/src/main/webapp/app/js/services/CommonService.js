@@ -464,6 +464,8 @@
             paramList.paramName=response[i].paramName;
             paramList.ref=response[i].ref;
             paramList.attributeInfo;
+            paramList.allAttributeinto=[];
+            paramList.attributeInfoTag=[];
             if(type1.indexOf(response[i].paramType) == -1 ){
               paramList.isParamType="simple";
               paramList.paramValue=response[i].paramValue.value;
