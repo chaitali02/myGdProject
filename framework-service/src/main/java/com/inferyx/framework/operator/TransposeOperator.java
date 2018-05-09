@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.datascience.Math3Distribution;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
@@ -24,7 +23,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
@@ -93,20 +91,23 @@ public class TransposeOperator implements Operator {
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.lang.Object, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
 	 */
 	@Override
-	public void execute(OperatorType operatorType, ExecParams execParams, Object metaExec,
+	public void execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		logger.info("Executing TransposeOperator");
 		StringBuilder sb = new StringBuilder();
 		
-		OperatorExec operatorExec = (OperatorExec) metaExec;
+		String execUuid = execIdentifier.getUuid();
+		String execVersion = execIdentifier.getVersion();
+		
+		//OperatorExec operatorExec = (OperatorExec) execIdentifier;
 		
 		ParamListHolder sourceDatapodInfo = paramSetServiceImpl.getParamByName(execParams, "sourceDatapod");
 		ParamListHolder keyInfo = paramSetServiceImpl.getParamByName(execParams, "key");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
-		MetaIdentifier locationDatapodIdentifier = locationInfo.getAttributeInfo().get(0).getRef();
-		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locationDatapodIdentifier.getUuid(), locationDatapodIdentifier.getVersion(), locationDatapodIdentifier.getType().toString());
+		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		MetaIdentifier sourceDatapodIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
 		Datapod sourceDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDatapodIdentifier.getUuid(), sourceDatapodIdentifier.getVersion(), sourceDatapodIdentifier.getType().toString());
 		
@@ -117,21 +118,30 @@ public class TransposeOperator implements Operator {
 		
 		List<AttributeRefHolder> attrRefHolders = sourceDatapodInfo.getAttributeInfo();
 		List<Attribute> attrList = new ArrayList<>();
-		Attribute keyAttr = sourceDatapod.getAttribute(Integer.parseInt(keyInfo.getAttributeInfo().get(0).getAttrId()));
+		List<Attribute> keyAttrList = new ArrayList<>();
+		List<AttributeRefHolder> keyAttrs = keyInfo.getAttributeInfo();
+//		Attribute keyAttr = sourceDatapod.getAttribute(Integer.parseInt(keyInfo.getAttributeInfo().get(0).getAttrId()));
 		for (AttributeRefHolder attrRefHolder : attrRefHolders) {
 			attrList.add(sourceDatapod.getAttribute(Integer.parseInt(attrRefHolder.getAttrId())));
 		}
+		for (AttributeRefHolder attrRefHolder : keyAttrs) {
+			keyAttrList.add(sourceDatapod.getAttribute(Integer.parseInt(attrRefHolder.getAttrId())));
+		}
 		
-		String version = operatorExec.getVersion();
+		//String version = operatorExec.getVersion();
 		
 		// Get the fieldArray
 		boolean isAttrFound = false;
 		sb.append(ConstantsUtil.SELECT);
-		sb.append(keyAttr.getName());
-		sb.append(", tranpose_column, transpose_value, " + version + " version FROM (");
+		for (Attribute attribute : keyAttrList) {
+			sb.append(attribute.getName()).append(", ");
+		}
+		sb.append("tranpose_column, transpose_value, " + execVersion + " version FROM (");
 		sb.append(ConstantsUtil.SELECT);
-		sb.append(keyAttr.getName());
-		sb.append(", MAP (");
+		for (Attribute attribute : keyAttrList) {
+			sb.append(attribute.getName()).append(", ");
+		}
+		sb.append(" MAP (");
 		int count = 0;
 		for(Attribute attribute : attrList) {
 			isAttrFound = Boolean.TRUE;
@@ -145,20 +155,26 @@ public class TransposeOperator implements Operator {
 		sb.append("  ) x LATERAL VIEW EXPLODE(tmp_column) exptbl AS tranpose_column, transpose_value ");
 		String sql = sb.toString();
 		
-		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + operatorExec.getVersion();
-		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
+		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
+		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-		String tableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
+		String tableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 		
 		ResultSetHolder resultSetHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		
+		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
+		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
+		@SuppressWarnings("unchecked")
+		List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) metaExec.getClass().getMethod("getAppInfo").invoke(metaExec);
 		
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, fileName, 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
-				, new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()) ,
-				operatorExec.getAppInfo(), operatorExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
-		operatorExec.setResult(resultRef);
-		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
+				, new MetaIdentifier(execIdentifier.getType(), execUuid, execVersion) ,
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+		
+		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
+		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
 	}
 
 }

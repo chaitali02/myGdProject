@@ -1269,7 +1269,7 @@ public class SparkExecutor implements IExecutor {
 	}*/
 	
 	@Override
-	public List<double[]> twoDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	public List<double[]> twoDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
 //		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 //		
@@ -1292,7 +1292,7 @@ public class SparkExecutor implements IExecutor {
 				if(attribute.getAttributeId().equals(Integer.parseInt(attributeRefHolder.getAttrId()))) {
 					columnList.add(attribute.getName());
 				}
-			}	
+			}
 		
 		List<double[]> valueList = new ArrayList<>();
 		for(Row row : df.collectAsList()) {
@@ -1307,7 +1307,7 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Double> oneDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	public List<Double> oneDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
 		
 //		Datasource datasource = commonServiceImpl.getDatasourceByApp();

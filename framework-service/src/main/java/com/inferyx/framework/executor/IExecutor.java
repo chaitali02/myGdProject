@@ -246,7 +246,7 @@ public interface IExecutor {
 	 * @throws ExecutionException TODO
 	 * @throws Exception TODO
 	 */
-	List<double[]> twoDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	List<double[]> twoDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception;
 
 	/**
@@ -260,7 +260,7 @@ public interface IExecutor {
 	 * @throws ExecutionException TODO
 	 * @throws Exception TODO
 	 */
-	List<Double> oneDArrayFromParamListHolder(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	List<Double> oneDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception;
 	
 	/**
