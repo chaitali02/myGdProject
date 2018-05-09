@@ -255,13 +255,13 @@ public class ImpalaExecutor implements IExecutor {
 		return null;
 	}
 	@Override
-	public List<double[]> twoDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	public List<double[]> twoDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
-	public List<Double> oneDArray(String sql, Datapod paramDp, List<AttributeRefHolder> attributeInfo, String clientContext)
+	public List<Double> oneDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;

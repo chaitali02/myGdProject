@@ -114,18 +114,18 @@ public class Math3Distribution {
 		
 		MetaIdentifier sourceIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
 		
-//		Object source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
-//		String sql = modelServiceImpl.generateSQLBySource(source);
+		Object source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+		String sql = modelServiceImpl.generateSQLBySource(source);
 //		exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 		
-		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
-		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
-		LOGGER.info("Table name:" + tableName);		
-
-		String sql = "SELECT * FROM " + tableName;
+//		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+//		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
+//		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
+//		LOGGER.info("Table name:" + tableName);		
+//
+//		String sql = "SELECT * FROM " + tableName;
 		
-		List<double[]> valueList = exec.twoDArray(sql, paramDp, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
+		List<double[]> valueList = exec.twoDArray(sql, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
 		double[][] twoDArray = valueList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
 		return twoDArray;
 	}
@@ -136,18 +136,18 @@ public class Math3Distribution {
 		
 		MetaIdentifier sourceIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
 		
-//		Object source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
-//		String sql = modelServiceImpl.generateSQLBySource(source);
+		Object source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+		String sql = modelServiceImpl.generateSQLBySource(source);
 //		exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 		
-		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
-		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
-		LOGGER.info("Table name:" + tableName);
+//		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+//		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
+//		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
+//		LOGGER.info("Table name:" + tableName);
+//		
+//		String sql = "SELECT * FROM " + tableName;
 		
-		String sql = "SELECT * FROM " + tableName;
-		
-		List<Double> valueList = exec.oneDArray(sql, paramDp, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
+		List<Double> valueList = exec.oneDArray(sql, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
 		double[] oneDArray = ArrayUtils.toPrimitive(valueList.toArray(new Double[valueList.size()]));
 		return oneDArray;
 	}
