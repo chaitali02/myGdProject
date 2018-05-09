@@ -44,14 +44,14 @@
     {
       "paramId": "1",
       "paramName": "key",
-      "paramType": "attribute",
+      "paramType": "attributes",
       "paramValue": null,
       "paramRef": null
     },
     {
       "paramId": "2",
       "paramName": "saveLocation",
-      "paramType": "attribute",
+      "paramType": "datapod",
       "paramValue": null,
       "paramRef": null
     }
