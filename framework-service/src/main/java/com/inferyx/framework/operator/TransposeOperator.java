@@ -118,9 +118,14 @@ public class TransposeOperator implements Operator {
 		
 		List<AttributeRefHolder> attrRefHolders = sourceDatapodInfo.getAttributeInfo();
 		List<Attribute> attrList = new ArrayList<>();
-		Attribute keyAttr = sourceDatapod.getAttribute(Integer.parseInt(keyInfo.getAttributeInfo().get(0).getAttrId()));
+		List<Attribute> keyAttrList = new ArrayList<>();
+		List<AttributeRefHolder> keyAttrs = keyInfo.getAttributeInfo();
+//		Attribute keyAttr = sourceDatapod.getAttribute(Integer.parseInt(keyInfo.getAttributeInfo().get(0).getAttrId()));
 		for (AttributeRefHolder attrRefHolder : attrRefHolders) {
 			attrList.add(sourceDatapod.getAttribute(Integer.parseInt(attrRefHolder.getAttrId())));
+		}
+		for (AttributeRefHolder attrRefHolder : keyAttrs) {
+			keyAttrList.add(sourceDatapod.getAttribute(Integer.parseInt(attrRefHolder.getAttrId())));
 		}
 		
 		//String version = operatorExec.getVersion();
@@ -128,11 +133,15 @@ public class TransposeOperator implements Operator {
 		// Get the fieldArray
 		boolean isAttrFound = false;
 		sb.append(ConstantsUtil.SELECT);
-		sb.append(keyAttr.getName());
-		sb.append(", tranpose_column, transpose_value, " + execVersion + " version FROM (");
+		for (Attribute attribute : keyAttrList) {
+			sb.append(attribute.getName()).append(", ");
+		}
+		sb.append("tranpose_column, transpose_value, " + execVersion + " version FROM (");
 		sb.append(ConstantsUtil.SELECT);
-		sb.append(keyAttr.getName());
-		sb.append(", MAP (");
+		for (Attribute attribute : keyAttrList) {
+			sb.append(attribute.getName()).append(", ");
+		}
+		sb.append(" MAP (");
 		int count = 0;
 		for(Attribute attribute : attrList) {
 			isAttrFound = Boolean.TRUE;

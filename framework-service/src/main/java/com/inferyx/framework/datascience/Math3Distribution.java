@@ -28,6 +28,7 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.ModelServiceImpl;
 
 /**
  * @author Ganesh
@@ -42,7 +43,7 @@ public class Math3Distribution {
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
-	private HDFSInfo hdfsInfo;
+	private ModelServiceImpl modelServiceImpl;
 	
 	static final Logger LOGGER = Logger.getLogger(Math3Distribution.class);
 	
@@ -111,15 +112,20 @@ public class Math3Distribution {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		
-		MetaIdentifier datapodIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
-		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
+		MetaIdentifier sourceIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
+		
+//		Object source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+//		String sql = modelServiceImpl.generateSQLBySource(source);
+//		exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+		
+		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
 		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
 		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
 		LOGGER.info("Table name:" + tableName);		
 
 		String sql = "SELECT * FROM " + tableName;
 		
-		List<double[]> valueList = exec.twoDArrayFromParamListHolder(sql, paramDp, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
+		List<double[]> valueList = exec.twoDArray(sql, paramDp, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
 		double[][] twoDArray = valueList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
 		return twoDArray;
 	}
@@ -128,15 +134,20 @@ public class Math3Distribution {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());	
 		
-		MetaIdentifier datapodIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
-		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodIdentifier.getUuid(), datapodIdentifier.getVersion(), datapodIdentifier.getType().toString());
+		MetaIdentifier sourceIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
+		
+//		Object source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+//		String sql = modelServiceImpl.generateSQLBySource(source);
+//		exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+		
+		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
 		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
 		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
 		LOGGER.info("Table name:" + tableName);
 		
 		String sql = "SELECT * FROM " + tableName;
 		
-		List<Double> valueList = exec.oneDArrayFromParamListHolder(sql, paramDp, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
+		List<Double> valueList = exec.oneDArray(sql, paramDp, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
 		double[] oneDArray = ArrayUtils.toPrimitive(valueList.toArray(new Double[valueList.size()]));
 		return oneDArray;
 	}

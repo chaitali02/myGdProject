@@ -738,7 +738,7 @@ public class TaskServiceImpl implements Callable<String> {
 				//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(), simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 				//ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
 				ExecParams execParams = getExecParams(operator);
-				modelServiceImpl.simulate(simulate, execParams, simulateExec);
+				modelServiceImpl.simulate(simulate, execParams, simulateExec, runMode);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;
