@@ -1,5 +1,4 @@
 {
-    "_id" : ObjectId("5af24e42d222fbb5f6fa007d"),
     "xPos" : 10.0,
     "yPos" : 250.0,
     "templateFlg" : "N",
@@ -51,7 +50,7 @@
                                             }
                                         }, 
                                         {
-                                            "paramId" : "2"
+                                            "paramId" : "2",
                                             "ref" : {
                                                 "type" : "paramlist",
                                                 "uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f7"
@@ -64,7 +63,7 @@
                                             }
                                         }, 
                                         {
-                                            "paramId" : "1"
+                                            "paramId" : "1",
                                             "ref" : {
                                                 "type" : "paramlist",
                                                 "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4"
@@ -138,7 +137,7 @@
                                 "EXEC_PARAMS" : {
                                     "paramListInfo" : [ 
                                         {
-                                            "paramId" : "0"
+                                            "paramId" : "0",
                                             "ref" : {
                                                 "type" : "paramlist",
                                                 "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21"
