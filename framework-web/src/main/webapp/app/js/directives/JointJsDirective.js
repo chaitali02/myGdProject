@@ -2759,6 +2759,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           else if(type =="distribution"){
             $scope.allDistribution=response;
           }
+          else if(type =="dataset"){
+            $scope.allDataset=response;
+          }
+          else if(type =="rule"){
+            $scope.allRule=response;
+          }
          
         }
       }
