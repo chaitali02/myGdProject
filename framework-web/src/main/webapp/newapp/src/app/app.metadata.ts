@@ -1051,7 +1051,7 @@ export class AppMetadata {
         listState: 'operator',
         moduleCaption: 'Data Science',
         moduleState: 'Data Science',
-        detailState: 'createoperator'
+      //  detailState: 'createoperator'
       },
       'operatorexec': {
         name: 'operatorexec',
