@@ -1488,8 +1488,7 @@ public class CommonServiceImpl <T> {
 								innerMethod.invoke(object, resolveAttributeName(attrId, object));
 							}
 						}	
-					}
-					
+					}					
 					
 					if(object instanceof ParamSet) {
 						ParamSet paramSet = (ParamSet) object;
@@ -1515,12 +1514,11 @@ public class CommonServiceImpl <T> {
 					}
 					
 					if (method.getName().contains("OperatorParams") && method.getName().startsWith(GET))  {
-						System.out.println();
 						HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
 						if(operatorParams != null)
 							object = resolveOperatorParams(operatorParams, object);
-						System.out.println();
 					}
+					
 					Object invokedObj = method.invoke(object);
 					if (invokedObj == null || invokedObj.getClass().isPrimitive()) {
 						continue;
@@ -1609,7 +1607,6 @@ public class CommonServiceImpl <T> {
 						}
 					}
 				operatorParams.put("EXEC_PARAMS", execParams);
-				System.out.println();
 			}
 		return object;
 	}
