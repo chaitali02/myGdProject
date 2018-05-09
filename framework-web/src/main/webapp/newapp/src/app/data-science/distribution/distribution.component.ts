@@ -35,33 +35,39 @@ export class DistributionComponent implements OnInit {
   published: any;
   continueCount : any;
   progressbarWidth:any;
-  isSubmit:any
+  isSubmitEnable : any;
   selectedVersion: Version;
   VersionList: SelectItem[] = [];
+  library : any;
+  librarytypesOption : {'value' : String , 'label' : String}[];
+  msgs:any;
+  arrayParamList : any;
+  paramList :any;
+
   
 
   constructor( config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService,private _location:Location,private _modelService:DistributionService) {
     this.distribution = true;
     this.distribution = {};
     this.distribution["active"]=true;
-    // this.continueCount=1;
-    // this.progressbarWidth=25*this.continueCount+"%";
-    // this.dropdownSettings = { 
-    //   singleSelection: false, 
-    //   text:"Select Attrubutes",
-    //   selectAllText:'Select All',
-    //   unSelectAllText:'UnSelect All',
-    //   enableSearchFilter: true,
-    //   classes:"myclass custom-class",
-    //   maxHeight:110,
-    //   disabled:false
-    // };   
+    this.isSubmitEnable =true
+    
+    this.dropdownSettings = { 
+      singleSelection: false, 
+      text:"Select Attrubutes",
+      selectAllText:'Select All',
+      unSelectAllText:'UnSelect All',
+      enableSearchFilter: true,
+      classes:"myclass custom-class",
+      maxHeight:110,
+      disabled:false
+    };   
     this.breadcrumbDataFrom=[{
       "caption":"Data Science",
       "routeurl":"/app/list/distribution"
     },
     {
-      "caption":"Training",
+      "caption":"Distribution",
       "routeurl":"/app/list/distribution"
     },
     {
@@ -69,6 +75,11 @@ export class DistributionComponent implements OnInit {
       "routeurl":null
     }
     ];
+    this.librarytypesOption=[
+      {"value" : "sparkML", "label" : "sparkML"},
+      {"value" : "R", "label" : "R"},
+      {"value" : "java", "label" : "java"}
+    ]
 
    
    }
@@ -83,6 +94,7 @@ export class DistributionComponent implements OnInit {
          this.getAllVersionByUuid();
         
              }
+             this.getAllLatest(); 
              
          })
        }
@@ -93,17 +105,26 @@ getOneByUuidAndVersion(){
           this.onSuccessgetOneByUuidAndVersion(response)},
         error => console.log("Error :: " + error)); 
       }
-      getAllVersionByUuid(){
+
+      
+ getAllVersionByUuid(){
         this._commonService.getAllVersionByUuid('distribution',this.id)
         .subscribe(
         response =>{
           this.OnSuccesgetAllVersionByUuid(response)},
         error => console.log("Error :: " + error));
       }
-    
 
-
+ getAllLatest(){
+        this._commonService.getAllLatest('paramList')
+        .subscribe(
+        response =>{
+          this.onSuccessgetAllLatest(response)},
+        error => console.log("Error :: " + error));  
+      }
+       
     
+   
  onSuccessgetOneByUuidAndVersion(response){
    this.distribution=response
    this.uuid=response.uuid;
@@ -113,8 +134,9 @@ getOneByUuidAndVersion(){
    this.selectedVersion=version 
    this.createdBy=response.createdBy.ref.name;
    this.distribution.published=response["published"] == 'Y' ? true : false
-   this.distribution.active=response["active"] == 'Y' ? true : 
-   this.breadcrumbDataFrom[2].caption=response.distribution.name
+   this.distribution.active=response["active"] == 'Y' ? true : false 
+   this.distribution.paramList =response.paramList.ref.name
+   this.breadcrumbDataFrom[2].caption=this.distribution.name
    console.log('Data is' + response);
     
  }
@@ -132,6 +154,65 @@ getOneByUuidAndVersion(){
     }
     this.VersionList=temp
   }
+
+  onSuccessgetAllLatest(response){
+    this.arrayParamList = [];
+    for(const i in response){
+      let refParam={}
+      refParam["label"] = response[i]['name'];
+      refParam["value"] = {}      
+      refParam["value"]['name'] = response[i]['name'];
+      refParam["value"]['label'] = response[i]['label'];
+      this.arrayParamList[i] = refParam;
+      
+    }
+  }
+
+
+  public goBack() {
+    // this._location.back();
+   this.router.navigate(['app/list/distribution']);
+    }
+
+submitDistribution()
+{
+  this.isSubmitEnable=true;
+  let distributionJson ={};
+  distributionJson["uuid"] =this.distribution.uuid;
+  distributionJson["name"] =this.distribution.name
+  distributionJson["desc"] =this.distribution.desc
+  distributionJson["active"] =this.distribution.active ==true ? "Y": "N";
+  distributionJson["Published"] =this.distribution.published ==true ? "Y" :"N";
+  distributionJson["library"] =this.distribution.library;
+  distributionJson["className"] =this.distribution.className;
+
+  let selectparamList = {};
+  let refParam = {};
+  refParam["uuid"] = this.paramList.uuid;
+  refParam["type"] = "paramlist";
+  refParam["name"] = this.paramList;
+  selectparamList["ref"] = refParam;
+
+  distributionJson["paramList"] = selectparamList;
+
+  console.log(JSON.stringify(distributionJson));
+  this._commonService.submit("algorithm",distributionJson).subscribe(
+    response => { this.OnSuccessubmit(response)},
+    error => console.log('Error :: ' + error)
+  )
+
+
+}
+OnSuccessubmit(response){
+  this.isSubmitEnable=true;
+  this.msgs = [];
+  this.msgs.push({severity:'success', summary:'Success Message', detail:'DitributionSubmitted Successfully'});
+  setTimeout(() => {
+    this.goBack()
+    }, 1000);
+     }
+
+
  }
     
       

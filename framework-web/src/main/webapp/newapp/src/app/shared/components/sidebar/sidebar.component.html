@@ -58,7 +58,7 @@
         <li *ngFor="let dashboardsubmenu of DataVisualizationMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', dashboardsubmenu.type]" class="nav-link">
             <span class="title">{{dashboardsubmenu.name}}</span>
-            <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dashboardsubmenu.type].count"></span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dashboardsubmenu.type].count"></span> -->
           </a>
         </li>
       </ul>
@@ -75,7 +75,7 @@
         <li *ngFor="let dataprofilesubmenu of DataProfileMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', dataprofilesubmenu.type]" class="nav-link">
             <span class="title">{{dataprofilesubmenu.name}}</span>
-            <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataprofilesubmenu.type].count"></span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataprofilesubmenu.type].count"></span> -->
           </a>
         </li>
       </ul>
@@ -93,7 +93,7 @@
         <li *ngFor="let dataqualitysubmenu of DataQualityMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', dataqualitysubmenu.type]" class="nav-link">
             <span class="title">{{dataqualitysubmenu.name}}</span>
-            <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataqualitysubmenu.type].count"></span>   
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataqualitysubmenu.type].count"></span>    -->
           </a>
         </li>
       </ul>
@@ -110,7 +110,7 @@
         <li class="nav-item" *ngFor="let metadatasubmenu of DataPreparationMenu.subMenu ">
           <a [routerLink]="['list', metadatasubmenu.type]" class="nav-link">
             <span class="title">{{metadatasubmenu.name}}</span>
-            <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[metadatasubmenu.type].count"></span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[metadatasubmenu.type].count"></span> -->
           </a>
         </li>
       </ul>
@@ -127,7 +127,7 @@
         <li *ngFor="let businesrulesubmenu of BusinessRuleMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', businesrulesubmenu.type]" class="nav-link">
             <span class="title">{{businesrulesubmenu.name}}</span>
-            <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[businesrulesubmenu.type].count"></span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[businesrulesubmenu.type].count"></span> -->
           </a>
         </li>
       </ul>
@@ -144,7 +144,7 @@
         <li class="nav-item" *ngFor=" let datasciencesubmenu of DataScienceMenu.subMenu">
           <a [routerLink]="['list', datasciencesubmenu.type]" class="nav-link">
             <span class="title" style="text-transform: capitalize">{{datasciencesubmenu.name}}</span>
-            <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[datasciencesubmenu.type].count"></span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[datasciencesubmenu.type].count"></span> -->
           </a>
         </li>
       </ul>
@@ -166,7 +166,7 @@
         <li *ngFor="let datapipelinesubmenu of DataPipelineMenu.subMenu" class="nav-item">        
           <a [routerLink]="['list', datapipelinesubmenu.type]" class="nav-link">
             <span class="title">{{datapipelinesubmenu.name}}</span>
-            <span class="badge badge-success" *ngIf="_MetaStats!=null && datapipelinesubmenu.type!=''" [innerHTML]="_MetaStats[datapipelinesubmenu.type].count"></span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null && datapipelinesubmenu.type!=''" [innerHTML]="_MetaStats[datapipelinesubmenu.type].count"></span> -->
           </a>
         </li>
       </ul>

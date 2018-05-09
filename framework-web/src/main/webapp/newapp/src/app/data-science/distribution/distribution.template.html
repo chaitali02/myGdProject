@@ -45,7 +45,7 @@
                 </div>
       
                 <div class="form-body"  style="padding-top:50px;">
-                  <form  class="form-horizontal"  name="myform" novalidate="novalidate" (ngSubmit)="submitAlgorithm()" #myNewForm = "ngForm">
+                  <form  class="form-horizontal"  name="myform" novalidate="novalidate" (ngSubmit)="submitDistribution()" #myNewForm = "ngForm">
                     <div class="form-group" *ngIf="mode">
                       <label class="col-md-3 control-label">UUID</label>
                       <div class="col-md-6">
@@ -120,63 +120,30 @@
                         </div>
                       </div>
                     </div>
-<!--       
-                    <div class="form-group" >
-                      <label class="col-md-3 control-label">Type
-                        <span class="required" aria-required="true"> * </span>
-                      </label>
-                      <div class="col-md-6">
-                        <p-dropdown [options]="typesOption"          
-                          [(ngModel)]="algorithm.type"
-                          name="type"
-                          [style]="{'width':'100%','padding':'3px','z-index':'100'}"
-                          [disabled]="mode == 'true'">
-                        </p-dropdown>
-                      </div>
-                    </div>  -->
-<!--       
+
                     <div class="form-group" >
                       <label class="col-md-3 control-label">Library
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
                         <p-dropdown [options]="librarytypesOption"          
-                          [(ngModel)]="algorithm.library"
+                          [(ngModel)]="distribution.library"
                           name="library"
                           [style]="{'width':'100%','padding':'3px','z-index':'99'}"
                           [disabled]="mode == 'true'">
                         </p-dropdown>
                       </div>
-                    </div>  -->
-      
-                    <!-- <div class="form-group">
-                      <label class="col-md-3 control-label">Train Name
+                    </div> 
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Class Name
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <input type="text" class="form-control" [(ngModel)]="algorithm.trainName" name="trainName" placeholder="" [disabled]="mode == 'true'">
-                      </div>
-                    </div> -->
-      
-                    <!-- <div class="form-group">
-                      <label class="col-md-3 control-label">Model Name
-                        <span class="required" aria-required="true"> * </span>
-                      </label>
-                      <div class="col-md-6">
-                        <input type="text" class="form-control" [(ngModel)]="algorithm.modelName" name="modelName" placeholder="" [disabled]="mode == 'true'">
+                        <input type="text" class="form-control" [(ngModel)]="distribution.className" name="className" placeholder="" [disabled]="mode == 'true'">
                       </div>
                     </div>
-       -->
-                    <!-- <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Label Required</label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <div class="btn-group">
-                          <ui-switch (change)="onChangeLabel($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="algorithm.labelRequired" name="labelRequired" [checked]="labelRequired" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
-                        </div>
-                      </div>
-                    </div> -->
-      
-                    <!-- <div class="form-group" >
+
+                    <div class="form-group" >
                       <label class="col-md-3 control-label">Parameter List</label>
                       <div class="col-md-6">
                         <p-dropdown [options]="arrayParamList"          
@@ -186,9 +153,9 @@
                           [disabled]="mode == 'true'">
                       </p-dropdown>
                       </div>
-                    </div> -->
-      
-                    <div class="form-group" style="padding-top: 10px;">
+                    </div>
+                    
+                   <div class="form-group" style="padding-top: 10px;">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                         <a class="btn btn-primary" (click)="goBack()">Cancel</a>
       
