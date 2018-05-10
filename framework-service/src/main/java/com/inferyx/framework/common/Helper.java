@@ -698,6 +698,9 @@ public class Helper {
 				case "date" : return ParamDataType.DATE;
 				case "attribute" : return ParamDataType.ATTRIBUTE;
 				case "attributes" : return ParamDataType.ATTRIBUTES;
+				case "datapod" : return ParamDataType.DATAPOD;
+				case "distribution" : return ParamDataType.DISTRIBUTION;
+				
 			}
 		return null;
 	}
