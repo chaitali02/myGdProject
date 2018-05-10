@@ -1604,6 +1604,7 @@ public class CommonServiceImpl <T> {
 												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
 											}
 										}
+										attributeRefHolder.getRef().setName(dataSet.getName());
 									} else if(attrRefObj instanceof Rule) {
 										Rule rule = (Rule) attrRefObj;
 
@@ -1611,8 +1612,8 @@ public class CommonServiceImpl <T> {
 											if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
 												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
 											}
-											
 										}
+										attributeRefHolder.getRef().setName(rule.getName());
 									}
 									
 								}
