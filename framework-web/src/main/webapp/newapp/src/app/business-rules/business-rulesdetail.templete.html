@@ -394,7 +394,7 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12" >
-                                                <p-checkbox [(ngModel)]="checkboxModelexecution" name="checkboxModelexecution" binary="true" (onChange)="changeCheckboxExecution()"></p-checkbox>
+                                                <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' "name="checkboxModelexecution" binary="true" (onChange)="changeCheckboxExecution()"></p-checkbox>
                                             </div>
                                         </div>
                                         <div *ngIf="isShowExecutionparam">

@@ -34,12 +34,12 @@ import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -61,7 +61,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private ParamListServiceImpl paramListServiceImpl;
 	private ParamMap paramMap;
 	private CommonServiceImpl<?> commonServiceImpl;
-	private Mode runMode;
+	private RunMode runMode;
 	private DataFrameService dataFrameService;
 	private SessionContext sessionContext;
 	private CustomLogger customLogger;
@@ -297,7 +297,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	 *
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
@@ -307,7 +307,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	 * @param runMode
 	 *            the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 
@@ -697,7 +697,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					filePathUrl = null;
 				
 				//result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath, paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
-				dataStoreServiceImpl.setRunMode(Mode.BATCH);
+				dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 				dataStoreServiceImpl.create(filePathUrl, trainName,
 						new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()),
 						new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),

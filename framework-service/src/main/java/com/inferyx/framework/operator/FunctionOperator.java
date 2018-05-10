@@ -25,8 +25,8 @@ import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.FunctionInfo;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.ParamInfoHolder;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatasetServiceImpl;
@@ -40,7 +40,7 @@ public class FunctionOperator {
 	protected DatasetServiceImpl datasetServiceImpl;
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
-	private Mode runMode;
+	private RunMode runMode;
 	
 
 	/**
@@ -48,7 +48,7 @@ public class FunctionOperator {
 	 *
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
@@ -57,7 +57,7 @@ public class FunctionOperator {
 	 *
 	 * @param runMode the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 
@@ -72,7 +72,7 @@ public class FunctionOperator {
 		String functionName = "";
 		for (FunctionInfo fun : list) {
 			if (datasource.getType().equalsIgnoreCase(fun.getType())) {
-				if(runMode != null && runMode.equals(Mode.BATCH) && datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString()) && fun.getName().equalsIgnoreCase("reflect")) {
+				if(runMode != null && runMode.equals(RunMode.BATCH) && datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString()) && fun.getName().equalsIgnoreCase("reflect")) {
 					functionName = "uuid()";
 					break;
 				}else

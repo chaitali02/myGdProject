@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.LoadServiceImpl;
 
 @RestController
@@ -43,11 +43,11 @@ public class LoadController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value = "mode", required = false) String mode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-			Mode runMode = null;
+			RunMode runMode = null;
 			if (mode == null || mode.equalsIgnoreCase("BATCH")) {
-				runMode = Mode.BATCH;
+				runMode = RunMode.BATCH;
 			} else {
-				runMode = Mode.ONLINE;
+				runMode = RunMode.ONLINE;
 			}
 			return loadServiceImpl.getLoadResults(loadExecUUID, loadExecVersion, offset, limit, sortBy, order, requestId, runMode);
 	}

@@ -9,6 +9,7 @@ import { ProjectSharedModule } from '../shared/module/shared.module';
 import { ModelComponent } from './model/model.component';
 import { ParamsetComponent } from './paramset/paramset.component';
 import { ResultsComponent } from './results/results.component';
+import {TrainingComponent } from './training/training.component';
 
 
 const routes: Routes = [
@@ -29,7 +30,11 @@ const routes: Routes = [
             {path: 'paramset/paramset/:id/:version/:mode', component:ParamsetComponent, pathMatch: 'full'},
             {path: 'paramset', component: ParamsetComponent, pathMatch: 'full'},
             {path: ':type/:id/:version/:type/:mode', component: ResultsComponent,pathMatch:'full' },
-           
+            {path: 'train/:id/:version/:mode', component: TrainingComponent,pathMatch:'full' },
+            {path: 'train/train/:id/:version/:mode', component:TrainingComponent, pathMatch: 'full'},
+            {path: 'train', component: TrainingComponent, pathMatch: 'full'},
+            
+            
          ]
     }
 ]

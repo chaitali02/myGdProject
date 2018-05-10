@@ -1,0 +1,53 @@
+{
+  "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
+  "version": "1525519035",
+  "name": "paramlist_generate_data",
+  "desc": "Generate Data Paramlist",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn" : ISODate("2018-04-28T07:46:18.669Z"),
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "distribution",
+      "paramType": "distribution",
+      "paramValue": null,
+      "paramRef": null
+    },
+    {
+      "paramId": "1",
+      "paramName": "numIterations",
+      "paramType": "integer",
+      "paramValue": "1000",
+      "paramRef": null
+    },
+    {
+      "paramId": "2",
+      "paramName": "saveLocation",
+      "paramType": "attribute",
+      "paramValue": null,
+      "paramRef": null
+    }
+  ]
+}

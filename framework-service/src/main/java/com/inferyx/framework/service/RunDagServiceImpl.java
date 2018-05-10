@@ -22,10 +22,10 @@ import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 
 public class RunDagServiceImpl implements Callable<String> {
 	
@@ -37,7 +37,7 @@ public class RunDagServiceImpl implements Callable<String> {
 	ConcurrentHashMap taskThreadMap;
 	CommonServiceImpl<?> commonServiceImpl;
 	protected SessionContext sessionContext;
-	protected Mode runMode;
+	protected RunMode runMode;
 	
 	static final Logger logger = Logger.getLogger(RunDagServiceImpl.class);
 		
@@ -156,14 +156,14 @@ public class RunDagServiceImpl implements Callable<String> {
 	/**
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
 	/**
 	 * @param runMode the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 

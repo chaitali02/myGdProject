@@ -59,9 +59,9 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -390,13 +390,13 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 	
 	public DataQualExec execute(String dataqualUUID, String dataqualVersion, DataQualExec dataqualExec,
-			DataQualGroupExec dataqualGroupExec, ExecParams execParams, Mode runMode) throws Exception {
+			DataQualGroupExec dataqualGroupExec, ExecParams execParams, RunMode runMode) throws Exception {
 		execute(dataqualUUID, dataqualVersion, null, dataqualExec, dataqualGroupExec, null, execParams, runMode);
 		return dataqualExec;
 	}
 
 	public DataQualExec execute(String dataqualUUID, String dataqualVersion,
-			ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, DataQualGroupExec dataqualGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, DataQualGroupExec dataqualGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		Datapod targetDatapod = (Datapod) daoRegister
 				.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
 		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
@@ -419,7 +419,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	@Override
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
-			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 			return execute(uuid, version, metaExecutor, (DataQualExec) baseRuleExec, (DataQualGroupExec)baseGroupExec, taskList, execParams, runMode);
 	}
 	
@@ -587,11 +587,11 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		return dataqualExec;
 	}
 */	
-	public String getTableName(Datapod datapod, Mode runMode) throws Exception {
+	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
 		return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 	}
 
-	public List<Map<String, Object>> getDQResults(String dataQualExecUUID, String dataQualExecVersion, int offset, int limit, String sortBy, String order, String requestId, Mode runMode) throws Exception {
+	public List<Map<String, Object>> getDQResults(String dataQualExecUUID, String dataQualExecVersion, int offset, int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			limit = offset+limit;
@@ -798,7 +798,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		mi.setVersion(dataQualExec.getDependsOn().getRef().getVersion());
 		return mi;
 	}
-	public void restart(String type,String uuid,String version, ExecParams execParams, Mode runMode) throws JsonProcessingException{
+	public void restart(String type,String uuid,String version, ExecParams execParams, RunMode runMode) throws JsonProcessingException{
 		//DataQualExec dataQualExec= dataQualExecServiceImpl.findOneByUuidAndVersion(uuid,version);
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.dqExec.toString());
 //		try {
@@ -816,7 +816,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 
 	@Override
-	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, Mode runMode)
+	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		logger.info("Inside dataQualServiceImpl.parse");
 		DataQual dataQual = null;
@@ -851,7 +851,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 	public HttpServletResponse download(String dataQualExecUUID, String dataQualExecVersion, String format, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 		
 		List<Map<String, Object>> results =getDQResults(dataQualExecUUID,dataQualExecVersion,offset,limit,sortBy,order,requestId, runMode);
 		response = commonServiceImpl.download(dataQualExecUUID, dataQualExecVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec,dataQualExecUUID,dataQualExecVersion)));
@@ -921,7 +921,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 	
 	
-	public List<Map<String, Object>> getDataQualSummary(String dataQualExecUUID, String dataQualExecVersion, Mode runMode) {
+	public List<Map<String, Object>> getDataQualSummary(String dataQualExecUUID, String dataQualExecVersion, RunMode runMode) {
 		
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(dataQualExecUUID, dataQualExecVersion);
 		dataStoreServiceImpl.setRunMode(runMode);
@@ -935,7 +935,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		IExecutor exec = null;
 		// String sql = null;
 		String appUuid = null;
-		if (runMode.equals(Mode.ONLINE)) {
+		if (runMode.equals(RunMode.ONLINE)) {
 			execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
 					|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
 							? helper.getExecutorContext(engine.getExecEngine())
@@ -953,7 +953,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 					.executeAndFetch(getSummarySql(tableName), appUuid);
 		} else {
 			if (datasource.getType().toLowerCase().contains("oracle"))
-				if (runMode.equals(Mode.ONLINE))
+				if (runMode.equals(RunMode.ONLINE))
 					data = exec.executeAndFetch(getSummarySql(tableName), appUuid);
 				else
 					data = exec.executeAndFetch(getSummarySql(tableName), appUuid);

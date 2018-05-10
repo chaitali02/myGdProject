@@ -1,4 +1,4 @@
-branch_type_id,branch_type_code,branch_type_desc,load_date
-101,TRA,Traditional - Bank owned building,2017-03-01
-102,INS,In Store / Retail Spaces,2017-03-01
-103,FBB,Foreign Bank Branch,2017-03-01
+branch_type_id,branch_type_code,branch_type_desc,load_date,load_id
+101,TRA,Traditional - Bank owned building,2017-03-01,0
+102,INS,In Store / Retail Spaces,2017-03-01,0
+103,FBB,Foreign Bank Branch,2017-03-01,0

@@ -40,7 +40,6 @@ import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.OperatorExec;
@@ -50,6 +49,7 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -212,7 +212,7 @@ public class ModelController {
 			@RequestParam(value = "modelExecVersion") String ruleExecVersion,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		response = modelServiceImpl.download(ruleExecUUID, ruleExecVersion, response, runMode);
 	}
 	
@@ -273,7 +273,7 @@ public class ModelController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			modelServiceImpl.setRunMode(runMode);
 			TrainExec trainExec = null;
 			List<ParamMap> paramMapList = new ArrayList<>();
@@ -349,7 +349,7 @@ public class ModelController {
 			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		modelExecServiceImpl.download(predictExecUUID, predictExecVersion, format, download, offset, limit, response, rows,
 				sortBy,type, order, requestId, runMode);
 		return null;
@@ -369,7 +369,7 @@ public class ModelController {
 			/*@RequestParam(value = "requestId", required = false) String requestId,*/
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		modelExecServiceImpl.download(simulateExecUUID, simulateExecVersion, format, download, offset, limit, response, rows,
 				sortBy,type, order, "1", runMode);
 		return null;
@@ -389,36 +389,9 @@ public class ModelController {
 			@RequestParam(value = "trainExecVersion") String trainExecVersion,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		response = modelServiceImpl.downloadLog(trainExecUUID, trainExecVersion, response, runMode);
 	}
 
-	@RequestMapping(value = "/operator/execute", method = RequestMethod.POST)
-	public boolean operator(@RequestParam("uuid") String operatorUuid, 
-			@RequestParam("version") String operatorVersion,
-			@RequestBody(required = false) ExecParams execParams,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
-		try {
-			Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(operatorUuid, operatorVersion,
-					MetaType.operator.toString());
-			OperatorExec operatorExec = null;
-			operatorExec = modelServiceImpl.create(operator, execParams, null, operatorExec);
-			return modelServiceImpl.operator(operator, execParams, operatorExec);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e.getMessage());
-		}
-	}
-
-	@RequestMapping(value = "/operator/getResults", method = RequestMethod.GET)
-	List<Map<String, Object>> getOperatorResults(@RequestParam("uuid") String operatorExecUuid,
-			@RequestParam("version") String operatorExecVersion,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
-		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
-		return modelExecServiceImpl.getOperatorResults(operatorExecUuid, operatorExecVersion, rowLimit);
-	}
+	
 }

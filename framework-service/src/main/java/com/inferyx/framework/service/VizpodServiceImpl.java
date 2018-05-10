@@ -56,12 +56,12 @@ import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.domain.Vizpod.AttributeDetails;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.domain.VizpodResultHolder;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -797,7 +797,7 @@ public class VizpodServiceImpl {
 	@SuppressWarnings("finally")
 	public VizpodResultHolder getVizpodResults(String vizpodUUID, String vizpodVersion, ExecParams execParams, VizExec vizExec, 
 			 									int rowLimit, int offset, int limit, String sortBy, String order, String requestId, 
-												Mode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException 
+												RunMode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException 
 	{
 
 		List<Map<String, Object>> data = new ArrayList<>();
@@ -936,7 +936,7 @@ public class VizpodServiceImpl {
 	
 	public VizpodDetailsHolder getVizpodDetails(String vizpodUUID, String vizpodVersion, ExecParams execParams,
 			VizExec vizExec, int rowLimit, int offset, int limit, String sortBy, String order, String requestId,
-			Mode runMode)
+			RunMode runMode)
 			throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		/* String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid(); */
@@ -1148,13 +1148,13 @@ public class VizpodServiceImpl {
 	 * @throws IllegalAccessException 
 	 */
 	public VizpodResultHolder getVizpodResults(String vizpodUUID, String vizpodVersion, ExecParams execParams, 
-												int rowLimit, int offset, int limit, String sortBy, String order,String requestId, Mode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+												int rowLimit, int offset, int limit, String sortBy, String order,String requestId, RunMode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		return getVizpodResults(vizpodUUID, vizpodVersion, execParams, new VizExec(), 
 										rowLimit, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
 	public VizpodDetailsHolder getVizpodDetails(String vizpodUUID, String vizpodVersion, ExecParams execParams,
-												int rowLimit, int offset, int limit, String sortBy, String order, String requestId, Mode runMode)
+												int rowLimit, int offset, int limit, String sortBy, String order, String requestId, RunMode runMode)
 															throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 
@@ -1279,7 +1279,7 @@ public class VizpodServiceImpl {
 		
 	public HttpServletResponse download(String uuid, String version, String format,ExecParams execParams, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 
 		VizpodResultHolder resultHolder = getVizpodResults(uuid, version, execParams, rowLimit, offset, limit, sortBy, order, requestId, runMode);
 		List<Map<String, Object>> results = resultHolder.getVizpodResultDataList();

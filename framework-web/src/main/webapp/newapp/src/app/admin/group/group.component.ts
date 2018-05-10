@@ -258,6 +258,8 @@ export class GroupComponent implements OnInit {
   }
 
   submitGroup(){
+
+    debugger;
     let groupJson={};
     groupJson["uuid"]=this.uuid;
     groupJson["name"]=this.name;
@@ -327,6 +329,7 @@ export class GroupComponent implements OnInit {
       )  
     } 
     OnSuccessubmit(response){
+      debugger;
       this.isSubmitEnable=true;
       this.msgs = [];
       this.msgs.push({severity:'success', summary:'Success Message', detail:'Group Submitted Successfully'});
