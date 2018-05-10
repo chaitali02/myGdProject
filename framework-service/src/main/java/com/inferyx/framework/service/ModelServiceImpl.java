@@ -961,11 +961,25 @@ public class ModelServiceImpl {
 					distParamHolderList.add(holder);
 				}
 				if(holder.getParamName().equalsIgnoreCase("saveLocation")) {
-					tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(holder.getParamValue().getRef().getUuid(), holder.getParamValue().getRef().getVersion()), runMode);
+					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(holder.getParamValue().getRef().getUuid(), holder.getParamValue().getRef().getVersion(), holder.getParamValue().getRef().getType().toString());
+					tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 				}
 			}
 			distExecParam.setParamListInfo(distParamHolderList);
 			simExecParam.setParamListInfo(simParamHolderList);
+			
+			ParamListHolder distributionInfo = new ParamListHolder();
+			distributionInfo.setParamId("0");
+			distributionInfo.setParamName("distribution");
+			distributionInfo.setParamType("distribution");
+			MetaIdentifier distIdentifier = new MetaIdentifier(MetaType.distribution, distribution.getUuid(), distribution.getVersion());
+			MetaIdentifierHolder distHolder = new MetaIdentifierHolder(distIdentifier);
+			distributionInfo.setParamValue(distHolder);
+			distributionInfo.setRef(new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()));
+			
+			List<ParamListHolder> paramListInfo2 = execParams.getParamListInfo();
+			paramListInfo2.add(distributionInfo);
+			execParams.setParamListInfo(paramListInfo2);
 			
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			if(simulate.getType().equalsIgnoreCase(SimulationType.MONTECARLO.toString())) {

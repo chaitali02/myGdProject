@@ -1004,19 +1004,18 @@ public class SparkExecutor implements IExecutor {
 	}*/
 
 	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) {
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception {
 		StructField[] fieldArray = new StructField[attributes.size()];
 		int count = 0;
-		
-		try {
+		Object object = distributionObject.getClass().getMethod("sample").invoke(distributionObject);
+		Class<?> returnType = distributionObject.getClass().getMethod("sample").getReturnType();
+		if(returnType.isArray()) {
 			double[] trialSample = (double[]) distributionObject.getClass().getMethod("sample").invoke(distributionObject);
 			int expectedNumcols = trialSample.length + 2;
-			if(attributes.size() < expectedNumcols)
+			if(attributes.size() != expectedNumcols)
 				throw new RuntimeException("Insufficient number of columns.");
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} else if(attributes.size() > 1) {
+			//throw new RuntimeException("Column number exceeded.");
 		}
 
 //		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
@@ -1030,25 +1029,44 @@ public class SparkExecutor implements IExecutor {
 		}
 		StructType schema = new StructType(fieldArray);
 		
+		
+		
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<numIterations; i++) {
 			int genId = i+1;
 			Object obj;
 			try {
 				obj = distributionObject.getClass().getMethod("sample").invoke(distributionObject);
-				double[] trial = (double[]) obj;
-				List<Object> datasetList = new ArrayList<>();
-				datasetList.add(genId);
-				for(double val : trial) {
-					datasetList.add(val);
+				//Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
+				if(returnType.isArray()) {
+					double[] trial = (double[]) obj;
+					List<Object> datasetList = new ArrayList<>();
+					datasetList.add(genId);
+					for(double val : trial) {
+						datasetList.add(val);
+					}
+					datasetList.add(execVersion);
+					rowList.add(RowFactory.create(datasetList.toArray()));
+					genId++;
+				} else if(returnType.isPrimitive()) {
+					if(!returnType.getName().equalsIgnoreCase("double")) {
+						rowList.add(RowFactory.create((double) object));
+						genId++;
+					} else {
+						List<Object> datasetList = new ArrayList<>();
+						datasetList.add(genId);
+						datasetList.add((Double) object);
+						datasetList.add(Integer.parseInt(execVersion));
+						rowList.add(RowFactory.create(datasetList.toArray()));
+						genId++;
+					}
 				}
-				datasetList.add(execVersion);
-				rowList.add(RowFactory.create(datasetList.toArray()));
-				genId++;
+				
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		
