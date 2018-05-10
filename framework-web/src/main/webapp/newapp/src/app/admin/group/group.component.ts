@@ -259,8 +259,8 @@ export class GroupComponent implements OnInit {
 
   submitGroup(){
     let groupJson={};
-    groupJson["uuid"]=this.group.uuid;
-    groupJson["name"]=this.group.name;
+    groupJson["uuid"]=this.uuid;
+    groupJson["name"]=this.name;
    //let tagArray=[];
    const tagstemp = [];
    for (const t in this.tags) {
@@ -272,7 +272,7 @@ export class GroupComponent implements OnInit {
   //   }
   // }
   groupJson["tags"]=tagstemp;
-  groupJson["desc"]=this.group.desc;
+  groupJson["desc"]=this.desc;
 
    let roleInfoArrayNew=[]; 
     if(this.roleInfoTags != null)
@@ -290,14 +290,14 @@ export class GroupComponent implements OnInit {
     }
     groupJson["roleInfo"]=roleInfoArrayNew;
 
-       let roleId = {};
+       let roleIdObj = {};
        let roleRef ={};
        roleRef["uuid"]=this.roleId.uuid;
        roleRef["type"]="role";
        roleRef["name"]=this.roleId;
-       roleId["ref"]=roleRef;
+       roleIdObj["ref"]=roleRef;
    
-    groupJson["roleId"]=roleId;
+    groupJson["roleId"]=roleIdObj;
 
     // let metaId={};
     // let refMetaId={}
