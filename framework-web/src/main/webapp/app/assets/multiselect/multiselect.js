@@ -217,17 +217,19 @@ angular.module('ui.multiselect', [])
       };
     }])
 
-  .directive('multiselectPopup', ['$document', function ($document,$window) {
+  .directive('multiselectPopup', ['$document', function ($document,$window,$anchorScroll) {
     return {
       restrict: 'E',
       scope: false,
       replace: true,
       templateUrl: 'assets/multiselect/multiselect.tmpl.html',
       link: function (scope, element, attrs) {
-
+     
         scope.isVisible = false;
 
         scope.toggleSelect = function () {
+        
+         
           if (element.hasClass('open')) {
             element.removeClass('open');
             $document.unbind('click', clickHandler);
@@ -235,12 +237,12 @@ angular.module('ui.multiselect', [])
             var $el   = element[0];
            var top =$el.getBoundingClientRect().top
            var oh=$el.offsetHeight;
-             // Determine whether bottom of menu will be below window at current scroll position
-    if (top + oh > window.innerHeight +  window.scrollTop){
-      element.addClass("dropup");
-    }else{
-     // element.addClass("dropdown");
-    }
+           // Determine whether bottom of menu will be below window at current scroll position
+          if (top + oh > window.innerHeight + window.scrollTo(0, angular.element(element).offsetTop)){
+            element.addClass("dropup");
+          }else{
+          // element.addClass("dropdown");
+          }
             element.addClass('open');
             scope.focus();
             $document.bind('click', clickHandler);

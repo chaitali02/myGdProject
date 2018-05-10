@@ -301,6 +301,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       keyboard: false
     });
   }
+ 
   
   $scope.publish = function (data, unpublish) {
     var action = unpublish == true ? "unpublish" : "publish";
@@ -398,6 +399,22 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.selectedParamValue=response[0];
     }
   }
+
+  $scope.onChangeForAttributeInfo=function(data,type,index){
+    $scope.paramListHolder[index].attributeInfoTag=null;
+    $scope.getAllAttributeBySource(data,type,index);
+
+  }
+  
+  $scope.getAllAttributeBySource=function(data,type,index,defaultValue){ 
+    if(data !=null){ 
+      CommonService.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
+      var onSuccessGetAllAttributeBySource = function (response) {
+        $scope.paramListHolder[index].allAttributeinto=response
+      
+      }
+    }
+  }
   $scope.getExecParamsSet = function () {
     $scope.paramtablecol = null
     $scope.paramtable = null;
@@ -414,6 +431,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
   }
   $scope.getExecParamList=function(){
+    $scope.attributeTypes=['datapod','dataset','rule'];
     CommonService.getParamListByType($scope.select,$scope.exeDetail.uuid, $scope.exeDetail.version).then(function (response) {
       onSuccessGetExecuteModel(response.data)
     });
@@ -437,26 +455,80 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var execParams={};
     var paramListInfo=[];
     if($scope.paramListHolder.length>0){
+      // for(var i=0;i<$scope.paramListHolder.length;i++){
+      //   var paramList={};
+      //   paramList.paramId=$scope.paramListHolder[i].paramId;
+      //   paramList.paramName=$scope.paramListHolder[i].paramName;
+      //   paramList.paramType=$scope.paramListHolder[i].paramType;
+      //   paramList.ref=$scope.paramListHolder[i].ref;
+      //   var ref={};
+      //   var type=["ONEDARRAY","TWODARRAY"]
+      //   var paramValue={};  
+      //   if(type.indexOf($scope.paramListHolder[i].paramType.toUpperCase()) ==-1){
+      //     ref.type="simple";
+      //     paramValue.ref=ref;
+      //     paramValue.value=$scope.paramListHolder[i].paramValue;  
+      //   }
+      //   else{
+      //     ref.type="datapod";
+      //     ref.uuid=$scope.paramListHolder[i].selectedParamValue.uuid;  
+      //     paramValue.ref=ref;
+      //   }
+      //   paramList.paramValue=paramValue;
+      //   paramListInfo[i]=paramList;
+      // }
       for(var i=0;i<$scope.paramListHolder.length;i++){
         var paramList={};
         paramList.paramId=$scope.paramListHolder[i].paramId;
-        paramList.paramName=$scope.paramListHolder[i].paramName;
-        paramList.paramType=$scope.paramListHolder[i].paramType;
+      //  paramList.paramName=$scope.paramListHolder[i].paramName;
+      //  paramList.paramType=$scope.paramListHolder[i].paramType;
         paramList.ref=$scope.paramListHolder[i].ref;
-        var ref={};
-        var type=["ONEDARRAY","TWODARRAY"]
-        var paramValue={};  
-        if(type.indexOf($scope.paramListHolder[i].paramType.toUpperCase()) ==-1){
-          ref.type="simple";
-          paramValue.ref=ref;
-          paramValue.value=$scope.paramListHolder[i].paramValue;  
+        if($scope.paramListHolder[i].paramType =='attribute'){
+          var attributeInfoArray=[];
+          var attributeInfo={};
+          var attributeInfoRef={}
+          attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
+          attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfo.uuid;
+        //  attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
+          attributeInfo.ref=attributeInfoRef;
+          attributeInfo.attrId=$scope.paramListHolder[i].attributeInfo.attributeId;
+          attributeInfoArray[0]=attributeInfo
+          paramList.attributeInfo=attributeInfoArray;
+
         }
-        else{
-          ref.type="datapod";
+        if($scope.paramListHolder[i].paramType =='attributes'){
+          var attributeInfoArray=[];
+          for(var j=0;j<$scope.paramListHolder[i].attributeInfoTag.length;j++){
+            var attributeInfo={};
+            var attributeInfoRef={}
+            attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
+            attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfoTag[j].uuid
+           // attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
+            attributeInfo.ref=attributeInfoRef;
+            attributeInfo.attrId=$scope.paramListHolder[i].attributeInfoTag[j].attributeId;
+         ///   attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
+            attributeInfoArray[j]=attributeInfo
+          }
+          paramList.attributeInfo=attributeInfoArray;
+        }
+        else if($scope.paramListHolder[i].paramType=='distribution' || $scope.paramListHolder[i].paramType=='datapod'){
+          var ref={};
+          var paramValue={};  
+          ref.type=$scope.paramListHolder[i].selectedParamValueType;
           ref.uuid=$scope.paramListHolder[i].selectedParamValue.uuid;  
           paramValue.ref=ref;
+          paramList.paramValue=paramValue;
         }
-        paramList.paramValue=paramValue;
+        else if($scope.paramListHolder[i].selectedParamValueType =="simple"){
+          var ref={};
+          var paramValue={};  
+          ref.type=$scope.paramListHolder[i].selectedParamValueType;
+          paramValue.ref=ref;
+          paramValue.value=$scope.paramListHolder[i].paramValue
+          paramList.paramValue=paramValue;
+          
+        }
+       
         paramListInfo[i]=paramList;
       }
       execParams.paramListInfo=paramListInfo;
