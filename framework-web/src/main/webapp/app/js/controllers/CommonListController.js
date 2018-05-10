@@ -392,11 +392,33 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
   }
   
-  $scope.getAllLatest=function(){
-    CommonService.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
-		var onSuccessGetAllLatest = function (response) {
-      $scope.allDatapod=response;
-      $scope.selectedParamValue=response[0];
+  // $scope.getAllLatest=function(){
+  //   CommonService.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
+	// 	var onSuccessGetAllLatest = function (response) {
+  //     $scope.allDatapod=response;
+  //     $scope.selectedParamValue=response[0];
+  //   }
+  // }
+  
+  $scope.getAllLatest=function(type,index,defaultValue){  
+    CommonService.getAllLatest(type || "datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
+    var onSuccessGetAllLatest = function (response) {
+      if(type =="datapod"){
+        $scope.allDatapod=response;
+      }
+      else if(type =="relation"){
+        $scope.allRelation=response;
+      }
+      else if(type =="distribution"){
+        $scope.allDistribution=response;
+      }
+      else if(type =="dataset"){
+        $scope.allDataset=response;
+      }
+      else if(type =="rule"){
+        $scope.allRule=response;
+      }
+     
     }
   }
 
@@ -455,33 +477,11 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var execParams={};
     var paramListInfo=[];
     if($scope.paramListHolder.length>0){
-      // for(var i=0;i<$scope.paramListHolder.length;i++){
-      //   var paramList={};
-      //   paramList.paramId=$scope.paramListHolder[i].paramId;
-      //   paramList.paramName=$scope.paramListHolder[i].paramName;
-      //   paramList.paramType=$scope.paramListHolder[i].paramType;
-      //   paramList.ref=$scope.paramListHolder[i].ref;
-      //   var ref={};
-      //   var type=["ONEDARRAY","TWODARRAY"]
-      //   var paramValue={};  
-      //   if(type.indexOf($scope.paramListHolder[i].paramType.toUpperCase()) ==-1){
-      //     ref.type="simple";
-      //     paramValue.ref=ref;
-      //     paramValue.value=$scope.paramListHolder[i].paramValue;  
-      //   }
-      //   else{
-      //     ref.type="datapod";
-      //     ref.uuid=$scope.paramListHolder[i].selectedParamValue.uuid;  
-      //     paramValue.ref=ref;
-      //   }
-      //   paramList.paramValue=paramValue;
-      //   paramListInfo[i]=paramList;
-      // }
       for(var i=0;i<$scope.paramListHolder.length;i++){
         var paramList={};
         paramList.paramId=$scope.paramListHolder[i].paramId;
-      //  paramList.paramName=$scope.paramListHolder[i].paramName;
-      //  paramList.paramType=$scope.paramListHolder[i].paramType;
+        paramList.paramName=$scope.paramListHolder[i].paramName;
+        paramList.paramType=$scope.paramListHolder[i].paramType;
         paramList.ref=$scope.paramListHolder[i].ref;
         if($scope.paramListHolder[i].paramType =='attribute'){
           var attributeInfoArray=[];
@@ -489,7 +489,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
           var attributeInfoRef={}
           attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
           attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfo.uuid;
-        //  attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
+          attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
           attributeInfo.ref=attributeInfoRef;
           attributeInfo.attrId=$scope.paramListHolder[i].attributeInfo.attributeId;
           attributeInfoArray[0]=attributeInfo
@@ -503,10 +503,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
             var attributeInfoRef={}
             attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
             attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfoTag[j].uuid
-           // attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
+            attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
             attributeInfo.ref=attributeInfoRef;
             attributeInfo.attrId=$scope.paramListHolder[i].attributeInfoTag[j].attributeId;
-         ///   attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
+            attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
             attributeInfoArray[j]=attributeInfo
           }
           paramList.attributeInfo=attributeInfoArray;
