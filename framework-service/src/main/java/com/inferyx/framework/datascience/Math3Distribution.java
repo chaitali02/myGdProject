@@ -114,7 +114,7 @@ public class Math3Distribution {
 		
 		MetaIdentifier sourceIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
 		
-		Object source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+		Object source = commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
 		String sql = modelServiceImpl.generateSQLBySource(source);
 //		exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 		
@@ -136,7 +136,7 @@ public class Math3Distribution {
 		
 		MetaIdentifier sourceIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
 		
-		Object source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+		Object source = commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
 		String sql = modelServiceImpl.generateSQLBySource(source);
 //		exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 		

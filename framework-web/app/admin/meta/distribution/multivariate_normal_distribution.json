@@ -1,26 +1,15 @@
 {
-    "metaId" : {
+    "library" : "SPARKML",
+    "className" : "org.apache.commons.math3.distribution.MultivariateNormalDistribution",
+    "paramList" : {
         "ref" : {
-            "type" : "datapod",
-            "uuid" : "d7d39f87-faa1-4175-a952-bc8bab52465a",
-            "version" : "1525636303"
+            "type" : "paramlist",
+            "uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4"
         }
     },
-    "execId" : {
-        "ref" : {
-            "type" : "loadExec",
-            "uuid" : "9b081995-1d30-4e58-8117-13163dc0ca4d",
-            "version" : "1525636303"
-        }
-    },
-    "location" : "/d7d39f87-faa1-4175-a952-bc8bab52465a/1525636303/1525636303",
-    "persistMode" : "DISK_ONLY",
-    "numRows" : NumberLong(3),
-    "runMode" : "BATCH",
-    "uuid" : "b8699bda-a6fa-4da3-bbb6-5d140e5ba233",
-    "version" : "1525636304",
-    "name" : "industry_mean",
-    "desc" : "Creating datastore for industry_mean",
+    "uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050",
+    "version" : "1523604730",
+    "name" : "multivariate_normal_distribution",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -30,6 +19,7 @@
         }
     },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "tags" : [],
     "active" : "Y",
     "published" : "N",
     "appInfo" : [ 

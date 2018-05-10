@@ -1,14 +1,15 @@
 {
-  "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
-  "version": "1525519035",
-  "name": "paramlist_generate_data",
-  "desc": "Generate Data Paramlist",
+  "id": "5aedc111b1dfe37d8ec87bf7",
+  "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
+  "version": "1525530897",
+  "name": "paramlist_transpose",
+  "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
+      "version": "1464977196"
+      
     },
     "value": null
   },
@@ -17,7 +18,13 @@
   "active": "Y",
   "published": "N",
   "appInfo": [
- 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        },
         {
             "ref" : {
                 "type" : "application",
@@ -29,22 +36,22 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "distribution",
-      "paramType": "distribution",
+      "paramName": "sourceDatapod",
+      "paramType": "attributes",
       "paramValue": null,
       "paramRef": null
     },
     {
       "paramId": "1",
-      "paramName": "numIterations",
-      "paramType": "integer",
-      "paramValue": "1000",
+      "paramName": "key",
+      "paramType": "attributes",
+      "paramValue": null,
       "paramRef": null
     },
     {
       "paramId": "2",
       "paramName": "saveLocation",
-      "paramType": "attribute",
+      "paramType": "datapod",
       "paramValue": null,
       "paramRef": null
     }
