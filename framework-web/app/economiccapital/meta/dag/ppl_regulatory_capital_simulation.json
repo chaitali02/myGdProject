@@ -225,11 +225,10 @@
     "version" : "1525647564",
     "name" : "ppl_regulatory_capital_simulation",
     "desc" : "Pipeline to simulate regulatory capital calculations",
-    "createdBy" : {
+   "createdBy" : {
         "ref" : {
             "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196"
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
     "createdOn" : ISODate("2018-05-09T01:26:27.635Z"),

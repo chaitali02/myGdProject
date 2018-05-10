@@ -52,11 +52,10 @@
     "uuid" : "5b3c8a96-ea4f-430c-866f-36e9cf06eec8",
     "version" : "1525636110",
     "name" : "industry_covariance",
-    "createdBy" : {
+   "createdBy" : {
         "ref" : {
             "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196"
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
