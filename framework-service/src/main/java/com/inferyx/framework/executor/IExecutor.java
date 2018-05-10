@@ -289,8 +289,9 @@ public interface IExecutor {
 	 * @param numIterations
 	 * @param tableName
 	 * @return
+	 * @throws Exception TODO
 	 */
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion);
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception;
 	
 	/**
 	 * 

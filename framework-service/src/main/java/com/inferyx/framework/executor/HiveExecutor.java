@@ -327,7 +327,7 @@ public class HiveExecutor implements IExecutor{
 	}
 
 	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) {
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
