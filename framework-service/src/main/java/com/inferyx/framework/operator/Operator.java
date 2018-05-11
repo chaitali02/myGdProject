@@ -20,7 +20,7 @@ import com.inferyx.framework.enums.RunMode;
 
 public interface Operator {
 	
-	public void execute(OperatorType operatorType, 
+	public String execute(OperatorType operatorType, 
 			ExecParams execParams, 
 			MetaIdentifier execIdentifier, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 

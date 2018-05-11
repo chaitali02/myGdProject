@@ -46,7 +46,7 @@ public class JoinTablesOperator implements com.inferyx.framework.operator.Operat
 	}
 	
 	@Override
-	public void execute(OperatorType operatorType, 
+	public String execute(OperatorType operatorType, 
 						ExecParams execParams, 
 						MetaIdentifier execIdentifier, 
 						java.util.Map<String, MetaIdentifier> refKeyMap, 
@@ -58,6 +58,7 @@ public class JoinTablesOperator implements com.inferyx.framework.operator.Operat
 //		String joinTableName = paramSetServiceImpl.getParamByName(execParams, "JOIN_TABLE_NAME").getValue();
 		String sql = relationOperator.generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode);
 		logger.info("Inside JoinTablesOperator relation sql : " + sql);
+		return null;
 	}
 
 }

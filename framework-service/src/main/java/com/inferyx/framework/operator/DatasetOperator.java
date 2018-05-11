@@ -134,10 +134,10 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		}
 
 		@Override
-		public void execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+		public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
 				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 			// TODO Auto-generated method stub
-			
+			return null;
 		}
 
 }

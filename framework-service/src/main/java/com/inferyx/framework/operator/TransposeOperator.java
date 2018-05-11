@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -36,6 +37,7 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 /**
@@ -53,6 +55,8 @@ public class TransposeOperator implements Operator {
 	private ExecutorFactory execFactory;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(TransposeOperator.class);
 
@@ -95,7 +99,7 @@ public class TransposeOperator implements Operator {
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.lang.Object, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
 	 */
 	@Override
-	public void execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		logger.info("Executing TransposeOperator");
@@ -193,7 +197,10 @@ public class TransposeOperator implements Operator {
 		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
 		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-		String tableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
+		
+		String newVersion = Helper.getVersion();
+		locationDatapod.setVersion(newVersion);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
 		
 		ResultSetHolder resultSetHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
@@ -210,6 +217,7 @@ public class TransposeOperator implements Operator {
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
+		return tableName;
 	}
 
 	public List<String> getColumnNameList(Object source, ParamListHolder holder ){
