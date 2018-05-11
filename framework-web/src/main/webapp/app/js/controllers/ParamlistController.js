@@ -45,7 +45,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.paramlist.versions = [];
 	$scope.isshowmodel = false;
 	$scope.paramtable = null;
-	//$scope.type = ["string", "double", "date", "integer", "row"];
+	$scope.typeSimple = ["string", "double", "date", "integer", "row"];
 	$scope.type = [
 		{"name":"string","caption":"string"},
 		{"name":"double","caption":"double"},
@@ -155,14 +155,14 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
 		$scope.getAllVersion($stateParams.id)
-		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "paramlist").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		ParamListService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramlist").then(function (response) { onSuccessGetLatestByUuid(response.data) });
 		var onSuccessGetLatestByUuid = function (response) {
 			$scope.paramlistData = response
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.paramlist.defaultVersion = defaultversion;
-			$scope.paramtable = response.params;
+			$scope.paramtable = response.paramInfo;
 		}
 	}//End If
 
@@ -179,6 +179,21 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			$scope.paramtable = response.params;
 		}
 
+	}
+    $scope.getAllLatest=function(type,index){
+		ParamListService.getAllLatest(type).then(function (response) { onGetAllLatest(response.data) });
+		var onGetAllLatest = function (response) {
+			$scope.allDistribution=response;
+			$scope.paramtable[index].selectedParamValue=response[0];
+		}
+	}
+
+	$scope.onChangeParamType=function(type,index){
+		if($scope.typeSimple.indexOf(type) !=-1){
+			$scope.paramtable[index].paramValueType='simple';
+		}else{
+			$scope.paramtable[index].paramValueType=type;
+		}
 	}
 
 	$scope.submitParamList = function () {
@@ -202,15 +217,40 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 
 		var paramInfoArray = [];
 		if ($scope.paramtable.length > 0) {
+			debugger
 			for (var i = 0; i < $scope.paramtable.length; i++) {
 				var paraminfo = {};
 				paraminfo.paramId = $scope.paramtable[i].paramId;
 				paraminfo.paramName = $scope.paramtable[i].paramName;
 				paraminfo.paramType = $scope.paramtable[i].paramType;
-				paraminfo.paramValue = $scope.paramtable[i].paramValue;
-				paramInfoArray[i] = paraminfo;
-			}
+				var paramValue={}
+				if($scope.typeSimple.indexOf($scope.paramtable[i].paramType) !=-1){
+				 var paramRef={}	 
+				 paramRef.type="simple";
+				 paramValue.ref=paramRef;
+				 paramValue.value=$scope.paramtable[i].paramValue;
+				 paraminfo.paramValue =paramValue
+				 paramInfoArray[i] = paraminfo; 
+				}
+				else if($scope.paramtable[i].paramType =='distribution'){
+					var paramRef={};
+					paramRef.type=$scope.paramtable[i].paramType;
+					if($scope.paramtable[i].selectedParamValue !=null)
+						paramRef.uuid=$scope.paramtable[i].selectedParamValue.uuid;
+					paramValue.ref=paramRef;
+					paraminfo.paramValue =paramValue
+					paramInfoArray[i] = paraminfo; 
+				}
+				else {
+					paramValue=null;
+					paraminfo.paramValue =paramValue
+					paramInfoArray[i] = paraminfo; 
+				}	
+			}	
+			
+			
 		}
+
 		paramlistJson.params = paramInfoArray;
 		console.log(JSON.stringify(paramlistJson));
 		ParamListService.submit(paramlistJson, 'paramlist').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });

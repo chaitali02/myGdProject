@@ -4,31 +4,56 @@
 			"paramId": 0,
 			"paramName": "k",
 			"paramType": "integer",
-			"paramValue": "10"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
 		},
 		{
 			"paramId": 1,
 			"paramName": "learningDecay",
 			"paramType": "double",
-			"paramValue": "10"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
 		},
 		{
 			"paramId": 2,
 			"paramName": "learningOffset",
 			"paramType": "double",
-			"paramValue": "12"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "12"
+			    }
 		},
 		{
 			"paramId": 3,
 			"paramName": "maxIter",
 			"paramType": "integer",
-			"paramValue": "4"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "4"
+			    }
 		},
 		{
 			"paramId": 4,
 			"paramName": "seed",
 			"paramType": "long",
-			"paramValue": "13.14"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "13.14"
+			    }
 		}
 	],
 	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a85",

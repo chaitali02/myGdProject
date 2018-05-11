@@ -31,26 +31,46 @@
     {
       "paramId": "0",
       "paramName": "labelCol",
-      "paramType": "STRING",
-      "paramValue": "label"
+      "paramType": "string",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "label"
+    }
     },
     {
       "paramId": "1",
       "paramName": "predictionCol",
-      "paramType": "STRING",
-      "paramValue": "Col1"
+      "paramType": "string",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "Col1"
+    }
     },
     {
       "paramId": "2",
       "paramName": "featuresCol",
-      "paramType": "STRING",
-      "paramValue": "Col2"
+      "paramType": "string",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "Col2"
+    }
     },
     {
       "paramId": "3",
       "paramName": "smoothing",
-      "paramType": "INTEGER",
-      "paramValue": "1"
+      "paramType": "integer",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "1"
+    }
     }
   ]
 }

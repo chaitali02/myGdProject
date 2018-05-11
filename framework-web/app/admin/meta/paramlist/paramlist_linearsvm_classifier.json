@@ -31,26 +31,46 @@
     {
       "paramId": "0",
       "paramName": "maxIter",
-      "paramType": "INTEGER",
-      "paramValue": "10"
+      "paramType": "integer",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "10"
+    }
     },
     {
       "paramId": "1",
       "paramName": "regParam",
-      "paramType": "DOUBLE",
-      "paramValue": "1.0"
+      "paramType": "double",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "1.0"
+    }
     },
     {
       "paramId": "2",
       "paramName": "predictionCol",
-      "paramType": "STRING",
-      "paramValue": "Col1"
+      "paramType": "string",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "Col1"
+    }
     },
     {
       "paramId": "3",
       "paramName": "featuresCol",
-      "paramType": "STRING",
-      "paramValue": "Col2"
+      "paramType": "string",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "Col2"
+    }
     }
   ]
 }

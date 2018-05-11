@@ -30,13 +30,23 @@
       "paramId": "0",
       "paramName": "lower",
       "paramType": "double",
-      "paramValue": "1526.11"
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "1526.11"
+    }
     },
     {
       "paramId": "1",
       "paramName": "upper",
       "paramType": "double",
-      "paramValue": "6352.12"
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "6352.12"
+    }
     }
   ]
 }

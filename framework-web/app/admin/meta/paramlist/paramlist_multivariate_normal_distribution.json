@@ -36,14 +36,14 @@
             "paramId" : "1",
             "paramName" : "factorMeans",
             "paramType" : "attribute",
-            "paramValue" : "",
+            "paramValue" :null,
             "paramRef" : null
         }, 
         {
             "paramId" : "2",
             "paramName" : "factorCovariance",
             "paramType" : "attributes",
-            "paramValue" : "",
+            "paramValue" : null,
             "paramRef" : null
         }
     ]

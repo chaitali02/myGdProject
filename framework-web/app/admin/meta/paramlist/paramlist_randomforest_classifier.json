@@ -31,32 +31,57 @@
     {
       "paramId": "0",
       "paramName": "maxBins",
-      "paramType": "INTEGER",
-      "paramValue": "10"
+      "paramType": "integer",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "10"
+    }
     },
     {
       "paramId": "1",
       "paramName": "maxDepth",
-      "paramType": "INTEGER",
-      "paramValue": "10"
+      "paramType": "integer",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "10"
+    }
     },
     {
       "paramId": "2",
       "paramName": "predictionCol",
-      "paramType": "STRING",
-      "paramValue": "Col1"
+      "paramType": "string",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "Col1"
+    }
     },
     {
       "paramId": "3",
       "paramName": "featuresCol",
-      "paramType": "STRING",
-      "paramValue": "Col2"
+      "paramType": "string",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "Col2"
+    }
     },
     {
       "paramId": "4",
       "paramName": "maxMemoryInMB",
-      "paramType": "INTEGER",
-      "paramValue": "100"
+      "paramType": "integer",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "100"
+    }
     }
   ]
 }

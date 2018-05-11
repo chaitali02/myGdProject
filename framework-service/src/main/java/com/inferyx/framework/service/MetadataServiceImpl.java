@@ -1088,11 +1088,12 @@ public class MetadataServiceImpl {
 			paramListHolder.setParamId(param.getParamId());
 			paramListHolder.setParamName(param.getParamName());
 			paramListHolder.setParamType(param.getParamType());
-			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
-					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
-				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
-			else 
-				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+//			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+//					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) {
+				paramListHolder.setParamValue(param.getParamValue());	
+//			} else { 
+//				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
+//			}
 			
 			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());
@@ -1142,11 +1143,11 @@ public class MetadataServiceImpl {
 				paramListHolder.setParamId(param.getParamId());
 				paramListHolder.setParamName(param.getParamName());
 				paramListHolder.setParamType(param.getParamType());
-				if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
-						|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
-					paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
-				else
-					paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+//				if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+//						|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
+					paramListHolder.setParamValue(param.getParamValue());		
+//				else
+//					paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
 		
 				paramListHolder.setRef(
 						new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
@@ -1188,13 +1189,12 @@ public class MetadataServiceImpl {
 					paramListHolder.setParamId(param.getParamId());
 					paramListHolder.setParamName(param.getParamName());
 					paramListHolder.setParamType(param.getParamType());
-					if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
-							|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
-						paramListHolder.setParamValue(
-								new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));
-					 else 
-						paramListHolder.setParamValue(new MetaIdentifierHolder(
-								new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
+//					if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+//							|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
+						paramListHolder.setParamValue(param.getParamValue());	
+//					 else 
+//						paramListHolder.setParamValue(new MetaIdentifierHolder(
+//								new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
 					
 					paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramListDistribution.getUuid(),
 							paramListDistribution.getVersion()));
@@ -1207,13 +1207,12 @@ public class MetadataServiceImpl {
 					paramListHolder.setParamId(param.getParamId());
 					paramListHolder.setParamName(param.getParamName());
 					paramListHolder.setParamType(param.getParamType());
-					if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
-							|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
-						paramListHolder.setParamValue(
-								new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));
-					else 
-						paramListHolder.setParamValue(new MetaIdentifierHolder(
-								new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
+//					if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+//							|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
+						paramListHolder.setParamValue(param.getParamValue());	
+//					else 
+//						paramListHolder.setParamValue(new MetaIdentifierHolder(
+//								new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
 
 					paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramListSimulate.getUuid(),
 							paramListSimulate.getVersion()));
@@ -1240,11 +1239,11 @@ public class MetadataServiceImpl {
 			paramListHolder.setParamId(param.getParamId());
 			paramListHolder.setParamName(param.getParamName());
 			paramListHolder.setParamType(param.getParamType());
-			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
-					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
-				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
-			else 
-				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+//			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+//					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
+				paramListHolder.setParamValue(param.getParamValue());		
+//			else 
+//				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
 			
 			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, operatorType.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());
@@ -1264,11 +1263,11 @@ public class MetadataServiceImpl {
 			paramListHolder.setParamId(param.getParamId());
 			paramListHolder.setParamName(param.getParamName());
 			paramListHolder.setParamType(param.getParamType());
-			if (param.getParamType().equalsIgnoreCase(ParamDataType.DISTRIBUTION.toString())
-					|| param.getParamType().equalsIgnoreCase(ParamDataType.DATAPOD.toString())) 
-				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(null, null, null), param.getParamValue()));	
-			else 
-				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
+//			if (param.getParamType().equalsIgnoreCase(ParamDataType.DISTRIBUTION.toString())
+//					|| param.getParamType().equalsIgnoreCase(ParamDataType.DATAPOD.toString())) 
+				paramListHolder.setParamValue(param.getParamValue());		
+//			else 
+//				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
 			
 			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());

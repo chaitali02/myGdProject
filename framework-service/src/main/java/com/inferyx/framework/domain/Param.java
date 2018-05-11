@@ -17,8 +17,8 @@ public class Param {
 
 	String paramId; // 0,1,2
 	String paramName; // param1, param2
-	String paramType; // string, date, double
-	String paramValue;
+	String paramType; // string, date, double,datapod,attribute,attributes
+	MetaIdentifierHolder paramValue;
 	MetaIdentifier paramRef;
 	
 	public String getParamId() {
@@ -39,12 +39,7 @@ public class Param {
 	public void setParamType(String paramType) {
 		this.paramType = paramType;
 	}
-	public String getParamValue() {
-		return paramValue;
-	}
-	public void setParamValue(String paramValue) {
-		this.paramValue = paramValue;
-	}
+	
 	/**
 	 * @return the paramRef
 	 */
@@ -56,5 +51,11 @@ public class Param {
 	 */
 	public void setParamRef(MetaIdentifier paramRef) {
 		this.paramRef = paramRef;
+	}
+	public MetaIdentifierHolder getParamValue() {
+		return paramValue;
+	}
+	public void setParamValue(MetaIdentifierHolder paramValue) {
+		this.paramValue = paramValue;
 	}
 }

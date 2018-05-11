@@ -4,19 +4,34 @@
             "paramId" : "0",
             "paramName" : "lowerlimit",
             "paramType" : "double",
-            "paramValue" : "1000"
+            "paramValue" : {
+		"ref" : {
+		    "type" : "simple"
+		},
+		"value" : "1000"
+	    }
         }, 
         {
             "paramId" : "1",
             "paramName" : "mode",
             "paramType" : "double",
-            "paramValue" : "3560"
+            "paramValue" : {
+		"ref" : {
+		    "type" : "simple"
+		},
+		"value" : "3560"
+	    }
         }, 
         {
             "paramId" : "2",
             "paramName" : "upperlimit",
             "paramType" : "double",
-            "paramValue" : "4500"
+            "paramValue" : {
+		"ref" : {
+		    "type" : "simple"
+		},
+		"value" : "4500"
+	    }
         }
     ],
     "uuid" : "fd3e1aa9-d14a-4355-9d6d-7bd0b9f44dd4",

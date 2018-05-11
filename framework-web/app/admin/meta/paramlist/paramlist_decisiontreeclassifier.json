@@ -4,31 +4,56 @@
 			"paramId": 0,
 			"paramName": "maxBins",
 			"paramType": "integer",
-			"paramValue": "10"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
 		},
 		{
 			"paramId": 1,
 			"paramName": "maxDepth",
 			"paramType": "integer",
-			"paramValue": "10"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
 		},
 		{
 			"paramId": 2,
 			"paramName": "predictionCol",
 			"paramType": "string",
-			"paramValue": "Col1"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "Col1"
+			    }
 		},
 		{
 			"paramId": 3,
 			"paramName": "featuresCol",
 			"paramType": "string",
-			"paramValue": "Col2"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "Col2"
+			    }
 		},
 		{
 			"paramId": 4,
 			"paramName": "maxMemoryInMB",
 			"paramType": "integer",
-			"paramValue": "100"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "100"
+			    }
 		}
 	],
 	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",

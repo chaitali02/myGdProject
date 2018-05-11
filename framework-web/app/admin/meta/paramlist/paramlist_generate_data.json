@@ -37,14 +37,24 @@
       "paramId": "0",
       "paramName": "distribution",
       "paramType": "distribution",
-      "paramValue": null,
+      "paramValue": {
+        "ref" : {
+            "type" : "distribution",
+	    "uuid" : "c5bfcdab-6435-4848-9214-6a878a865319"
+        }
+    },
       "paramRef": null
     },
     {
       "paramId": "1",
       "paramName": "numIterations",
       "paramType": "integer",
-      "paramValue": "1000",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "1000"
+    },
       "paramRef": null
     },
     {

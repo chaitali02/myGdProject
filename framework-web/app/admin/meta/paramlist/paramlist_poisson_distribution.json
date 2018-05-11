@@ -30,13 +30,23 @@
       "paramId": "0",
       "paramName": "p",
       "paramType": "double",
-      "paramValue": "3456"
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "3456"
+    }
     },
     {
       "paramId": "1",
       "paramName": "epsilon",
       "paramType": "double",
-      "paramValue": "7563"
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "7563"
+    }
     }
   ]
 }

@@ -30,13 +30,23 @@
       "paramId": "0",
       "paramName": "mean",
       "paramType": "double",
-      "paramValue": "5623"
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "5623"
+    }
     },
     {
       "paramId": "1",
       "paramName": "seed",
       "paramType": "double",
-      "paramValue": "4526"
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "4526"
+    }
     }
   ]
 }

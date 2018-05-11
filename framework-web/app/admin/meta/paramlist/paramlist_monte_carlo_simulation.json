@@ -4,24 +4,40 @@
             "paramId" : "0",
             "paramName" : "seed",
             "paramType" : "integer",
-            "paramValue" : "4523"
+            "paramValue" : {
+		"ref" : {
+		    "type" : "simple"
+		},
+		"value" : "4523"
+	    }
         }, 
         {
             "paramId" : "1",
             "paramName" : "minValue",
             "paramType" : "double",
-            "paramValue" : "8"
+            "paramValue" : {
+		"ref" : {
+		    "type" : "simple"
+		},
+		"value" : "8"
+	    }
         }, 
         {
             "paramId" : "2",
             "paramName" : "maxValue",
             "paramType" : "double",
-            "paramValue" : "16"
-        }, 
+            "paramValue" : {
+		"ref" : {
+		    "type" : "simple"
+		},
+		"value" : "16"
+	    }
+        },  
         {
             "paramId" : "3",
             "paramName" : "factorWeights",
-            "paramType" : "ONEDARRAY"
+            "paramType" : "attribute",
+	    "paramValue" : null
         }
     ],
     "uuid" : "cfa35a28-1d7d-4f88-80d7-e5a64981d410",
