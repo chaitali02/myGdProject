@@ -608,9 +608,13 @@ $scope.showRulePage=function(){
  $scope.showgraphdiv=false
 }
 
+
+
 $scope.countContinue=function(){
  $scope.continueCount=$scope.continueCount+1;
  if($scope.continueCount == 2 && $scope.isGraphRenderEdit !=true){
+  
+ 
    setTimeout(function () {
      $scope.isGraphRenderEdit=true;
      $scope.dagdata.name=$scope.pipelineName;

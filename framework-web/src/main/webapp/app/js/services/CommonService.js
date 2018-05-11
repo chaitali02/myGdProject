@@ -473,8 +473,13 @@
             }else if(type1.indexOf(response[i].paramType) != -1){
               paramList.isParamType=response[i].paramType;
               paramList.selectedParamValueType=response[i].paramType=="distribution" ?response[i].paramType:"datapod";
-              paramList.paramValue=response[i].paramValue;    
-          
+              paramList.paramValue=response[i].paramValue;
+              if(response[i].paramValue !=null){
+              var selectedParamValue={};
+              selectedParamValue.uuid=response[i].paramValue.ref.uuid;
+              selectedParamValue.type=response[i].paramValue.ref.type;
+              paramList.selectedParamValue=selectedParamValue;
+              }
             }else{
               paramList.isParamType="datapod";
               paramList.selectedParamValueType='datapod'

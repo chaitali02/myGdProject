@@ -4,31 +4,56 @@
 			"paramId": 0,
 			"paramName": "labelCol",
 			"paramType": "string",
-			"paramValue": "label"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "label"
+			    }
 		},
 		{
 			"paramId": 1,
 			"paramName": "maxIter",
 			"paramType": "integer",
-			"paramValue": "10"
-		},
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
+					},
 		{
 			"paramId": 2,
 			"paramName": "predictionCol",
 			"paramType": "String",
-			"paramValue": "Col1"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "Col1"
+			    }
 		},
 		{
 			"paramId": 3,
 			"paramName": "featuresCol",
 			"paramType": "string",
-			"paramValue": "Col2"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "Col2"
+			    }
 		},
 		{
 			"paramId": 4,
 			"paramName": "tol",
 			"paramType": "double",
-			"paramValue": "10"
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
 		}
 	],
 	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a83",
@@ -49,12 +74,30 @@
 	"active": "Y",
 	"published": "N",
 	"appInfo": [
-		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
-			}
-		}
+			{
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+       
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
 	]
 }

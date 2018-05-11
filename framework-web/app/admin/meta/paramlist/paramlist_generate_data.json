@@ -17,18 +17,29 @@
   "active": "Y",
   "published": "N",
   "appInfo": [
- 		{
+ 			{
             "ref" : {
                 "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
             }
-        },
+        }, 
         {
             "ref" : {
                 "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-                "version" : "1521430822"
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+       
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
             }
         }
   ],
@@ -37,14 +48,24 @@
       "paramId": "0",
       "paramName": "distribution",
       "paramType": "distribution",
-      "paramValue": null,
+      "paramValue": {
+        "ref" : {
+            "type" : "distribution",
+	    "uuid" : "c5bfcdab-6435-4848-9214-6a878a865319"
+        }
+    },
       "paramRef": null
     },
     {
       "paramId": "1",
       "paramName": "numIterations",
       "paramType": "integer",
-      "paramValue": "1000",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "1000"
+    },
       "paramRef": null
     },
     {

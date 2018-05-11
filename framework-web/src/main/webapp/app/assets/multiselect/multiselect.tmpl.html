@@ -1,6 +1,7 @@
 <div class="dropup multiselect">
-  <button type="button" class="btn" style="width:100% !important;background: white;
-      border: 1px solid #c2cad8;" ng-click="toggleSelect()" ng-disabled="disabled" ng-class="{'error': !valid()}">
+  <button type="button" class="btn"  ng-disabled="{{isDisable}}" style="width:100% !important;background: white;
+      border: 1px solid #c2cad8;" ng-click="toggleSelect()" ng-disabled="disabled">
+      <!-- ng-class="{'border-error': !valid()} -->
     <div class="pull-left" style="text-overflow: ellipsis;width:87px;overflow:hidden;" title="{{header[0].dname}}">{{header[0].name}}</div>
     <div class="pull-left" ng-if="header[0].name">{{header.length}} selected</div>
     <div class="pull-left" ng-if="!header[0].name">selected</div>
