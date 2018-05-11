@@ -21,6 +21,7 @@ public class ExecParams {
 	private List<String> stageInfo;
 	private ParamSetHolder paramSetHolder;
 	private List<ParamListHolder> paramListInfo;
+	private java.util.Map<String, String> internalVarMap;
 	
 	/**
 	 * @Ganesh
@@ -86,6 +87,14 @@ public class ExecParams {
 
 	public void setStageInfo(List<String> stageInfo) {
 		this.stageInfo = stageInfo;
+	}
+
+	public java.util.Map<String, String> getInternalVarMap() {
+		return internalVarMap;
+	}
+
+	public void setInternalVarMap(java.util.Map<String, String> internalVarMap) {
+		this.internalVarMap = internalVarMap;
 	}
 
 }

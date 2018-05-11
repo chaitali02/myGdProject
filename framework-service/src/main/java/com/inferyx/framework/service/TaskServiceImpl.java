@@ -13,6 +13,7 @@ package com.inferyx.framework.service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
@@ -589,6 +590,9 @@ public class TaskServiceImpl implements Callable<String> {
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		Operator operator = indvTask.getOperators().get(0);
 		String datapodTableName  = null;
+		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString());
+		TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
+		Map<String, String> internalVarMap = loadInternalParams(taskExec, dagExecUUID, dagExecVer, stageId, taskId);
 		if (datapodKey != null) {
 			datapodTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"),datapodKey.getVersion(), dagExecVer);
 		} else {
@@ -611,8 +615,6 @@ public class TaskServiceImpl implements Callable<String> {
 				loadExec.setCreatedBy(dataStore.getCreatedBy());
 				loadServiceImpl.executeSql(loadExec, dagExecVer, datapodTableName, datapodKey, loadDS/*, dfTask*/, runMode);
 				//DagExec dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExecUUID, dagExecVer);
-				DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString());
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
 				taskExec.getOperators().get(0).getOperatorInfo().setRef(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
 				//dagExecServiceImpl.save(dagExec);
 				commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
@@ -633,7 +635,6 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.dq)) {
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				
 				//DataQualExec dataqualExec = dataqualExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				DataQualExec dataqualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.dqExec.toString());
@@ -648,7 +649,6 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.dqgroup)) {
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				//DataQualGroupExec dataqualGroupExec = dataqualGroupExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				DataQualGroupExec dataqualGroupExec = (DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.dqgroupExec.toString());
 				dataqualGroupServiceImpl.execute(dataqualGroupExec.getDependsOn().getRef().getUuid(), dataqualGroupExec.getDependsOn().getRef().getVersion(), null, dataqualGroupExec, runMode);
@@ -662,10 +662,11 @@ public class TaskServiceImpl implements Callable<String> {
 		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.rule)) {
 			logger.info("Going to ruleServiceImpl.execute");
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				//RuleExec ruleExec = ruleExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.ruleExec.toString());
 				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
+				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
+				execParams.setInternalVarMap(internalVarMap);
 				ruleServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, ruleExec, null, null, execParams, RunMode.ONLINE);
 				// ruleServiceImpl.execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(), ruleExec, null, null, null);
 				if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
@@ -677,9 +678,10 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.rulegroup)) {
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				//RuleGroupExec ruleGroupExec = ruleGroupExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				RuleGroupExec ruleGroupExec = (RuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.rulegroupExec.toString());
+				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleGroupExec.getVersion());
+				execParams.setInternalVarMap(internalVarMap);
 				ruleGroupServiceImpl.execute(ruleGroupExec.getDependsOn().getRef().getUuid(), ruleGroupExec.getDependsOn().getRef().getVersion(), execParams, ruleGroupExec, runMode);
 				if (Helper.getLatestStatus(ruleGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 					throw new Exception();
@@ -690,7 +692,6 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.profile)) {
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				//ProfileExec profileExec = profileExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.profileExec.toString());
 				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
@@ -701,7 +702,6 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.profilegroup)) {
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				//ProfileGroupExec profileGroupExec = profileGroupExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				ProfileGroupExec profileGroupExec = (ProfileGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.profilegroupExec.toString());
 				profileGroupServiceImpl.execute(profileGroupExec.getDependsOn().getRef().getUuid(), profileGroupExec.getDependsOn().getRef().getVersion(), null, profileGroupExec, runMode);
@@ -714,9 +714,10 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.train)) {
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.trainExec.toString());
+				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", trainExec.getVersion());
+				execParams.setInternalVarMap(internalVarMap);
 				Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
 				Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 				ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
@@ -731,9 +732,10 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.simulate)) {
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.simulateExec.toString());
+				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", simulateExec.getVersion());
+				execParams.setInternalVarMap(internalVarMap);
 				Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateExec.getDependsOn().getRef().getUuid(), simulateExec.getDependsOn().getRef().getVersion(), MetaType.simulate.toString());
 				//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(), simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 				//ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
@@ -745,9 +747,10 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.predict)) {
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.predictExec.toString());
+				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", predictExec.getVersion());
+				execParams.setInternalVarMap(internalVarMap);
 				Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictExec.getDependsOn().getRef().getUuid(), predictExec.getDependsOn().getRef().getVersion(), MetaType.predict.toString());
 				//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 				//ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
@@ -759,7 +762,6 @@ public class TaskServiceImpl implements Callable<String> {
 		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.recon)) {
 			logger.info("Going to reconServiceImpl.execute");
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.reconExec.toString());
 				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
 				reconServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, reconExec, null, null, execParams, runMode);
@@ -773,7 +775,6 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.recongroup)) {
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				ReconGroupExec reconGroupExec = (ReconGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.recongroupExec.toString());
 				reconGroupServiceImpl.execute(reconGroupExec.getDependsOn().getRef().getUuid(), reconGroupExec.getDependsOn().getRef().getVersion(), execParams, reconGroupExec, runMode);
 				if (Helper.getLatestStatus(reconGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
@@ -786,7 +787,6 @@ public class TaskServiceImpl implements Callable<String> {
 		} 	 else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.operatortype)) {
 			logger.info("Going to operatorServiceImpl.execute");
 			try {
-				TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId);
 				OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.operatorExec.toString());
 				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
 				operatorServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, operatorExec, null, execParams, runMode);
@@ -801,6 +801,32 @@ public class TaskServiceImpl implements Callable<String> {
 		}  // End else
 		return datapodTableName;
 	}// End executeTask
+	
+	/**
+	 * 
+	 * @param taskExec
+	 * @param dagExecUUID
+	 * @param dagExecVer
+	 * @param stageId
+	 * @param taskId
+	 */
+	private java.util.Map<String, String> loadInternalParams(TaskExec taskExec, String dagExecUUID, String dagExecVer,
+			String stageId, String taskId) {
+		java.util.Map<String, String> internalVarMap = new HashMap<>();
+		if (internalVarMap == null || internalVarMap.isEmpty()) {
+			internalVarMap = new HashMap<>();
+			execParams.setInternalVarMap(internalVarMap);
+		}
+		internalVarMap.put("$CURRENT_DAG_EXEC_UUID", dagExecUUID);
+		internalVarMap.put("$CURRENT_DAG_EXEC_VERSION", dagExecVer);
+		internalVarMap.put("$CURRENT_STAGE_ID", stageId);
+		internalVarMap.put("$CURRENT_TASK_ID", taskId);
+		internalVarMap.put("$CURRENT_TASK_TYPE", taskExec.getOperators().get(0).getOperatorInfo().getRef().getType().toString());
+		internalVarMap.put("$CURRENT_TASK_OBJ_UUID", taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid());
+		/*internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", taskId);*/
+		return internalVarMap;
+	}
+
 
 	@Override
 	public String call() throws JsonProcessingException, JSONException, java.text.ParseException {
