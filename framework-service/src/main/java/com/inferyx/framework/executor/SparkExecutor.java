@@ -199,7 +199,6 @@ public class SparkExecutor implements IExecutor {
 		if (obj instanceof SparkSession) {
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 			dfSorted = sparkSession.sql(sql);
-			dfSorted.printSchema();
 			Row[] rows = (Row[]) dfSorted.head(Integer.parseInt("" + dfSorted.count()));
 			String[] columns = dfSorted.columns();
 			for (Row row : rows) {
@@ -670,7 +669,6 @@ public class SparkExecutor implements IExecutor {
 		if (obj instanceof SparkSession && !execContext.equals(ExecContext.livy_spark)) {
 			DataFrameHolder dataFrameHolder = iReader.read(datapod, dataStore, hdfsInfo, obj, datasource);
 			Dataset<Row> df = dataFrameHolder.getDataframe();
-			df.printSchema();
 			tableName = dataFrameHolder.getTableName();
 			String[] tablenameList = ((SparkSession) obj).sqlContext().tableNames();
 			boolean tableFound = false;
@@ -1387,7 +1385,6 @@ public class SparkExecutor implements IExecutor {
 		PipelineModel trngModel = null;
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		df.printSchema();
 		try {
 			Dataset<Row>[] splits = df
 					.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
@@ -1407,7 +1404,7 @@ public class SparkExecutor implements IExecutor {
 				trainingDf = trngDf;
 				validateDf = valDf;
 			}
-			trainingDf.printSchema();
+			
 			Dataset<Row> trainedDataSet = null;
 			@SuppressWarnings("unused")
 			StringIndexer labelIndexer = null;
@@ -1473,6 +1470,8 @@ public class SparkExecutor implements IExecutor {
 				case "double": return DataTypes.DoubleType;
 				case "date": return DataTypes.DateType;
 				case "string": return DataTypes.StringType;
+				case "timestamp": return DataTypes.TimestampType;
+				
 	            default: return null;
 		}
 	}
