@@ -21,7 +21,7 @@ import com.inferyx.framework.domain.ParamSet;
 public class OperatorUtilServiceImpl {
 
 	@Autowired
-	CommonServiceImpl commonServiceImpl;
+	CommonServiceImpl<?> commonServiceImpl;
 
 	public OperatorUtilServiceImpl() {
 		// TODO Auto-generated constructor stub
