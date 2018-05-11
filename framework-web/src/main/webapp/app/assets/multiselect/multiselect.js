@@ -35,12 +35,15 @@ angular.module('ui.multiselect', [])
         link: function (originalScope, element, attrs, modelCtrl) {
 
           var exp = attrs.options,
+            
             parsedResult = optionParser.parse(exp),
             isMultiple = attrs.multiple ? true : false,
-            required = false,
+            required = true,
             scope = originalScope.$new(),
             changeHandler = attrs.change || anguler.noop;
-
+            
+          scope.isDisable=attrs.ngDisabled;
+          
           scope.items = [];
           scope.header = 'Select';
           scope.multiple = isMultiple;
@@ -51,7 +54,7 @@ angular.module('ui.multiselect', [])
           });
 
           var popUpEl = angular.element('<multiselect-popup></multiselect-popup>');
-
+        
           //required validator
           if (attrs.required || attrs.ngRequired) {
             required = true;

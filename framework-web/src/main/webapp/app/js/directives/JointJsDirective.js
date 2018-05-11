@@ -1733,10 +1733,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
 
      var dblClickFn = function(e,newCell,elemt) {
-       
-       if(!$scope.editMode || $scope.isTemplate){
+       $scope.isModelDisable=$scope.editMode==false?true:false
+      //  if(!$scope.editMode || $scope.isTemplate){
+      //    return;
+      //  }
+        if($scope.isTemplate){
          return;
-       }
+        }
        $('#divtoshow').hide();
        if(newCell){
          var id = newCell.id;
@@ -1747,7 +1750,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        }
        var thisModel = newCell || $scope.graph.getCell(id);
        var elementType = thisModel.attributes.elementType;
-       if(!$scope.editMode || elementType == "stage" || elementType == "dag"){
+       if( elementType == "stage" || elementType == "dag"){
          return false;
        }
 
@@ -2665,7 +2668,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             $scope.paramListHolder = response;
             $scope.opringinalparamListHolder=$scope.paramListHolder
             var paramListHolder=[]
-            debugger
             if($scope.popupModel.modelData.operators[0].operatorParams !=null){
               var paramListInfo=$scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo
               for(var i=0;i<paramListInfo.length;i++){ 
