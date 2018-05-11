@@ -86,7 +86,10 @@ public class GenerateDataOperator implements Operator {
 
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 		for(ParamListHolder holder : paramListInfo) {
-			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid()) 
+					/*&& (!holder.getParamName().equalsIgnoreCase("distribution") 
+							&& !holder.getParamName().equalsIgnoreCase("saveLocation" )
+							&& !holder.getParamName().equalsIgnoreCase("numIterations" ))*/) {
 				distParamHolderList.add(holder);
 			}
 		}
