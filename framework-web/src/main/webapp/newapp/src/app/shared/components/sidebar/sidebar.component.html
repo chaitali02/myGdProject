@@ -58,7 +58,7 @@
         <li *ngFor="let dashboardsubmenu of DataVisualizationMenu.subMenu" class="nav-item">
           <a [routerLink]="['list', dashboardsubmenu.type]" class="nav-link">
             <span class="title">{{dashboardsubmenu.name}}</span>
-            <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dashboardsubmenu.type].count"></span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dashboardsubmenu.type].count"></span> -->
           </a>
         </li>
       </ul>

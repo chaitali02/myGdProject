@@ -108,7 +108,7 @@ export class FormulaComponent {
       { "text": "function", "caption": "function" }
     ]
     this.selectAttribute = this.attributeTypes[0].text
-    this.depandsOnTypes = ['datapod', 'relation', 'dataset'];
+    this.depandsOnTypes = ['datapod', 'relation', 'dataset','paramlist'];
     this.formulafuction = [
       { 'type': 'simple', 'value': '+', 'class': 'formula_function btn' },
       { 'type': 'simple', 'value': '-', 'class': 'formula_function btn' },

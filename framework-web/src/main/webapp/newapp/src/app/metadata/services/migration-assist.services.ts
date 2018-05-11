@@ -37,6 +37,24 @@ export class MigrationAssistService {
       .post(url, body, { headers: this.headers })
   }
 
+  validateDependancy(filename: any, data: any): Observable<any[]> {
+    let url = 'admin/import/validate?type=import&action=edit&fileName=' + filename;
+    return this._sharedService.postCall(url, data)
+      .map((response: Response) => {
+        return <any>response.text();
+      })
+      .catch(this.handleError);
+  }
+ 
+  importSubmit(filename: any, type:any, data: any): Observable<any[]> {
+    let url = 'admin/import/submit?action=add'+'&type=' + type +'&fileName=' + filename;
+    return this._sharedService.postCall(url, data)
+      .map((response: Response) => {
+        return <any>response.text();
+      })
+      .catch(this.handleError);
+  }
+
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
   }

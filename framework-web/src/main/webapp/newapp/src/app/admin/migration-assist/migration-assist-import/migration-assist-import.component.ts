@@ -7,6 +7,8 @@ import { OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { MigrationAssistService } from '../../../metadata/services/migration-assist.services';
+import { AppMetadata } from '../../../app.metadata';
+
 @Component({
     selector: 'app-migration-assist-import',
     templateUrl: './migration-assist-import.template.html'
@@ -32,9 +34,9 @@ export class MigrationAssistImportComponent implements OnInit {
     allName: any;
     msgs: any;
     isSubmitEnable: any;
-    metaTypes: any[];
+  
     metaType: any
-    metaInfoArray: any[];
+    
     dropdownSettingsMeta: any;
     metaInfo: any;
     includeDep: any;
@@ -43,13 +45,23 @@ export class MigrationAssistImportComponent implements OnInit {
     selectalljoinkey: any;
     myFile: File;
     metaInfoUpload: any;
-    isValidate : any;
-    constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _commonListService: CommonListService, private _migrationAssistService: MigrationAssistService) {
+    isValidate: any;
+    filename: any;
+    importTags: any;
+    selectedRows: any;
+    count : any;
+    statusPath : any;
+    statusColor : any;
+    statusCaption : any;
+    statusInfo : any[];
+    statusType : any;
+    constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _commonListService: CommonListService, private _migrationAssistService: MigrationAssistService, private _appMetaData : AppMetadata) {
         this.showImportData = true;
         this.importData = {};
         this.importData["active"] = true
         this.isSubmitEnable = false;
-        this.isValidate =false;
+        this.isValidate = true;
+        this.count =0;
         this.breadcrumbDataFrom = [{
             "caption": "Admin",
             "routeurl": "/app/list"
@@ -76,9 +88,8 @@ export class MigrationAssistImportComponent implements OnInit {
             //{ field: 'createdBy.ref.name', header: 'Created By'},            
             // {field: 'status', header: 'Status'},
         ];
-
-       
     }
+
     ngOnInit() {
         this.activatedRoute.params.subscribe((params: Params) => {
             this.id = params['id'];
@@ -87,60 +98,13 @@ export class MigrationAssistImportComponent implements OnInit {
 
             if (this.mode !== undefined) {
                 this.getOneByUuidAndVersion();
-               // this.dropdownSettingsMeta.disabled = "this.mode !== undefined" ? false : true
-                // this.getAllVersionByUuid();
+                // this.dropdownSettingsMeta.disabled = "this.mode !== undefined" ? false : true
+                this.isSubmitEnable = true;
             }
-            else {
-                this.getAll();
-            }
+           
         })
         this.metaType = {};
-        this.metaInfoArray = null;
-    }
-
-    getAll() {
-        this._commonService.getAll('meta')
-            .subscribe(
-            response => { this.onSuccessGetAll(response) },
-            error => console.log("Error :: " + error)
-            )
-    }
-
-    onSuccessGetAll(response) {
-        var temp = []
-        for (const i in response) {
-            let meta = {};
-            meta["label"] = response[i]['name'];
-            meta["value"] = {};
-            meta["value"]["label"] = response[i]['name'];
-            meta["value"]["uuid"] = response[i]['uuid'];
-            //allName["uuid"]=response[i]['uuid']
-            temp[i] = meta;
-        }
-        this.metaTypes = temp
-        this.getAllLatest();
-    }
-
-    getAllLatest() {
-        this._commonService.getAllLatest(this.metaType.label)
-            .subscribe(
-            response => {
-                this.onSuccessGetAllLatest(response)
-            },
-            error => console.log("Error :: " + error));
-    }
-
-    onSuccessGetAllLatest(response) {
-        this.metaInfoArray = [];
-
-        for (const i in response) {
-            let metaref = {};
-            metaref["id"] = response[i]['uuid'];
-            metaref["itemName"] = response[i]['name'];
-            metaref["version"] = response[i]['version'];
-            // metaref["type"] = response[i]['type'];
-            this.metaInfoArray[i] = metaref;
-        }
+        
     }
 
     onItemSelect(item: any) {
@@ -189,21 +153,9 @@ export class MigrationAssistImportComponent implements OnInit {
 
         //this.application.published=response["published"] == 'Y' ? true : false
         this.importData.active = response["active"] == 'Y' ? true : false
-        let metaInfoArray1 = [];
-
-        for (const i in response.metaInfo) {
-            let metaInfo = {}
-            metaInfo["id"] = response.metaInfo[i].ref.uuid;
-            metaInfo["itemName"] = response.metaInfo[i].ref.name;
-            metaInfo["version"] = response.metaInfo[i].ref.version;
-            metaInfo["type"] = response.metaInfo[i].ref.type;
-            metaInfoArray1[i] = metaInfo;
-        }
-        this.metaInfo = metaInfoArray1;
-
+       
         this.location = response.location;
         this.includeDep = response.includeDep;
-        this.getAll();
     }
 
     OnSuccesgetAllVersionByUuid(response) {
@@ -236,9 +188,7 @@ export class MigrationAssistImportComponent implements OnInit {
     }
 
     submitImport() {
-        let importJson = {};
-
-        // exportJson["uuid"]=this.exportData.uuid;
+        let importJson = {};     
         importJson["name"] = this.importData.name;
         //let tagArray=[];
         const tagstemp = [];
@@ -253,31 +203,29 @@ export class MigrationAssistImportComponent implements OnInit {
         importJson["tags"] = tagstemp;
         importJson["desc"] = this.importData.desc;
 
-        let metaInfoNew = [];
-        if (this.metaInfo != null) {
-            for (const c in this.metaInfo) {
-                let metaInfoObj = {};
-                let refMetaInfo = {}
-                refMetaInfo["type"] = this.metaType.label
-                refMetaInfo["uuid"] = this.metaInfo[c].id
-                refMetaInfo["name"] = this.metaInfo[c].itemName
-                refMetaInfo["version"] = this.metaInfo[c].version
-
-                metaInfoObj["ref"] = refMetaInfo;
-                metaInfoNew[c] = metaInfoObj
-            }
+        console.log(this.filename)
+        let metainfoarray = []
+        for (var i = 0; i < this.metaInfoUpload.length; i++) {
+            var metainfo = {};
+            var ref = {}
+            ref["type"] = this.metaInfoUpload[i].type
+            ref["uuid"] = this.metaInfoUpload[i].uuid;
+            ref["name"] = this.metaInfoUpload[i].name;
+            ref["version"] = this.metaInfoUpload[i].version;
+            metainfo["ref"] = ref;
+            metainfoarray[i] = metainfo;
         }
-        importJson["metaInfo"] = metaInfoNew;
+        importJson["metaInfo"] = metainfoarray;
 
-        importJson["active"] = this.importData.active == true ? 'Y' : "N"
-        importJson["includeDep"] = this.importData.includeDep;
+        importJson["includeDep"] = this.importData.includeDep == true ? 'Y' : "N";
         console.log(JSON.stringify(importJson));
-        this._commonService.submit("export", importJson).subscribe(
+
+
+        this._migrationAssistService.importSubmit(this.filename,"import",importJson).subscribe(
             response => { this.OnSuccessubmit(response) },
             error => console.log('Error :: ' + error)
         )
     }
-
 
     OnSuccessubmit(response) {
         console.log(response)
@@ -289,23 +237,32 @@ export class MigrationAssistImportComponent implements OnInit {
     }
 
     public goBack() {
-          this._location.back();
+        this._location.back();
     }
 
-    selectAllSubRow(index) {
+    checkAllAttributeRow() {
+        debugger
+        this.isValidate = false;
         console.log("selected");
-        this.isValidate = true;
-        (this.metaInfo[index]).forEach(attribute => {
-            attribute.selected = this.selectAllAttributeRow;
-        });
+        if (this.selectAllAttributeRow) {
+            this.selectAllAttributeRow = true;
+        }
+        else {
+            this.selectAllAttributeRow = false;
+        }
 
+        console.log(this.selectAllAttributeRow);
+        this.metaInfoUpload.forEach(tablejson => {
+            tablejson.selected = this.selectAllAttributeRow;
+            console.log(JSON.stringify(tablejson))
+        });
     }
 
     fileChange(files: any) {
-        debugger
         console.log("file upload");
         console.log(files);
         this.myFile = files[0].nativeElement;
+        console.log("file name is" + this.myFile);
 
         var f = files[0];
         console.log(f);
@@ -313,35 +270,123 @@ export class MigrationAssistImportComponent implements OnInit {
         console.log(filetype);
         var fd = new FormData();
         fd.append('file', f);
-        var filename = f.name.split('.')[0];
-        fd.append('fileName', filename);
+        this.filename = f.name.split('.')[0];
+        fd.append('fileName', this.filename);
         console.log(fd);
 
         this._migrationAssistService.uploadFile(fd, f.name, "import", filetype)
             .subscribe(
             response => {
                 this.onSuccessUpload(response);
-                // jQuery(this.fileupload.nativeElement).modal('hide');
-                // this.msgs = [];
-                // this.msgs.push({severity:'success', summary:'Success Message', detail:'Datapod Uploaded Successfully'});
-
             })
     }
 
-    onSuccessUpload(response) {
+    onSuccessUpload(response) {debugger
         var obj = JSON.parse(response._body);
         this.metaInfoUpload = [];
         for (const i in obj.metaInfo) {
             let metaInfoUpload = {};
             metaInfoUpload["type"] = obj.metaInfo[i].ref.type;
             metaInfoUpload["name"] = obj.metaInfo[i].ref.name;
-            if(obj.metaInfo[i].ref.vesion == null ?
+            metaInfoUpload["uuid"] = obj.metaInfo[i].ref.uuid;
+            if (obj.metaInfo[i].ref.version == null ?
                 metaInfoUpload["version"] = " " :
-                metaInfoUpload["version"] = obj.metaInfo[i].ref.vesion
+                metaInfoUpload["version"] = obj.metaInfo[i].ref.version
             )
-            metaInfoUpload["status"] = "";
+            metaInfoUpload["status"] = this._appMetaData.getStatusDefs("Resume")['caption'];
             this.metaInfoUpload[i] = metaInfoUpload;
         }
     }
+
+    clickOnCheckbox(i) {
+        console.log(this.metaInfoUpload[i].selected);
+        if(this.metaInfoUpload[i].selected == true)
+        { this.count++ }
+        else{this.count--}
+       
+        if(this.count !== 0 )
+        {this.isValidate = false}
+    }
+
+    validate() {
+        debugger
+        var importJson1 = {};
+        importJson1["includeDep"] = this.importData.includeDep == true ? 'Y' : "N";
+        importJson1["name"] = this.importData.name;
+        //  var filename = f.name.split('.')[0];
+
+        console.log(this.filename)
+
+        let metainfoarray = [];
+        this.selectAllAttributeRow = false
+        this.metaInfoUpload.forEach(selectedRows1 => {
+            if (selectedRows1.selected) {
+                metainfoarray.push(selectedRows1);
+            }
+            this.selectedRows = selectedRows1;
+
+        });
+        this.importTags = metainfoarray
+        console.log(JSON.stringify(this.importTags))
+     
+        for (var i = 0; i < this.importTags.length; i++) {
+            var metainfo = {};
+            var ref = {}
+            ref["type"] = this.importTags[i].type
+            ref["uuid"] = this.importTags[i].uuid;
+            ref["name"] = this.importTags[i].name;
+            ref["version"] = this.importTags[i].version;
+            metainfo["ref"] = ref;
+            metainfoarray[i] = metainfo;
+        }
+        importJson1["metaInfo"] = metainfoarray;
+        console.log(JSON.stringify(importJson1));
+
+        this._migrationAssistService.validateDependancy(this.filename, importJson1)
+            .subscribe(
+            response => { this.onSuccessSubmit1(response) },
+            error => console.log('Error :: ' + error))
+    }
+    onSuccessSubmit1(response) {
+        debugger
+        let validateResponse = JSON.parse(response);
+        let validateArray = [];
+        for (const i in validateResponse.metaInfo) {
+            let validateObj = {};
+            let ref = {};
+            ref["uuid"] = validateResponse.metaInfo[i].ref.uuid;
+            ref["type"] = validateResponse.metaInfo[i].ref.type;
+            validateObj["ref"] = ref;
+            validateObj["status"] = validateResponse.metaInfo[i].status;
+            validateArray[i] = validateObj;
+        }
+
+        for (const i in this.metaInfoUpload) {
+            for (const j in validateArray) {
+                if (this.metaInfoUpload[i].uuid == validateArray[j].ref.uuid) { 
+                    if( validateArray[j]["status"]== 'true'){            
+                        let st1 =  this._appMetaData.getStatusDefs("Completed")['caption'];           
+                        this.metaInfoUpload[i]["status"] = this._appMetaData.getStatusDefs("Completed")['caption']; 
+                    } 
+                    else if( validateArray[j]["status"] == 'false'){
+                        let st2 = this._appMetaData.getStatusDefs("Failed")['caption'];
+                        this.metaInfoUpload[i]["status"] = this._appMetaData.getStatusDefs("Failed")['caption'];
+                    }
+                }
+                else { console.log("validation error") }
+            }
+        }
+
+        for (const i in this.metaInfoUpload) {
+            let check = "on"
+            this.isSubmitEnable = true;
+            if ((this.metaInfoUpload[i]["status"] == "Resume" || this.metaInfoUpload[i]["status"] == "Failed") && check !== "off") {
+                check = "off";              
+            }
+            if (check == "off")
+            {this.isSubmitEnable = false}
+        }
+    }
+
 }
 
