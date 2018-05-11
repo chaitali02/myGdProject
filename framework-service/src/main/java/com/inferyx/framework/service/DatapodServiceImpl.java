@@ -57,6 +57,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -143,6 +144,8 @@ public class DatapodServiceImpl {
 	IUploadDao iDownloadDao;
 	@Autowired
 	private MessageServiceImpl messageServiceImpl;
+	@Autowired
+	Engine engine;
 //	@Autowired
 //	NewGraph newGraph;
 	
@@ -1166,7 +1169,7 @@ public class DatapodServiceImpl {
 
 	}
 	
-	void setResponseMsg(String msg){
+	public void setResponseMsg(String msg){
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
 				.getRequestAttributes();
 		if (requestAttributes != null) {
@@ -1196,4 +1199,22 @@ public class DatapodServiceImpl {
 			logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
 	}
 
+	public String genTableNameByDatapod(Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String tableName = null;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		String dsType = datasource.getType();
+		if(runMode.equals(RunMode.BATCH)) {
+			if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+					&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+				tableName = datasource.getDbname() + "." + datapod.getName();
+				return tableName;
+			} else {
+				tableName = String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
+			}
+		} else if(runMode.equals(RunMode.ONLINE)) {
+			tableName = String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
+		}		
+		return tableName;
+	}
 }

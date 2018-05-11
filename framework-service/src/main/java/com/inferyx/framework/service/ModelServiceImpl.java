@@ -962,7 +962,7 @@ public class ModelServiceImpl {
 				}
 				if(holder.getParamName().equalsIgnoreCase("saveLocation")) {
 					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(holder.getParamValue().getRef().getUuid(), holder.getParamValue().getRef().getVersion(), holder.getParamValue().getRef().getType().toString());
-					tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+					tableName = datapodServiceImpl.genTableNameByDatapod(datapod, simulateExec.getVersion(), runMode);
 				}
 			}
 			distExecParam.setParamListInfo(distParamHolderList);
@@ -987,7 +987,7 @@ public class ModelServiceImpl {
 			} else if(simulate.getType().equalsIgnoreCase(SimulationType.DEFAULT.toString())) {
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 					
-					generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
+					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
 					
 					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
 						
@@ -999,7 +999,7 @@ public class ModelServiceImpl {
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
 					
-					generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
+					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
 					
 					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
 					String[] customFldArr = new String[] {fieldArray[0]};
