@@ -1027,9 +1027,7 @@ public class SparkExecutor implements IExecutor {
 			fieldArray[count] = field;
 			count ++;
 		}
-		StructType schema = new StructType(fieldArray);
-		
-		
+		StructType schema = new StructType(fieldArray);		
 		
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<numIterations; i++) {
@@ -1050,7 +1048,11 @@ public class SparkExecutor implements IExecutor {
 					genId++;
 				} else if(returnType.isPrimitive()) {
 					if(!returnType.getName().equalsIgnoreCase("double")) {
-						rowList.add(RowFactory.create((double) object));
+						List<Object> datasetList = new ArrayList<>();
+						datasetList.add(genId);
+						datasetList.add(Double.parseDouble(""+object));
+						datasetList.add(Integer.parseInt(execVersion));
+						rowList.add(RowFactory.create(datasetList.toArray()));
 						genId++;
 					} else {
 						List<Object> datasetList = new ArrayList<>();
