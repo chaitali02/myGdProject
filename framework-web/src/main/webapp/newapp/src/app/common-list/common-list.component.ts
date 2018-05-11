@@ -1068,6 +1068,8 @@ export class CommonListComponent {
     onChange(value){  
         this.selectedType=value;
         this.gridTitle=this.metaconfig.getMetadataDefs(( this.selectedType).toLowerCase())['caption']
+        this.breadcrumbDataFrom[1].caption=this.gridTitle+' Exec'
+        //this.breadcrumbDataFrom[2].caption=this.expression.name;
         this.type=value+"exec"
         this.getBaseEntityByCriteria();
     }
