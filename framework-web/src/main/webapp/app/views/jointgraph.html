@@ -208,7 +208,7 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set
                       </label>
                       <div class="col-md-6">
-                        <select class="form-control"  select2 data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'"
+                        <select class="form-control"  ng-disabled="isModelDisable" select2 data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'"
                           ng-change="onSelectparamSet(null)">
                           <option value="" style="color:red;">USE DEFAULT VALUE</option>
                         </select>
