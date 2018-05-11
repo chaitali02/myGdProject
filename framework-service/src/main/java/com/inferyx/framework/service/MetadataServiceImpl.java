@@ -19,7 +19,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -73,6 +75,7 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.domain.RuleExec;
@@ -1275,6 +1278,44 @@ public class MetadataServiceImpl {
 		}
 		return holderList;
 	}
-	
+	@SuppressWarnings("unchecked")
+	public List<ParamList> getParamList(String collectionType) {
+		Query query = new Query();
+		Query query2 = new Query();
+		query.fields().include("paramList");
+		query2.fields().include("uuid");
+		query2.fields().include("version");
+		query2.fields().include("name");
+		query2.fields().include("createdOn");
+		query2.fields().include("appInfo");
+		query2.fields().include("active");
+		query2.fields().include("desc");
+		query2.fields().include("published");
+		query2.fields().include("params");
+
+		List<Simulate> simulateList = new ArrayList<>();
+		List<ParamList> paramList = new ArrayList<>();
+		HashSet<String> setUuid = new HashSet<String>();
+
+		if (collectionType.equals(MetaType.rule.toString())) {
+			List<String> listUuid = mongoTemplate.getCollection("rule").distinct("paramList.ref.uuid");
+			query2.addCriteria(Criteria.where("uuid").in(listUuid));
+			paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
+
+		}
+
+		if (collectionType.equals(MetaType.simulate.toString())) {
+			// Without distinct
+			query.addCriteria(Criteria.where("paramList.ref.uuid").exists(true));
+			simulateList = (List<Simulate>) mongoTemplate.find(query, Simulate.class);
+			for (Simulate simulate1 : simulateList) {
+				setUuid.add(simulate1.getParamList().getRef().getUuid());
+			}
+			query2.addCriteria(Criteria.where("uuid").in(setUuid));
+			paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
+		}
+
+		return paramList;
+	}
 	
 }
