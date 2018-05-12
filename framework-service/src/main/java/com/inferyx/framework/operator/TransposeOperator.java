@@ -157,11 +157,19 @@ public class TransposeOperator implements Operator {
 		/*for (Attribute attribute : keyAttrList) {
 			sb.append(attribute.getName()).append(", ");
 		}*/
+		int count = 0;
 		for (String columnName : keyAttrList) {
-			sb.append(columnName).append(", ");
+			sb.append(columnName).append(" ");
+			sb.append(locationDatapod.getAttributeName(count++)).append(", ");
 		}
 		
-		sb.append("tranpose_column, transpose_value, " + execVersion + " version FROM (");
+		sb.append("tranpose_column ");
+		sb.append(locationDatapod.getAttributeName(count++));
+		sb.append(", transpose_value ");
+		sb.append(locationDatapod.getAttributeName(count++));
+		sb.append(", " + execVersion + " ");
+		sb.append(locationDatapod.getAttributeName(count++));
+		sb.append(" FROM (");
 		sb.append(ConstantsUtil.SELECT);
 		
 		/*for (Attribute attribute : keyAttrList) {
@@ -172,7 +180,7 @@ public class TransposeOperator implements Operator {
 		}
 		
 		sb.append(" MAP (");
-		int count = 0;
+		count = 0;
 		/*for(Attribute attribute : attrList) {
 			isAttrFound = Boolean.TRUE;
 			sb.append("'"+attribute.getName() + "', " + attribute.getName());
@@ -201,6 +209,8 @@ public class TransposeOperator implements Operator {
 		String newVersion = Helper.getVersion();
 		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		
+		logger.info("Transpose sql --> " + sql);
 		
 		ResultSetHolder resultSetHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
