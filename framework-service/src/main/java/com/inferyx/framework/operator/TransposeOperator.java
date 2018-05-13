@@ -94,6 +94,51 @@ public class TransposeOperator implements Operator {
 	public TransposeOperator() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+	public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		ParamListHolder sourceDatapodInfo = paramSetServiceImpl.getParamByName(execParams, "sourceDatapod");
+		String execVersion = execIdentifier.getVersion();
+		String sourceTableName = null;
+		String destTableName = null;
+		
+		if (otherParams == null) {
+			otherParams = new HashMap<>();
+		}
+		
+		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
+		Datapod sourceData = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
+
+		if (otherParams.containsKey("datapodUuid_" + sourceData.getUuid() + "_tableName")) {
+			sourceTableName = otherParams.get("datapodUuid_" + sourceData.getUuid() + "_tableName");
+		} else {
+			sourceTableName = getTableNameBySource(sourceData, runMode);
+			otherParams.put("datapodUuid_" + sourceData.getUuid() + "_tableName", sourceTableName);
+		}
+		
+		// Set destination
+		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
+		
+		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
+		
+		String newVersion = Helper.getVersion();
+		locationDatapod.setVersion(newVersion);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
+			
+		return otherParams;
+		
+	}
+	
+	@Override
+	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		return null;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.lang.Object, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
@@ -139,9 +184,10 @@ public class TransposeOperator implements Operator {
 		}*/
 		
 		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
-		Object sourceData = commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
+		Datapod sourceData = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
 		List<String> attrList = getColumnNameList(sourceData, sourceDatapodInfo);
-		sourceTableName = getTableNameBySource(sourceData, runMode);
+//		sourceTableName = getTableNameBySource(sourceData, runMode);
+		sourceTableName = otherParams.get("datapodUuid_" + sourceData.getUuid() + "_tableName");
 		
 		MetaIdentifier keyIdentifier = keyInfo.getAttributeInfo().get(0).getRef();
 		Object key = commonServiceImpl.getOneByUuidAndVersion(keyIdentifier.getUuid(), keyIdentifier.getVersion(), keyIdentifier.getType().toString());
@@ -206,9 +252,10 @@ public class TransposeOperator implements Operator {
 		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
-		String newVersion = Helper.getVersion();
+		/*String newVersion = Helper.getVersion();
 		locationDatapod.setVersion(newVersion);
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);*/
+		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
 		
 		logger.info("Transpose sql --> " + sql);
 		
@@ -264,7 +311,7 @@ public class TransposeOperator implements Operator {
 		}
 		return columns;
 	}
-	
+
 	public String getTableNameBySource(Object sourceData, RunMode runMode) throws Exception {
 		String sourceTableName = null;
 		if(sourceData instanceof Datapod) {
@@ -309,4 +356,5 @@ public class TransposeOperator implements Operator {
 		}
 		return sourceTableName;
 	}
+
 }

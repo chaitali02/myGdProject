@@ -64,6 +64,33 @@ public class GenerateDataOperator implements Operator {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
+			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		String execVersion = execIdentifier.getVersion();
+		// Set destination
+		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
+		
+		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
+		
+		String newVersion = Helper.getVersion();
+		locationDatapod.setVersion(newVersion);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
+			
+		return otherParams;
+	}
+
+	@Override
+	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
 	 */
@@ -111,9 +138,10 @@ public class GenerateDataOperator implements Operator {
 //				}			
 		}*/		
 		
-		String newVersion = Helper.getVersion();
+		/*String newVersion = Helper.getVersion();
 		locationDatapod.setVersion(newVersion);
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);*/
+		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
 		//String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
 		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion);
 		

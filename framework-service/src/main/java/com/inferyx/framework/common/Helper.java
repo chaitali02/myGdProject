@@ -704,4 +704,21 @@ public class Helper {
 			}
 		return null;
 	}
+	
+	public java.util.Map mergeMap (java.util.Map sourceMap, java.util.Map destMap) {
+		if (sourceMap == null || sourceMap.isEmpty()) {
+			if (destMap == null || destMap.isEmpty()) {
+				return new HashMap<>();
+			}
+			return destMap;
+		}
+		if (destMap == null || destMap.isEmpty()) {
+			return sourceMap;
+		}
+		for (Object key : sourceMap.keySet()) {
+			destMap.put(key, sourceMap.get(key));
+		}
+		return destMap;
+	}
+	
 }

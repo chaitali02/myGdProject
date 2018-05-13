@@ -11,6 +11,8 @@
 package com.inferyx.framework.operator;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.inferyx.framework.domain.ExecParams;
@@ -20,6 +22,58 @@ import com.inferyx.framework.enums.RunMode;
 
 public interface Operator {
 	
+	/**
+	 * 
+	 * @param operatorType
+	 * @param execParams
+	 * @param execIdentifier
+	 * @param refKeyMap
+	 * @param otherParams
+	 * @param usedRefKeySet
+	 * @param datapodList
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> populateParams(OperatorType operatorType, 
+			ExecParams execParams, 
+			MetaIdentifier execIdentifier, 
+			java.util.Map<String, MetaIdentifier> refKeyMap, 
+			HashMap<String, String> otherParams, 
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception;
+	
+	/**
+	 * 
+	 * @param operatorType
+	 * @param execParams
+	 * @param execIdentifier
+	 * @param refKeyMap
+	 * @param otherParams
+	 * @param usedRefKeySet
+	 * @param datapodList
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	public String parse(OperatorType operatorType, 
+			ExecParams execParams, 
+			MetaIdentifier execIdentifier, 
+			java.util.Map<String, MetaIdentifier> refKeyMap, 
+			HashMap<String, String> otherParams, 
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception;
+	
+	/**
+	 * 
+	 * @param operatorType
+	 * @param execParams
+	 * @param execIdentifier
+	 * @param refKeyMap
+	 * @param otherParams
+	 * @param usedRefKeySet
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
 	public String execute(OperatorType operatorType, 
 			ExecParams execParams, 
 			MetaIdentifier execIdentifier, 

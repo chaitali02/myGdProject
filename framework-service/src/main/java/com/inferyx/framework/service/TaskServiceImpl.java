@@ -638,7 +638,7 @@ public class TaskServiceImpl implements Callable<String> {
 				
 				//DataQualExec dataqualExec = dataqualExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				DataQualExec dataqualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.dqExec.toString());
-				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
+				ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				dataqualExec = dataqualServiceImpl.execute(dataqualExec.getDependsOn().getRef().getUuid(), dataqualExec.getDependsOn().getRef().getVersion(), dataqualExec, null, execParams, runMode);
 				if (Helper.getLatestStatus(dataqualExec.getStatusList()).equals(failedStatus)) {
 					throw new Exception("DQ failed");
@@ -664,7 +664,7 @@ public class TaskServiceImpl implements Callable<String> {
 			try {
 				//RuleExec ruleExec = ruleExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.ruleExec.toString());
-				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
+				ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
 				execParams.setInternalVarMap(internalVarMap);
 				ruleServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, ruleExec, null, null, execParams, RunMode.ONLINE);
@@ -694,7 +694,7 @@ public class TaskServiceImpl implements Callable<String> {
 			try {
 				//ProfileExec profileExec = profileExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.profileExec.toString());
-				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
+				ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				profileServiceImpl.execute(profileExec.getDependsOn().getRef().getUuid(), profileExec.getDependsOn().getRef().getVersion(), profileExec, null, null, execParams, runMode);
 			} catch (ParseException | JSONException e) {
 				e.printStackTrace();
@@ -721,7 +721,7 @@ public class TaskServiceImpl implements Callable<String> {
 				Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
 				Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 				ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
-				ExecParams execParams = getExecParams(operator);
+				ExecParams execParams = commonServiceImpl.getExecParams(operator);
 				modelServiceImpl.train(train, model, trainExec, execParams, paramMap);
 				if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 					throw new Exception();
@@ -739,7 +739,7 @@ public class TaskServiceImpl implements Callable<String> {
 				Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateExec.getDependsOn().getRef().getUuid(), simulateExec.getDependsOn().getRef().getVersion(), MetaType.simulate.toString());
 				//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(), simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 				//ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
-				ExecParams execParams = getExecParams(operator);
+				ExecParams execParams = commonServiceImpl.getExecParams(operator);
 				modelServiceImpl.simulate(simulate, execParams, simulateExec, runMode);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -763,7 +763,7 @@ public class TaskServiceImpl implements Callable<String> {
 			logger.info("Going to reconServiceImpl.execute");
 			try {
 				ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.reconExec.toString());
-				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
+				ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				reconServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, reconExec, null, null, execParams, runMode);
 				
 				if (Helper.getLatestStatus(reconExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
@@ -788,8 +788,9 @@ public class TaskServiceImpl implements Callable<String> {
 			logger.info("Going to operatorServiceImpl.execute");
 			try {
 				OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.operatorExec.toString());
-				ExecParams execParams = getExecParams(taskExec.getOperators().get(0));
-				operatorServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, operatorExec, null, execParams, runMode);
+				HashMap<String, String> otherParams = execParams.getOtherParams();
+				ExecParams operatorExecParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
+				operatorServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, operatorExec, null, operatorExecParams, otherParams, runMode);
 				
 				if (Helper.getLatestStatus(operatorExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 					throw new Exception();
@@ -945,24 +946,4 @@ public class TaskServiceImpl implements Callable<String> {
 		return name;
 	}// End thread run
 	
-	/**
-	 * 
-	 * @param operator
-	 * @return
-	 */
-	public ExecParams getExecParams (Operator operator) {
-		if (operator == null 
-				|| operator.getOperatorParams() == null 
-				|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)
-				|| operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS) == null) {
-			return null;
-		}
-		logger.info("ExecParams : " + operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS));
-		ObjectMapper mapper = new ObjectMapper();
-		ExecParams execParams = mapper.convertValue(operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS), ExecParams.class);
-//		return (ExecParams) operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS);
-		return execParams;
-	}
-
-
 }

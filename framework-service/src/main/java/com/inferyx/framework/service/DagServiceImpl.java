@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -133,6 +134,8 @@ public class DagServiceImpl {
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 	@Autowired
 	private OperatorServiceImpl operatorServiceImpl;
+	@Autowired
+	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(DagServiceImpl.class);
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -918,7 +921,12 @@ public class DagServiceImpl {
 		List<StageExec> dagExecStgs = DagExecUtil.castToStageExecList(dagExec.getStages());
 
 		List<String> datapodList = new ArrayList<String>();
-		HashMap<String, String> otherParams = new HashMap<>();
+		HashMap<String, String> otherParams = null;
+		if (execParams.getOtherParams() == null) {
+			otherParams = new HashMap<>();
+			execParams.setOtherParams(otherParams);
+		}
+		otherParams = execParams.getOtherParams();
 		// Get the dag - START
 		MetaIdentifier dagRef = new MetaIdentifier(MetaType.dag, dagExec.getUuid(), dagExec.getVersion());
 		// Dag dag = (Dag) daoRegister.getRefObject(dagRef);
@@ -1454,10 +1462,21 @@ public class DagServiceImpl {
 							operatorExec.getVersion());
 					try {
 						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(operatorExecIdentifier);
+						
 						operatorExec = operatorServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.operatortype, MetaType.operatorExec, operatorExec, 
 								refKeyMap, datapodList, dagExec);
+						ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
+						otherParams = (HashMap<String, String>) operatorServiceImpl.parse(ref.getUuid(), ref.getVersion(), MetaType.operatortype, operatorExec, 
+																							operatorExecParams, otherParams, runMode);
+						execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
+						if (indvTask.getDependsOn().size() > 0) {
+							operatorExecParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
+							indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
+						}
 						commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 //						operatorExec = reconGroupServiceImpl.parse(operatorExec.getUuid(), operatorExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+						
+						
 						
 						if (operatorExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
 							throw new Exception();

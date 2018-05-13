@@ -53,6 +53,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
@@ -147,6 +148,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -3154,6 +3156,25 @@ public class CommonServiceImpl <T> {
 			}else
 				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
 			return null;
+		}
+
+		/**
+		 * 
+		 * @param operator
+		 * @return
+		 */
+		public ExecParams getExecParams (Operator operator) {
+			if (operator == null 
+					|| operator.getOperatorParams() == null 
+					|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)
+					|| operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS) == null) {
+				return null;
+			}
+			logger.info("ExecParams : " + operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS));
+			ObjectMapper mapper = new ObjectMapper();
+			ExecParams execParams = mapper.convertValue(operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS), ExecParams.class);
+//			return (ExecParams) operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS);
+			return execParams;
 		}
 		
 }
