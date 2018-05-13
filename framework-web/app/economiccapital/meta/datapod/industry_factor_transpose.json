@@ -19,7 +19,7 @@
         {
             "attributeId" : 1,
             "name" : "factor",
-            "type" : "integer",
+            "type" : "string",
             "desc" : "factor",
             "dispName" : "factor",
             "active" : "Y"
