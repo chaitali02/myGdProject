@@ -1076,7 +1076,7 @@ public class SparkExecutor implements IExecutor {
 		
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
 		df.printSchema();
-		df.show(false);
+		df.show(true);
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setDataFrame(df);
 		rsHolder.setType(ResultType.dataframe);	
@@ -1310,7 +1310,8 @@ public class SparkExecutor implements IExecutor {
 		for(Row row : df.collectAsList()) {
 			List<Double> covarsValList = new ArrayList<>();
 				for(String col : columnList)
-					covarsValList.add(Double.parseDouble(row.getAs(col)));
+//					covarsValList.add(Double.parseDouble(row.getAs(col)));
+					covarsValList.add(row.getAs(col));
 				valueList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
 		}
 		
@@ -1336,7 +1337,7 @@ public class SparkExecutor implements IExecutor {
 		List<Double> valueList = new ArrayList<>();
 		for(Row row : df.collectAsList()) 
 			for(String col : columnList)
-				valueList.add(Double.parseDouble(row.getAs(col)));
+				valueList.add(row.getAs(col));
 				
 		return valueList;
 	}
