@@ -27,7 +27,8 @@ import { DataScienceComponent } from './data-science.component';
 
 import { ModelService } from './../metadata/services/model.service';
 import { ResultsComponent } from './results/results.component';
-
+import {TrainingComponent } from './training/training.component';
+import { TrainingService } from '../metadata/services/training.service';
 
 @NgModule({
     imports:[
@@ -55,12 +56,14 @@ import { ResultsComponent } from './results/results.component';
         ParamlistComponent,
         ParamsetComponent,
         ResultsComponent,
+        TrainingComponent,
       
         
     ],
     providers:[
         CommonService,
-        ModelService
+        ModelService,
+        TrainingService
     ]
 })
  

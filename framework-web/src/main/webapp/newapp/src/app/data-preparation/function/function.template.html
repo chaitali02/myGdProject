@@ -45,7 +45,7 @@
 
           <div class="form-body"  style="padding-top:50px;">
             <form  class="form-horizontal"  name="myform" novalidate="novalidate" (ngSubmit)="submitFunction()" #myNewForm = "ngForm" >
-              <div class="form-group" >
+              <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
                   <input type="text" class="form-control" [(ngModel)]="functionData.uuid" name="uuid" placeholder="" [disabled]="true">
@@ -75,14 +75,14 @@
                   </div>
                 </div>
 
-              <div class="form-group" >
+              <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedBy</label>
                 <div class="col-md-6" >
                   <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
                 </div>
               </div>
 
-              <div class="form-group" >
+              <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
                   <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="functionData.createdOn" name="createdOn">
@@ -235,20 +235,20 @@
                             <tbody>
                                <tr *ngFor="let paramInfo of data.paramInfoHolder let j=index ">
             
-                                <td style="text-align: center; Vertical-align: middle;"><input style="width: 16px;height:16px;" type="checkbox"[(ngModel)]="paramInfo.selected" name="selected+{{i}}"[disabled]="mode == 'true'">
+                                <td style="text-align: center; Vertical-align: middle;"><input style="width: 16px;height:16px;" type="checkbox"[(ngModel)]="paramInfo.selected" name="selected+{{j}}"[disabled]="mode == 'true'">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="paramInfo.paramId" name="paramIde+{{i}}">
+                                    <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="paramInfo.paramId" name="paramIde+{{j}}">
                                  </td>
                                 <td style="width:35%;">
-                                    <input type="checkbox" style="width: 16px; margin-left: 41%" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="paramInfo.paramReq" name="paramReq+{{i}}"
+                                    <input type="checkbox" style="width: 16px; margin-left: 41%" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="paramInfo.paramReq" name="paramReq+{{j}}"
                                     value=false>
                                 </td>
                                 <td style="width:15%;">
                                     <p-dropdown 
                                     [options]="allParamType"          
                                     [(ngModel)]="paramInfo.paramType"
-                                    name="paramType+{{i}}"                                
+                                    name="paramType+{{j}}"                                
                                     [disabled]="mode == 'true'"
                                     [style]="{'width':'100%','padding':'3px'}"
                                     [filter]="true"
@@ -256,7 +256,7 @@
                                   </p-dropdown>
                                 </td>
                                 <td style="width:35%;">
-                                    <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="paramInfo.paramName" name="paramName+{{i}}">
+                                    <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="paramInfo.paramName" name="paramName+{{j}}">
                                 </td>
                               </tr> 
                             </tbody>

@@ -113,9 +113,9 @@
                   </p-dropdown>
                 </div>
                 <label class="col-md-1 control-label">Name
-                </label>
+                </label>{{metaId.uuid}}
                 <div class="col-md-3 col-sm-6 col-xs-12">
-                  <p-dropdown [options]="allNamesMetaId" [(ngModel)]="metaId.uuid" name="metaId" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                  <p-dropdown [options]="allNamesMetaId" [(ngModel)]="metaId.name" name="metaId" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
                     [filter]="true" [disabled]="mode == 'true'">
                   </p-dropdown>
                 </div>
@@ -154,7 +154,7 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datastore.active" name="active"
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datastore.active" name="active"
                       [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
@@ -164,7 +164,7 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datastore.published" name="published"
+                    <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datastore.published" name="published"
                       [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>

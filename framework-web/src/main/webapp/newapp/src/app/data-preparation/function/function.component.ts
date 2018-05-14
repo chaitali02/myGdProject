@@ -67,6 +67,11 @@ export class FunctionComponent implements OnInit {
       this.getOneByUuidAndVersion();
       this.getAllVersionByUuid();
       }
+      else{
+        this.functionData.active="Y"
+        // this.functionTableArray=[{}]
+        // this.functionTableArray[0].paramInfoHolder={}
+      }
       this.funcType = [{label:"hive",value:"hive"},
       {label:"impala",value:"impala"},
       {label:"oracle",value:"oracle"},
@@ -168,8 +173,9 @@ export class FunctionComponent implements OnInit {
   
   }
   addJoinSubRow(index){
+    
     var paramInfoHolder={}
-    paramInfoHolder["paramId"]=index+1;
+    paramInfoHolder["paramId"]=this.functionTableArray[index].paramInfoHolder.length+1;    
     paramInfoHolder["paramReq"]=false;
     paramInfoHolder["paramType"]=this.allParamType[0];
     paramInfoHolder["paramName"]="''";
@@ -178,14 +184,18 @@ export class FunctionComponent implements OnInit {
 
 addRow(){
 if( this.functionTableArray == null){
-
  this.functionTableArray=[];
 }
 var functionTable={};
 var paramInfoHolder=[];
 functionTable["type"]=this.allTypes[0];
 var paramInfoHolders={};
+paramInfoHolder["paramId"]=1;    
+paramInfoHolder["paramReq"]=false;
+paramInfoHolder["paramType"]=this.allParamType[0];
+paramInfoHolder["paramName"]="''";
 paramInfoHolder.push(paramInfoHolders)
+functionTable["paramInfoHolder"]=paramInfoHolder
 functionTable["name"]=''
 this.functionTableArray.splice(this.functionTableArray.length, 0,functionTable);
 
@@ -228,9 +238,11 @@ removeJoinSubRow(index){
 		var functionJson = {}
 		functionJson["uuid"] = this.functionData.uuid
 		functionJson["name"] = this.functionData.name
-		functionJson["desc"] = this.functionData.desc
-		functionJson["active"] = this.functionData.active;
-		functionJson["published"] = this.functionData.published;
+    functionJson["desc"] = this.functionData.desc
+    //functionJson["active"]=this.functionData.active == true ?'Y' :"N"
+    //functionJson["active"] = this.functionData.active;
+    functionJson["published"]=this.functionData.published == true ?'Y' :"N"
+		//functionJson["published"] = this.functionData.published;
 		functionJson["functionInfo"] = this.functionData.functionInfo;
 		functionJson["category"] = this.selectCatogory;
 		functionJson["funcType"] = this.selectFunctionType;
@@ -257,9 +269,14 @@ removeJoinSubRow(index){
 				for (let j = 0; j < this.functionTableArray.length; j++) {
 					var functionInfo = {};
 					var paramInfoHolder = [];
-					functionInfo["name"] = this.functionTableArray[j].name
-          functionInfo["type"] = this.functionTableArray[j].type
-          if (this.functionTableArray.paramInfoHolder) {
+          functionInfo["name"] = this.functionTableArray[j].name
+          //if(this.functionTableArray[j].type.value){
+            functionInfo["type"] =this.functionTableArray[j].type
+          //}else{
+          //   functionInfo["type"] = this.functionTableArray[j].type
+          // }
+          
+          if (this.functionTableArray[j].paramInfoHolder) {
 					for (var i = 0; i < this.functionTableArray[j].paramInfoHolder.length; i++) {
 						var paramInfoHolderDetail = {};
 						paramInfoHolderDetail["paramId"] = this.functionTableArray[j].paramInfoHolder[i].paramId;
@@ -271,8 +288,13 @@ removeJoinSubRow(index){
             else{
               paramInfoHolderDetail["paramReq"]="Y"
             }
-						//paramInfoHolderDetail["paramReq"] = this.functionTableArray[j].paramInfoHolder[i].paramReq;
-						paramInfoHolderDetail["paramType"] = this.functionTableArray[j].paramInfoHolder[i].paramType;
+            //paramInfoHolderDetail["paramReq"] = this.functionTableArray[j].paramInfoHolder[i].paramReq;
+            //if(this.functionTableArray[j].paramInfoHolder[i].paramType){
+              paramInfoHolderDetail["paramType"] = this.functionTableArray[j].paramInfoHolder[i].paramType;
+            // }
+						// else{
+            //   paramInfoHolderDetail["paramType"] = this.functionTableArray[j].paramInfoHolder[i].paramType.value;
+            // }
 						paramInfoHolder[i] = paramInfoHolderDetail;
           }
 					}

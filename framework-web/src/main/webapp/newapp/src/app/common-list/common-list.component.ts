@@ -102,7 +102,7 @@ export class CommonListComponent {
     gridTitle:any
     msgs: Message[] = [];
     items: any
-    nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','paramlist','paramset','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','modelexec'];
+    nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','paramlist','paramset','training','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','modelexec'];
     allStatus = [
         {
          "caption": "All",
@@ -319,6 +319,7 @@ export class CommonListComponent {
     }
 
     add() {
+        
         if(this.type != "activity"){
         let _moduleUrl=this.metaconfig.getMetadataDefs(this.type)['moduleState']
         this.routerUrl=this.metaconfig.getMetadataDefs(this.type)['detailState']
@@ -443,7 +444,7 @@ export class CommonListComponent {
         "functionName":"okRestart()"
         }
     }
-    upload(uuid,name) {debugger
+    upload(uuid,name) {
         this.UploadId=uuid;
         this.uploadName=name;
         jQuery(this.fileupload.nativeElement).modal('show');
@@ -1037,7 +1038,7 @@ export class CommonListComponent {
         this.gridOptions.api.selectAll();
     }
     onSearchCriteria(){
-     debugger
+     
         let startDateUtcStr="";
         let endDateUtcStr="";
         console.log(this.execname.label);
@@ -1067,6 +1068,8 @@ export class CommonListComponent {
     onChange(value){  
         this.selectedType=value;
         this.gridTitle=this.metaconfig.getMetadataDefs(( this.selectedType).toLowerCase())['caption']
+        this.breadcrumbDataFrom[1].caption=this.gridTitle+' Exec'
+        //this.breadcrumbDataFrom[2].caption=this.expression.name;
         this.type=value+"exec"
         this.getBaseEntityByCriteria();
     }

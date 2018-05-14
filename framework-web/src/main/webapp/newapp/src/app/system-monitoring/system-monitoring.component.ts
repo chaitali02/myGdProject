@@ -253,7 +253,7 @@ allActive = [
             
         }}] 
       this.cols = [
-        {field: 'appName  ', header: 'Application'},
+        {field: 'appName', header: 'Application'},
         {field: 'type', header: 'Meta'},
         {field: 'name', header: 'Name'},
        // {field: 'version', header: 'Version'},
