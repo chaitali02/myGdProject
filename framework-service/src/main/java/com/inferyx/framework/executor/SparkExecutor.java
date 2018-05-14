@@ -199,7 +199,7 @@ public class SparkExecutor implements IExecutor {
 		if (obj instanceof SparkSession) {
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 			dfSorted = sparkSession.sql(sql);
-			dfSorted.printSchema();
+
 			Row[] rows = (Row[]) dfSorted.head(Integer.parseInt("" + dfSorted.count()));
 			String[] columns = dfSorted.columns();
 			for (Row row : rows) {
@@ -611,7 +611,7 @@ public class SparkExecutor implements IExecutor {
 			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
 			df = dataFrameHolder.getDataframe();
 		}
-		df.printSchema();
+		
 		df.show(false);
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
@@ -642,7 +642,7 @@ public class SparkExecutor implements IExecutor {
 		sparkSession.sqlContext().registerDataFrameAsTable(dfTask, datapodTableName);
 
 		logger.info("Going to datapodWriter");
-		dfTask.printSchema();
+		
 		// Datapod datapod = (Datapod) daoRegister.getRefObject(new
 		// MetaIdentifier(MetaType.datapod, datapodKey.getUUID(),
 		// datapodKey.getVersion()));
@@ -670,7 +670,7 @@ public class SparkExecutor implements IExecutor {
 		if (obj instanceof SparkSession && !execContext.equals(ExecContext.livy_spark)) {
 			DataFrameHolder dataFrameHolder = iReader.read(datapod, dataStore, hdfsInfo, obj, datasource);
 			Dataset<Row> df = dataFrameHolder.getDataframe();
-			df.printSchema();
+			
 			tableName = dataFrameHolder.getTableName();
 			String[] tablenameList = ((SparkSession) obj).sqlContext().tableNames();
 			boolean tableFound = false;
@@ -692,7 +692,8 @@ public class SparkExecutor implements IExecutor {
 				// hiveContext.registerDataFrameAsTable(df, tableName);
 				logger.info("datapodRegister: Registering datapod " + tableName);
 				// hiveContext.registerDataFrameAsTable(df, tableName);
-				df.printSchema();
+				
+				df.show(true);
 			}
 		}
 	}
@@ -980,7 +981,7 @@ public class SparkExecutor implements IExecutor {
 			DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
 			df = dataFrameHolder.getDataframe();
 		}
-		df.printSchema();
+		
 		df.show(false);
 		String[] columns = df.columns();
 		Row [] rows = (Row[]) df.head(rowLimit);
@@ -1075,7 +1076,7 @@ public class SparkExecutor implements IExecutor {
 		}
 		
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
-		df.printSchema();
+	
 		df.show(true);
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setDataFrame(df);
@@ -1145,7 +1146,7 @@ public class SparkExecutor implements IExecutor {
 		}
 		
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
-		df.printSchema();
+		
 		df.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		return tableName;
@@ -1206,7 +1207,7 @@ public class SparkExecutor implements IExecutor {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 			transformedDf = va.transform(df);
 		}
-		transformedDf.printSchema();
+		
 		transformedDf.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(transformedDf, tableName);
 		return va;
@@ -1323,7 +1324,7 @@ public class SparkExecutor implements IExecutor {
 			throws InterruptedException, ExecutionException, Exception {
 			
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
-		df.printSchema();
+		
 		df.show(false);
 
 		List<String> columnList = new ArrayList<>();
@@ -1377,7 +1378,6 @@ public class SparkExecutor implements IExecutor {
 
 			sqlContext.registerDataFrameAsTable(dfTask, tableName);
 			dfTask.show(false);
-			dfTask.printSchema();
 			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 			datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
 			return filePathUrl + "/data";
@@ -1388,7 +1388,7 @@ public class SparkExecutor implements IExecutor {
 		PipelineModel trngModel = null;
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		df.printSchema();
+		
 		try {
 			Dataset<Row>[] splits = df
 					.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
@@ -1408,7 +1408,7 @@ public class SparkExecutor implements IExecutor {
 				trainingDf = trngDf;
 				validateDf = valDf;
 			}
-			trainingDf.printSchema();
+
 			Dataset<Row> trainedDataSet = null;
 			@SuppressWarnings("unused")
 			StringIndexer labelIndexer = null;
