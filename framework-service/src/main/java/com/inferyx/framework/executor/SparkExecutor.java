@@ -1046,7 +1046,7 @@ public class SparkExecutor implements IExecutor {
 					for(double val : trial) {
 						datasetList.add(val);
 					}
-					datasetList.add(execVersion);
+					datasetList.add(Integer.parseInt(execVersion));
 					rowList.add(RowFactory.create(datasetList.toArray()));
 					genId++;
 				} else if(returnType.isPrimitive()) {
@@ -1076,7 +1076,7 @@ public class SparkExecutor implements IExecutor {
 		}
 		
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
-	
+		df.printSchema();
 		df.show(true);
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setDataFrame(df);
