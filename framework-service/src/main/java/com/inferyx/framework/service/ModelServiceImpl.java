@@ -27,8 +27,10 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -987,7 +989,12 @@ public class ModelServiceImpl {
 			} else if(simulate.getType().equalsIgnoreCase(SimulationType.DEFAULT.toString())) {
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 					
-					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
+					HashMap<String, String> otherParams = execParams.getOtherParams();
+					if(otherParams == null)
+						otherParams = new HashMap<>();
+					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
+					
+					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 					
 					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
 						
@@ -998,8 +1005,13 @@ public class ModelServiceImpl {
 					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);					
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
+
+					HashMap<String, String> otherParams = execParams.getOtherParams();
+					if(otherParams == null)
+						otherParams = new HashMap<>();
+					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
 					
-					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
+					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 					
 					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
 					String[] customFldArr = new String[] {fieldArray[0]};
