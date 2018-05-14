@@ -55,7 +55,7 @@ public class ParquetWriter implements IWriter {
 					df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)exec.getDataType(attribute.getType())));
 				} 				
 			} 
-			df.printSchema();
+
 			df.show(true);
 			if(saveMode.equalsIgnoreCase("append"))	{
 				df.write().mode(SaveMode.Append).parquet(filePathUrl);

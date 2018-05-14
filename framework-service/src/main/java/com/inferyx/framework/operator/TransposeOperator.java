@@ -124,8 +124,8 @@ public class TransposeOperator implements Operator {
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		
-		String newVersion = Helper.getVersion();
-		locationDatapod.setVersion(newVersion);
+//		String newVersion = Helper.getVersion();
+//		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
 			
