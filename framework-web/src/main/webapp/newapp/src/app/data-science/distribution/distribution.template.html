@@ -129,11 +129,12 @@
                         <p-dropdown [options]="librarytypesOption"          
                           [(ngModel)]="distribution.library"
                           name="library"
-                          [style]="{'width':'100%','padding':'3px','z-index':'99'}"
+                          [style]="{'width':'100%','padding':'3px','z-index':'100'}"
                           [disabled]="mode == 'true'">
                         </p-dropdown>
                       </div>
                     </div> 
+
                     <div class="form-group">
                       <label class="col-md-3 control-label">Class Name
                         <span class="required" aria-required="true"> * </span>
@@ -147,13 +148,15 @@
                       <label class="col-md-3 control-label">Parameter List</label>
                       <div class="col-md-6">
                         <p-dropdown [options]="arrayParamList"          
-                          [(ngModel)]="paramList"
+                          [(ngModel)]="paramList" datakey="uuid"
                           name="type"
-                          [style]="{'width':'100%','padding':'3px','z-index':'100'}"
-                          [disabled]="mode == 'true'">
-                      </p-dropdown>
+                          [style]="{'width':'100%','padding':'3px','x-index':'100'}"
+                          [disabled]="mode == 'true'"
+                          >
+                         </p-dropdown>
                       </div>
                     </div>
+      
                     
                    <div class="form-group" style="padding-top: 10px;">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
