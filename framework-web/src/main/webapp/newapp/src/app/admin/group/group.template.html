@@ -117,7 +117,7 @@
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">App Id</label>{{appId | json}}
+                <label class="col-md-3 control-label">App Id</label>
                 <div class="col-md-6">
                   <p-dropdown [options]="appIdArray" [(ngModel)]="appId" dataKey="uuid" name="appId" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
                     [filter]="true">
@@ -126,7 +126,7 @@
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">Role Id</label>{{roleId.name}}{{roleId | json}}
+                <label class="col-md-3 control-label">Role Id</label>
                 <div class="col-md-6">
                   <p-dropdown [options]="roleIdArray" dataKey="uuid" [(ngModel)]="roleId" name="roleId" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
                     [filter]="true" placeholder="select">

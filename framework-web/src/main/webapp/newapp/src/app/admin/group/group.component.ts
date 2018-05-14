@@ -123,7 +123,6 @@ export class GroupComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    debugger
     this.breadcrumbDataFrom[2].caption = response.name;
     this.group = response;
     this.uuid = response.uuid;
@@ -262,7 +261,6 @@ export class GroupComponent implements OnInit {
   }
 
   submitGroup() {
-    debugger;
     this.isSubmitEnable = true;
     let groupJson = {};
     groupJson["uuid"] = this.group.uuid;
@@ -310,7 +308,6 @@ export class GroupComponent implements OnInit {
     )
   }
   OnSuccessubmit(response) {
-    debugger;
     this.isSubmitEnable = true;
     this.msgs = [];
     this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Group Submitted Successfully' });
