@@ -118,7 +118,7 @@
                 </div>
               </div>
 
-              <div class="form-group" *ngIf="!mode">
+              <!-- <div class="form-group" *ngIf="!mode">
                 <label class="col-md-3 control-label">Meta Type </label>
                 <div class="col-md-6">
                   <p-dropdown [options]="metaTypes" [(ngModel)]="metaType" name="metaType" placeholder="Select" [style]="{'width':'100%','padding':'3px'}"
@@ -135,13 +135,12 @@
                     (onDeSelectAll)="onDeSelectAll($event)">
                   </angular2-multiselect>
                 </div>
-              </div>
+              </div> -->
 
               <div class="form-group" *ngIf="!mode">
                 <label class="col-md-3 control-label">Select</label>
                 <div class="col-md-6">
-                    <input type="file"  #fileupload [(ngModel)]="myFile" name="myFile" accept=".zip" (change)="fileChange(fileupload.files)"/>                    
-                  <!-- <input type="file" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="file"> -->
+                  <input type="file"  #fileupload [(ngModel)]="myFile" name="myFile" accept=".zip" (change)="fileChange(fileupload.files)"/>                    
                 {{fileupload.myFile}}
                 </div>
               </div>
@@ -158,20 +157,21 @@
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
                  
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit"  *ngIf="isSubmitEnable" >
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit"  *ngIf="isSubmitEnable" [disabled]="mode == 'true'">
                  
-                  <input type="button" class="btn btn-success" value="Validate" name="validate" *ngIf="!isSubmitEnable" [disabled] = "!isValidate">
+                  <input type="button" class="btn btn-success" value="Validate" name="validate" *ngIf="!mode && !isSubmitEnable" [disabled]="isValidate" (click)="validate()">
                   
                 </div>
               </div>
 
 
-              <table class=" row-border hover table  table-striped table-bordered"*ngIf="mode">
+              <table class="row-border hover table  table-striped table-bordered" *ngIf="mode">
                 <thead class="theadborder">
                   <tr>
                     <th style="text-align: center; Vertical-align: middle;width:5%;">
                       <!-- <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="data.selectalljoinkey" name="selectalljoinkey"
                                 (change)="selectAllSubRow(i)" /> -->
+                      <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow" (change)="checkAllAttributeRow()" [disabled] = 'true'>   
                     </th>
                     <th style="text-align: center;width:17%;">Type</th>
                     <th style="text-align: center;width:30%;">Name</th>
@@ -181,8 +181,7 @@
                 <tbody>
                   <tr *ngFor="let obj of importData.metaInfo let i=index">
 
-                    <td style="text-align: center; Vertical-align: middle;">
-                      
+                    <td style="text-align: center; Vertical-align: middle;">                      
                       <input style="width: 16px;height:16px;" type="checkbox"[(ngModel)]="obj.selected" name="selected+{{i}}" (change)="selectAllSubRow(i)">
                     </td>
                     <td>
@@ -194,7 +193,6 @@
                     <td>
                       <input type="text" class="form-control" [(ngModel)]="obj.ref.version" name="version+{{i}}" [disabled]="mode == 'true'">
                     </td>
-
                   </tr>
                 </tbody>
               </table>
@@ -203,9 +201,7 @@
                 <thead class="theadborder">
                   <tr>
                     <th style="text-align: center; Vertical-align: middle;width:5%;">
-                      <!-- <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="data.selectalljoinkey" name="selectalljoinkey"
-                                (change)="selectAllSubRow(i)" /> -->
-                      <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectalljoinkey" name="selectalljoinkey" (change)="selectAllSubRow(i)">    
+                      <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow" (change)="checkAllAttributeRow()">    
                     </th>
                     <th style="text-align: center;width:17%;">Type</th>
                     <th style="text-align: center;width:30%;">Name</th>
@@ -215,12 +211,8 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let obj of metaInfoUpload let i=index">
-
-                    <!-- <td style="text-align: center; Vertical-align: middle;">
-                      <input type="checkbox" [(ngModel)]="obj.selected" name="selected+{{i}}">
-                    </td> -->
-                    <td style="text-align: center; Vertical-align: middle;"><input style="width: 16px;height:16px;" type="checkbox"[(ngModel)]="obj.selected" name="selected+{{i}}">
-                    </td>
+                    <td style="text-align: center; Vertical-align: middle;"><input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="obj.selected" name="selectedAttr+{{i}}" (change)="clickOnCheckbox(i)">
+                   </td>
                     <td>
                       <input type="text" class="form-control" [(ngModel)]="obj.type" name="type+{{i}}" [disabled]= 'true'>
                     </td>
@@ -230,8 +222,10 @@
                     <td>
                       <input type="text" class="form-control" [(ngModel)]="obj.version" name="version+{{i}}" [disabled]='true'>
                     </td>
-                    <td>
-                      <input type="text" class="form-control" [(ngModel)]="obj.status" name="status+{{i}}" [disabled]='true'>
+                    <td> 
+                      <div class="label-sm label-primary" [ngStyle]="{'width':'88%','font-size':'13px','text-align':'center','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#006df0'}" *ngIf="obj.status=='Resume'">{{obj.status}}</div>
+                      <div class="label-sm label-success" [ngStyle]="{'width':'88%','font-size':'13px','text-align':'center','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#36c6d3'}" *ngIf="obj.status=='Completed'">{{obj.status}}</div>
+                      <div class="label-sm label-danger" [ngStyle]="{'width':'88%','font-size':'13px','text-align':'center','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#ed6b75'}" *ngIf="obj.status=='Failed'">{{obj.status}}</div>
                     </td>
 
                   </tr>

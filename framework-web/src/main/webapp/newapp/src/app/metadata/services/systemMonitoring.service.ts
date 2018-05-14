@@ -41,7 +41,7 @@ export class SystemMonitoringService{
     let url ='/system/getActiveThread';
     return this._sharedService.getCall(url)
     .map((response: Response) => {
-      return <any[]>response.json();
+      return this.modifyThreadSessions(response.json());
   })
    .catch(this.handleError);
   }
@@ -77,6 +77,17 @@ modifyActiveSessions(response){
   for(var j=0;j<response.length;j++){
     response[j]["appName"]=response[j].appInfo[0].ref.name
     response[j]["status"]=response[j].status[response[j].status.length-1].stage
+    // for(var i=0;i<response[j].status.length;i++){
+    //   response[j]["status"]=response[j].status[i].stage
+    // }
+   
+  }
+  return response;
+}
+modifyThreadSessions(response){
+  for(var j=0;j<response.length;j++){
+    response[j]["appName"]=response[j].appInfo[0].ref.name
+    response[j]["type"]=response[j].execInfo.ref.type
     // for(var i=0;i<response[j].status.length;i++){
     //   response[j]["status"]=response[j].status[i].stage
     // }

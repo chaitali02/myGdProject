@@ -184,7 +184,7 @@
         <li class="nav-item" *ngFor="let admindatasubmenu of adminMenu.subMenu">
           <a [routerLink]="['list', admindatasubmenu.type]" class="nav-link">
             <span class="title" style="text-transform: capitalize">{{admindatasubmenu.name}}</span>
-            <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[admindatasubmenu.type].count"></span>        
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[admindatasubmenu.type].count"></span>         -->
           </a>
         </li>
         <li class="nav-item">

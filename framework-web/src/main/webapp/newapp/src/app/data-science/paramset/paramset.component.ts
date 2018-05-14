@@ -149,7 +149,7 @@ export class ParamsetComponent implements OnInit {
     this.paramTable.splice(this.paramTable.length,0,paramjson);
   }
 
-  removeAttribute(){   
+  removeAttribute(){   debugger
     var newDataList=[];
     this.selectAllAttributeRow=false
     this.paramTable.forEach(selected => {
@@ -161,13 +161,14 @@ export class ParamsetComponent implements OnInit {
     console.log(JSON.stringify(this.paramTable))
   }
 
-  checkAllAttributeRow(){
+  checkAllAttributeRow(){debugger
     if (!this.selectAllAttributeRow){
       this.selectAllAttributeRow = true;
       }
     else {
       this.selectAllAttributeRow = false;
       }
+      console.log(this.selectAllAttributeRow);
     this.paramTable.forEach(paramjson => {
       paramjson.selected = this.selectAllAttributeRow;
       console.log(JSON.stringify(paramjson))
