@@ -84,7 +84,6 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
@@ -178,8 +177,6 @@ public class ModelServiceImpl {
 	private RuleOperator ruleOperator;
 	@Autowired
 	private ConnectionFactory connFactory;
-	@Autowired
-	private Math3Distribution mlDistribution;
 	@Autowired
 	private MonteCarloSimulation monteCarloSimulation;
 	@Autowired
@@ -988,7 +985,6 @@ public class ModelServiceImpl {
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 					
 					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
-					
 					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
 						
 					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));

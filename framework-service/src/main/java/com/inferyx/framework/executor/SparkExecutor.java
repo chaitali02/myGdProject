@@ -1046,7 +1046,7 @@ public class SparkExecutor implements IExecutor {
 					for(double val : trial) {
 						datasetList.add(val);
 					}
-					datasetList.add(execVersion);
+					datasetList.add(Integer.parseInt(execVersion));
 					rowList.add(RowFactory.create(datasetList.toArray()));
 					genId++;
 				} else if(returnType.isPrimitive()) {

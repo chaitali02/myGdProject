@@ -47,6 +47,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.datascience.Operator;
+import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
@@ -66,7 +67,6 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
@@ -1232,10 +1232,8 @@ public class MetadataServiceImpl {
 	public List<ParamListHolder> getParamListByOperator(String operatorUuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 			
-		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorUuid, MetaType.operator.toString(),"N");			
-		
-		OperatorType operatorType = (OperatorType) commonServiceImpl.getLatestByUuid(operator.getOperatorType().getRef().getUuid(), MetaType.operatortype.toString(),"N");			
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operatorType.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
+		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorUuid, MetaType.operator.toString(),"N");
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operator.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
 	
 		for(Param param : paramList.getParams()) {
 			ParamListHolder paramListHolder = new ParamListHolder();
@@ -1248,7 +1246,7 @@ public class MetadataServiceImpl {
 //			else 
 //				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
 			
-			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, operatorType.getUuid(), paramList.getVersion()));
+			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, operator.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());
 			holderList.add(paramListHolder);
 		}
@@ -1258,8 +1256,8 @@ public class MetadataServiceImpl {
 	public List<ParamListHolder> getParamListByOperatorType(String operatorTypeUuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 			
-		OperatorType operatorType = (OperatorType) commonServiceImpl.getLatestByUuid(operatorTypeUuid, MetaType.operatortype.toString(),"N");			
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operatorType.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
+		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorTypeUuid, MetaType.operator.toString(),"N");			
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operator.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
 	
 		for(Param param : paramList.getParams()) {
 			ParamListHolder paramListHolder = new ParamListHolder();

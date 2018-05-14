@@ -23,8 +23,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorType;
-import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.enums.RunMode;
@@ -65,7 +63,7 @@ public class GenerateDataOperator implements Operator {
 	}
 
 	@Override
-	public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
+	public Map<String, String> populateParams(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
 			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		String execVersion = execIdentifier.getVersion();
@@ -84,7 +82,7 @@ public class GenerateDataOperator implements Operator {
 	}
 
 	@Override
-	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String parse(com.inferyx.framework.datascience.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
@@ -95,7 +93,7 @@ public class GenerateDataOperator implements Operator {
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
 	 */
 	@Override
-	public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String execute(com.inferyx.framework.datascience.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 	
 		String execUuid = execIdentifier.getUuid();
