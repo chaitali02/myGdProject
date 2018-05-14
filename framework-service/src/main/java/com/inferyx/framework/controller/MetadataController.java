@@ -46,7 +46,6 @@ import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
@@ -55,6 +54,7 @@ import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.RolePriv;
 import com.inferyx.framework.domain.StatusHolder;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.parser.DagParser;
 import com.inferyx.framework.parser.FormulaParser;
@@ -536,11 +536,11 @@ public class MetadataController {
 			@RequestBody List<Registry> registryList,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value = "mode", required = false) String mode) throws Exception {
-		Mode runMode;
+		RunMode runMode;
 		if (mode == null) {
-			runMode = Mode.ONLINE;
+			runMode = RunMode.ONLINE;
 		} else {
-			runMode = Mode.valueOf(mode); 
+			runMode = RunMode.valueOf(mode); 
 		}
 		return registerService.register(uuid, version, type, registryList, runMode);
 	}
@@ -881,4 +881,21 @@ public class MetadataController {
 		return metadataServiceImpl.getParamListByOperator(operatorUuid);
 	}
 	
+	@RequestMapping(value = "/getParamListByOperatorType", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamListByOperatorType(
+			@RequestParam(value = "uuid") String operatorTypeUuid ,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
+		return metadataServiceImpl.getParamListByOperatorType(operatorTypeUuid);
+	}
+	
+	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET)
+	public @ResponseBody List<ParamList> getParamListByRule(
+			@RequestParam(value = "type", required = false,defaultValue = "rule") String collectionType) throws JsonProcessingException {		
+		return metadataServiceImpl.getParamList(collectionType);
+	}
+	/*@RequestMapping(value = "/getParamListBySimulate", method = RequestMethod.GET,params = {"simulate"})
+	public @ResponseBody List<ParamList> getParamListBySimulate(	
+			@RequestParam(value = "type", required = false,defaultValue = "simulate") String collectionType) throws JsonProcessingException {		
+		return metadataServiceImpl.getParamList(collectionType);
+	}*/
 }

@@ -21,7 +21,7 @@ import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -234,7 +234,7 @@ public class DatapodRegister {
 		registerDatapod(datastore, datapod, Mode.BATCH);
 	}*/
 	
-	public void registerDatapod (DataStore datastore, Datapod datapod, Mode runMode) {
+	public void registerDatapod (DataStore datastore, Datapod datapod, RunMode runMode) {
 		try {
 			/*IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);*/
 			/*String datasourceUUID = datapod.getDatasource().getRef().getUuid();
@@ -251,7 +251,7 @@ public class DatapodRegister {
 			String appUuid = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
 			
-			if (runMode.equals(Mode.ONLINE)) {
+			if (runMode.equals(RunMode.ONLINE)) {
 				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
 								? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
 			} else {

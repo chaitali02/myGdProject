@@ -664,6 +664,38 @@ public class DagExecServiceImpl {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param Uuid
+	 * @param version
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public DagExec getDagExec(String Uuid, String version) throws JsonProcessingException {
+		return (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
+	}
+	
+	/**
+	 * 
+	 * @param Uuid
+	 * @param version
+	 * @param stageId
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	public StageExec getStageExec(String Uuid, String version, String stageId) throws JsonProcessingException {
+		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
+
+		List<StageExec> stageExecList = DagExecUtil.castToStageExecList(dagexec.getStages());
+
+		for (StageExec stageExec : stageExecList) {
+			if (stageExec.getStageId().equals(stageId)) {
+				return stageExec;
+			}
+		}
+		return null;
+	}
+	
 	
 	public TaskExec getTaskExec(DagExec dagexec, String stageId, String taskId) {
 		List<StageExec> stageExecList = DagExecUtil.castToStageExecList(dagexec.getStages());

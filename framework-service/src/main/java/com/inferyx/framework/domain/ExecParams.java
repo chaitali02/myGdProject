@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ExecParams {
@@ -21,6 +22,8 @@ public class ExecParams {
 	private List<String> stageInfo;
 	private ParamSetHolder paramSetHolder;
 	private List<ParamListHolder> paramListInfo;
+	private java.util.Map<String, String> internalVarMap;
+	private HashMap<String, String> otherParams;
 	
 	/**
 	 * @Ganesh
@@ -86,6 +89,22 @@ public class ExecParams {
 
 	public void setStageInfo(List<String> stageInfo) {
 		this.stageInfo = stageInfo;
+	}
+
+	public java.util.Map<String, String> getInternalVarMap() {
+		return internalVarMap;
+	}
+
+	public void setInternalVarMap(java.util.Map<String, String> internalVarMap) {
+		this.internalVarMap = internalVarMap;
+	}
+
+	public HashMap<String, String> getOtherParams() {
+		return otherParams;
+	}
+
+	public void setOtherParams(HashMap<String, String> otherParams) {
+		this.otherParams = otherParams;
 	}
 
 }

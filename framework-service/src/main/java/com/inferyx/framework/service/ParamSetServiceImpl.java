@@ -544,7 +544,7 @@ public class ParamSetServiceImpl {
 			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
 			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 				if (param.getParamId().equals(attributeId+"")) {
-					value = param.getParamValue();
+					value = param.getParamValue().getValue();
 					return value;
 				}
 			}
@@ -560,7 +560,7 @@ public class ParamSetServiceImpl {
 					ParamList paramList = (ParamList)daoRegister.getRefObject(paramListHolder.getRef());
 					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 						if (param.getParamId().equals(attributeId+"")) {
-							value = param.getParamValue();
+							value = param.getParamValue().getValue();
 							return value;
 						}
 					}

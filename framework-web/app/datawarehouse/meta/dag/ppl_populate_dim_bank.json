@@ -1,12 +1,12 @@
 {
-	"xPos": 140,
-	"yPos": 90,
+	"xPos" : 20.0,
+    "yPos" : 90.0,
 	"templateFlg" : "N",
 	"stages": [
 		{
 			"stageId": "86e91f2e-1956-49df-ba04-e4e2f2a98b49",
-			"xPos": 510,
-			"yPos": 90,
+			"xPos" : 470.0,
+            "yPos" : 90.0,
 			"dependsOn": [],
 			"name": "Populate dim_bank",
 			"tasks": [

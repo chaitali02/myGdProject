@@ -24,14 +24,14 @@
 		"B"
 	],
 	"desc": "Perform DQ on dat0acb28fa-7956-4f75-9ac1-48e6e692e8fdawarehouse",
-	"xPos": 50,
-	"yPos": 380,
+	"xPos" : 10.0,
+    "yPos" : 380.0,
 	"templateFlg" : "N",
 	"stages": [
 		{
 			"stageId": "80d93f74-bf99-470a-afde-1d30df464895",
-			"xPos": 360,
-			"yPos": 380,
+			"xPos" : 360.0,
+            "yPos" : 380.0,
 			"dependsOn": [],
 			"name": "Perform DQ on datawarehous",
 			"tasks": [

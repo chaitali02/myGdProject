@@ -57,6 +57,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -79,12 +80,12 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.UploadExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
@@ -143,6 +144,8 @@ public class DatapodServiceImpl {
 	IUploadDao iDownloadDao;
 	@Autowired
 	private MessageServiceImpl messageServiceImpl;
+	@Autowired
+	Engine engine;
 //	@Autowired
 //	NewGraph newGraph;
 	
@@ -403,7 +406,7 @@ public class DatapodServiceImpl {
 
 	}
 
-	public MetaIdentifierHolder createAndLoad(String csvFileName, Mode runMode) throws Exception {		
+	public MetaIdentifierHolder createAndLoad(String csvFileName, RunMode runMode) throws Exception {		
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
 		// Check if datapod exists
@@ -518,7 +521,7 @@ public class DatapodServiceImpl {
 		//Create Load exec and datastore
 		LoadExec loadExec = null;
 		loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), null/*, null*/, Mode.BATCH);
+		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), null/*, null*/, RunMode.BATCH);
 		
 		return new MetaIdentifierHolder(loadExec.getRef(MetaType.loadExec));
 	}
@@ -1106,7 +1109,7 @@ public class DatapodServiceImpl {
 			LoadExec loadExec = null;
 			loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
 			
-			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), null/*, null*/, Mode.BATCH);
+			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), null/*, null*/, RunMode.BATCH);
 		
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
@@ -1120,7 +1123,7 @@ public class DatapodServiceImpl {
 
 	public HttpServletResponse download(String uuid, String version, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 		datastoreServiceImpl.setRunMode(runMode);
 		DataStore ds = datastoreServiceImpl.findDataStoreByMeta(uuid, version);
 		if (ds == null) {
@@ -1166,7 +1169,7 @@ public class DatapodServiceImpl {
 
 	}
 	
-	void setResponseMsg(String msg){
+	public void setResponseMsg(String msg){
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
 				.getRequestAttributes();
 		if (requestAttributes != null) {
@@ -1196,4 +1199,22 @@ public class DatapodServiceImpl {
 			logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
 	}
 
+	public String genTableNameByDatapod(Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String tableName = null;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		String dsType = datasource.getType();
+		if(runMode.equals(RunMode.BATCH)) {
+			if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+					&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+				tableName = datasource.getDbname() + "." + datapod.getName();
+				return tableName;
+			} else {
+				tableName = String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
+			}
+		} else if(runMode.equals(RunMode.ONLINE)) {
+			tableName = String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
+		}		
+		return tableName;
+	}
 }

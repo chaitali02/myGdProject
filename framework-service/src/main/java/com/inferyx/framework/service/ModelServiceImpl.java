@@ -82,10 +82,10 @@ import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
+import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
@@ -98,6 +98,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SimulationType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -107,10 +108,11 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.GenerateDataOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
-import com.inferyx.framework.operator.TransposeOperator;
+import com.inferyx.framework.operator.TransposeOldOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -153,7 +155,7 @@ public class ModelServiceImpl {
 	private AlgorithmServiceImpl algorithmServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	private Mode runMode;
+	private RunMode runMode;
 	@Autowired
 	private DataFrameService dataFrameService;
 	@Autowired
@@ -181,7 +183,7 @@ public class ModelServiceImpl {
 	@Autowired
 	private MonteCarloSimulation monteCarloSimulation;
 	@Autowired
-	private TransposeOperator transposeOperator;
+	private GenerateDataOperator generateDataOperator;
 	
 	//private ParamMap paramMap;
 
@@ -245,14 +247,14 @@ public class ModelServiceImpl {
 	/**
 	 * @return the runMode
 	 */
-	public Mode getRunMode() {
+	public RunMode getRunMode() {
 		return runMode;
 	}
 
 	/**
 	 * @param runMode the runMode to set
 	 */
-	public void setRunMode(Mode runMode) {
+	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
 	}
 
@@ -794,7 +796,7 @@ public class ModelServiceImpl {
 		return logList;
 	}
 	
-	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,Mode runMode) throws Exception {
+	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,RunMode runMode) throws Exception {
 		
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(execUuid, execVersion);
 		String location = datastore.getLocation();
@@ -919,7 +921,7 @@ public class ModelServiceImpl {
 		return isSuccess;
 	}*/
 
-	public boolean simulate(Simulate simulate, ExecParams execParams, SimulateExec simulateExec) throws Exception {
+	public boolean simulate(Simulate simulate, ExecParams execParams, SimulateExec simulateExec, RunMode runMode) throws Exception {
 		boolean isSuccess = false;
 		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(simulate.getDistributionTypeInfo().getRef().getUuid(), simulate.getDistributionTypeInfo().getRef().getVersion(), simulate.getDistributionTypeInfo().getRef().getType().toString());
 		try {
@@ -933,7 +935,7 @@ public class ModelServiceImpl {
 
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			String filePath = "/simulate"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
-			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
+			//String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 			
@@ -950,6 +952,7 @@ public class ModelServiceImpl {
 			List<ParamListHolder> distParamHolderList = new ArrayList<>();
 			List<ParamListHolder> simParamHolderList= new ArrayList<>();
 			
+			String tableName = null;
 			List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 			for(ParamListHolder holder : paramListInfo) {
 				if(simulate.getParamList() != null && holder.getRef().getUuid().equalsIgnoreCase(simulate.getParamList().getRef().getUuid())) {
@@ -957,62 +960,59 @@ public class ModelServiceImpl {
 				} else if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
 					distParamHolderList.add(holder);
 				}
+				if(holder.getParamName().equalsIgnoreCase("saveLocation")) {
+					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(holder.getParamValue().getRef().getUuid(), holder.getParamValue().getRef().getVersion(), holder.getParamValue().getRef().getType().toString());
+					tableName = datapodServiceImpl.genTableNameByDatapod(datapod, simulateExec.getVersion(), runMode);
+				}
 			}
 			distExecParam.setParamListInfo(distParamHolderList);
 			simExecParam.setParamListInfo(simParamHolderList);
-
+			
+			ParamListHolder distributionInfo = new ParamListHolder();
+			distributionInfo.setParamId("0");
+			distributionInfo.setParamName("distribution");
+			distributionInfo.setParamType("distribution");
+			MetaIdentifier distIdentifier = new MetaIdentifier(MetaType.distribution, distribution.getUuid(), distribution.getVersion());
+			MetaIdentifierHolder distHolder = new MetaIdentifierHolder(distIdentifier);
+			distributionInfo.setParamValue(distHolder);
+			distributionInfo.setRef(new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()));
+			
+			List<ParamListHolder> paramListInfo2 = execParams.getParamListInfo();
+			paramListInfo2.add(distributionInfo);
+			execParams.setParamListInfo(paramListInfo2);
+			
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			if(simulate.getType().equalsIgnoreCase(SimulationType.MONTECARLO.toString())) {
 				result = monteCarloSimulation.simulateMonteCarlo(simulate, simExecParam, distExecParam, filePathUrl);
 			} else if(simulate.getType().equalsIgnoreCase(SimulationType.DEFAULT.toString())) {
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-					if(simulate.getDistributionTypeInfo() != null) {					
-						Object object = mlDistribution.getDistribution(distribution, distExecParam);
+					
+					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
+					
+					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
 						
-						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
-						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, true, appUuid);
-						String sql = simulateMLOperator.generateSql(simulate, tabName_2);
-						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-					} else {
-						String query = simulateMLOperator.generateSql(simulate, (tableName+"_"+"form_rand_df"));
-						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, (tableName+"_"+"form_rand_df"));
-						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
-						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-						result = exec.executeRegisterAndPersist(query, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-					}
+					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
+					String tabName_2 = exec.assembleRandomDF(fieldArray, tableName, true, appUuid);
+					String sql = simulateMLOperator.generateSql(simulate, tabName_2);
+					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);					
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-					if(simulate.getDistributionTypeInfo() != null) {
-						Object object = mlDistribution.getDistribution(distribution, distExecParam);
-						
-						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
-						String[] customFldArr = new String[] {fieldArray[0]};
-						String tabName_2 = exec.assembleRandomDF(customFldArr, tabName_1, true, appUuid);
-						
-						String sql = "SELECT * FROM " + tabName_2;
-						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-					} else {
-						TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
-								model.getVersion());
-						if (latestTrainExec == null)
-							throw new Exception("Executed model not found.");
-						
-						MetaIdentifierHolder targetHolder = simulate.getTarget();
-						Datapod target = null;
-						if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
-							target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
-									targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
-						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
-						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
-						//result = predictMLOperator.execute(null, model, algorithm, target, assembledDfHolder.getDataFrame(), fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, appUuid);
-						filePathUrl = filePathUrl + "/data";
-					}
+					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
+					
+					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
+					
+					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
+					String[] customFldArr = new String[] {fieldArray[0]};
+					String tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
+					
+					String sql = "SELECT * FROM " + tabName_2;
+					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);				
 				}
 			}
 			
 			
-			dataStoreServiceImpl.setRunMode(Mode.BATCH);
+			dataStoreServiceImpl.setRunMode(runMode);
 
 			dataStoreServiceImpl.create(filePathUrl, modelName,
 					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
@@ -1029,7 +1029,7 @@ public class ModelServiceImpl {
 				isSuccess = false;
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -1284,7 +1284,7 @@ public class ModelServiceImpl {
 		return trainExec;
 	}
 	
-public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVersion, HttpServletResponse response,Mode runMode) throws Exception {
+public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVersion, HttpServletResponse response,RunMode runMode) throws Exception {
 
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion,
 				MetaType.trainExec.toString());
@@ -1494,9 +1494,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return factorCovariances;
 	}*/
 	
-	public String getSQLBySource(Object source) throws Exception {  
+	public String generateSQLBySource(Object source) throws Exception {  
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		if (source instanceof Datapod) {
 			Datapod datapod = (Datapod) source;
 			DataStore datastore = dataStoreServiceImpl.findLatestByMeta(datapod.getUuid(), datapod.getVersion());
@@ -1508,17 +1507,20 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 			ConnectionHolder conHolder = conn.getConnection();
 			Object obj = conHolder.getStmtObject();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			//DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
-			String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), datapod, datastore, null, hdfsInfo, obj, datasource);
+			
+			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			//String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), datapod, datastore, null, hdfsInfo, obj, datasource);
 			String sql = "SELECT * FROM "+tableName;
 			return sql;
 		} else if (source instanceof DataSet) {
 			DataSet dataset = (DataSet) source;
-			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, Mode.BATCH);
+			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, RunMode.BATCH);
 			return sql;
 		} else if (source instanceof Rule) {
 			Rule rule = (Rule) source;
-			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, Mode.BATCH);
+			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, RunMode.BATCH);
 			return sql;
 		}
 		return null;
@@ -1536,8 +1538,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 
 		if (location.contains("/data"))
 			location = location.replaceAll("/data", "");
-		
-		location = hdfsInfo.getHdfsURL() + location;
+		if(!location.contains(hdfsInfo.getHdfsURL()))
+			location = hdfsInfo.getHdfsURL() + location;
 
 		Object trainedModel = modelClass.getMethod("load", String.class).invoke(modelClass, location);
 		return trainedModel;
@@ -1580,7 +1582,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
-			String sql = getSQLBySource(source);
+			String sql = generateSQLBySource(source);
 			exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
 			
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
@@ -1598,7 +1600,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 				result = filePathUrl;
 			}
 			
-			dataStoreServiceImpl.setRunMode(Mode.BATCH);
+			dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 			dataStoreServiceImpl.create(filePathUrl, modelName,
 					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
 					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
@@ -1629,133 +1631,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return isSuccess;
 	}
 
-	/**
-	 * @Ganesh
-	 *
-	 * @param operator
-	 * @param execParams
-	 * @param operatorExec
-	 * @return 
-	 * @throws Exception 
-	 */
-	public boolean operator(Operator operator, ExecParams execParams, OperatorExec operatorExec) throws Exception {
-		boolean isSuccess = false;
-		Object result = null;
-		try {
-			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.InProgress);
-			
-
-			String operatorName = String.format("%s_%s_%s", operator.getUuid().replace("-", "_"), operator.getVersion(), operatorExec.getVersion());
-			String filePath = String.format("/%s/%s/%s", operator.getUuid().replace("-", "_"), operator.getVersion(), operatorExec.getVersion());
-			String tableName = String.format("%s_%s_%s", operator.getUuid().replace("-", "_"), operator.getVersion(), operatorExec.getVersion());
-
-			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
-
-			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-			
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			String appUuid = commonServiceImpl.getApp().getUuid();
-			
-			MetaIdentifierHolder operatorTypeHolder = operator.getOperatorType();
-			OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(operatorTypeHolder.getRef().getUuid(), operatorTypeHolder.getRef().getVersion(), operatorTypeHolder.getRef().getType().toString());
-			MetaIdentifierHolder paramListHolder = operatorType.getParamList();
-			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(), paramListHolder.getRef().getType().toString());
-			List<Param> params = paramList.getParams();
-			if(execParams != null) {
-				List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
-				for(ParamListHolder holder : paramListInfo) {
-					if(holder.getParamValue().getRef().getType().equals(MetaType.datapod)) {
-						MetaIdentifierHolder datapodHolder = holder.getParamValue();
-						Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodHolder.getRef().getUuid(), datapodHolder.getRef().getVersion(), datapodHolder.getRef().getType().toString());
-						DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(), datapod.getVersion());
-						String tabName = exec.readFile(appUuid, datapod, datastore, tableName, hdfsInfo, null, datasource);
-						String sql = transposeOperator.generateSql(datapod, tabName);
-						result = exec.executeRegisterAndPersist(sql, tabName, filePath, datapod, SaveMode.Append.toString(), appUuid);
-					}
-				}
-			}
-			
-			dataStoreServiceImpl.setRunMode(Mode.BATCH);
-			dataStoreServiceImpl.create(filePathUrl, operatorName,
-					new MetaIdentifier(MetaType.operator, operator.getUuid(), operator.getVersion()),
-					new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()),
-					operatorExec.getAppInfo(), operatorExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
-
-			operatorExec.setResult(resultRef);
-			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
-			if (result != null) {
-				isSuccess = true;
-				operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Completed);
-			}else {
-				isSuccess = false;
-				operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Failed);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			String message = null;
-			try {
-				message = e.getMessage();
-			}catch (Exception e2) {
-				// TODO: handle exception
-			}
-			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Failed);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Operator execution failed.");
-			throw new RuntimeException((message != null) ? message : "Operator execution failed.");
-		}
-		return isSuccess;
-	}
 	
-	/**
-	 * @Ganesh
-	 *
-	 * @param operator
-	 * @param execParams
-	 * @param paramMap
-	 * @param operatorExec
-	 * @return
-	 * @throws Exception 
-	 */
-	public OperatorExec create(Operator operator, ExecParams execParams, Object paramMap, OperatorExec operatorExec) throws Exception {
-		try {
-			if(operatorExec == null) {
-				MetaIdentifierHolder operatorRef = new MetaIdentifierHolder();
-				operatorExec = new OperatorExec();
-				operatorRef.setRef(new MetaIdentifier(MetaType.operator, operator.getUuid(), operator.getVersion()));
-				operatorExec.setDependsOn(operatorRef);
-				operatorExec.setBaseEntity();
-			}
-			
-			operatorExec.setName(operator.getName());
-			operatorExec.setAppInfo(operator.getAppInfo());	
-			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
-			
-			List<Status> statusList = operatorExec.getStatusList();
-			if (statusList == null) 
-				statusList = new ArrayList<Status>();
-			
-			if (Helper.getLatestStatus(statusList) != null 
-					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
-				return operatorExec;
-			}
-			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.NotStarted);			
-		} catch (Exception e) {
-			logger.error(e);	
-			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Failed);
-			e.printStackTrace();
-			String message = null;
-			try {
-				message = e.getMessage();
-			}catch (Exception e2) {
-				// TODO: handle exception
-			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create executable Operator.");
-			throw new RuntimeException((message != null) ? message : "Can not create executable Operator.");
-		}
-		return operatorExec;
-	}	
+	
+	
 
 }

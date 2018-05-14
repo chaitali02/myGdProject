@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
@@ -21,7 +22,7 @@ import com.inferyx.framework.domain.ParamSet;
 public class OperatorUtilServiceImpl {
 
 	@Autowired
-	CommonServiceImpl commonServiceImpl;
+	CommonServiceImpl<?> commonServiceImpl;
 
 	public OperatorUtilServiceImpl() {
 		// TODO Auto-generated constructor stub
@@ -43,7 +44,9 @@ public class OperatorUtilServiceImpl {
 		for (ParamInfo paramInfo : paramInfoList) {
 			for (ParamListHolder paramListHolder : paramInfo.getParamSetVal()) {
 				param = paramList.getParams().get(Integer.parseInt(paramListHolder.getParamId()));
-				param.setParamValue(paramListHolder.getValue());
+				MetaIdentifierHolder miHolder = new MetaIdentifierHolder();
+				miHolder.setValue(paramListHolder.getValue());
+				param.setParamValue(miHolder);
 				newParamList.add(param);
 			}
 		}

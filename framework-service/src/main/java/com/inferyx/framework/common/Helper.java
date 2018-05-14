@@ -70,7 +70,6 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.OperatorExec;
@@ -107,6 +106,7 @@ import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.enums.ParamDataType;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 
 @Component
@@ -574,10 +574,10 @@ public class Helper {
 		else
 			return null;
 	}	
-	public static Mode getExecutionMode(String mode) {
+	public static RunMode getExecutionMode(String mode) {
 		switch(mode.toLowerCase()) {
-		case "batch": return Mode.BATCH;
-		case "online": return Mode.ONLINE;
+		case "batch": return RunMode.BATCH;
+		case "online": return RunMode.ONLINE;
 		default: return null;
 		}
 	}
@@ -689,14 +689,36 @@ public class Helper {
 	public static ParamDataType resolveParamDataType(String paramDataType) {
 		if(paramDataType != null && !StringUtils.isBlank(paramDataType))
 			switch(paramDataType.toLowerCase()) {
-			case "twodarray" : return ParamDataType.TWODARRAY;
-			case "onedarray" : return ParamDataType.ONEDARRAY;
-			case "double" : return ParamDataType.DOUBLE;
-			case "integer" : return ParamDataType.INTEGER;
-			case "long" : return ParamDataType.LONG;
-			case "string" : return ParamDataType.STRING;
-			case "date" : return ParamDataType.DATE;
+				case "twodarray" : return ParamDataType.TWODARRAY;
+				case "onedarray" : return ParamDataType.ONEDARRAY;
+				case "double" : return ParamDataType.DOUBLE;
+				case "integer" : return ParamDataType.INTEGER;
+				case "long" : return ParamDataType.LONG;
+				case "string" : return ParamDataType.STRING;
+				case "date" : return ParamDataType.DATE;
+				case "attribute" : return ParamDataType.ATTRIBUTE;
+				case "attributes" : return ParamDataType.ATTRIBUTES;
+				case "datapod" : return ParamDataType.DATAPOD;
+				case "distribution" : return ParamDataType.DISTRIBUTION;
+				
 			}
 		return null;
 	}
+	
+	public java.util.Map mergeMap (java.util.Map sourceMap, java.util.Map destMap) {
+		if (sourceMap == null || sourceMap.isEmpty()) {
+			if (destMap == null || destMap.isEmpty()) {
+				return new HashMap<>();
+			}
+			return destMap;
+		}
+		if (destMap == null || destMap.isEmpty()) {
+			return sourceMap;
+		}
+		for (Object key : sourceMap.keySet()) {
+			destMap.put(key, sourceMap.get(key));
+		}
+		return destMap;
+	}
+	
 }

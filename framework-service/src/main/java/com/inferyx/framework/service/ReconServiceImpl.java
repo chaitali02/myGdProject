@@ -54,13 +54,13 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -136,7 +136,7 @@ public class ReconServiceImpl extends RuleTemplate {
 
 	@Override
 	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
-			List<String> datapodList, DagExec dagExec, Mode runMode) throws Exception {
+			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 
 		logger.info("Inside dataQualServiceImpl.parse");
 		Recon recon = null;
@@ -166,7 +166,7 @@ public class ReconServiceImpl extends RuleTemplate {
 	@Override
 	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
-			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		return execute(uuid, version, metaExecutor, (ReconExec)baseRuleExec, (ReconGroupExec)baseGroupExec, taskList, execParams, runMode);
 	}
 	
@@ -181,7 +181,7 @@ public class ReconServiceImpl extends RuleTemplate {
 	}
 	
 	public ReconExec execute(String reconUuid, String reconVersion,
-			ThreadPoolTaskExecutor metaExecutor, ReconExec reconExec, ReconGroupExec reconGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, Mode runMode) throws Exception {
+			ThreadPoolTaskExecutor metaExecutor, ReconExec reconExec, ReconGroupExec reconGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside reconServiceImpl.execute");
 		try {
 			Datapod targetDatapod = (Datapod) daoRegister
@@ -198,12 +198,12 @@ public class ReconServiceImpl extends RuleTemplate {
 	}
 	
 	public ReconExec execute(String reconUuid, String reconVersion, ReconExec reconExec,
-			ReconGroupExec reconGroupExec, ExecParams  execParams, Mode runMode) throws Exception {
+			ReconGroupExec reconGroupExec, ExecParams  execParams, RunMode runMode) throws Exception {
 		execute(reconUuid, reconVersion, null, reconExec, reconGroupExec, null, execParams, runMode);
 		return reconExec;
 	}
 	
-	public String getTableName(Datapod datapod, Mode runMode) throws Exception {
+	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
 		return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 	}
 
@@ -217,7 +217,7 @@ public class ReconServiceImpl extends RuleTemplate {
 	}
 	public HttpServletResponse download(String reconExecUUID, String reconExecVersion, String format, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			Mode runMode) throws Exception {
+			RunMode runMode) throws Exception {
 		
 		List<Map<String, Object>> results =getReconResults(reconExecUUID,reconExecVersion,offset,limit,sortBy,order,requestId, runMode);
 		response = commonServiceImpl.download(reconExecUUID, reconExecVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec,reconExecUUID,reconExecVersion)));
@@ -226,7 +226,7 @@ public class ReconServiceImpl extends RuleTemplate {
 
 	}
 	
-	public List<Map<String, Object>> getReconResults(String reconExecUUID, String reconExecVersion, int offset, int limit, String sortBy, String order, String requestId, Mode runMode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, SQLException, JSONException {
+	public List<Map<String, Object>> getReconResults(String reconExecUUID, String reconExecVersion, int offset, int limit, String sortBy, String order, String requestId, RunMode runMode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, SQLException, JSONException {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			limit = offset+limit;
@@ -360,7 +360,7 @@ public class ReconServiceImpl extends RuleTemplate {
 		return data;
 	}
 
-	public void restart(String type, String uuid, String version, ExecParams  execParams, Mode runMode) throws JsonProcessingException {
+	public void restart(String type, String uuid, String version, ExecParams  execParams, RunMode runMode) throws JsonProcessingException {
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.reconExec.toString());
 		try {
 			reconExec = (ReconExec) parse(uuid,version, null, null, null, runMode);

@@ -11,6 +11,7 @@
 package com.inferyx.framework.operator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,11 @@ import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -105,7 +106,7 @@ public class MapOperator implements Operator {
 	}
 
 	public String generateSql(Map map, java.util.Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+			HashMap<String, String> otherParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		Relation relation = null;
 		// Target datapod
 		StringBuilder builder = new StringBuilder();
@@ -131,7 +132,7 @@ public class MapOperator implements Operator {
 				String table = null;
 				if (otherParams == null 
 						|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
-					table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), Mode.BATCH);
+					table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 				} else {
 					String tableKey = "datapod_".concat(datapod.getUuid());
 					table = otherParams.get(tableKey);
@@ -139,10 +140,10 @@ public class MapOperator implements Operator {
 				builder.append(String.format(table, datapod.getName())).append(" ").append(datapod.getName()).append(" ");
 			} else if (map.getSource().getRef().getType() == MetaType.dataset) {
 				DataSet dataset = (DataSet) daoRegister.getRefObject(map.getSource().getRef());
-				builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, Mode.BATCH)).append(")  ").append(dataset.getName());
+				builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, RunMode.BATCH)).append(")  ").append(dataset.getName());
 			} else if (map.getSource().getRef().getType() == MetaType.rule) {
 				Rule rule = (Rule) daoRegister.getRefObject(map.getSource().getRef());
-				builder.append(" (" + ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, null, Mode.BATCH) + " )  " + rule.getName());
+				builder.append(" (" + ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, null, RunMode.BATCH) + " )  " + rule.getName());
 			}
 			// Append Filter(s) - WHERE
 			builder.append(WHERE_1_1);
@@ -158,11 +159,28 @@ public class MapOperator implements Operator {
 	}
 
 	@Override
-	public void execute(OperatorType operatorType, ExecParams execParams,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+	public String execute(OperatorType operatorType, ExecParams execParams,
+			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
-		
+		return null;
+	}
+
+	@Override
+	public java.util.Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
+			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
+			RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

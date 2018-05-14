@@ -4,7 +4,7 @@
 DatascienceModule = angular.module('DatascienceModule');
 
 DatascienceModule.controller('CreateSimulateController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, SimulateService, CommonService, $http, $location) {
-
+  $scope.attributeTypes=['datapod','dataset','rule'];
   $scope.mode = "false";
   $scope.isTargetNameDisabled = false;
   $scope.dataLoading = false;
@@ -318,10 +318,52 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     $scope.checkboxSimulateexecution = "No";
 
   }
+
+  $scope.getAllLatest=function(type,index,defaultValue){  
+    CommonService.getAllLatest(type || "datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
+    var onSuccessGetAllLatest = function (response) {
+      if(type =="datapod"){
+        $scope.allDatapod=response;
+      }
+      else if(type =="relation"){
+        $scope.allRelation=response;
+      }
+      else if(type =="distribution"){
+        $scope.allDistribution=response;
+      }
+      else if(type =="dataset"){
+        $scope.allDataset=response;
+      }
+      else if(type =="rule"){
+        $scope.allRule=response;
+      }
+     
+    }
+  }
+  $scope.onChangeParamList=function(){
+    $scope.isShowExecutionParam = false;
+    $scope.checkboxSimulateexecution = "No";
+  }
+
+  $scope.onChangeForAttributeInfo=function(data,type,index){
+    $scope.paramListHolder[index].attributeInfoTag=null;
+    $scope.getAllAttributeBySource(data,type,index);
+
+  }
+  
+  $scope.getAllAttributeBySource=function(data,type,index,defaultValue){ 
+    if(data !=null){ 
+      CommonService.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
+      var onSuccessGetAllAttributeBySource = function (response) {
+        $scope.paramListHolder[index].allAttributeinto=response
+      
+      }
+    }
+  }
   $scope.onChangeRunImmediately = function () {
     $scope.isShowExecutionParam = false;
     if ($scope.selectDistributionType != null && $scope.checkboxSimulateexecution == "YES") {
-      $scope.getAllLatestDatapod();
+     // $scope.getAllLatestDatapod();
       SimulateService.getParamListByDistribution($scope.selectDistributionType.uuid).then(function (response) {
         onSuccesGetParamListByDistribution(response.data)
       });
@@ -330,9 +372,14 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
         $scope.getParamByParamList();
         if (response.length > 0) {
           $scope.isShowExecutionParam = true;
+          $('#executeParamList').modal({
+            backdrop: 'static',
+            keyboard: false
+          });
           
         } else {
           $scope.isShowExecutionParam = false;
+          $('#executeParamList').modal('hide');
           $scope.paramListHolder=[];
         }
       }
@@ -351,8 +398,13 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
         $scope.paramListHolder=paramList;
         if (response.length > 0 || $scope.paramListHolder.length > 0) {
           $scope.isShowExecutionParam = true; 
+          $('#executeParamList').modal({
+            backdrop: 'static',
+            keyboard: false
+          });
         } else {
           $scope.isShowExecutionParam = false;
+          $('#executeParamList').modal('hide');
         }
       }
     }
@@ -480,31 +532,67 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   $scope.changemodelvalue = function () {
     $scope.isshowSimulate = sessionStorage.isshowmodel
   };
+
+  $scope.executeWithExecParamList=function(){
+    $('#executeParamList').modal('hide');
+  }
   $scope.simulateExecute = function (response) {
     var execParams = {};
     var paramListInfo = [];
     if ($scope.paramListHolder.length > 0) {
-      for (var i = 0; i < $scope.paramListHolder.length; i++) {
-        var paramList = {};
-        paramList.paramId = $scope.paramListHolder[i].paramId;
-        paramList.paramName = $scope.paramListHolder[i].paramName;
-        paramList.paramType = $scope.paramListHolder[i].paramType;
+      for(var i=0;i<$scope.paramListHolder.length;i++){
+        var paramList={};
+        paramList.paramId=$scope.paramListHolder[i].paramId;
+        paramList.paramName=$scope.paramListHolder[i].paramName;
+        paramList.paramType=$scope.paramListHolder[i].paramType;
         paramList.ref=$scope.paramListHolder[i].ref;
-        var type = ["ONEDARRAY", "TWODARRAY"]
-        var ref = {};
-        var paramValue = {};
-        if (type.indexOf($scope.paramListHolder[i].paramType.toUpperCase()) == -1) {
-          ref.type = "simple";
-          paramValue.ref = ref;
-          paramValue.value = $scope.paramListHolder[i].paramValue;
+        if($scope.paramListHolder[i].paramType =='attribute'){
+          var attributeInfoArray=[];
+          var attributeInfo={};
+          var attributeInfoRef={}
+          attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
+          attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfo.uuid;
+          attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
+          attributeInfo.ref=attributeInfoRef;
+          attributeInfo.attrId=$scope.paramListHolder[i].attributeInfo.attributeId;
+          attributeInfoArray[0]=attributeInfo
+          paramList.attributeInfo=attributeInfoArray;
+
         }
-        else {
-          ref.type = "datapod";
-          ref.uuid = $scope.paramListHolder[i].selectedParamValue.uuid;
-          paramValue.ref = ref;
+        if($scope.paramListHolder[i].paramType =='attributes'){
+          var attributeInfoArray=[];
+          for(var j=0;j<$scope.paramListHolder[i].attributeInfoTag.length;j++){
+            var attributeInfo={};
+            var attributeInfoRef={}
+            attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
+            attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfoTag[j].uuid
+            attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
+            attributeInfo.ref=attributeInfoRef;
+            attributeInfo.attrId=$scope.paramListHolder[i].attributeInfoTag[j].attributeId;
+            attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
+            attributeInfoArray[j]=attributeInfo
+          }
+          paramList.attributeInfo=attributeInfoArray;
         }
-        paramList.paramValue = paramValue;
-        paramListInfo[i] = paramList;
+        else if($scope.paramListHolder[i].paramType=='distribution' || $scope.paramListHolder[i].paramType=='datapod'){
+          var ref={};
+          var paramValue={};  
+          ref.type=$scope.paramListHolder[i].selectedParamValueType;
+          ref.uuid=$scope.paramListHolder[i].selectedParamValue.uuid;  
+          paramValue.ref=ref;
+          paramList.paramValue=paramValue;
+        }
+        else if($scope.paramListHolder[i].selectedParamValueType =="simple"){
+          var ref={};
+          var paramValue={};  
+          ref.type=$scope.paramListHolder[i].selectedParamValueType;
+          paramValue.ref=ref;
+          paramValue.value=$scope.paramListHolder[i].paramValue
+          paramList.paramValue=paramValue;
+          
+        }
+       
+        paramListInfo[i]=paramList;
       }
       execParams.paramListInfo = paramListInfo;
     }

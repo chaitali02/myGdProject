@@ -10,7 +10,7 @@
 			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-09-16T08:02:12.987Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
 	"tags": [
 		"DEMO"
 	],
@@ -46,7 +46,19 @@
 				"type": "group",
 				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c3"
 			}
-		}
+		},
+         {
+            "ref" : {
+                "type" : "group",
+                "uuid" : "a93bac6e-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }, 
+         {
+            "ref" : {
+                "type" : "group",
+                "uuid" : "a93baa3e-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
 	],
 	"roleInfo": [
 		{

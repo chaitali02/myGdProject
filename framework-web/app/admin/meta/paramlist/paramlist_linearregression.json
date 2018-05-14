@@ -1,0 +1,103 @@
+{
+	"params": [
+		{
+			"paramId": 0,
+			"paramName": "labelCol",
+			"paramType": "string",
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "label"
+			    }
+		},
+		{
+			"paramId": 1,
+			"paramName": "maxIter",
+			"paramType": "integer",
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
+		},
+		{
+			"paramId": 2,
+			"paramName": "predictionCol",
+			"paramType": "string",
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "Col1"
+			    }
+		},
+		{
+			"paramId": 3,
+			"paramName": "featuresCol",
+			"paramType": "string",
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "Col2"
+			    }
+		},
+		{
+			"paramId": 4,
+			"paramName": "tol",
+			"paramType": "double",
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
+		}
+	],
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82",
+	"version": "1495146809",
+	"name": "paramlist_linearregression",
+	"desc": "LinearRegression Param List",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
+		"DEV",
+		"0.1.0"
+	],
+	"active": "Y",
+	"published": "N",
+	"appInfo": [
+			{
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+       
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
+	]
+}

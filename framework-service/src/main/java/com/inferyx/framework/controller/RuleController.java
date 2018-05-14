@@ -40,12 +40,12 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.RegisterService;
@@ -71,7 +71,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		return ruleOperator.generateSql(rule, null, null, usedRefKeySet, null, Mode.ONLINE);
+		return ruleOperator.generateSql(rule, null, null, usedRefKeySet, null, RunMode.ONLINE);
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -91,7 +91,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		RuleExec ruleExec = null;
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		if (execParams != null && execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
@@ -123,7 +123,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		RuleExec ruleExec = null;
 		List<MetaIdentifier> ruleExecMetaList = new ArrayList<>();
@@ -168,7 +168,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		RuleGroupExec ruleGroupExec = null;
 		ruleGroupExec = ruleGroupServiceImpl.create(ruleGroupUUID, ruleGroupVersion, execParams, null, null, null);
 		ruleGroupExec = ruleGroupServiceImpl.parse(ruleGroupExec.getUuid(), ruleGroupExec.getVersion(), null, null, null, runMode);
@@ -192,7 +192,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		RuleGroupExec ruleGroupExec = null;
 		try {
 			ruleGroupExec = (RuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(ruleGroupExecUUID, ruleGroupExecVersion, MetaType.rulegroupExec.toString());
@@ -219,7 +219,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		Mode runMode = Helper.getExecutionMode(mode);
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return ruleServiceImpl.getRuleResults(ruleExecUUID,ruleExecVersion,offset,limit,sortBy,order,requestId, runMode);
 	}
 	
@@ -285,7 +285,7 @@ public class RuleController {
 			@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			try {
 				List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 				if(type.equalsIgnoreCase(MetaType.ruleExec.toString())){
@@ -316,7 +316,7 @@ public class RuleController {
 				@RequestParam(value="requestId",required = false) String requestId, 
 				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode, HttpServletResponse response) throws Exception
 	    		{
-			Mode runMode = Helper.getExecutionMode(mode);
+			RunMode runMode = Helper.getExecutionMode(mode);
 			ruleServiceImpl.download(ruleExecUUID, ruleExecVersion,format,download,offset,limit,response,rows,sortBy,order,requestId, runMode);
 	    	return null;
 	   }

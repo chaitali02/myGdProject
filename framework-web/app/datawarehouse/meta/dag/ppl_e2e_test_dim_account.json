@@ -11,7 +11,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Mar 31 09:07:01 EDT 2018",
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -25,8 +25,8 @@
       "value": null
     }
   ],
-  "xPos": 30,
-  "yPos": 250,
+  "xPos" : 10.0,
+  "yPos" : 250.0,
   "templateFlg": "N",
   "templateInfo": null,
   "stages": [
@@ -54,8 +54,8 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 520,
-          "yPos": 80,
+          "xPos" : 550.0,
+          "yPos" : 140.0,
           "active": "Y",
           "statusList": []
         },
@@ -79,8 +79,8 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 530,
-          "yPos": 380,
+          "xPos" : 550.0,
+          "yPos" : 340.0,
           "active": "Y",
           "statusList": []
         },
@@ -107,8 +107,8 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 800,
-          "yPos": 250,
+          "xPos" : 780.0,
+          "yPos" : 240.0,
           "active": "Y",
           "statusList": []
         },
@@ -134,8 +134,8 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 1140,
-          "yPos": 80,
+          "xPos" : 1100.0,
+          "yPos" : 90.0,
           "active": "Y",
           "statusList": []
         },
@@ -161,8 +161,8 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 1160,
-          "yPos": 240,
+          "xPos" : 1160.0,
+          "yPos" : 240.0,
           "active": "Y",
           "statusList": []
         },
@@ -188,15 +188,15 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 1170,
-          "yPos": 410,
+          "xPos" : 1090.0,
+          "yPos" : 390.0,
           "active": "Y",
           "statusList": []
         }
       ],
       "name": "new stage",
-      "xPos": 220,
-      "yPos": 250,
+      "xPos" : 310.0,
+      "yPos" : 250.0,
       "active": "Y",
       "statusList": []
     }

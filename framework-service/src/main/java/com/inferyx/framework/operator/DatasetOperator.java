@@ -33,10 +33,10 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 	@Component
@@ -56,7 +56,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		DataStoreServiceImpl datastoreServiceImpl;
 		
 		public String generateSql(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, Mode runMode) throws Exception {
+								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 			return generateSelect(dataset, refKeyMap, otherParams, execParams, runMode)
 					.concat(getFrom())
 					.concat(generateFrom(dataset, refKeyMap, otherParams, usedRefKeySet, runMode))
@@ -66,7 +66,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		}
 		
 		public String generateSelect(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams
-									, ExecParams execParams, Mode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+									, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			// Create AttributeMap
 			List<AttributeMap> attrMapList = new ArrayList<>();
 			AttributeMap attrMap = null; 
@@ -95,7 +95,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			return ConstantsUtil.FROM;
 		}
 	 	
-		public String generateFrom(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+		public String generateFrom(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 			StringBuilder builder = new StringBuilder();
 			Relation relation = null;
 			usedRefKeySet.add(dataset.getDependsOn().getRef());
@@ -134,10 +134,27 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		}
 
 		@Override
-		public void execute(OperatorType operatorType, ExecParams execParams, Map<String, MetaIdentifier> refKeyMap,
-				HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, Mode runMode) throws Exception {
+		public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 			// TODO Auto-generated method stub
-			
+			return null;
+		}
+
+		@Override
+		public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
+				MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap,
+				HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
+				RunMode runMode) throws Exception {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+				Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 }

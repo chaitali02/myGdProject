@@ -53,6 +53,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
@@ -129,13 +130,17 @@ import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.dao.IVizpodExecDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Log;
 import com.inferyx.framework.domain.Message;
@@ -143,18 +148,20 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Mode;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -1483,9 +1490,9 @@ public class CommonServiceImpl <T> {
 							if (innerMethod.getName().startsWith(SET + "Attr") /*|| innerMethod.getName().startsWith(SET + "Attribute")*/ && innerMethod.getName().contains("Name")) {
 								innerMethod.invoke(object, resolveAttributeName(attrId, object));
 							}
-						}
-						
-					}
+						}	
+					}					
+					
 					if(object instanceof ParamSet) {
 						ParamSet paramSet = (ParamSet) object;
 						List<ParamInfo> paramInfo = paramSet.getParamInfo();
@@ -1507,6 +1514,12 @@ public class CommonServiceImpl <T> {
 						}
 						paramSet.setParamInfo(paramInfos);
 						object = paramSet;
+					}
+					
+					if (method.getName().contains("OperatorParams") && method.getName().startsWith(GET))  {
+						HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
+						if(operatorParams != null)
+							object = resolveOperatorParams(operatorParams, object);
 					}
 					
 					Object invokedObj = method.invoke(object);
@@ -1546,6 +1559,74 @@ public class CommonServiceImpl <T> {
 		return object;
 	}
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @param operatorParams
+	 * @return
+	 * @throws JsonProcessingException 
+	 */
+	private Object resolveOperatorParams(HashMap<String, Object> operatorParams, Object object) throws JsonProcessingException {
+			if(operatorParams.containsKey("EXEC_PARAMS")) {
+				ObjectMapper mapper = new ObjectMapper();
+				ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+				List<ParamListHolder> paramListInfo= execParams.getParamListInfo();
+				
+				if(paramListInfo != null)
+					for(ParamListHolder holder : paramListInfo) {
+						MetaIdentifier ref = holder.getRef();
+						if(ref != null) {
+							ParamList paramList = (ParamList) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							for(Param param : paramList.getParams())
+								if(param.getParamId().equalsIgnoreCase(holder.getParamId())) {
+									holder.setParamName(param.getParamName());
+									holder.setParamType(param.getParamType());
+								}
+						}
+						List<AttributeRefHolder> attributeInfo = holder.getAttributeInfo();
+						if(attributeInfo != null) {
+							for(AttributeRefHolder attributeRefHolder : attributeInfo) {
+								MetaIdentifier attrRef = attributeRefHolder.getRef();
+								if(attrRef != null) {
+									Object attrRefObj = getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString());
+									if(attrRefObj instanceof Datapod) {
+										Datapod datapod = (Datapod) attrRefObj;
+										
+										for(Attribute attribute : datapod.getAttributes()) {
+											if(attribute.getAttributeId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
+												attributeRefHolder.setAttrName(attribute.getName());
+											}
+										}
+										attributeRefHolder.getRef().setName(datapod.getName());
+									} else if(attrRefObj instanceof DataSet) {
+										DataSet dataSet = (DataSet) attrRefObj;
+										
+										for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
+											if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
+												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
+											}
+										}
+										attributeRefHolder.getRef().setName(dataSet.getName());
+									} else if(attrRefObj instanceof Rule) {
+										Rule rule = (Rule) attrRefObj;
+
+										for(AttributeSource attributeSource : rule.getAttributeInfo()) {
+											if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
+												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
+											}
+										}
+										attributeRefHolder.getRef().setName(rule.getName());
+									}
+									
+								}
+							}
+						}
+					}
+				operatorParams.put("EXEC_PARAMS", execParams);
+			}
+		return object;
+	}
+
 	public T resolveName(String uuid, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
 		return getAllByUuid(uuid, type);
 	}
@@ -2900,7 +2981,7 @@ public class CommonServiceImpl <T> {
 
 		public HttpServletResponse download(String uuid, String version, String format, int offset,
 				int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-				Mode runMode, List<Map<String, Object>> results,MetaType metaType, MetaIdentifierHolder dependsOn) throws Exception {
+				RunMode runMode, List<Map<String, Object>> results,MetaType metaType, MetaIdentifierHolder dependsOn) throws Exception {
 			
 			String downloadPath = Helper.getPropertyValue("framework.file.download.path");
 	       DownloadExec downloadExec=new DownloadExec();
@@ -3075,6 +3156,25 @@ public class CommonServiceImpl <T> {
 			}else
 				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
 			return null;
+		}
+
+		/**
+		 * 
+		 * @param operator
+		 * @return
+		 */
+		public ExecParams getExecParams (Operator operator) {
+			if (operator == null 
+					|| operator.getOperatorParams() == null 
+					|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)
+					|| operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS) == null) {
+				return null;
+			}
+			logger.info("ExecParams : " + operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS));
+			ObjectMapper mapper = new ObjectMapper();
+			ExecParams execParams = mapper.convertValue(operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS), ExecParams.class);
+//			return (ExecParams) operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS);
+			return execParams;
 		}
 		
 }

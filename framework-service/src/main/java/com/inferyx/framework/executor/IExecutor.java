@@ -23,10 +23,12 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.DataType;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -235,50 +237,39 @@ public interface IExecutor {
 
 	/**
 	 * 
-	 * @param tableName TODO
-	 * @param factorCovarianceDp
+	 * @param sql
+	 * @param attributeInfo TODO
 	 * @param clientContext TODO
 	 * @return
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws ParseException
+	 * @throws InterruptedException TODO
+	 * @throws ExecutionException TODO
+	 * @throws Exception TODO
 	 */
-	double[][] twoDArrayFromDatapod(String tableName, Datapod factorCovarianceDp, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+	List<double[]> twoDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
+			throws InterruptedException, ExecutionException, Exception;
 
 	/**
 	 * 
-	 * @param tableName 
-	 * @param factorMeanDp
+	 * @param sql
+	 * @param attributeInfo TODO
 	 * @param clientContext TODO
 	 * @return
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws ParseException
+	 * @throws InterruptedException TODO
+	 * @throws ExecutionException TODO
+	 * @throws Exception TODO
 	 */
-	double[] oneDArrayFromDatapod(String tableName, Datapod factorMeanDp, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException;
+	List<Double> oneDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
+			throws InterruptedException, ExecutionException, Exception;
 	
 	/**
 	 * 
+	 * @param object
 	 * @param features
-	 * @param numIterations
-	 * @param fieldArray TODO
+	 * @param numIterations TODO
 	 * @param tableName
 	 * @return
 	 */
+	
 	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) ;
 	
 	/**
@@ -288,8 +279,19 @@ public interface IExecutor {
 	 * @param numIterations
 	 * @param tableName
 	 * @return
+	 */	
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) ;
+	
+	/**
+	 * 
+	 * @param object
+	 * @param features
+	 * @param numIterations
+	 * @param tableName
+	 * @return
+	 * @throws Exception TODO
 	 */
-	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName);
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception;
 	
 	/**
 	 * 
@@ -360,4 +362,15 @@ public interface IExecutor {
 	 * @return is pmml saved or not
 	 */
 	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext) throws IOException, JAXBException;
+
+	ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath, Datapod datapod, String saveMode,
+			String clientContext) throws IOException;
+	
+	/**
+	 * 
+	 * @param dataType
+	 * @return dataType
+	 */
+	public Object getDataType(String dataType) throws NullPointerException;
+
 }

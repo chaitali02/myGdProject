@@ -19,7 +19,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
               '.status': {
                 'element-id' : 'dag_0',
               },
-              text: { text: dag.name,y:'60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } }
+              text: { text: dag.name,y:'60px','font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray;','text-anchor': 'start'} }
           }
         })
       ));
@@ -45,6 +45,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
                     uuid:"stage_0",version:"N/a"
                   }
                 }
+                
               }],
               isTemplate:true
             },
