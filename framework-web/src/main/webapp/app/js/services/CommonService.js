@@ -453,7 +453,7 @@
       var onSuccess = function(response) {
         var paramListHolder=[];
         var type=["ONEDARRAY","TWODARRAY"];
-        var type1=['distribution','attribute','attributes'];
+        var type1=['distribution','attribute','attributes','datapod'];
         if(response.length >0){
           for(var i=0;i<response.length;i++){
             var paramList={};
@@ -464,6 +464,8 @@
             paramList.paramName=response[i].paramName;
             paramList.ref=response[i].ref;
             paramList.attributeInfo;
+            paramList.allAttributeinto=[];
+            paramList.attributeInfoTag=[];
             if(type1.indexOf(response[i].paramType) == -1 ){
               paramList.isParamType="simple";
               paramList.paramValue=response[i].paramValue.value;
@@ -471,8 +473,13 @@
             }else if(type1.indexOf(response[i].paramType) != -1){
               paramList.isParamType=response[i].paramType;
               paramList.selectedParamValueType=response[i].paramType=="distribution" ?response[i].paramType:"datapod";
-              paramList.paramValue=response[i].paramValue;    
-          
+              paramList.paramValue=response[i].paramValue;
+              if(response[i].paramValue !=null){
+              var selectedParamValue={};
+              selectedParamValue.uuid=response[i].paramValue.ref.uuid;
+              selectedParamValue.type=response[i].paramValue.ref.type;
+              paramList.selectedParamValue=selectedParamValue;
+              }
             }else{
               paramList.isParamType="datapod";
               paramList.selectedParamValueType='datapod'
@@ -600,7 +607,8 @@
         }
       }
       if (type == "dataset") {
-        CommonFactory.findDatapodByDataset(uuid, type).then(function (response) { onSuccess(response.data) });
+        var url= "metadata/getAttributesByDataset?action=view&uuid=" + uuid + "&type=dataset"
+        CommonFactory.httpGet(url).then(function (response) { onSuccess(response.data) });
         var onSuccess = function (response) {
           var attributes = [];
           for (var j = 0; j < response.length; j++) {
@@ -642,8 +650,8 @@
   
       }
       if (type == "rule") {
-  
-        CommonFactory.findDatapodByRule(uuid, type).then(function (response) { onSuccess(response.data) });
+        var url= "metadata/getAttributesByRule?action=view&uuid=" + uuid + "&type=rule"
+        CommonFactory.httpGet(url).then(function (response) { onSuccess(response.data) });
         var onSuccess = function (response) {
           var attributes = [];
           for (var j = 0; j < response.length; j++) {

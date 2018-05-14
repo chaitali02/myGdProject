@@ -85,6 +85,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
+import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
@@ -107,6 +108,7 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.GenerateDataOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
@@ -180,6 +182,8 @@ public class ModelServiceImpl {
 	private Math3Distribution mlDistribution;
 	@Autowired
 	private MonteCarloSimulation monteCarloSimulation;
+	@Autowired
+	private GenerateDataOperator generateDataOperator;
 	
 	//private ParamMap paramMap;
 
@@ -917,7 +921,7 @@ public class ModelServiceImpl {
 		return isSuccess;
 	}*/
 
-	public boolean simulate(Simulate simulate, ExecParams execParams, SimulateExec simulateExec) throws Exception {
+	public boolean simulate(Simulate simulate, ExecParams execParams, SimulateExec simulateExec, RunMode runMode) throws Exception {
 		boolean isSuccess = false;
 		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(simulate.getDistributionTypeInfo().getRef().getUuid(), simulate.getDistributionTypeInfo().getRef().getVersion(), simulate.getDistributionTypeInfo().getRef().getType().toString());
 		try {
@@ -931,7 +935,7 @@ public class ModelServiceImpl {
 
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			String filePath = "/simulate"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
-			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
+			//String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 			
@@ -948,6 +952,7 @@ public class ModelServiceImpl {
 			List<ParamListHolder> distParamHolderList = new ArrayList<>();
 			List<ParamListHolder> simParamHolderList= new ArrayList<>();
 			
+			String tableName = null;
 			List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 			for(ParamListHolder holder : paramListInfo) {
 				if(simulate.getParamList() != null && holder.getRef().getUuid().equalsIgnoreCase(simulate.getParamList().getRef().getUuid())) {
@@ -955,62 +960,59 @@ public class ModelServiceImpl {
 				} else if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
 					distParamHolderList.add(holder);
 				}
+				if(holder.getParamName().equalsIgnoreCase("saveLocation")) {
+					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(holder.getParamValue().getRef().getUuid(), holder.getParamValue().getRef().getVersion(), holder.getParamValue().getRef().getType().toString());
+					tableName = datapodServiceImpl.genTableNameByDatapod(datapod, simulateExec.getVersion(), runMode);
+				}
 			}
 			distExecParam.setParamListInfo(distParamHolderList);
 			simExecParam.setParamListInfo(simParamHolderList);
-
+			
+			ParamListHolder distributionInfo = new ParamListHolder();
+			distributionInfo.setParamId("0");
+			distributionInfo.setParamName("distribution");
+			distributionInfo.setParamType("distribution");
+			MetaIdentifier distIdentifier = new MetaIdentifier(MetaType.distribution, distribution.getUuid(), distribution.getVersion());
+			MetaIdentifierHolder distHolder = new MetaIdentifierHolder(distIdentifier);
+			distributionInfo.setParamValue(distHolder);
+			distributionInfo.setRef(new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()));
+			
+			List<ParamListHolder> paramListInfo2 = execParams.getParamListInfo();
+			paramListInfo2.add(distributionInfo);
+			execParams.setParamListInfo(paramListInfo2);
+			
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			if(simulate.getType().equalsIgnoreCase(SimulationType.MONTECARLO.toString())) {
 				result = monteCarloSimulation.simulateMonteCarlo(simulate, simExecParam, distExecParam, filePathUrl);
 			} else if(simulate.getType().equalsIgnoreCase(SimulationType.DEFAULT.toString())) {
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-					if(simulate.getDistributionTypeInfo() != null) {					
-						Object object = mlDistribution.getDistribution(distribution, distExecParam);
+					
+					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
+					
+					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
 						
-						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
-						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, true, appUuid);
-						String sql = simulateMLOperator.generateSql(simulate, tabName_2);
-						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-					} else {
-						String query = simulateMLOperator.generateSql(simulate, (tableName+"_"+"form_rand_df"));
-						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, (tableName+"_"+"form_rand_df"));
-						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
-						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-						result = exec.executeRegisterAndPersist(query, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-					}
+					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
+					String tabName_2 = exec.assembleRandomDF(fieldArray, tableName, true, appUuid);
+					String sql = simulateMLOperator.generateSql(simulate, tabName_2);
+					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);					
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-					if(simulate.getDistributionTypeInfo() != null) {
-						Object object = mlDistribution.getDistribution(distribution, distExecParam);
-						
-						String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
-						String[] customFldArr = new String[] {fieldArray[0]};
-						String tabName_2 = exec.assembleRandomDF(customFldArr, tabName_1, true, appUuid);
-						
-						String sql = "SELECT * FROM " + tabName_2;
-						//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
-						result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-					} else {
-						TrainExec latestTrainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
-								model.getVersion());
-						if (latestTrainExec == null)
-							throw new Exception("Executed model not found.");
-						
-						MetaIdentifierHolder targetHolder = simulate.getTarget();
-						Datapod target = null;
-						if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
-							target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
-									targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
-						String tabName_1 = exec.generateFeatureData(model.getFeatures(), simulate.getNumIterations(), fieldArray, tableName);
-						String tabName_2 = exec.assembleRandomDF(fieldArray, tabName_1, false, appUuid);
-						//result = predictMLOperator.execute(null, model, algorithm, target, assembledDfHolder.getDataFrame(), fieldArray, latestTrainExec, targetHolder.getRef().getType().toString(), tableName, filePathUrl, filePath, appUuid);
-						filePathUrl = filePathUrl + "/data";
-					}
+					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
+					
+					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, null, null, runMode);
+					
+					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
+					String[] customFldArr = new String[] {fieldArray[0]};
+					String tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
+					
+					String sql = "SELECT * FROM " + tabName_2;
+					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);				
 				}
 			}
 			
 			
-			dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+			dataStoreServiceImpl.setRunMode(runMode);
 
 			dataStoreServiceImpl.create(filePathUrl, modelName,
 					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
@@ -1492,9 +1494,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return factorCovariances;
 	}*/
 	
-	public String getSQLBySource(Object source) throws Exception {  
+	public String generateSQLBySource(Object source) throws Exception {  
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		if (source instanceof Datapod) {
 			Datapod datapod = (Datapod) source;
 			DataStore datastore = dataStoreServiceImpl.findLatestByMeta(datapod.getUuid(), datapod.getVersion());
@@ -1506,8 +1507,11 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 			ConnectionHolder conHolder = conn.getConnection();
 			Object obj = conHolder.getStmtObject();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			//DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
-			String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), datapod, datastore, null, hdfsInfo, obj, datasource);
+			
+			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			//String tableName = exec.readFile(commonServiceImpl.getApp().getUuid(), datapod, datastore, null, hdfsInfo, obj, datasource);
 			String sql = "SELECT * FROM "+tableName;
 			return sql;
 		} else if (source instanceof DataSet) {
@@ -1578,7 +1582,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
-			String sql = getSQLBySource(source);
+			String sql = generateSQLBySource(source);
 			exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
 			
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {

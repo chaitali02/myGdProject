@@ -888,5 +888,14 @@ public class MetadataController {
 		return metadataServiceImpl.getParamListByOperatorType(operatorTypeUuid);
 	}
 	
-	
+	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET)
+	public @ResponseBody List<ParamList> getParamListByRule(
+			@RequestParam(value = "type", required = false,defaultValue = "rule") String collectionType) throws JsonProcessingException {		
+		return metadataServiceImpl.getParamList(collectionType);
+	}
+	/*@RequestMapping(value = "/getParamListBySimulate", method = RequestMethod.GET,params = {"simulate"})
+	public @ResponseBody List<ParamList> getParamListBySimulate(	
+			@RequestParam(value = "type", required = false,defaultValue = "simulate") String collectionType) throws JsonProcessingException {		
+		return metadataServiceImpl.getParamList(collectionType);
+	}*/
 }

@@ -143,10 +143,26 @@ public class RuleOperator implements Operator {
 	}
 
 	@Override
-	public void execute(OperatorType operatorType, ExecParams execParams, Object metaExec,
+	public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
-		
+		return null;
+	}
+
+	@Override
+	public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
+			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	} 
 
 }

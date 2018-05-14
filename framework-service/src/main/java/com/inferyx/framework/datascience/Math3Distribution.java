@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.HDFSInfo;
@@ -17,13 +19,16 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.enums.ParamDataType;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.ModelServiceImpl;
 
 /**
  * @author Ganesh
@@ -38,7 +43,9 @@ public class Math3Distribution {
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
-	private HDFSInfo hdfsInfo;
+	private ModelServiceImpl modelServiceImpl;
+	
+	static final Logger LOGGER = Logger.getLogger(Math3Distribution.class);
 	
 	public Object getDistribution(Distribution distribution, ExecParams execParams) throws InterruptedException, ExecutionException, Exception {
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
@@ -50,6 +57,7 @@ public class Math3Distribution {
 		int j = 0; 
 		for(ParamListHolder holder : paramListInfo) {
 			ParamDataType paramDataType = Helper.resolveParamDataType(holder.getParamType());
+			System.out.println(paramDataType);
 			switch(paramDataType) {
 				case TWODARRAY : 	double[][] twoDarray = getTwoDArray(holder); 
 									obj[j] = twoDarray;
@@ -105,16 +113,44 @@ public class Math3Distribution {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		
-		double[][] params = exec.twoDArrayFromParamListHolder(paramListHolder, commonServiceImpl.getApp().getUuid());
-		return params;
+		MetaIdentifier sourceIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
+		
+		Object source = commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+		String sql = modelServiceImpl.generateSQLBySource(source);
+//		exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+		
+//		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+//		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
+//		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
+//		LOGGER.info("Table name:" + tableName);		
+//
+//		String sql = "SELECT * FROM " + tableName;
+		
+		List<double[]> valueList = exec.twoDArray(sql, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
+		double[][] twoDArray = valueList.stream().map(lineStrArray -> ArrayUtils.toPrimitive(lineStrArray)).toArray(double[][]::new);
+		return twoDArray;
 	}
 	
 	private double[] getOneDArray(ParamListHolder paramListHolder) throws InterruptedException, ExecutionException, Exception {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());		
+		IExecutor exec = execFactory.getExecutor(datasource.getType());	
 		
-		double[] params = exec.oneDArrayFromParamListHolder(paramListHolder, commonServiceImpl.getApp().getUuid());
-		return params;
+		MetaIdentifier sourceIdentifier = paramListHolder.getAttributeInfo().get(0).getRef();
+		
+		Object source = commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+		String sql = modelServiceImpl.generateSQLBySource(source);
+//		exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+		
+//		Datapod paramDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(), sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
+//		DataStore paramDs = dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(), paramDp.getVersion());
+//		String tableName = dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(), paramDs.getVersion(), RunMode.BATCH);
+//		LOGGER.info("Table name:" + tableName);
+//		
+//		String sql = "SELECT * FROM " + tableName;
+		
+		List<Double> valueList = exec.oneDArray(sql, paramListHolder.getAttributeInfo(), commonServiceImpl.getApp().getUuid());
+		double[] oneDArray = ArrayUtils.toPrimitive(valueList.toArray(new Double[valueList.size()]));
+		return oneDArray;
 	}
 	
 	public Date getDate() {

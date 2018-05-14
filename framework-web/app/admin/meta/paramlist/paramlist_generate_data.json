@@ -1,0 +1,79 @@
+{
+  "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
+  "version": "1525519035",
+  "name": "paramlist_generate_data",
+  "desc": "Generate Data Paramlist",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+ 			{
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+       
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
+  ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "distribution",
+      "paramType": "distribution",
+      "paramValue": {
+        "ref" : {
+            "type" : "distribution",
+	    "uuid" : "c5bfcdab-6435-4848-9214-6a878a865319"
+        }
+    },
+      "paramRef": null
+    },
+    {
+      "paramId": "1",
+      "paramName": "numIterations",
+      "paramType": "integer",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "1000"
+    },
+      "paramRef": null
+    },
+    {
+      "paramId": "2",
+      "paramName": "saveLocation",
+      "paramType": "datapod",
+      "paramValue": null,
+      "paramRef": null
+    }
+  ]
+}

@@ -241,7 +241,6 @@ export class MigrationAssistImportComponent implements OnInit {
     }
 
     checkAllAttributeRow() {
-        debugger
         this.isValidate = false;
         console.log("selected");
         if (this.selectAllAttributeRow) {
@@ -281,7 +280,7 @@ export class MigrationAssistImportComponent implements OnInit {
             })
     }
 
-    onSuccessUpload(response) {debugger
+    onSuccessUpload(response) {
         var obj = JSON.parse(response._body);
         this.metaInfoUpload = [];
         for (const i in obj.metaInfo) {
@@ -309,7 +308,6 @@ export class MigrationAssistImportComponent implements OnInit {
     }
 
     validate() {
-        debugger
         var importJson1 = {};
         importJson1["includeDep"] = this.importData.includeDep == true ? 'Y' : "N";
         importJson1["name"] = this.importData.name;
@@ -348,7 +346,6 @@ export class MigrationAssistImportComponent implements OnInit {
             error => console.log('Error :: ' + error))
     }
     onSuccessSubmit1(response) {
-        debugger
         let validateResponse = JSON.parse(response);
         let validateArray = [];
         for (const i in validateResponse.metaInfo) {

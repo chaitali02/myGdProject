@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="appconfig")
 public class AppConfig extends BaseEntity{
 	List<Config> configInfo;
+	private MetaIdentifierHolder dependsOn;	
 
 	public List<Config> getConfigInfo() {
 		return configInfo;
@@ -25,7 +26,12 @@ public class AppConfig extends BaseEntity{
 	public void setConfigInfo(List<Config> configInfo) {
 		this.configInfo = configInfo;
 	}
-	
-		
-	
+
+	public MetaIdentifierHolder getDependsOn() {
+		return dependsOn;
+	}
+
+	public void setDependsOn(MetaIdentifierHolder dependsOn) {
+		this.dependsOn = dependsOn;
+	}
 }

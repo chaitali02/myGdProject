@@ -12,6 +12,7 @@ package com.inferyx.framework.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -160,6 +161,32 @@ public class OperatorServiceImpl {
 		logger.info(" After Set not started status");
 		return operatorExec;
 	}
+	
+	public Map<String, String> parse(String uuid, 
+			String version, 
+			MetaType operatortype2, 
+			OperatorExec operatorExec, 
+			ExecParams execParams, 
+			HashMap<String, String> otherParams, 
+			RunMode runMode) throws Exception {
+		logger.info("Inside OperatorServiceImpl.parse");	
+		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.NotStarted);
+		OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
+				operatorExec.getDependsOn().getRef().getVersion(), 
+				MetaType.operatortype.toString());
+		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(operatorType.getName());
+		synchronized (operatorExec) {
+			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
+		}
+		return newOperator.populateParams(operatorType, 
+									execParams, 
+									new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()), 
+									null, 
+									otherParams, 
+									new HashSet<>(), 
+									null, 
+									runMode);
+	}
 
 
 	public void execute(String uuid, 
@@ -168,9 +195,9 @@ public class OperatorServiceImpl {
 						OperatorExec operatorExec, 
 						List<FutureTask<TaskHolder>> taskList, 
 						ExecParams execParams, 
+						HashMap<String, String> otherParams, 
 						RunMode runMode) throws Exception {
 		logger.info("Inside OperatorServiceImpl.execute");
-		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.NotStarted);
 		OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
 																				operatorExec.getDependsOn().getRef().getVersion(), 
 																				MetaType.operatortype.toString());
@@ -179,7 +206,8 @@ public class OperatorServiceImpl {
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
-		newOperator.execute(operatorType, execParams, operatorExec, null, null, new HashSet<>(), runMode);
+		newOperator.execute(operatorType, execParams, new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()), null, otherParams, new HashSet<>(), runMode);
+		operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getUuid(), operatorExec.getVersion(), MetaType.operatorExec.toString());
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Completed);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);

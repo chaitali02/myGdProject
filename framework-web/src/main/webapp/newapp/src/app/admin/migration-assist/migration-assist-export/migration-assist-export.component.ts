@@ -298,4 +298,12 @@ export class MigrationAssistExportComponent implements OnInit {
   public goBack() {
     this._location.back();
   }
+
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/admin/migration-assist/export',uuid,version, 'false']);    
+  }
+
+  showview(uuid, version) {
+    this.router.navigate(['app/admin/migration-assist/export',uuid,version, 'true']);    
+  }
 }

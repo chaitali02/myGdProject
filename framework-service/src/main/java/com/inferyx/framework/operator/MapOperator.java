@@ -11,6 +11,7 @@
 package com.inferyx.framework.operator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,11 +159,28 @@ public class MapOperator implements Operator {
 	}
 
 	@Override
-	public void execute(OperatorType operatorType, ExecParams execParams,
-			Object metaExec, java.util.Map<String, MetaIdentifier> refKeyMap,
+	public String execute(OperatorType operatorType, ExecParams execParams,
+			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
-		
+		return null;
+	}
+
+	@Override
+	public java.util.Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
+			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
+			RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

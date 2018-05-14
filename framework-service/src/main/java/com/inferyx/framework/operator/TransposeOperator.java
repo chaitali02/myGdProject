@@ -15,25 +15,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.datascience.Math3Distribution;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
+import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 /**
@@ -51,6 +55,8 @@ public class TransposeOperator implements Operator {
 	private ExecutorFactory execFactory;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(TransposeOperator.class);
 
@@ -88,77 +94,267 @@ public class TransposeOperator implements Operator {
 	public TransposeOperator() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+	public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		ParamListHolder sourceDatapodInfo = paramSetServiceImpl.getParamByName(execParams, "sourceDatapod");
+		String execVersion = execIdentifier.getVersion();
+		String sourceTableName = null;
+		String destTableName = null;
+		
+		if (otherParams == null) {
+			otherParams = new HashMap<>();
+		}
+		
+		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
+		Datapod sourceData = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
+
+		if (otherParams.containsKey("datapodUuid_" + sourceData.getUuid() + "_tableName")) {
+			sourceTableName = otherParams.get("datapodUuid_" + sourceData.getUuid() + "_tableName");
+		} else {
+			sourceTableName = getTableNameBySource(sourceData, runMode);
+			otherParams.put("datapodUuid_" + sourceData.getUuid() + "_tableName", sourceTableName);
+		}
+		
+		// Set destination
+		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
+		
+		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
+		
+		String newVersion = Helper.getVersion();
+		locationDatapod.setVersion(newVersion);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
+			
+		return otherParams;
+		
+	}
+	
+	@Override
+	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+		return null;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.lang.Object, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
 	 */
 	@Override
-	public void execute(OperatorType operatorType, ExecParams execParams, Object metaExec,
+	public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		logger.info("Executing TransposeOperator");
 		StringBuilder sb = new StringBuilder();
 		
-		OperatorExec operatorExec = (OperatorExec) metaExec;
+		String execUuid = execIdentifier.getUuid();
+		String execVersion = execIdentifier.getVersion();
+		
+		//OperatorExec operatorExec = (OperatorExec) execIdentifier;
 		
 		ParamListHolder sourceDatapodInfo = paramSetServiceImpl.getParamByName(execParams, "sourceDatapod");
 		ParamListHolder keyInfo = paramSetServiceImpl.getParamByName(execParams, "key");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
-		MetaIdentifier locationDatapodIdentifier = locationInfo.getAttributeInfo().get(0).getRef();
-		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locationDatapodIdentifier.getUuid(), locationDatapodIdentifier.getVersion(), locationDatapodIdentifier.getType().toString());
-		MetaIdentifier sourceDatapodIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
-		Datapod sourceDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDatapodIdentifier.getUuid(), sourceDatapodIdentifier.getVersion(), sourceDatapodIdentifier.getType().toString());
+		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
+		//MetaIdentifier sourceDatapodIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
+		//Datapod sourceDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDatapodIdentifier.getUuid(), sourceDatapodIdentifier.getVersion(), sourceDatapodIdentifier.getType().toString());
 		
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		
-		String sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(sourceDatapod.getUuid(), sourceDatapod.getVersion()), runMode);
+		//String sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(sourceDatapod.getUuid(), sourceDatapod.getVersion()), runMode);
 		
-		List<AttributeRefHolder> attrRefHolders = sourceDatapodInfo.getAttributeInfo();
+		String sourceTableName = null;
+		
+		/*List<AttributeRefHolder> attrRefHolders = sourceDatapodInfo.getAttributeInfo();
 		List<Attribute> attrList = new ArrayList<>();
-		Attribute keyAttr = sourceDatapod.getAttribute(Integer.parseInt(keyInfo.getAttributeInfo().get(0).getAttrId()));
+		List<Attribute> keyAttrList = new ArrayList<>();		
+		List<AttributeRefHolder> keyAttrs = keyInfo.getAttributeInfo();
+//		//Attribute keyAttr = sourceDatapod.getAttribute(Integer.parseInt(keyInfo.getAttributeInfo().get(0).getAttrId()));
 		for (AttributeRefHolder attrRefHolder : attrRefHolders) {
 			attrList.add(sourceDatapod.getAttribute(Integer.parseInt(attrRefHolder.getAttrId())));
 		}
+		for (AttributeRefHolder attrRefHolder : keyAttrs) {
+			keyAttrList.add(sourceDatapod.getAttribute(Integer.parseInt(attrRefHolder.getAttrId())));
+		}*/
 		
-		String version = operatorExec.getVersion();
+		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
+		Datapod sourceData = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
+		List<String> attrList = getColumnNameList(sourceData, sourceDatapodInfo);
+//		sourceTableName = getTableNameBySource(sourceData, runMode);
+		sourceTableName = otherParams.get("datapodUuid_" + sourceData.getUuid() + "_tableName");
+		
+		MetaIdentifier keyIdentifier = keyInfo.getAttributeInfo().get(0).getRef();
+		Object key = commonServiceImpl.getOneByUuidAndVersion(keyIdentifier.getUuid(), keyIdentifier.getVersion(), keyIdentifier.getType().toString());
+		List<String> keyAttrList = getColumnNameList(key, keyInfo);
+		
+		
+		//String version = operatorExec.getVersion();
 		
 		// Get the fieldArray
 		boolean isAttrFound = false;
 		sb.append(ConstantsUtil.SELECT);
-		sb.append(keyAttr.getName());
-		sb.append(", tranpose_column, transpose_value, " + version + " version FROM (");
-		sb.append(ConstantsUtil.SELECT);
-		sb.append(keyAttr.getName());
-		sb.append(", MAP (");
+		
+		/*for (Attribute attribute : keyAttrList) {
+			sb.append(attribute.getName()).append(", ");
+		}*/
 		int count = 0;
-		for(Attribute attribute : attrList) {
+		for (String columnName : keyAttrList) {
+			sb.append(columnName).append(" ");
+			sb.append(locationDatapod.getAttributeName(count++)).append(", ");
+		}
+		
+		sb.append("tranpose_column ");
+		sb.append(locationDatapod.getAttributeName(count++));
+		sb.append(", transpose_value ");
+		sb.append(locationDatapod.getAttributeName(count++));
+		sb.append(", " + execVersion + " ");
+		sb.append(locationDatapod.getAttributeName(count++));
+		sb.append(" FROM (");
+		sb.append(ConstantsUtil.SELECT);
+		
+		/*for (Attribute attribute : keyAttrList) {
+			sb.append(attribute.getName()).append(", ");
+		}*/
+		for (String columnName : keyAttrList) {
+			sb.append(columnName).append(", ");
+		}
+		
+		sb.append(" MAP (");
+		count = 0;
+		/*for(Attribute attribute : attrList) {
 			isAttrFound = Boolean.TRUE;
 			sb.append("'"+attribute.getName() + "', " + attribute.getName());
 			sb.append((count < attrList.size()-1)?", ":"");
 			count++;
 			
+		}*/
+		for(String columnName : attrList) {
+			isAttrFound = Boolean.TRUE;
+			sb.append("'"+columnName + "', " + columnName);
+			sb.append((count < attrList.size()-1)?", ":"");
+			count++;
+			
 		}
+		
 		sb.append(") AS tmp_column FROM ");
 		sb.append(sourceTableName);
 		sb.append("  ) x LATERAL VIEW EXPLODE(tmp_column) exptbl AS tranpose_column, transpose_value ");
 		String sql = sb.toString();
+		logger.info("my sql: "+sql);
 		
-		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + operatorExec.getVersion();
-		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
+		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
+		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-		String tableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), operatorExec.getVersion());
+		
+		/*String newVersion = Helper.getVersion();
+		locationDatapod.setVersion(newVersion);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);*/
+		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
+		
+		logger.info("Transpose sql --> " + sql);
 		
 		ResultSetHolder resultSetHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		
+		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
+		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
+		@SuppressWarnings("unchecked")
+		List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) metaExec.getClass().getMethod("getAppInfo").invoke(metaExec);
 		
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, fileName, 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
-				, new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()) ,
-				operatorExec.getAppInfo(), operatorExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
-		operatorExec.setResult(resultRef);
-		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
+				, new MetaIdentifier(execIdentifier.getType(), execUuid, execVersion) ,
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+		
+		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
+		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
+		return tableName;
+	}
+
+	public List<String> getColumnNameList(Object source, ParamListHolder holder ){
+		
+		List<String> columns = new ArrayList<>();
+		List<AttributeRefHolder> attributeInfo = holder.getAttributeInfo();
+		if(source instanceof Datapod) {
+			Datapod datapod = (Datapod) source;
+			
+			for(Attribute attribute : datapod.getAttributes()) {
+				for(AttributeRefHolder attributeRefHolder : attributeInfo)
+					if(attribute.getAttributeId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
+						columns.add(attribute.getName());
+					}
+			}
+		} else if(source instanceof DataSet) {
+			DataSet dataSet = (DataSet) source;
+			
+			for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
+				for(AttributeRefHolder attributeRefHolder : attributeInfo)
+					if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
+						columns.add(attributeSource.getAttrSourceName());
+					}
+			}
+		} else if(source instanceof Rule) {
+			Rule rule = (Rule) source;
+
+			for(AttributeSource attributeSource : rule.getAttributeInfo()) {
+				for(AttributeRefHolder attributeRefHolder : attributeInfo)
+					if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
+						columns.add(attributeSource.getAttrSourceName());
+					}
+			}
+		}
+		return columns;
+	}
+
+	public String getTableNameBySource(Object sourceData, RunMode runMode) throws Exception {
+		String sourceTableName = null;
+		if(sourceData instanceof Datapod) {
+			Datapod datapod = (Datapod) sourceData;
+			sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+		} else if(sourceData instanceof DataSet) {
+			DataSet dataSet = (DataSet) sourceData;
+			MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
+			if(dependsOn.getRef().getType().equals(MetaType.datapod)) {
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
+				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if(dependsOn.getRef().getType().equals(MetaType.relation)) {
+				Relation relation = (Relation) sourceData;
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString());
+				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			}
+		} else if(sourceData instanceof Rule) {
+			Rule rule = (Rule) sourceData;
+			MetaIdentifierHolder sourceHolder = rule.getSource();
+			if(sourceHolder.getRef().getType().equals(MetaType.datapod)) {
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if(sourceHolder.getRef().getType().equals(MetaType.dataset)) {
+				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+				MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
+				if(dependsOn.getRef().getType().equals(MetaType.datapod)) {
+					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
+					sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				} else if(dependsOn.getRef().getType().equals(MetaType.relation)) {
+					Relation relation = (Relation) sourceData;
+					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString());
+					sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				}
+			} else if(sourceHolder.getRef().getType().equals(MetaType.relation)) {
+				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString());
+				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if(sourceHolder.getRef().getType().equals(MetaType.rule)) {
+				Rule rule2 = (Rule) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+				sourceTableName = getTableNameBySource(rule2, runMode);
+			}
+		}
+		return sourceTableName;
 	}
 
 }

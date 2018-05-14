@@ -1,0 +1,102 @@
+/* Put your css in here */
+
+/* multiselect {
+    display:block;
+}
+multiselect .btn {
+    width: 100%;
+    background-color: #FFF;
+}
+multiselect .btn.error{
+    border: 1px solid #da4f49 !important;
+}
+multiselect .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+}
+multiselect .dropdown-menu {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2px;
+}
+multiselect .dropdown-menu > li > a {
+    padding: 3px 10px;
+    cursor:pointer;
+} */
+
+.multiselect > .dropdown-menu > li.icon-ok{
+    display: block;
+    cursor: pointer;
+    background-color: #e1e5ec;
+    color: rgb(0, 0, 0);
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: rgb(204, 204, 204) !important;
+    border-image: initial !important;
+    margin: 2px
+}
+.multiselect > ul.dropdown-menu {
+    width: 100%;
+    max-height: 150px;
+    min-height: 20px;
+    overflow: auto;
+}
+.multiselect > .dropdown-menu{
+    box-shadow:0px 0px
+}
+.multiselect > .dropdown-menu > li:hover > a {
+    background-color: #337ab7!important;
+    color: #FFF
+}
+.multiselect > .dropdown-menu > li.icon-empty{
+    display: block;
+}
+.multiselect .line {
+    padding:  8px 0px 0px 8px;
+    max-height: 30px;   
+    overflow: hidden;
+    box-sizing: content-box;
+}
+.multiselect .helperButton {
+    display: inline;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    height: 26px;
+    font-size: 13px;
+    border-radius: 2px;
+    color: #666;    
+    background-color: #f1f1f1;
+    line-height: 1.6;
+    margin: 0px 2px 8px 1px;
+    padding-left: 6px;
+}
+
+.multiselect .inputFilter {
+    border-radius: 2px; 
+    border: 1px solid #ccc;
+    height: 26px;
+    font-size: 14px;
+    width:100%;    
+    padding-left:7px;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */    
+    color: #888;
+    margin: 0px 0px 8px 0px;
+    /* -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075); */
+}
+/* .multiselect .inputFilter:focus {
+    border: 1px solid #66AFE9 !important;
+    outline: 0;
+    -webkit-box-shadow: box-shadow: inset 0 0 1px rgba(0,0,0,.065), 0 0 5px rgba(102, 175, 233, .6) !important;
+            box-shadow: inset 0 0 1px rgba(0,0,0,.065), 0 0 5px rgba(102, 175, 233, .6) !important;
+} */
+
+.border-error{
+    border: 1px solid red;
+}
+.border-noerror{
+    border: 1px solid black;
+}

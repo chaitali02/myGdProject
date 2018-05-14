@@ -137,9 +137,10 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
   this.getParamByParamList = function (uuid, type) {
 		var deferred = $q.defer();
 		SimulateFactory.findParamByParamList(uuid,type).then(function (response) { onSuccess(response.data) });
-		var onSuccess = function (response) {
-			var paramListHolder=[];
-      var type=["ONEDARRAY","TWODARRAY"]
+		var onSuccess = function(response) {
+      var paramListHolder=[];
+      var type=["ONEDARRAY","TWODARRAY"];
+      var type1=['distribution','attribute','attributes','datapod'];
       if(response.length >0){
         for(var i=0;i<response.length;i++){
           var paramList={};
@@ -149,21 +150,31 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
           paramList.paramType=response[i].paramType.toLowerCase();
           paramList.paramName=response[i].paramName;
           paramList.ref=response[i].ref;
-          if(type.indexOf(response[i].paramType) == -1){
+          paramList.attributeInfo;
+          paramList.allAttributeinto=[];
+          paramList.attributeInfoTag=[];
+          if(type1.indexOf(response[i].paramType) == -1 ){
             paramList.isParamType="simple";
             paramList.paramValue=response[i].paramValue.value;
+            paramList.selectedParamValueType='simple'
+          }else if(type1.indexOf(response[i].paramType) != -1){
+            paramList.isParamType=response[i].paramType;
+            paramList.selectedParamValueType=response[i].paramType=="distribution" ?response[i].paramType:"datapod";
+            paramList.paramValue=response[i].paramValue;    
+        
           }else{
             paramList.isParamType="datapod";
+            paramList.selectedParamValueType='datapod'
             paramList.paramValue=response[i].paramValue;    
           }
+         
           paramListHolder[i]=paramList;
         }
       }
       deferred.resolve({
         data: paramListHolder
       });
-		}
-
+    }
 		return deferred.promise;
 	}
   this.getAllModelByType = function (flag, type) {
@@ -181,7 +192,8 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
     SimulateFactory.findParamListByDistribution(uuid,version).then(function(response){ onSuccess(response.data)});
     var onSuccess = function(response) {
       var paramListHolder=[];
-      var type=["ONEDARRAY","TWODARRAY"]
+      var type=["ONEDARRAY","TWODARRAY"];
+      var type1=['distribution','attribute','attributes','datapod'];
       if(response.length >0){
         for(var i=0;i<response.length;i++){
           var paramList={};
@@ -191,13 +203,24 @@ DatascienceModule.service("SimulateService", function ($http, SimulateFactory, $
           paramList.paramType=response[i].paramType.toLowerCase();
           paramList.paramName=response[i].paramName;
           paramList.ref=response[i].ref;
-          if(type.indexOf(response[i].paramType) == -1){
+          paramList.attributeInfo;
+          paramList.allAttributeinto=[];
+          paramList.attributeInfoTag=[];
+          if(type1.indexOf(response[i].paramType) == -1 ){
             paramList.isParamType="simple";
             paramList.paramValue=response[i].paramValue.value;
+            paramList.selectedParamValueType='simple'
+          }else if(type1.indexOf(response[i].paramType) != -1){
+            paramList.isParamType=response[i].paramType;
+            paramList.selectedParamValueType=response[i].paramType=="distribution" ?response[i].paramType:"datapod";
+            paramList.paramValue=response[i].paramValue;    
+        
           }else{
             paramList.isParamType="datapod";
+            paramList.selectedParamValueType='datapod'
             paramList.paramValue=response[i].paramValue;    
           }
+         
           paramListHolder[i]=paramList;
         }
       }
