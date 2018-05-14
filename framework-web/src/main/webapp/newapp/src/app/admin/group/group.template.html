@@ -14,11 +14,11 @@
           </div>
           <div class="tools">
             <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
-              *ngIf="mode">
+              *ngIf="mode" >
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;"
-              *ngIf="mode">
+              *ngIf="mode" >
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>
             <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip
@@ -117,29 +117,19 @@
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">RoleInfo</label>
+                <label class="col-md-3 control-label">App Id</label>{{appId | json}}
                 <div class="col-md-6">
-                  <angular2-multiselect [data]="roleInfoArray" [(ngModel)]="roleInfoTags" name="roleInfoTags" [settings]="dropdownSettingsRole"
-                    (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
-                    (onDeSelectAll)="onDeSelectAll($event)">
-                  </angular2-multiselect>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">App Id</label>
-                <div class="col-md-6">
-                  <p-dropdown [options]="appIdArray" [(ngModel)]="appId" name="appId" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                  <p-dropdown [options]="appIdArray" [(ngModel)]="appId" dataKey="uuid" name="appId" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
                     [filter]="true">
                   </p-dropdown>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">Role Id </label>
+                <label class="col-md-3 control-label">Role Id</label>{{roleId.name}}{{roleId | json}}
                 <div class="col-md-6">
-                  <p-dropdown [options]="roleIdArray" [(ngModel)]="roleId" name="roleId" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
-                    [filter]="true">
+                  <p-dropdown [options]="roleIdArray" dataKey="uuid" [(ngModel)]="roleId" name="roleId" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                    [filter]="true" placeholder="select">
                   </p-dropdown>
                 </div>
               </div>
