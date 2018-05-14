@@ -67,10 +67,21 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		content: '',
 		timeout: 3000 //time in ms
 	};
+	
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['paramlist'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+   
+	$scope.close=function(){
+		$scope.parantType=$stateParams.parantType;
+		$scope.type=$stateParams.type;
+		var state=$scope.type
+		if($scope.parantType){
+			state=state+$scope.parantType
+		}
+		$state.go(state); 
+	}
 
 	$scope.showPage = function () {
 		$scope.showForm = true;
@@ -217,7 +228,6 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 
 		var paramInfoArray = [];
 		if ($scope.paramtable.length > 0) {
-			debugger
 			for (var i = 0; i < $scope.paramtable.length; i++) {
 				var paraminfo = {};
 				paraminfo.paramId = $scope.paramtable[i].paramId;
@@ -276,7 +286,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$('#paramlistsave').css("dispaly", "none");
 		var hidemode = "yes";
 		if (hidemode == 'yes') {
-			setTimeout(function () { $state.go("paramlist"); }, 2000);
+			
+			setTimeout(function () { $scope.close(); }, 2000);
 		}
 	}
 });

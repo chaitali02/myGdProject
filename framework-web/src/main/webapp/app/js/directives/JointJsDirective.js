@@ -2689,6 +2689,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 paramList.selectedParamValue=selectedParamValue;
                 paramList.selectedParamValueType=paramListInfo[i].paramValue.ref.type
                 paramListHolder[i]=paramList
+               
                }else if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type== "simple"){
                 var paramValue={}
                 paramValue.paramValue=paramListInfo[i].paramValue.value
@@ -2741,6 +2742,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               $scope.opringinalparamListHolder=$scope.paramListHolder
             }else{
               $scope.paramListHolder = response;
+              for(var i=0;i<$scope.paramListHolder.length;i++){
+                if($scope.paramListInfo[i].paramValue.ref.type =='distribution'){
+                  $scope.onChangeDistribution(paramValue.selectedParamValue,i);
+                  break;
+                }
+              }
               $scope.opringinalparamListHolder=$scope.paramListHolder
             }
           }
