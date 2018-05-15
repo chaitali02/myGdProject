@@ -1366,8 +1366,15 @@ public class MetadataServiceImpl {
 		}
 		
 		// get all rule uuid which contains paramlist 
+		if (collectionType.equals(MetaType.rule.toString())) {
 		List<String> listUuid = mongoTemplate.getCollection("rule").distinct("paramList.ref.uuid");
 		criteriaList.add(where("uuid").in(listUuid));
+		}
+		if (collectionType.equals(MetaType.model.toString())) {
+			List<String> listUuidOpertor = mongoTemplate.getCollection("operator").distinct("paramList.ref.uuid");
+			List<String> listUuidSimulate =mongoTemplate.getCollection("simulate").distinct("paramList.ref.uuid");
+			criteriaList.add(where("uuid").in(listUuidOpertor).andOperator(where("uuid").in(listUuidSimulate)));
+			}
      	Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
     	Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
 		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.paramlist.toString(),
@@ -1392,6 +1399,12 @@ public class MetadataServiceImpl {
 		query2.fields().include("params");
 
 		if (collectionType.equals(MetaType.rule.toString())) {
+			query2.addCriteria(
+					Criteria.where("uuid").in(uuidList).andOperator(Criteria.where("version").in(versionList)));
+			paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
+			
+		}
+		if (collectionType.equals(MetaType.model.toString())) {
 			query2.addCriteria(
 					Criteria.where("uuid").in(uuidList).andOperator(Criteria.where("version").in(versionList)));
 			paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
