@@ -181,7 +181,8 @@
                 <div class="col-md-6">
                   <p-dropdown [options]="arrayParamList"          
                     [(ngModel)]="paramList"
-                    name="type"
+                    name="paramList" dataKey="label"
+                    placeholder = "Select"
                     [style]="{'width':'100%','padding':'3px','z-index':'100'}"
                     [disabled]="mode == 'true'">
                 </p-dropdown>
