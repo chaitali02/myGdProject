@@ -1299,16 +1299,16 @@ public class MetadataServiceImpl {
 //	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ParamList> getParamList(String collectionType,String name, String userName, String startDate,
+	public List<ParamList> getParamList(String collectionType,String type,String name, String userName, String startDate,
 			String endDate, String tags, String active, String uuid, String version, String published) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		
-		MetaType metaType = Helper.getMetaType(MetaType.paramlist.toString());
+		MetaType metaType = Helper.getMetaType(type);
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
 
-		String appUuid = commonServiceImpl.findAppId(collectionType);
+		String appUuid = commonServiceImpl.findAppId(type);
 
 		try {
 			if (appUuid != null)
