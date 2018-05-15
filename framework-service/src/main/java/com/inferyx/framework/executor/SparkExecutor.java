@@ -1179,6 +1179,8 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		if(isDistribution)
 			df = df.withColumnRenamed(df.columns()[1], fieldArray[0]);
+		else
+			fieldArray = df.columns();
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> assembledDf = va.transform(df);
 		assembledDf.show(false);
