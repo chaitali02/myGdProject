@@ -1,13 +1,6 @@
-/*******************************************************************************
- * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
- *
- * This unpublished material is proprietary to Inferyx Inc.
- * The methods and techniques described herein are considered  trade 
- * secrets and/or confidential. Reproduction or distribution, in whole or 
- * in part, is forbidden.
- *
- * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
- *******************************************************************************/
+/**
+ * 
+ */
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
@@ -31,7 +24,6 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.connector.ConnectionHolder;
@@ -53,18 +45,25 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
 
-@Component
-public class MySqlExecutor implements IExecutor {
+/**
+ * @author Ganesh
+ *
+ */
+public class PostGresExecutor implements IExecutor {
+
 	@Autowired 
 	ConnectionFactory connectionFactory;
 	
-	static final Logger logger = Logger.getLogger(MySqlExecutor.class);	
+	static Logger logger = Logger.getLogger(PostGresExecutor.class); 
 	
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#executeSql(java.lang.String)
+	 */
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
-		logger.info(" Inside MySQL executor  for SQL : " + sql);
+		logger.info(" Inside PostGres executor  for SQL : " + sql);
 		ResultSetHolder rsHolder = new ResultSetHolder();
-		IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
+		IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		Object obj = conHolder.getStmtObject();
 		long countRows = -1L;
@@ -88,17 +87,18 @@ public class MySqlExecutor implements IExecutor {
 		return rsHolder;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#executeSql(java.lang.String, java.lang.String)
+	 */
 	@Override
-	public Boolean registerTempTable(Dataset<Row> df, String tableName) throws IOException {
+	public ResultSetHolder executeSql(String sql, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public ResultSetHolder executeSql(String sql, String clientContext) throws IOException {
-		return executeSql(sql);
-	}
-
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#executeAndFetch(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public List<Map<String, Object>> executeAndFetch(String sql, String clientContext) throws IOException {
 		List<Map<String, Object>> data = new ArrayList<>();
@@ -125,73 +125,103 @@ public class MySqlExecutor implements IExecutor {
 		return data;
 	}
 
-
-	@Override
-	public ResultSetHolder executeAndRegister(String sql, String tableName, String clientContext) throws IOException {
-		return executeSql(sql);
-	}
-
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#executeAndPersist(java.lang.String, java.lang.String, com.inferyx.framework.domain.Datapod, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public ResultSetHolder executeAndPersist(String sql, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
-		return executeSql(sql);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#executeAndRegister(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public ResultSetHolder executeAndRegister(String sql, String tableName, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#executeRegisterAndPersist(java.lang.String, java.lang.String, java.lang.String, com.inferyx.framework.domain.Datapod, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
 			String saveMode, String clientContext) throws IOException {
-		return executeSql(sql);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#registerDataFrameAsTable(com.inferyx.framework.domain.ResultSetHolder, java.lang.String)
+	 */
 	@Override
 	public ResultSetHolder registerDataFrameAsTable(ResultSetHolder rsHolder, String tableName) {
 		// TODO Auto-generated method stub
-		return rsHolder;
-	}
-	
-	/*@Override
-	public ResultSetHolder persistFile(Datapod datapod, String filePath, DataFrame df ) {
-		try {
-			String saveMode = "append";
-			System.out.println("************************MySQL");
-			IWriter datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
-			datapodWriter.write(df, filePath, datapod, saveMode);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return null;
-	}*/
-	public void registerDatapod(String filePath, String tableName, String clientContext) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#registerDatapod(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void registerDatapod(String filePath, String tableName, String clientContext) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#executeScript(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean executeScript(String filePath, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#registerTempTable(org.apache.spark.sql.Dataset, java.lang.String)
+	 */
+	@Override
+	public Boolean registerTempTable(Dataset<Row> df, String tableName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#fetchAndTrainModel(com.inferyx.framework.domain.Train, com.inferyx.framework.domain.Model, java.lang.String[], com.inferyx.framework.domain.Algorithm, java.lang.String, java.lang.String, org.apache.spark.ml.param.ParamMap, java.lang.String)
+	 */
 	@Override
 	public Object fetchAndTrainModel(Train train, Model model, String[] fieldArray, Algorithm algorithm,
 			String modelName, String filePath, ParamMap paramMap, String clientContext) throws Exception {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#fetchAndCreatePMML(com.inferyx.framework.domain.DataStore, com.inferyx.framework.domain.Datapod, java.lang.String)
+	 */
 	@Override
 	public String fetchAndCreatePMML(DataStore datastore, Datapod datapod, String clientContext) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#fetchModelResults(com.inferyx.framework.domain.DataStore, com.inferyx.framework.domain.Datapod, int, java.lang.String)
+	 */
 	@Override
-	public List<String> fetchModelResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception {
+	public List<String> fetchModelResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#loadAndRegister(com.inferyx.framework.domain.Load, java.lang.String, java.lang.String, java.lang.String, java.lang.String, com.inferyx.framework.domain.Datapod, java.lang.String)
+	 */
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
@@ -199,13 +229,19 @@ public class MySqlExecutor implements IExecutor {
 		return 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#registerDatapod(java.lang.String, com.inferyx.framework.domain.Datapod, com.inferyx.framework.domain.DataStore, com.inferyx.framework.executor.ExecContext, java.lang.String)
+	 */
 	@Override
 	public void registerDatapod(String tableName, Datapod datapod, DataStore dataStore, ExecContext execContext,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#fetchAttributeList(java.lang.String, java.lang.String, boolean, boolean, java.lang.String)
+	 */
 	@Override
 	public List<Attribute> fetchAttributeList(String csvFileName, String parquetDir, boolean flag,
 			boolean writeToParquet, String clientContext) throws Exception {
@@ -213,6 +249,9 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#submitQuery(java.lang.String, int, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public List<Object> submitQuery(String sql, int rowLimit, String format, String header, String clientContext)
 			throws IOException {
@@ -220,6 +259,9 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#predictModel(com.inferyx.framework.domain.Predict, java.lang.String[], com.inferyx.framework.domain.Algorithm, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public Object predictModel(Predict predict, String[] fieldArray, Algorithm algorithm, String filePath,
 			String tableName, String clientContext) throws Exception {
@@ -227,6 +269,9 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#simulateModel(com.inferyx.framework.domain.Simulate, com.inferyx.framework.domain.ExecParams, java.lang.String[], com.inferyx.framework.domain.Algorithm, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public Object simulateModel(Simulate simulate, ExecParams execParams, String[] fieldArray, Algorithm algorithm,
 			String filePath, String tableName, String clientContext) throws Exception {
@@ -234,13 +279,19 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#fetchResults(com.inferyx.framework.domain.DataStore, com.inferyx.framework.domain.Datapod, int, java.lang.String)
+	 */
 	@Override
-	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext)
-			throws Exception {
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit,
+			String clientContext) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#twoDArray(java.lang.String, java.util.List, java.lang.String)
+	 */
 	@Override
 	public List<double[]> twoDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
@@ -248,6 +299,9 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#oneDArray(java.lang.String, java.util.List, java.lang.String)
+	 */
 	@Override
 	public List<Double> oneDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
@@ -255,19 +309,49 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#generateFeatureData(java.util.List, int, java.lang.String[], java.lang.String)
+	 */
 	@Override
-	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {
+	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray,
+			String tableName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#generateFeatureData(java.lang.Object, java.util.List, int, java.lang.String)
+	 */
+	@Override
+	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#generateData(java.lang.Object, java.util.List, int, java.lang.String)
+	 */
+	@Override
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
+			String execVersion) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#readFile(java.lang.String, com.inferyx.framework.domain.Datapod, com.inferyx.framework.domain.DataStore, java.lang.String, com.inferyx.framework.common.HDFSInfo, java.lang.Object, com.inferyx.framework.domain.Datasource)
+	 */
 	@Override
 	public String readFile(String clientContext, Datapod datapod, DataStore datastore, String tableName,
-			HDFSInfo hdfsInfo, Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
+			HDFSInfo hdfsInfo, Object conObject, Datasource datasource)
+			throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#assembleRandomDF(java.lang.String[], java.lang.String, boolean, java.lang.String)
+	 */
 	@Override
 	public String assembleRandomDF(String[] fieldArray, String tableName, boolean isDistribution, String clientContext)
 			throws IOException {
@@ -275,6 +359,9 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#assembleDF(java.lang.String[], java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public Object assembleDF(String[] fieldArray, String tableName, String trainName, String label,
 			String clientContext) throws IOException {
@@ -282,6 +369,9 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#executePredict(java.lang.Object, com.inferyx.framework.domain.Datapod, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
 			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
@@ -290,6 +380,9 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#trainModel(org.apache.spark.ml.param.ParamMap, java.lang.String[], java.lang.String, java.lang.String, double, double, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
@@ -297,6 +390,9 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#savePMML(java.lang.Object, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext)
 			throws IOException, JAXBException {
@@ -304,21 +400,12 @@ public class MySqlExecutor implements IExecutor {
 		return false;
 	}
 
-	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#registerAndPersist(com.inferyx.framework.domain.ResultSetHolder, java.lang.String, java.lang.String, com.inferyx.framework.domain.Datapod, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath,
 			Datapod datapod, String saveMode, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
