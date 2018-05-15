@@ -5,19 +5,29 @@ package com.inferyx.framework.executor;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.connector.ConnectionHolder;
+import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -30,8 +40,10 @@ import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.factory.ConnectionFactory;
 
 /**
  * @author Ganesh
@@ -39,13 +51,40 @@ import com.inferyx.framework.domain.Train;
  */
 public class PostGresExecutor implements IExecutor {
 
+	@Autowired 
+	ConnectionFactory connectionFactory;
+	
+	static Logger logger = Logger.getLogger(PostGresExecutor.class); 
+	
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.executor.IExecutor#executeSql(java.lang.String)
 	 */
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(" Inside PostGres executor  for SQL : " + sql);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		Object obj = conHolder.getStmtObject();
+		long countRows = -1L;
+		if(obj instanceof Statement)
+		{
+			Statement stmt = (Statement) conHolder.getStmtObject();
+			ResultSet rs = null;
+			try {	
+				if(sql.toUpperCase().contains("INSERT")) {
+					countRows = stmt.executeUpdate(sql);
+					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
+					rsHolder.setCountRows(countRows);
+				} else 
+					rs = stmt.executeQuery(sql);
+				rsHolder.setResultSet(rs);
+				rsHolder.setType(ResultType.resultset);
+			} catch (SQLException e) {				
+				e.printStackTrace();
+			}			
+		}		
+		return rsHolder;
 	}
 
 	/* (non-Javadoc)
@@ -62,8 +101,28 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public List<Map<String, Object>> executeAndFetch(String sql, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Map<String, Object>> data = new ArrayList<>();
+		try {
+			ResultSetHolder rsHolder = executeSql(sql);
+			ResultSet rsSorted = rsHolder.getResultSet();
+			ResultSetMetaData rsmd = rsSorted.getMetaData();
+			int numOfCols = rsmd.getColumnCount();
+			while(rsSorted.next()) {
+				Map<String, Object> object = new LinkedHashMap<String, Object>(numOfCols);
+				for(int i = 1; i<= numOfCols; i++) {
+					//System.out.println(rsmd.getColumnName(i).substring(rsmd.getColumnName(i).indexOf(".")+1) +"  "+ rsSorted.getObject(i).toString());
+					if(rsmd.getColumnName(i).contains("."))
+						object.put(rsmd.getColumnName(i).substring(rsmd.getColumnName(i).indexOf(".")+1), rsSorted.getObject(i));
+					else
+						object.put(rsmd.getColumnName(i), rsSorted.getObject(i));
+				}
+				data.add(object);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new IOException("Failed to execute SQL query.");
+		}
+		return data;
 	}
 
 	/* (non-Javadoc)
