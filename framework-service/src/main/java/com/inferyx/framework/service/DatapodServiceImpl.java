@@ -1005,21 +1005,13 @@ public class DatapodServiceImpl {
 			//patern matching for csv filename
 			Pattern p = Pattern.compile("[ !@#$%&*()+=|<>?{}\\[\\]~-]");
 			Matcher match = p.matcher(csvFileName);
-			/*while(match.find()){
-			String s = match.group();
-			csvFileName = csvFileName.replaceAll("\\"+s, "");
-			}*/
-			boolean z = match.find();
+			boolean z = match.find();			
 			if (z == true || csvFileName.contains(" ")) 
 				throw new Exception("CSV file name contains white space or special character");
 			
 			String uploadPath = null;
-			/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-					? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
-			Datasource datasource = null;		
-
-			//csvFileName = csvFileName.substring(StringUtils.lastIndexOf(csvFileName, "/") + 1, csvFileName.length());
 			uploadPath = hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
+			
 			// Copy file to server location
 			File file = new File(uploadPath);
 			csvFile.transferTo(file);
@@ -1052,14 +1044,14 @@ public class DatapodServiceImpl {
 			
 			if(attributes.size()==dpAttrs.size())
 			{
-				for(Attribute a : dpAttrs) {					
+				for(Attribute dpAttr : dpAttrs) {					
 					if(attributeIterator.hasNext()) {
 						Attribute attribute  = attributeIterator.next();				
 						
-						String b = attribute.getName();
-						String c = a.getName();
+						if ( Character.isDigit(attribute.getName().charAt(0)) ) 
+							throw new Exception("CSV file column name contains <b>Numeric value</b>.");
 						
-						if(!b.equals(c)) {
+						if(!attribute.getName().equals(dpAttr.getName())) {
 							logger.info("CSV Column not matched : "+attribute.getName());
 							throw new Exception("CSV Column not matched:<b>"+attribute.getName()+"</b> Position:<b>"+(attributeIterator.nextIndex()+"</b>")	);
 						}

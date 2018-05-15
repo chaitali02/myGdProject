@@ -2171,7 +2171,6 @@ public class CommonServiceImpl <T> {
 		return resolveBaseEntityList(baseEntityList);
 	}
 	
-	@SuppressWarnings("unused")
 	public List<MetaStatsHolder> getMetaStats(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, JsonProcessingException {
 		logger.info("Inside getMetaStats - type : " + type);
 		String appUuid = null;

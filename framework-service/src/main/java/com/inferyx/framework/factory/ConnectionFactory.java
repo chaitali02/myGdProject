@@ -18,6 +18,7 @@ import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.connector.ImpalaConnector;
 import com.inferyx.framework.connector.MySqlConnector;
 import com.inferyx.framework.connector.OracleConnector;
+import com.inferyx.framework.connector.PostGresConnector;
 import com.inferyx.framework.connector.PythonConnector;
 import com.inferyx.framework.connector.RConnector;
 import com.inferyx.framework.connector.SparkConnector;
@@ -39,6 +40,8 @@ public class ConnectionFactory {
 	RConnector rConnector;
 	@Autowired
 	PythonConnector pythonConnector;
+	@Autowired
+	PostGresConnector postGresConnector;
 	
 	public IConnector getConnector(String connection)
 	{
@@ -52,6 +55,7 @@ public class ConnectionFactory {
 		case "file": return sparkConnector;
 		case "r" : return rConnector;
 		case "python" : return pythonConnector;
+		case "postgres" : return postGresConnector;
 		default:				
 		}
 		return null;
