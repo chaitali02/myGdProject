@@ -569,6 +569,7 @@ public class Helper {
 				case "file": return (executionEngine != null && executionEngine == "livy_spark") ? ExecContext.livy_spark : ExecContext.FILE;
 				case "r" : return ExecContext.R;
 				case "python" : return ExecContext.PYTHON;
+				case "postgres" : return ExecContext.POSTGRES;
 				default : return null;
 			}
 		else
