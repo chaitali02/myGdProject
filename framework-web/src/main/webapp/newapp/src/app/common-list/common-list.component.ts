@@ -102,7 +102,7 @@ export class CommonListComponent {
     gridTitle:any
     msgs: Message[] = [];
     items: any
-    nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','distribution','paramlist','paramset','training','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','modelexec'];
+    nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','distribution','paramlist','paramset','training','prediction','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','modelexec'];
     allStatus = [
         {
          "caption": "All",
@@ -786,7 +786,7 @@ export class CommonListComponent {
                 {label: 'Restore', icon: 'fa fa-retweet',visible: (this.Exec), command: (onclick)=> {
                     this.restore(this.rowID)
                 }},
-                {label: 'Publish', icon: 'fa fa-share-alt',visible: (this.Exec), command: (onclick)=> {
+                {label: 'Publish', icon: 'fa fa-share-alt',disabled: (this.Exec), command: (onclick)=> {
                     this.publish(this.rowID)
                 }},
                 {label: 'Unpublish', icon: 'fa fa-shield',visible: (this.Exec),command: (onclick)=> {

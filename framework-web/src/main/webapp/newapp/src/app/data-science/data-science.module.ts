@@ -31,6 +31,8 @@ import {TrainingComponent } from './training/training.component';
 import { TrainingService } from '../metadata/services/training.service';
 import { DistributionComponent } from './distribution/distribution.component';
 import { DistributionService } from '../metadata/services/distribution.service';
+import { PredictionComponent } from './prediction/prediction.component';
+import { PredictionService } from '../metadata/services/prediction.service'
 
 @NgModule({
     imports:[
@@ -60,14 +62,15 @@ import { DistributionService } from '../metadata/services/distribution.service';
         ResultsComponent,
         TrainingComponent,
         DistributionComponent,
-      
+        PredictionComponent,
         
     ],
     providers:[
         CommonService,
         ModelService,
         TrainingService,
-        DistributionService
+        DistributionService,
+        PredictionService, 
     ]
 })
  
