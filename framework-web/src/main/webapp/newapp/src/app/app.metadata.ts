@@ -10,9 +10,7 @@ export class AppMetadata {
   constructor() {
     this.obj = {};
     this.obj.metadataDefs = {
-      
-      
-      
+            
       'dag': {
         name: 'dag',
         caption: 'Pipeline',
