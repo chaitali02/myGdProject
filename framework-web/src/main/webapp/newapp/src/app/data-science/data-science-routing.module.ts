@@ -8,8 +8,9 @@ import { ModelComponent } from './model/model.component';
 import { ParamsetComponent } from './paramset/paramset.component';
 import { ResultsComponent } from './results/results.component';
 import {TrainingComponent } from './training/training.component';
-import {DistributionComponent } from './distribution/distribution.component'
-import {PredictionComponent } from './prediction/prediction.component'
+import {DistributionComponent } from './distribution/distribution.component';
+import {PredictionComponent } from './prediction/prediction.component';
+import {SimulationComponent} from './simulation/simulation.component'
 
 const routes: Routes = [
     {
@@ -38,7 +39,9 @@ const routes: Routes = [
             {path: 'prediction/:id/:version/:mode', component: PredictionComponent,pathMatch:'full' },
             {path: 'prediction/distribution/:id/:version/:mode', component:PredictionComponent, pathMatch: 'full'},
             {path: 'prediction', component:PredictionComponent, pathMatch: 'full'},
-            
+            {path: 'simulation/:id/:version/:mode', component: SimulationComponent,pathMatch:'full' },
+            {path: 'simulation/distribution/:id/:version/:mode', component:SimulationComponent, pathMatch: 'full'},
+            {path: 'simulation', component:SimulationComponent, pathMatch: 'full'},
          ]
     }
 ]
