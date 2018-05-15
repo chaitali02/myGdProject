@@ -36,8 +36,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       }
     });
   }
-
-  $scope.updateStats();
+  //$scope.updateStats();
   
   var groups = ['profileexec', 'profilegroupexec', 'dqexec', 'dqgroupexec', 'ruleexec', 'rulegroupexec','reconexec','recongroupexec'];
   // $scope.pagination={
@@ -251,6 +250,13 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     // }
     $scope.gridOptions.data = [];
     $scope.gridOptions.data = data.data;
+    
+    if(data.data.length >0) {
+      var countObj={};
+      countObj.type=$scope.select;
+      countObj.count=data.data.length;      
+      $rootScope.metaStats[$scope.select]=countObj;
+    }
     // if($scope.originalData.length >0){
     //   $scope.getResults($scope.originalData);
     // }
