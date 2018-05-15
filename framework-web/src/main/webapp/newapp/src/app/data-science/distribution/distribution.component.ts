@@ -43,9 +43,7 @@ export class DistributionComponent implements OnInit {
   arrayParamList: any;
   selectedParamlist: any;
   paramList: DependsOn;
-
-
-  constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: DistributionService) {
+    constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: DistributionService) {
     this.distribution = true;
     this.distribution = {};
     //this.paramList ={'label':"","uuid":""}
@@ -88,37 +86,40 @@ export class DistributionComponent implements OnInit {
       this.id = params['id'];
       this.version = params['version'];
       this.mode = params['mode'];
-       if (this.mode !== undefined) {
+      if (this.mode !== undefined) {
         this.getOneByUuidAndVersion();
         this.getAllVersionByUuid();
 
-       }
-        this.getAllLatest();
+      }
+      this.getAllLatest();
     })
   }
   getOneByUuidAndVersion() {
     this._commonService.getOneByUuidAndVersion(this.id, this.version, 'distribution')
-    .subscribe(
-     response => {
-      this.onSuccessgetOneByUuidAndVersion(response)},
+      .subscribe(
+      response => {
+        this.onSuccessgetOneByUuidAndVersion(response)
+      },
       error => console.log("Error :: " + error));
   }
 
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('distribution', this.id)
-    .subscribe(
-     response => {
-      this.OnSuccesgetAllVersionByUuid(response)},
+      .subscribe(
+      response => {
+        this.OnSuccesgetAllVersionByUuid(response)
+      },
       error => console.log("Error :: " + error));
   }
 
   getAllLatest() {
     this._commonService.getAllLatest('paramList')
-    .subscribe(
-    response => {
-     this.onSuccessgetAllLatest(response)},
-     error => console.log("Error :: " + error));
+      .subscribe(
+      response => {
+        this.onSuccessgetAllLatest(response)
+      },
+      error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -131,11 +132,11 @@ export class DistributionComponent implements OnInit {
     this.createdBy = response.createdBy.ref.name;
     this.distribution.published = response["published"] == 'Y' ? true : false
     this.distribution.active = response["active"] == 'Y' ? true : false
-   // this.distribution.paramList = response.paramList.ref.name
-   let dependOnTemp: DependsOn = new DependsOn();
-   dependOnTemp.label = response["paramList"]["ref"]["name"];
-   dependOnTemp.uuid = response["paramList"]["ref"]["uuid"];
-   this.paramList=dependOnTemp;
+    // this.distribution.paramList = response.paramList.ref.name
+    let dependOnTemp: DependsOn = new DependsOn();
+    dependOnTemp.label = response["paramList"]["ref"]["name"];
+    dependOnTemp.uuid = response["paramList"]["ref"]["uuid"];
+    this.paramList = dependOnTemp;
     this.breadcrumbDataFrom[2].caption = this.distribution.name
     console.log('Data is' + response);
 
@@ -150,7 +151,7 @@ export class DistributionComponent implements OnInit {
       ver["value"]["label"] = response[i]['version'];
       ver["value"]["uuid"] = response[i]['uuid'];
       temp[i] = ver;
-     }
+    }
     this.VersionList = temp
   }
 
@@ -161,7 +162,7 @@ export class DistributionComponent implements OnInit {
       refParam["label"] = response[i]['name'];
       refParam["value"] = {}
       refParam["value"]["uuid"] = response[i]["uuid"]
-     // refParam["value"]['name'] = response[i]['name'];
+      // refParam["value"]['name'] = response[i]['name'];
       refParam["value"]['label'] = response[i]['name'];
       this.arrayParamList[i] = refParam;
 
@@ -169,17 +170,18 @@ export class DistributionComponent implements OnInit {
   }
 
 
-  
+
 
   onVersionChange() {
-   this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'paramlist')
-    .subscribe(
-     response => {//console.log(response)},
-       this.onSuccessgetOneByUuidAndVersion(response)},
-       error => console.log("Error :: " + error));
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'paramlist')
+      .subscribe(
+      response => {//console.log(response)},
+        this.onSuccessgetOneByUuidAndVersion(response)
+      },
+      error => console.log("Error :: " + error));
   }
 
-  
+
 
   public goBack() {
     // this._location.back();
@@ -194,14 +196,14 @@ export class DistributionComponent implements OnInit {
     //let tagArray=[];
     const tagstemp = [];
     for (const t in this.tags) {
-    tagstemp.push(this.tags[t]["value"]);
-     }
-// if(this.tags.length > 0){
-//   for(let counttag=0;counttag < this.tags.length;counttag++){
-//     tagArray[counttag]=this.tags[counttag]["value"];
-//   }
-// }
-    distributionJson["tags"]=tagstemp;
+      tagstemp.push(this.tags[t]["value"]);
+    }
+    // if(this.tags.length > 0){
+    //   for(let counttag=0;counttag < this.tags.length;counttag++){
+    //     tagArray[counttag]=this.tags[counttag]["value"];
+    //   }
+    // }
+    distributionJson["tags"] = tagstemp;
     distributionJson["desc"] = this.distribution.desc;
     distributionJson["active"] = this.distribution.active == true ? "Y" : "N";
     distributionJson["published"] = this.distribution.published == true ? "Y" : "N";
@@ -209,10 +211,10 @@ export class DistributionComponent implements OnInit {
     distributionJson["className"] = this.distribution.className;
     let paramlist = {};
     let refParam = {};
-    if(this.paramList!=null){
+    if (this.paramList != null) {
       refParam["uuid"] = this.paramList.uuid;
       refParam["type"] = "paramlist";
-     // refParam["name"] = this.paramList.name;
+      // refParam["name"] = this.paramList.name;
       paramlist["ref"] = refParam;
     }
     distributionJson["paramList"] = paramlist;
@@ -234,11 +236,11 @@ export class DistributionComponent implements OnInit {
   }
 
   enableEdit(uuid, version) {
-    this.router.navigate(['app/dataScience/distribution',uuid,version, 'false']);
+    this.router.navigate(['app/dataScience/distribution', uuid, version, 'false']);
   }
 
   showview(uuid, version) {
-   this.router.navigate(['app/dataScience/distribution',uuid,version, 'true']);
+    this.router.navigate(['app/dataScience/distribution', uuid, version, 'true']);
   }
 
 
