@@ -16,7 +16,7 @@
                             "dependsOn" : [],
                             "operatorInfo" : {
                                 "ref" : {
-                                    "type" : "operatortype",
+                                    "type" : "operator",
                                     "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
                                     "name" : "Generate Data"
                                 }

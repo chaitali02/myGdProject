@@ -36,7 +36,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       }
     });
   }
-  //$scope.updateStats();
+  if($scope.select !="paramlist")
+  $scope.updateStats();
   
   var groups = ['profileexec', 'profilegroupexec', 'dqexec', 'dqgroupexec', 'ruleexec', 'rulegroupexec','reconexec','recongroupexec'];
   // $scope.pagination={
@@ -67,7 +68,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $sessionStorage.fromParams = fromParams
   });
 
-  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype'];
+  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype','operator'];
   $scope.isExecutable = $scope.nonExecTypes.indexOf($scope.select);
   $scope.isUpload = ($scope.select == 'datapod' ? 0 : -1)
   
@@ -251,7 +252,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.gridOptions.data = [];
     $scope.gridOptions.data = data.data;
     
-    if(data.data.length >0) {
+    if($scope.select =="paramlist") {
       var countObj={};
       countObj.type=$scope.select;
       countObj.count=data.data.length;      

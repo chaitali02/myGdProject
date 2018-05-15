@@ -1787,7 +1787,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          var GetAllLatesMap=function(response){
            $scope.operatorinfoMapInfo = response;
            $scope.popupModel.type=elementType
-           if(elementType =="operatortype" && newCell){
+           if(elementType =="operator" && newCell){
             for(var i=0;i< response.length;i++){
                if(response[i].name == elemt.title){
                 $scope.popupModel.selectedType=response[i].uuid +"|"+ response[i].name;
@@ -1828,7 +1828,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
        
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
-        var typeParamListArray=["simulate","operatortype"];
+        var typeParamListArray=["simulate","operator"];
         var typeParamSetArray=["train"];
         if(typeParamSetArray.indexOf(type) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=true;
@@ -2519,7 +2519,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
         objDetail.type=type;
         var typeParamSetArray=["train"];
-        var typeParamListArray=["simulate","operatortype"];
+        var typeParamListArray=["simulate","operator"];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;
