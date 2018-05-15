@@ -311,6 +311,20 @@
       }
       return deferred.promise;
     } /*End getBaseEntityByCriteria*/
+    
+    this.getParamListByRule = function(type, name, userName, startDate, endDate, tags, active, published) {
+      var deferred = $q.defer();
+      var url = "metadata/getParamListByRule?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;
+      CommonFactory.httpGet(url).then(function(response) {
+        OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End getParamListByRule*/
 
     /*Start getAll*/
     this.getAll = function(type) {

@@ -1147,8 +1147,10 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
       noExec: "=",
       loading: '=?',
       data:"=?",
+      parantType:'=?',
     },
     link: function($scope, element, attrs) {
+      
       $scope.searchForm = {};
       $rootScope.refreshSearchResults = function() {
         $scope.searchCriteria();
@@ -1156,12 +1158,6 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
         $scope.tz=localStorage.serverTz;
         var matches = $scope.tz.match(/\b(\w)/g);
         $scope.timezone=matches.join('')
-        //alert(timezoneabb)
-        // timezone=$scope.tz.split(" ")
-        // for(var i=0;i<=timezone.length;i++)
-        // {
-        //   $scope.time=timezone[i].charAt(0)
-        // }alert($scope.time)
         $scope.endDateBeforeRender = endDateBeforeRender
         $scope.endDateOnSetTime = endDateOnSetTime
         $scope.startDateBeforeRender = startDateBeforeRender
@@ -1176,16 +1172,8 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
         }
 
         function startDateBeforeRender ($dates) {
-          // var activeDate = moment($scope.searchForm.enddate);
-          // const todaySinceMidnight = new Date();
-          // $dates.filter(function (date) {
-          //   return date.utcDateValue > todaySinceMidnight.getTime();
-          // }).forEach(function (date) {
-          //   date.selectable = false;
-          // });
           if ($scope.searchForm.enddate) {
             var activeDate = moment($scope.searchForm.enddate);
-
             $dates.filter(function (date) {
               return date.localDateValue() >= activeDate.valueOf()
             }).forEach(function (date) {
@@ -1197,7 +1185,6 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
         function endDateBeforeRender ($view, $dates) {
           if ($scope.searchForm.startdate) {
             var activeDate = moment($scope.searchForm.startdate).subtract(1, $view).add(1, 'minute');
-
             $dates.filter(function (date) {
               return date.localDateValue() <= activeDate.valueOf()
             }).forEach(function (date) {
@@ -1205,29 +1192,7 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
             })
           }
         }
-      // $rootScope.validate = function(flag) {
-      //
-      // $scope.showEndErrorMessage=false;
-      // $scope.showStartErrorMessage=false;
-      //   if($scope.searchForm.enddate !=null && $scope.searchForm.startdate !=null){
-      //     var enddate= new Date($scope.searchForm.enddate)
-      //     var startdate = new Date($scope.searchForm.startdate)
-      //     if( enddate < startdate && flag=='End'){
-      //
-      //       $scope.searchForm.enddate=null;
-      //
-      //     $("#end_date").find("input").val("");
-      //       $scope.showEndErrorMessage=true;
-      //     }
-      //     if( enddate < startdate && flag=='Start'){
-      //
-      //       $scope.searchForm.startdate=null;
-      //     $("#start_date").find("input").val("");
-      //       $scope.showStartErrorMessage=true;
-      //     }
-      //   }
-      //
-      // }
+      
       $rootScope.refreshRowData = function() {
         $scope.searchCriteria();
       }
@@ -1238,11 +1203,6 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
       } else {
         $scope.select = dagMetaDataService.elementDefs[$scope.moduleType].execType; //$scope.moduleType + 'exec';
       }
-      // var d = new Date(); // or whatever date you have
-      // var tzName = d.toLocaleString('en', {
-      //   timeZoneName: 'short'
-      // }).split(' ').pop();
-      // $scope.currentTimezone = tzName;
       if ($scope.handleGroup) {
         //$scope.select = $scope.moduleType;
         $scope.temp = $scope.moduleType.split('exec')[0];
@@ -1257,10 +1217,8 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
         $scope.onChangeType = function(newType) {
           $scope.searchForm.newType = newType //dagMetaDataService.elementDefs[newType].name.replace(/\s/g, "") ;//newType
           if ($scope.noExec) {
-
             $scope.select = newType;
           } else {
-
             $scope.select = dagMetaDataService.elementDefs[newType].execType; //newType+ 'exec' ;
           }
 
@@ -1270,8 +1228,8 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
             'data': []
           });
         }
-      } else {
-
+      }//End If 
+      else{
         if($scope.moduleType !='vizexec' &&  $scope.moduleType !='downloadexec' && $scope.moduleType !='uploadexec'){
           $scope.temp = $scope.moduleType.split('exec')[0];
           $scope.searchForm.newType = $scope.temp;
@@ -1282,9 +1240,7 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
         else{
           $scope.searchForm.newType="vizpod"
         }
-        // $scope.searchForm.newType = $scope.moduleType //dagMetaDataService.elementDefs[$scope.moduleType].name;//$scope.moduleType;
-      }
-
+      }//End ELSE
 
       $scope.refresh = function() {
         $scope.searchForm.execname = "";
@@ -1318,11 +1274,8 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
             "name": "Failed"
           }
         ];
+        
         $scope.allActive = [
-          // {
-          //   "caption": "All",
-          //   "name": ""
-          // },
           {
             "caption": "Active",
             "name": "Y"
@@ -1330,20 +1283,20 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
           {
             "caption": "Inactive",
             "name": "N"
-          }];
-          $scope.allPublish = [
-            // {
-            //   "caption": "All",
-            //   "name": " "
-            // },
-            {
-              "caption": "Yes",
-              "name": "Y"
-            },
-            {
-              "caption": "No",
-              "name": "N"
-            }];
+          }
+        ];
+        
+        $scope.allPublish = [
+          {
+            "caption": "Yes",
+            "name": "Y"
+          },
+          {
+            "caption": "No",
+            "name": "N"
+          }
+        ];
+
         $(".form_meridian_datetime").find("input").val("");
         CommonService.getAllLatest($scope.searchForm.newType).then(function(response) {
           onSuccessGetAllLatestExec(response.data)
@@ -1368,10 +1321,6 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
       var cached = cacheService.getCache('searchCriteria', $scope.moduleType);
       if (cached && cached.searchForm) {
         $scope.searchForm = cached.searchForm;
-        //$scope.select = dagMetaDataService.elementDefs[$scope.searchForm.newType].execType;
-        // $scope.startdate = $scope.searchForm.startdate.toJSON()
-        // $scope.enddate = $scope.searchForm.enddate.toJSON()
-
         if($scope.noExec){
           $scope.select = $scope.searchForm.newType;
         }
@@ -1416,11 +1365,20 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
           tags[i] = $scope.searchForm.tags[i].text;
         }
         tags = tags.toString();
-        //console.log(new Date($scope.startdate).toUTCString())
-        // console.log(startdate)
-        // console.log(enddate)
         $scope.loading = true;
-        CommonService[$scope.noExec ? 'getBaseEntityByCriteria' : 'getBaseEntityStatusByCriteria']($scope.select, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '',$scope.searchForm.published || '', $scope.searchForm.status || '').then(function(response) {
+        var url='';
+        if($scope.parantType == 'rule'){
+          url='getParamListByRule'
+        }
+        else if($scope.noExec){
+          url='getBaseEntityByCriteria'    
+        }
+        else{
+          url='getBaseEntityStatusByCriteria'
+        }
+        CommonService[url]($scope.select, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '',$scope.searchForm.published || '', $scope.searchForm.status || '').then(function(response) {
+        
+       // CommonService[$scope.noExec ? 'getBaseEntityByCriteria' : 'getBaseEntityStatusByCriteria']($scope.select, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '',$scope.searchForm.published || '', $scope.searchForm.status || '').then(function(response) {
           onSuccess(response.data)
         },function error() {
           $scope.loading = false;

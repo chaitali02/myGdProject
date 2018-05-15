@@ -57,7 +57,6 @@ public class Math3Distribution {
 		int j = 0; 
 		for(ParamListHolder holder : paramListInfo) {
 			ParamDataType paramDataType = Helper.resolveParamDataType(holder.getParamType());
-			System.out.println(paramDataType);
 			switch(paramDataType) {
 				case TWODARRAY : 	double[][] twoDarray = getTwoDArray(holder); 
 									obj[j] = twoDarray;
