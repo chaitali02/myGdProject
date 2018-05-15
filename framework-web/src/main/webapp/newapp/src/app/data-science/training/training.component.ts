@@ -10,8 +10,8 @@ import { TrainingService } from '../../metadata/services/training.service';
 
 import { Version } from '../../metadata/domain/version';
 import{ DependsOn } from '../dependsOn';
-import {AttributeHolder} from '../../metadata/domain/domain.attributeHolder'
-import { ResponseOptions } from '@angular/http/src/base_response_options';
+// import {AttributeHolder} from '../../metadata/domain/domain.attributeHolder'
+// import { ResponseOptions } from '@angular/http/src/base_response_options';
 
 @Component({
   selector: 'app-training',
