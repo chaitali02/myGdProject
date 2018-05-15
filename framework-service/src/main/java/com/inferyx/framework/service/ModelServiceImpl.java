@@ -925,6 +925,7 @@ public class ModelServiceImpl {
 
 	public boolean simulate(Simulate simulate, ExecParams execParams, SimulateExec simulateExec, RunMode runMode) throws Exception {
 		boolean isSuccess = false;
+		execParams = (ExecParams) commonServiceImpl.resolveName(execParams, null);
 		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(simulate.getDistributionTypeInfo().getRef().getUuid(), simulate.getDistributionTypeInfo().getRef().getVersion(), simulate.getDistributionTypeInfo().getRef().getType().toString());
 		try {
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.InProgress);
@@ -1014,8 +1015,12 @@ public class ModelServiceImpl {
 					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 					
 					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
-					String[] customFldArr = new String[] {fieldArray[0]};
-					String tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
+					String tabName_2 = null;
+//					for(int i=0; i<fieldArray.length; i++) {
+						String[] customFldArr = new String[] {fieldArray[0]};
+						tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);	
+//						tableName = tabName_2;
+//					}
 					
 					String sql = "SELECT * FROM " + tabName_2;
 					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());

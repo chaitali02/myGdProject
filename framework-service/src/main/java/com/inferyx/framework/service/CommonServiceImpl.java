@@ -1515,11 +1515,27 @@ public class CommonServiceImpl <T> {
 						paramSet.setParamInfo(paramInfos);
 						object = paramSet;
 					}
-					
-					if (method.getName().contains("OperatorParams") && method.getName().startsWith(GET))  {
-						HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
-						if(operatorParams != null)
-							object = resolveOperatorParams(operatorParams, object);
+					/*if (method.getName().contains("ParamListInfo") && method.getName().startsWith(GET) && (object instanceof ExecParams))  {
+						System.out.println();
+						List<ParamListHolder> paramListInfo = (List<ParamListHolder>) method.invoke(object);
+						System.out.println();
+					}*/
+					if ((method.getName().contains("OperatorParams") || (object instanceof ExecParams)) && method.getName().startsWith(GET))  {
+						if(method.getName().contains("OperatorParams")){
+							@SuppressWarnings("unchecked")
+							HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
+							if(operatorParams != null) {
+								if(operatorParams.containsKey("EXEC_PARAMS")) {
+									ObjectMapper mapper = new ObjectMapper();
+									ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+									execParams = resolveExecParams(execParams);
+									operatorParams.put("EXEC_PARAMS", execParams);
+								}
+							}
+						} else if((object instanceof ExecParams)) {
+							object = resolveExecParams((ExecParams)object);
+						}
+						
 					}
 					
 					Object invokedObj = method.invoke(object);
@@ -1566,10 +1582,7 @@ public class CommonServiceImpl <T> {
 	 * @return
 	 * @throws JsonProcessingException 
 	 */
-	private Object resolveOperatorParams(HashMap<String, Object> operatorParams, Object object) throws JsonProcessingException {
-			if(operatorParams.containsKey("EXEC_PARAMS")) {
-				ObjectMapper mapper = new ObjectMapper();
-				ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+	private ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
 				List<ParamListHolder> paramListInfo= execParams.getParamListInfo();
 				
 				if(paramListInfo != null)
@@ -1621,10 +1634,8 @@ public class CommonServiceImpl <T> {
 								}
 							}
 						}
-					}
-				operatorParams.put("EXEC_PARAMS", execParams);
-			}
-		return object;
+					}				
+		return execParams;
 	}
 
 	public T resolveName(String uuid, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
