@@ -120,32 +120,32 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                                <label for="middle-name" class="control-label col-md-3">Tags</label>
                                 <div class="col-md-6">
                                     <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                                <label for="middle-name" class="control-label col-md-3">Desc</label>
                                 <div class="col-md-6">
-                                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="filterdata.desc" rows="2" style="resize:none;"></textarea>
+                                    <textarea class="form-control textarea-overflow" ng-disabled="{{mode}}" ng-model="filterdata.desc" rows="2" style="resize:none;"></textarea>
                                 </div>
                             </div>
 
 
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">DependsOn
+                                <label class="control-label col-md-3">DependsOn
                                     <span class="required" aria-required="true"> * </span>
                                 </label>
-                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                <div class="col-md-2">
                                     <select title="Type" ng-model="selectRelation" ng-options="x for x in relation" ng-change="dependsOndd()" class="form-control"
                                         ng-disabled="{{mode}}" required="">
                                     </select>
                                 </div>
 
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:8.5%;">Name</label>
-                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                <label class="control-label col-md-3" style="width:8.5%;">Name</label>
+                                <div class="col-md-3">
                                     <select class="form-control" select2 ng-change="changeRelation()" data-ng-model="filterRelation.defaultoption" ng-options="r as r.name for r in filterRelation.options track by r.uuid"
                                         ng-disabled="{{mode}}">
                                     </select>
@@ -153,8 +153,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                <label class="control-label col-md-3">Active</label>
+                                <div class="col-md-6">
                                     <div class="btn-group" ng-init="filterdata.active='Y'">
                                         <label class="btn btn-default" ng-model="filterdata.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
                                         <label class="btn btn-default" ng-model="filterdata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
@@ -162,8 +162,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                <label class="control-label col-md-3">Published</label>
+                                <div class="col-md-6">
                                     <div class="btn-group" ng-init="filterdata.published='N'">
                                         <label class="btn btn-default" ng-model="filterdata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
                                         <label class="btn btn-default" ng-model="filterdata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
@@ -195,7 +195,7 @@
                             <br/>
 
                             <div>
-                                <table class=" row-border hover table  table-striped table-bordered">
+                                <table class=" row-border hover table  table-striped table-bordered" style="table-layout: fixed;">
                                     <thead>
                                         <tr>
                                             <th style="width:5%;text-align: center; Vertical-align: middle;">
@@ -203,12 +203,12 @@
                                                     <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="checkAll" ng-click="checkAllFilterRow()"/>
                                                 </span>
                                             </th>
-                                            <th style="width:11%;text-align:center;">Logical Operator</th>
+                                            <th style="width:15%;text-align:center;">Logical Operator</th>
                                             <th style="width:13%;text-align:center;"> LHS Type</th>
-                                            <th style="width:25%;text-align:center;">LHS Attribute</th>
+                                            <th style="width:200px;text-align:center;">LHS Attribute</th>
                                             <th style="width:13%;text-align:center;">Operator</th>
                                             <th style="width:13%;text-align:center;">RHS Type</th>
-                                            <th style="width:25%;text-align:center;">RHS Attribute</th>
+                                            <th style="width:200px;text-align:center;">RHS Attribute</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -230,19 +230,19 @@
                                                     </select>
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td width="200px">
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                     <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
                                                         ng-show="tabledata.islhsSimple">
                                                 </span>
-                                                <div ng-show="tabledata.islhsDatapod">
+                                                <div width="200px" ng-show="tabledata.islhsDatapod">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                         <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
                                                             ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
                                                         </select>
                                                     </span>
                                                 </div>
-                                                <div ng-show="tabledata.islhsFormula">
+                                                <div   style="width:200px;" ng-show="tabledata.islhsFormula">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                         <select select2 class="form-control" ng-change="selectmetlhsType()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
                                                             ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula">
@@ -264,12 +264,12 @@
                                                     </select>
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td style="width:200px;">
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                     <input type="text" ng-disabled="{{mode}}" class="form-control" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                                         ng-show="tabledata.isrhsSimple">
                                                 </span>
-                                                <div ng-show="tabledata.isrhsDatapod">
+                                                <div   ng-show="tabledata.isrhsDatapod">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                         <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
                                                         </select>
