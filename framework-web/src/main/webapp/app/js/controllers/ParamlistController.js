@@ -36,6 +36,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.parantType=$stateParams.parantType;
 	$scope.isSubmitEnable = true;
 	$scope.paramlistData;
 	$scope.showForm = true;
