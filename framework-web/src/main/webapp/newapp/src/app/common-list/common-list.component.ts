@@ -302,7 +302,7 @@ export class CommonListComponent {
                 "caption": "Rule Group"
                 }
             ];
-
+           
             this.breadcrumbDataFrom=[
                 {
                     "caption":this.metaconfig.getMetadataDefs((this.type))['moduleCaption'],
