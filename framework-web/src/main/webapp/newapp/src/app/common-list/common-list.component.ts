@@ -787,7 +787,7 @@ export class CommonListComponent {
                 {label: 'Restore', icon: 'fa fa-retweet',visible: (this.Exec), command: (onclick)=> {
                     this.restore(this.rowID)
                 }},
-                {label: 'Publish', icon: 'fa fa-share-alt',disabled: (this.Exec), command: (onclick)=> {
+                {label: 'Publish', icon: 'fa fa-share-alt',visible: (this.Exec), command: (onclick)=> {
                     this.publish(this.rowID)
                 }},
                 {label: 'Unpublish', icon: 'fa fa-shield',visible: (this.Exec),command: (onclick)=> {
