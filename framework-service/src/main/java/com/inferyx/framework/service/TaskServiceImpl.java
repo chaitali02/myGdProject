@@ -784,7 +784,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} 	 else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.operatortype)) {
+		} 	 else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.operator)) {
 			logger.info("Going to operatorServiceImpl.execute");
 			try {
 				OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.operatorExec.toString());

@@ -86,7 +86,6 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
@@ -181,8 +180,6 @@ public class ModelServiceImpl {
 	private RuleOperator ruleOperator;
 	@Autowired
 	private ConnectionFactory connFactory;
-	@Autowired
-	private Math3Distribution mlDistribution;
 	@Autowired
 	private MonteCarloSimulation monteCarloSimulation;
 	@Autowired
@@ -1000,6 +997,7 @@ public class ModelServiceImpl {
 					
 					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 					
+<<<<<<< HEAD
 					String tabName_2 = null;
 					String tableName_3 = null;
 					if(distribution.getClassName().contains("UniformRealDistribution")) {
@@ -1023,6 +1021,16 @@ public class ModelServiceImpl {
 					
 					String sql = "SELECT * FROM " + tableName_3;
 					result = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);					
+=======
+
+					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
+						
+					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"form_rand_df"));
+					String tabName_2 = exec.assembleRandomDF(fieldArray, tableName, true, appUuid);
+					String sql = simulateMLOperator.generateSql(simulate, tabName_2);
+					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);					
+>>>>>>> 22327fc4350b3637e427e6dd7d8eca5505cba0a9
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 					
 					HashMap<String, String> otherParams = execParams.getOtherParams();

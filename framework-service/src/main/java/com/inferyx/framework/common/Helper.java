@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.datascience.Operator;
+import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AppConfig;
@@ -73,7 +74,6 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
@@ -254,7 +254,7 @@ public class Helper {
 				case recongroupExec : return "iReconGroupExecDao";
 				case distribution : return "iDistributionDao";
 				case appConfig : return "iAppConfigDao";
-				case operatortype : return "iOperatorTypeDao";
+//				case operatortype : return "iOperatorTypeDao";
 				case operatorExec : return "iOperatorExecDao";
 				case operator : return "iOperatorDao";
 				
@@ -360,7 +360,7 @@ public class Helper {
 		case recongroupExec : return ReconGroupExec.class;
 		case distribution : return Distribution.class;
 		case appConfig : return AppConfig.class;
-		case operatortype : return OperatorType.class;
+//		case operatortype : return Operator.class;
 		case operatorExec : return OperatorExec.class;
 		case operator : return Operator.class;
 
@@ -437,7 +437,7 @@ public class Helper {
 				case "recongroupexec" : return MetaType.recongroupExec;
 				case "distribution" : return MetaType.distribution;
 				case "appconfig" : return MetaType.appConfig;
-				case "operatortype" : return MetaType.operatortype;
+//				case "operatortype" : return MetaType.operatortype;
 				case "operatorexec" : return MetaType.operatorExec;
 				case "operator" : return MetaType.operator;
 
@@ -569,6 +569,7 @@ public class Helper {
 				case "file": return (executionEngine != null && executionEngine == "livy_spark") ? ExecContext.livy_spark : ExecContext.FILE;
 				case "r" : return ExecContext.R;
 				case "python" : return ExecContext.PYTHON;
+				case "postgres" : return ExecContext.POSTGRES;
 				default : return null;
 			}
 		else

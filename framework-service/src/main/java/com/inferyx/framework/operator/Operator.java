@@ -17,14 +17,13 @@ import java.util.Set;
 
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.enums.RunMode;
 
 public interface Operator {
 	
 	/**
 	 * 
-	 * @param operatorType
+	 * @param operator
 	 * @param execParams
 	 * @param execIdentifier
 	 * @param refKeyMap
@@ -35,7 +34,7 @@ public interface Operator {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, String> populateParams(OperatorType operatorType, 
+	public Map<String, String> populateParams(com.inferyx.framework.datascience.Operator operator, 
 			ExecParams execParams, 
 			MetaIdentifier execIdentifier, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 
@@ -44,7 +43,7 @@ public interface Operator {
 	
 	/**
 	 * 
-	 * @param operatorType
+	 * @param operator
 	 * @param execParams
 	 * @param execIdentifier
 	 * @param refKeyMap
@@ -55,7 +54,7 @@ public interface Operator {
 	 * @return
 	 * @throws Exception
 	 */
-	public String parse(OperatorType operatorType, 
+	public String parse(com.inferyx.framework.datascience.Operator operator, 
 			ExecParams execParams, 
 			MetaIdentifier execIdentifier, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 
@@ -64,7 +63,7 @@ public interface Operator {
 	
 	/**
 	 * 
-	 * @param operatorType
+	 * @param operator
 	 * @param execParams
 	 * @param execIdentifier
 	 * @param refKeyMap
@@ -74,7 +73,7 @@ public interface Operator {
 	 * @return
 	 * @throws Exception
 	 */
-	public String execute(OperatorType operatorType, 
+	public String execute(com.inferyx.framework.datascience.Operator operator, 
 			ExecParams execParams, 
 			MetaIdentifier execIdentifier, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 

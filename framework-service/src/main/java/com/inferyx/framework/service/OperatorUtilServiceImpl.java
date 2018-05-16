@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.datascience.Operator;
+import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -34,13 +34,10 @@ public class OperatorUtilServiceImpl {
 		ParamSet paramSet = null;//execParams.getParamSetHolder().getRef();
 		
 		List<ParamInfo> paramInfoList = paramSet.getParamInfo();
-		OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(
-				operator.getOperatorType().getRef().getUuid(), operator.getOperatorType().getRef().getVersion(),
-				operator.getOperatorType().getRef().getType().toString());
 		// Get paramList
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(
-				operatorType.getParamList().getRef().getUuid(), operatorType.getParamList().getRef().getVersion(),
-				operatorType.getParamList().getRef().getType().toString());
+				operator.getParamList().getRef().getUuid(), operator.getParamList().getRef().getVersion(),
+				operator.getParamList().getRef().getType().toString());
 		for (ParamInfo paramInfo : paramInfoList) {
 			for (ParamListHolder paramListHolder : paramInfo.getParamSetVal()) {
 				param = paramList.getParams().get(Integer.parseInt(paramListHolder.getParamId()));

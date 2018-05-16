@@ -1508,18 +1508,24 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> df_2 = executeSql(sql_2, clientContext).getDataFrame();
 		df_2 = df_2.withColumnRenamed("features", "features_"+i);
 		
-		Set<String> combinedColumns = new HashSet<>();
-		for(String column : df_1.columns()) {
-			combinedColumns.add(column);
-		}
-		combinedColumns.addAll(Arrays.asList(df_1.columns()));
-		combinedColumns.addAll(Arrays.asList(df_2.columns()));
+//		Set<String> combinedColumns = new HashSet<>();
+//		for(String column : df_1.columns()) {
+//			combinedColumns.add(column);
+//		}
+//		combinedColumns.addAll(Arrays.asList(df_1.columns()));
+//		combinedColumns.addAll(Arrays.asList(df_2.columns()));
 //		df_1.show(true);
 //		df_2.show(true);
 //		df_1 = df_1.join(df_2, JavaConverters.asScalaBufferConverter(new ArrayList<>(combinedColumns)).asScala(), "full");
 		
-		df_1 = df_1.crossJoin(df_2);
-		df_1.select("id",JavaConverters.asScalaBufferConverter(new ArrayList<>(combinedColumns)).asScala()).show(true);
+		df_1.printSchema();
+		df_2.printSchema();
+		
+		List<String> joinColumns = new ArrayList<>();
+		joinColumns.add("id");
+		joinColumns.add("version");
+		df_1 = df_1.join(df_2,JavaConverters.asScalaBufferConverter(joinColumns).asScala());
+		//df_1 = df_1.crossJoin(df_2);
 		df_1.printSchema();
 		df_1.show(true);
 		
