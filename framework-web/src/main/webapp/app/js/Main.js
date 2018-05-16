@@ -362,10 +362,10 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
 	        "name":"rules",
 	        "class":"fa fa-cogs",
 	        "submenu":[
-	            	{"name":"viewrule","type":"rule","uuid":"null","caption":"Rule"},
-	    	        {"name":"rulesgroup","type":"rulegroup","uuid":"null","caption":"Rule Group"},
-                    {"name":"paramlistrule","type":"paramlist","uuid":"null","caption":"Parameter List"},
-                    {"name":"rulerestult","type":"ruleexec","uuid":"null","caption":"Rule Results"}
+	            	{"name":"viewrule","type":"rule","typeCount":"rule","uuid":"null","caption":"Rule"},
+	    	        {"name":"rulesgroup","type":"rulegroup","typeCount":"rulegroup","uuid":"null","caption":"Rule Group"},
+                    {"name":"paramlistrule","type":"paramlist","typeCount":"paramlistrule","uuid":"null","caption":"Parameter List"},
+                    {"name":"rulerestult","type":"ruleexec","typeCount":"ruleexec","uuid":"null","caption":"Rule Results"}
 	    	    ]
         }
         $scope.Recondata={
@@ -416,17 +416,17 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
             "name":"datascience",
             "class":"fa fa-flask",
             "submenu":[
-                {"name":"algorithm","type":"algorithm","uuid":"null","caption":"Algorithm"},
-                {"name":"distribution","type":"distribution","uuid":"null","caption":"Distribution"},
-                {"name":"model","type":"model","uuid":"null","caption":"Model"},
-                {"name":"paramlist","type":"paramlist","uuid":"null","caption":"Parameter List"},
-                {"name":"paramset","type":"paramset","uuid":"null","caption":"Parameter Set"},
+                {"name":"algorithm","type":"algorithm","typeCount":"algorithm","uuid":"null","caption":"Algorithm"},
+                {"name":"distribution","type":"distribution","typeCount":"distribution","uuid":"null","caption":"Distribution"},
+                {"name":"model","type":"model","typeCount":"model","uuid":"null","caption":"Model"},
+                {"name":"paramlist","type":"paramlist","typeCount":"paramlistmodel","uuid":"null","caption":"Parameter List"},
+                {"name":"paramset","type":"paramset","typeCount":"paramset","uuid":"null","caption":"Parameter Set"},
                 // {"name":"operatortype","type":"operatortype","uuid":"null","caption":"Operator"},
-                {"name":"operator","type":"operator","uuid":"null","caption":"Operator"},
-                {"name":"train","type":"train","uuid":"null","caption":"Training"},
-                {"name":"predict","type":"predict","uuid":"null","caption":"Prediction"},
-                {"name":"simulate","type":"simulate","uuid":"null","caption":"Simulation"},
-                {"name":"resultmodelmodel","type":"modelexec","uuid":"null","caption":"Results"}
+                {"name":"operator","type":"operator","typeCount":"operator","uuid":"null","caption":"Operator"},
+                {"name":"train","type":"train","typeCount":"train","uuid":"null","caption":"Training"},
+                {"name":"predict","type":"predict","typeCount":"predict","uuid":"null","caption":"Prediction"},
+                {"name":"simulate","type":"simulate","typeCount":"simulate","uuid":"null","caption":"Simulation"},
+                {"name":"resultmodelmodel","type":"modelexec","typeCount":"modelexec","uuid":"null","caption":"Results"}
         	    ]
         };
 
@@ -2376,7 +2376,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         url:"/DataScience/ParamList",
 		templateUrl:"views/common-list.html",
 		data: {pageTitle: 'Data Science'},
-		params:{type:'paramlist'}
+		params:{type:'paramlist',parantType:'model'}
 
     })
     
@@ -2384,7 +2384,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         url:"/CreateParamList?id&mode&returnBack&version",
         templateUrl:"views/paramlist.html",
         data: { pageTitle: 'Data Science'},
-        params:{type:'paramlist'},
+        params:{type:'paramlist',parantType:'model'},
         controller: "",
         resolve: {
             deps: ['$ocLazyLoad', function($ocLazyLoad) {

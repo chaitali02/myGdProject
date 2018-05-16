@@ -2200,11 +2200,14 @@ public class CommonServiceImpl <T> {
 				if (appUuid == null) {
 					//count = (long) iDao.getClass().getMethod("count").invoke(iDao);
 					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
-
-				}else{
+           
+				}
+				
+				else{
 					/*Query query = new Query();
 					query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));    
 					count = mongoTemplate.count(query, Helper.getDomainClass(Helper.getMetaType(mType.toString().toLowerCase())));*/
+				
 					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
 					//count = getAllLatest(mType.toString(), "Y").size();
 				}
@@ -2216,6 +2219,13 @@ public class CommonServiceImpl <T> {
 					String nameLastUpdatedBy = (String) ref.getClass().getMethod("getName").invoke(ref);
 					String lastUpdatedOn = (String) metaobjNew.getClass().getMethod("getCreatedOn").invoke(metaobjNew);
 					countHolder.add(new MetaStatsHolder(mType.toString().toLowerCase(), Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+					if(mType.toString().equalsIgnoreCase(MetaType.paramlist.toString())){
+						count= metadataServiceImpl.getParamList(MetaType.rule.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistrule", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+						count= metadataServiceImpl.getParamList(MetaType.model.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistmodel", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+			
+					}	
 				}				
 			}
 		}else{

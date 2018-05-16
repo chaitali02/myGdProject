@@ -222,7 +222,7 @@ public class SimulateMLOperator implements Serializable {
 			
 			LOGGER.info("query : "+builder);
 			return builder.toString();
-		} else if(dependsOn.getRef().getType().equals(MetaType.algorithm)) {
+		} else if(dependsOn.getRef().getType().equals(MetaType.algorithm)) { //used to generate query for algorithm without distribution
 			StringBuilder sb = new StringBuilder();
 			for (Feature feature : model.getFeatures()) {
 				sb.append("(" + feature.getMinVal() + " + rand()*(" + feature.getMaxVal() + "-" + feature.getMinVal()
