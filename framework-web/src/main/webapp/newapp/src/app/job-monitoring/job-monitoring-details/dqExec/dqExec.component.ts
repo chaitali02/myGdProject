@@ -46,7 +46,7 @@ export class DqExecComponent implements OnInit {
         "routeurl":"/app/jobMonitoring"
       },
       {
-        "caption":"Data Quality",
+        "caption":"DQ Group Exec ",
         "routeurl":"/app/list/dqExec"
   
       },

@@ -15,34 +15,34 @@ export class TrainingService{
     
   constructor(@Inject(Http) private http: Http,private _sharedService: SharedService,private _commonService:CommonService) { }
   
-  getAllModelByType(uuid:Number,type:String): Observable<any[]> {
-    let url ='/model/getAllModelByType?action=view&customFlag='+uuid+ '&type=model';
-    return this._sharedService.getCall(url)
-    .map((response: Response) => {
-      return <any[]>response.json();
-  })
-   .catch(this.handleError);
-  }
+  // getAllModelByType(uuid:Number,type:String): Observable<any[]> {
+  //   let url ='/model/getAllModelByType?action=view&customFlag='+uuid+ '&type=model';
+  //   return this._sharedService.getCall(url)
+  //   .map((response: Response) => {
+  //     return <any[]>response.json();
+  // })
+  //  .catch(this.handleError);
+  // }
 
 
 
-  getParamSetByAlgorithm(uuid:Number,version:String): Observable<any[]> {
-    let url ='/metadata/getParamSetByAlgorithm?action=view&type=algorithm&algorithmUuid='+uuid+'&algorithmVersion='+version;
-    return this._sharedService.getCall(url)
-    .map((response: Response) => {
-      return <any[]>response.json();
-  })
-   .catch(this.handleError);
-  }
+  // getParamSetByAlgorithm(uuid:Number,version:String): Observable<any[]> {
+  //   let url ='/metadata/getParamSetByAlgorithm?action=view&type=algorithm&algorithmUuid='+uuid+'&algorithmVersion='+version;
+  //   return this._sharedService.getCall(url)
+  //   .map((response: Response) => {
+  //     return <any[]>response.json();
+  // })
+  //  .catch(this.handleError);
+  // }
   
-  execute(uuid:Number,version:String,data:any): Observable<any> {
-    let url ='/model/train/execute?action=execute&uuid='+uuid+'&version='+version;
-    return this._sharedService.postCall(url,data)
-    .map((response: Response) => {
-      return <any>response.json();
-  })
-   .catch(this.handleError);
-  }
+  // execute(uuid:Number,version:String,data:any): Observable<any> {
+  //   let url ='/model/train/execute?action=execute&uuid='+uuid+'&version='+version;
+  //   return this._sharedService.postCall(url,data)
+  //   .map((response: Response) => {
+  //     return <any>response.json();
+  // })
+  //  .catch(this.handleError);
+  // }
   
   private handleError(error: Response) {
     return Observable.throw(error.statusText);

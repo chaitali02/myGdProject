@@ -14,7 +14,7 @@ import {AttributeHolder} from '../../metadata/domain/domain.attributeHolder'
 import { ResponseOptions } from '@angular/http/src/base_response_options';
 
 @Component({
-  selector: 'app-model',
+  selector: 'app-training',
   templateUrl: './training.template.html',
 })
 export class TrainingComponent implements OnInit {

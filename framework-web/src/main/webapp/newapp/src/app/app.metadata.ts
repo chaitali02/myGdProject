@@ -792,8 +792,9 @@ export class AppMetadata {
         iconCaption: '',
         allowInMenu: false,
         listState: 'distribution',
-        detailState: 'createdistribution',
-        moduleCaption: 'Distribution',
+        detailState: 'distribution',
+        moduleState: 'dataScience',
+        moduleCaption: 'Data Science',
         childMenu: [],
         allowInChildMenu: false,
       },
@@ -1048,7 +1049,7 @@ export class AppMetadata {
         listState: 'operator',
         moduleCaption: 'Data Science',
         moduleState: 'Data Science',
-        detailState: 'createoperator'
+      //  detailState: 'createoperator'
       },
       'operatorexec': {
         name: 'operatorexec',
@@ -1441,8 +1442,9 @@ export class AppMetadata {
         metaType: 'simulate',
         iconPath: 'assets/layouts/layout/img/train.svg',
         allowInMenu: false,
-        state: 'createtrain',
-        detailState: 'createtrain',
+        detailState: 'train',
+        moduleState: 'dataScience',
+        moduleCaption: 'Data Science',
         childMenu: [],
         allowInChildMenu: true,
       },

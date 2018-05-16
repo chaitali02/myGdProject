@@ -10,6 +10,7 @@ import { ModelComponent } from './model/model.component';
 import { ParamsetComponent } from './paramset/paramset.component';
 import { ResultsComponent } from './results/results.component';
 import {TrainingComponent } from './training/training.component';
+import {DistributionComponent } from './distribution/distribution.component'
 
 
 const routes: Routes = [
@@ -33,7 +34,9 @@ const routes: Routes = [
             {path: 'train/:id/:version/:mode', component: TrainingComponent,pathMatch:'full' },
             {path: 'train/train/:id/:version/:mode', component:TrainingComponent, pathMatch: 'full'},
             {path: 'train', component: TrainingComponent, pathMatch: 'full'},
-            
+            {path: 'distribution/:id/:version/:mode', component: DistributionComponent,pathMatch:'full' },
+            {path: 'distribution/distribution/:id/:version/:mode', component:DistributionComponent, pathMatch: 'full'},
+            {path: 'distribution', component:DistributionComponent, pathMatch: 'full'},
             
          ]
     }
