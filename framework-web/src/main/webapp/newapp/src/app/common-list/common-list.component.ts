@@ -103,6 +103,7 @@ export class CommonListComponent {
     msgs: Message[] = [];
     items: any
     nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','distribution','paramlist','paramset','training','prediction','operatortype','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','modelexec'];
+    // nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','paramlist','paramset','training','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','modelexec'];
     allStatus = [
         {
          "caption": "All",
@@ -302,7 +303,7 @@ export class CommonListComponent {
                 "caption": "Rule Group"
                 }
             ];
-
+           
             this.breadcrumbDataFrom=[
                 {
                     "caption":this.metaconfig.getMetadataDefs((this.type))['moduleCaption'],

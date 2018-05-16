@@ -5,6 +5,7 @@ import { SelectItem } from 'primeng/primeng';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
 import { Version } from '../../shared/version';
+import { DependsOn } from '../dependsOn';
 
 @Component({
   selector: 'app-algorithm',
@@ -46,6 +47,7 @@ export class AlgorithmComponent implements OnInit {
     this.algorithm["active"]=true;
     this.algorithm["labelRequired"]=true;
     this.isSubmitEnable=true;
+    this.paramList = {};
     this.breadcrumbDataFrom=[{
       "caption":"Data Science",
       "routeurl":"/app/list/algorithm"
@@ -56,8 +58,7 @@ export class AlgorithmComponent implements OnInit {
     },
     {
       "caption":"",
-      "routeurl":null
-      
+      "routeurl":null      
     }
     ] 
 
@@ -110,8 +111,7 @@ export class AlgorithmComponent implements OnInit {
       this.onSuccessgetAllLatest(response)},
     error => console.log("Error :: " + error));  
   }
-    
-  
+     
   onSuccessgetOneByUuidAndVersion(response){
     this.algorithm=response;
     this.uuid=response.uuid;
@@ -122,7 +122,12 @@ export class AlgorithmComponent implements OnInit {
     this.createdBy=response.createdBy.ref.name;  
     this.algorithm.published=response["published"] == 'Y' ? true : false
     this.algorithm.active=response["active"] == 'Y' ? true : false
-    this.paramList=response.paramList.ref.name;
+
+    let dependsOn : DependsOn = new DependsOn();
+    dependsOn.uuid=response["paramList"]["ref"]["uuid"];
+    dependsOn.label=response["paramList"]["ref"]["name"];
+    this.paramList=dependsOn;
+  
     this.breadcrumbDataFrom[2].caption=this.algorithm.name;
     console.log('Data is' + response);
     
@@ -148,7 +153,8 @@ export class AlgorithmComponent implements OnInit {
       refParam["label"] = response[i]['name'];
       refParam["value"] = {}      
       refParam["value"]['name'] = response[i]['name'];
-      refParam["value"]['label'] = response[i]['label'];
+      refParam["value"]['label'] = response[i]['name'];
+      refParam["value"]['uuid'] = response[i]['uuid'];
       this.arrayParamList[i] = refParam;
     }    
   }
@@ -199,8 +205,7 @@ export class AlgorithmComponent implements OnInit {
     // }
     // algoJson["tags"] = tagstemp;
     algoJson["desc"]=this.algorithm.desc;
-  //  algoJson["active"]=this.algorithm.active;
-    //algoJson["published"]=this.algorithm.published; 
+  
     algoJson["active"]=this.algorithm.active == true ?'Y' :"N"
     algoJson["published"]=this.algorithm.published == true ?'Y' :"N"
     algoJson["type"]=this.algorithm.type;
@@ -211,9 +216,10 @@ export class AlgorithmComponent implements OnInit {
 
     let selectparamList = {};
     let refParam = {};
+
     refParam["uuid"] = this.paramList.uuid;
     refParam["type"] = "paramlist";
-    refParam["name"] = this.paramList;
+    refParam["name"] = this.paramList.name;
     selectparamList["ref"] = refParam;
 
     algoJson["paramList"] = selectparamList;

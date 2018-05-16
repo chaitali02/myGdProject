@@ -11,4 +11,4 @@ ld/
 metastore_db
 src/main/webapp/app/node_modules/
 src/main/webapp/app/.tmp/
-
+framework-web/derby.log

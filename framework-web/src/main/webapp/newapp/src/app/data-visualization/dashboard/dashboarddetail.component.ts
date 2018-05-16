@@ -45,15 +45,21 @@ export class DashboardDetailComponent {
          this.dashboardData["active"]=true;
          this.pageNo=1;
          this.sectionRows=[];
+
          this.breadcrumbDataFrom=[{
+            "caption":" Data Visualization",
+            "routeurl":"/app/list/dashboard"
+          },
+          {
             "caption":"Dashboard",
-            "routeurl":"list/dashboard"
-        },
-        {
-            "caption":"",
-            "routeurl":null
-        }
-        ]  
+            "routeurl":"/app/list/dashboard"
+          },
+          {
+              "caption":"",
+              "routeurl":null
+          }
+        ];
+ 
         this.sources = ["datapod","relation"];
         this.source=this.sources[0];
         this.dropdownSettings = { 
@@ -346,7 +352,7 @@ export class DashboardDetailComponent {
         error => console.log("Error :: " + error));  
     }
     onSuccessGetOneByUuidAndVersion(response){
-       this.breadcrumbDataFrom[1].caption=response.name
+       this.breadcrumbDataFrom[2].caption=response.name
        this.dashboardData=response;
        const version: Version = new Version();
        version.label = response['version'];
