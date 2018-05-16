@@ -921,15 +921,9 @@ public class ModelServiceImpl {
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.InProgress);
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
 					simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-			
-//			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(
-//					model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(),
-//					MetaType.algorithm.toString());
-
+	
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
-			String filePath = "/simulate"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
-			//String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
-			
+			String filePath = "/simulate"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());	
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
@@ -961,6 +955,9 @@ public class ModelServiceImpl {
 			distExecParam.setParamListInfo(distParamHolderList);
 			simExecParam.setParamListInfo(simParamHolderList);
 			
+			/*
+			 * New ParamListHolder for distribution  
+			 */
 			ParamListHolder distributionInfo = new ParamListHolder();
 			distributionInfo.setParamId("0");
 			distributionInfo.setParamName("distribution");
@@ -970,8 +967,20 @@ public class ModelServiceImpl {
 			distributionInfo.setParamValue(distHolder);
 			distributionInfo.setRef(new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()));
 			
+			/*
+			 * New ParamListHolder for numIterations  
+			 */
+			ParamListHolder numIterationsInfo = new ParamListHolder();
+			numIterationsInfo.setParamId("1");
+			numIterationsInfo.setParamName("numIterations");
+			distributionInfo.setParamType("integer");
+			MetaIdentifierHolder numIterHolder = new MetaIdentifierHolder(null, ""+simulate.getNumIterations());
+			numIterationsInfo.setParamValue(numIterHolder);
+			numIterationsInfo.setRef(new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()));
+			
 			List<ParamListHolder> paramListInfo2 = execParams.getParamListInfo();
 			paramListInfo2.add(distributionInfo);
+			paramListInfo2.add(numIterationsInfo);
 			execParams.setParamListInfo(paramListInfo2);
 			
 			String appUuid = commonServiceImpl.getApp().getUuid();
