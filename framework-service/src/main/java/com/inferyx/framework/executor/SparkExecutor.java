@@ -18,12 +18,9 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
@@ -75,25 +72,21 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
-import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
-import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
 import scala.collection.Iterator;
-import scala.collection.JavaConversions;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
 import scala.collection.mutable.WrappedArray;
@@ -133,8 +126,6 @@ public class SparkExecutor implements IExecutor {
 	private MetadataUtil daoRegister;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
-	@Autowired
-	private DataStoreServiceImpl dataStoreServiceImpl;	
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 
@@ -1372,7 +1363,7 @@ public class SparkExecutor implements IExecutor {
 				.invoke(trainedModel, df);
 		predictionDf.show(false);
 
-		String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
+		//String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
 
 		//if (targetType.equalsIgnoreCase(MetaType.datapod.toString())) {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();

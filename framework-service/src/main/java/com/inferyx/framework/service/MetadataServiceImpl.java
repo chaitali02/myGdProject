@@ -1298,7 +1298,7 @@ public class MetadataServiceImpl {
 //	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ParamList> getParamList(String collectionType,String type,String name, String userName, String startDate,
+	public List<BaseEntity> getParamList(String collectionType,String type,String name, String userName, String startDate,
 			String endDate, String tags, String active, String uuid, String version, String published) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		
 		MetaType metaType = Helper.getMetaType(type);
@@ -1335,7 +1335,7 @@ public class MetadataServiceImpl {
 			else if (endDate != null && !endDate.isEmpty())
 				criteriaList.add(where("createdOn").lte(simpleDateFormat.parse(endDate)));
 			if (tags != null && !tags.isEmpty()) {
-				ArrayList tagList = new ArrayList(Arrays.asList(tags.split(",")));
+				ArrayList<?> tagList = new ArrayList<>(Arrays.asList(tags.split(",")));
 				criteriaList.add(where("tags").all(tagList));
 			}
 			if (active != null && !active.isEmpty()) {
@@ -1392,10 +1392,8 @@ public class MetadataServiceImpl {
 		query2.fields().include("createdBy");
 		query2.fields().include("appInfo");
 		query2.fields().include("active");
-		query2.fields().include("paramListType");
 		query2.fields().include("desc");
 		query2.fields().include("published");
-		query2.fields().include("params");
 
 		if (collectionType.toString().equalsIgnoreCase(MetaType.rule.toString())) {
 			query2.addCriteria(
@@ -1409,7 +1407,8 @@ public class MetadataServiceImpl {
 			paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
 
 		}
-		return paramList;
+		List<BaseEntity> baseEntities = new ArrayList<>(paramList);
+		return commonServiceImpl.resolveBaseEntityList(baseEntities);
 	}
 	
 }
