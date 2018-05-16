@@ -218,6 +218,10 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		paramlistJson.desc = $scope.paramlistData.desc
 		paramlistJson.active = $scope.paramlistData.active;
 		paramlistJson.published = $scope.paramlistData.published;
+		if($scope.parantType){
+	    	paramlistJson.paramListType = $scope.parantType;
+			
+		}
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

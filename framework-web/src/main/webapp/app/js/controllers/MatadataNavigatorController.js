@@ -38,6 +38,7 @@
     CommonService.getMetaStats().then(function(response) {onSuccess(response.data)});
     var onSuccess = function(response) {
       var colorclassarray = ["blue-sharp", "green-sharp", "purple-soft", "red-haze"]
+      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype'];
       var metaarray = []
       for (var i = 0; i < response.length; i++) {
         var metajson = {};
@@ -50,9 +51,8 @@
         metajson.class = colorclassarray[randomno];
         var patt = new RegExp("exec");
        // alert(patt)
-        
         var res = patt.exec(response[i].type);
-        if (response[i].type.indexOf("exec") == -1 && response[i].type !="message") {
+        if (response[i].type.indexOf("exec") == -1 && noMetaType.indexOf(response[i].type) == -1) {
           switch (response[i].type) {
             case "datapod":
               metajson.caption = "Datapod";
@@ -186,6 +186,16 @@
               metajson.icon = "fa fa-flask"
               metajson.state = "paramlist";
               break;
+            case "operator":
+              metajson.caption = "operator";
+              metajson.icon = "fa fa-flask"
+              metajson.state = "operator";
+            break;
+            case "distribution":
+             metajson.caption = "distribution";
+             metajson.icon = "fa fa-flask"
+             metajson.state = "distribution";
+            break;
             case "paramset":
               metajson.caption = "Param Set";
               metajson.icon = "fa fa-flask"
