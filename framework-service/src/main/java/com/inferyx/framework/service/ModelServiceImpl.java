@@ -105,7 +105,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -184,8 +183,6 @@ public class ModelServiceImpl {
 	private MonteCarloSimulation monteCarloSimulation;
 	@Autowired
 	private GenerateDataOperator generateDataOperator;
-	@Autowired
-	private SparkExecutor sparkExecutor;
 	
 	//private ParamMap paramMap;
 
@@ -997,31 +994,6 @@ public class ModelServiceImpl {
 					
 					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 					
-<<<<<<< HEAD
-					String tabName_2 = null;
-					String tableName_3 = null;
-					if(distribution.getClassName().contains("UniformRealDistribution")) {
-						for(int i=0; i<fieldArray.length; i++) {
-//							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
-							String[] customFldArr = new String[] {fieldArray[i]};
-							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
-							String sql = simulateMLOperator.generateSql(simulate, tabName_2);
-							result = exec.executeAndRegister(sql, tabName_2, appUuid);//(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
-
-							if(i == 0)
-								tableName_3 = tabName_2;
-							if(i>0)
-								tableName_3 = sparkExecutor.joinDf(tableName_3, tabName_2, i, appUuid);
-						}
-					} else {
-//						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
-						String[] customFldArr = new String[] {fieldArray[0]};
-						tableName_3 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
-					}
-					
-					String sql = "SELECT * FROM " + tableName_3;
-					result = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);					
-=======
 
 					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
 						
@@ -1030,9 +1002,9 @@ public class ModelServiceImpl {
 					String sql = simulateMLOperator.generateSql(simulate, tabName_2);
 					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
 					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);					
->>>>>>> 22327fc4350b3637e427e6dd7d8eca5505cba0a9
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-					
+					//Object object = mlDistribution.getDistribution(distribution, distExecParam);
+
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
@@ -1040,30 +1012,23 @@ public class ModelServiceImpl {
 					
 					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 					
+					//String tabName_1 = exec.generateFeatureData(object, model.getFeatures(), simulate.getNumIterations(), (tableName+"_"+"algo_rand_df"));
 					String tabName_2 = null;
-					String tableName_3 = null;
-					if(distribution.getClassName().contains("UniformRealDistribution")) {
-						for(int i=0; i<fieldArray.length; i++) {
-//							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
-							String[] customFldArr = new String[] {fieldArray[i]};
-							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
-	
-							if(i == 0)
-								tableName_3 = tabName_2;
-							if(i>0)
-								tableName_3 = sparkExecutor.joinDf(tableName_3, tabName_2, i, appUuid);
-						}
-					} else {
-//						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+//					for(int i=0; i<fieldArray.length; i++) {
 						String[] customFldArr = new String[] {fieldArray[0]};
-						tableName_3 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
-					}
-					String sql = "SELECT * FROM " + tableName_3;
-					result = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);				
+						tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);	
+//						tableName = tabName_2;
+//					}
+					
+					String sql = "SELECT * FROM " + tabName_2;
+					//result = exec.executeAndRegister(sql, tableName, commonServiceImpl.getApp().getUuid());
+					result = exec.executeRegisterAndPersist(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);				
 				}
 			}
 			
+			
 			dataStoreServiceImpl.setRunMode(runMode);
+
 			dataStoreServiceImpl.create(filePathUrl, modelName,
 					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
 					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),

@@ -203,14 +203,16 @@
                                                     <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="checkAll" ng-click="checkAllFilterRow()"/>
                                                 </span>
                                             </th>
-                                            <th style="text-align: center; Vertical-align: middle;width:15%;">Logical Operator</th>
-                                            <th style="text-align: center;width:35%;">LHS Attribute</th>
-                                            <th style="text-align: center;width:15%;">Operator</th>
-                                            <th style="text-align: center;width:30%;">RHS Attribute</th>
+                                            <th style="width:11%;text-align:center;">Logical Operator</th>
+                                            <th style="width:13%;text-align:center;"> LHS Type</th>
+                                            <th style="width:25%;text-align:center;">LHS Attribute</th>
+                                            <th style="width:13%;text-align:center;">Operator</th>
+                                            <th style="width:13%;text-align:center;">RHS Type</th>
+                                            <th style="width:25%;text-align:center;">RHS Attribute</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="data in filterTableArray">
+                                        <tr ng-repeat="tabledata in filterTableArray">
                                             <td style="text-align:center;Vertical-align:middle;">
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                     <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" />
@@ -218,25 +220,69 @@
                                             </td>
                                             <td>
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                    <select ng-model="data.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first ||{{mode}}" class="form-control"></select>
+                                                    <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first ||{{mode}}" class="form-control"></select>
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                    <select select2 ng-model="data.lhsFilter" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                                    <select ng-change="selectlhsType(tabledata.lhstype.text,$index)" ng-model="tabledata.lhstype" ng-options="x as x.caption for x in lshType track by x.text"
+                                                        ng-disabled=" {{mode}}" class="form-control">
                                                     </select>
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                    <select ng-init="data.operator" ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator" ng-disabled="{{mode}}"
+                                                    <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
+                                                        ng-show="tabledata.islhsSimple">
+                                                </span>
+                                                <div ng-show="tabledata.islhsDatapod">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
+                                                            ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                                <div ng-show="tabledata.islhsFormula">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <select select2 class="form-control" ng-change="selectmetlhsType()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
+                                                            ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula">
+                                                        </select>
+                                                    </span>
+                                                </div>
+
+                                            </td>
+                                            <td>
+                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                    <select ng-init="tabledata.operator" ng-disabled="{{mode}}" ng-model="tabledata.operator" ng-options="x for x in operator" ng-disabled="{{mode}}"
                                                     class="form-control"></select>
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                    <input type="text" class="form-control" ng-model="data.filtervalue" title="{{data.filtervalue}}" ng-disabled="{{mode}}">
-                                                </span> 
+                                                    <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption for x in lshType track by x.text"
+                                                        ng-disabled=" {{mode}}" class="form-control">
+                                                    </select>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                    <input type="text" ng-disabled="{{mode}}" class="form-control" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
+                                                        ng-show="tabledata.isrhsSimple">
+                                                </span>
+                                                <div ng-show="tabledata.isrhsDatapod">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                                <div ng-show="tabledata.isrhsFormula">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <select select2 class="form-control" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
+                                                            ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula">
+                                                        </select>
+                                                    </span>
+                                                </div>
+
                                             </td>
                                         </tr>
                                     </tbody>
