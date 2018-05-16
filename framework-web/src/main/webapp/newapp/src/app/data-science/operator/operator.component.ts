@@ -6,26 +6,27 @@ import { SelectItem } from 'primeng/primeng';
 import { AppConfig } from '../../app.config';
 
 import { CommonService } from '../../metadata/services/common.service';
-import { DistributionService } from '../../metadata/services/distribution.service';
+import { OperatorService } from '../../metadata/services/operator.service';
 
 import { Version } from '../../metadata/domain/version';
+import { error } from 'util';
 import { DependsOn } from '../dependsOn';
 
 
 @Component({
-  selector: 'app-distribution',
-  templateUrl: './distribution.template.html',
+  selector: 'app-operator',
+  templateUrl: './operator.template.html',
 })
-export class DistributionComponent implements OnInit {
+export class OperatorComponent implements OnInit {
   selectallattribute: any;
   ishowExecutionparam: boolean;
   dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
+  arrayParamList: any;
   createdBy: any;
   name: any;
   version: any;
   breadcrumbDataFrom: any;
-  showdistribution: any;
-  distribution: any;
+  operator: any;
   tags: any;
   id: any;
   mode: any;
@@ -37,46 +38,29 @@ export class DistributionComponent implements OnInit {
   isSubmitEnable: any;
   selectedVersion: Version;
   VersionList: SelectItem[] = [];
-  library: any;
-  librarytypesOption: { 'value': String, 'label': String }[];
   msgs: any;
-  arrayParamList: any;
-  selectedParamlist: any;
   paramList: DependsOn;
-    constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: DistributionService) {
-    this.distribution = true;
-    this.distribution = {};
+
+  constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: OperatorService) {
+    this.operator = true;
+    this.operator = {};
     //this.paramList ={'label':"","uuid":""}
-    this.distribution["active"] = true;
-    this.isSubmitEnable = true
-    this.dropdownSettings = {
-      singleSelection: false,
-      text: "Select Attrubutes",
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      classes: "myclass custom-class",
-      maxHeight: 110,
-      disabled: false
-    };
+    this.operator["active"] = true;
+
     this.breadcrumbDataFrom = [{
       "caption": "Data Science",
-      "routeurl": "/app/list/distribution"
+      "routeurl": "/app/list/operatortype"
     },
     {
-      "caption": "Distribution",
-      "routeurl": "/app/list/distribution"
+      "caption": "Operator",
+      "routeurl": "/app/list/operatortype"
     },
     {
       "caption": "",
       "routeurl": null
     }
     ];
-    this.librarytypesOption = [
-      { "value": "sparkML", "label": "sparkML" },
-      { "value": "R", "label": "R" },
-      { "value": "java", "label": "java" }
-    ]
+
 
 
   }
@@ -95,7 +79,7 @@ export class DistributionComponent implements OnInit {
     })
   }
   getOneByUuidAndVersion() {
-    this._commonService.getOneByUuidAndVersion(this.id, this.version, 'distribution')
+    this._commonService.getOneByUuidAndVersion(this.id, this.version, 'operatortype')
       .subscribe(
       response => {
         this.onSuccessgetOneByUuidAndVersion(response)
@@ -105,7 +89,7 @@ export class DistributionComponent implements OnInit {
 
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('distribution', this.id)
+    this._commonService.getAllVersionByUuid('operatortype', this.id)
       .subscribe(
       response => {
         this.OnSuccesgetAllVersionByUuid(response)
@@ -113,31 +97,23 @@ export class DistributionComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-  getAllLatest() {
-    this._commonService.getAllLatest('paramList')
-      .subscribe(
-      response => {
-        this.onSuccessgetAllLatest(response)
-      },
-      error => console.log("Error :: " + error));
-  }
+
 
   onSuccessgetOneByUuidAndVersion(response) {
-    this.distribution = response
+    this.operator = response
     this.uuid = response.uuid;
     const version: Version = new Version();
     version.label = response['version'];
     version.uuid = response['uuid'];
     this.selectedVersion = version
     this.createdBy = response.createdBy.ref.name;
-    this.distribution.published = response["published"] == 'Y' ? true : false
-    this.distribution.active = response["active"] == 'Y' ? true : false
-    // this.distribution.paramList = response.paramList.ref.name
+    this.operator.published = response["published"] == 'Y' ? true : false
+    this.operator.active = response["active"] == 'Y' ? true : false
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["paramList"]["ref"]["name"];
     dependOnTemp.uuid = response["paramList"]["ref"]["uuid"];
     this.paramList = dependOnTemp;
-    this.breadcrumbDataFrom[2].caption = this.distribution.name
+    this.breadcrumbDataFrom[2].caption = this.operator.name
     console.log('Data is' + response);
 
   }
@@ -155,6 +131,16 @@ export class DistributionComponent implements OnInit {
     this.VersionList = temp
   }
 
+
+  getAllLatest() {
+    this._commonService.getAllLatest('paramList')
+      .subscribe(
+      response => {
+        this.onSuccessgetAllLatest(response)
+      },
+      error => console.log("Error :: " + error));
+  }
+
   onSuccessgetAllLatest(response) {
     this.arrayParamList = [];
     for (const i in response) {
@@ -170,10 +156,8 @@ export class DistributionComponent implements OnInit {
   }
 
 
-
-
   onVersionChange() {
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'distribution')
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'operatortype')
       .subscribe(
       response => {//console.log(response)},
         this.onSuccessgetOneByUuidAndVersion(response)
@@ -185,14 +169,15 @@ export class DistributionComponent implements OnInit {
 
   public goBack() {
     // this._location.back();
-    this.router.navigate(['app/list/distribution']);
+    this.router.navigate(['app/list/operatortype']);
   }
 
-  submitDistribution() {
+  submitOperatorType() {
+    debugger;
     this.isSubmitEnable = true;
-    let distributionJson = {};
-    distributionJson["uuid"] = this.distribution.uuid;
-    distributionJson["name"] = this.distribution.name;
+    let operatorJson = {};
+    operatorJson["uuid"] = this.operator.uuid;
+    operatorJson["name"] = this.operator.name;
     //let tagArray=[];
     const tagstemp = [];
     for (const t in this.tags) {
@@ -203,12 +188,10 @@ export class DistributionComponent implements OnInit {
     //     tagArray[counttag]=this.tags[counttag]["value"];
     //   }
     // }
-    distributionJson["tags"] = tagstemp;
-    distributionJson["desc"] = this.distribution.desc;
-    distributionJson["active"] = this.distribution.active == true ? "Y" : "N";
-    distributionJson["published"] = this.distribution.published == true ? "Y" : "N";
-    distributionJson["library"] = this.distribution.library;
-    distributionJson["className"] = this.distribution.className;
+    operatorJson["tags"] = tagstemp;
+    operatorJson["desc"] = this.operator.desc;
+    operatorJson["active"] = this.operator.active == true ? "Y" : "N";
+    operatorJson["published"] = this.operator.published == true ? "Y" : "N";
     let paramlist = {};
     let refParam = {};
     if (this.paramList != null) {
@@ -217,9 +200,9 @@ export class DistributionComponent implements OnInit {
       // refParam["name"] = this.paramList.name;
       paramlist["ref"] = refParam;
     }
-    distributionJson["paramList"] = paramlist;
-    console.log(JSON.stringify(distributionJson));
-    this._commonService.submit("distribution", distributionJson).subscribe(
+    operatorJson["paramList"] = paramlist;
+    console.log(JSON.stringify(operatorJson));
+    this._commonService.submit("operatortype", operatorJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
@@ -229,21 +212,11 @@ export class DistributionComponent implements OnInit {
     console.log(response)
     this.isSubmitEnable = true;
     this.msgs = [];
-    this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Ditribution Submitted Successfully' });
+    this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Ditr Submitted Successfully' });
     setTimeout(() => {
       this.goBack()
     }, 1000);
   }
-
-  enableEdit(uuid, version) {
-    this.router.navigate(['app/dataScience/distribution', uuid, version, 'false']);
-  }
-
-  showview(uuid, version) {
-    this.router.navigate(['app/dataScience/distribution', uuid, version, 'true']);
-  }
-
-
 
 
 }

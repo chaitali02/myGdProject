@@ -31,6 +31,8 @@ import {TrainingComponent } from './training/training.component';
 import { TrainingService } from '../metadata/services/training.service';
 import { DistributionComponent } from './distribution/distribution.component';
 import { DistributionService } from '../metadata/services/distribution.service';
+import { OperatorComponent } from './operator/operator.component';
+import { OperatorService } from '../metadata/services/operator.service';
 import { PredictionComponent } from './prediction/prediction.component';
 import { PredictionService } from '../metadata/services/prediction.service';
 import {SimulationComponent } from './simulation/simulation.component';
@@ -66,6 +68,7 @@ import {SimulationService } from '../metadata/services/simulation.service';
         DistributionComponent,
         PredictionComponent,
         SimulationComponent,
+        OperatorComponent,
         
     ],
     providers:[
@@ -75,6 +78,8 @@ import {SimulationService } from '../metadata/services/simulation.service';
         DistributionService,
         PredictionService, 
         SimulationService,
+        OperatorService,
+        OperatorComponent
     ]
 })
  
