@@ -2380,7 +2380,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
 
     })
     
-    .state('createparamlist', {
+    .state('createparamlistmodel', {
         url:"/CreateParamList?id&mode&returnBack&version",
         templateUrl:"views/paramlist.html",
         data: { pageTitle: 'Data Science'},
