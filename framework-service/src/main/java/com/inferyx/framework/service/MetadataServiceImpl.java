@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1364,16 +1365,20 @@ public class MetadataServiceImpl {
 		if (className == null) {
 			return null;
 		}
-		
-		// get all rule uuid which contains paramlist 
-		List<String> listUuid = mongoTemplate.getCollection("rule").distinct("paramList.ref.uuid");
-		criteriaList.add(where("uuid").in(listUuid));
-     	Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
-    	Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
+		if (collectionType.equalsIgnoreCase(MetaType.rule.toString())) {
+			criteriaList.add(where("paramListType").is(MetaType.rule.toString()));
+		}
+
+		if (collectionType.equalsIgnoreCase(MetaType.model.toString())) {
+			criteriaList.add(where("paramListType").is(MetaType.model.toString()));
+		}
+
+		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+		Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
 		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.paramlist.toString(),
 				className);
 		metaObjectList = ruleExecResults.getMappedResults();
-       //loop metaObjectList to get uuid,version list...
+		// loop metaObjectList to get uuid,version list...
 		for (ParamList paramlist : metaObjectList) {
 			uuidList.add(paramlist.getId());
 			versionList.add(paramlist.getVersion());
@@ -1387,15 +1392,22 @@ public class MetadataServiceImpl {
 		query2.fields().include("createdBy");
 		query2.fields().include("appInfo");
 		query2.fields().include("active");
+		query2.fields().include("paramListType");
 		query2.fields().include("desc");
 		query2.fields().include("published");
 		query2.fields().include("params");
 
-		if (collectionType.equals(MetaType.rule.toString())) {
+		if (collectionType.toString().equalsIgnoreCase(MetaType.rule.toString())) {
 			query2.addCriteria(
 					Criteria.where("uuid").in(uuidList).andOperator(Criteria.where("version").in(versionList)));
 			paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
-			
+
+		}
+		if (collectionType.toString().equalsIgnoreCase(MetaType.model.toString())) {
+			query2.addCriteria(
+					Criteria.where("uuid").in(uuidList).andOperator(Criteria.where("version").in(versionList)));
+			paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
+
 		}
 		return paramList;
 	}
