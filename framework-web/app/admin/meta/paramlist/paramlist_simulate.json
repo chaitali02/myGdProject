@@ -17,6 +17,7 @@
   "tags": [],
   "active": "Y",
   "published": "N",
+  "paramListType" : "model",
   "appInfo": [
     {
       "ref": {
@@ -31,21 +32,6 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "numIterations",
-      "paramType": "integer",
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "1000"
-      },
-      "paramRef": null
-    },
-    {
-      "paramId": "1",
       "paramName": "saveLocation",
       "paramType": "datapod",
       "paramValue": null,
