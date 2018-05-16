@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
@@ -72,24 +72,22 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
-import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
-import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
 import scala.collection.Iterator;
+import scala.collection.JavaConverters;
 import scala.collection.Seq;
 import scala.collection.mutable.WrappedArray;
 
@@ -128,8 +126,6 @@ public class SparkExecutor implements IExecutor {
 	private MetadataUtil daoRegister;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
-	@Autowired
-	private DataStoreServiceImpl dataStoreServiceImpl;	
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 
@@ -1177,13 +1173,26 @@ public class SparkExecutor implements IExecutor {
 	public String assembleRandomDF(String[] fieldArray, String tableName, boolean isDistribution, String clientContext) throws IOException{
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		
 		if(isDistribution)
 			df = df.withColumnRenamed(df.columns()[1], fieldArray[0]);
 		else
 			fieldArray = df.columns();
+
+		df.printSchema();
+		df.show(true);
+		
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> assembledDf = va.transform(df);
+		assembledDf.printSchema();
 		assembledDf.show(false);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		tableName = tableName + "_" + Helper.getVersion();
 		sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 		return tableName;
 	}
@@ -1354,7 +1363,7 @@ public class SparkExecutor implements IExecutor {
 				.invoke(trainedModel, df);
 		predictionDf.show(false);
 
-		String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
+		//String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
 
 		//if (targetType.equalsIgnoreCase(MetaType.datapod.toString())) {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -1482,4 +1491,36 @@ public class SparkExecutor implements IExecutor {
 		}
 	}
 
+	public String joinDf(String joinTabName_1, String joinTabName_2, int i, String clientContext) throws IOException {
+		String sql_1 = "SELECT * FROM " + joinTabName_1;
+		Dataset<Row> df_1 = executeSql(sql_1, clientContext).getDataFrame();
+		
+		String sql_2 = "SELECT * FROM " + joinTabName_2;
+		Dataset<Row> df_2 = executeSql(sql_2, clientContext).getDataFrame();
+		df_2 = df_2.withColumnRenamed("features", "features_"+i);
+		
+//		Set<String> combinedColumns = new HashSet<>();
+//		for(String column : df_1.columns()) {
+//			combinedColumns.add(column);
+//		}
+//		combinedColumns.addAll(Arrays.asList(df_1.columns()));
+//		combinedColumns.addAll(Arrays.asList(df_2.columns()));
+//		df_1.show(true);
+//		df_2.show(true);
+//		df_1 = df_1.join(df_2, JavaConverters.asScalaBufferConverter(new ArrayList<>(combinedColumns)).asScala(), "full");
+		
+		df_1.printSchema();
+		df_2.printSchema();
+		
+		List<String> joinColumns = new ArrayList<>();
+		joinColumns.add("id");
+		joinColumns.add("version");
+		df_1 = df_1.join(df_2,JavaConverters.asScalaBufferConverter(joinColumns).asScala());
+		//df_1 = df_1.crossJoin(df_2);
+		df_1.printSchema();
+		df_1.show(true);
+		
+		registerTempTable(df_1, joinTabName_1);
+		return joinTabName_1;
+	}
 }
