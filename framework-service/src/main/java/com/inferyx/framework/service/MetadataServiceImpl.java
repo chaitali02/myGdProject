@@ -1396,7 +1396,6 @@ public class MetadataServiceImpl {
 		query2.fields().include("desc");
 		query2.fields().include("published");
 		query2.fields().include("params");
-		query2.fields().include("paramListType");
 
 		if (collectionType.toString().equalsIgnoreCase(MetaType.rule.toString())) {
 			query2.addCriteria(

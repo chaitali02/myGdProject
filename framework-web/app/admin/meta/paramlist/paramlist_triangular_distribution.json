@@ -50,6 +50,7 @@
     "tags" : [],
     "active" : "Y",
     "published" : "N",
+    "paramListType" : "model",
     "appInfo" : [ 
         	{
             "ref" : {
