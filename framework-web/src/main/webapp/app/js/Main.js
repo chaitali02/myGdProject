@@ -419,7 +419,7 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
                 {"name":"algorithm","type":"algorithm","typeCount":"algorithm","uuid":"null","caption":"Algorithm"},
                 {"name":"distribution","type":"distribution","typeCount":"distribution","uuid":"null","caption":"Distribution"},
                 {"name":"model","type":"model","typeCount":"model","uuid":"null","caption":"Model"},
-                {"name":"paramlist","type":"paramlist","typeCount":"paramlistmodel","uuid":"null","caption":"Parameter List"},
+                {"name":"paramlistmodel","type":"paramlist","typeCount":"paramlistmodel","uuid":"null","caption":"Parameter List"},
                 {"name":"paramset","type":"paramset","typeCount":"paramset","uuid":"null","caption":"Parameter Set"},
                 // {"name":"operatortype","type":"operatortype","uuid":"null","caption":"Operator"},
                 {"name":"operator","type":"operator","typeCount":"operator","uuid":"null","caption":"Operator"},
@@ -2372,7 +2372,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         }
     })
 
-    .state('paramlist', {
+    .state('paramlistmodel', {
         url:"/DataScience/ParamList",
 		templateUrl:"views/common-list.html",
 		data: {pageTitle: 'Data Science'},

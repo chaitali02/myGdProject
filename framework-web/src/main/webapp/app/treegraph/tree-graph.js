@@ -308,7 +308,7 @@ function update(source) {
 
     nodeEnter.append("text")
         .attr("x", function (d) {
-            return d.children || d._children ? -10 : 10;
+            return d.children || d._children ? -17 : 17;
         })
         .attr("dy", ".35em")
         .attr("font-family", "Arial, Helvetica, sans-serif")
@@ -366,9 +366,9 @@ function update(source) {
 
     nodeExit.select("text")
         .style("fill-opacity", 1e-6)
-        .attr("font-family", "Arial, Helvetica, sans-serif")
-        .attr("fill", "73879C")
-        .style("font", "normal 11px Arial");
+        // .attr("font-family", "Arial, Helvetica, sans-serif")
+        // .attr("fill", "73879C")
+        // .style("font", "normal 11px Arial");
 
     // Update the links…
     var link = svg.selectAll("path.link")
@@ -420,7 +420,7 @@ function update(source) {
         .insert("g")
         .attr("class", "link")
         .append("text")
-        .attr("dy", ".35em")
+       // .attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .attr("font-family", "Arial, Helvetica, sans-serif")
         .attr("fill", "73879C")
