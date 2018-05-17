@@ -59,6 +59,11 @@
             "type" : "oracle",
             "name" : "sum",
             "paramInfoHolder" : []
+        },
+        {
+            "type" : "postgres",
+            "name" : "sum",
+            "paramInfoHolder" : []
         }
     ]
 }
