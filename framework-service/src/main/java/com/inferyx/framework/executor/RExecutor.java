@@ -375,4 +375,23 @@ public class RExecutor implements IExecutor {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#joinDf(java.lang.String, java.lang.String, int, java.lang.String)
+	 */
+	@Override
+	public String joinDf(String joinTabName_1, String joinTabName_2, int i, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#renameColumn(java.lang.String, int, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

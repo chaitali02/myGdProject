@@ -372,8 +372,14 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 				var lhsref = {}
 				var rhsoperand = {}
 				var rhsref = {};
-				 filterInfo .logicalOperator = $scope.filterTableArray[i].logicalOperator;
-				 filterInfo .operator = $scope.filterTableArray[i].operator;
+				if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
+					filterInfo.logicalOperator=""
+				}
+				else{
+					filterInfo.logicalOperator=$scope.filterTableArray[i].logicalOperator
+				}
+				//filterInfo .logicalOperator = $scope.filterTableArray[i].logicalOperator;
+				filterInfo .operator = $scope.filterTableArray[i].operator;
 				if ($scope.filterTableArray[i].lhstype.text == "string") {
 
 					lhsref.type = "simple";
@@ -381,7 +387,7 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
 				}
 				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
-					if ($scope.selectExpression == "dataset") {
+					if ($scope.selectRelation == "dataset") {
 						lhsref.type = "dataset";
 
 					}
@@ -407,7 +413,7 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
 				}
 				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
-					if ($scope.selectExpression == "dataset") {
+					if ($scope.selectRelation == "dataset") {
 						rhsref.type = "dataset";
 
 					}

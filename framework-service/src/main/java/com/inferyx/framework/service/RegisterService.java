@@ -45,7 +45,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
@@ -110,7 +109,6 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.CSVRegister;
 import com.inferyx.framework.register.HiveRegister;
-import com.inferyx.framework.register.ImpalaRegister;
 import com.inferyx.framework.register.MySqlRegister;
 import com.inferyx.framework.register.OracleRegister;
 import com.inferyx.framework.register.PostGresRegister;
@@ -125,15 +123,9 @@ public class RegisterService {
 
 	static final Logger logger = Logger.getLogger(RegisterService.class);
 	@Autowired
-	private AlgorithmServiceImpl algorithmServiceImpl;
-	@Autowired
-	private ModelServiceImpl modelServiceImpl;
-	@Autowired
 	private ModelExecServiceImpl modelExecServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	private FilterServiceImpl filterServiceImpl;
 	@Autowired
 	private RelationServiceImpl relationServiceImpl;
 	@Autowired
@@ -141,15 +133,9 @@ public class RegisterService {
 	@Autowired
 	private DagServiceImpl dagServiceImpl;
 	@Autowired
-	private MapServiceImpl mapServiceImpl;
-	@Autowired
 	private ExpressionServiceImpl expressionServiceImpl;
 	@Autowired
-	private MetadataServiceImpl metadataServiceImpl;
-	@Autowired
 	private DagExecServiceImpl dagExecServiceImpl;
-	@Autowired
-	private ConditionServiceImpl conditionServiceImpl;
 	@Autowired
 	private VizpodServiceImpl vizpodServiceImpl;
 	@Autowired
@@ -158,45 +144,19 @@ public class RegisterService {
 	 * @Autowired private GroupServiceImpl groupServiceImpl;
 	 */
 	@Autowired
-	private LoadServiceImpl loadServiceImpl;
-	@Autowired
 	private UserServiceImpl userServiceImpl;
 	@Autowired
 	private SessionServiceImpl sessionServiceImpl;
 	@Autowired
 	private ActivityServiceImpl activityServiceImpl;
 	@Autowired
-	private RoleServiceImpl roleServiceImpl;
-	@Autowired
-	private GroupServiceImpl groupServiceImpl;
-	@Autowired
-	private PrivilegeServiceImpl privilegeServiceImpl;
-	@Autowired
-	private GraphServiceImpl graphServiceImpl;
-	@Autowired
-	private DimensionServiceImpl dimensionServiceImpl;
-	@Autowired
-	private MeasureServiceImpl measureServiceImpl;
-	@Autowired
-	private VizExecServiceImpl vizExecServiceImpl;
-	@Autowired
-	private RuleGroupServiceImpl ruleGroupServiceImpl;
-	@Autowired
 	private DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	private ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	private DatasourceServiceImpl datasourceServiceImpl;
-	@Autowired
-	private DashboardServiceImpl dashboardServiceImpl;
 	@Autowired
 	private DatasetViewServiceImpl datasetViewServiceImpl;
 	@Autowired
 	private DashboardViewServiceImpl dashboardViewServiceImpl;
 	@Autowired
 	private DataQualServiceImpl dataQualServiceImpl;
-	@Autowired
-	private DataQualGroupServiceImpl dataQualGroupServiceImpl;
 	@Autowired
 	private DataQualExecServiceImpl dataQualExecServiceImpl;
 	@Autowired
@@ -218,8 +178,6 @@ public class RegisterService {
 	@Autowired
 	private HiveRegister hiveRegister;
 	@Autowired
-	private ImpalaRegister impalaRegister;
-	@Autowired
 	private MySqlRegister mysqlRegister;
 	@Autowired
 	private OracleRegister oracleRegister;
@@ -234,23 +192,15 @@ public class RegisterService {
 	@Autowired
 	private MapExecServiceImpl mapExecServiceImpl;
 	@Autowired
-	private ProfileServiceImpl profileServiceImpl;
-	@Autowired
 	private ProfileExecServiceImpl profileExecServiceImpl;
 	@Autowired
-	private ProfileGroupServiceImpl profileGroupServiceImpl;
-	@Autowired
 	private ProfileGroupExecServiceImpl profileGroupExecServiceImpl;
-	@Autowired
-	private ParamListServiceImpl paramListServiceImpl;
 	@Autowired
 	private ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ConnectionFactory connectionFactory;
 	@Autowired
 	protected ExecutorFactory execFactory;
-    @Autowired
-    private MetadataUtil daoRegister;
     @Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
     @Autowired
@@ -2554,6 +2504,11 @@ public class RegisterService {
 		return mongoGraphServiceImpl.getGraphJson(uuid,version,degree);
 
 	}
+	public String getTreeGraphResults(String uuid,String version, String degree) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		//return graphServiceImpl.getGraphJson(uuid,version,degree);
+		return mongoGraphServiceImpl.getTreeGraphJson(uuid,version,degree);
+
+	}
 	
 	/* public String getGraphJson() { 
 		 return mongoGraphServiceImpl.getGraphJson();
@@ -3523,6 +3478,68 @@ public class RegisterService {
 				
 				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
 				registryList.addAll(datapodList);
+			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
+					| ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
+		}//For PostGres
+		else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+			List<String> tables = new ArrayList<String>();
+			try {
+				Class.forName(datasource.getDriver());
+				Connection con = DriverManager.getConnection("jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort()
+						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
+				DatabaseMetaData md = con.getMetaData();
+				ResultSet rs = md.getTables(null, null, "%", null);
+				
+				while (rs.next()) 
+					tables.add(rs.getString(3));
+				logger.info("PostGres Tables :  " + tables);
+				rs.close();				
+
+				List<Datapod> datapodList = null;
+				int i = 1;
+				for (String table : tables) {
+					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
+					if (datapodList.size() > 0){
+						for (Datapod datapod : datapodList) {
+							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
+								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
+									Registry registry = new Registry();
+									registry.setId(Integer.toString(i));
+									registry.setName(table);
+									registry.setRegisteredOn(datapod.getCreatedOn());
+									registry.setDesc(datapod.getDesc());
+									registry.setRegisteredOn(datapod.getCreatedOn());
+									registry.setStatus("Registered");
+									registryList.add(registry);
+									break;
+								} else {
+									Registry registry = new Registry();
+									registry.setId(Integer.toString(i));
+									registry.setName(table);
+									registry.setRegisteredOn(null);
+									registry.setDesc(null);
+									registry.setRegisteredOn(null);
+									registry.setStatus("UnRegistered");
+									registryList.add(registry);
+
+								}
+							}
+						}
+					} else {
+						Registry registry = new Registry();
+						registry.setId(Integer.toString(i));
+						registry.setName(table);
+						registry.setRegisteredOn(null);
+						registry.setDesc(null);
+						registry.setRegisteredOn(null);
+						registry.setStatus("UnRegistered");
+						registryList.add(registry);
+
+					}
+					i++;
+				}
 			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
 					| ClassNotFoundException e1) {
 				e1.printStackTrace();

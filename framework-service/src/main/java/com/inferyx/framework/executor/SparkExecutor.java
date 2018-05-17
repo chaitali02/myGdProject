@@ -162,16 +162,27 @@ public class SparkExecutor implements IExecutor {
 								"jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/"
 										+ datasource.getDbname())
 						.option("user", datasource.getUsername()).option("password", datasource.getPassword())
-						.option("dbtable", "(" + sql + ") as rule_table").load();
+						.option("dbtable", "(" + sql + ") as mysql_table").load();
 				rsHolder.setDataFrame(dataFrame);
 				rsHolder.setType(ResultType.dataframe);
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-				Dataset<Row> dataFrame = sqlContext.read().format("jdbc").option("driver", datasource.getDriver())
+				Dataset<Row> dataFrame = sqlContext.read().format("jdbc")
+						.option("driver", datasource.getDriver())
 						.option("url",
 								"jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":"
 										+ datasource.getDbname())
 						.option("user", datasource.getUsername()).option("password", datasource.getPassword())
-						.option("dbtable", "(" + sql + ")  rule_table").load();
+						.option("dbtable", "(" + sql + ")  oracle_table").load();
+				rsHolder.setDataFrame(dataFrame);
+				rsHolder.setType(ResultType.dataframe);
+			} else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				Dataset<Row> dataFrame = sqlContext.read().format("jdbc")
+						.option("driver", datasource.getDriver())
+						.option("url",
+								"jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/"
+										+ datasource.getDbname())
+						.option("user", datasource.getUsername()).option("password", datasource.getPassword())
+						.option("dbtable", "(" + sql + ") as postgres_table").load();
 				rsHolder.setDataFrame(dataFrame);
 				rsHolder.setType(ResultType.dataframe);
 			}
@@ -1006,15 +1017,17 @@ public class SparkExecutor implements IExecutor {
 	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception {
 		StructField[] fieldArray = new StructField[attributes.size()];
 		int count = 0;
-		Object object = distributionObject.getClass().getMethod("sample").invoke(distributionObject);
+		
 		Class<?> returnType = distributionObject.getClass().getMethod("sample").getReturnType();
 		if(returnType.isArray()) {
 			double[] trialSample = (double[]) distributionObject.getClass().getMethod("sample").invoke(distributionObject);
 			int expectedNumcols = trialSample.length + 2;
 			if(attributes.size() != expectedNumcols)
 				throw new RuntimeException("Insufficient number of columns.");
-		} else if(attributes.size() > 1) {
-			//throw new RuntimeException("Column number exceeded.");
+		} else if(returnType.isPrimitive()) {
+			int expectedNumcols = 3;
+			if(attributes.size() != expectedNumcols)
+				throw new RuntimeException("Insufficient number of columns.");
 		}
 
 //		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
@@ -1031,7 +1044,8 @@ public class SparkExecutor implements IExecutor {
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<numIterations; i++) {
 			int genId = i+1;
-			Object obj;
+			Object obj = null;
+
 			try {
 				obj = distributionObject.getClass().getMethod("sample").invoke(distributionObject);
 				//Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
@@ -1186,13 +1200,13 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> assembledDf = va.transform(df);
 		assembledDf.printSchema();
 		assembledDf.show(false);
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		tableName = tableName + "_" + Helper.getVersion();
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		tableName = tableName + "_" + Helper.getVersion();
 		sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 		return tableName;
 	}
@@ -1385,10 +1399,10 @@ public class SparkExecutor implements IExecutor {
 			ResultSetHolder rsHolder = executeSql(sql, commonServiceImpl.getApp().getUuid());
 
 			Dataset<Row> dfTask = rsHolder.getDataFrame();
+			dfTask.show(true);
 			dfTask.cache();
 
 			sqlContext.registerDataFrameAsTable(dfTask, tableName);
-			dfTask.show(false);
 			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 			datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
 			return filePathUrl + "/data";
@@ -1449,21 +1463,15 @@ public class SparkExecutor implements IExecutor {
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 			trainedDataSet.show(false);
 			return trngModel;
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException
+				| IllegalAccessException 
+				| IllegalArgumentException 
+				| InstantiationException 
+				| SecurityException
+				| NoSuchMethodException
+				| InvocationTargetException e) {
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
+		} 
 		return trngModel; 
 	}
 
@@ -1491,36 +1499,44 @@ public class SparkExecutor implements IExecutor {
 		}
 	}
 
+	@Override
 	public String joinDf(String joinTabName_1, String joinTabName_2, int i, String clientContext) throws IOException {
 		String sql_1 = "SELECT * FROM " + joinTabName_1;
 		Dataset<Row> df_1 = executeSql(sql_1, clientContext).getDataFrame();
 		
 		String sql_2 = "SELECT * FROM " + joinTabName_2;
 		Dataset<Row> df_2 = executeSql(sql_2, clientContext).getDataFrame();
-		df_2 = df_2.withColumnRenamed("features", "features_"+i);
-		
-//		Set<String> combinedColumns = new HashSet<>();
-//		for(String column : df_1.columns()) {
-//			combinedColumns.add(column);
-//		}
-//		combinedColumns.addAll(Arrays.asList(df_1.columns()));
-//		combinedColumns.addAll(Arrays.asList(df_2.columns()));
-//		df_1.show(true);
-//		df_2.show(true);
-//		df_1 = df_1.join(df_2, JavaConverters.asScalaBufferConverter(new ArrayList<>(combinedColumns)).asScala(), "full");
-		
-		df_1.printSchema();
-		df_2.printSchema();
-		
+//		df_2 = df_2.withColumnRenamed("features", "features_"+i);
+	
 		List<String> joinColumns = new ArrayList<>();
 		joinColumns.add("id");
 		joinColumns.add("version");
 		df_1 = df_1.join(df_2,JavaConverters.asScalaBufferConverter(joinColumns).asScala());
-		//df_1 = df_1.crossJoin(df_2);
+//		df_1 = df_1.crossJoin(df_2);
 		df_1.printSchema();
 		df_1.show(true);
 		
 		registerTempTable(df_1, joinTabName_1);
 		return joinTabName_1;
+	}
+
+	@Override
+	public String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext) throws IOException {
+		String sql = "SELECT * FROM " + tableName;
+		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		
+		df = df.withColumnRenamed(df.columns()[targetColIndex], targetColName);
+		df.printSchema();
+		df.show(true);
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		tableName = tableName + "_" + Helper.getVersion();
+		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		return tableName;
 	}
 }

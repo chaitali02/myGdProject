@@ -375,7 +375,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 						|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString()))
 					sql = "INSERT OVERWRITE TABLE " + mapTableName +" "+ partitionClause + " " + sql;
 				else if(datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-						|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))	
+						|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+						|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString()))	
 						sql = "INSERT INTO " + mapTableName + " " + sql;
 			}
 

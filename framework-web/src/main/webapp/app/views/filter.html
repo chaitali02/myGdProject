@@ -195,7 +195,7 @@
                             <br/>
 
                             <div>
-                                <table class=" row-border hover table  table-striped table-bordered" style="table-layout: fixed;">
+                                <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
                                     <thead>
                                         <tr>
                                             <th style="width:5%;text-align: center; Vertical-align: middle;">
@@ -215,7 +215,7 @@
                                         <tr ng-repeat="tabledata in filterTableArray">
                                             <td style="text-align:center;Vertical-align:middle;">
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" />
+                                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
                                                 </span>
                                             </td>
                                             <td>

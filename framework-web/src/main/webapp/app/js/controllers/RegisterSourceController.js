@@ -202,8 +202,17 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
     }
   }
 
-
-   $scope.submitRegisgterSource = function () {
+  $scope.getGridOptionsDataIndex=function(id){
+    var index=-1;
+    for(var i=0;i<$scope.gridOptions.data.length;i++){
+      if(id == $scope.gridOptions.data[i].id){
+       index=i;
+       break;
+      }
+    }
+    return index;
+  } 
+  $scope.submitRegisgterSource = function () {
     var registerSourceArray = [];
     $scope.isRSDisable=true;
     var count = 0;
@@ -213,7 +222,14 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
     var selectRegisterSoucre=$scope.getSelectedRow();
     for (var i = 0; i < selectRegisterSoucre.length; i++) {
       var registerSourceJson = {};
+      if(!$scope.searchtext){
       $scope.gridOptions.data[selectRegisterSoucre[i].id-1].status="Registering"
+      }else{
+        var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
+        if(index!=-1){
+        $scope.gridOptions.data[index].status="Registering"
+      }
+      }
       registerSourceJson.id = selectRegisterSoucre[i].id
       registerSourceJson.name = selectRegisterSoucre[i].name;
       registerSourceJson.dese = selectRegisterSoucre[i].dese;
@@ -230,13 +246,26 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       $scope.dataLoading = false;
       $scope.selectedAllRow = false;
       for (var i = 0; i < response.length; i++) {
-        var id = response[i].id - 1
-        $scope.gridOptions.data[id].registeredOn = response[i].registeredOn;
-        $scope.gridOptions.data[id].desc = response[i].desc;
-        $scope.gridOptions.data[id].status = response[i].status;
-        $scope.gridOptions.data[id].selected= false;
-        $scope.gridOptions.data[id].isDisabled=true;
-        $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
+        if(!$scope.searchtext){
+          var id = response[i].id - 1
+          $scope.gridOptions.data[id].registeredOn = response[i].registeredOn;
+          $scope.gridOptions.data[id].desc = response[i].desc;
+          $scope.gridOptions.data[id].status = response[i].status;
+          $scope.gridOptions.data[id].selected= false;
+          $scope.gridOptions.data[id].isDisabled=true;
+          $scope.gridOptions.data[id].registeredBy=response[i].registeredBy;
+        }
+        else{
+          var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
+          if(index!=-1){
+            $scope.gridOptions.data[index].registeredOn = response[i].registeredOn;
+            $scope.gridOptions.data[index].desc = response[i].desc;
+            $scope.gridOptions.data[index].status = response[i].status;
+            $scope.gridOptions.data[index].selected= false;
+            $scope.gridOptions.data[index].isDisabled=true;
+            $scope.gridOptions.data[index].registeredBy=response[i].registeredBy;
+        }
+        }
         //$scope.gridOptions.data.splice(i,1);
        // $scope.gridApi.selection.unSelectRow($scope.gridOptions.data[id]);
       }

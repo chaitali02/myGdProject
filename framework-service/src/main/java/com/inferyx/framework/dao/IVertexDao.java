@@ -70,6 +70,10 @@ public interface IVertexDao extends MongoRepository<Vertex, String> {
 	@Query(value = "{ '_id' : ?0 }")
 	public Vertex findOneById(String id);
 	
+	
+	@Query(value = "{ 'uuid' : ?0 }")
+	public Vertex findOneByUuid(String id);
+	
 	@Query(value="{}")
 	public List<Vertex> findAll();	
 	
