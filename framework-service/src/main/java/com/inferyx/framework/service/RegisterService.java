@@ -2501,6 +2501,11 @@ public class RegisterService {
 		return mongoGraphServiceImpl.getGraphJson(uuid,version,degree);
 
 	}
+	public String getTreeGraphResults(String uuid,String version, String degree) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		//return graphServiceImpl.getGraphJson(uuid,version,degree);
+		return mongoGraphServiceImpl.getTreeGraphJson(uuid,version,degree);
+
+	}
 	
 	/* public String getGraphJson() { 
 		 return mongoGraphServiceImpl.getGraphJson();
