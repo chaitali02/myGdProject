@@ -57,6 +57,11 @@
             "type" : "oracle",
             "name" : "count",
             "paramInfoHolder" : []
+        },
+        {
+            "type" : "postgres",
+            "name" : "count",
+            "paramInfoHolder" : []
         }
     ],
     "funcType" : "hive",
