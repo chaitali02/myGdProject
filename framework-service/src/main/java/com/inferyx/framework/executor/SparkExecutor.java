@@ -1049,14 +1049,14 @@ public class SparkExecutor implements IExecutor {
 					if(!returnType.getName().equalsIgnoreCase("double")) {
 						List<Object> datasetList = new ArrayList<>();
 						datasetList.add(genId);
-						datasetList.add(Double.parseDouble(""+object));
+						datasetList.add(Double.parseDouble(""+obj));
 						datasetList.add(Integer.parseInt(execVersion));
 						rowList.add(RowFactory.create(datasetList.toArray()));
 						genId++;
 					} else {
 						List<Object> datasetList = new ArrayList<>();
 						datasetList.add(genId);
-						datasetList.add((Double) object);
+						datasetList.add((Double) obj);
 						datasetList.add(Integer.parseInt(execVersion));
 						rowList.add(RowFactory.create(datasetList.toArray()));
 						genId++;
