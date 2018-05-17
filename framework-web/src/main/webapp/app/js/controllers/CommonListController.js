@@ -256,7 +256,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       var countObj={};
       countObj.type=$scope.select;
       countObj.count=data.data.length;      
-      $rootScope.metaStats[$scope.select]=countObj;
+      $rootScope.metaStats[$scope.select+$scope.parantType]=countObj;
     }
     // if($scope.originalData.length >0){
     //   $scope.getResults($scope.originalData);

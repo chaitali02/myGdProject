@@ -889,7 +889,7 @@ public class MetadataController {
 	}
 	
 	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET)
-	public @ResponseBody List<ParamList> getParamListByRule(
+	public @ResponseBody List<BaseEntity> getParamListByRule(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "userName", required = false) String userName,
@@ -904,7 +904,7 @@ public class MetadataController {
 		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
 	}
 	@RequestMapping(value = "/getParamListByModel", method = RequestMethod.GET)
-	public @ResponseBody List<ParamList> getParamListByModel(
+	public @ResponseBody List<BaseEntity> getParamListByModel(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "userName", required = false) String userName,
