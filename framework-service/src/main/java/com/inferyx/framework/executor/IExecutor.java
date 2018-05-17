@@ -373,4 +373,29 @@ public interface IExecutor {
 	 */
 	public Object getDataType(String dataType) throws NullPointerException;
 
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param joinTabName_1
+	 * @param joinTabName_2
+	 * @param i
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	String joinDf(String joinTabName_1, String joinTabName_2, int i, String clientContext) throws IOException;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param tableName
+	 * @param targetColIndex
+	 * @param targetColName
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
+			throws IOException;
 }

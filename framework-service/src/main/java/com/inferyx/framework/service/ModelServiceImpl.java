@@ -173,8 +173,6 @@ public class ModelServiceImpl {
 	private MonteCarloSimulation monteCarloSimulation;
 	@Autowired
 	private GenerateDataOperator generateDataOperator;
-	@Autowired
-	private SparkExecutor sparkExecutor;
 	
 	//private ParamMap paramMap;
 
@@ -1013,16 +1011,18 @@ public class ModelServiceImpl {
 							}
 //							
 							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
-							String[] customFldArr = new String[] {fieldArray[i]};
-							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
+//							String[] customFldArr = new String[] {fieldArray[i]};
+//							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
+							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
 							String sql = simulateMLOperator.generateSql(simulate, tabName_2);
 							result = exec.executeAndRegister(sql, tabName_2, appUuid);//(sql, tabName_2, filePath, null, SaveMode.Append.toString(), appUuid);
 
 							if(i == 0)
 								tableName_3 = tabName_2;
 							if(i>0)
-								tableName_3 = sparkExecutor.joinDf(tableName_3, tabName_2, i, appUuid);
+								tableName_3 = exec.joinDf(tableName_3, tabName_2, i, appUuid);
 						}
+						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {
 //						
 						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
@@ -1058,20 +1058,22 @@ public class ModelServiceImpl {
 							}
 							
 							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
-							String[] customFldArr = new String[] {fieldArray[i]};
-							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
-	
+//							String[] customFldArr = new String[] {fieldArray[i]};
+//							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
+							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
 							if(i == 0)
 								tableName_3 = tabName_2;
 							if(i>0)
-								tableName_3 = sparkExecutor.joinDf(tableName_3, tabName_2, i, appUuid);
+								tableName_3 = exec.joinDf(tableName_3, tabName_2, i, appUuid);
 						}
+						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {
 						
 						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 						String[] customFldArr = new String[] {fieldArray[0]};
 						tableName_3 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 					}
+					
 					String sql = "SELECT * FROM " + tableName_3;
 					result = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);				
 				}

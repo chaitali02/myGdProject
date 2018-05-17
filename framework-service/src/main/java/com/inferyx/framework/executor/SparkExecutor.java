@@ -1031,7 +1031,8 @@ public class SparkExecutor implements IExecutor {
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<numIterations; i++) {
 			int genId = i+1;
-			Object obj;
+			Object obj = null;
+
 			try {
 				obj = distributionObject.getClass().getMethod("sample").invoke(distributionObject);
 				//Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
@@ -1186,13 +1187,13 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> assembledDf = va.transform(df);
 		assembledDf.printSchema();
 		assembledDf.show(false);
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		tableName = tableName + "_" + Helper.getVersion();
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		tableName = tableName + "_" + Helper.getVersion();
 		sparkSession.sqlContext().registerDataFrameAsTable(assembledDf, tableName);
 		return tableName;
 	}
@@ -1491,36 +1492,44 @@ public class SparkExecutor implements IExecutor {
 		}
 	}
 
+	@Override
 	public String joinDf(String joinTabName_1, String joinTabName_2, int i, String clientContext) throws IOException {
 		String sql_1 = "SELECT * FROM " + joinTabName_1;
 		Dataset<Row> df_1 = executeSql(sql_1, clientContext).getDataFrame();
 		
 		String sql_2 = "SELECT * FROM " + joinTabName_2;
 		Dataset<Row> df_2 = executeSql(sql_2, clientContext).getDataFrame();
-		df_2 = df_2.withColumnRenamed("features", "features_"+i);
-		
-//		Set<String> combinedColumns = new HashSet<>();
-//		for(String column : df_1.columns()) {
-//			combinedColumns.add(column);
-//		}
-//		combinedColumns.addAll(Arrays.asList(df_1.columns()));
-//		combinedColumns.addAll(Arrays.asList(df_2.columns()));
-//		df_1.show(true);
-//		df_2.show(true);
-//		df_1 = df_1.join(df_2, JavaConverters.asScalaBufferConverter(new ArrayList<>(combinedColumns)).asScala(), "full");
-		
-		df_1.printSchema();
-		df_2.printSchema();
-		
+//		df_2 = df_2.withColumnRenamed("features", "features_"+i);
+	
 		List<String> joinColumns = new ArrayList<>();
 		joinColumns.add("id");
 		joinColumns.add("version");
 		df_1 = df_1.join(df_2,JavaConverters.asScalaBufferConverter(joinColumns).asScala());
-		//df_1 = df_1.crossJoin(df_2);
+//		df_1 = df_1.crossJoin(df_2);
 		df_1.printSchema();
 		df_1.show(true);
 		
 		registerTempTable(df_1, joinTabName_1);
 		return joinTabName_1;
+	}
+
+	@Override
+	public String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext) throws IOException {
+		String sql = "SELECT * FROM " + tableName;
+		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		
+		df = df.withColumnRenamed(df.columns()[targetColIndex], targetColName);
+		df.printSchema();
+		df.show(true);
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		tableName = tableName + "_" + Helper.getVersion();
+		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		return tableName;
 	}
 }
