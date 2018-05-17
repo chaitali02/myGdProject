@@ -895,3 +895,8 @@ vertical-align: middle;
   border: 1px solid #acacac;
   border-radius: 3px;
 }
+
+.textarea-overflow{
+  overflow-y: auto;
+  overflow-x: hidden;
+}

@@ -628,7 +628,7 @@ public class TaskServiceImpl implements Callable<String> {
 				MapExec mapExec = (MapExec) daoRegister.getRefObject(dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().getRef());
 				DataStore mapDS = new DataStore();
 				mapDS.setCreatedBy(dataStore.getCreatedBy());
-				mapServiceImpl.executeSql(mapExec, dagExecVer, datapodKey, mapDS, runMode);
+				mapServiceImpl.executeSql(mapExec, datapodKey, mapDS, runMode);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;
