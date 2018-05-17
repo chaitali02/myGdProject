@@ -279,11 +279,11 @@
                                   </span>
                                 </th>
                                 <th style="width:15%;text-align:center;">Logical Operator</th>
-                                <th style="width:13%;text-align:center;"> LHS Type</th>
-                                <th style="width:200px;text-align:center;">LHS Attribute</th>
+                                <th style="width:14%;text-align:center;"> LHS Type</th>
+                                <th style="width:190px;text-align:center;">LHS Attribute</th>
                                 <th style="width:13%;text-align:center;">Operator</th>
-                                <th style="width:13%;text-align:center;">RHS Type</th>
-                                <th style="width:200px;text-align:center;">RHS Attribute</th>
+                                <th style="width:14%;text-align:center;">RHS Type</th>
+                                <th style="width:190px;text-align:center;">RHS Attribute</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -305,19 +305,19 @@
                                     </select>
                                   </span>
                                 </td>
-                                <td width="200px">
+                                <td width="190px">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
                                       ng-show="tabledata.islhsSimple" ng-change="onChangeSimple()">
                                   </span>
-                                  <div width="200px" ng-show="tabledata.islhsDatapod">
+                                  <div width="190px" ng-show="tabledata.islhsDatapod">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
                                       ng-change="onChangeAttribute()" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
                                       </select>
                                     </span>
                                   </div>
-                                  <div style="width:200px;" ng-show="tabledata.islhsFormula">
+                                  <div  ng-show="tabledata.islhsFormula">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       <select select2 class="form-control" ng-change="selectmetlhsType()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in ruleLodeFormula track by r.uuid"
                                         ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula" ng-change="onChangeFromula()">

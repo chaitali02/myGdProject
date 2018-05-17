@@ -613,9 +613,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].islhsFormula = true;
 			$scope.filterTableArray[index].islhsSimple = false;
 			$scope.filterTableArray[index].islhsDatapod = false;
-			RuleService.getFormulaByType($scope.filterRelation.defaultoption.uuid, $scope.selectRelation).then(function (response) { onSuccressGetFormula(response.data) });
+			RuleService.getFormulaByType($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
-				$scope.ruleLodeFormula = response;
+				$scope.ruleLodeFormula = response.data;
 			}
 		}
 
@@ -640,9 +640,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsFormula = true;
 			$scope.filterTableArray[index].isrhsSimple = false;
 			$scope.filterTableArray[index].isrhsDatapod = false;
-			RuleService.getFormulaByType($scope.filterRelation.defaultoption.uuid, $scope.selectRelation).then(function (response) { onSuccressGetFormula(response.data) });
+			RuleService.getFormulaByType($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
-				$scope.ruleLodeFormula = response;
+				$scope.ruleLodeFormula = response.data;
 			}
 		}
   }
