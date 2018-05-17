@@ -1006,15 +1006,17 @@ public class SparkExecutor implements IExecutor {
 	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception {
 		StructField[] fieldArray = new StructField[attributes.size()];
 		int count = 0;
-		Object object = distributionObject.getClass().getMethod("sample").invoke(distributionObject);
+		
 		Class<?> returnType = distributionObject.getClass().getMethod("sample").getReturnType();
 		if(returnType.isArray()) {
 			double[] trialSample = (double[]) distributionObject.getClass().getMethod("sample").invoke(distributionObject);
 			int expectedNumcols = trialSample.length + 2;
 			if(attributes.size() != expectedNumcols)
 				throw new RuntimeException("Insufficient number of columns.");
-		} else if(attributes.size() > 1) {
-			//throw new RuntimeException("Column number exceeded.");
+		} else if(returnType.isPrimitive()) {
+			int expectedNumcols = 3;
+			if(attributes.size() != expectedNumcols)
+				throw new RuntimeException("Insufficient number of columns.");
 		}
 
 //		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
@@ -1386,10 +1388,10 @@ public class SparkExecutor implements IExecutor {
 			ResultSetHolder rsHolder = executeSql(sql, commonServiceImpl.getApp().getUuid());
 
 			Dataset<Row> dfTask = rsHolder.getDataFrame();
+			dfTask.show(true);
 			dfTask.cache();
 
 			sqlContext.registerDataFrameAsTable(dfTask, tableName);
-			dfTask.show(false);
 			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
 			datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
 			return filePathUrl + "/data";
@@ -1450,21 +1452,15 @@ public class SparkExecutor implements IExecutor {
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 			trainedDataSet.show(false);
 			return trngModel;
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException
+				| IllegalAccessException 
+				| IllegalArgumentException 
+				| InstantiationException 
+				| SecurityException
+				| NoSuchMethodException
+				| InvocationTargetException e) {
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
+		} 
 		return trngModel; 
 	}
 
