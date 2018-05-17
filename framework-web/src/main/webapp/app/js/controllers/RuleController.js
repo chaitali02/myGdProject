@@ -645,8 +645,31 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 				$scope.ruleLodeFormula = response;
 			}
 		}
-
+  }
+  
+  $scope.onChangeSimple = function () {
+		if ($scope.rulecompare != null) {
+			$scope.rulecompare.filterChg = "y"
+		}
 	}
+	
+	$scope.onChangeOperator=function(){
+		if ($scope.rulecompare != null) {
+			$scope.rulecompare.filterChg = "y"
+		}
+	}
+  $scope.onChangeAttribute=function(){
+		if ($scope.rulecompare != null) {
+			$scope.rulecompare.filterChg = "y"
+		}
+	}
+
+	$scope.onChangeFromula=function(){
+		if ($scope.rulecompare != null) {
+			$scope.rulecompare.filterChg = "y"
+		}
+	}
+
   $scope.onChangeSourceAttribute = function (type, index) {
     if (type == "string") {
       $scope.attributeTableArray[index].isSourceAtributeSimple = true;
@@ -876,17 +899,22 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       if ($scope.filterTableArray.length > 0) {
         for (var i = 0; i < $scope.filterTableArray.length; i++) {
           if ($scope.rulecompare != null && $scope.rulecompare.filter != null && $scope.rulecompare.filter.filterInfo.length == $scope.filterTableArray.length) {
-            if ($scope.rulecompare.filter.filterInfo[i].operand[0].attributeId != $scope.filterTableArray[i].lhsFilter.attributeId ||
-              $scope.filterTableArray[i].logicalOperator != $scope.rulecompare.filter.filterInfo[i].logicalOperator ||
-              $scope.filterTableArray[i].filtervalue != $scope.rulecompare.filter.filterInfo[i].operand[1].value ||
-              $scope.filterTableArray[i].operator != $scope.rulecompare.filter.filterInfo[i].operator) {
+          //   if ($scope.rulecompare.filter.filterInfo[i].operand[0].attributeId != $scope.filterTableArray[i].lhsFilter.attributeId ||
+          //     $scope.filterTableArray[i].logicalOperator != $scope.rulecompare.filter.filterInfo[i].logicalOperator ||
+          //     $scope.filterTableArray[i].filtervalue != $scope.rulecompare.filter.filterInfo[i].operand[1].value ||
+          //     $scope.filterTableArray[i].operator != $scope.rulecompare.filter.filterInfo[i].operator) {
 
-              ruleJson.filterChg = "y";
+          //     ruleJson.filterChg = "y";
 
-            } else {
+          //   } 
+          if ($scope.rulecompare.filterChg == "y") {
+						ruleJson.filterChg = "y";
+					}
+          else {
               ruleJson.filterChg = "n";
             }
-          } else {
+          } 
+          else {
             ruleJson.filterChg = "y";
           }
           var  filterInfo  = {};
