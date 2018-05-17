@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "vertex")
 public class Vertex {
-	
+	String parent;
 	String uuid;
 	String version;
 	String name;
@@ -23,8 +23,14 @@ public class Vertex {
 	String desc;
 	String createdOn;
 	String active;
-
 	
+	public String getParent() {
+		return parent;
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
 	public String getNodeType() {
 		return nodeType;
 	}
