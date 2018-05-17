@@ -242,7 +242,7 @@ export class AppMetadata {
       },
       'loadexec': {
         name: 'load',
-        caption: 'Load',
+        caption: 'load Exec',
         execType: 'loadExec',
         metaType: 'loadExec',
         color: '#EB54C3',
@@ -268,7 +268,7 @@ export class AppMetadata {
       },
       'mapexec': {
         name: 'map',
-        caption: 'Map',
+        caption: 'map Exec',
         execType: 'mapExec',
         metaType: 'map',
         color: '#EB54C3',
@@ -294,7 +294,7 @@ export class AppMetadata {
       },
       'dqgroupexec': {
         name: 'dqgroup',
-        caption: 'DQ Group',
+        caption: 'DQ Group Exec',
         execType: 'dqgroupExec',
         metaType: 'dqgroupExec',
         color: '#dceaab',
@@ -322,7 +322,7 @@ export class AppMetadata {
       },
       'ruleexec': {
         name: 'rule',
-        caption: 'Rule',
+        caption: 'Rule Exec',
         execType: 'ruleExec',
         metaType: 'ruleExec',
         color: '#EB54C3',
@@ -350,7 +350,7 @@ export class AppMetadata {
       },
       'rulegroupexec': {
         name: 'rulegroup',
-        caption: 'Rule Group',
+        caption: 'Rule Group Exec',
         execType: 'rulegroupExec',
         metaType: 'rulegroupExec',
         color: '#EB54C3',
@@ -378,7 +378,7 @@ export class AppMetadata {
       },
       'profileexec': {
         name: 'profile',
-        caption: 'Profile',
+        caption: 'Profile Exec',
         execType: 'profileExec',
         metaType: 'profileExec',
         color: '#EB54C3',
@@ -406,7 +406,7 @@ export class AppMetadata {
       },
       'profilegroupexec': {
         name: 'profilegroup',
-        caption: 'Profile Group',
+        caption: 'Profile Group Exec',
         execType: 'profilegroupExec',
         metaType: 'profilegroupExec',
         color: '#EB54C3',
@@ -434,7 +434,7 @@ export class AppMetadata {
       },
       'dagexec': {
         name: 'pipeline',
-        caption: 'Pipeline',
+        caption: 'Pipeline Exec',
         execType: 'dagexec',
         metaType: 'dagexec',
         color: '#e59866',
@@ -503,7 +503,7 @@ export class AppMetadata {
       },
       'vizexec': {
         name: 'vizpod',
-        caption: 'Vizpod',
+        caption: 'Vizpod Exec',
         execType: 'vizexec',
         metaType: 'vizexec',
         color: '#fff8dc',
@@ -558,7 +558,7 @@ export class AppMetadata {
       },
       'dqexec': {
         name: 'dq',
-        caption: 'Data Quality',
+        caption: 'Data Quality Exec',
         execType: 'dqexec',
         metaType: 'dqexec',
         color: '#EB54C3',
@@ -586,7 +586,7 @@ export class AppMetadata {
       },
       'modelexec': {
         name: 'model',
-        caption: 'Model',
+        caption: 'Model Exec',
         execType: 'modelExec',
         metaType: 'modelExec',
         color: '#EB54C3',
