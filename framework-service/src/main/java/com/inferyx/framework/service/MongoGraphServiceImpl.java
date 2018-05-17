@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,7 @@ import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.domain.Edge;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.NodeDetail;
 import com.inferyx.framework.domain.NodeDetails;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.Vertex;
@@ -93,6 +96,7 @@ public class MongoGraphServiceImpl {
 		  map.put("dataType", vertex.getDataType());
 		  map.put("desc", vertex.getDesc());
 		  map.put("createdOn", vertex.getCreatedOn());
+		  map.put("parent", vertex.getParent());
 		  map.put("active", vertex.getActive());
 		  MetaIdentifier mi = new MetaIdentifier();
 		  mi.setType(Helper.getMetaType(vertex.getNodeType()));	  
@@ -150,6 +154,59 @@ public class MongoGraphServiceImpl {
 		ObjectWriter writer = new ObjectMapper().writer()
 		.withDefaultPrettyPrinter();
 		result = writer.writeValueAsString(nodeDetails);
+		} catch (IOException e) {
+		e.printStackTrace();
+		}
+		return result;
+
+	}
+	
+	
+	
+	public String getTreeGraphJson(String uuid, String version, String degree) {
+		NodeDetail nodeDetail = new NodeDetail();
+		String result = null;
+		List<Map<String,Object>> graphVertex = new ArrayList<>();
+			Map<String, Vertex> vertexMap = new HashMap<>();
+		List<Vertex> vertexList = null;
+
+		Vertex parentvertex = null;
+		List<String> uuidList = null;
+		
+		parentvertex=iVertexDao.findOneByUuid(uuid);
+		
+		vertexList = iVertexDao.findAllByUuidContaining(uuidList);
+		if (vertexList != null) {
+		
+			for (Vertex vertex : vertexList) {
+				
+				vertexMap.put(vertex.getUuid(), vertex);
+			}
+			for (String vertexKey : vertexMap.keySet()) {
+				Vertex vertex = vertexMap.get(vertexKey);
+				
+				if(!vertex.getUuid().equals(uuid)) {
+				vertex.setParent(parentvertex.getName());
+				graphVertex.add(getVertexMap(vertex));
+				}
+			}
+		} 
+		nodeDetail.setName(parentvertex.getName());
+		nodeDetail.setParent("null");
+		nodeDetail.setActive(parentvertex.getActive());
+		nodeDetail.setCreatedOn(parentvertex.getCreatedOn());
+		nodeDetail.setId(parentvertex.getUuid());
+		nodeDetail.setNodeType(parentvertex.getNodeType());
+		nodeDetail.setDataType(parentvertex.getDataType());
+		nodeDetail.setVersion(parentvertex.getVersion());
+
+		nodeDetail.setChildren(graphVertex);
+	
+		try {
+		ObjectWriter writer = new ObjectMapper().writer()
+		.withDefaultPrettyPrinter();
+		result = writer.writeValueAsString(nodeDetail);
+	
 		} catch (IOException e) {
 		e.printStackTrace();
 		}

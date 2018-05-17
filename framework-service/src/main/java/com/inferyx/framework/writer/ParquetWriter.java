@@ -84,7 +84,8 @@ public class ParquetWriter implements IWriter {
 					throw new RuntimeException((message != null) ? message : "File path not exist.");
 				}
 				throw new RuntimeException((message != null) ? message : "File path not exist.");
-			}
+			} else 
+				throw new RuntimeException(e);
 		}
 	}
 }
