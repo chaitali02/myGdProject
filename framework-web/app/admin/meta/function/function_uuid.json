@@ -141,7 +141,7 @@
         }, 
         {
             "type" : "postgres",
-            "name" : "uuid",
+            "name" : "uuid_generate_v1",
             "paramInfoHolder" : []
         }
     ]
