@@ -102,10 +102,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     if($scope.parantType){ //for Paramlist
       stateName=stateName+$scope.parantType
     }
-    if (mode != 'view') {
+   // if (mode != 'view') {
       //clearing cache if edit is called
       cacheService.saveCache('searchCriteria', $scope.select, null);
-    }
+   // }
     
     if (stateName)
       $state.go(stateName, {

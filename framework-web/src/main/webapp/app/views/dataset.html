@@ -283,15 +283,15 @@
                
                 <tbody ng-repeat="tabledata in filterTableArray" >
                   
-                  <tr  
+                  <tr class="tn-draggable" 
                   data-drop="true" data-drag={{isDragable}}
             ng-model="filterTableArray"
             jqyoui-droppable="{index: {{$index}},'onOver':'onOverCallBackRow($index)'}" 
-            jqyoui-draggable="{index: {{$index}}, insertInline: true, direction:'jqyouiDirection',onStart:'onDragCallBackRow({index: $index})'}"
+            jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection',onStart:'onDragCallBackRow({index: $index})'}"
             data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
-            data-direction="{{tabledata.jqyouiDirection}}" >
+            data-direction="{{tabledata.name.jqyouiDirection}}" >
                     
-                    <td style="text-align:center;Vertical-align:middle;">
+                    <td class ="chek" style="text-align:center;Vertical-align:middle;" ng-mouseenter="onMouseEnter()" ng-mouseleave="onMouseLeave()">
                        
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                          
@@ -316,7 +316,7 @@
                         <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
                           ng-show="tabledata.islhsSimple" ng-change="onChangeSimple()">
                       </span>
-                      <div width="200px" ng-show="tabledata.islhsDatapod">
+                      <div width="200px" ng-show="tabledata.islhsDatapod" >
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
                               ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId" ng-change="onChangeAttribute()">
