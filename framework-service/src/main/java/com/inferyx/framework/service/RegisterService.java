@@ -111,6 +111,7 @@ import com.inferyx.framework.register.CSVRegister;
 import com.inferyx.framework.register.HiveRegister;
 import com.inferyx.framework.register.MySqlRegister;
 import com.inferyx.framework.register.OracleRegister;
+import com.inferyx.framework.register.PostGresRegister;
 import com.inferyx.framework.view.metadata.DQView;
 import com.inferyx.framework.view.metadata.DashboardView;
 import com.inferyx.framework.view.metadata.DatasetView;
@@ -180,6 +181,8 @@ public class RegisterService {
 	private MySqlRegister mysqlRegister;
 	@Autowired
 	private OracleRegister oracleRegister;
+	@Autowired
+	private PostGresRegister postGresRegister;
 	@Autowired
 	private LoadExecServiceImpl loadExecServiceImpl;
 	@Autowired
@@ -3263,7 +3266,7 @@ public class RegisterService {
 				tables = metastore.getAllTables(hiveDBName);
 				logger.info("Tables are :: " + tables);
 				
-				List<Datapod> datapodList = null;
+				/*List<Datapod> datapodList = null;
 				int i = 1;
 				for (String table : tables) {
 					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);					
@@ -3301,10 +3304,11 @@ public class RegisterService {
 						registry.setRegisteredOn(null);
 						registry.setStatus("UnRegistered");
 						registryList.add(registry);
-
 					}
 					i++;
-				}
+				}*/
+				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+				registryList.addAll(datapodList);
 
 			} catch (MetaException e) {
 				e.printStackTrace();
@@ -3325,7 +3329,7 @@ public class RegisterService {
 				logger.info("Mysql Tables :  " + tables);
 				rs.close();				
 
-				List<Datapod> datapodList = null;
+				/*List<Datapod> datapodList = null;
 				int i = 1;
 				for (String table : tables) {
 					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
@@ -3351,7 +3355,6 @@ public class RegisterService {
 									registry.setRegisteredOn(null);
 									registry.setStatus("UnRegistered");
 									registryList.add(registry);
-
 								}
 							}
 						}
@@ -3364,10 +3367,11 @@ public class RegisterService {
 						registry.setRegisteredOn(null);
 						registry.setStatus("UnRegistered");
 						registryList.add(registry);
-
 					}
 					i++;
-				}
+				}*/
+				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+				registryList.addAll(datapodList);
 			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
 					| ClassNotFoundException e1) {
 				e1.printStackTrace();
@@ -3390,53 +3394,14 @@ public class RegisterService {
 				logger.info("Oracle Tables :  " + tables);
 				rs.close();
 
-				List<Datapod> datapodList = null;
-				int i = 1;
-				for (String table : tables) {
-					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
-					if (datapodList.size() > 0){
-						for (Datapod datapod : datapodList) {
-							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setDesc(datapod.getDesc());
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setStatus("Registered");
-									registryList.add(registry);
-									break;
-								} else {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(null);
-									registry.setDesc(null);
-									registry.setRegisteredOn(null);
-									registry.setStatus("UnRegistered");
-									registryList.add(registry);
-
-								}
-							}
-						}
-					} else {
-						Registry registry = new Registry();
-						registry.setId(Integer.toString(i));
-						registry.setName(table);
-						registry.setRegisteredOn(null);
-						registry.setDesc(null);
-						registry.setRegisteredOn(null);
-						registry.setStatus("UnRegistered");
-						registryList.add(registry);
-
-					}
-					i++;
-				}
+				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+				registryList.addAll(datapodList);
+				
 			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException | ClassNotFoundException e1) {
 				e1.printStackTrace();
 			}
-		} else if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+		} 
+		else if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			File folder = new File(datasource.getPath());
 			File[] listOfFiles = folder.listFiles();
 			List<String> fileList = new ArrayList<String>();
@@ -3450,7 +3415,7 @@ public class RegisterService {
 					logger.info("Directory " + listOfFiles[i].getName());
 				}
 			}
-			List<Datapod> datapodList = null;
+			/*List<Datapod> datapodList = null;
 			int i = 1;
 			for (String table : fileList) {
 				datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
@@ -3477,7 +3442,6 @@ public class RegisterService {
 								registry.setRegisteredOn(null);
 								registry.setStatus("UnRegistered");
 								registryList.add(registry);
-
 							}
 						}
 					}
@@ -3493,8 +3457,11 @@ public class RegisterService {
 
 				}
 				i++;
-			}
-		}//For PostGres
+			}*/
+			List<Registry> datapodList = createDatapodList(fileList, datasourceUuid, appUuid);
+			registryList.addAll(datapodList);
+		}
+		//for Postgres
 		else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 			List<String> tables = new ArrayList<String>();
 			try {
@@ -3502,56 +3469,17 @@ public class RegisterService {
 				Connection con = DriverManager.getConnection("jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort()
 						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
 				DatabaseMetaData md = con.getMetaData();
-				ResultSet rs = md.getTables(null, null, "%", null);
+
+				String[] types = {"TABLE"};
+				ResultSet rs = md.getTables(null, null, "%", types);
 				
 				while (rs.next()) 
 					tables.add(rs.getString(3));
-				logger.info("PostGres Tables :  " + tables);
-				rs.close();				
-
-				List<Datapod> datapodList = null;
-				int i = 1;
-				for (String table : tables) {
-					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
-					if (datapodList.size() > 0){
-						for (Datapod datapod : datapodList) {
-							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setDesc(datapod.getDesc());
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setStatus("Registered");
-									registryList.add(registry);
-									break;
-								} else {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(null);
-									registry.setDesc(null);
-									registry.setRegisteredOn(null);
-									registry.setStatus("UnRegistered");
-									registryList.add(registry);
-
-								}
-							}
-						}
-					} else {
-						Registry registry = new Registry();
-						registry.setId(Integer.toString(i));
-						registry.setName(table);
-						registry.setRegisteredOn(null);
-						registry.setDesc(null);
-						registry.setRegisteredOn(null);
-						registry.setStatus("UnRegistered");
-						registryList.add(registry);
-
-					}
-					i++;
-				}
+				logger.info("PostGres Tables :  " + tables);				
+				rs.close();		
+				
+				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+				registryList.addAll(datapodList);
 			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
 					| ClassNotFoundException e1) {
 				e1.printStackTrace();
@@ -3560,10 +3488,8 @@ public class RegisterService {
 		
 		if (status.equalsIgnoreCase("UnRegistered")) {
 			int count = 1;
-			for (Registry unRegiser : registryList) {
-				
-				if (unRegiser.getStatus().equalsIgnoreCase("UnRegistered")) {
-					
+			for (Registry unRegiser : registryList) {				
+				if (unRegiser.getStatus().equalsIgnoreCase("UnRegistered")) {		
 					unRegiser.setId(Integer.toString(count));
 					unRegisterList.add(unRegiser);
 					count++;
@@ -3572,10 +3498,8 @@ public class RegisterService {
 			return unRegisterList;
 		} else if (status.equals("Registered")) {
 			int count = 1;
-			for (Registry register : registryList) {
-				
-				if (register.getStatus().equals("Registered")) {
-					
+			for (Registry register : registryList) {				
+				if (register.getStatus().equals("Registered")) {					
 					register.setId(Integer.toString(count));
 					registerList.add(register);
 					count++;
@@ -3586,6 +3510,52 @@ public class RegisterService {
 			return registryList;
 		}
 
+	}
+
+	private List<Registry> createDatapodList(List<String> tables, String datasourceUuid, String appUuid) throws JsonProcessingException {
+		List<Registry> registryList = new ArrayList<Registry>();
+		List<Datapod> datapodList = null;
+		int i = 1;
+		for (String table : tables) {
+			datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
+			if (datapodList.size() > 0){
+				for (Datapod datapod : datapodList) {
+					for (int j = 0; j < datapod.getAppInfo().size(); j++) {
+						if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
+							Registry registry = new Registry();
+							registry.setId(Integer.toString(i));
+							registry.setName(table);
+							registry.setRegisteredOn(datapod.getCreatedOn());
+							registry.setDesc(datapod.getDesc());
+							registry.setRegisteredOn(datapod.getCreatedOn());
+							registry.setStatus("Registered");
+							registryList.add(registry);
+							break;
+						} else {
+							Registry registry = new Registry();
+							registry.setId(Integer.toString(i));
+							registry.setName(table);
+							registry.setRegisteredOn(null);
+							registry.setDesc(null);
+							registry.setRegisteredOn(null);
+							registry.setStatus("UnRegistered");
+							registryList.add(registry);
+						}
+					}
+				}
+			} else {
+				Registry registry = new Registry();
+				registry.setId(Integer.toString(i));
+				registry.setName(table);
+				registry.setRegisteredOn(null);
+				registry.setDesc(null);
+				registry.setRegisteredOn(null);
+				registry.setStatus("UnRegistered");
+				registryList.add(registry);
+			}
+			i++;
+		}
+		return registryList;
 	}
 
 	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode)
@@ -3600,6 +3570,8 @@ public class RegisterService {
 			return mysqlRegister.registerDB(uuid, version, registryList);
 		} else if (type.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			return oracleRegister.registerDB(uuid, version, registryList);
+		} else if (type.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				return postGresRegister.registerDB(uuid, version, registryList);
 		} else {
 			return null;
 		}

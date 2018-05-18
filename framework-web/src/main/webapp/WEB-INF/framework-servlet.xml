@@ -337,8 +337,8 @@
 	<bean id="postGresConnector" class="com.inferyx.framework.connector.PostGresConnector"/>
 	<bean id="postGresExecutor" class="com.inferyx.framework.executor.PostGresExecutor"/>
 	<!-- <bean id="postGresWriter" class="com.inferyx.framework.writer.PostGresWriter"/>
-	<bean id="postGresReader" class="com.inferyx.framework.reader.PostGresReader"/>
-	<bean id="postGresRegister" class="com.inferyx.framework.register.PostGresRegister"/> -->
+	<bean id="postGresReader" class="com.inferyx.framework.reader.PostGresReader"/> -->
+	<bean id="postGresRegister" class="com.inferyx.framework.register.PostGresRegister"/>
 	
 	<bean id="reconOperator" class="com.inferyx.framework.operator.ReconOperator"/>
 	<bean id="reconExecServiceImpl" class="com.inferyx.framework.service.ReconExecServiceImpl"/>
