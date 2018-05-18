@@ -7,14 +7,17 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		$scope.isDragable="false";
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isDragable="true";
 	}
 	else {
 		$scope.isAdd = true;
+		$scope.isDragable="true";
 	}
 	$scope.mode = "false";
 	$scope.dataLoading = false;
@@ -27,7 +30,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.showGraphDiv = false
 	$scope.graphDataStatus = false
 	$scope.logicalOperator = [" ", "OR", "AND"];
-	$scope.SourceTypes = ["datapod", "relation"]
+	$scope.SourceTypes = ["datapod", "relation",'dataset']
 	$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN"];
 	$scope.isSubmitEnable = true;
 	$scope.attributeTableArray = null;
@@ -52,7 +55,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
-
+	
+	
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('metaListdataset', {
@@ -83,7 +87,27 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		paginationPageSizes: [10, 25, 50, 75, 100],
 		maxSize: 5,
 	}
+	
 
+	// $scope.onOverCallBackRow=function(event,ui,index){
+	// 	 console.log($scope.indexDragg)
+	// 	console.log(index)
+	// 		var data=ui.draggable.scope().tabledata
+	// 		if(index == 0 ){
+	// 			var temp=$scope.filterTableArray[$scope.indexDragg].logicalOperator;
+	// 			$scope.filterTableArray[$scope.indexDragg].logicalOperator=" "
+	// 			$scope.filterTableArray[index].logicalOperator=temp;
+	// 		}
+	// 		// else if($scope.indexDragg == 0){
+	// 		// 	var temp=$scope.filterTableArray[index].logicalOperator;
+	// 		// 	$scope.filterTableArray[index].logicalOperator=" "
+	// 		// 	$scope.filterTableArray[$scope.indexDragg].logicalOperator=temp;
+	// 		// }
+	// }
+	// $scope.onDragCallBackRow=function(event,ui,index){
+	// 	$scope.indexDragg=null
+	// 	$scope.indexDragg=index.index;
+	// }
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 	$scope.gridOptions = {
 		rowHeight: 40,
@@ -428,7 +452,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.selectSourceType = null;
 		$scope.myform.$dirty = false;
 		$scope.datasetHasChanged = true;
-		MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($scope.datasetversion.defaultVersion.uuid, $scope.datasetversion.defaultVersion.version, 'datasetview', $cookieStore.get('userdetail').sessionId).then(function (response) { onSuccessResult(response.data) });
+		MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($scope.datasetversion.defaultVersion.uuid, $scope.datasetversion.defaultVersion.version, 'datasetview').then(function (response) { onSuccessResult(response.data) });
 		var onSuccessResult = function (response) {
 			$scope.dataset = response.dataset;
 			$scope.selectSourceType = response.dataset.dependsOn.ref.type
@@ -860,7 +884,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
 				}
 				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
-					if ($scope.selectExpression == "dataset") {
+					if ($scope.selectSourceType == "dataset") {
 						lhsref.type = "dataset";
 
 					}
@@ -886,7 +910,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
 				}
 				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
-					if ($scope.selectExpression == "dataset") {
+					if ($scope.selectSourceType == "dataset") {
 						rhsref.type = "dataset";
 
 					}

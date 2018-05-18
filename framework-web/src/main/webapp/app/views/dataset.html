@@ -280,14 +280,26 @@
                     <th style="width:200px;text-align:center;">RHS Attribute</th>
                   </tr>
                 </thead>
+               
                 <tbody>
                   <tr ng-repeat="tabledata in filterTableArray">
-                    <td style="text-align:center;Vertical-align:middle;">
+                  <!-- <tr class="tn-draggable" 
+                  data-drop="true" data-drag={{isDragable}}
+            ng-model="filterTableArray"
+            jqyoui-droppable="{index: {{$index}},'onOver':'onOverCallBackRow($index)'}" 
+            jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection',onStart:'onDragCallBackRow({index: $index})'}"
+            data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
+            data-direction="{{tabledata.name.jqyouiDirection}}" > -->
+                    
+                    <td class ="chek" style="text-align:center;Vertical-align:middle;" ng-mouseenter="onMouseEnter()" ng-mouseleave="onMouseLeave()">
+                       
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                         
                         <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
                       </span>
                     </td>
                     <td>
+                     
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                         <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first ||{{mode}}" class="form-control"></select>
                       </span>
@@ -304,7 +316,7 @@
                         <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
                           ng-show="tabledata.islhsSimple" ng-change="onChangeSimple()">
                       </span>
-                      <div width="200px" ng-show="tabledata.islhsDatapod">
+                      <div width="200px" ng-show="tabledata.islhsDatapod" >
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
                               ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId" ng-change="onChangeAttribute()">
@@ -376,7 +388,7 @@
             <div class="form-body" style="padding-top:50px;">
               <div>
                 <div class="">
-                  <table class=" row-border hover table  table-striped table-bordered">
+                  <table class=" row-border hover table  table-striped table-bordered" style="height:300px;">
                     <thead>
                       <tr>
                         <th style="text-align: center; Vertical-align: middle;width:5%;">
@@ -391,8 +403,13 @@
                         <th style="width:46%;text-align: center">Source Name</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr ng-repeat="data in attributeTableArray">
+                    <tbody ng-repeat="data in attributeTableArray">
+                      <tr     data-drop="true" data-drag={{isDragable}}
+                      ng-model="attributeTableArray"
+                      jqyoui-droppable="{index: {{$index}}}" 
+                      jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
+                      data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
+                      data-direction="{{data.name.jqyouiDirection}}"  >
                         <td style="text-align: center; Vertical-align: middle;width:5%;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"
