@@ -1386,10 +1386,10 @@ InferyxApp.directive('searchCriteria', function(cacheService, CommonService, $fi
           $scope.loading = false;
         });
         var onSuccess = function(response) {
-          cacheService.saveCache('searchCriteria', $scope.moduleType, {
-            searchForm: $scope.searchForm,
-            data: response
-          });
+          // cacheService.saveCache('searchCriteria', $scope.moduleType, {
+          //   searchForm: $scope.searchForm,
+          //   data: response
+          // });
           $scope.data=response;
           //$scope.dagExec=response;
           //$scope.$emit('searchCriteriaChanged',{'type':$scope.searchForm.newType,'data' :response});
