@@ -1,5 +1,4 @@
 {
-    "_id" : ObjectId("5afe2cca912b6b2f77684f97"),
     "dependsOn" : {
         "ref" : {
             "type" : "dataset",
@@ -9,70 +8,8 @@
     "formulaInfo" : [ 
         {
             "ref" : {
-                "type" : "simple"
-            },
-            "value" : "CASE"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "WHEN"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "("
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "("
-        }, 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-            },
-            "attributeId" : 5
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "*"
-        }, 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-            },
-            "attributeId" : 11
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : ")"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "+"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "("
-        }, 
-        {
-            "ref" : {
                 "type" : "function",
-                "uuid" : "9e3e25b2-02fb-11e7-93ae-92361f002671"
+                "uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671"
             }
         }, 
         {
@@ -83,127 +20,20 @@
         }, 
         {
             "ref" : {
-                "type" : "simple"
-            },
-            "value" : "1"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "-"
-        }, 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-            },
-            "attributeId" : 4
+                "type" : "formula",
+                "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a5"
+            }
         }, 
         {
             "ref" : {
                 "type" : "simple"
             },
             "value" : ")"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : ")"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "*"
-        }, 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-            },
-            "attributeId" : 8
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : ")"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "<"
-        }, 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-            },
-            "attributeId" : 12
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "THEN"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "("
-        }, 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-            },
-            "attributeId" : 2
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "*"
-        }, 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-            },
-            "attributeId" : 3
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : ")"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "ELSE"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "0"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "END"
         }
     ],
-    "formulaType" : "sum_aggr",
-    "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a5",
-    "version" : "1526604145",
+    "formulaType" : "aggr",
+    "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a6",
+    "version" : "1526663901",
     "name" : "fm_portfolio_loss",
     "createdBy" : {
         "ref" : {
@@ -213,7 +43,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-18T01:30:52.936Z"),
+    "createdOn" : ISODate("2018-05-18T17:18:21.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
