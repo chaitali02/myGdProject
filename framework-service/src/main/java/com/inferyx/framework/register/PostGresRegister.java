@@ -101,9 +101,7 @@ public class PostGresRegister {
 			datasource = commonServiceImpl.getDatasourceByApp();
 			IConnector connector = connectionFactory.getConnector(datasource.getType());
 			ConnectionHolder conHolder = connector.getConnection();
-			//Statement stmt = (Statement) conHolder.getConObject();	
 			Connection con = (Connection) conHolder.getConObject();
-
 			DatabaseMetaData md = con.getMetaData();
 
 			for (int i = 0; i < registryListTable.size(); i++) {
@@ -151,9 +149,10 @@ public class PostGresRegister {
 				datastore.setDesc(dp.getDesc());
 				IExecutor exec = execFactory.getExecutor(ExecContext.POSTGRES.toString());
 				ResultSetHolder rsHolder = exec.executeSql("SELECT * FROM " + datasource.getDbname() + "." + tableName);
-				ResultSetHolder rsh = postGresExecutor.registerDataFrameAsTable(rsHolder, tableName);
-				datastore.setNumRows(rsh.getCountRows());
+				//ResultSetHolder rsh = postGresExecutor.registerDataFrameAsTable(rsHolder, tableName);
+				datastore.setNumRows(rsHolder.getCountRows());
 				datastore.setCreatedBy(dp.getCreatedBy());
+				datastore.setLocation(datasource.getDbname() + "." + tableName);
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
 

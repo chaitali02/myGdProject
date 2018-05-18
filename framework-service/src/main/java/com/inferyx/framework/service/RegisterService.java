@@ -3469,77 +3469,17 @@ public class RegisterService {
 				Connection con = DriverManager.getConnection("jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort()
 						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
 				DatabaseMetaData md = con.getMetaData();
-				ResultSet rs = md.getTables(null, null, "%", null);
+
+				String[] types = {"TABLE"};
+				ResultSet rs = md.getTables(null, null, "%", types);
 				
 				while (rs.next()) 
 					tables.add(rs.getString(3));
-				logger.info("Postgres Tables :  " + tables);
+				logger.info("PostGres Tables :  " + tables);				
 				rs.close();		
 				
 				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
 				registryList.addAll(datapodList);
-			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
-					| ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-		}//For PostGres
-		else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-			List<String> tables = new ArrayList<String>();
-			try {
-				Class.forName(datasource.getDriver());
-				Connection con = DriverManager.getConnection("jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort()
-						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
-				DatabaseMetaData md = con.getMetaData();
-				ResultSet rs = md.getTables(null, null, "%", null);
-				
-				while (rs.next()) 
-					tables.add(rs.getString(3));
-				logger.info("PostGres Tables :  " + tables);
-				rs.close();				
-
-				List<Datapod> datapodList = null;
-				int i = 1;
-				for (String table : tables) {
-					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
-					if (datapodList.size() > 0){
-						for (Datapod datapod : datapodList) {
-							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setDesc(datapod.getDesc());
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setStatus("Registered");
-									registryList.add(registry);
-									break;
-								} else {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(null);
-									registry.setDesc(null);
-									registry.setRegisteredOn(null);
-									registry.setStatus("UnRegistered");
-									registryList.add(registry);
-
-								}
-							}
-						}
-					} else {
-						Registry registry = new Registry();
-						registry.setId(Integer.toString(i));
-						registry.setName(table);
-						registry.setRegisteredOn(null);
-						registry.setDesc(null);
-						registry.setRegisteredOn(null);
-						registry.setStatus("UnRegistered");
-						registryList.add(registry);
-
-					}
-					i++;
-				}
 			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
 					| ClassNotFoundException e1) {
 				e1.printStackTrace();
