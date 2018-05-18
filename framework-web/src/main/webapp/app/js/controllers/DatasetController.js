@@ -55,7 +55,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
-
+	
+	
 	$scope.enableEdit = function (uuid, version) {
 		$scope.showPage()
 		$state.go('metaListdataset', {
@@ -87,29 +88,26 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		maxSize: 5,
 	}
 	
-	$scope.onOverCallBackRow=function(event,ui,index){
-		// console.log($scope.indexDragg)
-		// console.log(index)
-			var data=ui.draggable.scope().tabledata
-			if(index == 0 ){
-				var temp=$scope.filterTableArray[$scope.indexDragg].logicalOperator;
-				$scope.filterTableArray[$scope.indexDragg].logicalOperator=" "
-				$scope.filterTableArray[index].logicalOperator=temp;
-			}
-			// else if($scope.indexDragg == 0){
-			// 	var temp=$scope.filterTableArray[index].logicalOperator;
-			// 	$scope.filterTableArray[index].logicalOperator=" "
-			// 	$scope.filterTableArray[$scope.indexDragg].logicalOperator=temp;
-			// }
-	
-		
-		
-		
-	}
-	$scope.onDragCallBackRow=function(event,ui,index){
-		$scope.indexDragg=null
-		$scope.indexDragg=index.index;
-	}
+
+	// $scope.onOverCallBackRow=function(event,ui,index){
+	// 	 console.log($scope.indexDragg)
+	// 	console.log(index)
+	// 		var data=ui.draggable.scope().tabledata
+	// 		if(index == 0 ){
+	// 			var temp=$scope.filterTableArray[$scope.indexDragg].logicalOperator;
+	// 			$scope.filterTableArray[$scope.indexDragg].logicalOperator=" "
+	// 			$scope.filterTableArray[index].logicalOperator=temp;
+	// 		}
+	// 		// else if($scope.indexDragg == 0){
+	// 		// 	var temp=$scope.filterTableArray[index].logicalOperator;
+	// 		// 	$scope.filterTableArray[index].logicalOperator=" "
+	// 		// 	$scope.filterTableArray[$scope.indexDragg].logicalOperator=temp;
+	// 		// }
+	// }
+	// $scope.onDragCallBackRow=function(event,ui,index){
+	// 	$scope.indexDragg=null
+	// 	$scope.indexDragg=index.index;
+	// }
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 	$scope.gridOptions = {
 		rowHeight: 40,
