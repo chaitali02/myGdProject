@@ -281,15 +281,15 @@
                   </tr>
                 </thead>
                
-                <tbody ng-repeat="tabledata in filterTableArray" >
-                  
-                  <tr class="tn-draggable" 
+                <tbody>
+                  <tr ng-repeat="tabledata in filterTableArray">
+                  <!-- <tr class="tn-draggable" 
                   data-drop="true" data-drag={{isDragable}}
             ng-model="filterTableArray"
             jqyoui-droppable="{index: {{$index}},'onOver':'onOverCallBackRow($index)'}" 
             jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection',onStart:'onDragCallBackRow({index: $index})'}"
             data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
-            data-direction="{{tabledata.name.jqyouiDirection}}" >
+            data-direction="{{tabledata.name.jqyouiDirection}}" > -->
                     
                     <td class ="chek" style="text-align:center;Vertical-align:middle;" ng-mouseenter="onMouseEnter()" ng-mouseleave="onMouseLeave()">
                        
@@ -403,8 +403,13 @@
                         <th style="width:46%;text-align: center">Source Name</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr ng-repeat="data in attributeTableArray">
+                    <tbody ng-repeat="data in attributeTableArray">
+                      <tr     data-drop="true" data-drag={{isDragable}}
+                      ng-model="attributeTableArray"
+                      jqyoui-droppable="{index: {{$index}}}" 
+                      jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
+                      data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
+                      data-direction="{{data.name.jqyouiDirection}}"  >
                         <td style="text-align: center; Vertical-align: middle;width:5%;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"
