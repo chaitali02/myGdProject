@@ -24,7 +24,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 	$scope.isSourceAtributeDatapod = true;
 	$scope.formula = {};
 	$scope.formula.versions = [];
-	$scope.depandsOnTypes = ["datapod", "relation", 'dataset', 'paramlist'];
+	$scope.depandsOnTypes = ["datapod", "relation", 'dataset','rule', 'paramlist'];
 	$scope.isDependencyShow = false;
 
 	$scope.privileges = [];
@@ -480,9 +480,13 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 					formulainfo.ref = ref;
 					formulainfo.value = $scope.formulainfoarray[i].value;
 				}
-				else if ($scope.formulainfoarray[i].type == "datapod" || $scope.formulainfoarray[i].type == "dataset") {
+			
+				else if ($scope.formulainfoarray[i].type == "datapod" || $scope.formulainfoarray[i].type == "dataset" || $scope.formulainfoarray[i].type == "rule") {
 					if ($scope.selectedDependsOnType == "dataset") {
 						ref.type = "dataset";
+					}
+					else if($scope.selectedDependsOnType == "rule"){
+						ref.type = "rule";
 					}
 					else {
 						ref.type = $scope.formulainfoarray[i].type;

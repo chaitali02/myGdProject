@@ -280,14 +280,26 @@
                     <th style="width:200px;text-align:center;">RHS Attribute</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr ng-repeat="tabledata in filterTableArray">
+               
+                <tbody ng-repeat="tabledata in filterTableArray" >
+                  
+                  <tr  
+                  data-drop="true" data-drag={{isDragable}}
+            ng-model="filterTableArray"
+            jqyoui-droppable="{index: {{$index}},'onOver':'onOverCallBackRow($index)'}" 
+            jqyoui-draggable="{index: {{$index}}, insertInline: true, direction:'jqyouiDirection',onStart:'onDragCallBackRow({index: $index})'}"
+            data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
+            data-direction="{{tabledata.jqyouiDirection}}" >
+                    
                     <td style="text-align:center;Vertical-align:middle;">
+                       
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                         
                         <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
                       </span>
                     </td>
                     <td>
+                     
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                         <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first ||{{mode}}" class="form-control"></select>
                       </span>
