@@ -1,4 +1,5 @@
 {
+    "_id" : ObjectId("5afe2cca912b6b2f77684f97"),
     "dependsOn" : {
         "ref" : {
             "type" : "dataset",
@@ -6,18 +7,6 @@
         }
     },
     "formulaInfo" : [ 
-        {
-            "ref" : {
-                "type" : "function",
-                "uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "("
-        }, 
         {
             "ref" : {
                 "type" : "simple"
@@ -210,15 +199,9 @@
                 "type" : "simple"
             },
             "value" : "END"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : ")"
         }
     ],
-    "formulaType" : "simple",
+    "formulaType" : "sum_aggr",
     "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a5",
     "version" : "1526604145",
     "name" : "fm_portfolio_loss",
@@ -230,7 +213,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-18T00:42:25.000Z"),
+    "createdOn" : ISODate("2018-05-18T01:30:52.936Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
