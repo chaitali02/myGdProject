@@ -638,7 +638,7 @@ public class TaskServiceImpl implements Callable<String> {
 				
 				//DataQualExec dataqualExec = dataqualExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				DataQualExec dataqualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.dqExec.toString());
-				ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
+				//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				dataqualExec = dataqualServiceImpl.execute(dataqualExec.getDependsOn().getRef().getUuid(), dataqualExec.getDependsOn().getRef().getVersion(), dataqualExec, null, execParams, runMode);
 				if (Helper.getLatestStatus(dataqualExec.getStatusList()).equals(failedStatus)) {
 					throw new Exception("DQ failed");
@@ -664,10 +664,10 @@ public class TaskServiceImpl implements Callable<String> {
 			try {
 				//RuleExec ruleExec = ruleExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.ruleExec.toString());
-				ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
+				//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
 				execParams.setInternalVarMap(internalVarMap);
-				ruleServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, ruleExec, null, null, execParams, RunMode.ONLINE);
+				ruleServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, ruleExec, null, null, execParams, runMode);
 				// ruleServiceImpl.execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(), ruleExec, null, null, null);
 				if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 					throw new Exception();
@@ -694,7 +694,7 @@ public class TaskServiceImpl implements Callable<String> {
 			try {
 				//ProfileExec profileExec = profileExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.profileExec.toString());
-				ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
+				//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				profileServiceImpl.execute(profileExec.getDependsOn().getRef().getUuid(), profileExec.getDependsOn().getRef().getVersion(), profileExec, null, null, execParams, runMode);
 			} catch (ParseException | JSONException e) {
 				e.printStackTrace();
@@ -763,7 +763,7 @@ public class TaskServiceImpl implements Callable<String> {
 			logger.info("Going to reconServiceImpl.execute");
 			try {
 				ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.reconExec.toString());
-				ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
+				//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				reconServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, reconExec, null, null, execParams, runMode);
 				
 				if (Helper.getLatestStatus(reconExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
