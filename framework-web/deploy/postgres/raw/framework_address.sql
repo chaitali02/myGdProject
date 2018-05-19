@@ -16,3 +16,5 @@ CREATE TABLE framework.address (
   load_id integer,
   PRIMARY KEY (address_id,load_date)
 );
+
+\copy framework.address(address_id,address_line1,address_line2,address_line3,city,county,state,zipcode,country,latitude,longitude,load_date)FROM /user/hive/warehouse/framework/upload/address.csv delimiter ',' csv  header;

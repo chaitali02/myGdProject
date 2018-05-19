@@ -23,6 +23,7 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.HDFSInfo;
@@ -78,8 +79,11 @@ public class PostGresExecutor implements IExecutor {
 					countRows = stmt.executeUpdate(sql);
 					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
 					rsHolder.setCountRows(countRows);
-				} else 
+				} else { 
 					rs = stmt.executeQuery(sql);
+					countRows = rs.getMetaData().getColumnCount();
+				}
+				rsHolder.setCountRows(countRows);
 				rsHolder.setResultSet(rs);
 				rsHolder.setType(ResultType.resultset);
 			} catch (SQLException e) {				
@@ -157,7 +161,22 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public ResultSetHolder registerDataFrameAsTable(ResultSetHolder rsHolder, String tableName) {
-		// TODO Auto-generated method stub
+		/*try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			Object obj = conHolder.getStmtObject();
+			SparkSession sparkSession = null;
+			if (obj instanceof SparkSession) {
+				sparkSession = (SparkSession) conHolder.getStmtObject();
+				// sparkSession.registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+				sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+				rsHolder.setCountRows(rsHolder.getDataFrame().count());
+			}
+		} catch (NullPointerException e) {
+			throw new RuntimeException("Failed to register Dataframe as Table.");
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to register Dataframe as Table.");
+		}*/
 		return null;
 	}
 

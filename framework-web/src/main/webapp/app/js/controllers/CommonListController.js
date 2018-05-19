@@ -102,10 +102,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     if($scope.parantType){ //for Paramlist
       stateName=stateName+$scope.parantType
     }
-    if (mode != 'view') {
+   // if (mode != 'view') {
       //clearing cache if edit is called
       cacheService.saveCache('searchCriteria', $scope.select, null);
-    }
+   // }
     
     if (stateName)
       $state.go(stateName, {
@@ -716,8 +716,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       //$('#fileupload').modal('hide')
       $scope.executionmsg = "Data Uploaded Successfully"
       notify.type = 'success',
-        notify.title = 'Success',
-        notify.content = $scope.executionmsg//"Dashboard Deleted Successfully"
+      notify.title = 'Success',
+      notify.content = $scope.executionmsg//"Dashboard Deleted Successfully"
       $scope.$emit('notify', notify);
 
     }

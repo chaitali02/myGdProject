@@ -382,7 +382,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
-          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type  =="string"?true:false;
+          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type=="string"?true:false;
           if($scope.selectedDependsOnType== "formula" && $scope.modeldata.features[i].paramListInfo !=null){
             var paramListInfo={};
             paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;

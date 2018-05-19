@@ -1494,8 +1494,10 @@ public class SparkExecutor implements IExecutor {
 	public Object getDataType(String dataType) throws NullPointerException {
 		if(dataType == null)
 			return null;
-		if(dataType.contains("("))
+
+		if(dataType.contains("(")) {
 			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
 		
 		switch (dataType.toLowerCase()) {
 			case "integer": return DataTypes.IntegerType;
@@ -1503,7 +1505,8 @@ public class SparkExecutor implements IExecutor {
 			case "date": return DataTypes.DateType;
 			case "string": return DataTypes.StringType;
 			case "timestamp": return DataTypes.TimestampType;
-			case "decimal": return DataTypes.IntegerType;//return DataTypes.createDecimalType();
+			case "decimal" : return DataTypes.createDecimalType();
+			
             default: return null;
 		}
 	}
