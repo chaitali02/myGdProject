@@ -1791,7 +1791,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             for(var i=0;i< response.length;i++){
                if(response[i].name == elemt.title){
                 $scope.popupModel.selectedType=response[i].uuid +"|"+ response[i].name;
-                $scope.onChangeOperatorInfo();
+                $scope.onChangeOperatorInfo(false);
                
                 break;
                }
@@ -2508,8 +2508,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       var iconMenu = iconContextMenu().items(iconMenuItems);
       
 
-      $scope.onChangeOperatorInfo=function(){
+      $scope.onChangeOperatorInfo=function(defaultValue){
        // $scope.popupModel.modelData.operators[0].operatorParams=null;
+       $scope.paramListHolder=null;
         var temp = $scope.popupModel.selectedType.split('|');
         $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
         $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
@@ -2526,6 +2527,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         }
       
         if(typeParamListArray.indexOf(type) != -1){
+          if(defaultValue){
+            $scope.popupModel.modelData.operators[0].operatorParams=null;
+          }
           $scope.getExecParamList(objDetail,$scope.popupModel);
           $scope.isExecParamList=true
         }
@@ -2743,7 +2747,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             }else{
               $scope.paramListHolder = response;
               for(var i=0;i<$scope.paramListHolder.length;i++){
-                if($scope.paramListInfo[i].paramValue.ref.type =='distribution'){
+                if($scope.paramListInfo && $scope.paramListInfo[i].paramValue.ref.type =='distribution'){
                   $scope.onChangeDistribution(paramValue.selectedParamValue,i);
                   break;
                 }
