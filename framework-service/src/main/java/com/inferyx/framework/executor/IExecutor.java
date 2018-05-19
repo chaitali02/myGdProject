@@ -398,4 +398,16 @@ public interface IExecutor {
 	 */
 	String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
 			throws IOException;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param tableName
+	 * @param mappingList
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+			throws IOException;
 }

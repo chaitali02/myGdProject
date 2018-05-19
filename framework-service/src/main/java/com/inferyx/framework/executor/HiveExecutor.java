@@ -372,4 +372,14 @@ public class HiveExecutor implements IExecutor{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#renameDfColumnName(java.lang.String, java.util.Map, java.lang.String)
+	 */
+	@Override
+	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
