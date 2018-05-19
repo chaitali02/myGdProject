@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
@@ -1226,7 +1227,7 @@ public class SparkExecutor implements IExecutor {
 			transformedDf = trainingTmp.withColumn("label", trainingTmp.col(label).cast("Double"))
 					.select("label", "features");
 
-			logger.info("DataFrame count for training: " + transformedDf.count());
+			logger.info("DataFrame count: " + transformedDf.count());
 
 		} else {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
@@ -1375,7 +1376,7 @@ public class SparkExecutor implements IExecutor {
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
 				.invoke(trainedModel, df);
-		predictionDf.show(false);
+		//predictionDf.show(false);
 
 		//String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
 
@@ -1411,9 +1412,10 @@ public class SparkExecutor implements IExecutor {
 	@Override
 	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
 		PipelineModel trngModel = null;
+
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		
+		df.printSchema();
 		try {
 			Dataset<Row>[] splits = df
 					.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
@@ -1428,7 +1430,9 @@ public class SparkExecutor implements IExecutor {
 			if (trainName.contains("LinearRegression")
 					|| trainName.contains("LogisticRegression")) {
 				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+				//trainingDf.show(true);
 				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+				//validateDf.show(true);
 			} else {
 				trainingDf = trngDf;
 				validateDf = valDf;
@@ -1477,8 +1481,10 @@ public class SparkExecutor implements IExecutor {
 
 	@Override
 	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext) throws IOException, JAXBException {
+		
 		String sql = "SELECT * FROM " + trainedDSName;
 		Dataset<Row> trainedDataSet = executeSql(sql, clientContext).getDataFrame();
+		trainedDataSet.printSchema();
 		PMML pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)trngModel);
 		MetroJAXBUtil.marshalPMML(pmml, new FileOutputStream(new File(pmmlLocation), true));					
 		return true;
@@ -1488,9 +1494,11 @@ public class SparkExecutor implements IExecutor {
 	public Object getDataType(String dataType) throws NullPointerException {
 		if(dataType == null)
 			return null;
+
 		if(dataType.contains("(")) {
 			dataType = dataType.substring(0, dataType.indexOf("("));
 		}
+		
 		switch (dataType.toLowerCase()) {
 			case "integer": return DataTypes.IntegerType;
 			case "double": return DataTypes.DoubleType;
@@ -1540,6 +1548,23 @@ public class SparkExecutor implements IExecutor {
 			e.printStackTrace();
 		}
 		tableName = tableName + "_" + Helper.getVersion();
+		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		return tableName;
+	}
+	
+	@Override
+	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext) throws IOException {
+		
+		String sql = "SELECT * FROM " + tableName;
+		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		
+		/*
+		 * map: key=oldColName, value=newColName
+		 */
+		for(Entry<String, String> entry : mappingList.entrySet()) {
+			df = df.withColumnRenamed(entry.getKey(), entry.getValue());
+		}
+		df.show(true);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		return tableName;
 	}

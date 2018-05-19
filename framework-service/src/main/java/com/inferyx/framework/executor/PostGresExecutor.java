@@ -63,6 +63,8 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
 		logger.info(" Inside PostGres executor  for SQL : " + sql);
+		if(sql.contains("dp_rule_results"))
+			System.out.println();
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
 		ConnectionHolder conHolder = connector.getConnection();
@@ -95,9 +97,8 @@ public class PostGresExecutor implements IExecutor {
 	 * @see com.inferyx.framework.executor.IExecutor#executeSql(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ResultSetHolder executeSql(String sql, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSetHolder executeSql(String sql, String clientContext) throws IOException {		
+		return executeSql(sql);
 	}
 
 	/* (non-Javadoc)
@@ -135,8 +136,7 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeAndPersist(String sql, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return executeSql(sql);
 	}
 
 	/* (non-Javadoc)
@@ -144,8 +144,7 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public ResultSetHolder executeAndRegister(String sql, String tableName, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return executeSql(sql);
 	}
 
 	/* (non-Javadoc)
@@ -154,8 +153,7 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
 			String saveMode, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return executeSql(sql);
 	}
 
 	/* (non-Javadoc)
@@ -452,6 +450,16 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#renameDfColumnName(java.lang.String, java.util.Map, java.lang.String)
+	 */
+	@Override
+	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
