@@ -44,6 +44,14 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     content: 'Dashboard deleted Successfully',
     timeout: 30000 //time in ms
   };
+  $scope.pagination={
+    currentPage:1,
+    pageSize:10,
+    usePageSize:10,
+    paginationPageSizes:["All",5,10,25,50],
+    maxSize:5,
+  }  
+
   
   $scope.close = function() {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
@@ -172,7 +180,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         featureMap.sourceFeature=sourceFeature;
         featureMapTableArray[i]=featureMap;
       }
-      $scope.featureMapTableArray=featureMapTableArray;
+      $scope.originalFeatureMapTableArray=featureMapTableArray;
+      $scope.featureMapTableArray =$scope.getResults($scope.pagination,featureMapTableArray);
   }
 }
   $scope.onChangeTargeType=function(){
@@ -252,15 +261,10 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         var sourceFeature={};
         var targetFeature={};
         featureMap.featureMapId=response.featureAttrMap[i].featureMapId;
-        // sourceFeature.datapodname = response.featureMap[i].sourceFeature.ref.name;
-        // sourceFeature.name = response.featureMap[i].sourceFeature.attrName;
-        // sourceFeature.attributeId = response.featureMap[i].sourceFeature.attrId;
-        // sourceFeature.id = response.featureMap[i].sourceFeature.ref.uuid + "_" + response.featureMap[i].sourceFeature.attrId;
-        // sourceFeature.dname = response.featureMap[i].sourceFeature.ref.name + "." + response.featureMap[i].sourceFeature.attrName;
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
         sourceFeature.type = response.featureAttrMap[i].feature.ref.type;
         sourceFeature.featureId = response.featureAttrMap[i].feature.featureId;
-       // sourceFeature.featureName = response.featureAttrMap[i].feature.featureName;
+        sourceFeature.featureName = response.featureAttrMap[i].feature.featureName;
         featureMap.sourceFeature=sourceFeature;
         targetFeature.uuid = response.featureAttrMap[i].attribute.ref.uuid;
         targetFeature.type = response.featureAttrMap[i].attribute.ref.type;
@@ -272,7 +276,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         featureMap.targetFeature=targetFeature;
         featureMapTableArray[i]=featureMap;
       }
-      $scope.featureMapTableArray=featureMapTableArray;
+      $scope.originalFeatureMapTableArray=featureMapTableArray;
+      $scope.featureMapTableArray =$scope.getResults($scope.pagination,featureMapTableArray);
     }
   }
   if(typeof $stateParams.id != "undefined") {
@@ -408,5 +413,37 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       }
     }
   }
+
+  $scope.getResults = function(pagination,params) {
+    pagination.totalItems=params.length;
+    if(pagination.totalItems >0){
+      pagination.to = (((pagination.currentPage - 1) * (pagination.usePageSize))+1);
+    }
+    else{
+      pagination.to=0;
+    }
+    if(pagination.totalItems < (pagination.usePageSize*pagination.currentPage)) {
+        pagination.from = pagination.totalItems;
+    } else {
+      pagination.from = ((pagination.currentPage) * pagination.usePageSize);
+    }
+    var limit = (pagination.usePageSize* pagination.currentPage);
+    var offset = ((pagination.currentPage - 1) * pagination.usePageSize)
+    return params.slice(offset,limit);
+  }
+
+  $scope.onPageChanged = function(){
+    $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  };
+  $scope.onPerPageChange=function(){
+    if($scope.pagination.pageSize == 'All'){
+      $scope.pagination.usePageSize=$scope.originalFeatureMapTableArray.length;
+    }else{
+      $scope.pagination.usePageSize=$scope.pagination.pageSize;
+    }
+    $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  }  
+
 }); //End CreateModelController
+
 

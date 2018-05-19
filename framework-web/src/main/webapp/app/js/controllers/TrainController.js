@@ -43,6 +43,13 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     content: '',
     timeout: 30000 //time in ms
   };
+  $scope.pagination={
+    currentPage:1,
+    pageSize:10,
+    usePageSize:10,
+    paginationPageSizes:["All",5,10,25,50],
+    maxSize:5,
+  }  
 
   $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
@@ -167,7 +174,8 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           sourceFeature.featureName = response.features[i].name;
           featureMap.sourceFeature = sourceFeature;
           featureMapTableArray[i] = featureMap;
-          $scope.featureMapTableArray = featureMapTableArray;
+          $scope.originalFeatureMapTableArray=featureMapTableArray;
+          $scope.featureMapTableArray = $scope.getResults($scope.pagination,featureMapTableArray);//featureMapTableArray;
         }
       }
     }
@@ -268,7 +276,8 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         featureAttrMap.targetFeature = targetFeature;
         featureMapTableArray[i] = featureAttrMap;
       }
-      $scope.featureMapTableArray = featureMapTableArray;
+      $scope.originalFeatureMapTableArray=featureMapTableArray;
+      $scope.featureMapTableArray =$scope.getResults($scope.pagination,featureMapTableArray);
       $scope.onChangeModel(false);
     }
   }
@@ -498,5 +507,36 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       stage.selected = $scope.selectAllParam;
     });
   }
+  
+  $scope.getResults = function(pagination,params) {
+    pagination.totalItems=params.length;
+    if(pagination.totalItems >0){
+      pagination.to = (((pagination.currentPage - 1) * (pagination.usePageSize))+1);
+    }
+    else{
+      pagination.to=0;
+    }
+    if(pagination.totalItems < (pagination.usePageSize*pagination.currentPage)) {
+        pagination.from = pagination.totalItems;
+    } else {
+      pagination.from = ((pagination.currentPage) * pagination.usePageSize);
+    }
+    var limit = (pagination.usePageSize* pagination.currentPage);
+    var offset = ((pagination.currentPage - 1) * pagination.usePageSize)
+    return params.slice(offset,limit);
+  }
+
+  $scope.onPageChanged = function(){
+    $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  };
+  $scope.onPerPageChange=function(){
+    if($scope.pagination.pageSize == 'All'){
+      $scope.pagination.usePageSize=$scope.originalFeatureMapTableArray.length;
+    }else{
+      $scope.pagination.usePageSize=$scope.pagination.pageSize;
+    }
+    $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  }  
+
 
 }); //End CreateModelController
