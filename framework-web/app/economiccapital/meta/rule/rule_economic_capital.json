@@ -2,36 +2,25 @@
     "debugMode" : false,
     "source" : {
         "ref" : {
-            "type" : "dataset",
-            "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            "type" : "rule",
+            "uuid" : "fe506c16-8991-439a-95d4-b83664b25008"
         }
     },
     "attributeInfo" : [ 
         {
             "attrSourceId" : "0",
-            "attrSourceName" : "iterationid",
-            "sourceAttr" : {
-                "attrId" : "6",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "1",
-            "attrSourceName" : "fm_portfolio_loss",
+            "attrSourceName" : "fm_economic_capital",
             "sourceAttr" : {
                 "ref" : {
                     "type" : "formula",
-                    "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a6"
+                    "uuid" : "0dc2c1b9-62b0-4c3a-9319-077ea8c705d1"
                 }
             }
         }
     ],
-    "uuid" : "fe506c16-8991-439a-95d4-b83664b25008",
-    "version" : "1526662622",
-    "name" : "rule_portfolio_loss_simulation",
+    "uuid" : "8d00dae5-70c2-4fa8-b29e-600c971de83c",
+    "version" : "1526662220",
+    "name" : "rule_economic_capital",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -40,7 +29,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-18T04:57:02.000Z"),
+    "createdOn" : ISODate("2018-05-18T04:50:20.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
