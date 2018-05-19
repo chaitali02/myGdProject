@@ -1405,7 +1405,7 @@ public class SparkExecutor implements IExecutor {
 
 			sqlContext.registerDataFrameAsTable(dfTask, tableName);
 			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
-			datapodWriter.write(dfTask, filePathUrl + "/data", null, SaveMode.Append.toString());
+			datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
 			return filePathUrl + "/data";
 	}
 
