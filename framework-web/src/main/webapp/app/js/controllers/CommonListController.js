@@ -716,8 +716,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       //$('#fileupload').modal('hide')
       $scope.executionmsg = "Data Uploaded Successfully"
       notify.type = 'success',
-        notify.title = 'Success',
-        notify.content = $scope.executionmsg//"Dashboard Deleted Successfully"
+      notify.title = 'Success',
+      notify.content = $scope.executionmsg//"Dashboard Deleted Successfully"
       $scope.$emit('notify', notify);
 
     }
