@@ -1079,5 +1079,6 @@ export class CommonListComponent {
         this.gridOptions.api.setQuickFilter($event.target.value);
         //this.gridOptions.onModelUpdated()
     }
+
 }
 
