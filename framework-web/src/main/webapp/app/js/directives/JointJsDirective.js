@@ -2747,8 +2747,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             }else{
               $scope.paramListHolder = response;
               for(var i=0;i<$scope.paramListHolder.length;i++){
-                if($scope.paramListInfo && $scope.paramListInfo[i].paramValue.ref.type =='distribution'){
-                  $scope.onChangeDistribution(paramValue.selectedParamValue,i);
+                if( $scope.paramListHolder[i].paramValue && $scope.paramListHolder[i].paramValue.ref.type =='distribution'){
+                  $scope.onChangeDistribution($scope.paramListHolder[i].selectedParamValue,i);
                   break;
                 }
               }
