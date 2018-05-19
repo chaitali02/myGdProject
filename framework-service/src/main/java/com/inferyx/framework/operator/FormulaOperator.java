@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AggregateFunc;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FormulaType;
@@ -31,11 +31,13 @@ import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.ParamListServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
+import com.inferyx.framework.service.RuleServiceImpl;
 
 @Component
 public class FormulaOperator {
@@ -45,7 +47,7 @@ public class FormulaOperator {
 	@Autowired protected FunctionOperator functionOperator;
 	@Autowired protected ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired protected ParamListServiceImpl paramListServiceImpl;
-	@Autowired protected 
+	@Autowired protected RuleServiceImpl ruleServiceImpl;
 	
 	static final Logger LOGGER = Logger.getLogger(FormulaOperator.class);
 
@@ -102,6 +104,12 @@ public class FormulaOperator {
 				DataSet dataset = (DataSet) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttributeId()+"")).append(" ").toString();
+			}
+			
+			if (sourceAttr.getRef().getType() == MetaType.rule) {
+				Rule rule = (Rule) daoRegister
+						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				builder.append(ruleServiceImpl.getAttributeSql(daoRegister, rule, sourceAttr.getAttributeId()+"")).append(" ").toString();
 			}
 		}
 		if (formula.getFormulaType() != null && formula.getFormulaType().equals(FormulaType.sum_aggr)) {

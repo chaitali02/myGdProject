@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,15 +54,17 @@ public class RuleOperator implements Operator {
 	FilterOperator filterOperator;
 	@Autowired
 	DataStoreServiceImpl datastoreServiceImpl;
+	static final Logger logger = Logger.getLogger(RuleOperator.class);
 	
 	public String generateSql(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap,HashMap<String, String> otherParams, 
 								Set<MetaIdentifier> usedRefKeySet,	ExecParams execParams, RunMode runMode) throws Exception {
-		return generateSelect(rule, refKeyMap, otherParams, execParams, runMode)
+		String sql = generateSelect(rule, refKeyMap, otherParams, execParams, runMode)
 				.concat(getFrom())
 				.concat(generateFrom(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(generateWhere())
 				.concat(generateFilter(rule, refKeyMap, otherParams, usedRefKeySet, execParams))
 				.concat(selectGroupBy(rule, refKeyMap, otherParams, execParams));
+		return sql;
 	}
 	
 	private List<AttributeMap> createAttrMap (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap) {

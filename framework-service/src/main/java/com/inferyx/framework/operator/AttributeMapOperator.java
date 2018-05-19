@@ -383,7 +383,7 @@ public class AttributeMapOperator {
 			java.util.Map<String, MetaIdentifier> refKeyMap, 
 			HashMap<String, String> otherParams, 
 			ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		StringBuilder groupByStr = new StringBuilder(" GROUP BY ");
+		StringBuilder groupByStr = new StringBuilder("");// StringBuilder(" GROUP BY ");
 		String groupInfo = "";
 		boolean isGroupBy = false;
 		if (attrMapList == null || attrMapList.isEmpty()) {
@@ -423,10 +423,11 @@ public class AttributeMapOperator {
 				}
 			}
 		}
-		if (!isGroupBy) {
+		String groupBySr = groupByStr.toString();
+		if (!isGroupBy || StringUtils.isBlank(groupBySr)) {
 			return " ";
 		}
-		return groupByStr.substring(0, groupByStr.length()-1).toString();
+		return " GROUP BY " + groupBySr.substring(0, groupBySr.length()-1);
 	}
 	
 	public List<AttributeMap> createAttrMap (List<AttributeSource> attributeSourceList) {
