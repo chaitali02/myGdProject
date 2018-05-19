@@ -502,7 +502,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 					formulainfo.value = response.formulaInfo[i].value;
 
 				}
-				else if (response.formulaInfo[i].ref.type == "datapod" || response.formulaInfo[i].ref.type == "dataset") {
+				else if (response.formulaInfo[i].ref.type == "datapod" || response.formulaInfo[i].ref.type == "dataset" ||  response.formulaInfo[i].ref.type == "rule") {
 
 					formulainfo.type = response.formulaInfo[i].ref.type;
 					formulainfo.uuid = response.formulaInfo[i].ref.uuid;

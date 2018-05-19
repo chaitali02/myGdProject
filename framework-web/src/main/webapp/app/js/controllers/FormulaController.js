@@ -128,7 +128,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		if(!$scope.isEdit && !$scope.isAdd ){
 			return false;
 		}
-	 	console.log($scope.formulainfoarray[index]);
+		 console.log($scope.formulainfoarray[index]);
 	 	if(["datapod",'dataset','rule','paramlist'].indexOf(type) != -1){
 			$scope.attributeinfo={};
 			var type={};
@@ -139,7 +139,6 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			attributeInfo.attributeId=$scope.formulainfoarray[index].attrId;
 			attributeInfo.dname= $scope.formulainfoarray[index].value;
 			setTimeout(function(){ $scope.attributeinfo=attributeInfo; },10);
-			
 			$scope.DblClcikEditDetail={};
 			$scope.DblClcikEditDetail.isEdit=true;
 			$scope.DblClcikEditDetail.index=index; 
@@ -383,7 +382,14 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.isSourceAtributeParamlist = false;
 			MetadataFormulaSerivce.getFormulaByType($scope.allformuladepands.defaultoption.uuid, $scope.selectedDependsOnType).then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
-				$scope.formulaLodeFormula = response.data
+				var temp;
+				temp=response.data
+				if($scope.formuladata){
+					temp = response.data.filter(function(el) {
+						return el.uuid !== $scope.formuladata.uuid;
+					});
+			    }
+				$scope.formulaLodeFormula = temp
 			}
 		}
 		else if (type == "expression") {

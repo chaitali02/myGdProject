@@ -260,7 +260,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
         sourceFeature.type = response.featureAttrMap[i].feature.ref.type;
         sourceFeature.featureId = response.featureAttrMap[i].feature.featureId;
-        sourceFeature.featureName = response.featureAttrMap[i].feature.featureName;
+       // sourceFeature.featureName = response.featureAttrMap[i].feature.featureName;
         featureMap.sourceFeature=sourceFeature;
         targetFeature.uuid = response.featureAttrMap[i].attribute.ref.uuid;
         targetFeature.type = response.featureAttrMap[i].attribute.ref.type;

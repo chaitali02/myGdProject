@@ -288,12 +288,18 @@
                                             <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
                                                 <input type="number" limit-to="2"  class="form-control"  ng-disabled="{{mode}}" ng-model="trainData.trainPercent" name="trainPercent" min="1" max="99" ng-change="onChageTrainPercent()" style="width:64px;">
                                             </div>
-                                            <label class="control-label col-md-4 col-sm-4 col-xs-12" style="width:11%;float:left;margin-left:-1%;">Val Percent</label>
+                                            <!-- <label class="control-label col-md-4 col-sm-4 col-xs-12" style="width:11%;float:left;margin-left:-1%;">Validation Percent</label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <input type="number" limit-to="2" class="form-control" ng-disabled="{{mode}}" ng-model="trainData.valPercent" name="valPercent" min="1" max="99"   maxlength = "2" ng-change="onChageValPercent();" style="width:64px;">     
+                                            </div> -->
+                                        </div>  
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Validation Percent</label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
+                                                <input type="number" limit-to="2" class="form-control" ng-disabled="{{mode}}" ng-model="trainData.valPercent" name="valPercent" min="1" max="99"   maxlength = "2" ng-change="onChageValPercent();" style="width:64px;">     
                                             </div>
-                                        </div>
-                                    
+                                           
+                                        </div>  
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Run Immediately ?
                                             </label>

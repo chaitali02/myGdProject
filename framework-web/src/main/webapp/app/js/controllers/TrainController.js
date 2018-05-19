@@ -342,7 +342,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         sourceFeatureRef.type = $scope.featureMapTableArray[i].sourceFeature.type;
         sourceFeature.ref = sourceFeatureRef;
         sourceFeature.featureId = $scope.featureMapTableArray[i].sourceFeature.featureId;
-        sourceFeature.featureName = $scope.featureMapTableArray[i].sourceFeature.featureName;
+        //sourceFeature.featureName = $scope.featureMapTableArray[i].sourceFeature.featureName;
         featureMapObj.feature = sourceFeature;
         targetFeatureRef.uuid = $scope.featureMapTableArray[i].targetFeature.uuid;
         targetFeatureRef.type = $scope.selectSourceType;
