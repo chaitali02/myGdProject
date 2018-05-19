@@ -15,14 +15,14 @@ export class TrainingService{
     
   constructor(@Inject(Http) private http: Http,private _sharedService: SharedService,private _commonService:CommonService) { }
   
-  // getAllModelByType(uuid:Number,type:String): Observable<any[]> {
-  //   let url ='/model/getAllModelByType?action=view&customFlag='+uuid+ '&type=model';
-  //   return this._sharedService.getCall(url)
-  //   .map((response: Response) => {
-  //     return <any[]>response.json();
-  // })
-  //  .catch(this.handleError);
-  // }
+  getAllModelByType(flag:any,type:String): Observable<any[]> {
+    let url ="model/getAllModelByType?action=view&customFlag="+flag+ "&type=" + type+"&modelType=algorithm"
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
 
 
 
