@@ -6,12 +6,10 @@ package com.inferyx.framework.factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.inferyx.framework.operator.GenerateDataForAttrRef;
 import com.inferyx.framework.operator.GenerateDataOperator;
-import com.inferyx.framework.operator.JoinTablesOperator;
 import com.inferyx.framework.operator.Operator;
 import com.inferyx.framework.operator.TransposeOperator;
-
-import scala.util.control.Exception;
 
 /**
  * @author joy
@@ -24,6 +22,8 @@ public class OperatorFactory {
 	GenerateDataOperator generateDataOperator;
 	@Autowired
 	TransposeOperator transposeOperator;
+	@Autowired
+	GenerateDataForAttrRef generateDataForAttrRef;
 
 	/**
 	 * 
@@ -41,6 +41,7 @@ public class OperatorFactory {
 		switch(operatorTypeName) {
 			case "Generate Data" : return generateDataOperator;
 			case "Transpose" : return transposeOperator;
+			case "Generate Data for attributes" : return generateDataForAttrRef;
 			default : throw new IllegalArgumentException("Invalid Operator Type");
 		}
 	}

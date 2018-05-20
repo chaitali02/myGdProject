@@ -425,6 +425,7 @@ public class SparkExecutor implements IExecutor {
 				// sparkSession.registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
 				sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
 				rsHolder.setCountRows(rsHolder.getDataFrame().count());
+				rsHolder.setTableName(tableName);
 			}
 		} catch (NullPointerException e) {
 			throw new RuntimeException("Failed to register Dataframe as Table.");
@@ -1015,7 +1016,7 @@ public class SparkExecutor implements IExecutor {
 	}*/
 
 	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception {
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws Exception {
 		StructField[] fieldArray = new StructField[attributes.size()];
 		int count = 0;
 		
@@ -1089,10 +1090,12 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
 		df.printSchema();
 		df.show(true);
+		registerTempTable(df, tableName);
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setDataFrame(df);
 		rsHolder.setType(ResultType.dataframe);	
 		rsHolder.setCountRows(df.count());
+		rsHolder.setTableName(tableName);
 		return rsHolder;
 	}
 
@@ -1412,7 +1415,6 @@ public class SparkExecutor implements IExecutor {
 	@Override
 	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
 		PipelineModel trngModel = null;
-
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();

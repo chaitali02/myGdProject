@@ -346,16 +346,6 @@ public class PostGresExecutor implements IExecutor {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.inferyx.framework.executor.IExecutor#generateData(java.lang.Object, java.util.List, int, java.lang.String)
-	 */
-	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
-			String execVersion) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
 	 * @see com.inferyx.framework.executor.IExecutor#readFile(java.lang.String, com.inferyx.framework.domain.Datapod, com.inferyx.framework.domain.DataStore, java.lang.String, com.inferyx.framework.common.HDFSInfo, java.lang.Object, com.inferyx.framework.domain.Datasource)
 	 */
 	@Override
@@ -461,6 +451,13 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
+			String execVersion, String tableName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

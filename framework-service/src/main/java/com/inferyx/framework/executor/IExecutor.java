@@ -284,17 +284,6 @@ public interface IExecutor {
 	
 	/**
 	 * 
-	 * @param object
-	 * @param features
-	 * @param numIterations
-	 * @param tableName
-	 * @return
-	 * @throws Exception TODO
-	 */
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception;
-	
-	/**
-	 * 
 	 * @param clientContext
 	 * @param datapod
 	 * @param datastore
@@ -410,4 +399,17 @@ public interface IExecutor {
 	 */
 	String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException;
+
+	/**
+	 * 
+	 * @param distributionObject
+	 * @param attributes
+	 * @param numIterations
+	 * @param execVersion
+	 * @param tableName
+	 * @return
+	 * @throws Exception
+	 */
+	ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
+			String execVersion, String tableName) throws Exception;
 }

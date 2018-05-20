@@ -318,12 +318,6 @@ public class LivyExecutor implements IExecutor {
 	}
 
 	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath,
 			Datapod datapod, String saveMode, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
@@ -370,6 +364,13 @@ public class LivyExecutor implements IExecutor {
 	@Override
 	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
+			String execVersion, String tableName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
