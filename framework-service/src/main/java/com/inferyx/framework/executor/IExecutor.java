@@ -412,4 +412,16 @@ public interface IExecutor {
 	 */
 	ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
 			String execVersion, String tableName) throws Exception;
+
+	/**
+	 * 
+	 * @param data
+	 * @param className
+	 * @param tableName
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder createAndRegister(List data, Class className, String tableName, String clientContext)
+			throws IOException;
 }

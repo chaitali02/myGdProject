@@ -244,6 +244,39 @@ public class SparkExecutor implements IExecutor {
 		logger.info("temp table registered: " + tableName);
 		return resHolder;
 	}
+	@Override
+	public ResultSetHolder createAndRegister(List data, Class className, String tableName, String clientContext) throws IOException {
+		ResultSetHolder rsHolder = null;
+		try {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+				ConnectionHolder conHolder = connector.getConnection();
+				Object obj = conHolder.getStmtObject();
+				if (obj instanceof SparkSession) {
+					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+					Dataset<Row> df = sparkSession.createDataFrame(data, className);
+					df.show();
+					rsHolder.setDataFrame(df);
+					rsHolder.setType(ResultType.dataframe);
+					long countRows = df.count();
+					rsHolder.setCountRows(countRows);
+					df.createOrReplaceGlobalTempView(tableName);
+					registerTempTable(df, tableName);
+					logger.info("temp table registered: " + tableName);
+				}
+			}
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rsHolder;
+	}
 
 	@Override
 	/**

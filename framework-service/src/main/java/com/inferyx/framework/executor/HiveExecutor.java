@@ -383,4 +383,11 @@ public class HiveExecutor implements IExecutor{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public ResultSetHolder createAndRegister(List data, Class className, String tableName, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
