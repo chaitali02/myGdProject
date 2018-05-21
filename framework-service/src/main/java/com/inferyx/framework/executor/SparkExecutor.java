@@ -150,7 +150,7 @@ public class SparkExecutor implements IExecutor {
 				if (obj instanceof SparkSession) {
 					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 					Dataset<Row> df = sparkSession.sql(sql);
-					df.show();
+					df.show(true);
 					rsHolder.setDataFrame(df);
 					rsHolder.setType(ResultType.dataframe);
 				}
@@ -1409,10 +1409,11 @@ public class SparkExecutor implements IExecutor {
 	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		//df.show(true);
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
 				.invoke(trainedModel, df);
-		//predictionDf.show(false);
+		//predictionDf.show(true);
 
 		//String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
 
