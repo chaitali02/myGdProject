@@ -2,7 +2,7 @@
 
 -- Table: framework.fact_customer_summary_monthly
 
--- DROP TABLE framework.fact_customer_summary_monthly;
+   DROP TABLE framework.fact_customer_summary_monthly;
 
 CREATE TABLE framework.fact_customer_summary_monthly
 (

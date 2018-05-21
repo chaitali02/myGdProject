@@ -4,12 +4,12 @@
 
 -- Table: framework.dim_branch
 
--- DROP TABLE framework.dim_branch;
+ DROP TABLE framework.dim_branch;
 
 CREATE TABLE framework.dim_branch
 (
   branch_id text NOT NULL,
-  src_branch_id text,
+  src_branch_id integer,
   branch_type_code text,
   branch_name text,
   branch_desc text,

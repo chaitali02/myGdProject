@@ -1,4 +1,8 @@
 
+-- Table: framework.account
+
+   DROP TABLE framework.account;
+   
 CREATE TABLE framework.account (
   account_id text ,
   account_type_id integer ,
