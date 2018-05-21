@@ -1,20 +1,7 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- Table: framework.dim_address
 
--- DROP TABLE framework.dim_address;
+DROP TABLE framework.dim_address;
 
 CREATE TABLE framework.dim_address
 (

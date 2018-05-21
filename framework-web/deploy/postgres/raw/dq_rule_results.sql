@@ -1,4 +1,9 @@
 
+-- Table: framework.dq_rule_results
+
+   DROP TABLE framework.dq_rule_results;
+
+
 CREATE TABLE framework.dq_rule_results (
   rowkey text ,
   datapoduuid text ,

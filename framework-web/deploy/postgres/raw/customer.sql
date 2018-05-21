@@ -1,4 +1,9 @@
 
+-- Table: framework.customer
+
+   DROP TABLE framework.customer;
+   
+   
 CREATE TABLE framework.customer (
   customer_id text ,
   address_id text ,

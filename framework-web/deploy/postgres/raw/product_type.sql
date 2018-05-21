@@ -2,6 +2,9 @@
 
 
 
+-- Table: framework.product_type
+
+   DROP TABLE framework.product_type;
 
 CREATE TABLE framework.product_type (
   product_type_id integer ,
@@ -12,3 +15,4 @@ CREATE TABLE framework.product_type (
   load_id text 
 );
 
+  \copy framework.product_type(product_type_id,product_type_code,product_type_desc,load_date,version,load_id)FROM /user/hive/warehouse/framework/upload/product_type.csv delimiter ',' csv  header;

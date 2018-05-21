@@ -1,4 +1,9 @@
 
+-- Table: framework.address
+
+   DROP TABLE framework.address;
+
+
 CREATE TABLE framework.address (
   address_id text ,
   address_line1 text ,
