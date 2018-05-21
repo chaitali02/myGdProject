@@ -108,7 +108,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         displayName: 'Version',
         name: 'version',
         visible: true,
-        maxWidth:100,
+        maxWidth:110,
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         sort: {
@@ -138,7 +138,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   obj.gridOptions.columnDefs.push({
     displayName: 'Status',
     name: 'active',
-    minWidth:100,
+    maxWidth:100,
     cellClass: 'text-center',
     headerCellClass: 'text-center',
     cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.active == "Y" ? "Active" : "Inactive"}}</div>'
@@ -146,6 +146,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   obj.gridOptions.columnDefs.push({
     displayName: 'Published',
     name: 'published',
+    maxWidth:100,
     cellClass: 'text-center',
     headerCellClass: 'text-center',
     cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.published == "Y" ? "Yes" : "No"}}</div>'
@@ -154,12 +155,13 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     {
       displayName: 'Action',
       name: 'action',
-      cellClass: 'text-center',
+     
       headerCellClass: 'text-center',
       minWidth:100,
       cellTemplate: [
         '<div class="ui-grid-cell-contents">',
-        '  <div class="dropdown" uib-dropdown dropdown-append-to-body>',
+        '<div class="col-md-12" style="display:inline-flex;">',   
+        '  <div class="col-md-10 dropdown" uib-dropdown dropdown-append-to-body>',
         '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
         '    <i class="fa fa-angle-down"></i></button>',
         '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
@@ -172,9 +174,13 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Execute\') == -1 || row.entity.active==\'N\'" ng-if="grid.appScope.isExecutable == -1"><a ng-click="grid.appScope.execute(row.entity)"><i class="fa fa-tasks" aria-hidden="true"></i>  Execute</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Clone\') == -1"><a ng-click="grid.appScope.createCopy(row.entity)"><i class="fa fa-clone" aria-hidden="true"></i>  Clone</a></li>',
         '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Export\') == -1"><a ng-click="grid.appScope.getDetail(row.entity)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Export</a></li>',
-        '    <li ng-show="grid.appScope.isUpload !=-1"><a ng-click="grid.appScope.getDetailForUpload(row.entity)"><i class="fa fa-upload" aria-hidden="true"></i>  Upload</a></li>',
+        '    <li ng-show="grid.appScope.isUpload !=-1"><a ng-click="grid.appScope.getDetailForUpload(row.entity,$index)"><i class="fa fa-upload" aria-hidden="true"></i>  Upload</a></li>',
         '    </ul>',
         '  </div>',
+        '   <div class="col-md-2" ng-if="row.entity.isupload"style="display:inline-block;vertical-align: middle;">',
+        '     <i class="glyphicon glyphicon-refresh spinning" style="margin:3px 0px 0px -6px;"></i></div>',
+   
+        '</div>',
         '</div>'
       ].join('')
     }
