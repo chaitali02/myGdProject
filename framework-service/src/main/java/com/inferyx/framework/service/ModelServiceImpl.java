@@ -1659,8 +1659,9 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 						model.getVersion());
 				if (trainExec == null)
 					throw new Exception("Executed model not found.");
-				
-				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
+
+				String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
+				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainName(), label, appUuid);
 				Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelName(), trainExec);
 				filePathUrl = exec.executePredict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
 				result = filePathUrl;

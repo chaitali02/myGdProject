@@ -10,36 +10,16 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
-import org.apache.spark.ml.feature.VectorAssembler;
-import org.apache.spark.ml.linalg.Vector;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SQLContext;
-import org.apache.spark.sql.SaveMode;
-import org.apache.spark.sql.SparkSession;
-import org.apache.spark.storage.StorageLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.connector.ConnectionHolder;
-import com.inferyx.framework.connector.IConnector;
-import com.inferyx.framework.domain.Algorithm;
-import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.DataFrameHolder;
-import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.Formula;
@@ -48,16 +28,8 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SourceAttr;
-import com.inferyx.framework.domain.TrainExec;
-import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.factory.DataSourceFactory;
-import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.ModelServiceImpl;
-import com.inferyx.framework.writer.IWriter;
 
 /**
  * @author joy
@@ -67,19 +39,7 @@ import com.inferyx.framework.writer.IWriter;
 public class PredictMLOperator {
 	
 	@Autowired
-	private HDFSInfo hdfsInfo;
-	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private SQLContext sqlContext;
-	@Autowired
-	private MetadataUtil daoRegister;
-	@Autowired
-	private DataSourceFactory datasourceFactory;
-	@Autowired
-	private ConnectionFactory connectionFactory;
-	@Autowired
-	private ExecutorFactory execFactory;
 	@Autowired
 	private FormulaOperator formulaOperator;
 	
@@ -218,21 +178,13 @@ public class PredictMLOperator {
 					}
 			}
 			
-			AttributeRefHolder labelInfo = predict.getLabelInfo();
-			commonServiceImpl.getOneByUuidAndVersion(labelInfo.getRef().getUuid(), labelInfo.getRef().getVersion(), labelInfo.getRef().getType().toString());
-			
-			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null)).append(" AS ").append(model.getLabel());
+			String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
+			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null)).append(" AS ").append(label);
 			builder.append(" FROM ");
 			builder.append(tableName).append(" ").append(aliaseName);
 
 			LOGGER.info("query : "+builder);
 		}
 		return builder.toString();
-	}
-	
-	public String resolveLabel(AttributeRefHolder labelInfo) {
-		String attributeName = null;
-		
-		return null;
 	}
 }
