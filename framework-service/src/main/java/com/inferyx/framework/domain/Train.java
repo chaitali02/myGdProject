@@ -21,6 +21,25 @@ public class Train extends BaseEntity {
 	private List<FeatureAttrMap> featureAttrMap;
 	private double trainPercent;
 	private double valPercent;
+	private AttributeRefHolder labelInfo;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the labelInfo
+	 */
+	public AttributeRefHolder getLabelInfo() {
+		return labelInfo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param labelInfo the labelInfo to set
+	 */
+	public void setLabelInfo(AttributeRefHolder labelInfo) {
+		this.labelInfo = labelInfo;
+	}
 
 	public MetaIdentifierHolder getDependsOn() {
 		return dependsOn;

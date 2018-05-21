@@ -133,6 +133,17 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       }
     }
   }
+  
+  // $scope.getAllAttributeBySource=function(){
+  //   TrainService.getAllAttributeBySource($scope.selectSource.uuid,$scope.selectSourceType).then(function(response) {
+  //     onSuccessGetAllAttributeBySource(response.data)
+  //   });
+  //   var onSuccessGetAllAttributeBySource = function(response) {
+  //     $scope.allsourceLabel = response
+  //   }
+    
+  // }
+
   // $scope.getAllLetestTarget=function(defaultValue){
   //   TrainService.getAllLatest($scope.selectTargetType).then(function(response) { onGetAllLatest(response.data)});
   //   var onGetAllLatest = function(response) {
@@ -146,16 +157,23 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainService.getAllAttributeBySource($scope.selectSource.uuid, $scope.selectSourceType).then(function (response) { onGetAllAttributeBySource(response.data) });
     var onGetAllAttributeBySource = function (response) {
       //console.log(response)
+      $scope.allsourceLabel=[];
       $scope.allTargetAttribute = response;
-
-
+      $scope.allsourceLabel = response
+      if (typeof $stateParams.id == "undefined"){
+        $scope.selectLabel=response[0];
+      }
     }
   }
+
   $scope.getAllLetestModel();
   $scope.getAllLetestSource();
   // $scope.getAllLetestTarget();
 
   $scope.onChangeModel = function (defaultValue) {
+    if(!$scope.selectModel){
+      return false;
+    }
     TrainService.getOneByUuidandVersion($scope.selectModel.uuid, $scope.selectModel.version, "model").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
       $scope.modelData = response;
@@ -215,10 +233,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   $scope.onChangeSource = function () {
     if ($scope.allSource != null && $scope.selectSource != null) {
       $scope.getAllAttribute();
+     //$scope.getAllAttributeBySource();
     }
   }
 
   $scope.getOneByUuidandVersion = function (uuid, version) {
+    
     TrainService.getOneByUuidandVersion(uuid, version, "train").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
       $scope.trainData = response;
@@ -227,7 +247,6 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.Train.defaultVersion = defaultversion;
-
       selectModel.uuid = response.dependsOn.ref.uuid;
       selectModel.name = response.dependsOn.ref.name;
       selectModel.version = " ";
@@ -238,6 +257,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       selectSource.uuid = response.source.ref.uuid;
       selectSource.name = response.source.ref.name;
       $scope.selectSource = selectSource;
+      $scope.getAllAttribute();
+      var selectLabel = {};
+      $scope.selectLabel=null
+      selectLabel.uuid = response.labelInfo.ref.uuid;
+      selectLabel.attributeId = response.labelInfo.attrId;
+      $scope.selectLabel = selectLabel;
       // var selectTarget={};
       // $scope.selectTarget=null;
       // selectTarget.uuid=response.target.ref.uuid;
@@ -255,7 +280,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           $scope.tags = tags;
         }
       }
-      $scope.getAllAttribute();
+     
       for (var i = 0; i < response.featureAttrMap.length; i++) {
         var featureAttrMap = {};
         var sourceFeature = {};
@@ -278,6 +303,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       }
       $scope.originalFeatureMapTableArray=featureMapTableArray;
       $scope.featureMapTableArray =$scope.getResults($scope.pagination,featureMapTableArray);
+      if($scope.selectModel)
       $scope.onChangeModel(false);
     }
   }
@@ -291,13 +317,18 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
   $scope.selectVersion = function (uuid, version) {
+
     $scope.allSource = [];
-    $scope.allTarget = [];
+  //  $scope.allTarget = [];
     $scope.allModel = [];
-    $scope.getAllLetestModel();
-    $scope.getAllLetestSource();
-    $scope.getAllLetestTarget();
-    $scope.getOneByUuidandVersion(uuid, version);
+    $scope.allsourceLabel=null;
+    $scope.selectLabel=null;
+    setTimeout(function () {
+      $scope.getAllLetestModel();
+      $scope.getAllLetestSource();
+      // $scope.getAllLetestTarget();
+      $scope.getOneByUuidandVersion(uuid, version);
+    },100)
   }
 
   $scope.submitModel = function () {
@@ -331,6 +362,13 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     sourceref.uuid = $scope.selectSource.uuid;
     source.ref = sourceref;
     TrainJson.source = source;
+    var labelInfo = {};
+    var ref = {};
+    ref.type = $scope.selectSourceType
+    ref.uuid = $scope.selectLabel.uuid
+    labelInfo.ref = ref;
+    labelInfo.attrId = $scope.selectLabel.attributeId
+    TrainJson.labelInfo = labelInfo;
     // var target={};
     // var targetref={};
     // targetref.type=$scope.selectTargetType;

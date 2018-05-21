@@ -670,9 +670,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				for(FeatureAttrMap featureAttrMap : train.getFeatureAttrMap()) {
 					mappingList.put(featureAttrMap.getAttribute().getAttrName(), featureAttrMap.getFeature().getFeatureName());
 				}
-				
+
+				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
-				PipelineModel trngModel = exec.trainModel(paramMap, fieldArray, model.getLabel(), algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				PipelineModel trngModel = exec.trainModel(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
 				result = trngModel;
 				
 				List<String> customDirectories = new ArrayList<>();
