@@ -212,6 +212,17 @@
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Label
+                                            </label>
+                                            <div class="col-md-6">
+                                            
+                                                <select class="form-control" select2 name="version" ng-disabled="{{mode}} || isLabelDisable" data-ng-model="selectLabel"
+                                                    ng-options="r as r.dname for r in allsourceLabel track by r.uuid + r.attributeId">
+                                                </select>
+                                            </div>
+                                          </div>
                                         
                                         <div class="row">
                                             <div class="portlet light bordered">
