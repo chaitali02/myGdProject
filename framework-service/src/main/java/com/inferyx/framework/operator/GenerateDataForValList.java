@@ -4,14 +4,15 @@
 package com.inferyx.framework.operator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.datascience.Math3Distribution;
 import com.inferyx.framework.domain.Attribute;
@@ -20,11 +21,9 @@ import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.GenVal;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
-import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
@@ -40,14 +39,13 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
  * @author joy
  *
  */
+@Service
 public class GenerateDataForValList extends GenerateDataOperator {
 	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
-	@Autowired
-	private Math3Distribution mlDistribution;
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
@@ -69,24 +67,28 @@ public class GenerateDataForValList extends GenerateDataOperator {
 			ExecParams execParams, MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
 			RunMode runMode) throws Exception {
+		String execUuid = execIdentifier.getUuid();
 		String execVersion = execIdentifier.getVersion();
-		// Set attribute source 
-		ParamListHolder attrInfo = paramSetServiceImpl.getParamByName(execParams, "valList");
+		ParamListHolder valInfo = paramSetServiceImpl.getParamByName(execParams, "valList");
 		// Set destination
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		
-		MetaIdentifier attrDpIdentifier = locationInfo.getParamValue().getRef();
-		Datapod attrDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrDpIdentifier.getUuid(), attrDpIdentifier.getVersion(), attrDpIdentifier.getType().toString());
+		String valStr = valInfo.getParamValue().getValue();
+		String []valStrArr = valStr.split(",");
+		List<String> valList = Arrays.asList(valStrArr);
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		String valTableName = "valList_"+execUuid+"_"+execVersion;
+		exec.createAndRegister(valList, GenVal.class, valTableName, commonServiceImpl.getApp().getUuid());
 		
 //		String newVersion = Helper.getVersion();
 //		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
-		String attrDpTableName = datapodServiceImpl.genTableNameByDatapod(attrDatapod, execVersion, runMode);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
-		otherParams.put("datapodUuid_" + attrDatapod.getUuid() + "_tableName", attrDpTableName);
+		otherParams.put("datapodUuid_" + "valList" + "_tableName", valTableName);
 			
 		return otherParams;
 	}
@@ -111,19 +113,16 @@ public class GenerateDataForValList extends GenerateDataOperator {
 		
 		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
-		ParamListHolder attrInfo = paramSetServiceImpl.getParamByName(execParams, "valList");
 		
 		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
 		
 		
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
-		MetaIdentifier attrIdentifier = attrInfo.getAttributeInfo().get(0).getRef();
-		Object attrDp = commonServiceImpl.getOneByUuidAndVersion(attrIdentifier.getUuid(), attrIdentifier.getVersion(), attrIdentifier.getType().toString());
-		List<String> attrList = getColumnNameList(attrDp, attrInfo);
+
 		// Get the attribute 
-		String attributeName = attrList.get(0);
-		String attrTableName = otherParams.get("datapodUuid_" + ((Datapod)attrDp).getUuid() + "_tableName");
+		String attributeName = "id";
+		String attrTableName = otherParams.get("datapodUuid_" + "valList" + "_tableName");
 		String countSql = "select count("+attributeName+") as " + attributeName + " from " + attrTableName;
 		// Get number of customers
 		List<Map<String, Object>> dataList = exec.executeAndFetch(countSql, commonServiceImpl.getApp().getUuid());
