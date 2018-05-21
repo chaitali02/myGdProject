@@ -1,8 +1,8 @@
 {
     "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197e",
     "version" : "1495325960",
-    "name" : "Generate Data for attributes",
-    "desc" : "Generate Data for attributes using distribution.",
+    "name" : "Generate Data for attribute",
+    "desc" : "Generate Data for attribute using distribution.",
     "createdBy" : {
         "ref" : {
             "type" : "user",

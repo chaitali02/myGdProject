@@ -143,7 +143,9 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
 		
 		// Generate Data 
-		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, locationDatapod.getAttributes(), numRepetitions, execVersion, tableName);
+		Datapod tmp_generate_data = (Datapod) commonServiceImpl.getLatestByUuid("ceb4f8ea-e02e-44f7-8083-2808cd8bde2d", locDpIdentifier.getType().toString());
+		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, tmp_generate_data.getAttributes(), numRepetitions, execVersion, tableName);		
+//		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, locationDatapod.getAttributes(), numRepetitions, execVersion, tableName);
 		
 		// Generate Bucket Id
 		String bucketsSql = getBucketsSql(numIterations, resultSetHolder);
