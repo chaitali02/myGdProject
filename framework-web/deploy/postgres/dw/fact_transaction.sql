@@ -4,16 +4,16 @@
 
 -- Table: framework.fact_transaction
 
--- DROP TABLE framework.fact_transaction;
+   DROP TABLE framework.fact_transaction;
 
 CREATE TABLE framework.fact_transaction
 (
-  transaction_id integer,
+  transaction_id text,
   src_transaction_id text,
-  transaction_type_id integer,
+  transaction_type_id text,
   trans_date_id integer,
-  bank_id integer,
-  branch_id integer,
+  bank_id text,
+  branch_id text,
   customer_id text,
   address_id text,
   account_id text,

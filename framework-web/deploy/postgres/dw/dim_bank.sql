@@ -3,7 +3,7 @@
 
 -- Table: framework.dim_bank
 
--- DROP TABLE framework.dim_bank;
+ DROP TABLE framework.dim_bank;
 
 CREATE TABLE framework.dim_bank
 (

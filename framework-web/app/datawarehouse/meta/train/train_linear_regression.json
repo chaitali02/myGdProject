@@ -11,7 +11,8 @@
             "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
         }
     },
-    "target" : {
+    "labelInfo" : {
+        "attrId" : "0",
         "ref" : {
             "type" : "datapod",
             "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -73,9 +74,11 @@
             }
         }
     ],
-    "uuid" : "8ff9342d-a48c-437b-b381-cddbbe2b90a9",
-    "version" : "1521704987",
-    "name" : "predict_linear_regression",
+    "trainPercent" : 70.0,
+    "valPercent" : 30.0,
+    "uuid" : "adba4446-ff6b-4b81-b83c-acc0beb4f6ce",
+    "version" : "1521706735",
+    "name" : "train_linear_regression",
     "createdBy" : {
         "ref" : {
             "type" : "user",

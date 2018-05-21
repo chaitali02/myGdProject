@@ -1,6 +1,9 @@
 
 
 
+-- Table: framework.transaction
+
+   DROP TABLE framework.transaction;
 
 CREATE TABLE framework.transaction (
   transaction_id text ,
