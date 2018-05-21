@@ -270,7 +270,9 @@ execute(uuid,version,type,action): Observable<any> {
   if(type=="model"){
       url = '/model/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
   }
- 
+  if(type=="predict"){
+    url = '/model/predict/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
+}
   let body=null
   return this._sharedService.postCall(url,body)
   .map((response: Response) => {

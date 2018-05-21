@@ -169,7 +169,7 @@
     </div>
     <br>
     <div class="row">
-      <div class="col-md-12" *ngIf="rowData1">
+      <div class="col-md-12" >
         <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" (onRowSelect)="onRowSelect($event)"
           selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
           [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">

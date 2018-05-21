@@ -94,7 +94,7 @@ export class PredictionComponent implements OnInit {
         this.getAllLatestModel()
         this.getAllLatestSource(this.selectSourceType)
         this.getAllLatestTarget(this.selectTargetType)
-        this.getAttribute()
+        //this.getAttribute()
       }
      
     })
@@ -457,7 +457,7 @@ OnSuccessubmit(response){
     this.isSubmit="false";
    // this.IsProgerssShow="false";
     this.msgs = [];
-    this.msgs.push({severity:'success', summary:'Success Message', detail:'DQ Save Successfully'});
+    this.msgs.push({severity:'success', summary:'Success Message', detail:'Predict Save Successfully'});
     setTimeout(() => {
     this.goBack();
     
