@@ -35,6 +35,7 @@ import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataFrameHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -217,6 +218,9 @@ public class PredictMLOperator {
 					}
 			}
 			
+			AttributeRefHolder labelInfo = predict.getLabelInfo();
+			commonServiceImpl.getOneByUuidAndVersion(labelInfo.getRef().getUuid(), labelInfo.getRef().getVersion(), labelInfo.getRef().getType().toString());
+			
 			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null)).append(" AS ").append(model.getLabel());
 			builder.append(" FROM ");
 			builder.append(tableName).append(" ").append(aliaseName);
@@ -225,5 +229,10 @@ public class PredictMLOperator {
 		}
 		return builder.toString();
 	}
-
+	
+	public String resolveLabel(AttributeRefHolder labelInfo) {
+		String attributeName = null;
+		
+		return null;
+	}
 }
