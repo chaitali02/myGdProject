@@ -181,7 +181,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         featureMapTableArray[i]=featureMap;
       }
       $scope.originalFeatureMapTableArray=featureMapTableArray;
-      $scope.featureMapTableArray =$scope.getResults($scope.pagination,featureMapTableArray);
+      $scope.featureMapTableArray =featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);
   }
 }
   $scope.onChangeTargeType=function(){
@@ -287,7 +287,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         featureMapTableArray[i]=featureMap;
       }
       $scope.originalFeatureMapTableArray=featureMapTableArray;
-      $scope.featureMapTableArray =$scope.getResults($scope.pagination,featureMapTableArray);
+      $scope.featureMapTableArray =featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);
     }
   }
   if(typeof $stateParams.id != "undefined") {
@@ -437,35 +437,35 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     }
   }
 
-  $scope.getResults = function(pagination,params) {
-    pagination.totalItems=params.length;
-    if(pagination.totalItems >0){
-      pagination.to = (((pagination.currentPage - 1) * (pagination.usePageSize))+1);
-    }
-    else{
-      pagination.to=0;
-    }
-    if(pagination.totalItems < (pagination.usePageSize*pagination.currentPage)) {
-        pagination.from = pagination.totalItems;
-    } else {
-      pagination.from = ((pagination.currentPage) * pagination.usePageSize);
-    }
-    var limit = (pagination.usePageSize* pagination.currentPage);
-    var offset = ((pagination.currentPage - 1) * pagination.usePageSize)
-    return params.slice(offset,limit);
-  }
+  // $scope.getResults = function(pagination,params) {
+  //   pagination.totalItems=params.length;
+  //   if(pagination.totalItems >0){
+  //     pagination.to = (((pagination.currentPage - 1) * (pagination.usePageSize))+1);
+  //   }
+  //   else{
+  //     pagination.to=0;
+  //   }
+  //   if(pagination.totalItems < (pagination.usePageSize*pagination.currentPage)) {
+  //       pagination.from = pagination.totalItems;
+  //   } else {
+  //     pagination.from = ((pagination.currentPage) * pagination.usePageSize);
+  //   }
+  //   var limit = (pagination.usePageSize* pagination.currentPage);
+  //   var offset = ((pagination.currentPage - 1) * pagination.usePageSize)
+  //   return params.slice(offset,limit);
+  // }
 
-  $scope.onPageChanged = function(){
-    $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
-  };
-  $scope.onPerPageChange=function(){
-    if($scope.pagination.pageSize == 'All'){
-      $scope.pagination.usePageSize=$scope.originalFeatureMapTableArray.length;
-    }else{
-      $scope.pagination.usePageSize=$scope.pagination.pageSize;
-    }
-    $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
-  }  
+  // $scope.onPageChanged = function(){
+  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  // };
+  // $scope.onPerPageChange=function(){
+  //   if($scope.pagination.pageSize == 'All'){
+  //     $scope.pagination.usePageSize=$scope.originalFeatureMapTableArray.length;
+  //   }else{
+  //     $scope.pagination.usePageSize=$scope.pagination.pageSize;
+  //   }
+  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  // }  
 
 }); //End CreateModelController
 
