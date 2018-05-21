@@ -250,11 +250,16 @@
     this.uploadFile=function(dataUuid,data,type){
       var url="datapod/upload?action=edit&datapodUuid="+dataUuid+"&type="+type
   		var deferred = $q.defer();
-  	    CommonFactory.uploadFile(url,data).then(function(response){onSuccess(response.data)});
+  	    CommonFactory.uploadFile(url,data).then(function(response){onSuccess(response.data)},function(response){onError(response)});
     	    var onSuccess=function(response){
       	    deferred.resolve({
                 data:response
              });
+          }
+          var onError = function (response) {
+            deferred.reject({
+              data: response
+            })
           }
          return deferred.promise;
   	}
@@ -305,6 +310,12 @@
         OnSuccess(response.data)
       });
       var OnSuccess = function(response) {
+        if(response){
+          for (var i = 0; i < response.length; i++) {
+          response[i].isupload=false;
+          response[i].index=i;
+          }
+        }
         deferred.resolve({
           data: response
         });
