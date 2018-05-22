@@ -1,6 +1,6 @@
 -- Table: framework.dim_account
 
--- DROP TABLE framework.dim_account;
+DROP TABLE framework.dim_account;
 
 CREATE TABLE framework.dim_account
 (

@@ -1,7 +1,9 @@
+ 
 
 -- Table: framework.dim_date
 
--- DROP TABLE framework.dim_date;
+
+ DROP TABLE framework.dim_date;
 
 CREATE TABLE framework.dim_date
 (
@@ -75,8 +77,62 @@ ALTER TABLE framework.dim_date
 
 
 
-
-
-
-
-
+Copy framework.dim_date(date_id,
+  date_type,
+  date_val,
+  day_num_of_week,
+  day_num_of_month,
+  day_num_of_quarter,
+  day_num_of_year,
+  day_num_absolute,
+  day_of_week_name,
+  day_of_week_abbreviation,
+  julian_day_num_of_year,
+  julian_day_num_absolute,
+  is_weekday,
+  is_us_civil_holiday,
+  is_last_day_of_week,
+  is_last_day_of_month,
+  is_last_day_of_quarter,
+  is_last_day_of_year,
+  is_last_day_of_fiscal_month,
+  is_last_day_of_fiscal_quarter,
+  is_last_day_of_fiscal_year,
+  week_of_year_begin_date,
+  week_of_year_begin_date_key,
+  week_of_year_end_date,
+  week_of_year_end_date_key,
+  week_of_month_begin_date,
+  week_of_month_begin_date_key,
+  week_of_month_end_date,
+  week_of_month_end_date_key,
+  week_of_quarter_begin_date,
+  week_of_quarter_begin_date_key,
+  week_of_quarter_end_date,
+  week_of_quarter_end_date_key,
+  week_num_of_month,
+  week_num_of_quarter,
+  week_num_of_year,
+  month_num_of_year,
+  month_num_overall,
+  month_name,
+  month_name_abbreviation,
+  month_begin_date,
+  month_begin_date_key,
+  month_end_date,
+  month_end_date_key,
+  quarter_num_of_year,
+  quarter_num_overall,
+  quarter_begin_date,
+  quarter_begin_date_key,
+  quarter_end_date,
+  quarter_end_date_key,
+  year_num,
+  year_begin_date,
+  year_begin_date_key,
+  year_end_date,
+  year_end_date_key,
+  yyyy_mm,
+  yyyy_mm_dd,
+  dd_mon_yyyy,
+  load_date)FROM '/user/hive/warehouse/framework/upload/dim_date.csv' delimiter ',' csv  header;

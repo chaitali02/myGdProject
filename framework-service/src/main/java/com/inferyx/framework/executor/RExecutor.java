@@ -326,7 +326,7 @@ public class RExecutor implements IExecutor {
 	}
 
 	@Override
-	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
 			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
@@ -406,7 +406,7 @@ public class RExecutor implements IExecutor {
 	}
 
 	@Override
-	public ResultSetHolder createAndRegister(List data, Class className, String tableName, String clientContext)
+	public ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;

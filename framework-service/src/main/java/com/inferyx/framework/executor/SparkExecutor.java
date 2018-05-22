@@ -38,6 +38,7 @@ import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -150,7 +151,7 @@ public class SparkExecutor implements IExecutor {
 				if (obj instanceof SparkSession) {
 					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 					Dataset<Row> df = sparkSession.sql(sql);
-					df.show();
+					df.show(true);
 					rsHolder.setDataFrame(df);
 					rsHolder.setType(ResultType.dataframe);
 				}
@@ -244,9 +245,10 @@ public class SparkExecutor implements IExecutor {
 		logger.info("temp table registered: " + tableName);
 		return resHolder;
 	}
+	
 	@Override
-	public ResultSetHolder createAndRegister(List data, Class className, String tableName, String clientContext) throws IOException {
-		ResultSetHolder rsHolder = null;
+	public ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext) throws IOException {
+		ResultSetHolder rsHolder = new ResultSetHolder();
 		try {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
@@ -1159,14 +1161,14 @@ public class SparkExecutor implements IExecutor {
 		
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<numIterations; i++) {
-			List<Double> colList = new ArrayList<>();
+			//List<Double> colList = new ArrayList<>();
 			int genId = i;
 			for(int j=0; j<features.size(); j++) {	
 				try {
-					Double totalVal = 0.0;
+					//Double totalVal = 0.0;
 					//double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
 					Object obj = object.getClass().getMethod("sample").invoke(object);
-					Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
+					//Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
 					/*if(returnType.isArray()) {*/
 						double[] trial = (double[]) obj;
 						List<Object> datasetList = new ArrayList<>();
@@ -1406,18 +1408,19 @@ public class SparkExecutor implements IExecutor {
 	}
 	
 	@Override
-	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		//df.show(true);
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
 				.invoke(trainedModel, df);
-		//predictionDf.show(false);
+		predictionDf.show(true);
 
 		//String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
 
 		//if (targetType.equalsIgnoreCase(MetaType.datapod.toString())) {
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			/*Datasource datasource = commonServiceImpl.getDatasourceByApp();
 
 			df.createOrReplaceGlobalTempView("tempPredictResult");
 			IConnector connector = connectionFactory.getConnector(datasource.getType().toLowerCase());
@@ -1425,24 +1428,29 @@ public class SparkExecutor implements IExecutor {
 			if (conHolder.getStmtObject() instanceof SparkSession) {
 				SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 				predictionDf.persist(StorageLevel.MEMORY_AND_DISK());
-				sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, "tempPredictResult");
-			}
+				//sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, "tempPredictResult");
+			}*/
 
-			String columns = "";
-			for (String col : predictionDf.columns())
-				columns = columns.concat(col).concat(" AS ").concat(col).concat(",");
-			columns = columns.substring(0, columns.length() - 2);
-			String sql = "SELECT " + columns + " FROM " + "tempPredictResult";
-			ResultSetHolder rsHolder = executeSql(sql, commonServiceImpl.getApp().getUuid());
+//			String columns = "";
+//			for (String col : predictionDf.columns())
+//				columns = columns.concat(col).concat(" AS ").concat(col).concat(",");
+//			columns = columns.substring(0, columns.length() - 2);
+//			String sql = "SELECT " + columns + " FROM " + "tempPredictResult";
+//			ResultSetHolder rsHolder = executeSql(sql, commonServiceImpl.getApp().getUuid());
+//
+//			Dataset<Row> dfTask = rsHolder.getDataFrame();
+//			dfTask.show(true);
+//			dfTask.cache();
 
-			Dataset<Row> dfTask = rsHolder.getDataFrame();
-			dfTask.show(true);
-			dfTask.cache();
-
-			sqlContext.registerDataFrameAsTable(dfTask, tableName);
-			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
-			datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
-			return filePathUrl + "/data";
+			sqlContext.registerDataFrameAsTable(predictionDf, "tempPredictResult");
+//			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
+//			datapodWriter.write(predictionDf, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setType(ResultType.dataframe);
+			rsHolder.setDataFrame(predictionDf);
+			rsHolder.setCountRows(predictionDf.count());
+			rsHolder.setTableName("tempPredictResult");
+			return rsHolder;
 	}
 
 	@Override
@@ -1541,6 +1549,7 @@ public class SparkExecutor implements IExecutor {
 			case "string": return DataTypes.StringType;
 			case "timestamp": return DataTypes.TimestampType;
 			case "decimal" : return DataTypes.createDecimalType();
+			case "vector" : return new VectorUDT();
 			
             default: return null;
 		}

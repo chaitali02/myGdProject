@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.spark.sql.Dataset;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -3239,5 +3240,23 @@ public class CommonServiceImpl <T> {
 				e.printStackTrace();
 			}
 			return object;
+		}
+		
+
+		
+		public String resolveLabel(AttributeRefHolder labelInfo) throws JsonProcessingException {
+			String attributeName = null;
+			Object source = getOneByUuidAndVersion(labelInfo.getRef().getUuid(), labelInfo.getRef().getVersion(), labelInfo.getRef().getType().toString());
+			if(source instanceof Datapod) {
+				Datapod datapod = (Datapod) source;
+				attributeName = datapod.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			} else if(source instanceof Dataset) {
+				DataSet dataset = (DataSet) source;
+				attributeName = dataset.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			} else if(source instanceof Rule) {
+				Rule rule = (Rule) source;
+				attributeName = rule.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			}		
+			return attributeName;
 		}
 }

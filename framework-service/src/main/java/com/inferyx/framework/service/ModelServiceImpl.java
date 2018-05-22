@@ -85,6 +85,7 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
@@ -1651,26 +1652,53 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			String sql = generateSQLBySource(source);
 			exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
 			
+			long count = 0;
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 				String predictQuery = predictMLOperator.generateSql(predict, (tableName+"_pred_data"));
-				result = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, target, SaveMode.Append.toString(), appUuid);
+				ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, target, SaveMode.Append.toString(), appUuid);
+				result = rsHolder;
+				
+				count = rsHolder.getCountRows();
+				if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
+					createDatastore(filePath, predict.getName(), 
+							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
+							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
+							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+							Helper.getPersistModeFromRunMode(RunMode.BATCH.toString()), RunMode.BATCH);					
+				}
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
 						model.getVersion());
 				if (trainExec == null)
 					throw new Exception("Executed model not found.");
-				
-				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
+
+				String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
+				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainName(), label, appUuid);
 				Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelName(), trainExec);
-				filePathUrl = exec.executePredict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
-				result = filePathUrl;
+				ResultSetHolder rsHolder =  exec.executePredict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
+				String query = "SELECT * FROM " + rsHolder.getTableName();
+				ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePath, target, SaveMode.Append.toString(), appUuid);
+				result = rsHolder2;
+
+				count = rsHolder2.getCountRows();
+				if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
+					createDatastore(filePath, predict.getName(), 
+							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
+							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
+							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+							Helper.getPersistModeFromRunMode(RunMode.BATCH.toString()), RunMode.BATCH);					
+				}
 			}
 			
-			dataStoreServiceImpl.setRunMode(RunMode.BATCH);
-			dataStoreServiceImpl.create(filePathUrl, modelName,
+//			dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+//			dataStoreServiceImpl.create(filePathUrl, modelName,
+//					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
+//					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
+//					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+			createDatastore(filePathUrl, modelName,
 					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
 					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
-					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, Helper.getPersistModeFromRunMode(RunMode.BATCH.toString()), RunMode.BATCH);
 
 			predictExec.setLocation(filePathUrl);
 			predictExec.setResult(resultRef);
@@ -1695,5 +1723,11 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
 		}
 		return isSuccess;
+	}
+	
+	public void createDatastore(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
+			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode, RunMode runMode) throws Exception{
+		dataStoreServiceImpl.setRunMode(runMode);
+		dataStoreServiceImpl.create(filePath, fileName, metaId, execId, appInfo, createdBy, SaveMode.Append.toString(), resultRef, count, persistMode);
 	}
 }

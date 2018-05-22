@@ -677,11 +677,17 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
   };
 
-  $scope.getDetailForUpload = function (data) {
+  $scope.getDetailForUpload = function (data,index) {
+    console.log(data.index)
     $scope.setActivity(data.uuid, data.version, $scope.select, "uplode");
     var uuid = data.uuid
     $scope.uploaaduuid = data.uuid
     var version = data.version
+    $scope,uploadDetail={
+      uuid:data.uuid,
+      index:data.index
+    }
+  
     $(":file").jfilestyle('clear')
     $("#csv_file").val("");
     $('#fileupload').modal({
@@ -698,6 +704,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
   $scope.uploadFile = function () {
     //var file = $scope.myFile;
+    
     if($scope.isFileSubmitDisable){
       $scope.msg = "Special character or space not allowed in file name."
       notify.type = 'info',
@@ -711,18 +718,22 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var fd = new FormData();
     fd.append('csvFileName', file);
     $('#fileupload').modal('hide')
+    $scope.gridOptions.data[$scope,uploadDetail.index].isupload=true;
     CommonService.uploadFile($scope.uploaaduuid, fd, "datapod").then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      //$('#fileupload').modal('hide')
+      $scope.gridOptions.data[$scope,uploadDetail.index].isupload=false;
+      $scope,uploadDetail=null;
       $scope.executionmsg = "Data Uploaded Successfully"
       notify.type = 'success',
       notify.title = 'Success',
-      notify.content = $scope.executionmsg//"Dashboard Deleted Successfully"
+      notify.content = $scope.executionmsg
       $scope.$emit('notify', notify);
 
     }
     var onError = function (response) {
-    	$('#fileupload').modal('hide')
+      $('#fileupload').modal('hide');
+      $scope.gridOptions.data[$scope,uploadDetail.index].isupload=false;
+      $scope,uploadDetail=null;
     }
     // CommonService.SaveFile(file.name,fd,"datapod").then(function(response){onSuccess(response.data)});
     // var onSuccess=function(response){

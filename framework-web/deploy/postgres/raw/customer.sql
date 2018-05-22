@@ -1,4 +1,9 @@
 
+-- Table: framework.customer
+
+   DROP TABLE framework.customer;
+   
+   
 CREATE TABLE framework.customer (
   customer_id text ,
   address_id text ,
@@ -17,4 +22,6 @@ CREATE TABLE framework.customer (
   PRIMARY KEY (customer_id,load_date)
 );
 
-\copy framework.customer(customer_id,address_id,branch_id,title,first_name,middle_name,last_name,ssn,phone,date_first_purchase,commute_distance_miles,load_date)FROM /user/hive/warehouse/framework/upload/customer.csv delimiter ',' csv  header;
+
+
+Copy framework.customer(customer_id,address_id,branch_id,title,first_name,middle_name,last_name,ssn,phone,date_first_purchase,commute_distance_miles,load_date)FROM '/user/hive/warehouse/framework/upload/customer.csv' delimiter ',' csv  header;

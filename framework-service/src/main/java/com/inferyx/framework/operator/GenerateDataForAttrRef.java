@@ -98,8 +98,62 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	
 	@Override
+	public String execute(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
+			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+		String execUuid = execIdentifier.getUuid();
+		String execVersion = execIdentifier.getVersion();
+		int numRepetitions = 0;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		
+		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
+		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
+		ParamListHolder attrInfo = paramSetServiceImpl.getParamByName(execParams, "attrRef");
+		// Set min range
+		ParamListHolder minRandInfo = paramSetServiceImpl.getParamByName(execParams, "min");
+		// Set max range
+		ParamListHolder maxRandInfo = paramSetServiceImpl.getParamByName(execParams, "max");
+		
+		
+		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
+		
+		int minRand = Integer.parseInt(minRandInfo.getParamValue().getValue());
+		int maxRand = Integer.parseInt(maxRandInfo.getParamValue().getValue());
+		
+		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
+		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
+		
+		MetaIdentifier attrIdentifier = attrInfo.getAttributeInfo().get(0).getRef();
+		Object attrDp = commonServiceImpl.getOneByUuidAndVersion(attrIdentifier.getUuid(), attrIdentifier.getVersion(), attrIdentifier.getType().toString());
+		List<String> attrList = getColumnNameList(attrDp, attrInfo);
+		// Get the attribute 
+		String attributeName = attrList.get(0);
+		logger.info("OtherParams : " + otherParams);
+		logger.info("attrDp.getUuid : " + ((Datapod)attrDp).getUuid());
+		String attrTableName = otherParams.get("datapodUuid_" + ((Datapod)attrDp).getUuid() + "_tableName");
+		
+		List<Attribute> attributeList = locationDatapod.getAttributes();
+		
+		String rangeSql = "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
+						+", (randn() * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
+						+" FROM "
+						+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
+						+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
+		ResultSetHolder resultSetHolder = exec.executeAndRegister(rangeSql, tableName, datasource.getType());
+		
+		// save result
+		save(exec, resultSetHolder, tableName, locationDatapod, execIdentifier, runMode);
+		
+		return tableName;
+		
+	}
+
+	/*@Override
 	public String execute(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
 			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
@@ -163,7 +217,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		save(exec, resultSetHolder, tableName, locationDatapod, execIdentifier, runMode);
 		
 		return tableName;
-	}
+	}*/
 	
 public List<String> getColumnNameList(Object source, ParamListHolder holder ){
 		
