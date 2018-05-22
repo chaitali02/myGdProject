@@ -2,7 +2,7 @@
   "id": "5b0289c32750525081481674",
   "uuid": "b3bdb5ad-5128-4ca4-9a00-5c8d13cb953e",
   "version": "1526892995",
-  "name": "target_predict_algorithm_linear_regression",
+  "name": "target_predict_algo_linear_regression",
   "desc": "Saves the result of prediction which is of the type algorithm Linear Regression.",
   "createdBy": {
     "ref": {
