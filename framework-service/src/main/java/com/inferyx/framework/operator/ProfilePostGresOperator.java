@@ -30,26 +30,24 @@ public class ProfilePostGresOperator extends ProfileOperator {
 
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 		sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, "
-				+ "\'" + profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, "
-				+ "\'" + datapod.getName()+"\' AS datapodName, "
-				+ attrId + " AS AttributeId, "
-				+ "\'" + attrName+"\' AS attributeName, "
-				+ "(SELECT COUNT(*) FROM " + profileTableName +" tab) AS numRows, "
-				+ "MIN(" + attrName + ") AS minVal, "
-				+ "MAX(" + attrName + ") AS maxVal, "
-				+ "AVG( CAST(" + attrName + " AS INT8)) AS avgVal, "
-				+ "PERCENTILE_CONT(" + 0.5 + ") WITHIN GROUP (ORDER BY CAST(" + attrName + " AS INT8)) AS medianVal, "
-				+ "STDDEV(" + attrName + ") AS stdDev, "
-				+ "COUNT(distinct " + attrName + ") AS numDistinct, "
-				+ "COUNT(distinct " + attrName + ")/COUNT(" + attrName + ")*100 AS perDistinct, "
-				+ "COUNT(if(" + attrName + " is null,1,0)) AS numNull,"
-				+ "COUNT(if(" + attrName + "" + " is null,1,0)) / COUNT(" + attrName + ")*100 AS perNull, "
-				+ "COUNT(if(" + attrName + " is null,1,0)) / COUNT(" + attrName + ") AS sixSigma, " 
+				+ "\'" + profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"
+				+ datapod.getName()+"' AS datapodName,"
+				+ attrId + " AS AttributeId,'"
+				+ attrName+"' AS attributeName,"
+				+ "(SELECT COUNT(*) FROM " + profileTableName +" tab) AS numRows,"
+				+ "MIN(CAST(regexp_replace(" + attrName + ", '[^0-9]+', '0', 'g') as int8)) AS minVal,"
+				+ "MAX(CAST(regexp_replace(" + attrName + ", '[^0-9]+', '0', 'g') as int8)) AS maxVal,"				
+				+ "AVG(CAST(regexp_replace(" + attrName + ", '[^0-9]+', '0', 'g') as int8)) AS avgVal,"				
+				+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY CAST(regexp_replace(" + attrName + ", '[^0-9]+', '0', 'g') as int8)) AS medianVal,"				
+				+ "STDDEV(CAST(regexp_replace(" + attrName + ", '[^0-9]+', '0', 'g') as int8)) AS stdDev,"				
+				+ "COUNT(CAST(regexp_replace(" + attrName + ", '[^0-9]+', '0', 'g') as int8)) AS numDistinct,"
+				+ "COUNT(CAST(regexp_replace(" + attrName + ", '[^0-9]+', '0', 'g') as int8))/COUNT(CAST(regexp_replace(" + attrName + ", '[^0-9]+', '0', 'g') as int8))*100 AS perDistinct,"		
+				+ "COUNT(" + attrName + ") AS numNull,"				
+				+ "COUNT(" + attrName + ") / (CASE WHEN COUNT(" + attrName + ") IS NULL THEN 1 ELSE count(" + attrName + ") END)*100 AS perNull,"
+				+ "COUNT(" + attrName + ") / (CASE WHEN COUNT(" + attrName + ") IS NULL THEN 1 ELSE count(" + attrName + ") END) AS sixSigma," 
 				+ "CURRENT_DATE AS load_date, " 
-				+ "UNIX_TIMESTAMP() AS load_id, "
-				+ "'" + profileExec.getVersion() + "' AS version"
+				+ "UNIX_TIMESTAMP() AS load_id, '" + profileExec.getVersion() + "' AS version"
 				+ " FROM " + profileTableName;
-		
     	logger.info("query is : " + sql);
 		return sql;
 	}
