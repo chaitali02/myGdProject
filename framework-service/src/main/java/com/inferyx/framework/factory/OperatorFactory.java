@@ -44,7 +44,7 @@ public class OperatorFactory {
 		switch(operatorTypeName) {
 			case "Generate Data" : return generateDataOperator;
 			case "Transpose" : return transposeOperator;
-			case "Generate Data for attributes" : return generateDataForAttrRef;
+			case "Generate Data for attribute" : return generateDataForAttrRef;
 			case "Generate Data for value list" : return generateDataForValList;
 			default : throw new IllegalArgumentException("Invalid Operator Type");
 		}
