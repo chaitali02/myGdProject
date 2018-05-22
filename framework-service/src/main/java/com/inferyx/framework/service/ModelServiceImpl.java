@@ -924,6 +924,9 @@ public class ModelServiceImpl {
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
 					simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 	
+			MetaIdentifierHolder targetHolder = simulate.getTarget();
+			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+			
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			String filePath = "/simulate"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());	
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
@@ -986,6 +989,7 @@ public class ModelServiceImpl {
 			execParams.setParamListInfo(paramListInfo2);
 			
 			String appUuid = commonServiceImpl.getApp().getUuid();
+			long count = 0;
 			if(simulate.getType().equalsIgnoreCase(SimulationType.MONTECARLO.toString())) {
 				result = monteCarloSimulation.simulateMonteCarlo(simulate, simExecParam, distExecParam, filePathUrl);
 			} else if(simulate.getType().equalsIgnoreCase(SimulationType.DEFAULT.toString())) {
@@ -1035,7 +1039,17 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;
-					result = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+					result = rsHolder;
+					
+					count = rsHolder.getCountRows();
+					if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+						createDatastore(filePath, simulate.getName(), 
+								new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
+								new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
+								simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+					}
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 					
 					HashMap<String, String> otherParams = execParams.getOtherParams();
@@ -1079,15 +1093,33 @@ public class ModelServiceImpl {
 					}
 					
 					String sql = "SELECT * FROM " + tableName_3;
-					result = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);				
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+					result = rsHolder;
+
+					count = rsHolder.getCountRows();
+					if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+						createDatastore(filePath, simulate.getName(), 
+								new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
+								new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
+								simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+					}
 				}
 			}
 			
-			dataStoreServiceImpl.setRunMode(runMode);
-			dataStoreServiceImpl.create(filePathUrl, modelName,
-					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
-					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
-					simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+//			dataStoreServiceImpl.setRunMode(runMode);
+//			dataStoreServiceImpl.create(filePathUrl, modelName,
+//					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
+//					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
+//					simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+			
+
+				createDatastore(filePathUrl, modelName,
+						new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
+						new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
+						simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+						Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+		
 
 			simulateExec.setLocation(filePathUrl);
 			simulateExec.setResult(resultRef);
