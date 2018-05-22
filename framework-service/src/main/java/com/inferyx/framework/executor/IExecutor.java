@@ -326,7 +326,7 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @return
 	 */
-	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException ;
+	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException ;
 	
 	/**
 	 * 
@@ -422,6 +422,6 @@ public interface IExecutor {
 	 * @return
 	 * @throws IOException
 	 */
-	ResultSetHolder createAndRegister(List data, Class className, String tableName, String clientContext)
+	ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext)
 			throws IOException;
 }

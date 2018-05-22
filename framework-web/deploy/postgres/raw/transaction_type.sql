@@ -15,7 +15,7 @@ CREATE TABLE framework.transaction_type (
   load_id integer 
 );
 
-  \copy framework.transaction_type(transaction_type_id,transaction_type_code,transaction_type_desc,load_date,version,load_id)FROM /user/hive/warehouse/framework/upload/transaction_type.csv delimiter ',' csv  header;
+  Copy framework.transaction_type(transaction_type_id,transaction_type_code,transaction_type_desc,load_date,version,load_id)FROM '/user/hive/warehouse/framework/upload/transaction_type.csv' delimiter ',' csv  header;
 
 
 

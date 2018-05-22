@@ -77,7 +77,7 @@ ALTER TABLE framework.dim_date
 
 
 
-\copy framework.dim_date(date_id,
+Copy framework.dim_date(date_id,
   date_type,
   date_val,
   day_num_of_week,
@@ -135,4 +135,4 @@ ALTER TABLE framework.dim_date
   yyyy_mm,
   yyyy_mm_dd,
   dd_mon_yyyy,
-  load_date)FROM /user/hive/warehouse/framework/upload/dim_date.csv delimiter ',' csv  header;
+  load_date)FROM '/user/hive/warehouse/framework/upload/dim_date.csv' delimiter ',' csv  header;
