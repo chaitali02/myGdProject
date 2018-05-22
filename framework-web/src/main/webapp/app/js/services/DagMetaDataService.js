@@ -161,7 +161,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       cellTemplate: [
         '<div class="ui-grid-cell-contents">',
         '<div class="col-md-12" style="display:inline-flex;">',   
-        '  <div class="col-md-8 dropdown" uib-dropdown dropdown-append-to-body>',
+        '  <div class="col-md-10 dropdown" uib-dropdown dropdown-append-to-body>',
         '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
         '    <i class="fa fa-angle-down"></i></button>',
         '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
@@ -177,8 +177,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '    <li ng-show="grid.appScope.isUpload !=-1"><a ng-click="grid.appScope.getDetailForUpload(row.entity,$index)"><i class="fa fa-upload" aria-hidden="true"></i>  Upload</a></li>',
         '    </ul>',
         '  </div>',
-        '   <div class="col-md-4" ng-if="row.entity.isupload" style="display:inline-block;vertical-align: middle;">',
-        '     <i class="glyphicon glyphicon-refresh spinning" style="margin:3px 0px 0px 10px;"></i></div>',
+        '   <div class="col-md-2" ng-if="row.entity.isupload"style="display:inline-block;vertical-align: middle;">',
+        '     <i class="glyphicon glyphicon-refresh spinning" style="margin:3px 0px 0px -6px;"></i></div>',
    
         '</div>',
         '</div>'
