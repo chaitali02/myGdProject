@@ -15,4 +15,4 @@ CREATE TABLE account_status_type (
 
 
 
-\copy framework.account_status_type(account_status_id,account_status_code,account_status_desc,load_date,version,load_id)FROM /user/hive/warehouse/framework/upload/account_status_type.csv delimiter ',' csv  header;
+Copy framework.account_status_type(account_status_id,account_status_code,account_status_desc,load_date,version,load_id)FROM '/user/hive/warehouse/framework/upload/account_status_type.csv' delimiter ',' csv  header;
