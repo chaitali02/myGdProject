@@ -45,7 +45,7 @@
     {
       "attributeId": 1,
       "name": "features",
-      "type": "string",
+      "type": "vector",
       "desc": "features",
       "key": "",
       "partition": "N",
@@ -54,12 +54,12 @@
     },
     {
       "attributeId": 2,
-      "name": "predictio",
+      "name": "prediction",
       "type": "double",
-      "desc": "predictio",
+      "desc": "prediction",
       "key": "",
       "partition": "N",
-      "dispName": "predictio",
+      "dispName": "prediction",
       "active": "Y"
     }
   ]
