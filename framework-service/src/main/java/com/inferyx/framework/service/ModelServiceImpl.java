@@ -149,7 +149,7 @@ public class ModelServiceImpl {
 	private AlgorithmServiceImpl algorithmServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	private RunMode runMode;
+	//private RunMode runMode;
 	@Autowired
 	private DataFrameService dataFrameService;
 	@Autowired
@@ -234,19 +234,22 @@ public class ModelServiceImpl {
 		return app;
 	}*/
 
+	/********************** UNUSED **********************/
 	/**
 	 * @return the runMode
-	 */
+	 *//*
 	public RunMode getRunMode() {
 		return runMode;
 	}
+	*/
 
+	/********************** UNUSED **********************/
 	/**
 	 * @param runMode the runMode to set
-	 */
+	 *//*
 	public void setRunMode(RunMode runMode) {
 		this.runMode = runMode;
-	}
+	}*/
 
 	/********************** UNUSED **********************/
 	/*public List<Model> resolveName(List<Model> models) throws JsonProcessingException {
@@ -1299,7 +1302,7 @@ public class ModelServiceImpl {
 		return trainExec;
 	}
 	
-	public TrainExec train(Train train, Model model, TrainExec  trainExec, ExecParams execParams, ParamMap paramMap) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException{
+	public TrainExec train(Train train, Model model, TrainExec  trainExec, ExecParams execParams, ParamMap paramMap, RunMode runMode) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException{
 		
 		if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 			commonServiceImpl.sendResponse("400", MessageStatus.FAIL.toString(), "Training can not be performed on formula.");
@@ -1612,7 +1615,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		return trainedModel;
 	}
 
-	public boolean predict(Predict predict, ExecParams execParams, PredictExec predictExec) throws Exception {
+	public boolean predict(Predict predict, ExecParams execParams, PredictExec predictExec, RunMode runMode) throws Exception {
 		boolean isSuccess = false;
 		try {
 			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.InProgress);
@@ -1664,7 +1667,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
-							Helper.getPersistModeFromRunMode(RunMode.BATCH.toString()), RunMode.BATCH);					
+							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
 				}
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
@@ -1686,19 +1689,15 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
-							Helper.getPersistModeFromRunMode(RunMode.BATCH.toString()), RunMode.BATCH);					
+							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
 				}
 			}
-			
-//			dataStoreServiceImpl.setRunMode(RunMode.BATCH);
-//			dataStoreServiceImpl.create(filePathUrl, modelName,
-//					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
-//					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
-//					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+
 			createDatastore(filePathUrl, modelName,
 					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
 					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
-					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, Helper.getPersistModeFromRunMode(RunMode.BATCH.toString()), RunMode.BATCH);
+					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+					Helper.getPersistModeFromRunMode(runMode.toString()), runMode);
 
 			predictExec.setLocation(filePathUrl);
 			predictExec.setResult(resultRef);
