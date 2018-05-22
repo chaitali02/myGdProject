@@ -925,7 +925,9 @@ public class ModelServiceImpl {
 					simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 	
 			MetaIdentifierHolder targetHolder = simulate.getTarget();
-			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+			Datapod targetDp = null;
+			if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
+				targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
 			
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 			String filePath = "/simulate"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());	
@@ -1032,23 +1034,25 @@ public class ModelServiceImpl {
 						}
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {
-//						
 						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 						String[] customFldArr = new String[] {fieldArray[0]};
 						tableName_3 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 					}
 					
-					String sql = "SELECT * FROM " + tableName_3;
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
-					result = rsHolder;
-					
-					count = rsHolder.getCountRows();
+					String sql = "SELECT * FROM " + tableName_3;					
 					if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+						result = rsHolder;						
+						count = rsHolder.getCountRows();
 						createDatastore(filePath, simulate.getName(), 
 								new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
 								new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
 								simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+					} else {
+						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+						result = rsHolder;						
+						count = rsHolder.getCountRows();
 					}
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 					
@@ -1085,34 +1089,29 @@ public class ModelServiceImpl {
 								tableName_3 = exec.joinDf(tableName_3, tabName_2, i, appUuid);
 						}
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
-					} else {
-						
+					} else {						
 						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 						String[] customFldArr = new String[] {fieldArray[0]};
 						tableName_3 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 					}
 					
-					String sql = "SELECT * FROM " + tableName_3;
-					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
-					result = rsHolder;
-
-					count = rsHolder.getCountRows();
+					String sql = "SELECT * FROM " + tableName_3;					
 					if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+						result = rsHolder;
+						count = rsHolder.getCountRows();
 						createDatastore(filePath, simulate.getName(), 
 								new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
 								new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
 								simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+					} else {
+						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+						result = rsHolder;
+						count = rsHolder.getCountRows();
 					}
 				}
 			}
-			
-//			dataStoreServiceImpl.setRunMode(runMode);
-//			dataStoreServiceImpl.create(filePathUrl, modelName,
-//					new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
-//					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()),
-//					simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
-			
 
 				createDatastore(filePathUrl, modelName,
 						new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()),
@@ -1689,17 +1688,20 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			
 			long count = 0;
 			if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-				String predictQuery = predictMLOperator.generateSql(predict, (tableName+"_pred_data"));
-				ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, target, SaveMode.Append.toString(), appUuid);
-				result = rsHolder;
-				
-				count = rsHolder.getCountRows();
+				String predictQuery = predictMLOperator.generateSql(predict, (tableName+"_pred_data"));				
 				if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, target, SaveMode.Append.toString(), appUuid);
+					result = rsHolder;					
+					count = rsHolder.getCountRows();
 					createDatastore(filePath, predict.getName(), 
 							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
+				} else {
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePath, null, SaveMode.Append.toString(), appUuid);
+					result = rsHolder;					
+					count = rsHolder.getCountRows();
 				}
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 				TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
@@ -1712,16 +1714,20 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 				Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelName(), trainExec);
 				ResultSetHolder rsHolder =  exec.executePredict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
 				String query = "SELECT * FROM " + rsHolder.getTableName();
-				ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePath, target, SaveMode.Append.toString(), appUuid);
-				result = rsHolder2;
-
-				count = rsHolder2.getCountRows();
+				
 				if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
+					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, rsHolder.getTableName(), filePath, target, SaveMode.Append.toString(), appUuid);
+					result = rsHolder2;
+					count = rsHolder2.getCountRows();
 					createDatastore(filePath, predict.getName(), 
 							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);					
+				} else {
+					ResultSetHolder rsHolder2 = exec.executeRegisterAndPersist(query, (tableName+"_pred_data"), filePath, null, SaveMode.Append.toString(), appUuid);
+					result = rsHolder2;					
+					count = rsHolder2.getCountRows();
 				}
 			}
 
