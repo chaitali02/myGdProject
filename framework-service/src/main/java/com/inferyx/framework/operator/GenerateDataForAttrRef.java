@@ -113,9 +113,16 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		ParamListHolder attrInfo = paramSetServiceImpl.getParamByName(execParams, "attrRef");
+		// Set min range
+		ParamListHolder minRandInfo = paramSetServiceImpl.getParamByName(execParams, "min");
+		// Set max range
+		ParamListHolder maxRandInfo = paramSetServiceImpl.getParamByName(execParams, "max");
+		
 		
 		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
 		
+		int minRand = Integer.parseInt(minRandInfo.getParamValue().getValue());
+		int maxRand = Integer.parseInt(maxRandInfo.getParamValue().getValue());
 		
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
@@ -129,7 +136,12 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		logger.info("OtherParams : " + otherParams);
 		logger.info("attrDp.getUuid : " + ((Datapod)attrDp).getUuid());
 		String attrTableName = otherParams.get("datapodUuid_" + ((Datapod)attrDp).getUuid() + "_tableName");
-		String rangeSql = "select ranges.iteration_id,"+attrTableName+"."+attributeName+", randn(), "+execVersion+" FROM "
+		
+		List<Attribute> attributeList = locationDatapod.getAttributes();
+		
+		String rangeSql = "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
+						+", (randn() * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
+						+" FROM "
 						+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 						+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		ResultSetHolder resultSetHolder = exec.executeAndRegister(rangeSql, tableName, datasource.getType());
