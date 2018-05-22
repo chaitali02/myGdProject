@@ -15,6 +15,25 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 @Document(collection="operator")
 public class Operator extends BaseEntity {
 	private MetaIdentifierHolder paramList;
+	private String operatorType;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the operatorType
+	 */
+	public String getOperatorType() {
+		return operatorType;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param operatorType the operatorType to set
+	 */
+	public void setOperatorType(String operatorType) {
+		this.operatorType = operatorType;
+	}
 
 	/**
 	 * @Ganesh
