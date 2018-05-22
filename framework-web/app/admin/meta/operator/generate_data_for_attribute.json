@@ -17,6 +17,7 @@
     ],
     "active" : "Y",
     "published" : "N",
+    "operatorType" : "GenerateDataForAttrRef",
     "appInfo" : [ 
         {
             "ref" : {

@@ -722,7 +722,7 @@ public class TaskServiceImpl implements Callable<String> {
 				Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 				ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
 				ExecParams execParams = commonServiceImpl.getExecParams(operator);
-				modelServiceImpl.train(train, model, trainExec, execParams, paramMap);
+				modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
 				if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 					throw new Exception();
 				}
@@ -754,7 +754,7 @@ public class TaskServiceImpl implements Callable<String> {
 				Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictExec.getDependsOn().getRef().getUuid(), predictExec.getDependsOn().getRef().getVersion(), MetaType.predict.toString());
 				//Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 				//ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
-				modelServiceImpl.predict(predict, execParams, predictExec);
+				modelServiceImpl.predict(predict, execParams, predictExec, runMode);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;

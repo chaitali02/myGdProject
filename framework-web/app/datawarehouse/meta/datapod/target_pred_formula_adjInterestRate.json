@@ -1,9 +1,9 @@
 {
-  "id": "5b0289c32750525081481674",
-  "uuid": "b3bdb5ad-5128-4ca4-9a00-5c8d13cb953e",
-  "version": "1526892995",
-  "name": "target_predict_algorithm_linear_regression",
-  "desc": "Saves the result of prediction which is of the type algorithm Linear Regression.",
+  "id": "5b028cba2750525081481797",
+  "uuid": "4a92b971-5741-4dcc-a8e0-96c1fa92a327",
+  "version": "1526893754",
+  "name": "target_pred_formula_adjInterestRate",
+  "desc": "Saves the result of prediction which is of the type formula adjInterestRate.",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -11,7 +11,7 @@
       "version": "1464977196"
     }
   },
-  "createdOn": "Mon May 21 14:26:35 IST 2018",
+  "createdOn": "Mon May 21 14:39:14 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -34,32 +34,22 @@
   "attributes": [
     {
       "attributeId": 0,
-      "name": "label",
+      "name": "interestRate",
       "type": "double",
-      "desc": "label",
+      "desc": "interestRate",
       "key": "",
       "partition": "N",
-      "dispName": "label",
+      "dispName": "interestRate",
       "active": "Y"
     },
     {
       "attributeId": 1,
-      "name": "features",
-      "type": "vector",
-      "desc": "features",
-      "key": "",
-      "partition": "N",
-      "dispName": "features",
-      "active": "Y"
-    },
-    {
-      "attributeId": 2,
-      "name": "prediction",
+      "name": "account_id",
       "type": "double",
-      "desc": "prediction",
+      "desc": "account_id",
       "key": "",
       "partition": "N",
-      "dispName": "prediction",
+      "dispName": "account_id",
       "active": "Y"
     }
   ]

@@ -38,6 +38,8 @@ import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.ml.linalg.DenseVector;
+import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
@@ -214,7 +216,9 @@ public class SparkExecutor implements IExecutor {
 			for (Row row : rows) {
 				Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
 				for (String column : columns) {
-					object.put(column, row.getAs(column));
+					//object.put(column, row.getAs(column));
+					object.put(column, (row.getAs(column) == null ? "" :
+						(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
 				}
 				data.add(object);
 			}
@@ -1030,13 +1034,12 @@ public class SparkExecutor implements IExecutor {
 		String[] columns = df.columns();
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
-			//Double[] obj2 = (Double[]) ((WrappedArray<?>)row.get(0)).array();
 			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
-			//Map<String, Object> object2 = new LinkedHashMap<String, Object>(columns.length);
 			for (String column : columns) {
-				object.put(column, (row.getAs(column)==null ? "":
-					(row.getAs(column) instanceof WrappedArray<?>) ? Arrays.toString((Double[])((WrappedArray<?>)row.getAs(column)).array()) : row.getAs(column).toString()) );
-				//object2.put(column, Arrays.toString(obj2));
+//				object.put(column, (row.getAs(column)==null ? "":
+//					(row.getAs(column) instanceof WrappedArray<?>) ? Arrays.toString((Double[])((WrappedArray<?>)row.getAs(column)).array()) : row.getAs(column).toString()) );
+				object.put(column, (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
 			}
 			data.add(object);
 		}
