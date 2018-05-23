@@ -1,9 +1,5 @@
-
--- Table: framework.address
-
-   DROP TABLE framework.address;
-
-
+DROP TABLE framework.address;
+   
 CREATE TABLE framework.address (
   address_id text ,
   address_line1 text ,
@@ -12,14 +8,13 @@ CREATE TABLE framework.address (
   city text ,
   county text ,
   state text ,
-  zipcode integer ,
+  zipcode text ,
   country text ,
   latitude text ,
   longitude text ,
   load_date text ,
-  version integer ,
-  load_id integer,
+  load_id integer DEFAULT 0,
   PRIMARY KEY (address_id,load_date)
 );
 
-Copy framework.address(address_id,address_line1,address_line2,address_line3,city,county,state,zipcode,country,latitude,longitude,load_date)FROM '/user/hive/warehouse/framework/upload/address.csv' delimiter ',' csv  header;
+Copy framework.address(address_id,address_line1,address_line2,address_line3,city,county,state,zipcode,country,latitude,longitude,load_date)FROM '/user/hive/warehouse/framework/upload/address.csv' delimiter ',' csv header;

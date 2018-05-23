@@ -1,8 +1,4 @@
-
-
--- Table: framework.profile_rule_results
-
-   DROP TABLE framework.profile_rule_results;
+DROP TABLE framework.profile_rule_results;
    
 CREATE TABLE framework.profile_rule_results (
   DatapodUUID text ,
@@ -20,6 +16,3 @@ CREATE TABLE framework.profile_rule_results (
   sixSigma double precision ,
   version integer 
 );
- 
-
-
