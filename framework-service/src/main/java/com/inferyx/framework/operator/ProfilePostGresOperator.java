@@ -34,27 +34,27 @@ public class ProfilePostGresOperator extends ProfileOperator {
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 		Attribute attribute = datapod.getAttribute(Integer.parseInt(attrId));
 		String attrType = attribute.getType();
-		int attrName1;
+
 		if(!attrType.equalsIgnoreCase("string"))			
-		sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, "
-				+ "\'" + profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"
-				+ datapod.getName()+"' AS datapodName,"
-				+ attrId + " AS AttributeId,'"
-				+ attrName+"' AS attributeName,"
-				+ "(SELECT COUNT(*) FROM " + profileTableName +" tab) AS numRows,"
-				+ "MIN(" + attrName + ") AS minVal,"
-				+ "MAX(" + attrName + ") AS maxVal,"				
-				+ "AVG(" + attrName + ") AS avgVal,"				
-				+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY " + attrName + ") AS medianVal,"				
-				+ "STDDEV(" + attrName + ") AS stdDev,"				
-				+ "COUNT(" + attrName + ") AS numDistinct,"
-				+ "COUNT(" + attrName + ")/COUNT(" + attrName + ")*100 AS perDistinct,"		
-				+ "COUNT(" + attrName + ") AS numNull,"				
-				+ "COUNT(" + attrName + ") / (CASE WHEN COUNT(" + attrName + ") IS NULL THEN 1 ELSE count(" + attrName + ") END)*100 AS perNull,"
-				+ "COUNT(" + attrName + ") / (CASE WHEN COUNT(" + attrName + ") IS NULL THEN 1 ELSE count(" + attrName + ") END) AS sixSigma," 
-				+ "CURRENT_DATE AS load_date, " 
-				+ "UNIX_TIMESTAMP() AS load_id, '" + profileExec.getVersion() + "' AS version"
-				+ " FROM " + profileTableName;
+			sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, "
+					+ "\'" + profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"
+					+ datapod.getName()+"' AS datapodName,"
+					+ attrId + " AS AttributeId,'"
+					+ attrName+"' AS attributeName,"
+					+ "(SELECT COUNT(*) FROM " + profileTableName +" tab) AS numRows,"
+					+ "MIN(" + attrName + ") AS minVal,"
+					+ "MAX(" + attrName + ") AS maxVal,"				
+					+ "AVG(" + attrName + ") AS avgVal,"				
+					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY " + attrName + ") AS medianVal,"				
+					+ "STDDEV(" + attrName + ") AS stdDev,"				
+					+ "COUNT(" + attrName + ") AS numDistinct,"
+					+ "COUNT(" + attrName + ")/COUNT(" + attrName + ")*100 AS perDistinct,"		
+					+ "COUNT(" + attrName + ") AS numNull,"				
+					+ "COUNT(" + attrName + ") / (CASE WHEN COUNT(" + attrName + ") IS NULL THEN 1 ELSE count(" + attrName + ") END)*100 AS perNull,"
+					+ "COUNT(" + attrName + ") / (CASE WHEN COUNT(" + attrName + ") IS NULL THEN 1 ELSE count(" + attrName + ") END) AS sixSigma," 
+					+ "CURRENT_DATE AS load_date, " 
+					+ "UNIX_TIMESTAMP() AS load_id, '" + profileExec.getVersion() + "' AS version"
+					+ " FROM " + profileTableName;
 		else sql = null;
 		/*else sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, "
 				+ "\'" + profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"
