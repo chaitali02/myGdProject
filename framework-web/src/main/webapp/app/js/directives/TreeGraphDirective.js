@@ -1,5 +1,5 @@
 var InferyxApp = angular.module("InferyxApp");
-InferyxApp.directive('treeGraphDrirective', function ($timeout, CommonService, dagMetaDataService) {
+InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, dagMetaDataService) {
     return {
         scope: {
             uuid: "=",
@@ -20,20 +20,20 @@ InferyxApp.directive('treeGraphDrirective', function ($timeout, CommonService, d
             duration = 750;
             var tree;
             var svg ;
-     
+         
             scope.getGraphData = function () {
                 if (scope.uuid && scope.version) {
                     var newUuid = scope.uuid
                     $('#graphloader').show();
-                    $('.show-graph-body[tree-graph-directive]').hide();
+                    $('.show-graph-body').hide();
                     $('#errorMsg').hide();
                     CommonService.getTreeGraphResults(newUuid, scope.version, "1").then(function (result){
                         $('#graphloader').hide();
-                        if (result.data && result.data.children && result.data.children.length == 0) {
+                        if (!result.data) {
                           $('#errorMsg').text('No Results Found').show();
-                          $('.show-graph-body[graph-directive]').hide();
+                          $('.show-graph-body').hide();
                         } else {
-                          $('.show-graph-body[graph-directive]').show();
+                          $('.show-graph-body').show();
                         }
                         scope.graphdata = result.data;
                         for (var i = 0; i < scope.graphdata.children.length; i++) {
@@ -67,7 +67,10 @@ InferyxApp.directive('treeGraphDrirective', function ($timeout, CommonService, d
             }
 
             scope.getGraphData();
-           
+
+            scope.$on('refreshData', function () {
+                scope.getGraphData();
+              });
             var diagonal = d3.svg.diagonal()
             .projection(function (d) {
                 return [d.y, d.x];

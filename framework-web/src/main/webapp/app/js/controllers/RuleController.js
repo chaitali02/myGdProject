@@ -1207,6 +1207,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
     var onsuccess = function (response) {
       //console.log(JSON.stringify(response))
       $scope.ruleGroupDetail = response;
+      if(response.tag)
       $scope.tags = response.tags;
       $scope.checkboxModelparallel = response.inParallel;
       var defaultversion = {};

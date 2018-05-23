@@ -49,7 +49,7 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 	}
    
 	$scope.showGraph = function (uuid, version) {
-		$scope.showFrom = false;
+		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}
 
