@@ -72,7 +72,7 @@ public class MongoGraphServiceImpl {
 		if (vertex == null) {
 			return null;
 		}
-		map.put("id", vertex.getUuid());
+		//map.put("id", vertex.getUuid());
 		  map.put("version", vertex.getVersion());
 	///If user's name is "user" then resolve it using method "getLatestByUuidWithoutAppUuid"	  
 		  if(vertex.getName().toLowerCase().equalsIgnoreCase(MetaType.user.toString().toLowerCase())) {
@@ -163,55 +163,80 @@ public class MongoGraphServiceImpl {
 	
 	
 	
+	@SuppressWarnings("null")
 	public String getTreeGraphJson(String uuid, String version, String degree) {
 		NodeDetail nodeDetail = new NodeDetail();
 		String result = null;
 		List<Map<String,Object>> graphVertex = new ArrayList<>();
-			Map<String, Vertex> vertexMap = new HashMap<>();
+		List<Map<String,Object>> graphEdge = new ArrayList<>();
+		Map<String, Edge> edgeMap = new HashMap<>();
+		Map<String, Vertex> vertexMap = new HashMap<>();
+		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
 
 		Vertex parentvertex = null;
 		List<String> uuidList = null;
-		
+		edgeList = iEdgeDao.findAllBySrc(uuid);
+
+		// Get all dsts from edgeList
+		if (edgeList != null) {
+		uuidList = new ArrayList<>();
+		for (Edge edge : edgeList) {
+		edgeMap.put(edge.getSrc()+"_"+edge.getDst(), edge);
+		}
+		for (String edgeKey : edgeMap.keySet()) {
+		Edge edge = edgeMap.get(edgeKey);
+		uuidList.add(edge.getDst());
+		graphEdge.add(getEdgeMap(edge));
+
+		}
+		}
+
+		uuidList.add(uuid);
 		parentvertex=iVertexDao.findOneByUuid(uuid);
-		
+
 		vertexList = iVertexDao.findAllByUuidContaining(uuidList);
 		if (vertexList != null) {
-		
-			for (Vertex vertex : vertexList) {
-				
-				vertexMap.put(vertex.getUuid(), vertex);
-			}
-			for (String vertexKey : vertexMap.keySet()) {
-				Vertex vertex = vertexMap.get(vertexKey);
-				
-				if(!vertex.getUuid().equals(uuid)) {
-				vertex.setParent(parentvertex.getName());
-				graphVertex.add(getVertexMap(vertex));
-				}
-			}
+
+		for (Vertex vertex : vertexList) {
+
+		vertexMap.put(vertex.getUuid(), vertex);
+		}
+		for (String vertexKey : vertexMap.keySet()) {
+		Vertex vertex = vertexMap.get(vertexKey);
+
+		if(!vertex.getUuid().equals(uuid)) {
+		//vertex.setParent(parentvertex.getName());
+		Map<String, Object> mapresult=getVertexMap(vertex);
+	//	mapresult.put("id",mapresult.get("id")+parentvertex.getUuid());
+		graphVertex.add(mapresult);
+		}
+		}
 		} 
 		nodeDetail.setName(parentvertex.getName());
-		nodeDetail.setParent("null");
+		//nodeDetail.setParent("null");
 		nodeDetail.setActive(parentvertex.getActive());
 		nodeDetail.setCreatedOn(parentvertex.getCreatedOn());
-		nodeDetail.setId(parentvertex.getUuid());
+		String id=parentvertex.getUuid()+parentvertex.getName();
+	//	nodeDetail.setId(id);
 		nodeDetail.setNodeType(parentvertex.getNodeType());
 		nodeDetail.setDataType(parentvertex.getDataType());
 		nodeDetail.setVersion(parentvertex.getVersion());
 
 		nodeDetail.setChildren(graphVertex);
-	
+		// nodeDetail.setParent(parentvertex);
+		//nodeDetails.setLinks(graphEdge);
+		//nodeDetail.setJsonName("graph");
+
 		try {
 		ObjectWriter writer = new ObjectMapper().writer()
 		.withDefaultPrettyPrinter();
 		result = writer.writeValueAsString(nodeDetail);
-	
+
 		} catch (IOException e) {
 		e.printStackTrace();
 		}
 		return result;
-
 	}
 
 }

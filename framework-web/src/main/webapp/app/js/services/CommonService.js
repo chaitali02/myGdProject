@@ -370,6 +370,21 @@
       return deferred.promise;
     } /*End getGraphResults*/
 
+     /*Start getTreeGraphResults*/
+     this.getTreeGraphResults = function(uuid, version, degree) {
+      var deferred = $q.defer();
+      var url = "graph/getTreeGraphResults?action=view&uuid=" + uuid + "&version=" + version + "&degree=" + degree;
+      CommonFactory.httpGet(url).then(function(response) {
+        onSuccess(response.data)
+      });
+      var onSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End getTreeGraphResults*/
+
     this.execute = function(type, uuid, version, data) {
       var url;
       if (type.substr(-5) == 'group') {
