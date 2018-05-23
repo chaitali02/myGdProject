@@ -101,6 +101,7 @@ import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.dao.IVizpodExecDao;
 import com.inferyx.framework.domain.Edge;
+import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Vertex;
@@ -1166,7 +1167,7 @@ public class GraphRegister<T> {
 		}
 		String result =null;
 		List<MetaType> metaTypes = MetaType.getMetaList();
-		
+		 GraphMetaIdentifierHolder  graphMetaIdentifierHolder=new GraphMetaIdentifierHolder();
 		for(MetaType mType : metaTypes){
 			try {
 				//Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
@@ -1177,7 +1178,7 @@ public class GraphRegister<T> {
 				}
 				for (Object obj : objectList) {
 					result = writer.writeValueAsString(obj);
-					graphServiceImpl.createVnE(result, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, mType.toString());
+					graphServiceImpl.createVnE(result, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, mType.toString(), graphMetaIdentifierHolder);
 				}
 				logger.info(" Total vertex size after "+mType + " : " + totalVertexList.size());
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
@@ -1246,7 +1247,7 @@ public class GraphRegister<T> {
 	*/
 	public void updateGraph(Object metaObj, MetaType type) throws JSONException, java.text.ParseException, JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		String jsonString = writer.writeValueAsString(metaObj);
-		graphServiceImpl.createVnE(jsonString, totalVertexList, totalEdgeList, vertexRowMap, edgeRowMap, type.toString());
+		graphServiceImpl.createVnE(jsonString, totalVertexList, totalEdgeList, vertexRowMap, edgeRowMap, type.toString(), null);
 		//graphServiceImpl.createGraph(totalVertexList, totalEdgeList);
 	}
 	

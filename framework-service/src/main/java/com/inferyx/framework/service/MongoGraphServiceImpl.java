@@ -179,7 +179,6 @@ public class MongoGraphServiceImpl {
 	
 	
 	
-	@SuppressWarnings("null")
 	public String getTreeGraphJson(String uuid, String version, String degree) {
 		NodeDetail nodeDetail = new NodeDetail();
 		String result = null;
@@ -245,7 +244,7 @@ public class MongoGraphServiceImpl {
 		GraphMetaIdentifierHolder graphMetaIdentifierHolder=new GraphMetaIdentifierHolder();
 		graphMetaIdentifierHolder.setRef(graphMeta);
 
-		nodeDetail.setMetaRef(graphMetaIdentifierHolder);
+		nodeDetail.setMetaRef(graphMetaIdentifierHolder);;
 		nodeDetail.setChildren(graphVertex);
 		// nodeDetail.setParent(parentvertex);
 		//nodeDetails.setLinks(graphEdge);

@@ -811,7 +811,7 @@ public class GraphServiceImpl {
 
 	@SuppressWarnings("unused")
 	public void createVnE(String jsonString, List<Row> totalVertexList, List<Row> totalEdgeList,
-			Map<String, Row> verticesRowMap, Map<String, Row> edgeRowMap, String type) throws JSONException,
+			Map<String, Row> verticesRowMap, Map<String, Row> edgeRowMap, String type,GraphMetaIdentifierHolder graphMetaIdentifierHolder) throws JSONException,
 			ParseException, JsonProcessingException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		JSONObject jsonObject = new JSONObject(jsonString);
@@ -831,9 +831,9 @@ public class GraphServiceImpl {
 		totalVertexList.add(vertexRow);
 		verticesRowMap.put(srcUuid.concat("_").concat(name).concat("_").concat(type).concat("_").concat("Y"),
 				vertexRow);
-		Vertex vertex = new Vertex(srcUuid, "", name, type, null, null, new Date().toString(), "Y", null);
+		Vertex vertex = new Vertex(srcUuid, "", name, type, null, null, new Date().toString(), "Y", graphMetaIdentifierHolder);
 		saveVertex(vertex);
-		createVnE(jsonObject, vertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, null, null, null);
+		createVnE(jsonObject, vertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, null, null, graphMetaIdentifierHolder);
 	}
 
 	@SuppressWarnings({ "unchecked", "unused" })
@@ -1170,8 +1170,14 @@ public class GraphServiceImpl {
 										refName = refName + "_" + refN1;
 									}
 								}
+								GraphMetaIdentifierHolder graphMetaHolder=new GraphMetaIdentifierHolder();
+							    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
+							    graphMeta.setType(childType);
+							    graphMeta.setUuid(childUuid);
+							    graphMeta.setName(refName);
+							    graphMetaHolder.setRef(graphMeta);
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName, name, null);
+										edgeRowMap, refName, name, graphMetaHolder);
 							}
 						} else if (key.equalsIgnoreCase("roleInfo")) /* for roleInfo/user */ {
 							/*String attr3 = childObj.optString("ref");
