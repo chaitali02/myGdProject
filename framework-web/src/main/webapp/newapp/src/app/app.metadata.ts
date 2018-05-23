@@ -1436,7 +1436,7 @@ export class AppMetadata {
       },
       'train': {
         name: 'train',
-        caption: 'Training',
+        caption: 'train',
         color: '#1DE9B6',
         icon: 'model.svg',
         iconCaption: 'Training',
