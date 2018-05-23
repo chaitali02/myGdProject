@@ -89,25 +89,25 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 	
 
-	$scope.onOverCallBackRow=function(event,ui,index){
-		 console.log($scope.indexDragg)
-		console.log(index)
-			var data=ui.draggable.scope().tabledata
-			if(index == 0 ){
-				var temp=$scope.filterTableArray[$scope.indexDragg].logicalOperator;
-				$scope.filterTableArray[$scope.indexDragg].logicalOperator=" "
-				$scope.filterTableArray[index].logicalOperator=temp;
-			}
-			// else if($scope.indexDragg == 0){
-			// 	var temp=$scope.filterTableArray[index].logicalOperator;
-			// 	$scope.filterTableArray[index].logicalOperator=" "
-			// 	$scope.filterTableArray[$scope.indexDragg].logicalOperator=temp;
-			// }
-	}
-	$scope.onDragCallBackRow=function(event,ui,index){
-		$scope.indexDragg=null
-		$scope.indexDragg=index.index;
-	}
+	// $scope.onOverCallBackRow=function(event,ui,index){
+	// 	 console.log($scope.indexDragg)
+	// 	console.log(index)
+	// 		var data=ui.draggable.scope().tabledata
+	// 		if(index == 0 ){
+	// 			var temp=$scope.filterTableArray[$scope.indexDragg].logicalOperator;
+	// 			$scope.filterTableArray[$scope.indexDragg].logicalOperator=" "
+	// 			$scope.filterTableArray[index].logicalOperator=temp;
+	// 		}
+	// 		// else if($scope.indexDragg == 0){
+	// 		// 	var temp=$scope.filterTableArray[index].logicalOperator;
+	// 		// 	$scope.filterTableArray[index].logicalOperator=" "
+	// 		// 	$scope.filterTableArray[$scope.indexDragg].logicalOperator=temp;
+	// 		// }
+	// }
+	// $scope.onDragCallBackRow=function(event,ui,index){
+	// 	$scope.indexDragg=null
+	// 	$scope.indexDragg=index.index;
+	// }
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 	$scope.gridOptions = {
 		rowHeight: 40,
@@ -260,6 +260,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		MetadataDatasetSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			$scope.datasetRelation = response;
+			if($scope.dataset &&  $scope.selectSourceType == "dataset"){
+				temp = response.options.filter(function(el) {
+					return el.uuid !== $scope.dataset.uuid;
+				});
+				$scope.datasetRelation.options = temp
+			}
 			MetadataDatasetSerivce.getAllAttributeBySource($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
@@ -303,6 +309,13 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			MetadataDatasetSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
 				$scope.datasetRelation = response;
+				
+				if($scope.dataset &&  $scope.selectSourceType == "dataset"){
+					temp = response.options.filter(function(el) {
+						return el.uuid !== $scope.dataset.uuid;
+					});
+					$scope.datasetRelation.options = temp
+				}
 				var defaultoption = {};
 				defaultoption.type = $sessionStorage.datasetjosn.dependsOn.ref.type
 				defaultoption.uuid = $sessionStorage.datasetjosn.dependsOn.ref.uuid
@@ -362,6 +375,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				var onSuccess = function (response) {
 					//console.log(JSON.stringify(response))
 					$scope.datasetRelation = response;
+					if($scope.dataset &&  $scope.selectSourceType == "dataset"){
+						temp = response.options.filter(function(el) {
+							return el.uuid !== $scope.dataset.uuid;
+						});
+						$scope.datasetRelation.options = temp
+					}
 					var defaultoption = {};
 					defaultoption.type = $scope.dataset.dependsOn.ref.type
 					defaultoption.uuid = $scope.dataset.dependsOn.ref.uuid

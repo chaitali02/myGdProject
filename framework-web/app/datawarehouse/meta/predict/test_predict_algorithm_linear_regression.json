@@ -1,0 +1,107 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "model",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+        }
+    },
+    "source" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+        }
+    },
+    "target" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "b3bdb5ad-5128-4ca4-9a00-5c8d13cb953e"
+        }
+    },
+    "labelInfo" : {
+        "attrId" : "0",
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+        }
+    },
+    "featureAttrMap" : [ 
+        {
+            "featureMapId" : "0",
+            "feature" : {
+                "featureId" : "0",
+                "featureName" : "interest_rate",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+                }
+            },
+            "attribute" : {
+                "attrId" : "19",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "1",
+            "feature" : {
+                "featureId" : "1",
+                "featureName" : "account_type_id",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+                }
+            },
+            "attribute" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "2",
+            "feature" : {
+                "featureId" : "2",
+                "featureName" : "account_status_id",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+                }
+            },
+            "attribute" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            }
+        }
+    ],
+    "uuid" : "8ff9342d-a48c-437b-b381-cddbbe2b90a9",
+    "version" : "1521704987",
+    "name" : "predict_algorithm_linear_regression",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

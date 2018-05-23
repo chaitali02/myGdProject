@@ -305,41 +305,45 @@
                             </div>
                           </div>
                           <div class="portlet-body">
-                            <table class=" row-border hover table table-striped table-bordered">
-                              <thead>
-                                <tr>
-                                  <th style="text-align: center; Vertical-align:middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="{{mode}}" /></th>
-                                  <th style="width:8%; text-align:center">ID</th>
-                                  <th style="width:18%; text-align:center">Name</th>
-                                  <th style="width:15%; text-align:center">Type</th>
-                                  <th style="width:20%; text-align:center">Desc</th>
-                                  <th style="width:10%; text-align:center">Min Value</th>
-                                  <th style="width:10%; text-align:center">Max Value</th>
-                                  <th style="width:20%; text-align:center" ng-show="isParamListShow">Params</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr ng-repeat="data in featureTableArray">
-                                  <td style="text-align: center; Vertical-align: middle;width:5%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control"  ng-value="$index+1" ng-disabled="true"></span></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.name" title="{{data.sourceFeature.name}}" ng-disabled="{{mode}}"></span></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r for r in featuureType"
-                                        ng-change="onChangeFeatureType($index)">
+                            <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
+                              <div class="col-md-12">
+                              <table class=" row-border hover table table-striped table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th style="text-align: center; Vertical-align:middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="{{mode}}" /></th>
+                                    <th style="width:8%; text-align:center">ID</th>
+                                    <th style="width:18%; text-align:center">Name</th>
+                                    <th style="width:15%; text-align:center">Type</th>
+                                    <th style="width:20%; text-align:center">Desc</th>
+                                    <th style="width:10%; text-align:center">Min Value</th>
+                                    <th style="width:10%; text-align:center">Max Value</th>
+                                    <th style="width:20%; text-align:center" ng-show="isParamListShow">Params</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr ng-repeat="data in featureTableArray">
+                                    <td style="text-align: center; Vertical-align: middle;width:5%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control"  ng-value="$index+1" ng-disabled="true"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.name" title="{{data.sourceFeature.name}}" ng-disabled="{{mode}}"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r for r in featuureType"
+                                          ng-change="onChangeFeatureType($index)">
+                                        </select>
+                                      </span>
+                                    </td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.desc" title="{{data.sourceFeature.desc}}"ng-disabled="{{mode}}"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.minVal" title="{{data.sourceFeature.minVal}}"ng-disabled="{{mode}}|| data.isMinMaxDiabled"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.maxVal" title="{{data.sourceFeature.maxVal}}" ng-disabled="{{mode}} || data.isMinMaxDiabled"></span> </td>
+                                    <td ng-show="isParamListShow"><span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      
+                                      <select  select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.paramListInfo" ng-options="r as r.dname for r in allParamlist track by r.uuid+r.paramId" ng-change="onChangeParamInfo($index)">
                                       </select>
-                                    </span>
-                                   </td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.desc" title="{{data.sourceFeature.desc}}"ng-disabled="{{mode}}"></span></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.minVal" title="{{data.sourceFeature.minVal}}"ng-disabled="{{mode}}|| data.isMinMaxDiabled"></span></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.maxVal" title="{{data.sourceFeature.maxVal}}" ng-disabled="{{mode}} || data.isMinMaxDiabled"></span> </td>
-                                  <td ng-show="isParamListShow"><span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                     
-                                    <select  select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.paramListInfo" ng-options="r as r.dname for r in allParamlist track by r.uuid+r.paramId" ng-change="onChangeParamInfo($index)">
-                                    </select>
-                                   </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>

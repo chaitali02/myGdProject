@@ -119,6 +119,43 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		}
 
 	});
+	
+	$scope.onMouseEnterTitle=function(type,index){
+		if(['function','simple'].indexOf(type) == -1)
+        $scope.formulainfoarray[index].title="dbclick to edit"
+	}
+	$scope.onDbclcikEdit=function(type,index){
+		if(!$scope.isEdit && !$scope.isAdd ){
+			return false;
+		}
+		 console.log($scope.formulainfoarray[index]);
+	 	if(["datapod",'dataset','rule','paramlist'].indexOf(type) != -1){
+			$scope.attributeinfo={};
+			var type={};
+	 	    type.text="datapod";
+		    $scope.attributeType= type;
+			var attributeInfo={}
+		 	attributeInfo.uuid=$scope.formulainfoarray[index].uuid
+			attributeInfo.attributeId=$scope.formulainfoarray[index].attrId;
+			attributeInfo.dname= $scope.formulainfoarray[index].value;
+			setTimeout(function(){ $scope.attributeinfo=attributeInfo; },10);
+			$scope.DblClcikEditDetail={};
+			$scope.DblClcikEditDetail.isEdit=true;
+			$scope.DblClcikEditDetail.index=index; 
+		}
+		else if (type == "string"){
+			var type={};
+	 	    type.text=$scope.formulainfoarray[index].type;
+		    $scope.attributeType= type;
+			$scope.sourcesimple=$scope.formulainfoarray[index].value;
+			$scope.DblClcikEditDetail={};
+			$scope.DblClcikEditDetail.isEdit=true;
+			$scope.DblClcikEditDetail.index=index; 
+		}
+		$scope.onChangeAttribute(type.text);
+		
+		 
+	};
 
 	$scope.onChangeName = function (data) {
 		$scope.statename
@@ -265,6 +302,9 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 
 	$scope.addAttribute = function () {
 		var len = $scope.formulainfoarray.length;
+		if($scope.DblClcikEditDetail !=null){
+			len =$scope.DblClcikEditDetail.index;
+		}
 		var data = {};
 		if ($scope.attributeType.text == "datapod") {
 			if ($scope.attributeinfo != null) {
@@ -312,9 +352,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			data.attrId = $scope.sourceparamlist.attributeId;
 			$scope.sourceparamlist = null;
 		}
-
 		$scope.formulainfoarray[len] = data;
-
+		$scope.DblClcikEditDetail=null;
 	}
 
 	$scope.onChangeAttribute = function (type) {
@@ -343,7 +382,14 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.isSourceAtributeParamlist = false;
 			MetadataFormulaSerivce.getFormulaByType($scope.allformuladepands.defaultoption.uuid, $scope.selectedDependsOnType).then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
-				$scope.formulaLodeFormula = response.data
+				var temp;
+				temp=response.data
+				if($scope.formuladata){
+					temp = response.data.filter(function(el) {
+						return el.uuid !== $scope.formuladata.uuid;
+					});
+			    }
+				$scope.formulaLodeFormula = temp
 			}
 		}
 		else if (type == "expression") {

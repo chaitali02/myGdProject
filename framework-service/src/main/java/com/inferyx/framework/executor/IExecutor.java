@@ -284,17 +284,6 @@ public interface IExecutor {
 	
 	/**
 	 * 
-	 * @param object
-	 * @param features
-	 * @param numIterations
-	 * @param tableName
-	 * @return
-	 * @throws Exception TODO
-	 */
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception;
-	
-	/**
-	 * 
 	 * @param clientContext
 	 * @param datapod
 	 * @param datastore
@@ -337,7 +326,7 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @return
 	 */
-	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException ;
+	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException ;
 	
 	/**
 	 * 
@@ -397,5 +386,42 @@ public interface IExecutor {
 	 * @throws IOException
 	 */
 	String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
+			throws IOException;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param tableName
+	 * @param mappingList
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+			throws IOException;
+
+	/**
+	 * 
+	 * @param distributionObject
+	 * @param attributes
+	 * @param numIterations
+	 * @param execVersion
+	 * @param tableName
+	 * @return
+	 * @throws Exception
+	 */
+	ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
+			String execVersion, String tableName) throws Exception;
+
+	/**
+	 * 
+	 * @param data
+	 * @param className
+	 * @param tableName
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext)
 			throws IOException;
 }

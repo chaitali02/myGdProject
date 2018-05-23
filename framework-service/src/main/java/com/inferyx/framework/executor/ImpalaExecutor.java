@@ -290,7 +290,7 @@ public class ImpalaExecutor implements IExecutor {
 		return null;
 	}
 	@Override
-	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
 			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
@@ -307,11 +307,6 @@ public class ImpalaExecutor implements IExecutor {
 			throws IOException, JAXBException {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	@Override
 	public ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath,
@@ -345,6 +340,27 @@ public class ImpalaExecutor implements IExecutor {
 	 */
 	@Override
 	public String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#renameDfColumnName(java.lang.String, java.util.Map, java.lang.String)
+	 */
+	@Override
+	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
+			String execVersion, String tableName) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;

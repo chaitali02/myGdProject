@@ -1,0 +1,97 @@
+{
+    "uuid" : "e26970d6-999e-4ffa-9903-0f6e8ac39b99",
+    "version" : "1488801521",
+    "name" : "percentile(BIGINT col, p)",
+    "desc" : "Returns the exact pth percentile of a column in the group (does not work with floating point types). p must be between 0 and 1. NOTE: A true percentile can only be computed for integer values. Use PERCENTILE_APPROX if your input is non-integral.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : ISODate("2017-11-07T10:24:13.443Z"),
+    "paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "A",
+            "paramType" : "bigint",
+            "paramReq" : "Y",
+            "paramDefVal" : ""
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "p",
+            "paramType" : "decimal",
+            "paramReq" : "Y",
+            "paramDefVal" : ""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "published" : "N",
+    "inputReq" : "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
+    ],
+    "funcType" : "hive",
+    "category" : "string",
+    "functionInfo" : [ 
+        {
+            "type" : "file",
+            "name" : "percentile",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "mysql",
+            "name" : "percentile",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "hive",
+            "name" : "percentile",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "impala",
+            "name" : "percentile",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "oracle",
+            "name" : "percentile",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "postgres",
+            "name" : "percentile",
+            "paramInfoHolder" : []
+        }
+    ]
+}

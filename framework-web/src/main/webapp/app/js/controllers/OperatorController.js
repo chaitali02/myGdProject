@@ -16,6 +16,8 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 	else {
 		$scope.isAdd = true;
 	}
+
+	$scope.operatorType=['GenerateData','Transpose','GenerateDataForAttrRef','GenerateDataForValList'];
 	
 	$scope.mode = false;
 	$scope.isSubmitInProgress = false;
@@ -97,6 +99,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.Operator.defaultVersion = defaultversion;
+			$scope.selectedOperatorType=response.operatorType;
 			if($scope.OperatorData.paramList !=null){
 				OperatorService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 				var onSuccessGetAllLatestParamlist = function (response) {
@@ -131,6 +134,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			defaultversion.uuid = response.uuid;
 			$scope.Operator.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
+			$scope.selectedOperatorType=response.operatorType;
 			if($scope.OperatorData.paramList !=null){
 				OperatorService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 				var onSuccessGetAllLatestParamlist = function (response) {
@@ -156,6 +160,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		OperatorJson.desc = $scope.OperatorData.desc
 		OperatorJson.active = $scope.OperatorData.active;
 		OperatorJson.published = $scope.OperatorData.published;
+		OperatorJson.operatorType=$scope.selectedOperatorType;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var countTag = 0; countTag < $scope.tags.length; countTag++) {

@@ -23,6 +23,7 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.HDFSInfo;
@@ -62,6 +63,8 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
 		logger.info(" Inside PostGres executor  for SQL : " + sql);
+		if(sql.contains("dp_rule_results"))
+			System.out.println();
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
 		ConnectionHolder conHolder = connector.getConnection();
@@ -76,8 +79,11 @@ public class PostGresExecutor implements IExecutor {
 					countRows = stmt.executeUpdate(sql);
 					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
 					rsHolder.setCountRows(countRows);
-				} else 
+				} else { 
 					rs = stmt.executeQuery(sql);
+					countRows = rs.getMetaData().getColumnCount();
+				}
+				rsHolder.setCountRows(countRows);
 				rsHolder.setResultSet(rs);
 				rsHolder.setType(ResultType.resultset);
 			} catch (SQLException e) {				
@@ -91,9 +97,8 @@ public class PostGresExecutor implements IExecutor {
 	 * @see com.inferyx.framework.executor.IExecutor#executeSql(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ResultSetHolder executeSql(String sql, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultSetHolder executeSql(String sql, String clientContext) throws IOException {		
+		return executeSql(sql);
 	}
 
 	/* (non-Javadoc)
@@ -131,8 +136,7 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeAndPersist(String sql, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return executeSql(sql);
 	}
 
 	/* (non-Javadoc)
@@ -140,8 +144,7 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public ResultSetHolder executeAndRegister(String sql, String tableName, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return executeSql(sql);
 	}
 
 	/* (non-Javadoc)
@@ -150,8 +153,7 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
 			String saveMode, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return executeSql(sql);
 	}
 
 	/* (non-Javadoc)
@@ -159,7 +161,22 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public ResultSetHolder registerDataFrameAsTable(ResultSetHolder rsHolder, String tableName) {
-		// TODO Auto-generated method stub
+		/*try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			Object obj = conHolder.getStmtObject();
+			SparkSession sparkSession = null;
+			if (obj instanceof SparkSession) {
+				sparkSession = (SparkSession) conHolder.getStmtObject();
+				// sparkSession.registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+				sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
+				rsHolder.setCountRows(rsHolder.getDataFrame().count());
+			}
+		} catch (NullPointerException e) {
+			throw new RuntimeException("Failed to register Dataframe as Table.");
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to register Dataframe as Table.");
+		}*/
 		return null;
 	}
 
@@ -329,16 +346,6 @@ public class PostGresExecutor implements IExecutor {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.inferyx.framework.executor.IExecutor#generateData(java.lang.Object, java.util.List, int, java.lang.String)
-	 */
-	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
-			String execVersion) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
 	 * @see com.inferyx.framework.executor.IExecutor#readFile(java.lang.String, com.inferyx.framework.domain.Datapod, com.inferyx.framework.domain.DataStore, java.lang.String, com.inferyx.framework.common.HDFSInfo, java.lang.Object, com.inferyx.framework.domain.Datasource)
 	 */
 	@Override
@@ -373,7 +380,7 @@ public class PostGresExecutor implements IExecutor {
 	 * @see com.inferyx.framework.executor.IExecutor#executePredict(java.lang.Object, com.inferyx.framework.domain.Datapod, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
 			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
@@ -433,6 +440,30 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.inferyx.framework.executor.IExecutor#renameDfColumnName(java.lang.String, java.util.Map, java.lang.String)
+	 */
+	@Override
+	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
+			String execVersion, String tableName) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;

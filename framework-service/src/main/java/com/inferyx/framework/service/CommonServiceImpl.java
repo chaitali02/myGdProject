@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.spark.sql.Dataset;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -141,6 +142,9 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.FeatureAttrMap;
+import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Log;
 import com.inferyx.framework.domain.Message;
@@ -148,6 +152,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
@@ -159,6 +164,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
@@ -1536,6 +1542,12 @@ public class CommonServiceImpl <T> {
 							object = resolveExecParams((ExecParams)object);
 						}
 						
+					}
+					
+					if ((method.getName().contains("FeatureAttrMap")) && object instanceof Train && method.getName().startsWith(GET))  {
+						@SuppressWarnings("unchecked")
+						List<FeatureAttrMap> featureAttrMap = (List<FeatureAttrMap>) method.invoke(object);
+						object = resolveFeatureAttrMap(featureAttrMap, object);
 					}
 					
 					Object invokedObj = method.invoke(object);
@@ -3197,4 +3209,54 @@ public class CommonServiceImpl <T> {
 			return execParams;
 		}
 		
+		private Object resolveFeatureAttrMap(List<FeatureAttrMap> featureAttrMapList, Object object) throws JsonProcessingException {
+			try {
+				for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+					FeatureRefHolder featureHolder = featureAttrMap.getFeature(); 
+					AttributeRefHolder attributeHolder = featureAttrMap.getAttribute();
+					
+					MetaIdentifier featureIdentifier = featureHolder.getRef();
+					MetaIdentifier attributeIdentifier = attributeHolder.getRef();
+					Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString());
+					Datapod datapod = (Datapod) getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString());
+					for(Feature feature : model.getFeatures()) {
+						if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
+							featureHolder.setFeatureName(feature.getName());
+							featureAttrMap.setFeature(featureHolder);
+						}
+					}
+					for(Attribute attribute : datapod.getAttributes()) {
+						if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
+							attributeHolder.setAttrName(attribute.getName());
+							featureAttrMap.setAttribute(attributeHolder);
+						}
+					}
+				}
+				Train train = (Train) object;
+				train.setFeatureAttrMap(featureAttrMapList);
+				object = train;
+				return object;				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return object;
+		}
+		
+
+		
+		public String resolveLabel(AttributeRefHolder labelInfo) throws JsonProcessingException {
+			String attributeName = null;
+			Object source = getOneByUuidAndVersion(labelInfo.getRef().getUuid(), labelInfo.getRef().getVersion(), labelInfo.getRef().getType().toString());
+			if(source instanceof Datapod) {
+				Datapod datapod = (Datapod) source;
+				attributeName = datapod.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			} else if(source instanceof Dataset) {
+				DataSet dataset = (DataSet) source;
+				attributeName = dataset.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			} else if(source instanceof Rule) {
+				Rule rule = (Rule) source;
+				attributeName = rule.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			}		
+			return attributeName;
+		}
 }

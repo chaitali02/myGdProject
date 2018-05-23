@@ -162,6 +162,13 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     });
     var onSuccessRelation = function (response) {
       $scope.ruleRelation = response
+      if($scope.ruleData &&  $scope.rulsourcetype == "rule"){
+          temp = response.options.filter(function(el) {
+            return el.uuid !== $scope.ruleData.uuid;
+        });
+        $scope.ruleRelation.options = temp
+      }
+      
       if ($scope.filterTableArray != null) {
         $scope.showModal1 = true;
       }
@@ -228,7 +235,14 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         onSuccessRelation(response.data)
       });
       var onSuccessRelation = function (response) {
+
         $scope.ruleRelation = response
+        if($scope.ruleData &&  $scope.rulsourcetype == "rule"){
+            temp = response.options.filter(function(el) {
+              return el.uuid !== $scope.ruleData.uuid;
+          });
+          $scope.ruleRelation.options = temp
+        }  
         var defaultoption = {};
         defaultoption.uuid = $scope.ruleData.source.ref.uuid;
         defaultoption.name = $scope.ruleData.source.ref.name;

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
@@ -37,6 +38,9 @@ import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
+import org.apache.spark.ml.linalg.DenseVector;
+import org.apache.spark.ml.linalg.Vector;
+import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -149,7 +153,7 @@ public class SparkExecutor implements IExecutor {
 				if (obj instanceof SparkSession) {
 					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 					Dataset<Row> df = sparkSession.sql(sql);
-					df.show();
+					df.show(true);
 					rsHolder.setDataFrame(df);
 					rsHolder.setType(ResultType.dataframe);
 				}
@@ -212,7 +216,9 @@ public class SparkExecutor implements IExecutor {
 			for (Row row : rows) {
 				Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
 				for (String column : columns) {
-					object.put(column, row.getAs(column));
+					//object.put(column, row.getAs(column));
+					object.put(column, (row.getAs(column) == null ? "" :
+						(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
 				}
 				data.add(object);
 			}
@@ -242,6 +248,40 @@ public class SparkExecutor implements IExecutor {
 		registerTempTable(df, tableName);
 		logger.info("temp table registered: " + tableName);
 		return resHolder;
+	}
+	
+	@Override
+	public ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext) throws IOException {
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		try {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+				ConnectionHolder conHolder = connector.getConnection();
+				Object obj = conHolder.getStmtObject();
+				if (obj instanceof SparkSession) {
+					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+					Dataset<Row> df = sparkSession.createDataFrame(data, className);
+					df.show();
+					rsHolder.setDataFrame(df);
+					rsHolder.setType(ResultType.dataframe);
+					long countRows = df.count();
+					rsHolder.setCountRows(countRows);
+					df.createOrReplaceGlobalTempView(tableName);
+					registerTempTable(df, tableName);
+					logger.info("temp table registered: " + tableName);
+				}
+			}
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rsHolder;
 	}
 
 	@Override
@@ -424,6 +464,7 @@ public class SparkExecutor implements IExecutor {
 				// sparkSession.registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
 				sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
 				rsHolder.setCountRows(rsHolder.getDataFrame().count());
+				rsHolder.setTableName(tableName);
 			}
 		} catch (NullPointerException e) {
 			throw new RuntimeException("Failed to register Dataframe as Table.");
@@ -993,13 +1034,12 @@ public class SparkExecutor implements IExecutor {
 		String[] columns = df.columns();
 		Row [] rows = (Row[]) df.head(rowLimit);
 		for (Row row : rows) {
-			//Double[] obj2 = (Double[]) ((WrappedArray<?>)row.get(0)).array();
 			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
-			//Map<String, Object> object2 = new LinkedHashMap<String, Object>(columns.length);
 			for (String column : columns) {
-				object.put(column, (row.getAs(column)==null ? "":
-					(row.getAs(column) instanceof WrappedArray<?>) ? Arrays.toString((Double[])((WrappedArray<?>)row.getAs(column)).array()) : row.getAs(column).toString()) );
-				//object2.put(column, Arrays.toString(obj2));
+//				object.put(column, (row.getAs(column)==null ? "":
+//					(row.getAs(column) instanceof WrappedArray<?>) ? Arrays.toString((Double[])((WrappedArray<?>)row.getAs(column)).array()) : row.getAs(column).toString()) );
+				object.put(column, (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
 			}
 			data.add(object);
 		}
@@ -1014,7 +1054,7 @@ public class SparkExecutor implements IExecutor {
 	}*/
 
 	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception {
+	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws Exception {
 		StructField[] fieldArray = new StructField[attributes.size()];
 		int count = 0;
 		
@@ -1088,10 +1128,12 @@ public class SparkExecutor implements IExecutor {
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
 		df.printSchema();
 		df.show(true);
+		registerTempTable(df, tableName);
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setDataFrame(df);
 		rsHolder.setType(ResultType.dataframe);	
 		rsHolder.setCountRows(df.count());
+		rsHolder.setTableName(tableName);
 		return rsHolder;
 	}
 
@@ -1122,14 +1164,14 @@ public class SparkExecutor implements IExecutor {
 		
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<numIterations; i++) {
-			List<Double> colList = new ArrayList<>();
+			//List<Double> colList = new ArrayList<>();
 			int genId = i;
 			for(int j=0; j<features.size(); j++) {	
 				try {
-					Double totalVal = 0.0;
+					//Double totalVal = 0.0;
 					//double[] trial = (double[]) object.getClass().getMethod("sample").invoke(object);
 					Object obj = object.getClass().getMethod("sample").invoke(object);
-					Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
+					//Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
 					/*if(returnType.isArray()) {*/
 						double[] trial = (double[]) obj;
 						List<Object> datasetList = new ArrayList<>();
@@ -1226,7 +1268,7 @@ public class SparkExecutor implements IExecutor {
 			transformedDf = trainingTmp.withColumn("label", trainingTmp.col(label).cast("Double"))
 					.select("label", "features");
 
-			logger.info("DataFrame count for training: " + transformedDf.count());
+			logger.info("DataFrame count: " + transformedDf.count());
 
 		} else {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
@@ -1369,18 +1411,19 @@ public class SparkExecutor implements IExecutor {
 	}
 	
 	@Override
-	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		//df.show(true);
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
 				.invoke(trainedModel, df);
-		predictionDf.show(false);
+		predictionDf.show(true);
 
 		//String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
 
 		//if (targetType.equalsIgnoreCase(MetaType.datapod.toString())) {
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			/*Datasource datasource = commonServiceImpl.getDatasourceByApp();
 
 			df.createOrReplaceGlobalTempView("tempPredictResult");
 			IConnector connector = connectionFactory.getConnector(datasource.getType().toLowerCase());
@@ -1388,24 +1431,29 @@ public class SparkExecutor implements IExecutor {
 			if (conHolder.getStmtObject() instanceof SparkSession) {
 				SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 				predictionDf.persist(StorageLevel.MEMORY_AND_DISK());
-				sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, "tempPredictResult");
-			}
+				//sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, "tempPredictResult");
+			}*/
 
-			String columns = "";
-			for (String col : predictionDf.columns())
-				columns = columns.concat(col).concat(" AS ").concat(col).concat(",");
-			columns = columns.substring(0, columns.length() - 2);
-			String sql = "SELECT " + columns + " FROM " + "tempPredictResult";
-			ResultSetHolder rsHolder = executeSql(sql, commonServiceImpl.getApp().getUuid());
+//			String columns = "";
+//			for (String col : predictionDf.columns())
+//				columns = columns.concat(col).concat(" AS ").concat(col).concat(",");
+//			columns = columns.substring(0, columns.length() - 2);
+//			String sql = "SELECT " + columns + " FROM " + "tempPredictResult";
+//			ResultSetHolder rsHolder = executeSql(sql, commonServiceImpl.getApp().getUuid());
+//
+//			Dataset<Row> dfTask = rsHolder.getDataFrame();
+//			dfTask.show(true);
+//			dfTask.cache();
 
-			Dataset<Row> dfTask = rsHolder.getDataFrame();
-			dfTask.show(true);
-			dfTask.cache();
-
-			sqlContext.registerDataFrameAsTable(dfTask, tableName);
-			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
-			datapodWriter.write(dfTask, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
-			return filePathUrl + "/data";
+			sqlContext.registerDataFrameAsTable(predictionDf, "tempPredictResult");
+//			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
+//			datapodWriter.write(predictionDf, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setType(ResultType.dataframe);
+			rsHolder.setDataFrame(predictionDf);
+			rsHolder.setCountRows(predictionDf.count());
+			rsHolder.setTableName("tempPredictResult");
+			return rsHolder;
 	}
 
 	@Override
@@ -1413,7 +1461,7 @@ public class SparkExecutor implements IExecutor {
 		PipelineModel trngModel = null;
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		
+		df.printSchema();
 		try {
 			Dataset<Row>[] splits = df
 					.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
@@ -1428,7 +1476,9 @@ public class SparkExecutor implements IExecutor {
 			if (trainName.contains("LinearRegression")
 					|| trainName.contains("LogisticRegression")) {
 				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+				//trainingDf.show(true);
 				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+				//validateDf.show(true);
 			} else {
 				trainingDf = trngDf;
 				validateDf = valDf;
@@ -1477,8 +1527,10 @@ public class SparkExecutor implements IExecutor {
 
 	@Override
 	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext) throws IOException, JAXBException {
+		
 		String sql = "SELECT * FROM " + trainedDSName;
 		Dataset<Row> trainedDataSet = executeSql(sql, clientContext).getDataFrame();
+		trainedDataSet.printSchema();
 		PMML pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)trngModel);
 		MetroJAXBUtil.marshalPMML(pmml, new FileOutputStream(new File(pmmlLocation), true));					
 		return true;
@@ -1488,14 +1540,21 @@ public class SparkExecutor implements IExecutor {
 	public Object getDataType(String dataType) throws NullPointerException {
 		if(dataType == null)
 			return null;
-			switch (dataType.toLowerCase()) {
-				case "integer": return DataTypes.IntegerType;
-				case "double": return DataTypes.DoubleType;
-				case "date": return DataTypes.DateType;
-				case "string": return DataTypes.StringType;
-				case "timestamp": return DataTypes.TimestampType;
-				
-	            default: return null;
+
+		if(dataType.contains("(")) {
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
+		switch (dataType.toLowerCase()) {
+			case "integer": return DataTypes.IntegerType;
+			case "double": return DataTypes.DoubleType;
+			case "date": return DataTypes.DateType;
+			case "string": return DataTypes.StringType;
+			case "timestamp": return DataTypes.TimestampType;
+			case "decimal" : return DataTypes.createDecimalType();
+			case "vector" : return new VectorUDT();
+			
+            default: return null;
 		}
 	}
 
@@ -1536,6 +1595,23 @@ public class SparkExecutor implements IExecutor {
 			e.printStackTrace();
 		}
 		tableName = tableName + "_" + Helper.getVersion();
+		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
+		return tableName;
+	}
+	
+	@Override
+	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext) throws IOException {
+		
+		String sql = "SELECT * FROM " + tableName;
+		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
+		
+		/*
+		 * map: key=oldColName, value=newColName
+		 */
+		for(Entry<String, String> entry : mappingList.entrySet()) {
+			df = df.withColumnRenamed(entry.getKey(), entry.getValue());
+		}
+		df.show(true);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		return tableName;
 	}

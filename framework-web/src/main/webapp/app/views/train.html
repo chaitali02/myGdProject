@@ -212,6 +212,17 @@
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Label
+                                            </label>
+                                            <div class="col-md-6">
+                                            
+                                                <select class="form-control" select2 name="version" ng-disabled="{{mode}} || isLabelDisable" data-ng-model="selectLabel"
+                                                    ng-options="r as r.dname for r in allsourceLabel track by r.uuid + r.attributeId">
+                                                </select>
+                                            </div>
+                                          </div>
                                         
                                         <div class="row">
                                             <div class="portlet light bordered">
@@ -229,26 +240,56 @@
                                                     </div>
                                                 </div>
                                                 <div class="portlet-body">
-                                                    <div class="">
-                                                        <table class=" row-border hover table  table-striped table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                <th style="width:2%; text-align:center">ID</th>
-                                                                <th style="width:18%;">Features</th>
-                                                                <th style="width:20%;">Attributes</th>
-                                                                
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr ng-repeat="data in featureMapTableArray">
-                                                                <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.id" ng-value="$index+1" ng-disabled="true"></span></td>
-                                                                <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.sourceFeature.featureName" title="{{data.sourceFeature.dname}}" ng-disabled="true"></span></td>
-                                                                <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                    <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}" class="form-control"></select></span>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
+                                                    <div class="row">
+                                                        <!-- <div class="col-md-6 col-sm-6" style="padding-left:0px;">
+                                                            <label class="col-md-2 col-sm-2" style="margin-top:10px;" >Show</label>
+                                                            <div class=" form-group col-md-4 col-sm-4">
+                                                                <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+                                                               </select>
+                                                            </div>
+                                                        </div> -->
+                                                        <!-- <div class="col-md-6 col-sm-6">
+                                                            <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                                            <label>Search:</label>
+                                                            <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext" aria-controls="datastoredatatable">
+                                                            </div>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
+                                                        <div class="col-md-12">
+                                                            <div class="">
+                                                                <table class=" row-border hover table  table-striped table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                        <th style="width:2%; text-align:center">ID</th>
+                                                                        <th style="width:18%;">Features</th>
+                                                                        <th style="width:20%;">Attributes</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr ng-repeat="data in featureMapTableArray">
+                                                                        <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.id" ng-value="$index+1" ng-disabled="true"></span></td>
+                                                                        <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.sourceFeature.featureName" title="{{data.sourceFeature.dname}}" ng-disabled="true"></span></td>
+                                                                        <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                            <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}" class="form-control"></select></span>
+                                                                        </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <!-- <div class="row">
+                                                                <div class="col-md-6" style="margin-top:17px">
+                                                                    Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
+                                                                    ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;"
+                                                                    max-size="pagination.maxSize" class="pagination-md" boundary-links="true"
+                                                                    previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                                                                    </ul>
+                                                                </div>
+                                                            </div> -->
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -286,14 +327,20 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Train Percent</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
-                                                <input type="number" limit-to="2"  class="form-control"  ng-disabled="{{mode}}" ng-model="trainData.trainPercent" name="trainPercent" min="1" max="99" ng-change="onChageTrainPercent()" style="width:64px;">
+                                                <input type="number" limit-to="2"  class="form-control"  ng-disabled="{{mode}}" ng-model="trainData.trainPercent" name="trainPercent" min="1" max="99" ng-change="onChageTrainPercent()" style="width:64px;" required>
                                             </div>
-                                            <label class="control-label col-md-4 col-sm-4 col-xs-12" style="width:11%;float:left;margin-left:-1%;">Val Percent</label>
+                                            <!-- <label class="control-label col-md-4 col-sm-4 col-xs-12" style="width:11%;float:left;margin-left:-1%;">Validation Percent</label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <input type="number" limit-to="2" class="form-control" ng-disabled="{{mode}}" ng-model="trainData.valPercent" name="valPercent" min="1" max="99"   maxlength = "2" ng-change="onChageValPercent();" style="width:64px;">     
+                                            </div> -->
+                                        </div>  
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Validation Percent</label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
+                                                <input type="number" limit-to="2" class="form-control" ng-disabled="{{mode}}" ng-model="trainData.valPercent" name="valPercent" min="1" max="99"   maxlength = "2" ng-change="onChageValPercent();" style="width:64px;" required>     
                                             </div>
-                                        </div>
-                                    
+                                           
+                                        </div>  
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Run Immediately ?
                                             </label>
