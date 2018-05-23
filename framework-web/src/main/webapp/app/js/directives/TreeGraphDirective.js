@@ -283,13 +283,15 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     update(d);
                 }
                 else {
-                    if (d.metaRef.type == null) {
+                	
+                    if (d.metaRef.ref.type == null || d.metaRef.ref.type == "simple") {
                         return false;
                     }
+                   
                     $('.show-graph-body').hide();
                     $('#graphloader').show();
                     $('#errorMsg').hide();
-                    CommonService.getTreeGraphResults(d.metaRef.uuid, d.version | "", "1").then(function (result) {
+                    CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.version | "", "1").then(function (result) {
                        $('.show-graph-body').show();
                        $('#graphloader').hide();
                         var r;
@@ -393,9 +395,9 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             }
 
             function navigateTo(data, d) {
-                if (d == "Knowledge Graph" && data.metaRef.type != null) {
-                    data.metaRef.name = data.name
-                    data.metaRef.type = data.nodeType
+                if (d == "Knowledge Graph" && data.metaRef.ref.type != null) {
+                    data.metaRef.ref.name = data.name
+                    data.metaRef.ref.type = data.nodeType
                     dagMetaDataService.navigateTo(data.metaRef);
                 }
             }
@@ -423,11 +425,15 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
   
           <div class="row" style="margin-top: 5px">
             <span style="margin-left:20px;">Id</span>
-            <span id="task_Id" style="margin-left:60px">{{nodeDetail.metaRef.uuid}}</span>
+            <span id="task_Id" style="margin-left:58px">{{nodeDetail.metaRef.ref.uuid}}</span>
+          </div>
+            <div class="row" style="margin-top: 5px">
+            <span style="margin-left:20px;">Type</span>
+            <span id="task_Id" style="margin-left:40px">{{nodeDetail.metaRef.ref.type}}</span>
           </div>
           <div class="row" style="margin-top: 5px">
             <span style="margin-left:20px">Name</span>
-            <span id="task_Name" style="margin-left:36px">{{nodeDetail.name}}</span>
+            <span id="task_Name" style="margin-left:33px">{{nodeDetail.name}}</span>
           </div>
         </div>
       </div>
