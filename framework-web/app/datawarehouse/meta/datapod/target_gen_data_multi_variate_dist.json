@@ -2,7 +2,7 @@
   "id": "5afbd1452750524ccbe5bf5f",
   "uuid": "42b5f42a-b37a-4f94-8d63-b3c293f69ada",
   "version": "1526452549",
-  "name": "target_multi_variate_dist",
+  "name": "target_gen_data_multi_variate_dist",
   "desc": null,
   "createdBy": {
     "ref": {

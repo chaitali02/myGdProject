@@ -134,9 +134,10 @@
                 <div class="bounce2"></div>
                 <div class="bounce3"></div>
               </div>
-              <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="dataset.uuid" version="datasetversion.defaultVersion.version">
+              <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="dataset.uuid" version="datasetversion.defaultVersion.version" >
               </div>
             </div>
+            
             <div class="form-body" data-ng-show="showForm">
               <div class="form-body">
                 <div class="form-group" ng-show="dataset.uuid">
@@ -316,7 +317,7 @@
                         <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
                           ng-show="tabledata.islhsSimple" ng-change="onChangeSimple()">
                       </span>
-                      <div width="200px" ng-show="tabledata.islhsDatapod" >
+                      <div width="200px" ng-show="tabledata.islhsDatapod">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
                               ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId" ng-change="onChangeAttribute()">

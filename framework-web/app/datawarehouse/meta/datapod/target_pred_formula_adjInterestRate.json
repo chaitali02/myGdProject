@@ -2,7 +2,7 @@
   "id": "5b028cba2750525081481797",
   "uuid": "4a92b971-5741-4dcc-a8e0-96c1fa92a327",
   "version": "1526893754",
-  "name": "target_predict_formula_adjInterestRate",
+  "name": "target_pred_formula_adjInterestRate",
   "desc": "Saves the result of prediction which is of the type formula adjInterestRate.",
   "createdBy": {
     "ref": {

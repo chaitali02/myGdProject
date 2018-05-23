@@ -40,9 +40,9 @@
   "target": {
     "ref": {
       "type": "datapod",
-      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+      "uuid": "c6ee852a-412b-4bb5-8c8a-d66de53308ca",
       "version": null,
-      "name": "account"
+      "name": "target_sim_linear_regression"
     },
     "value": null
   },

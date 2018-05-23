@@ -65,7 +65,7 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="OperatorData.uuid" version="Operator.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="OperatorData.uuid" version="Operator.defaultVersion.version">
             </div>
           </div>
 
@@ -147,7 +147,15 @@
                   </div>
                 </div>
               </div>
-              
+              <div class="form-group">
+                <label class="col-md-3 control-label">Type
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedOperatorType" ng-options="r for r in operatorType" required="">
+                  </select>
+                </div>
+              </div>
               <div class="form-group">
                 <label class="col-md-3 control-label">Parameter List
                   <span class="required" aria-required="true"> * </span>

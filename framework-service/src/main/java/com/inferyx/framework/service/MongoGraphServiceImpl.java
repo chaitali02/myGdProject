@@ -179,6 +179,7 @@ public class MongoGraphServiceImpl {
 	
 	
 	
+	@SuppressWarnings("null")
 	public String getTreeGraphJson(String uuid, String version, String degree) {
 		NodeDetail nodeDetail = new NodeDetail();
 		String result = null;
