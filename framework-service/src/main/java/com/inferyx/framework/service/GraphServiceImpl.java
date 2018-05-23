@@ -44,6 +44,8 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Edge;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.FilterInfo;
+import com.inferyx.framework.domain.GraphMetaIdentifier;
+import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -550,7 +552,7 @@ public class GraphServiceImpl {
 		for (int i = 0; i < verticesr.size(); i++) {
 			vertex = new Vertex(verticesr.get(i).getString(0), verticesr.get(i).getString(1),
 					verticesr.get(i).getString(2), verticesr.get(i).getString(3), verticesr.get(i).getString(4),
-					verticesr.get(i).getString(5), verticesr.get(i).getString(6), verticesr.get(i).getString(7));
+					verticesr.get(i).getString(5), verticesr.get(i).getString(6), verticesr.get(i).getString(7), null);
 			vertices.add(vertex);
 			if (i % 10000 == 0) {
 				saveVertices(vertices);
@@ -775,7 +777,7 @@ public class GraphServiceImpl {
 		String active = document.get("active").toString();
 		Row vertexRow = RowFactory.create(UUID, Version, Name, type, null, null, CreatedOn, active);
 
-		Vertex vertex = new Vertex(UUID, Version, Name, type, null, null, CreatedOn, active);
+		Vertex vertex = new Vertex(UUID, Version, Name, type, null, null, CreatedOn, active, null);
 		saveVertex(vertex);
 
 		verticesRowList.add(vertexRow);
@@ -829,14 +831,14 @@ public class GraphServiceImpl {
 		totalVertexList.add(vertexRow);
 		verticesRowMap.put(srcUuid.concat("_").concat(name).concat("_").concat(type).concat("_").concat("Y"),
 				vertexRow);
-		Vertex vertex = new Vertex(srcUuid, "", name, type, null, null, new Date().toString(), "Y");
+		Vertex vertex = new Vertex(srcUuid, "", name, type, null, null, new Date().toString(), "Y", null);
 		saveVertex(vertex);
-		createVnE(jsonObject, vertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, null, null);
+		createVnE(jsonObject, vertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, null, null, null);
 	}
 
 	@SuppressWarnings({ "unchecked", "unused" })
 	public void createVnE(JSONObject jsonObject, Vertex srcVertex, List<Row> totalVertexList, List<Row> totalEdgeList,
-			Map<String, Row> verticesRowMap, Map<String, Row> edgeRowMap, String position, String parentName)
+			Map<String, Row> verticesRowMap, Map<String, Row> edgeRowMap, String position, String parentName,GraphMetaIdentifierHolder graphMetaRef)
 			throws JSONException, ParseException, JsonProcessingException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException,
 			NullPointerException {
@@ -877,7 +879,7 @@ public class GraphServiceImpl {
 			verticesRowMap.put(srcVertex.getUuid() + "_" + position.concat("_").concat(name + "_" + position)
 					.concat("_").concat(name).concat("_").concat("Y"), vertexRow);
 			vertex = new Vertex(srcVertex.getUuid() + "_" + position, "", position, name.toLowerCase(), null, null,
-					new Date().toString(), "Y");
+					new Date().toString(), "Y", graphMetaRef);
 			saveVertex(vertex);
 			position = null;
 			srcVertex = vertex;
@@ -933,7 +935,7 @@ public class GraphServiceImpl {
 								break;
 							}
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									attr, name);
+									attr, name, null);
 						} else if (key.equalsIgnoreCase("attributeInfo")
 								|| key.equalsIgnoreCase("filterInfo"))/* For Dataset/profile/filter */ {
 							String refN = childObj.optString("ref");
@@ -959,14 +961,51 @@ public class GraphServiceImpl {
 									}
 								}
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName + "_" + i, name);
-							} else if (attr != "" && attr != null)
+										edgeRowMap, refName + "_" + i, name, null);
+							} else if (attr != "" && attr != null) {
+							    GraphMetaIdentifierHolder graphMetaHolder=new GraphMetaIdentifierHolder();
+							    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
+								if (childObj != null && value.startsWith("{", 0)) {
+									String attr2 = childObj.optString("sourceAttr");
+									JSONObject jsonObj3 = new JSONObject(attr2);
+									String SourceId = childObj.optString("attrSourceId");
+									String SourceName = childObj.optString("attrSourceName");
+									
+
+									if (jsonObj3 != null && attr2.startsWith("{", 0)) {
+										String attr3 = jsonObj3.optString("ref");
+										JSONObject jsonObj4 = new JSONObject(attr3);
+										
+										if (jsonObj4 != null && attr3.startsWith("{", 0)) {
+											childUuid = jsonObj4.optString("uuid");
+											childType = jsonObj4.optString("type");
+											graphMeta.setUuid(childUuid);
+											graphMeta.setType(childType);
+											//graphMeta.setName(SourceName);
+
+											graphMetaHolder.setRef(graphMeta);
+											/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+													null, null, null, null, null, childUuid, null, null);
+											refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+													: baseEntityList.get(0).getName();*/
+											
+										}
+											if (StringUtils.isBlank(refName)) {
+												refName = childType;
+											}
+									}
+									createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
+											edgeRowMap, SourceName + "_" + SourceId, name, graphMetaHolder);
+								} else
+								{
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, attr, name);
+										edgeRowMap, attr, name, null);
+								}
+							}
 							else if (attr1 != "" && attr1 != null)
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, attr1, name);
-						} else if (key.equalsIgnoreCase("relationInfo"))/* for relation */ {
+										edgeRowMap, attr1, name, null);
+						}  else if (key.equalsIgnoreCase("relationInfo"))/* for relation */ {
 							String attr4 = childObj.optString("join");
 							JSONObject jsonObj5 = new JSONObject(attr4);
 							String attr3 = jsonObj5.optString("ref");
@@ -987,7 +1026,7 @@ public class GraphServiceImpl {
 								}
 							}
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									refName, name);
+									refName, name, null);
 						} else if (key.equalsIgnoreCase("ruleInfo")) {
 							// String attrN = childObj.optString("ref");
 							if (childObj != null && value.startsWith("{", 0)) {
@@ -1009,7 +1048,7 @@ public class GraphServiceImpl {
 									}
 								}
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName, name);
+										edgeRowMap, refName, name, null);
 							}
 						} else if (key.equalsIgnoreCase("keys")) /* vizpod */ {
 							// String attrN = childObj.optString("ref");
@@ -1036,7 +1075,7 @@ public class GraphServiceImpl {
 									}
 								}
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName, name);
+										edgeRowMap, refName, name, null);
 							}
 						} else if (key.equalsIgnoreCase("values")) /* vizpod */ {
 							// String attrN = childObj.optString("ref");
@@ -1063,7 +1102,7 @@ public class GraphServiceImpl {
 									}
 								}
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName, name);
+										edgeRowMap, refName, name, null);
 							}
 						} else if (key.equalsIgnoreCase("groups")) /* vizpod */ {
 							// String attrN = childObj.optString("ref");
@@ -1090,7 +1129,7 @@ public class GraphServiceImpl {
 									}
 								}
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName, name);
+										edgeRowMap, refName, name, null);
 							}
 						} else if (key.equalsIgnoreCase("execList")) {
 							// String attrN = childObj.optString("ref");
@@ -1101,7 +1140,7 @@ public class GraphServiceImpl {
 									String attr = jsonObjType.optString("name");
 									if (attr != null && !attr.equals("null"))
 										createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-												edgeRowMap, attr, name);
+												edgeRowMap, attr, name, null);
 								}
 							}
 						} else if (key.equalsIgnoreCase("formulaInfo")) {
@@ -1132,7 +1171,7 @@ public class GraphServiceImpl {
 									}
 								}
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName, name);
+										edgeRowMap, refName, name, null);
 							}
 						} else if (key.equalsIgnoreCase("roleInfo")) /* for roleInfo/user */ {
 							/*String attr3 = childObj.optString("ref");
@@ -1152,7 +1191,7 @@ public class GraphServiceImpl {
 									refName = childType + "_" + i;
 								}
 							}*/
-							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, position, name);
+							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, position, name, graphMetaRef);
 						}
 
 						else if (key.equalsIgnoreCase("appInfo")|| key.equalsIgnoreCase("groupInfo"))/* for appInfo */ {
@@ -1174,7 +1213,7 @@ public class GraphServiceImpl {
 								}
 							}*/
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									position, name);
+									position, name, graphMetaRef);
 						}
 						else if (key.equalsIgnoreCase("refKeyList"))/* for business rule */ {
 							String attr = childObj.optString("name");
@@ -1194,16 +1233,16 @@ public class GraphServiceImpl {
 								refName = attr;
 							}
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									refName, name);
+									refName, name, null);
 						}
 
 						else if (key.equalsIgnoreCase("operand"))/* for relation/expression */ {
 							if (childObj != null && value.startsWith("{", 0))
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, position, key);
+										edgeRowMap, position, key, null);
 						} else if (childObj != null)
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									i + "", name);
+									i + "", name, null);
 				}
 			} else if (childObj != null && value.startsWith("{", 0)) {
 
@@ -1249,12 +1288,12 @@ public class GraphServiceImpl {
 					verticesRowMap.put(childUuid.concat("_").concat(name).concat("_").concat(childObj.optString("type"))
 							.concat("_").concat("Y"), vertexRow);
 					vertex = new Vertex(childUuid, "", name, childObj.optString("type"), null, null,
-							new Date().toString(), "Y");
+							new Date().toString(), "Y", null);
 					saveVertex(vertex);
 					continue;
 				}
 				createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, position,
-						key);
+						key, null);
 			}
 		}
 	}

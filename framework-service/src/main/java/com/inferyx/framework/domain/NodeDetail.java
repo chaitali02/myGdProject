@@ -31,7 +31,14 @@ public class NodeDetail {
 	
 	private String version;
 	private String createdOn;
+	private GraphMetaIdentifierHolder metaRef;
 	
+	public GraphMetaIdentifierHolder getMetaRef() {
+		return metaRef;
+	}
+	public void setMetaRef(GraphMetaIdentifierHolder metaRef) {
+		this.metaRef = metaRef;
+	}
 	public String getDataType() {
 		return dataType;
 	}

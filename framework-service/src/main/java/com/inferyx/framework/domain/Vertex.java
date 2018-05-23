@@ -10,20 +10,31 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "vertex")
 public class Vertex {
-	String parent;
-	String uuid;
-	String version;
-	String name;
-	String nodeType;
-	String dataType;
-	String desc;
-	String createdOn;
-	String active;
+	private String parent;
+	private String uuid;
+	private String version;
+	private String name;
+	private String nodeType;
+	private String dataType;
+	private String desc;
+	private String createdOn;
+	private String active;
+	private GraphMetaIdentifierHolder graphMetaHolder;
 	
+	public GraphMetaIdentifierHolder getGraphMetaHolder() {
+		return graphMetaHolder;
+	}
+
+	public void setGraphMetaHolder(GraphMetaIdentifierHolder graphMetaHolder) {
+		this.graphMetaHolder = graphMetaHolder;
+	}
+
 	public String getParent() {
 		return parent;
 	}
@@ -95,7 +106,30 @@ public class Vertex {
 		this.createdOn = createdOn;
 	}
 
-	public Vertex (String uuid, String version, String name, String nodeType, String dataType, String desc, String createdOn, String active) {
+	@Override
+	public String toString() {
+		return "Vertex [parent=" + parent + ", uuid=" + uuid + ", version=" + version + ", name=" + name + ", nodeType="
+				+ nodeType + ", dataType=" + dataType + ", desc=" + desc + ", createdOn=" + createdOn + ", active="
+				+ active + ", graphMetaHolder=" + graphMetaHolder + "]";
+	}
+
+	public Vertex(String uuid, String version, String name, String nodeType, String dataType, String desc,
+			String createdOn, String active, GraphMetaIdentifierHolder graphMetaHolder) {
+		super();
+		this.uuid = uuid;
+		this.version = version;
+		this.name = name;
+		this.nodeType = nodeType;
+		this.dataType = dataType;
+		this.desc = desc;
+		this.createdOn = createdOn;
+		this.active = active;
+		this.graphMetaHolder = graphMetaHolder;
+	}
+
+	
+
+	/*public Vertex (String uuid, String version, String name, String nodeType, String dataType, String desc, String createdOn, String active) {
 		this.uuid = uuid;
 		this.version = version;
 		this.name = name;
@@ -105,11 +139,11 @@ public class Vertex {
 		this.createdOn = createdOn;
 		this.active = active;
 	}
-
-	@Override
+*/
+	/*@Override
 	public String toString() {
 		return "Vertex [uuid=" + uuid + ", version=" + version + ", name=" + name + ", nodeType=" + nodeType
 				+ ", dataType=" + dataType + ", desc=" + desc + ", createdOn=" + createdOn + ", active=" + active + "]";
-	}
+	}*/
 
 }
