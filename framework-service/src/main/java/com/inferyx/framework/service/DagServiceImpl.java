@@ -926,7 +926,6 @@ public class DagServiceImpl {
 			otherParams = new HashMap<>();
 			execParams.setOtherParams(otherParams);
 		}
-		otherParams = execParams.getOtherParams();
 		// Get the dag - START
 		MetaIdentifier dagRef = new MetaIdentifier(MetaType.dag, dagExec.getUuid(), dagExec.getVersion());
 		// Dag dag = (Dag) daoRegister.getRefObject(dagRef);
@@ -941,6 +940,7 @@ public class DagServiceImpl {
 							// consider inactive stage)
 			}
 			for (TaskExec indvExecTask : dagExecTasks) {
+				otherParams = execParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
 				MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
 				List<Operator> operatorList = new ArrayList<>();
@@ -1008,6 +1008,7 @@ public class DagServiceImpl {
 						commonServiceImpl.save(MetaType.mapExec.toString(), mapExec);
 					}
 				} else if (ref.getType().equals(MetaType.rule)) {
+					logger.info("OtherParams in DagServiceImpl.parse rule " + otherParams);
 					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
 							.convertRefKeyListToMap(execParams.getRefKeyList());
 					RuleExec ruleExec = new RuleExec();
@@ -1019,7 +1020,7 @@ public class DagServiceImpl {
 						/*ruleExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), refKeyMap, execParams,
 								datapodList, dagExec, ruleExec);*/
 						ruleExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), ruleExec, refKeyMap, execParams, datapodList, dagExec);
-						ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+						ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						ruleExec.setRefKeyList(execParams.getRefKeyList());
 						MetaIdentifier ruleExecIdentifier = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(),
 								ruleExec.getVersion());
@@ -1090,7 +1091,7 @@ public class DagServiceImpl {
 						/*dqExec = dataQualServiceImpl.create(ref.getUuid(), ref.getVersion(), dqExec, refKeyMap,
 								datapodList, dagExec);*/
 						dqExec = dataQualServiceImpl.create(ref.getUuid(),ref.getVersion(),dqExec,refKeyMap,datapodList,dagExec);
-						dqExec =  (DataQualExec)dataQualServiceImpl.parse(dqExec.getUuid(), dqExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+						dqExec =  (DataQualExec)dataQualServiceImpl.parse(dqExec.getUuid(), dqExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						dqExec.setRefKeyList(execParams.getRefKeyList());
 						builder = new StringBuilder(dqExec.getExec());
 						if (dqExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
@@ -1168,7 +1169,7 @@ public class DagServiceImpl {
 					/*	profileExec = profileServiceImpl.create(ref.getUuid(), ref.getVersion(), null, refKeyMap,
 								datapodList, dagExec);*/
 						profileExec = profileServiceImpl.create(ref.getUuid(),ref.getVersion(),profileExec,refKeyMap,datapodList,dagExec);
-						profileExec =  (ProfileExec)profileServiceImpl.parse(profileExec.getUuid(), profileExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+						profileExec =  (ProfileExec)profileServiceImpl.parse(profileExec.getUuid(), profileExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 				
 						profileExec.setRefKeyList(execParams.getRefKeyList());
 						builder = new StringBuilder(profileExec.getExec());
@@ -1395,7 +1396,7 @@ public class DagServiceImpl {
 					reconExec.setBaseEntity();
 					try {
 						reconExec = reconServiceImpl.create(ref.getUuid(), ref.getVersion(), reconExec, refKeyMap, datapodList, dagExec);
-						reconExec = (ReconExec) reconServiceImpl.parse(reconExec.getUuid(), reconExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+						reconExec = (ReconExec) reconServiceImpl.parse(reconExec.getUuid(), reconExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						reconExec.setRefKeyList(execParams.getRefKeyList());
 						MetaIdentifier reconExecIdentifier = new MetaIdentifier(MetaType.reconExec, reconExec.getUuid(),
 								reconExec.getVersion());

@@ -68,7 +68,7 @@ public class ReconController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		ReconExec reconExec = reconServiceImpl.create(reconUuid, reconVersion, null, null, null);
-		reconExec = (ReconExec) reconServiceImpl.parse(reconExec.getUuid(), reconExec.getVersion(), null, null, null,
+		reconExec = (ReconExec) reconServiceImpl.parse(reconExec.getUuid(), reconExec.getVersion(), null, null, null, null,
 				runMode);
 		reconExec = reconServiceImpl.execute(reconUuid, reconVersion, metaExecutor, reconExec, null, taskList, null, runMode);
 		commonServiceImpl.completeTaskThread(taskList);

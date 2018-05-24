@@ -61,6 +61,7 @@ import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -1136,7 +1137,86 @@ public class SparkExecutor implements IExecutor {
 		rsHolder.setTableName(tableName);
 		return rsHolder;
 	}
-
+	
+	/**
+	 * 
+	 *  To transpose : 
+	 *  
+	 * SELECT t.iteration_id, yn.custid as cust_id, t.val_column as trial_value FROM 
+	 * yn JOIN 
+	 * (SELECT row_number() over(partition by seq_column) as iteration_id, seq_column, val_column  FROM 
+	 * (SELECT array(1, 2) as seq_r, array(yes, no) arr_r
+	 * FROM generate_yn_data ) arrayrec
+	 * LATERAL VIEW posexplode(arrayrec.seq_r) EXPLODED_rec as seqs, seq_column 
+	 * LATERAL VIEW posexplode(arrayrec.arr_r) EXPLODED_rec as seqv, val_column 
+	 * where seqs = seqv) t 
+	 * ON (t.seq_column = yn.id)
+	 * @param resultSetHolder
+	 * @param locationDatapod
+	 * @param execVersion
+	 * @return
+	 */
+	/*public ResultSetHolder transposeData(ResultSetHolder resultSetHolder, Datapod locationDatapod, String execVersion) {
+		Dataset<Row> df = resultSetHolder.getDataFrame();
+		String []columns = df.columns();
+		
+		StringBuilder sb = new StringBuilder(ConstantsUtil.SELECT);
+		
+		for (Attribute attribute : keyAttrList) {
+			sb.append(attribute.getName()).append(", ");
+		}
+		int count = 0;
+		String arrSeq = " array(";
+		String arrCol = " array(";
+		for (int i=0; i< columns.length; i++) {
+			if (i==0) {
+				// Column is id column
+				sb.append(" array ").append(columns[i]).append(") ");
+				sb.append(locationDatapod.getAttributeName(i)).append(", ");
+				continue;
+			}
+			sb.append(columns[i]).append(" ");
+			sb.append(locationDatapod.getAttributeName(i)).append(", ");
+		}
+		
+		sb.append("tranpose_column ");
+		sb.append(locationDatapod.getAttributeName(count++));
+		sb.append(", transpose_value ");
+		sb.append(locationDatapod.getAttributeName(count++));
+		sb.append(", " + execVersion + " ");
+		sb.append(locationDatapod.getAttributeName(count++));
+		sb.append(" FROM (");
+		sb.append(ConstantsUtil.SELECT);
+		
+		for (Attribute attribute : keyAttrList) {
+			sb.append(attribute.getName()).append(", ");
+		}
+		for (String columnName : keyAttrList) {
+			sb.append(columnName).append(", ");
+		}
+		
+		sb.append(" MAP (");
+		count = 0;
+		for(Attribute attribute : attrList) {
+			isAttrFound = Boolean.TRUE;
+			sb.append("'"+attribute.getName() + "', " + attribute.getName());
+			sb.append((count < attrList.size()-1)?", ":"");
+			count++;
+			
+		}
+		for(String columnName : attrList) {
+			isAttrFound = Boolean.TRUE;
+			sb.append("'"+columnName + "', " + columnName);
+			sb.append((count < attrList.size()-1)?", ":"");
+			count++;
+			
+		}
+		
+		sb.append(") AS tmp_column FROM ");
+		sb.append(sourceTableName);
+		sb.append("  ) x LATERAL VIEW EXPLODE(tmp_column) exptbl AS tranpose_column, transpose_value ");
+	}
+*/
 	@Override
 	public String generateFeatureData(Object object, List<Feature> features, int numIterations, String tableName) {
 		StructField[] fieldArray = new StructField[features.size()+1];

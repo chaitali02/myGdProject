@@ -377,7 +377,8 @@ public class RuleServiceImpl extends RuleTemplate {
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
 				MetaType.ruleExec.toString());
 		try {
-			ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
+			HashMap<String, String> otherParams = execParams.getOtherParams();
+			ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, otherParams, null, null, runMode);
 			execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(),
 					metaExecutor, ruleExec, null, taskList, execParams, runMode);
 		} catch (Exception e) {
@@ -736,7 +737,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * This is an override of BaseRuleService.parse for rule
 	 */
 	@Override
-	public RuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+	public RuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		logger.info("Inside ruleServiceImpl.parse");
 		Rule rule = null;
@@ -748,7 +749,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule = (Rule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule.toString());
-		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, null, usedRefKeySet, ruleExec.getExecParams(), runMode));
+		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, ruleExec.getExecParams(), runMode));
 		if(rule.getParamList() != null) {
 			MetaIdentifier mi = rule.getParamList().getRef();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString());

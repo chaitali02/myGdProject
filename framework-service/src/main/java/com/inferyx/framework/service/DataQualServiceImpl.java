@@ -806,8 +806,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
+		HashMap<String, String> otherParams = execParams.getOtherParams();
 		try {
-			dataQualExec = (DataQualExec) parse(uuid,version, null, null, null, runMode);
+			dataQualExec = (DataQualExec) parse(uuid,version, null, otherParams, null, null, runMode);
 			execute(dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion(),dataQualExec,null, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -816,7 +817,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 
 	@Override
-	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode)
+	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		logger.info("Inside dataQualServiceImpl.parse");
 		DataQual dataQual = null;
