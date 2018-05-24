@@ -46,7 +46,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.paramlist.versions = [];
 	$scope.isshowmodel = false;
 	$scope.paramtable = null;
-	$scope.typeSimple = ["string", "double", "date", "integer", "row"];
+	$scope.typeSimple = ["string", "double", "date", "integer", "list"];
 	$scope.type = [
 		{"name":"string","caption":"string"},
 		{"name":"double","caption":"double"},
@@ -57,7 +57,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"attribute","caption":"attribute"},
 		{"name":"attributes","caption":"attribute[s]"},
 		{"name":"distribution","caption":"distribution"},
-		{"name":"datapod","caption":"datapod"}];
+		{"name":"datapod","caption":"datapod"},
+	    {"name":"list","caption":"list"}, ];
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['paramlist'] || [];

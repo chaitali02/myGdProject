@@ -591,6 +591,14 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
           paramList.paramValue=paramValue;
           
         }
+        else if($scope.paramListHolder[i].selectedParamValueType =="list"){
+          var ref={};
+          var paramValue={};  
+          ref.type='simple';
+          paramValue.ref=ref;
+          paramValue.value=$scope.paramListHolder[i].paramValue
+          paramList.paramValue=paramValue;
+        }
        
         paramListInfo[i]=paramList;
       }
