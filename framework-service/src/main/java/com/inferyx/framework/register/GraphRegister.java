@@ -1178,7 +1178,7 @@ public class GraphRegister<T> {
 				}
 				for (Object obj : objectList) {
 					result = writer.writeValueAsString(obj);
-					graphServiceImpl.createVnE(result, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, mType.toString(), graphMetaIdentifierHolder);
+					graphServiceImpl.createVnE(result, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, mType.toString(), null);
 				}
 				logger.info(" Total vertex size after "+mType + " : " + totalVertexList.size());
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException

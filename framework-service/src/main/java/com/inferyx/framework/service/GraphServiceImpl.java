@@ -550,9 +550,10 @@ public class GraphServiceImpl {
 			return;
 		}
 		for (int i = 0; i < verticesr.size(); i++) {
+			GraphMetaIdentifierHolder graphMetaIdentifierHolder = (GraphMetaIdentifierHolder) verticesr.get(i).get(8);
 			vertex = new Vertex(verticesr.get(i).getString(0), verticesr.get(i).getString(1),
 					verticesr.get(i).getString(2), verticesr.get(i).getString(3), verticesr.get(i).getString(4),
-					verticesr.get(i).getString(5), verticesr.get(i).getString(6), verticesr.get(i).getString(7), null);
+					verticesr.get(i).getString(5), verticesr.get(i).getString(6), verticesr.get(i).getString(7),graphMetaIdentifierHolder);
 			vertices.add(vertex);
 			if (i % 10000 == 0) {
 				saveVertices(vertices);
@@ -786,8 +787,8 @@ public class GraphServiceImpl {
 	}
 
 	public Row createVertex(String uuid, String version, String name, String nodeType, String createdOn,
-			String active) {
-		return RowFactory.create(uuid, version, name, nodeType, null, null, createdOn, active);
+			String active,GraphMetaIdentifierHolder graphMetaIdentifierHolder) {
+		return RowFactory.create(uuid, version, name, nodeType, null, null, createdOn, active,graphMetaIdentifierHolder);
 	}
 
 	/*
@@ -815,6 +816,7 @@ public class GraphServiceImpl {
 			ParseException, JsonProcessingException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		JSONObject jsonObject = new JSONObject(jsonString);
+		
 		String srcUuid = jsonObject.optString("uuid");
 		if (keywordList == null || keywordList.isEmpty()) {
 			populateKeywordList();
@@ -827,7 +829,13 @@ public class GraphServiceImpl {
 			String n = jsonObject.optString("name");
 			name = n;
 		}
-		Row vertexRow = createVertex(srcUuid, "", name, type, new Date().toString(), "Y");
+		graphMetaIdentifierHolder= new GraphMetaIdentifierHolder();
+		GraphMetaIdentifier graphMetaIdentifier=new GraphMetaIdentifier();
+		graphMetaIdentifier.setUuid(srcUuid);
+		graphMetaIdentifier.setType(type);
+		graphMetaIdentifier.setName(name);
+		graphMetaIdentifierHolder.setRef(graphMetaIdentifier);
+		Row vertexRow = createVertex(srcUuid, "", name, type, new Date().toString(), "Y",graphMetaIdentifierHolder);
 		totalVertexList.add(vertexRow);
 		verticesRowMap.put(srcUuid.concat("_").concat(name).concat("_").concat(type).concat("_").concat("Y"),
 				vertexRow);
@@ -838,7 +846,7 @@ public class GraphServiceImpl {
 
 	@SuppressWarnings({ "unchecked", "unused" })
 	public void createVnE(JSONObject jsonObject, Vertex srcVertex, List<Row> totalVertexList, List<Row> totalEdgeList,
-			Map<String, Row> verticesRowMap, Map<String, Row> edgeRowMap, String position, String parentName,GraphMetaIdentifierHolder graphMetaRef)
+			Map<String, Row> verticesRowMap, Map<String, Row> edgeRowMap, String position, String parentName,GraphMetaIdentifierHolder graphMetaIdentifierHolder)
 			throws JSONException, ParseException, JsonProcessingException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException,
 			NullPointerException {
@@ -858,7 +866,9 @@ public class GraphServiceImpl {
 		String refName = null;
 		String objUuid = jsonObject.optString("uuid");
 		String type = jsonObject.optString("type");
-
+		   GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
+		   graphMetaIdentifierHolder=new GraphMetaIdentifierHolder();/*
+	    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();*/
 		// String nme = jsonObject.optString("name");
 
 		// Only applicable for Array
@@ -873,13 +883,17 @@ public class GraphServiceImpl {
 					edgeRow);
 			edge = new Edge(srcVertex.getUuid(), srcVertex.getUuid() + "_" + position, name);
 			saveEdge(edge);
+			graphMeta.setUuid(srcVertex.getUuid() + "_" + position);
+			graphMeta.setType(name);
+			graphMeta.setName(position);
+			graphMetaIdentifierHolder.setRef(graphMeta);
 			vertexRow = createVertex(srcVertex.getUuid() + "_" + position, "", position, name, new Date().toString(),
-					"Y");
+					"Y", graphMetaIdentifierHolder);
 			totalVertexList.add(vertexRow);
 			verticesRowMap.put(srcVertex.getUuid() + "_" + position.concat("_").concat(name + "_" + position)
 					.concat("_").concat(name).concat("_").concat("Y"), vertexRow);
 			vertex = new Vertex(srcVertex.getUuid() + "_" + position, "", position, name.toLowerCase(), null, null,
-					new Date().toString(), "Y", graphMetaRef);
+					new Date().toString(), "Y", graphMetaIdentifierHolder);
 			saveVertex(vertex);
 			position = null;
 			srcVertex = vertex;
@@ -894,13 +908,14 @@ public class GraphServiceImpl {
 			if (jsonArray != null) {
 				if (jsonArray.length() == 0 || !keywordList.contains(key)) {
 					continue;
-				}
+				}	
 				for (int i = 0; i < jsonArray.length(); i++) {
 					value = jsonArray.optString(i);
 					childObj = jsonArray.optJSONObject(i);
 
 					name = key;
 					if (childObj != null)
+			
 						if (key.equalsIgnoreCase("attributes") || key.equalsIgnoreCase("expressionInfo")
 								|| key.equalsIgnoreCase("params") || key.equalsIgnoreCase("functionInfo")
 								|| key.equalsIgnoreCase("sectionInfo") || key.equalsIgnoreCase("joinKey")
@@ -964,8 +979,8 @@ public class GraphServiceImpl {
 										edgeRowMap, refName + "_" + i, name, null);
 							} else if (attr != "" && attr != null) {
 							    GraphMetaIdentifierHolder graphMetaHolder=new GraphMetaIdentifierHolder();
-							    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
-								if (childObj != null && value.startsWith("{", 0)) {
+/*							    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
+*/								if (childObj != null && value.startsWith("{", 0)) {
 									String attr2 = childObj.optString("sourceAttr");
 									JSONObject jsonObj3 = new JSONObject(attr2);
 									String SourceId = childObj.optString("attrSourceId");
@@ -1171,8 +1186,8 @@ public class GraphServiceImpl {
 									}
 								}
 								GraphMetaIdentifierHolder graphMetaHolder=new GraphMetaIdentifierHolder();
-							    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
-							    graphMeta.setType(childType);
+/*							    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
+*/							    graphMeta.setType(childType);
 							    graphMeta.setUuid(childUuid);
 							    graphMeta.setName(refName);
 							    graphMetaHolder.setRef(graphMeta);
@@ -1197,7 +1212,7 @@ public class GraphServiceImpl {
 									refName = childType + "_" + i;
 								}
 							}*/
-							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, position, name, graphMetaRef);
+							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, position, name, graphMetaIdentifierHolder);
 						}
 
 						else if (key.equalsIgnoreCase("appInfo")|| key.equalsIgnoreCase("groupInfo"))/* for appInfo */ {
@@ -1219,7 +1234,7 @@ public class GraphServiceImpl {
 								}
 							}*/
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									position, name, graphMetaRef);
+									position, name, null);
 						}
 						else if (key.equalsIgnoreCase("refKeyList"))/* for business rule */ {
 							String attr = childObj.optString("name");
@@ -1246,9 +1261,23 @@ public class GraphServiceImpl {
 							if (childObj != null && value.startsWith("{", 0))
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
 										edgeRowMap, position, key, null);
-						} else if (childObj != null)
+						} 
+						else if (childObj != null ) {
+							String refN = childObj.optString("ref");
+					
+							JSONObject jsonObjType = new JSONObject(refN);
+							childUuid = jsonObjType.optString("uuid");
+							childType = jsonObjType.optString("type");
+							
+							baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+									null, null, null, null, null, childUuid, null, null);
+							refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+									: baseEntityList.get(0).getName();	
+							
+			
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									i + "", name, null);
+									refName + "", name, null);
+							}
 				}
 			} else if (childObj != null && value.startsWith("{", 0)) {
 
@@ -1288,13 +1317,17 @@ public class GraphServiceImpl {
 					edgeRowMap.put(srcVertex.getUuid() + "_" + childUuid + "_" + name, edgeRow);
 					edge = new Edge(srcVertex.getUuid(), childUuid, parentName);
 					saveEdge(edge);
+					graphMeta.setUuid(childUuid);
+					graphMeta.setType(childObj.optString("type"));
+					graphMeta.setName(name);
+					graphMetaIdentifierHolder.setRef(graphMeta);
 					vertexRow = createVertex(childUuid, "", name, childObj.optString("type"), new Date().toString(),
-							"Y");
+							"Y", graphMetaIdentifierHolder);
 					totalVertexList.add(vertexRow);
 					verticesRowMap.put(childUuid.concat("_").concat(name).concat("_").concat(childObj.optString("type"))
 							.concat("_").concat("Y"), vertexRow);
 					vertex = new Vertex(childUuid, "", name, childObj.optString("type"), null, null,
-							new Date().toString(), "Y", null);
+							new Date().toString(), "Y", graphMetaIdentifierHolder);
 					saveVertex(vertex);
 					continue;
 				}
