@@ -1552,6 +1552,7 @@ public class SparkExecutor implements IExecutor {
 			case "string": return DataTypes.StringType;
 			case "timestamp": return DataTypes.TimestampType;
 			case "decimal" : return DataTypes.createDecimalType();
+			case "long" : return DataTypes.LongType;
 			case "vector" : return new VectorUDT();
 			
             default: return null;
