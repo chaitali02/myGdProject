@@ -91,8 +91,10 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                 if (scope.graphdata == null) {
                     return false;
                 }
+                
                 var w = d3.select("svg").attr("width");
                 d3.select("svg").attr("width", parseInt(w) + 100);
+                d3.select("svg").attr("height", height);
 
                 // Compute the new tree layout.
                 var nodes = tree.nodes(root).reverse(),
@@ -278,29 +280,54 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             // Toggle children on click.
             function toggleChildren(d) {
                 if (d.children) {
+
                     d._children = d.children;
                     d.children = null;
-                    update(d);
+                    for (var i = 0; i <  d._children.length; i++) {
+                        if(d._children.length >20){
+                            height=height-30;
+                        }
+                    }
+                    if(d._children.length >20){
+                        tree = d3.layout.tree()
+                        .size([height, width]);
+                        update(d);
+                    }else{
+                        update(d);
+                    }
+                    
                 }
-                else {
-                	
+                else {	
                     if (d.metaRef.ref.type == null || d.metaRef.ref.type == "simple") {
                         return false;
                     }
-                   
                     $('.show-graph-body').hide();
                     $('#graphloader').show();
                     $('#errorMsg').hide();
                     CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.version | "", "1").then(function (result) {
                        $('.show-graph-body').show();
                        $('#graphloader').hide();
+
+                       for (var i = 0; i <  result.data.children.length; i++) {
+                        result.data.children[i].index = i;
+                            if(result.data.children.length >20){
+                                height=height+30;
+                            }
+                        }
                         var r;
                         r = result.data;
                         r.parent = d.name
                         d._children = r.children
                         d.children = d._children;
                         d._children = null;
-                        update(d);
+                        if(result.data.children.length >20){
+                            tree = d3.layout.tree()
+                            .size([height, width]);
+                            update(d);
+                        }else{
+                            update(d);
+                        }
+                        
                     });
                 }
             }//End ToggleChildren

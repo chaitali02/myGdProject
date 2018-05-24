@@ -497,6 +497,7 @@
       else if(type == "operatortype"){
         url = "metadata/getParamListByOperatorType?uuid=" + uuid+"&type="+type;
       }
+    
       else if(type =='distribution'){
         url="metadata/getParamListByDistribution?uuid=" + uuid+"&type="+type;
       }
@@ -507,7 +508,7 @@
       var onSuccess = function(response) {
         var paramListHolder=[];
         var type=["ONEDARRAY","TWODARRAY"];
-        var type1=['distribution','attribute','attributes','datapod'];
+        var type1=['distribution','attribute','attributes','datapod','list'];
         if(response.length >0){
           for(var i=0;i<response.length;i++){
             var paramList={};
@@ -528,11 +529,21 @@
               paramList.isParamType=response[i].paramType;
               paramList.selectedParamValueType=response[i].paramType=="distribution" ?response[i].paramType:"datapod";
               paramList.paramValue=response[i].paramValue;
-              if(response[i].paramValue !=null){
+              if(response[i].paramValue !=null && response[i].paramValue !='list'){
               var selectedParamValue={};
               selectedParamValue.uuid=response[i].paramValue.ref.uuid;
               selectedParamValue.type=response[i].paramValue.ref.type;
               paramList.selectedParamValue=selectedParamValue;
+              }
+              if( response[i].paramValue && response[i].paramType =='list'){
+                paramList.selectedParamValueType="list";
+                var listvalues=response[i].paramValue.value.split(',');
+                var selectedParamValue={};
+                selectedParamValue.type=response[i].paramValue.ref.type;
+                selectedParamValue.value=listvalues[0];
+                paramList.paramValue=selectedParamValue;
+                paramList.selectedParamValue=selectedParamValue;
+                paramList.allListInfo=listvalues;
               }
             }else{
               paramList.isParamType="datapod";
