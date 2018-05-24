@@ -2692,15 +2692,27 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 paramList.paramValue=paramValue;
                 paramList.selectedParamValue=selectedParamValue;
                 paramList.selectedParamValueType=paramListInfo[i].paramValue.ref.type
-                paramListHolder[i]=paramList
+                paramListHolder[i]=paramList;
                
-               }else if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type== "simple"){
+               }else if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type== "simple" && paramListInfo[i].paramType !='list'){
                 var paramValue={}
                 paramValue.paramValue=paramListInfo[i].paramValue.value
                 paramValue.selectedParamValueType=paramListInfo[i].paramValue.ref.type;
                 paramValue.selectedParamValue=selectedParamValue
                 paramList.selectedParamValueType=paramListInfo[i].paramValue.ref.type
                 paramList.paramValue=paramListInfo[i].paramValue.value;
+                paramListHolder[i]=paramList
+               }
+               else if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type== "simple" && paramListInfo[i].paramType =='list'){
+                var paramValue={}
+                paramValue.paramValue=paramListInfo[i].paramValue.value
+                paramValue.selectedParamValueType=paramListInfo[i].paramValue.ref.type;
+                paramValue.selectedParamValue=selectedParamValue
+                paramList.selectedParamValueType=paramListInfo[i].paramType;
+                paramList.paramValue=paramListInfo[i].paramValue.value;
+                if($scope.opringinalparamListHolder.length <= paramListInfo.length){
+                  paramList.allListInfo=$scope.opringinalparamListHolder[i].allListInfo;
+                }
                 paramListHolder[i]=paramList
                }
                else if(paramListInfo[i].paramType == "attribute"){
@@ -2747,9 +2759,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             }else{
               $scope.paramListHolder = response;
               for(var i=0;i<$scope.paramListHolder.length;i++){
-                if( $scope.paramListHolder[i].paramValue && $scope.paramListHolder[i].paramValue.ref.type =='distribution'){
-                  $scope.onChangeDistribution($scope.paramListHolder[i].selectedParamValue,i);
-                  break;
+                if(['list','simple'].indexOf($scope.paramListHolder[i].isParamType) ==-1){
+                  if( $scope.paramListHolder[i].paramValue && $scope.paramListHolder[i].paramValue.ref.type =='distribution'){
+                    $scope.onChangeDistribution($scope.paramListHolder[i].selectedParamValue,i);
+                    break;
+                  }
                 }
               }
               $scope.opringinalparamListHolder=$scope.paramListHolder
@@ -2804,7 +2818,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         }
       }
       $scope.onChangeDistribution=function(data,index){
-        CommonService.getParamListByType('distribution',data.uuid,data.version).then(function (response){ onSuccessGetParamListByType(response.data)});
+        CommonService.getParamListByType('distribution',data.uuid,data.version | "").then(function (response){ onSuccessGetParamListByType(response.data)});
         var onSuccessGetParamListByType = function (response) {
           if($scope.paramListHolder.length == $scope.opringinalparamListHolder.length){
             $scope.opringinalparamListHolder=$scope.paramListHolder;
@@ -2815,6 +2829,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           var paramList
           paramList = $scope.paramListHolder.concat(response);
           $scope.paramListHolder=paramList;
+       //   $scope.opringinalparamListHolder=$scope.paramListHolder;
+
         }
       }
       $scope.loadAttributes = function(query,index) {
@@ -2880,8 +2896,15 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               ref.type=$scope.paramListHolder[i].selectedParamValueType;
               paramValue.ref=ref;
               paramValue.value=$scope.paramListHolder[i].paramValue
+              paramList.paramValue=paramValue; 
+            }
+            else if($scope.paramListHolder[i].selectedParamValueType =="list"){
+              var ref={};
+              var paramValue={};  
+              ref.type='simple';
+              paramValue.ref=ref;
+              paramValue.value=$scope.paramListHolder[i].paramValue
               paramList.paramValue=paramValue;
-              
             }
            
             paramListInfo[i]=paramList;
