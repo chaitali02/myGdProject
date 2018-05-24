@@ -483,7 +483,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 		// e.printStackTrace();
 		// }
 		try {
-			profileExec = (ProfileExec) parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null,
+			HashMap<String, String> otherParams = execParams.getOtherParams();
+			profileExec = (ProfileExec) parse(profileExec.getUuid(), profileExec.getVersion(), null, otherParams, null, null,
 					runMode);
 			execute(profileExec.getDependsOn().getRef().getUuid(), profileExec.getDependsOn().getRef().getVersion(),
 					profileExec, null, null, execParams, runMode);
@@ -517,7 +518,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 	}
 
 	@Override
-	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		ProfileExec profileExec =null;
 		try {
