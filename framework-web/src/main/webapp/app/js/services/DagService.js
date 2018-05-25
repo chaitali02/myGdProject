@@ -388,7 +388,7 @@ MetadataModule.service('MetadataDagSerivce',function($q,sortFactory,MetadataDagF
 					 taskjson.operatorId=response.stages[i].tasks[j].operators[0].operatorId;
 					 taskjson.operatorId=response.stages[i].tasks[j].operators[0].operatorId;
 					 var operatorinfo={}
-					 if(response.stages[i].tasks[j].operators[0].operatorInfo.ref.type == "map"){
+					 if(response.stages[i].tasks[j].operators[0].operatorInfo.ref && response.stages[i].tasks[j].operators[0].operatorInfo.ref.type == "map"){
 						 var obj={};
 						 var operatormap={}
 						 obj.text=response.stages[i].tasks[j].operators[0].operatorInfo.ref.type;
@@ -402,7 +402,7 @@ MetadataModule.service('MetadataDagSerivce',function($q,sortFactory,MetadataDagF
 						 operatormap.name=response.stages[i].tasks[j].operators[0].operatorInfo.ref.name;
 						 operatorinfo.operatormap=operatormap
 					 }
-					 if(response.stages[i].tasks[j].operators[0].operatorInfo.ref.type == "dq"){
+					 if(response.stages[i].tasks[j].operators[0].operatorInfo.ref && response.stages[i].tasks[j].operators[0].operatorInfo.ref.type == "dq"){
 						 var obj={};
 						 var operatordq={}
 						 obj.text=response.stages[i].tasks[j].operators[0].operatorInfo.ref.type;
@@ -416,7 +416,7 @@ MetadataModule.service('MetadataDagSerivce',function($q,sortFactory,MetadataDagF
 						 operatordq.name=response.stages[i].tasks[j].operators[0].operatorInfo.ref.name;
 						 operatorinfo.operatordq=operatordq
 					 }
-					 if(response.stages[i].tasks[j].operators[0].operatorInfo.ref.type == "dqgroup"){
+					 if(response.stages[i].tasks[j].operators[0].operatorInfo.ref && response.stages[i].tasks[j].operators[0].operatorInfo.ref.type == "dqgroup"){
 						 var obj={};
 						 var operatordqgroup={}
 						 obj.text=response.stages[i].tasks[j].operators[0].operatorInfo.ref.type;
@@ -430,7 +430,7 @@ MetadataModule.service('MetadataDagSerivce',function($q,sortFactory,MetadataDagF
 						 operatordqgroup.name=response.stages[i].tasks[j].operators[0].operatorInfo.ref.name;
 						 operatorinfo.operatordqgroup=operatordqgroup
 					 }
-					 if(response.stages[i].tasks[j].operators[0].operatorInfo.ref.type == "load"){
+					 if(response.stages[i].tasks[j].operators[0].operatorInfo.ref && response.stages[i].tasks[j].operators[0].operatorInfo.ref.type == "load"){
 						 var obj={};
 						 var operatorload={}
 						 obj.text=response.stages[i].tasks[j].operators[0].operatorInfo.ref.type;

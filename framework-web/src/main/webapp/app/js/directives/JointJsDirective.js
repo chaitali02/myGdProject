@@ -586,7 +586,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
              $("#"+divid).hide();
              $('.connection').removeClass('active');
            });
-           
+          debugger
            var jointElement = $(this).closest(".joint-element");
            var s = jointElement.attr("model-id");
            $('.connection[source-id='+s+']').addClass('active');
@@ -1792,12 +1792,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                if(response[i].name == elemt.title){
                 $scope.popupModel.selectedType=response[i].uuid +"|"+ response[i].name;
                 $scope.onChangeOperatorInfo(false);
-               
                 break;
-               }
+              }
             }
-           }
-           
+           }   
          }
            
          var xPercent = e.clientX / $( window ).width() * 100;
@@ -2054,6 +2052,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        });
             
        $( "#paper" ).on("mouseover",".joint-element .body",function(e){
+      
          if($scope.isTemplate){
            var divid = 'divtoshow';
            $("#"+divid).hide();
@@ -2070,11 +2069,15 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $('.connection[source-id='+s+']').addClass('active');
          var cell = $scope.graph.getCell(s);
          var elementModel = cell.attributes['model-data'];
+      
          try {
            var elementType = elementModel.operators[0].operatorInfo.ref.type;
            if(elementType.slice(-4) == 'Exec'){
              elementType = elementType.slice(0,-4);
            }
+           if(['dag','stage'].indexOf(elementType) ==-1){
+            elementModel.version=cell.attributes['dagversion'];
+          }
          }catch(e){
            if(s.substr(0,3)=='dag'){
              var cell = $(this);
@@ -2086,8 +2089,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var elementModel = {name : cell.attributes['model-data'].name, type : elementType, uuid:cell.attributes['model-data'].stageId};
            }else{
              var elementType = undefined;
+             elementModel.version=cell.attributes['dagversion'];
            }
          }
+       
          
          var allowedHover = angular.copy(dagMetaDataService.validTaskTypes);
          allowedHover.push('dag');
@@ -2123,9 +2128,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          }
          else {
            var directRef = ['dag','stage'];
-           var txt1 = directRef.indexOf(elementType) > -1 ? elementModel.uuid : elementModel.operators[0].operatorInfo.ref.uuid || '';
+           var txt1 = directRef.indexOf(elementType) > -1 ? elementModel.uuid : elementModel.taskId ||'' //operators[0].operatorInfo.ref.uuid || '';
            var txt2 = directRef.indexOf(elementType) > -1 ? elementModel.name : elementModel.name || '';
-           var txt3 = directRef.indexOf(elementType) > -1 ? elementModel.version : elementModel.operators[0].operatorInfo.ref.version || '';
+           var txt3 = directRef.indexOf(elementType) > -1 ? elementModel.version : elementModel.version || ''//elementModel.operators[0].operatorInfo.ref.version || '';
          }
 
          $("#elementTypeText").html(dagtypetext);
@@ -2170,6 +2175,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          // id: "dag_0",
          elementType: operator,
          parentStage: '',
+         dagversion:'N/a',
          "model-data": {
            name : 'New '+operator,
            operators : [ {

@@ -3,9 +3,6 @@
  */
 package com.inferyx.framework.operator;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +15,9 @@ import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.datascience.Math3Distribution;
+import com.inferyx.framework.datascience.distribution.DistributionHelper;
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
@@ -30,6 +27,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -57,6 +55,8 @@ public class GenerateDataOperator implements Operator {
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
+	@Autowired
+	private DistributionHelper distributionHelper;
 	
 	static final Logger logger = Logger.getLogger(GenerateDataOperator.class);
 
@@ -118,10 +118,11 @@ public class GenerateDataOperator implements Operator {
 		Object distributionObject = getDistributionObject(execParams, resolvedIterations, execVersion, otherParams);
 		
 		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
-		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+		List<RowObj> rowObjList = distributionHelper.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+//		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
 		
 		// Save result
-		save(exec, resultSetHolder, tableName, locationDatapod, execIdentifier, runMode);
+		save(exec, rowObjList, tableName, locationDatapod, execIdentifier, runMode);
 		
 		return tableName;
 	}
@@ -189,7 +190,7 @@ public class GenerateDataOperator implements Operator {
 	 * @throws Exception
 	 */
 	protected void save (IExecutor exec, 
-						ResultSetHolder resultSetHolder, 
+						List<RowObj> rowObjList, 
 						String tableName, 
 						Datapod locationDatapod, 
 						MetaIdentifier execIdentifier, 
@@ -198,6 +199,48 @@ public class GenerateDataOperator implements Operator {
 		String execUuid = execIdentifier.getUuid();
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
+		List<Attribute> attributes = locationDatapod.getAttributes();
+		ResultSetHolder resultSetHolder = exec.createRegisterAndPersist(rowObjList, attributes, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		rowObjList = null;
+//		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		
+		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
+		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
+		@SuppressWarnings("unchecked")
+		List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) metaExec.getClass().getMethod("getAppInfo").invoke(metaExec);
+		
+		dataStoreServiceImpl.setRunMode(runMode);
+		dataStoreServiceImpl.create(getFilePath(locationDatapod, execVersion), getFileName(locationDatapod, execVersion), 
+				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
+				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+		
+		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
+		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
+		
+	}
+
+	/**
+	 * 
+	 * @param exec
+	 * @param resultSetHolder
+	 * @param tableName
+	 * @param locationDatapod
+	 * @param execIdentifier
+	 * @param runMode
+	 * @throws Exception
+	 */
+	protected void save (IExecutor exec, 
+						ResultSetHolder resultSetHolder,  
+						String tableName, 
+						Datapod locationDatapod, 
+						MetaIdentifier execIdentifier, 
+						RunMode runMode) throws Exception {
+		String execVersion = execIdentifier.getVersion();
+		String execUuid = execIdentifier.getUuid();
+		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+		
+		List<Attribute> attributes = locationDatapod.getAttributes();
 		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
@@ -215,5 +258,6 @@ public class GenerateDataOperator implements Operator {
 		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
 		
 	}
+
 	
 }

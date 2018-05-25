@@ -81,6 +81,7 @@ import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
+import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -396,6 +397,59 @@ public class SparkExecutor implements IExecutor {
 			datapodWriter.write(df, filePathUrl, datapod, saveMode);
 		}
 		return rsHolder;
+	}
+	
+	/**
+	 * 
+	 * @param rowObjList
+	 * @param attributes
+	 * @param tableName
+	 * @param filePath
+	 * @param datapod
+	 * @param saveMode
+	 * @param clientContext
+	 * @return
+	 * @throws IOException 
+	 */
+	@Override
+	public ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes, String tableName, String filePath, Datapod datapod, String saveMode,
+			String clientContext) throws IOException {
+		int count = 0;
+		StructField[] fieldArray = new StructField[attributes.size()];
+		for(Attribute attribute : attributes){						
+			StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
+//			StructField field = new StructField(attribute.getName(), DataTypes.DoubleType, true, Metadata.empty());
+			fieldArray[count] = field;
+			count ++;
+		}
+		StructType schema = new StructType(fieldArray);		
+		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(createRowList(rowObjList), schema);
+		df.printSchema();
+		df.show(true);
+		registerTempTable(df, tableName);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setDataFrame(df);
+		rsHolder.setType(ResultType.dataframe);	
+		rsHolder.setCountRows(df.count());
+		rsHolder.setTableName(tableName);
+		return rsHolder;
+	}
+	
+	/**
+	 * 
+	 * @param rowObjList
+	 * @return
+	 */
+	private List<Row> createRowList(List<RowObj> rowObjList) {
+		List<Row> rowList = new ArrayList<>();
+		if (rowObjList == null || rowObjList.isEmpty()) {
+			return null;
+		}
+		
+		for (RowObj rowObj : rowObjList) {
+			rowList.add(RowFactory.create(rowObj.getRowData()));
+		}
+		return rowList;
 	}
 
 	@Override
@@ -1054,89 +1108,8 @@ public class SparkExecutor implements IExecutor {
 		return simulateMLOperator.executeDistribution(distribution, numTrials, seed, factorMeansInfo, factorCovariancesInfo);
 	}*/
 
-	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws Exception {
-		StructField[] fieldArray = new StructField[attributes.size()];
-		int count = 0;
-		
-		Class<?> returnType = distributionObject.getClass().getMethod("sample").getReturnType();
-		if(returnType.isArray()) {
-			double[] trialSample = (double[]) distributionObject.getClass().getMethod("sample").invoke(distributionObject);
-			int expectedNumcols = trialSample.length + 2;
-			if(attributes.size() != expectedNumcols)
-				throw new RuntimeException("Insufficient number of columns.");
-		} else if(returnType.isPrimitive()) {
-			int expectedNumcols = 3;
-			if(attributes.size() != expectedNumcols)
-				throw new RuntimeException("Insufficient number of columns.");
-		}
-
-//		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
-//		fieldArray[count] = idField;
-//		count++;
-		for(Attribute attribute : attributes){						
-			StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
-//			StructField field = new StructField(attribute.getName(), DataTypes.DoubleType, true, Metadata.empty());
-			fieldArray[count] = field;
-			count ++;
-		}
-		StructType schema = new StructType(fieldArray);		
-		
-		List<Row> rowList = new ArrayList<>();
-		for(int i=0; i<numIterations; i++) {
-			int genId = i+1;
-			Object obj = null;
-
-			try {
-				obj = distributionObject.getClass().getMethod("sample").invoke(distributionObject);
-				//Class<?> returnType = object.getClass().getMethod("sample").getReturnType();
-				if(returnType.isArray()) {
-					double[] trial = (double[]) obj;
-					List<Object> datasetList = new ArrayList<>();
-					datasetList.add(genId);
-					for(double val : trial) {
-						datasetList.add(val);
-					}
-					datasetList.add(Integer.parseInt(execVersion));
-					rowList.add(RowFactory.create(datasetList.toArray()));
-					genId++;
-				} else if(returnType.isPrimitive()) {
-					if(!returnType.getName().equalsIgnoreCase("double")) {
-						List<Object> datasetList = new ArrayList<>();
-						datasetList.add(genId);
-						datasetList.add(Double.parseDouble(""+obj));
-						datasetList.add(Integer.parseInt(execVersion));
-						rowList.add(RowFactory.create(datasetList.toArray()));
-						genId++;
-					} else {
-						List<Object> datasetList = new ArrayList<>();
-						datasetList.add(genId);
-						datasetList.add((Double) obj);
-						datasetList.add(Integer.parseInt(execVersion));
-						rowList.add(RowFactory.create(datasetList.toArray()));
-						genId++;
-					}
-				}
-				
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-					| NoSuchMethodException | SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-		}
-		
-		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
-		df.printSchema();
-		df.show(true);
-		registerTempTable(df, tableName);
-		ResultSetHolder rsHolder = new ResultSetHolder();
-		rsHolder.setDataFrame(df);
-		rsHolder.setType(ResultType.dataframe);	
-		rsHolder.setCountRows(df.count());
-		rsHolder.setTableName(tableName);
-		return rsHolder;
-	}
+	
+	
 	
 	/**
 	 * 
@@ -1631,6 +1604,14 @@ public class SparkExecutor implements IExecutor {
 			case "date": return DataTypes.DateType;
 			case "string": return DataTypes.StringType;
 			case "timestamp": return DataTypes.TimestampType;
+			case "long" : return DataTypes.LongType;
+			case "binary" : return DataTypes.BinaryType;
+			case "boolean" : return DataTypes.BooleanType;
+			case "byte" : return DataTypes.ByteType;
+			case "float" : return DataTypes.FloatType;
+			case "null" : return DataTypes.NullType;
+			case "short" : return DataTypes.ShortType;
+			case "calendarInterval" : return DataTypes.CalendarIntervalType;
 			case "decimal" : return DataTypes.createDecimalType();
 			case "vector" : return new VectorUDT();
 			

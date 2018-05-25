@@ -152,12 +152,14 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
                   elementType : type,
                   "model-data": task,
                   parentStage : stage.stageId,
+                  dagversion:dag.version,
                   position: { x: task.xPos || taskXPos, y: task.yPos || taskYPos },
                   attrs: {
                       '.body': {
                           'element-id' : task.taskId,
                           "model-data": JSON.stringify(task),
-                          "active":!isTemplate
+                          "active":!isTemplate,
+                         
                       },
                       '.status': {
                           'element-id' : task.taskId,

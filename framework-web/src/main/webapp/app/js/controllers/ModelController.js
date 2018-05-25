@@ -567,7 +567,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
       ModelService.submit(modelJson, 'model').then(function(response) { onSuccess(response.data)},function(response){onError(response.data)});
     }
     else{
-      modelJson.customeFlag="Y"
+      modelJson.customFlag="Y"
       var blob = new Blob([$scope.scriptCode], { type: "text/xml"});
       var fd = new FormData();
       fd.append('file', blob)
