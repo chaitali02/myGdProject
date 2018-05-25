@@ -403,19 +403,6 @@ public interface IExecutor {
 
 	/**
 	 * 
-	 * @param distributionObject
-	 * @param attributes
-	 * @param numIterations
-	 * @param execVersion
-	 * @param tableName
-	 * @return
-	 * @throws Exception
-	 */
-	ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
-			String execVersion, String tableName) throws Exception;
-
-	/**
-	 * 
 	 * @param data
 	 * @param className
 	 * @param tableName

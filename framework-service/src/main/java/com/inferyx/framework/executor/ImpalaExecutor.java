@@ -354,12 +354,7 @@ public class ImpalaExecutor implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
-			String execVersion, String tableName) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	@Override
 	public ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext)
 			throws IOException {
