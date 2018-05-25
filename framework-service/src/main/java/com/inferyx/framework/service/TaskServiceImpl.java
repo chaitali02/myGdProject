@@ -45,7 +45,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Predict;
@@ -573,7 +573,7 @@ public class TaskServiceImpl implements Callable<String> {
 	 * @throws Exception 
 	 */
 	private MetaIdentifierHolder executeDagTask(MetaIdentifierHolder dagResultRef) throws Exception {
-		Operator operator = indvTask.getOperators().get(0);
+		TaskOperator operator = indvTask.getOperators().get(0);
 		Dag dag = (Dag) commonServiceImpl.getLatestByUuid(operator.getOperatorInfo().getRef().getUuid(), MetaType.dag.toString());
 		dagResultRef = dagServiceImpl.submitDag(dag, runMode);
 		return dagResultRef;
@@ -588,7 +588,7 @@ public class TaskServiceImpl implements Callable<String> {
 	 */
 	private String executeTask() throws Exception {
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
-		Operator operator = indvTask.getOperators().get(0);
+		TaskOperator operator = indvTask.getOperators().get(0);
 		String datapodTableName  = null;
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString());
 		TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);

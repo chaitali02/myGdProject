@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.inferyx.framework.datascience.distribution;
+package com.inferyx.framework.datascience;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import com.inferyx.framework.factory.RowObjFactory;
  *
  */
 @Service
-public class DistributionHelper {
+public class RandDistribution {
 	
 	@Autowired
 	protected Helper helper;
@@ -36,7 +36,7 @@ public class DistributionHelper {
 	/**
 	 * 
 	 */
-	public DistributionHelper() {
+	public RandDistribution() {
 		// TODO Auto-generated constructor stub
 	}
 

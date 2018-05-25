@@ -158,7 +158,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -3202,7 +3202,7 @@ public class CommonServiceImpl <T> {
 		 * @param operator
 		 * @return
 		 */
-		public ExecParams getExecParams (Operator operator) {
+		public ExecParams getExecParams (TaskOperator operator) {
 			if (operator == null 
 					|| operator.getOperatorParams() == null 
 					|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)

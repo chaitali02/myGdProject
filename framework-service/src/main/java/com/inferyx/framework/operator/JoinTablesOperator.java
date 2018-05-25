@@ -47,7 +47,7 @@ public class JoinTablesOperator implements Operator {
 	}
 	
 	@Override
-	public String execute(com.inferyx.framework.datascience.Operator operator, 
+	public String execute(com.inferyx.framework.domain.Operator operator, 
 						ExecParams execParams, 
 						MetaIdentifier execIdentifier, 
 						java.util.Map<String, MetaIdentifier> refKeyMap, 
@@ -63,7 +63,7 @@ public class JoinTablesOperator implements Operator {
 	}
 
 	@Override
-	public Map<String, String> populateParams(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
+	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
 			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
@@ -71,7 +71,7 @@ public class JoinTablesOperator implements Operator {
 	}
 
 	@Override
-	public String parse(com.inferyx.framework.datascience.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
