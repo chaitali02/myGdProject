@@ -3259,4 +3259,14 @@ public class CommonServiceImpl <T> {
 			}		
 			return attributeName;
 		}
+		public String getResoveNameByUuidandType(String uuid,MetaType type) {
+			
+			
+			
+			
+			
+			
+			return null;
+			
+		}
 }

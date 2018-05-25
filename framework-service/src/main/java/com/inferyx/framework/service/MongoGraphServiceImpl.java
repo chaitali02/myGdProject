@@ -63,7 +63,8 @@ public class MongoGraphServiceImpl {
 			return null;
 		}
 		map.put("src", edge.getSrc());
-		map.put("dst", edge.getDst());
+/*		map.put("src", edge.getSrcMetaRef().getRef().getUuid());
+*/		map.put("dst", edge.getDst());
 		map.put("relationType", edge.getRelationType());
 		return map;
 	}

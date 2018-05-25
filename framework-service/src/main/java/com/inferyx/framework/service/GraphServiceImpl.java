@@ -570,7 +570,10 @@ public class GraphServiceImpl {
 			return;
 		}
 		for (int i = 0; i < edgesr.size(); i++) {
-			edge = new Edge(edgesr.get(i).getString(0), edgesr.get(i).getString(1), edgesr.get(i).getString(2));
+			GraphMetaIdentifierHolder srcMetaIdentifierHolder = (GraphMetaIdentifierHolder) edgesr.get(i).get(3);
+			GraphMetaIdentifierHolder dstMetaIdentifierHolder = (GraphMetaIdentifierHolder) edgesr.get(i).get(4);
+
+			edge = new Edge(edgesr.get(i).getString(0), edgesr.get(i).getString(1), edgesr.get(i).getString(2), srcMetaIdentifierHolder, dstMetaIdentifierHolder);
 			// System.out.println(edge);
 			edges.add(edge);
 			if (i % 10000 == 0) {
@@ -804,8 +807,8 @@ public class GraphServiceImpl {
 	 * return edgeRowList; }
 	 */
 
-	public Row createEdge(String srcUuid, String dst, String name, Map<String, Row> edgeRowMap) {
-		Row edgeRow = RowFactory.create(srcUuid, dst, name);
+	public Row createEdge(String srcUuid, String dst, String name, Map<String, Row> edgeRowMap,GraphMetaIdentifierHolder srcMetaRef,GraphMetaIdentifierHolder dstMetaRef) {
+		Row edgeRow = RowFactory.create(srcUuid, dst, name,srcMetaRef,dstMetaRef);
 		edgeRowMap.put(srcUuid + "_" + dst + "_" + name, edgeRow);
 		return edgeRow;
 	}
@@ -866,8 +869,15 @@ public class GraphServiceImpl {
 		String refName = null;
 		String objUuid = jsonObject.optString("uuid");
 		String type = jsonObject.optString("type");
-		   GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
-		   graphMetaIdentifierHolder=new GraphMetaIdentifierHolder();/*
+		GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
+		graphMetaIdentifierHolder=new GraphMetaIdentifierHolder();
+		
+		GraphMetaIdentifierHolder srcEdgeMetaRef=new GraphMetaIdentifierHolder();
+		GraphMetaIdentifier srcEdgeMetaIdenRef=new GraphMetaIdentifier();
+		
+		GraphMetaIdentifierHolder dstEdgeMetaRef=new GraphMetaIdentifierHolder();
+		GraphMetaIdentifier dstEdgeMetaIdenRef=new GraphMetaIdentifier();
+		  /*
 	    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();*/
 		// String nme = jsonObject.optString("name");
 
@@ -875,13 +885,25 @@ public class GraphServiceImpl {
 		if (position != null) {
 			name = StringUtils.isBlank(parentName) ? srcVertex.getName() : parentName;
 			// System.out.println("Creating edge..." + name+ "_" + position);
+			srcEdgeMetaIdenRef.setType(srcVertex.getNodeType());
+			srcEdgeMetaIdenRef.setUuid(srcVertex.getUuid());
+			srcEdgeMetaIdenRef.setName(srcVertex.getName());
+			srcEdgeMetaRef.setRef(srcEdgeMetaIdenRef);
+			
+			
+			dstEdgeMetaIdenRef.setType(srcVertex.getNodeType());
+			dstEdgeMetaIdenRef.setUuid(srcVertex.getUuid() + "_" + position);
+			dstEdgeMetaIdenRef.setName(srcVertex.getName());
+			dstEdgeMetaRef.setRef(dstEdgeMetaIdenRef);
 			edgeRow = createEdge(srcVertex.getUuid(), srcVertex.getUuid() + "_" + position, name,
-					new HashMap<String, Row>());
+					new HashMap<String, Row>(), srcEdgeMetaRef, dstEdgeMetaRef);
 			totalEdgeList.add(edgeRow);
 			edgeRowMap.put(
 					srcVertex.getUuid() + "_" + srcVertex.getUuid() + "_" + position + "_" + name + "_" + position,
 					edgeRow);
-			edge = new Edge(srcVertex.getUuid(), srcVertex.getUuid() + "_" + position, name);
+			
+
+			edge = new Edge(srcVertex.getUuid(), srcVertex.getUuid() + "_" + position, name, srcEdgeMetaRef, dstEdgeMetaRef);
 			saveEdge(edge);
 			graphMeta.setUuid(srcVertex.getUuid() + "_" + position);
 			graphMeta.setType(name);
@@ -1312,10 +1334,26 @@ public class GraphServiceImpl {
 						name = refName;
 					}
 					name = refName;
-					edgeRow = createEdge(srcVertex.getUuid(), childUuid, parentName, new HashMap<String, Row>());
+					srcEdgeMetaRef = new GraphMetaIdentifierHolder();
+					srcEdgeMetaIdenRef = new GraphMetaIdentifier();
+
+					dstEdgeMetaRef = new GraphMetaIdentifierHolder();
+					dstEdgeMetaIdenRef = new GraphMetaIdentifier();
+					srcEdgeMetaIdenRef.setType(srcVertex.getNodeType());
+					srcEdgeMetaIdenRef.setUuid(srcVertex.getUuid());
+					srcEdgeMetaIdenRef.setName(srcVertex.getName());
+					srcEdgeMetaRef.setRef(srcEdgeMetaIdenRef);
+
+					dstEdgeMetaIdenRef.setType(childType);
+					dstEdgeMetaIdenRef.setUuid(childUuid);
+					dstEdgeMetaIdenRef.setName(name);
+					dstEdgeMetaRef.setRef(dstEdgeMetaIdenRef);
+
+					edgeRow = createEdge(srcVertex.getUuid(), childUuid, parentName, new HashMap<String, Row>(),
+							srcEdgeMetaRef, dstEdgeMetaRef);
 					totalEdgeList.add(edgeRow);
 					edgeRowMap.put(srcVertex.getUuid() + "_" + childUuid + "_" + name, edgeRow);
-					edge = new Edge(srcVertex.getUuid(), childUuid, parentName);
+					edge = new Edge(srcVertex.getUuid(), childUuid, parentName, srcEdgeMetaRef, dstEdgeMetaRef);
 					saveEdge(edge);
 					graphMeta.setUuid(childUuid);
 					graphMeta.setType(childObj.optString("type"));

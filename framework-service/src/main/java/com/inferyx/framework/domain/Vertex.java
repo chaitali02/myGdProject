@@ -25,14 +25,14 @@ public class Vertex {
 	private String desc;
 	private String createdOn;
 	private String active;
-	private GraphMetaIdentifierHolder graphMetaHolder;
+	private GraphMetaIdentifierHolder metaRef;
 	
 	public GraphMetaIdentifierHolder getGraphMetaHolder() {
-		return graphMetaHolder;
+		return metaRef;
 	}
 
-	public void setGraphMetaHolder(GraphMetaIdentifierHolder graphMetaHolder) {
-		this.graphMetaHolder = graphMetaHolder;
+	public void setGraphMetaHolder(GraphMetaIdentifierHolder metaRef) {
+		this.metaRef = metaRef;
 	}
 
 	public String getParent() {
@@ -110,11 +110,11 @@ public class Vertex {
 	public String toString() {
 		return "Vertex [parent=" + parent + ", uuid=" + uuid + ", version=" + version + ", name=" + name + ", nodeType="
 				+ nodeType + ", dataType=" + dataType + ", desc=" + desc + ", createdOn=" + createdOn + ", active="
-				+ active + ", graphMetaHolder=" + graphMetaHolder + "]";
+				+ active + ", graphMetaHolder=" + metaRef + "]";
 	}
 
 	public Vertex(String uuid, String version, String name, String nodeType, String dataType, String desc,
-			String createdOn, String active, GraphMetaIdentifierHolder graphMetaHolder) {
+			String createdOn, String active, GraphMetaIdentifierHolder metaRef) {
 		super();
 		this.uuid = uuid;
 		this.version = version;
@@ -124,7 +124,7 @@ public class Vertex {
 		this.desc = desc;
 		this.createdOn = createdOn;
 		this.active = active;
-		this.graphMetaHolder = graphMetaHolder;
+		this.metaRef = metaRef;
 	}
 
 	

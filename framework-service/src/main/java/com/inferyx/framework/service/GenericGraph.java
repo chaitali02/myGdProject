@@ -627,7 +627,7 @@ public class GenericGraph {
 
 	public List<Row> createAndSaveEdge(String srcUuid, String dst, String name) {
 		edgeRow = RowFactory.create(srcUuid, dst, name);
-		Edge edge = new Edge(srcUuid, dst, name);
+		Edge edge = new Edge(srcUuid, dst, name, null, null);
 		graphServiceImpl.saveEdge(edge);
 		edgeRowList.add(edgeRow);
 		return edgeRowList;

@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaStatsHolder;
@@ -284,5 +285,13 @@ public class CommonController<T> {
 			throws JsonProcessingException, ParseException {
 		List<?> baseEntityList = commonServiceImpl.getAllLatestCompleteObjects(type,active);
 		return objectWriter.writeValueAsString(baseEntityList);
+	}
+
+	@RequestMapping(value = "/getResoveNameByUuidandType", method = RequestMethod.GET)
+	public @ResponseBody String getOperatorByOperatorType(
+			@RequestParam(value ="type") MetaType type,
+			@RequestParam(value = "uuid", required = false) String uuid,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return commonServiceImpl.getResoveNameByUuidandType(uuid, type);
 	}
 }
