@@ -25,7 +25,6 @@ export class TrainingComponent implements OnInit {
   selectTarget: any;
   allTarget: any[];
   selectTargetType: string;
-  targetTypes: string[];
   allTargetAttribute: any[];
   featureMapTableArray: any[];
   selectSource: DependsOn;
@@ -65,8 +64,6 @@ export class TrainingComponent implements OnInit {
     // ]
     this.sourceTypes = ["datapod", "dataset", "rule"]
     this.selectSourceType = this.sourceTypes[0];
-    //this.targetTypes = ["datapod","file"];
-    //    this.selectTargetType=this.targetTypes[0]; 
     this.breadcrumbDataFrom = [{
       "caption": "Data Science",
       "routeurl": "/app/list/train"
@@ -92,8 +89,7 @@ export class TrainingComponent implements OnInit {
         this.getOneByUuidAndVersion();
         this.getAllVersionByUuid();
         this.getAllLatestModel();
-      //  this.onChangeSource();
-     //   this.getAttribute();
+        
 
 
       }
@@ -118,7 +114,7 @@ export class TrainingComponent implements OnInit {
 
   }
   getAllLatestModel() {
-    debugger
+
     this._trainingService.getAllModelByType("N", "model")
       .subscribe(
       response => {
@@ -144,7 +140,7 @@ export class TrainingComponent implements OnInit {
   }
 
   getAllLatestSource(source) {
-    debugger
+
     this._commonService.getAllLatest(source)
       .subscribe(
       response => {
@@ -177,13 +173,13 @@ export class TrainingComponent implements OnInit {
     //this.selectTarget=this.allTarget[0]
   }
   onChangeSourceType() {
-    debugger
+
     this.getAllLatestSource(this.selectSourceType)
   }
 
 
   onSuccessgetAllLatestSource(response) {
-    debugger
+
     var temp = []
     for (const i in response) {
       let ver = {};
@@ -253,9 +249,9 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-   
+
   onSuccessgetOneByUuidAndVersion(response) {
-    this.train= response;
+    this.train = response;
     this.uuid = response.uuid;
     const version: Version = new Version;
     version.label = response["version"];
@@ -265,21 +261,21 @@ export class TrainingComponent implements OnInit {
     this.train.active = response["active"] == 'Y' ? true : false;
     this.train.published = response["published"] == 'Y' ? true : false;
     this.breadcrumbDataFrom[2].caption = response.name;
-    this.trainPercent =response.trainPercent;
-    this.valPercent =response.valPercent;
+    this.trainPercent = response.trainPercent;
+    this.valPercent = response.valPercent;
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["dependsOn"]["ref"]["name"];
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
     dependOnTemp.version = response["dependsOn"]["ref"]["version"];
-    this.selectModel=dependOnTemp
+    this.selectModel = dependOnTemp
     // this.selectSourceType.label=response["source"]["ref"]["type"];
     // this.selectSourceType.value=response["source"]["ref"]["type"];
-    this.selectSourceType=response["source"]["ref"]["type"];
-   // this.selectTargetType=response["target"]["ref"]["type"];
+    this.selectSourceType = response["source"]["ref"]["type"];
+    // this.selectTargetType=response["target"]["ref"]["type"];
     let sourceTemp: DependsOn = new DependsOn();
     sourceTemp.label = response["source"]["ref"]["name"];
     sourceTemp.uuid = response["source"]["ref"]["uuid"];
-    this.selectSource=sourceTemp
+    this.selectSource = sourceTemp
     // let targetTemp: DependsOn = new DependsOn();
     // targetTemp.label = response["target"]["ref"]["name"];
     // targetTemp.uuid = response["target"]["ref"]["uuid"];
@@ -288,12 +284,12 @@ export class TrainingComponent implements OnInit {
     this.getAllLatestSource(this.selectSourceType)
     this.getAllLatestTarget(this.selectTargetType)
     this.getAttribute()
-    var featureMapTableArray=[];
-    for(var i=0;i<response.featureAttrMap.length;i++){
-      var featureMap={};
-      var sourceFeature={};
-      var targetFeature={};
-      featureMap["featureMapId"]=response.featureAttrMap[i].featureMapId;
+    var featureMapTableArray = [];
+    for (var i = 0; i < response.featureAttrMap.length; i++) {
+      var featureMap = {};
+      var sourceFeature = {};
+      var targetFeature = {};
+      featureMap["featureMapId"] = response.featureAttrMap[i].featureMapId;
       // sourceFeature.datapodname = response.featureMap[i].sourceFeature.ref.name;
       // sourceFeature.name = response.featureMap[i].sourceFeature.attrName;
       // sourceFeature.attributeId = response.featureMap[i].sourceFeature.attrId;
@@ -303,7 +299,7 @@ export class TrainingComponent implements OnInit {
       sourceFeature["type"] = response.featureAttrMap[i].feature.ref.type;
       sourceFeature["featureId"] = response.featureAttrMap[i].feature.featureId;
       sourceFeature["featureName"] = response.featureAttrMap[i].feature.featureName;
-      featureMap["sourceFeature"]=sourceFeature;
+      featureMap["sourceFeature"] = sourceFeature;
       targetFeature["uuid"] = response.featureAttrMap[i].attribute.ref.uuid;
       targetFeature["type"] = response.featureAttrMap[i].attribute.ref.type;
       targetFeature["datapodname"] = response.featureAttrMap[i].attribute.ref.name;
@@ -311,14 +307,14 @@ export class TrainingComponent implements OnInit {
       targetFeature["attributeId"] = response.featureAttrMap[i].attribute.attrId;
       targetFeature["id"] = response.featureAttrMap[i].attribute.ref.uuid + "_" + response.featureAttrMap[i].attribute.attrId;
       targetFeature["dname"] = response.featureAttrMap[i].attribute.ref.name + "." + response.featureAttrMap[i].attribute.attrName;
-      featureMap["targetFeature"]=targetFeature;
-      featureMapTableArray[i]=featureMap;
+      featureMap["targetFeature"] = targetFeature;
+      featureMapTableArray[i] = featureMap;
     }
-    this.featureMapTableArray=featureMapTableArray;
+    this.featureMapTableArray = featureMapTableArray;
   }
 
   onChangeSource() {
-    debugger
+
     this.getAttribute()
   }
   getAttribute() {
@@ -330,13 +326,13 @@ export class TrainingComponent implements OnInit {
     )
   }
   OnSuccesgetAllLatest(response) {
-    debugger
+
     let temp = []
     for (const n in response) {
       let allname = {};
       allname["label"] = response[n]['dname'];
       allname["value"] = {};
-      allname["value"] ["id"]=response[n]['uuid'];
+      allname["value"]["id"] = response[n]['uuid'];
       allname["value"]["label"] = response[n]['dname'];
       allname["value"]["id"] = response[n]['id'];
       temp[n] = allname;
@@ -345,7 +341,7 @@ export class TrainingComponent implements OnInit {
 
   }
   onSuccessgetAllVersionByUuid(response) {
-    debugger
+
     var temp = []
     for (const i in response) {
       let ver = {};
@@ -358,10 +354,8 @@ export class TrainingComponent implements OnInit {
     this.VersionList = temp
   }
 
-
   onChangeModel() {
-    debugger
-    // PredictService.getOneByUuidandVersion(this.selectModel.uuid,this.selectModel.version,"model").then(function(response) { onSuccessGetLatestByUuid(response.data)});
+
     this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version, 'model')
       .subscribe(
       response => {
@@ -371,7 +365,7 @@ export class TrainingComponent implements OnInit {
   }
 
   onSuccessonChangeModel(response) {
-    debugger
+
     var featureMapTableArray = [];
     for (var i = 0; i < response.features.length; i++) {
       var featureMap = {};
@@ -416,27 +410,17 @@ export class TrainingComponent implements OnInit {
   }
 
 
-  onChageTrainPercent() {
-    debugger
-    this.train.valPercent = 100 - this.train.trainPercent;
+ onChageTrainPercent  () {
+    this.train.valPercent = (100 - this.train.trainPercent);
   }
 
   onChageValPercent() {
-    debugger;
-    this.train.trainPercent = 100 - this.train.valPercent;
+    
+    this.train.trainPercent = (100 - this.train.valPercent);
   }
 
-
-
-
-
-
-
-
-
-
   submit() {
-    debugger
+
     var trainJson = {}
     trainJson["uuid"] = this.train.uuid
     trainJson["name"] = this.train.name
@@ -456,8 +440,8 @@ export class TrainingComponent implements OnInit {
       }
     }
     trainJson["tags"] = tagArray;
-    trainJson["valPercent"] =this.train.valPercent;
-    trainJson["trainPercent"]=this.train.trainPercent;
+    trainJson["valPercent"] = this.train.valPercent;
+    trainJson["trainPercent"] = this.train.trainPercent;
     var dependsOn = {};
     var ref = {};
     ref["type"] = "model";
@@ -517,7 +501,6 @@ export class TrainingComponent implements OnInit {
 
 
   OnSuccessubmit(response) {
-    //  this.isSubmitEnable=true;
     this.msgs = [];
     this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Train Submitted Successfully' });
     setTimeout(() => {
