@@ -36,7 +36,6 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
 
 /**
  * @author joy
- *
  */
 @Service
 public class GenerateDataForAttrRef extends GenerateDataOperator {

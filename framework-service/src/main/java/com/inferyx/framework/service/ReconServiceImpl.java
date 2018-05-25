@@ -135,7 +135,7 @@ public class ReconServiceImpl extends RuleTemplate {
 	}
 
 	@Override
-	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 
 		logger.info("Inside dataQualServiceImpl.parse");
@@ -363,7 +363,8 @@ public class ReconServiceImpl extends RuleTemplate {
 	public void restart(String type, String uuid, String version, ExecParams  execParams, RunMode runMode) throws JsonProcessingException {
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.reconExec.toString());
 		try {
-			reconExec = (ReconExec) parse(uuid,version, null, null, null, runMode);
+			HashMap<String, String> otherParams = execParams.getOtherParams();
+			reconExec = (ReconExec) parse(uuid,version, null, otherParams, null, null, runMode);
 			execute(reconExec.getDependsOn().getRef().getUuid(),reconExec.getDependsOn().getRef().getVersion(),reconExec,null, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();

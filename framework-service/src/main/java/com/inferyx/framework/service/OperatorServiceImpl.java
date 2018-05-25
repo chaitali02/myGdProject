@@ -25,6 +25,8 @@ import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -388,4 +391,27 @@ public class OperatorServiceImpl {
 		}
 		return operatorExec;
 	}	
+	
+	public List<Operator> getOperatorByOperatorType(String type){
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+		query.fields().include("active");
+		query.fields().include("desc");
+		query.fields().include("published");
+		query.fields().include("paramList");
+		query.fields().include("operatorType");
+
+		
+		query.addCriteria(Criteria.where("operatorType").is(type));
+
+		List<Operator>  operators = new ArrayList<>();
+		operators = (List<Operator>) mongoTemplate.find(query, Operator.class);
+		return operators;
+		
+	}
 }
