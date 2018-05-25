@@ -81,6 +81,7 @@ import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
+import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -396,6 +397,59 @@ public class SparkExecutor implements IExecutor {
 			datapodWriter.write(df, filePathUrl, datapod, saveMode);
 		}
 		return rsHolder;
+	}
+	
+	/**
+	 * 
+	 * @param rowObjList
+	 * @param attributes
+	 * @param tableName
+	 * @param filePath
+	 * @param datapod
+	 * @param saveMode
+	 * @param clientContext
+	 * @return
+	 * @throws IOException 
+	 */
+	@Override
+	public ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes, String tableName, String filePath, Datapod datapod, String saveMode,
+			String clientContext) throws IOException {
+		int count = 0;
+		StructField[] fieldArray = new StructField[attributes.size()];
+		for(Attribute attribute : attributes){						
+			StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
+//			StructField field = new StructField(attribute.getName(), DataTypes.DoubleType, true, Metadata.empty());
+			fieldArray[count] = field;
+			count ++;
+		}
+		StructType schema = new StructType(fieldArray);		
+		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(createRowList(rowObjList), schema);
+		df.printSchema();
+		df.show(true);
+		registerTempTable(df, tableName);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setDataFrame(df);
+		rsHolder.setType(ResultType.dataframe);	
+		rsHolder.setCountRows(df.count());
+		rsHolder.setTableName(tableName);
+		return rsHolder;
+	}
+	
+	/**
+	 * 
+	 * @param rowObjList
+	 * @return
+	 */
+	private List<Row> createRowList(List<RowObj> rowObjList) {
+		List<Row> rowList = new ArrayList<>();
+		if (rowObjList == null || rowObjList.isEmpty()) {
+			return null;
+		}
+		
+		for (RowObj rowObj : rowObjList) {
+			rowList.add(RowFactory.create(rowObj.getRowData()));
+		}
+		return rowList;
 	}
 
 	@Override
@@ -1138,6 +1192,8 @@ public class SparkExecutor implements IExecutor {
 		return rsHolder;
 	}
 	
+	
+	
 	/**
 	 * 
 	 *  To transpose : 
@@ -1632,7 +1688,6 @@ public class SparkExecutor implements IExecutor {
 			case "string": return DataTypes.StringType;
 			case "timestamp": return DataTypes.TimestampType;
 			case "decimal" : return DataTypes.createDecimalType();
-			case "long" : return DataTypes.LongType;
 			case "vector" : return new VectorUDT();
 			
             default: return null;

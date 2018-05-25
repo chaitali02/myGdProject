@@ -38,6 +38,7 @@ import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 
@@ -424,4 +425,19 @@ public interface IExecutor {
 	 */
 	ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext)
 			throws IOException;
+	
+	/**
+	 * 
+	 * @param rowObjList
+	 * @param attributes
+	 * @param tableName
+	 * @param filePath
+	 * @param datapod
+	 * @param saveMode
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
+			String filePath, Datapod datapod, String saveMode, String clientContext) throws IOException;
 }

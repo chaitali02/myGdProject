@@ -52,6 +52,7 @@ import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -409,6 +410,14 @@ public class PythonExecutor implements IExecutor {
 
 	@Override
 	public ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes,
+			String tableName, String filePath, Datapod datapod, String saveMode, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
