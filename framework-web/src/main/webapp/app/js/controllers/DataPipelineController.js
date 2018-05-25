@@ -52,6 +52,7 @@ DataPipelineModule.controller('WorkflowResultController', function ($location, $
   $scope.versionexcutionDag = $stateParams.version;
   var count = 0;
   $scope.showgraphdiv = false;
+  $scope.showJointGraph=true;
   var notify = {
     type: 'success',
     title: 'Success',

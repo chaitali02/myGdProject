@@ -17,7 +17,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		$scope.isAdd = true;
 	}
 
-	$scope.operatorType=['GenerateData','Transpose','GenerateDataForAttrRef','GenerateDataForValList'];
+	$scope.operatorType=['GenerateData','Transpose'];
 	
 	$scope.mode = false;
 	$scope.isSubmitInProgress = false;

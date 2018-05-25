@@ -76,10 +76,11 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                 return [d.y, d.x];
             });
             function createSvg(){
-                d3.select("div.show-graph-body #network-graph-wrapper svg").remove();
-                svg = d3.select("div.show-graph-body #network-graph-wrapper").append("svg")
+                d3.selectAll("div.show-graph-body #network-graph-wrapper svg.tree-graph").remove();
+                svg = d3.selectAll("div.show-graph-body #network-graph-wrapper").append("svg")
                     .attr("width", width + margin.right + margin.left)
                     .attr("height", height + margin.top + margin.bottom)
+                    .attr('class','tree-graph')
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                    
@@ -92,9 +93,9 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     return false;
                 }
                 
-                var w = d3.select("svg").attr("width");
-                d3.select("svg").attr("width", parseInt(w) + 100);
-                d3.select("svg").attr("height", height);
+                var w = d3.select("svg.tree-graph").attr("width");
+                d3.select("svg.tree-graph").attr("width", parseInt(w) + 100);
+                d3.select("svg.tree-graph").attr("height", height);
 
                 // Compute the new tree layout.
                 var nodes = tree.nodes(root).reverse(),
