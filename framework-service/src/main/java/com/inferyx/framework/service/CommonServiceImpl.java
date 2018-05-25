@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import static org.mockito.Matchers.eq;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
