@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import static org.mockito.Matchers.eq;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
@@ -25,6 +26,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -41,12 +43,16 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.spark.sql.Dataset;
 import org.codehaus.jettison.json.JSONException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json4s.jackson.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -172,6 +178,8 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.GraphRegister;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.UpdateResult;
 
 @Service
 public class CommonServiceImpl <T> {
@@ -3259,14 +3267,21 @@ public class CommonServiceImpl <T> {
 			}		
 			return attributeName;
 		}
-		public String getResoveNameByUuidandType(String uuid,MetaType type) {
+		@SuppressWarnings("unchecked")
+		public List<BaseEntity> getResoveNameByUuidandType(String uuid,String type)  {
 			
 			
+			Query query = new Query();
+			query.fields().include("uuid");
+			query.fields().include("name");
+			query.fields().include("type");
 			
+			query.addCriteria(Criteria.where("uuid").is(uuid));
+			List<BaseEntity> obj=new ArrayList<>();
+			obj = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(Helper.getMetaType(type)));
+			//String name=obj.getName();
 			
-			
-			
-			return null;
+			return obj;
 			
 		}
 }

@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
+import org.json4s.jackson.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -288,8 +289,8 @@ public class CommonController<T> {
 	}
 
 	@RequestMapping(value = "/getResoveNameByUuidandType", method = RequestMethod.GET)
-	public @ResponseBody String getOperatorByOperatorType(
-			@RequestParam(value ="type") MetaType type,
+	public @ResponseBody List<BaseEntity> getOperatorByOperatorType(
+			@RequestParam(value ="type") String type,
 			@RequestParam(value = "uuid", required = false) String uuid,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return commonServiceImpl.getResoveNameByUuidandType(uuid, type);

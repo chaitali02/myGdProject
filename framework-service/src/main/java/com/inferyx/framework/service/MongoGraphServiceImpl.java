@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +59,7 @@ public class MongoGraphServiceImpl {
 	}
 	
 	protected  Map<String, Object> getEdgeMap(Edge edge) {
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new LinkedHashMap<>();
 		if (edge == null) {
 			return null;
 		}
@@ -71,7 +72,7 @@ public class MongoGraphServiceImpl {
 
 	
 	protected  Map<String, Object> getVertexMap(Vertex vertex) {
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new LinkedHashMap<>();
 		if (vertex == null) {
 			return null;
 		}
@@ -129,8 +130,8 @@ public class MongoGraphServiceImpl {
 		String result = null;
 		List<Map<String,Object>> graphVertex = new ArrayList<>();
 		List<Map<String,Object>> graphEdge = new ArrayList<>();
-		Map<String, Edge> edgeMap = new HashMap<>();
-		Map<String, Vertex> vertexMap = new HashMap<>();
+		Map<String, Edge> edgeMap = new LinkedHashMap<>();
+		Map<String, Vertex> vertexMap = new LinkedHashMap<>();
 		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
 		List<String> uuidList = null;
@@ -185,8 +186,8 @@ public class MongoGraphServiceImpl {
 		String result = null;
 		List<Map<String,Object>> graphVertex = new ArrayList<>();
 		List<Map<String,Object>> graphEdge = new ArrayList<>();
-		Map<String, Edge> edgeMap = new HashMap<>();
-		Map<String, Vertex> vertexMap = new HashMap<>();
+		Map<String, Edge> edgeMap = new LinkedHashMap<>();
+		Map<String, Vertex> vertexMap = new LinkedHashMap<>();
 		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
 
@@ -229,6 +230,7 @@ public class MongoGraphServiceImpl {
 		}
 		}
 		} 
+		if(parentvertex != null) {
 		nodeDetail.setName(parentvertex.getName());
 		//nodeDetail.setParent("null");
 		nodeDetail.setActive(parentvertex.getActive());
@@ -250,7 +252,7 @@ public class MongoGraphServiceImpl {
 		// nodeDetail.setParent(parentvertex);
 		//nodeDetails.setLinks(graphEdge);
 		//nodeDetail.setJsonName("graph");
-
+		}
 		try {
 		ObjectWriter writer = new ObjectMapper().writer()
 		.withDefaultPrettyPrinter();

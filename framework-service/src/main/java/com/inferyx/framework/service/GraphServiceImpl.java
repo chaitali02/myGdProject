@@ -965,6 +965,7 @@ public class GraphServiceImpl {
 								map.put("features", name + "_" + i);
 								map.put("operators", name + "_" + i);
 								map.put("featureAttrMap",  name + "_" + i);
+							
 								if (map.containsKey(key))
 									attr = map.get(key);
 							}
@@ -986,9 +987,13 @@ public class GraphServiceImpl {
 									childUuid = jsonObj4.optString("uuid");
 									childType = jsonObj4.optString("type");
 									if (!childType.equals(MetaType.simple.toString())) {
-										baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+										/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 												null, null, null, null, null, childUuid, null, null);
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();*/
+										
+										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
 										refName = MetaType.simple.toString();
@@ -1051,10 +1056,14 @@ public class GraphServiceImpl {
 								childUuid = jsonObj4.optString("uuid");
 								childType = jsonObj4.optString("type");
 								if (!childType.equals(MetaType.simple.toString())) {
-									baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null, null,
+									/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null, null,
 											null, null, null, null, childUuid, null, null);
 									refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-											: baseEntityList.get(0).getName();
+											: baseEntityList.get(0).getName();*/
+
+									baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+									refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();
 								} else {
 									refName = MetaType.simple.toString();
 								}
@@ -1073,9 +1082,13 @@ public class GraphServiceImpl {
 									childUuid = jsonObjType.optString("uuid");
 									childType = jsonObjType.optString("type");
 									if (!childType.equals(MetaType.simple.toString())) {
-										baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+										/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 												null, null, null, null, null, childUuid, null, null);
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();*/
+
+										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
 										refName = MetaType.simple.toString();
@@ -1097,9 +1110,13 @@ public class GraphServiceImpl {
 									childUuid = jsonObjType.optString("uuid");
 									childType = jsonObjType.optString("type");
 									if (!childType.equals(MetaType.simple.toString())) {
-										baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+										/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 												null, null, null, null, null, childUuid, null, null);
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();*/
+
+										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
 										refName = MetaType.simple.toString();
@@ -1124,9 +1141,13 @@ public class GraphServiceImpl {
 									childUuid = jsonObjType.optString("uuid");
 									childType = jsonObjType.optString("type");
 									if (!childType.equals(MetaType.simple.toString())) {
-										baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+										/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 												null, null, null, null, null, childUuid, null, null);
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();*/
+
+										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
 										refName = MetaType.simple.toString();
@@ -1151,9 +1172,13 @@ public class GraphServiceImpl {
 									childUuid = jsonObjType.optString("uuid");
 									childType = jsonObjType.optString("type");
 									if (!childType.equals(MetaType.simple.toString())) {
-										baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+										/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 												null, null, null, null, null, childUuid, null, null);
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();*/
+
+										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
 										refName = MetaType.simple.toString();
@@ -1193,9 +1218,13 @@ public class GraphServiceImpl {
 									childType = jsonObjType.optString("type");
 
 									if (!childType.equals(MetaType.simple.toString())) {
-										baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+										/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 												null, null, null, null, null, childUuid, null, null);
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();*/
+
+										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
 										refName = MetaType.simple.toString();
@@ -1266,10 +1295,14 @@ public class GraphServiceImpl {
 								childType = jsonObjType.optString("type");
 
 								if (!childType.equals(MetaType.simple.toString())) {
-									baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+									/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 											null, null, null, null, null, childUuid, null, null);
 									refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-											: baseEntityList.get(0).getName();
+											: baseEntityList.get(0).getName();*/
+
+									baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+									refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();
 								}
 							}
 							if (attr != null && !attr.equals("null")) {
@@ -1291,11 +1324,14 @@ public class GraphServiceImpl {
 							childUuid = jsonObjType.optString("uuid");
 							childType = jsonObjType.optString("type");
 							
-							baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+							/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 									null, null, null, null, null, childUuid, null, null);
 							refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-									: baseEntityList.get(0).getName();	
-							
+									: baseEntityList.get(0).getName();	*/
+
+							baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+							refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();
 			
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
 									refName + "", name, null);
@@ -1308,10 +1344,14 @@ public class GraphServiceImpl {
 					childType = childObj.optString("type");
 
 					if (!childType.equals(MetaType.simple.toString())) {
-						baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null, null, null, null,
+					/*	baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null, null, null, null,
 								null, null, childUuid, null, null);
 						refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-								: baseEntityList.get(0).getName();
+								: baseEntityList.get(0).getName();*/
+						
+						baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+						refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();
 					} else {
 						break;
 						// refName = MetaType.simple.toString();
