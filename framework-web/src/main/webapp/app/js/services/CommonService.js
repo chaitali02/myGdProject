@@ -396,6 +396,21 @@
       return deferred.promise;
     } /*End getTreeGraphResults*/
 
+       /*Start getTreeGraphResults*/
+       this.getOperatorByOperatorType = function(operatorType) {
+        var deferred = $q.defer();
+        var url = "operator/getOperatorByOperatorType?action=view&operatorType="+operatorType;
+        CommonFactory.httpGet(url).then(function(response) {
+          onSuccess(response.data)
+        });
+        var onSuccess = function(response) {
+          deferred.resolve({
+            data: response
+          });
+        }
+        return deferred.promise;
+      } /*End getTreeGraphResults*/
+
     this.execute = function(type, uuid, version, data) {
       var url;
       if (type.substr(-5) == 'group') {

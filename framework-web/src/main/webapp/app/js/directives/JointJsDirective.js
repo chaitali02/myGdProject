@@ -586,7 +586,6 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
              $("#"+divid).hide();
              $('.connection').removeClass('active');
            });
-          debugger
            var jointElement = $(this).closest(".joint-element");
            var s = jointElement.attr("model-id");
            $('.connection[source-id='+s+']').addClass('active');
@@ -1773,31 +1772,60 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        if(thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid){
          $scope.popupModel.selectedType = thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo.ref.name;
        }
-           
-       MetadataDagSerivce.getAllLatest(elementType).then(function(response){
-         if(!response || !response.data){
-           $scope.operatorinfoMapInfo = [];
-           return
+       if(elementType =="operator" &&  !newCell){
+        var uuid=$scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid;
+        CommonService.getOneByUuidAndVersion(uuid,"","operator").then(function(response){ 
+          if(!response || !response.data){
+            $scope.operatorinfoMapInfo = [];
+            return
+          }
+          CommonService.getOperatorByOperatorType(response.data.operatorType).then(function(response){
+            if(!response || !response.data){
+              $scope.operatorinfoMapInfo = [];
+              return
+            }
+            GetAllLatesMap(response.data);
+            },function (error) {
+              $scope.operatorinfoMapInfo = [];
+            });
+        });
+      }
+      else if(elementType =="operator" && newCell){
+        var type =elemt.title
+        CommonService.getOperatorByOperatorType(type.replace(/ /g,'')).then(function(response){
+          if(!response || !response.data){
+            $scope.operatorinfoMapInfo = [];
+            return
+          }
+          GetAllLatesMap(response.data);
+          },function (error) {
+            $scope.operatorinfoMapInfo = [];
+          });
+      }
+      else{ 
+        MetadataDagSerivce.getAllLatest(elementType).then(function(response){
+          if(!response || !response.data){
+            $scope.operatorinfoMapInfo = [];
+            return
+          }
+          GetAllLatesMap(response.data);
+          },function (error) {
+            $scope.operatorinfoMapInfo = [];
+          }); 
          }
-         GetAllLatesMap(response.data);
-         },function (error) {
-           $scope.operatorinfoMapInfo = [];
-         });
-         
          var GetAllLatesMap=function(response){
-           $scope.operatorinfoMapInfo = response;
-           $scope.popupModel.type=elementType
-           if(elementType =="operator" && newCell){
+          $scope.operatorinfoMapInfo = response;
+          $scope.popupModel.type=elementType
+          if(elementType =="operator" && newCell){
             for(var i=0;i< response.length;i++){
-               if(response[i].name == elemt.title){
+              if(response[i].name == elemt.title){
                 $scope.popupModel.selectedType=response[i].uuid +"|"+ response[i].name;
                 $scope.onChangeOperatorInfo(false);
                 break;
               }
             }
-           }   
-         }
-           
+          }   
+        }  
          var xPercent = e.clientX / $( window ).width() * 100;
          var yPercent = e.clientY / $( window ).height() * 100;
          if(xPercent > 50){
@@ -2761,7 +2789,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               }
               console.log(paramListHolder )
               $scope.paramListHolder = paramListHolder;
-              $scope.opringinalparamListHolder=$scope.paramListHolder
+           //   $scope.opringinalparamListHolder=$scope.paramListHolder
             }else{
               $scope.paramListHolder = response;
               for(var i=0;i<$scope.paramListHolder.length;i++){
@@ -2824,6 +2852,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         }
       }
       $scope.onChangeDistribution=function(data,index){
+        debugger 
         CommonService.getParamListByType('distribution',data.uuid,data.version | "").then(function (response){ onSuccessGetParamListByType(response.data)});
         var onSuccessGetParamListByType = function (response) {
           if($scope.paramListHolder.length == $scope.opringinalparamListHolder.length){
