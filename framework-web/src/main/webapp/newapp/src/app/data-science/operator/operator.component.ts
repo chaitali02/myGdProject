@@ -173,7 +173,7 @@ export class OperatorComponent implements OnInit {
   }
 
   submitOperatorType() {
-    debugger;
+    
     this.isSubmitEnable = true;
     let operatorJson = {};
     operatorJson["uuid"] = this.operator.uuid;
