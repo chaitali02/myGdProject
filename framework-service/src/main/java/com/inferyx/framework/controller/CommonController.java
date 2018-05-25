@@ -288,11 +288,4 @@ public class CommonController<T> {
 		return objectWriter.writeValueAsString(baseEntityList);
 	}
 
-	@RequestMapping(value = "/getResoveNameByUuidandType", method = RequestMethod.GET)
-	public @ResponseBody List<BaseEntity> getOperatorByOperatorType(
-			@RequestParam(value ="type") String type,
-			@RequestParam(value = "uuid", required = false) String uuid,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		return commonServiceImpl.getResoveNameByUuidandType(uuid, type);
-	}
 }
