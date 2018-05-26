@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.inferyx.framework.datascience;
+package com.inferyx.framework.datascience.distribution;
 
 import java.lang.reflect.Constructor;
 import java.util.Date;
@@ -34,7 +34,7 @@ import com.inferyx.framework.service.ModelServiceImpl;
  * @author Ganesh
  *
  */
-public class Math3Distribution {
+public class RandomDistribution {
 
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
@@ -45,7 +45,7 @@ public class Math3Distribution {
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
 	
-	static final Logger LOGGER = Logger.getLogger(Math3Distribution.class);
+	static final Logger LOGGER = Logger.getLogger(RandomDistribution.class);
 	
 	public Object getDistribution(Distribution distribution, ExecParams execParams) throws InterruptedException, ExecutionException, Exception {
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();

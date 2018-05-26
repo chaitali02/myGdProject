@@ -1,5 +1,5 @@
 {
-    "library" : "SPARKML",
+    "library" : "MATH3",
     "className" : "org.apache.commons.math3.distribution.MultivariateNormalDistribution",
     "paramList" : {
         "ref" : {

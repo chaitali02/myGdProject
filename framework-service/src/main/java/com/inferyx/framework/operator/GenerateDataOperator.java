@@ -15,8 +15,8 @@ import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.datascience.Math3Distribution;
 import com.inferyx.framework.datascience.RandDistribution;
+import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -48,7 +48,7 @@ public class GenerateDataOperator implements Operator {
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
-	private Math3Distribution mlDistribution;
+	private RandomDistribution mlDistribution;
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired

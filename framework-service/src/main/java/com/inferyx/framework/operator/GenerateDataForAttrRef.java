@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.datascience.Math3Distribution;
+import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -45,7 +45,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
-	private Math3Distribution mlDistribution;
+	private RandomDistribution mlDistribution;
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
