@@ -427,4 +427,19 @@ public interface IExecutor {
 	 */
 	ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
 			String filePath, Datapod datapod, String saveMode, String clientContext) throws IOException;
+
+	/**
+	 * 
+	 * @param distributionObject
+	 * @param methodName
+	 * @param args
+	 * @param attributes
+	 * @param numIterations
+	 * @param execVersion
+	 * @param tableName
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder generateData(Object distributionObject, String methodName, Object[] args,
+			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException;
 }

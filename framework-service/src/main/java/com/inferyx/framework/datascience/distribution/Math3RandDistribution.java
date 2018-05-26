@@ -1,13 +1,12 @@
 /**
  * 
  */
-package com.inferyx.framework.datascience;
+package com.inferyx.framework.datascience.distribution;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.factory.RowObjFactory;
 
@@ -26,7 +24,7 @@ import com.inferyx.framework.factory.RowObjFactory;
  *
  */
 @Service
-public class RandDistribution {
+public class Math3RandDistribution extends RandomDistribution {
 	
 	@Autowired
 	protected Helper helper;
@@ -36,7 +34,7 @@ public class RandDistribution {
 	/**
 	 * 
 	 */
-	public RandDistribution() {
+	public Math3RandDistribution() {
 		// TODO Auto-generated constructor stub
 	}
 

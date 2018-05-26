@@ -15,8 +15,10 @@ import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.datascience.RandDistribution;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.datascience.distribution.Math3RandDistribution;
 import com.inferyx.framework.datascience.distribution.RandomDistribution;
+import com.inferyx.framework.datascience.distribution.RandomDistributionFactory;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -48,15 +50,13 @@ public class GenerateDataOperator implements Operator {
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
-	private RandomDistribution mlDistribution;
-	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
-	private RandDistribution distributionHelper;
+	private RandomDistributionFactory randomDistributionFactory;
 	
 	static final Logger logger = Logger.getLogger(GenerateDataOperator.class);
 
@@ -103,7 +103,8 @@ public class GenerateDataOperator implements Operator {
 	
 		String execUuid = execIdentifier.getUuid();
 		String execVersion = execIdentifier.getVersion();
-		
+		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "distribution");
+		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(distributionInfo.getParamValue().getRef().getUuid(), distributionInfo.getParamValue().getRef().getVersion(), distributionInfo.getParamValue().getRef().getType().toString());
 		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
@@ -118,12 +119,19 @@ public class GenerateDataOperator implements Operator {
 		Object distributionObject = getDistributionObject(execParams, resolvedIterations, execVersion, otherParams);
 		
 		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
-		List<RowObj> rowObjList = distributionHelper.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
-//		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
 		
-		// Save result
-		save(exec, rowObjList, tableName, locationDatapod, execIdentifier, runMode);
-		
+		if (randomDistribution instanceof Math3RandDistribution) {
+			List<RowObj> rowObjList = randomDistribution.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+			// Save result
+			save(exec, rowObjList, tableName, locationDatapod, execIdentifier, runMode);
+		} else {
+			Object[] objList = randomDistribution.getParamObjList(execParams.getParamListInfo());
+			ResultSetHolder resultSetHolder = exec.generateData(distributionObject, getMethodName(execParams), objList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);			
+			// Save result
+			save(exec, resultSetHolder, tableName, locationDatapod, execIdentifier, runMode);
+		}
+
 		return tableName;
 	}
 	
@@ -167,8 +175,21 @@ public class GenerateDataOperator implements Operator {
 			}
 		}
 		distExecParam.setParamListInfo(distParamHolderList);
-		Object distributionObject = mlDistribution.getDistribution(distribution, distExecParam);
+		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
+		Object distributionObject = randomDistribution.getDistribution(distribution, distExecParam);
 		return distributionObject;
+	}
+	
+	/**
+	 * 
+	 * @param execParams
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	protected String getMethodName(ExecParams execParams) throws JsonProcessingException {
+		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "distribution");
+		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(distributionInfo.getParamValue().getRef().getUuid(), distributionInfo.getParamValue().getRef().getVersion(), distributionInfo.getParamValue().getRef().getType().toString());
+		return distribution.getMethodName();
 	}
 	
 	protected String getFilePath (Datapod locationDatapod, String execVersion) {

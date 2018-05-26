@@ -38,10 +38,10 @@ import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
-import org.apache.spark.ml.linalg.DenseVector;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
@@ -61,7 +61,6 @@ import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -95,7 +94,6 @@ import com.inferyx.framework.writer.IWriter;
 import scala.collection.Iterator;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
-import scala.collection.mutable.WrappedArray;
 
 @Component
 public class SparkExecutor implements IExecutor {
@@ -134,6 +132,44 @@ public class SparkExecutor implements IExecutor {
 	private DataSourceFactory datasourceFactory;
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
+	
+	/**
+	 * 
+	 * @param distributionObject
+	 * @param methodName
+	 * @param args
+	 * @param attributes
+	 * @param numIterations
+	 * @param execVersion
+	 * @param tableName
+	 * @return
+	 * @throws IOException
+	 */
+	@Override
+	public ResultSetHolder generateData(Object distributionObject, String methodName, Object[] args, List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException {
+		RDD<Object> obj = null;
+		SparkSession sparkSession = null;
+		ResultSetHolder resultSetHolder = null;
+		try {
+			obj = (RDD<Object>)distributionObject.getClass().getMethod(methodName).invoke(null, args);
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			Object object = conHolder.getStmtObject();
+			if (object instanceof SparkSession) {
+				sparkSession = (SparkSession) conHolder.getStmtObject();
+			}
+			Dataset<Row> df = sparkSession.createDataFrame(obj, Double.class).toDF();
+			df.createOrReplaceTempView(tableName);
+			df = sparkSession.sql("select row_number over(), *, " + execVersion + " from " + tableName);
+			resultSetHolder.setDataFrame(df);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		return resultSetHolder;
+	}
 
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {

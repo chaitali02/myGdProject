@@ -45,7 +45,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
-	private RandomDistribution mlDistribution;
+	private RandomDistribution randomDistribution;
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired

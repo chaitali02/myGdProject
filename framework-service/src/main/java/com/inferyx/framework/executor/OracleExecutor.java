@@ -391,4 +391,11 @@ public class OracleExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public ResultSetHolder generateData(Object distributionObject, String methodName, Object[] args,
+			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
