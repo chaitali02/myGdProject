@@ -32,6 +32,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
@@ -430,16 +431,20 @@ public interface IExecutor {
 
 	/**
 	 * 
+	 * @param distribution
 	 * @param distributionObject
 	 * @param methodName
 	 * @param args
+	 * @param paramtypes
 	 * @param attributes
 	 * @param numIterations
 	 * @param execVersion
 	 * @param tableName
 	 * @return
 	 * @throws IOException
+	 * @throws ClassNotFoundException
 	 */
-	ResultSetHolder generateData(Object distributionObject, String methodName, Object[] args,
-			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException;
+	ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args,
+			Class<?>[] paramtypes, List<Attribute> attributes, int numIterations, String execVersion, String tableName)
+			throws IOException, ClassNotFoundException;
 }

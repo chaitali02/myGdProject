@@ -20,6 +20,7 @@ import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.ParamListHolder;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.executor.IExecutor;
@@ -234,12 +235,20 @@ public class RandomDistribution {
 		return oneDArray;
 	}
 
-	public List<RowObj> generateData(Object distributionObject, List<Attribute> attributes, int numIterations,
-			String execVersion, String tableName) throws Exception {
+	public Date getDate() {
+		return new Date();
+	}
+
+	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName,
+			ExecParams execParams, List<Attribute> attributes, int numIterations, String execVersion, String tableName)
+			throws Exception {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Date getDate() {
-		return new Date();
+	public List<RowObj> generateData(Distribution distribution, Object distributionObject, String methodName,
+			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

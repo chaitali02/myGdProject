@@ -35,6 +35,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
@@ -472,7 +473,7 @@ public class PostGresExecutor implements IExecutor {
 	}
 
 	@Override
-	public ResultSetHolder generateData(Object distributionObject, String methodName, Object[] args,
+	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes,
 			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
