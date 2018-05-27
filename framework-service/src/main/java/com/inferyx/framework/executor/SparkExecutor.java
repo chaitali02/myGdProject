@@ -450,6 +450,7 @@ public class SparkExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes, String tableName, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
+		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 		int count = 0;
 		StructField[] fieldArray = new StructField[attributes.size()];
 		for(Attribute attribute : attributes){						
@@ -468,6 +469,19 @@ public class SparkExecutor implements IExecutor {
 		rsHolder.setType(ResultType.dataframe);	
 		rsHolder.setCountRows(df.count());
 		rsHolder.setTableName(tableName);
+		
+		// Write datapod
+		IWriter datapodWriter = null;
+		try {
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new IOException("Can not write data.");
+		}
+		
+		datapodWriter.write(df, filePathUrl, datapod, saveMode);
 		return rsHolder;
 	}
 	

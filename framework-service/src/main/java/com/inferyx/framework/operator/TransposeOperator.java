@@ -127,7 +127,8 @@ public class TransposeOperator implements Operator {
 //		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
-			
+		logger.info("otherParams in transposeOperator : "+ otherParams);
+		
 		return otherParams;
 		
 	}

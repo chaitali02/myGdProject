@@ -82,7 +82,7 @@ public class GenerateDataOperator implements Operator {
 //		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
-			
+		logger.info("otherParams in generateDataOperator : "+ otherParams);
 		return otherParams;
 	}
 
@@ -115,7 +115,7 @@ public class GenerateDataOperator implements Operator {
 		// Get exec
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-
+		
 		Object distributionObject = getDistributionObject(execParams, resolvedIterations, execVersion, otherParams);
 		
 		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");

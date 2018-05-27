@@ -74,8 +74,8 @@ public class RelationOperator {
 			table = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 			dataStore = null;
 		} else */if (otherParams == null 
-				|| otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()))) == null
-				|| otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName") == null) {
+				|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()))) == null
+				&& otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName") == null)) {
 			table = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(fromDatapod.getUuid(), fromDatapod.getVersion()), runMode);
 		} else if (otherParams.containsKey("datapodUuid_"+fromDatapod.getUuid()+"_tableName")) {
 			table = otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName");
