@@ -46,7 +46,7 @@ public class ProfilePostGresOperator extends ProfileOperator {
 					+ "MIN(" + attrName1 + ") AS minVal,"
 					+ "MAX(" + attrName1 + ") AS maxVal,"				
 					+ "AVG(" + attrName1 + ") AS avgVal,"				
-					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "+ attrName + ") AS medianVal,"				
+					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "+ attrName1 + ") AS medianVal,"				
 					+ "STDDEV(" + attrName1 + ") AS stdDev,"				
 					+ "COUNT(" + attrName + ") AS numDistinct,"
 					+ "COUNT(" + attrName + ")/COUNT(" + attrName + ")*100 AS perDistinct,"		
@@ -54,7 +54,7 @@ public class ProfilePostGresOperator extends ProfileOperator {
 					+ "COUNT(" + attrName + ") / COUNT(" + attrName1 + ")*100 AS perNull,"
 					+ "COUNT(" + attrName + ") / COUNT(" + attrName1 + ") AS sixSigma," 
 					+ "CURRENT_DATE AS load_date, " 
-					+ "UNIX_TIMESTAMP() AS load_id, '" + profileExec.getVersion() + "' AS version"
+					+ "UNIX_TIMESTAMP() AS load_id, " + profileExec.getVersion() + " AS version"
 					+ " FROM " + profileTableName;
 		else sql = null;
 		/*else sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, "
