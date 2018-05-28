@@ -1,14 +1,4 @@
-
-
-
-
-
-
-
-
--- Table: framework.dim_customer
-
-  DROP TABLE framework.dim_customer;
+DROP TABLE framework.dim_customer;
 
 CREATE TABLE framework.dim_customer
 (
@@ -31,10 +21,6 @@ CREATE TABLE framework.dim_customer
   load_id integer NOT NULL,
   CONSTRAINT dim_customer_pkey PRIMARY KEY (customer_id, load_date, load_id),
   CONSTRAINT src_customer_id UNIQUE (src_customer_id, load_date, load_id)
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE framework.dim_customer
-  OWNER TO inferyx;
 
+ALTER TABLE framework.dim_customer OWNER TO inferyx;

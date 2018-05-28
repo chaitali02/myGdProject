@@ -1,5 +1,3 @@
--- Table: framework.dim_account
-
 DROP TABLE framework.dim_account;
 
 CREATE TABLE framework.dim_account
@@ -28,9 +26,6 @@ CREATE TABLE framework.dim_account
   load_id integer NOT NULL,
   CONSTRAINT dim_account_pkey PRIMARY KEY (account_id, load_date, load_id),
   CONSTRAINT src_account_id UNIQUE (src_account_id, load_date, load_id)
-)
-WITH (
-  OIDS=FALSE
 );
 ALTER TABLE framework.dim_account
   OWNER TO inferyx;

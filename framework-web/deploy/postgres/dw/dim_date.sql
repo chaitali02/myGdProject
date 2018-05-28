@@ -1,9 +1,4 @@
- 
-
--- Table: framework.dim_date
-
-
- DROP TABLE framework.dim_date;
+DROP TABLE framework.dim_date;
 
 CREATE TABLE framework.dim_date
 (
@@ -68,10 +63,8 @@ CREATE TABLE framework.dim_date
   load_date text NOT NULL,
   CONSTRAINT dim_date_pkey PRIMARY KEY (date_id, load_date),
   CONSTRAINT date_val UNIQUE (date_val, load_date)
-)
-WITH (
-  OIDS=FALSE
 );
+
 ALTER TABLE framework.dim_date
   OWNER TO inferyx;
 
