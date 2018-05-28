@@ -1,9 +1,4 @@
-
-
-
--- Table: framework.dim_bank
-
- DROP TABLE framework.dim_bank;
+DROP TABLE framework.dim_bank;
 
 CREATE TABLE framework.dim_bank
 (
@@ -18,19 +13,6 @@ CREATE TABLE framework.dim_bank
   load_id integer NOT NULL,
   CONSTRAINT dim_bank_pkey PRIMARY KEY (bank_id, load_date, load_id),
   CONSTRAINT src_bank_id UNIQUE (src_bank_id, load_date, load_id)
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE framework.dim_bank
-  OWNER TO inferyx;
 
-
-
-
-
-
-
-
-
-
+ALTER TABLE framework.dim_bank OWNER TO inferyx;

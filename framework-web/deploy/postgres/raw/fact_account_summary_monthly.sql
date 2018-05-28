@@ -1,10 +1,4 @@
-
-
-
-
--- Table: framework.fact_account_summary_monthly
-
-  DROP TABLE framework.fact_account_summary_monthly;
+DROP TABLE framework.fact_account_summary_monthly;
 
 CREATE TABLE framework.fact_account_summary_monthly
 (
@@ -18,12 +12,9 @@ CREATE TABLE framework.fact_account_summary_monthly
   load_date text NOT NULL,
   load_id integer,
   CONSTRAINT fact_account_summary_monthly_pkey PRIMARY KEY (account_id, yyyy_mm, load_date)
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE framework.fact_account_summary_monthly
-  OWNER TO inferyx;
+
+ALTER TABLE framework.fact_account_summary_monthly OWNER TO inferyx;
 
 
 
