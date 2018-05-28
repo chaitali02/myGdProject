@@ -3267,9 +3267,7 @@ public class CommonServiceImpl <T> {
 			return attributeName;
 		}
 		@SuppressWarnings("unchecked")
-		public List<BaseEntity> getResoveNameByUuidandType(String uuid,String type)  {
-			
-			
+		public List<BaseEntity> getResolveNameByUuidandType(String uuid,String type)  {
 			Query query = new Query();
 			query.fields().include("uuid");
 			query.fields().include("name");
