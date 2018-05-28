@@ -31,8 +31,6 @@ import org.apache.spark.sql.types.DataTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.datascience.Operator;
-import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AppConfig;
@@ -75,6 +73,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;

@@ -31,7 +31,7 @@ public class Task {
 	private String taskId;
 	private List<String> dependsOn = new ArrayList<>(0);
 	private String name;
-	private List<Operator> operators = new ArrayList<Operator>();
+	private List<TaskOperator> operators = new ArrayList<TaskOperator>();
 	private Double xPos;
 	private Double yPos;
 	private String active = "Y";
@@ -127,7 +127,7 @@ public class Task {
 	 * 
 	 * @return The operators
 	 */
-	public List<Operator> getOperators() {
+	public List<TaskOperator> getOperators() {
 		return operators;
 	}
 
@@ -136,7 +136,7 @@ public class Task {
 	 * @param operators
 	 *            The operators
 	 */
-	public void setOperators(List<Operator> operators) {
+	public void setOperators(List<TaskOperator> operators) {
 		this.operators = operators;
 	}
 

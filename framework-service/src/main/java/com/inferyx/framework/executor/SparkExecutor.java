@@ -38,11 +38,12 @@ import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
-import org.apache.spark.ml.linalg.DenseVector;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
@@ -61,7 +62,6 @@ import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -74,6 +74,7 @@ import com.inferyx.framework.domain.DataFrameHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.Load;
@@ -95,7 +96,6 @@ import com.inferyx.framework.writer.IWriter;
 import scala.collection.Iterator;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
-import scala.collection.mutable.WrappedArray;
 
 @Component
 public class SparkExecutor implements IExecutor {
@@ -132,8 +132,78 @@ public class SparkExecutor implements IExecutor {
 	private MetadataUtil daoRegister;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
+	@Autowired
+	private Helper helper;
+
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
+	
+	/**
+	 * 
+	 * @param distributionObject
+	 * @param methodName
+	 * @param args
+	 * @param attributes
+	 * @param numIterations
+	 * @param execVersion
+	 * @param tableName
+	 * @return
+	 * @throws IOException
+	 * @throws ClassNotFoundException 
+	 */
+	@Override
+	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes, List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException, ClassNotFoundException {
+		RDD<Double> obj = null;
+		SparkSession sparkSession = null;
+		ResultSetHolder resultSetHolder = new ResultSetHolder();
+		Object[] arguments = new Object[args.length+1];
+		Class<?>[] modParamTypes = new Class<?>[paramtypes.length+1];
+		Dataset<Row> df = null;
+		try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			Object object = conHolder.getStmtObject();
+			if (object instanceof SparkSession) {
+				sparkSession = (SparkSession) conHolder.getStmtObject();
+				arguments[0] = sparkSession.sparkContext();
+				modParamTypes[0] = SparkContext.class;
+				int count = 1;
+				for (Object arg : args) {
+					arguments[count] = arg;
+					modParamTypes[count]=paramtypes[count-1];
+					logger.info("Argument arguments["+count+"] = "+arg);
+					logger.info("Type modParamTypes["+count+"] = "+modParamTypes[count]);
+					count++;
+				}
+				count=0;
+				StructField[] fieldArray = new StructField[attributes.size()];
+				for(Attribute attribute : attributes){						
+					StructField field = new StructField(attribute.getName(), (DataType)helper.getDataType(attribute.getType()), true, Metadata.empty());
+					fieldArray[count] = field;
+					count ++;
+				}
+				StructType schema = new StructType(fieldArray);
+				
+				StructField[] randFieldArray = new StructField[1];
+				randFieldArray[0] = new StructField(attributes.get(1).getName(), (DataType)helper.getDataType(attributes.get(1).getType()), true, Metadata.empty());
+				schema = new StructType(randFieldArray);
+				
+				
+				obj = (RDD<Double>)(Class.forName(distribution.getClassName())).getMethod(methodName, modParamTypes).invoke(null, arguments);
+				df = sparkSession.createDataset(obj, Encoders.DOUBLE()).toDF(attributes.get(1).getName());
+			}
+			df.show();
+			df.createOrReplaceTempView(tableName+"_vw");
+			df = sparkSession.sql("select row_number() over(ORDER BY 1) as "+attributes.get(0).getDispName()+", "+attributes.get(1).getDispName()+", " + execVersion + " as "+attributes.get(2).getDispName()+" from " + tableName+"_vw");
+			resultSetHolder.setDataFrame(df);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		return resultSetHolder;
+	}
 
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
@@ -414,6 +484,7 @@ public class SparkExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes, String tableName, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
+		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 		int count = 0;
 		StructField[] fieldArray = new StructField[attributes.size()];
 		for(Attribute attribute : attributes){						
@@ -432,6 +503,19 @@ public class SparkExecutor implements IExecutor {
 		rsHolder.setType(ResultType.dataframe);	
 		rsHolder.setCountRows(df.count());
 		rsHolder.setTableName(tableName);
+		
+		// Write datapod
+		IWriter datapodWriter = null;
+		try {
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new IOException("Can not write data.");
+		}
+		
+		datapodWriter.write(df, filePathUrl, datapod, saveMode);
 		return rsHolder;
 	}
 	

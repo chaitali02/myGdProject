@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
-import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;

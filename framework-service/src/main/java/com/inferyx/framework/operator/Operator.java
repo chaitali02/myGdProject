@@ -34,7 +34,7 @@ public interface Operator {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, String> populateParams(com.inferyx.framework.datascience.Operator operator, 
+	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, 
 			ExecParams execParams, 
 			MetaIdentifier execIdentifier, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 
@@ -54,7 +54,7 @@ public interface Operator {
 	 * @return
 	 * @throws Exception
 	 */
-	public String parse(com.inferyx.framework.datascience.Operator operator, 
+	public String parse(com.inferyx.framework.domain.Operator operator, 
 			ExecParams execParams, 
 			MetaIdentifier execIdentifier, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 
@@ -73,7 +73,7 @@ public interface Operator {
 	 * @return
 	 * @throws Exception
 	 */
-	public String execute(com.inferyx.framework.datascience.Operator operator, 
+	public String execute(com.inferyx.framework.domain.Operator operator, 
 			ExecParams execParams, 
 			MetaIdentifier execIdentifier, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 

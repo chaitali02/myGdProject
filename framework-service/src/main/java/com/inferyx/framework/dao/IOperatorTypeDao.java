@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import com.inferyx.framework.datascience.Operator;
+import com.inferyx.framework.domain.Operator;
 
 /**
  * @author Ganesh

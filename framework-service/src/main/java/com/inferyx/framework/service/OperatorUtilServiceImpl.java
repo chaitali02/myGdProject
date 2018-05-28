@@ -8,10 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.datascience.Operator;
-import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -50,7 +49,7 @@ public class OperatorUtilServiceImpl {
 		return newParamList;
 	}
 	
-	public ExecParams getExecParams (com.inferyx.framework.domain.Operator operator) {
+	public ExecParams getExecParams (com.inferyx.framework.domain.TaskOperator operator) {
 		if (operator == null 
 				|| operator.getOperatorParams() == null 
 				|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)

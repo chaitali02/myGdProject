@@ -409,31 +409,6 @@
                     "statusList" : []
                 }, 
                 {
-                    "taskId" : "5a0d2021-3043-4c43-982f-8ad6f899ffab",
-                    "dependsOn" : [ 
-                        "de9b32cd-1815-46c7-b332-a1746d011383", 
-                        "611c930a-36ec-4332-9db5-c3a3ca7c40e7"
-                    ],
-                    "name" : "Portfolio Loss Simulation",
-                    "operators" : [ 
-                        {
-                            "dependsOn" : [],
-                            "operatorInfo" : {
-                                "ref" : {
-                                    "type" : "rule",
-                                    "uuid" : "fe506c16-8991-439a-95d4-b83664b25008",
-                                    "name" : "rule_portfolio_loss_simulation"
-                                }
-                            },
-                            "operatorParams" : {}
-                        }
-                    ],
-                    "xPos" : 920.0,
-                    "yPos" : 250.0,
-                    "active" : "Y",
-                    "statusList" : []
-                }, 
-                {
                     "taskId" : "de9b32cd-1815-46c7-b332-a1746d011383",
                     "dependsOn" : [ 
                         "9c7b8e3f-46d7-47c2-90c1-3f7637016fbb"
@@ -578,6 +553,31 @@
                     "statusList" : []
                 }, 
                 {
+                    "taskId" : "5a0d2021-3043-4c43-982f-8ad6f899ffab",
+                    "dependsOn" : [ 
+                        "de9b32cd-1815-46c7-b332-a1746d011383", 
+                        "611c930a-36ec-4332-9db5-c3a3ca7c40e7"
+                    ],
+                    "name" : "Portfolio Loss Simulation",
+                    "operators" : [ 
+                        {
+                            "dependsOn" : [],
+                            "operatorInfo" : {
+                                "ref" : {
+                                    "type" : "rule",
+                                    "uuid" : "fe506c16-8991-439a-95d4-b83664b25008",
+                                    "name" : "rule_portfolio_loss_simulation"
+                                }
+                            },
+                            "operatorParams" : {}
+                        }
+                    ],
+                    "xPos" : 920.0,
+                    "yPos" : 250.0,
+                    "active" : "Y",
+                    "statusList" : []
+                }, 
+                {
                     "taskId" : "96d9c67a-0944-4304-a716-7f12c4f598d4",
                     "dependsOn" : [ 
                         "5a0d2021-3043-4c43-982f-8ad6f899ffab"
@@ -621,7 +621,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-23T02:07:09.000Z"),
+    "createdOn" : ISODate("2018-05-27T10:10:31.109Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

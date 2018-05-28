@@ -7,7 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.factory.RowObjFactory;
 
@@ -26,7 +25,7 @@ import com.inferyx.framework.factory.RowObjFactory;
  *
  */
 @Service
-public class DistributionHelper {
+public class Math3RandDistribution extends RandomDistribution {
 	
 	@Autowired
 	protected Helper helper;
@@ -36,15 +35,16 @@ public class DistributionHelper {
 	/**
 	 * 
 	 */
-	public DistributionHelper() {
+	public Math3RandDistribution() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<RowObj> generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws Exception {
+	@Override
+	public List<RowObj> generateData(Distribution distribution, Object distributionObject, String methodName, List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws Exception {
 		StructField[] fieldArray = new StructField[attributes.size()];
 		int count = 0;
 		
-		Class<?> returnType = distributionObject.getClass().getMethod("sample").getReturnType();
+		Class<?> returnType = distributionObject.getClass().getMethod(methodName).getReturnType();
 		if(returnType.isArray()) {
 			double[] trialSample = (double[]) distributionObject.getClass().getMethod("sample").invoke(distributionObject);
 			int expectedNumcols = trialSample.length + 2;

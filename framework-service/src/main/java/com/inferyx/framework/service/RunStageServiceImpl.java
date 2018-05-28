@@ -46,7 +46,7 @@ import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.Recon;
@@ -1145,7 +1145,7 @@ public class RunStageServiceImpl implements Callable<String> {
 		indivTaskExe.setFilePath(filePath);
 		indivTaskExe.setDagServiceImpl(dagServiceImpl);
 		indivTaskExe.setHdfsInfo(hdfsInfo);
-		Operator operator = indvTask.getOperators().get(0); 
+		TaskOperator operator = indvTask.getOperators().get(0); 
 		indivTaskExe.setOperatorInfo(operator.getOperatorInfo());
 		indivTaskExe.setCommonServiceImpl(commonServiceImpl);
 		indivTaskExe.setOperatorType(operator.getOperatorType());

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import com.inferyx.framework.enums.OperandType;
+
 public class Operand {
 
 private MetaIdentifier ref;
@@ -20,7 +22,7 @@ private MetaIdentifier ref;
 
 	private Value value; 
 	
-	private OperatorNew operand;
+	private OperandType operand;
 	
 	private LogicalOperand logicaloperand;
 	
@@ -51,10 +53,10 @@ private MetaIdentifier ref;
 	public void setValue(Value value) {
 		this.value = value;
 	}
-	public OperatorNew getOperand() {
+	public OperandType getOperand() {
 		return operand;
 	}
-	public void setOperand(OperatorNew operand) {
+	public void setOperand(OperandType operand) {
 		this.operand = operand;
 	}
 	public LogicalOperand getLogicaloperand() {

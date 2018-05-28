@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.datascience.Math3Distribution;
+import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -45,7 +45,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
-	private Math3Distribution mlDistribution;
+	private RandomDistribution randomDistribution;
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
@@ -63,7 +63,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	}
 
 	@Override
-	public Map<String, String> populateParams(com.inferyx.framework.datascience.Operator operator,
+	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator,
 			ExecParams execParams, MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
 			RunMode runMode) throws Exception {
@@ -91,7 +91,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	}
 
 	@Override
-	public String parse(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
+	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
 			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
@@ -100,7 +100,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	
 	
 	@Override
-	public String execute(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
+	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
 			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		String execUuid = execIdentifier.getUuid();

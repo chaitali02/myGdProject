@@ -15,8 +15,10 @@ import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.datascience.Math3Distribution;
-import com.inferyx.framework.datascience.distribution.DistributionHelper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.datascience.distribution.Math3RandDistribution;
+import com.inferyx.framework.datascience.distribution.RandomDistribution;
+import com.inferyx.framework.datascience.distribution.RandomDistributionFactory;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -48,15 +50,13 @@ public class GenerateDataOperator implements Operator {
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
-	private Math3Distribution mlDistribution;
-	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
-	private DistributionHelper distributionHelper;
+	private RandomDistributionFactory randomDistributionFactory;
 	
 	static final Logger logger = Logger.getLogger(GenerateDataOperator.class);
 
@@ -68,7 +68,7 @@ public class GenerateDataOperator implements Operator {
 	}
 
 	@Override
-	public Map<String, String> populateParams(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
+	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
 			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		String execVersion = execIdentifier.getVersion();
@@ -82,12 +82,12 @@ public class GenerateDataOperator implements Operator {
 //		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
-			
+		logger.info("otherParams in generateDataOperator : "+ otherParams);
 		return otherParams;
 	}
 
 	@Override
-	public String parse(com.inferyx.framework.datascience.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
@@ -98,14 +98,26 @@ public class GenerateDataOperator implements Operator {
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
 	 */
 	@Override
-	public String execute(com.inferyx.framework.datascience.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 	
 		String execUuid = execIdentifier.getUuid();
 		String execVersion = execIdentifier.getVersion();
-		
+		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "distribution");
+		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(distributionInfo.getParamValue().getRef().getUuid(), distributionInfo.getParamValue().getRef().getVersion(), distributionInfo.getParamValue().getRef().getType().toString());
 		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
+		
+		List<ParamListHolder> distParamHolderList = new ArrayList<>();
+		ExecParams distExecParam = new ExecParams();
+
+		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+		for(ParamListHolder holder : paramListInfo) {
+			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+				distParamHolderList.add(holder);
+			}
+		}
+		distExecParam.setParamListInfo(distParamHolderList);
 		
 		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
 		int resolvedIterations = getResolvedIterations(numIterations, 0);
@@ -114,16 +126,24 @@ public class GenerateDataOperator implements Operator {
 		// Get exec
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-
+																																		
 		Object distributionObject = getDistributionObject(execParams, resolvedIterations, execVersion, otherParams);
 		
 		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
-		List<RowObj> rowObjList = distributionHelper.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
-//		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
 		
-		// Save result
-		save(exec, rowObjList, tableName, locationDatapod, execIdentifier, runMode);
-		
+		if (randomDistribution instanceof Math3RandDistribution) {
+			List<RowObj> rowObjList = randomDistribution.generateData(distribution, distributionObject, getMethodName(execParams), locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+			// Save result
+			save(exec, rowObjList, tableName, locationDatapod, execIdentifier, runMode);
+		} else {
+			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo());
+			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo());
+			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);			
+			// Save result
+			save(exec, resultSetHolder, tableName, locationDatapod, execIdentifier, runMode);
+		}
+
 		return tableName;
 	}
 	
@@ -167,8 +187,21 @@ public class GenerateDataOperator implements Operator {
 			}
 		}
 		distExecParam.setParamListInfo(distParamHolderList);
-		Object distributionObject = mlDistribution.getDistribution(distribution, distExecParam);
+		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
+		Object distributionObject = randomDistribution.getDistribution(distribution, distExecParam);
 		return distributionObject;
+	}
+	
+	/**
+	 * 
+	 * @param execParams
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	protected String getMethodName(ExecParams execParams) throws JsonProcessingException {
+		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "distribution");
+		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(distributionInfo.getParamValue().getRef().getUuid(), distributionInfo.getParamValue().getRef().getVersion(), distributionInfo.getParamValue().getRef().getType().toString());
+		return distribution.getMethodName();
 	}
 	
 	protected String getFilePath (Datapod locationDatapod, String execVersion) {
