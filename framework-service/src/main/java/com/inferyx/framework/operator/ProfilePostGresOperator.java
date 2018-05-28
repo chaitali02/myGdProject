@@ -8,9 +8,7 @@ import java.text.ParseException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.DataType;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.Datasource.DataSourceType;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
@@ -34,9 +32,9 @@ public class ProfilePostGresOperator extends ProfileOperator {
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 		Attribute attribute = datapod.getAttribute(Integer.parseInt(attrId));
 		String attrType = attribute.getType();
-		String attrName1 = "cast(regexp_replace(COALESCE(NULLIF(cast(" + attrName + " as text),''),'0'), '[^0-9]+', '0', 'g') as decimal)";	
+		String attrName1 = " cast(regexp_replace(COALESCE(NULLIF(cast(" + attrName + " as text),''),'0'), '[^0-9]+', '0', 'g') as decimal) ";	
 		
-		if(!attrType.equalsIgnoreCase("string"))			
+//		if(!attrType.equalsIgnoreCase("string"))			
 			sql = "SELECT '" + profile.getDependsOn().getRef().getUuid() + "' AS datapodUUID, "
 					+ "'" + profile.getDependsOn().getRef().getVersion() + "' AS datapodVersion, '"
 					+ datapod.getName()+"' AS datapodName,"
@@ -46,17 +44,19 @@ public class ProfilePostGresOperator extends ProfileOperator {
 					+ "MIN(" + attrName1 + ") AS minVal,"
 					+ "MAX(" + attrName1 + ") AS maxVal,"				
 					+ "AVG(" + attrName1 + ") AS avgVal,"				
-					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "+ attrName + ") AS medianVal,"				
+					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "+ attrName1 + ") AS medianVal,"				
 					+ "STDDEV(" + attrName1 + ") AS stdDev,"				
-					+ "COUNT(" + attrName + ") AS numDistinct,"
-					+ "COUNT(" + attrName + ")/COUNT(" + attrName + ")*100 AS perDistinct,"		
-					+ "COUNT(" + attrName + ") AS numNull,"				
-					+ "COUNT(" + attrName + ") / COUNT(" + attrName1 + ")*100 AS perNull,"
-					+ "COUNT(" + attrName + ") / COUNT(" + attrName1 + ") AS sixSigma," 
+					+ "COUNT(" + attrName1 + ") AS numDistinct,"
+					+ "COUNT(" + attrName1 + ")/COUNT(" + attrName1 + ")*100 AS perDistinct,"		
+					+ "COUNT(" + attrName1 + ") AS numNull,"				
+					+ "COUNT(" + attrName1 + ") / COUNT(" + attrName1 + ")*100 AS perNull,"
+					+ "COUNT(" + attrName1 + ") / COUNT(" + attrName1 + ") AS sixSigma," 
 					+ "CURRENT_DATE AS load_date, " 
-					+ "UNIX_TIMESTAMP() AS load_id, '" + profileExec.getVersion() + "' AS version"
+					+ "UNIX_TIMESTAMP() AS load_id, " + profileExec.getVersion() + " AS version"
 					+ " FROM " + profileTableName;
-		else sql = null;
+//		else 
+//			sql = null;
+			
 		/*else sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, "
 				+ "\'" + profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"
 				+ datapod.getName()+"' AS datapodName,"
