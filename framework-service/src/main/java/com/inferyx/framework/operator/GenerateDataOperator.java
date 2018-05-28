@@ -108,6 +108,17 @@ public class GenerateDataOperator implements Operator {
 		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
+		List<ParamListHolder> distParamHolderList = new ArrayList<>();
+		ExecParams distExecParam = new ExecParams();
+
+		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+		for(ParamListHolder holder : paramListInfo) {
+			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+				distParamHolderList.add(holder);
+			}
+		}
+		distExecParam.setParamListInfo(distParamHolderList);
+		
 		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
 		int resolvedIterations = getResolvedIterations(numIterations, 0);
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
@@ -115,19 +126,20 @@ public class GenerateDataOperator implements Operator {
 		// Get exec
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		
+																																		
 		Object distributionObject = getDistributionObject(execParams, resolvedIterations, execVersion, otherParams);
 		
 		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
 		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
 		
 		if (randomDistribution instanceof Math3RandDistribution) {
-			List<RowObj> rowObjList = randomDistribution.generateData(distributionObject, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+			List<RowObj> rowObjList = randomDistribution.generateData(distribution, distributionObject, getMethodName(execParams), locationDatapod.getAttributes(), numIterations, execVersion, tableName);
 			// Save result
 			save(exec, rowObjList, tableName, locationDatapod, execIdentifier, runMode);
 		} else {
-			Object[] objList = randomDistribution.getParamObjList(execParams.getParamListInfo());
-			ResultSetHolder resultSetHolder = exec.generateData(distributionObject, getMethodName(execParams), objList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);			
+			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo());
+			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo());
+			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);			
 			// Save result
 			save(exec, resultSetHolder, tableName, locationDatapod, execIdentifier, runMode);
 		}
