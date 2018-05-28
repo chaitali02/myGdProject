@@ -1,10 +1,4 @@
-
-
-
-
--- Table: framework.fact_transaction
-
-   DROP TABLE framework.fact_transaction;
+DROP TABLE framework.fact_transaction;
 
 CREATE TABLE framework.fact_transaction
 (
@@ -26,11 +20,6 @@ CREATE TABLE framework.fact_transaction
   notes text,
   load_date text,
   load_id integer
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE framework.fact_transaction
-  OWNER TO inferyx;
 
-
+ALTER TABLE framework.fact_transaction OWNER TO inferyx;

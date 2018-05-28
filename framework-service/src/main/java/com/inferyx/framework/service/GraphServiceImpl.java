@@ -924,6 +924,9 @@ public class GraphServiceImpl {
 		// Loop each property
 		while (iter.hasNext()) {
 			String key = iter.next();
+			if(key.equalsIgnoreCase("dependsOn")) {
+				System.out.println("assssssd");
+			}
 			jsonArray = jsonObject.optJSONArray(key);
 			JSONObject childObj = jsonObject.optJSONObject(key);
 			value = jsonObject.optString(key);
@@ -992,7 +995,7 @@ public class GraphServiceImpl {
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();*/
 										
-										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
@@ -1061,7 +1064,7 @@ public class GraphServiceImpl {
 									refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
 											: baseEntityList.get(0).getName();*/
 
-									baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+									baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 									refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 								} else {
@@ -1087,7 +1090,7 @@ public class GraphServiceImpl {
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();*/
 
-										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
@@ -1115,7 +1118,7 @@ public class GraphServiceImpl {
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();*/
 
-										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
@@ -1146,7 +1149,7 @@ public class GraphServiceImpl {
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();*/
 
-										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
@@ -1177,7 +1180,7 @@ public class GraphServiceImpl {
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();*/
 
-										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
@@ -1223,7 +1226,7 @@ public class GraphServiceImpl {
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();*/
 
-										baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+										baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
@@ -1300,7 +1303,7 @@ public class GraphServiceImpl {
 									refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
 											: baseEntityList.get(0).getName();*/
 
-									baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+									baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 									refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 								}
@@ -1318,23 +1321,23 @@ public class GraphServiceImpl {
 										edgeRowMap, position, key, null);
 						} 
 						else if (childObj != null ) {
-							String refN = childObj.optString("ref");
+							/*String refN = childObj.optString("ref");
 					
 							JSONObject jsonObjType = new JSONObject(refN);
 							childUuid = jsonObjType.optString("uuid");
 							childType = jsonObjType.optString("type");
 							
-							/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+							baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 									null, null, null, null, null, childUuid, null, null);
 							refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-									: baseEntityList.get(0).getName();	*/
+									: baseEntityList.get(0).getName();	
 
-							baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+							baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 							refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
-												: baseEntityList.get(0).getName();
+												: baseEntityList.get(0).getName();*/
 			
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									refName + "", name, null);
+									i + "", name, null);
 							}
 				}
 			} else if (childObj != null && value.startsWith("{", 0)) {
@@ -1349,7 +1352,7 @@ public class GraphServiceImpl {
 						refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
 								: baseEntityList.get(0).getName();*/
 						
-						baseEntityList=	commonServiceImpl.getResoveNameByUuidandType(childUuid, childType);
+						baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 						refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 					} else {

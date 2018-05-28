@@ -1,6 +1,3 @@
-
--- Table: framework.dim_address
-
 DROP TABLE framework.dim_address;
 
 CREATE TABLE framework.dim_address
@@ -21,15 +18,6 @@ CREATE TABLE framework.dim_address
   load_id integer NOT NULL,
   CONSTRAINT dim_address_pkey PRIMARY KEY (address_id, load_date, load_id),
   CONSTRAINT src_address_id UNIQUE (src_address_id, load_date, load_id)
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE framework.dim_address
-  OWNER TO inferyx;
 
-
-
-
-
-
+ALTER TABLE framework.dim_address OWNER TO inferyx;

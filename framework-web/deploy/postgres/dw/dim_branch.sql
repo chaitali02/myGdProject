@@ -1,10 +1,4 @@
-
-
-
-
--- Table: framework.dim_branch
-
- DROP TABLE framework.dim_branch;
+DROP TABLE framework.dim_branch;
 
 CREATE TABLE framework.dim_branch
 (
@@ -20,19 +14,6 @@ CREATE TABLE framework.dim_branch
   load_id integer NOT NULL,
   CONSTRAINT dim_branch_pkey PRIMARY KEY (branch_id, load_date, load_id),
   CONSTRAINT src_branch_id UNIQUE (src_branch_id, load_date, load_id)
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE framework.dim_branch
-  OWNER TO inferyx;
 
-
-
-
-
-
-
-
-
-
+ALTER TABLE framework.dim_branch OWNER TO inferyx;
