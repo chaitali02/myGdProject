@@ -37,6 +37,7 @@ import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.Condition;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
@@ -258,7 +259,7 @@ public class Helper {
 //				case operatortype : return "iOperatorTypeDao";
 				case operatorExec : return "iOperatorExecDao";
 				case operator : return "iOperatorDao";
-				
+				case comment : return "iCommentDao";
 				default:
 					return null;
 			}
@@ -364,6 +365,7 @@ public class Helper {
 //		case operatortype : return Operator.class;
 		case operatorExec : return OperatorExec.class;
 		case operator : return Operator.class;
+		case comment : return Comment.class;
 
 		default:
 			return null;
@@ -441,6 +443,7 @@ public class Helper {
 //				case "operatortype" : return MetaType.operatortype;
 				case "operatorexec" : return MetaType.operatorExec;
 				case "operator" : return MetaType.operator;
+				case "comment" : return MetaType.comment;
 
 				default : return null;
 			}
