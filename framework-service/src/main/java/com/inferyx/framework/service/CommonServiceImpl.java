@@ -69,6 +69,7 @@ import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
+import com.inferyx.framework.dao.ICommentDao;
 import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.dao.IDagExecDao;
@@ -411,7 +412,17 @@ public class CommonServiceImpl <T> {
 	IOperatorExecDao iOperatorExecDao;
 	@Autowired
 	IOperatorDao iOperatorDao;
+	@Autowired
+	ICommentDao iCommentDao;
 	
+	public ICommentDao getiCommentDao() {
+		return iCommentDao;
+	}
+
+	public void setiCommentDao(ICommentDao iCommentDao) {
+		this.iCommentDao = iCommentDao;
+	}
+
 	/**
 	 * @Ganesh
 	 *
@@ -3267,9 +3278,7 @@ public class CommonServiceImpl <T> {
 			return attributeName;
 		}
 		@SuppressWarnings("unchecked")
-		public List<BaseEntity> getResoveNameByUuidandType(String uuid,String type)  {
-			
-			
+		public List<BaseEntity> getResolveNameByUuidandType(String uuid,String type)  {
 			Query query = new Query();
 			query.fields().include("uuid");
 			query.fields().include("name");
