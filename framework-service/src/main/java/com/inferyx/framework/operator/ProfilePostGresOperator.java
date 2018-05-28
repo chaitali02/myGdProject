@@ -49,7 +49,7 @@ public class ProfilePostGresOperator extends ProfileOperator {
 					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "+ attrName1 + ") AS medianVal,"				
 					+ "STDDEV(" + attrName1 + ") AS stdDev,"				
 					+ "COUNT(" + attrName + ") AS numDistinct,"
-					+ "COUNT(" + attrName + ")/COUNT(" + attrName + ")*100 AS perDistinct,"		
+					+ "COUNT(" + attrName + ")/COUNT(" + attrName1 + ")*100 AS perDistinct,"		
 					+ "COUNT(" + attrName + ") AS numNull,"				
 					+ "COUNT(" + attrName + ") / COUNT(" + attrName1 + ")*100 AS perNull,"
 					+ "COUNT(" + attrName + ") / COUNT(" + attrName1 + ") AS sixSigma," 
