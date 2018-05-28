@@ -909,7 +909,7 @@ public class DagServiceImpl {
 	public DagExec parseDagExec(Dag dag, DagExec dagExec) throws Exception {
 		mapServiceImpl.setRunMode(runMode);
 		if (dagExec == null) {
-			System.out.println("Nothing to parse. Aborting parseDagExec");
+			logger.info("Nothing to parse. Aborting parseDagExec");
 			return null;
 		}
 		ExecParams execParams = dagExec.getExecParams();
