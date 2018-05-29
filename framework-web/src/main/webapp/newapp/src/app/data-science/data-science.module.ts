@@ -78,14 +78,11 @@ import {SimulationService } from '../metadata/services/simulation.service';
         ModelService,
         TrainingService,
         DistributionService,
-<<<<<<< HEAD
-        DatasetService
-=======
+        DatasetService,
         PredictionService, 
         SimulationService,
         OperatorService,
         OperatorComponent
->>>>>>> c9d0cec15b87e0844f3227e2b7f138c952585ff0
     ]
 })
  
