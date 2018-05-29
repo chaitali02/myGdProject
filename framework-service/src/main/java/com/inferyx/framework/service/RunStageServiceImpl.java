@@ -980,6 +980,11 @@ public class RunStageServiceImpl implements Callable<String> {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Failed, stageId);
 					}
 					return true;
+				} else if (statusHolder.getFailed()) {
+					synchronized (dagExecUUID) {
+						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Failed, stageId);
+					}
+					return true;					
 				} else if (statusHolder.getCompleted()) {
 					synchronized (dagExecUUID) {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Completed, stageId);
