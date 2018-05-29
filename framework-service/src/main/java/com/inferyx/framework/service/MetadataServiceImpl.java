@@ -55,6 +55,7 @@ import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
+import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
@@ -80,6 +81,7 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.ParamDataType;
@@ -1408,6 +1410,25 @@ public class MetadataServiceImpl {
 		}
 		List<BaseEntity> baseEntities = new ArrayList<>(paramList);
 		return commonServiceImpl.resolveBaseEntityList(baseEntities);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BaseEntity> getCommentByType(String uuid, String type) {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+		query.fields().include("active");
+		query.fields().include("desc");
+		query.fields().include("published");
+		//query.fields().include("dependsOn");
+		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(uuid));
+		List<BaseEntity> result = new ArrayList<BaseEntity>();
+		result = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.comment));
+		return result;
 	}
 	
 }

@@ -4,8 +4,10 @@ DROP TABLE IF EXISTS `dq_rule_results`;
 CREATE TABLE `dq_rule_results` (
   `rowkey` varchar(45) DEFAULT NULL,
   `datapoduuid` varchar(45) DEFAULT NULL,
-  `datapodversion` varchar(45) DEFAULT NULL,
+  `datapodversion` varchar(45) DEFAULT NULL,  
+  `datapodname` varchar(45) DEFAULT NULL,
   `attributeid` varchar(45) DEFAULT NULL,
+  `attributename` varchar(45) DEFAULT NULL,
   `attributevalue` varchar(45) DEFAULT NULL,
   `nullcheck_pass` varchar(45) DEFAULT NULL,
   `valuecheck_pass` varchar(45) DEFAULT NULL,
