@@ -943,3 +943,31 @@ font-weight:bold;
 .not-selected {
 font-weight:normtal;
 }
+
+.comment-panel {
+  height: 50%;
+  width:0;
+  position: absolute;
+  z-index: 100;
+  top:3.6%;
+  background-color:#21282e;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 25px;
+  overflow: hidden;
+}       
+.comment-panel-width{
+width:40%;
+right: 1%;
+}
+.comment-panel-without-width{
+width:0%;
+right:0%;
+}
+
+.mt-comment:hover{
+  background: #ecf0f3 !important;
+}
+.comment-panel-mt-comment:hover{
+  background: #21282e !important;
+}

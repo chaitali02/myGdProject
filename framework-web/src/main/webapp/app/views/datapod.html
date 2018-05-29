@@ -12,6 +12,8 @@
   div.ui-grid-cell input {
     padding: 9px;
   }
+
+ 
 </style>
 
 <div data-ng-controller="MetadataDatapodController">
@@ -31,20 +33,30 @@
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span>{{datapoddata.name }}</span>
+        <span>{{datapoddata.name }}</span></li>
         <!-- | strReplace:'_':' '|capitalize -->
     </ul>
     <div class="page-toolbar">
-      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
-        <i class="icon-calendar"></i>&nbsp;
-        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+      <div class="col-md-12">
+        <div id="dashboard-report-range" class="tooltips btn btn-sm col-md-10" style="width:89%;"data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+        <!-- <div class="col-md-1" style="margin-top:2%;">
+          <div class="sidebar-toggler"  ng-click="isPanelOpen == false ? panelOpen():closePanelNav();">
+            <i ng-class="isPanelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>  
+          </div>
+        </div> -->
       </div>
     </div>
   </div>
   <!-- END PAGE HEADER-->
   <br>
+  
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <!-- BEGIN MAIN CONTENT -->
+  <!-- BEGIN MAIN CONTENT --> 
+ 
+  <div ng-if="isPanelOpen" panelopen="isPanelOpen" type="'datapod'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="datapoddata" comment-panel-directive></div>
   <div class="row">
     <div class="col-md-12">
       <!-- BEGIN: ACCORDION DEMO -->

@@ -343,17 +343,22 @@
             </a>
             <ul>
                 <li>
-                    <a ng-click="appCtrl.isBasicOpen = !appCtrl.isBasicOpen" class="active" style="background-color: #36c6d3;border-radius: 30px;">
-
-    </screenshot>
-    <span style="color:white">Screenshot</span>
-    <i class="fa fa-camera" aria-hidden="true"></i>
-    </a>
-    </li>
-    </ul>
-    <span aria-hidden="true" class="quick-nav-bg"></span>
+                    <a ng-click="appCtrl.isBasicOpen = !appCtrl.isBasicOpen" class="active" style="margin:4px;background-color:#36c6d3;border-radius: 30px;">
+                        <span style="color:white">Screenshot</span>
+                        <i class="fa fa-camera" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="isPanelOpen=!isPanelOpen" ng-disabled="isCommentDisabled" class="active sidebar-toggler" style="margin:4px;background-color: #36c6d3;border-radius: 30px;">
+                        <span style="color:white">Comment</span>
+                        <i class="fa fa-comment" aria-hidden="true"></i>
+                    </a>
+                </li>
+            </ul>
+        <span aria-hidden="true" class="quick-nav-bg"></span>
     </nav>
 
+    <div class="quick-nav-overlay"></div>
     <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <script src="bower_components/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
     <script src="assets/pages/scripts/ui-modals.min.js" type="text/javascript"></script>
@@ -422,6 +427,8 @@
     <script src="js/Main.js" type="text/javascript"></script>
     <script src="js/Directives.js" type="text/javascript"></script>
     <script src="js/directives/TreeGraphDirective.js" type="text/javascript"></script>
+    <script src="js/directives/CommentPanelDirective.js" type="text/javascript"></script>
+    
     <script src="js/MainService.js" type="text/javascript"></script>
     <script src="js/module/CommonModule.js"></script>
     <script src="js/services/CommonService.js"></script>
@@ -479,7 +486,7 @@
     <script src="assets/angular-trix.js"></script>
     <script src="assets/democtrl.js"></script>
     <script src="assets/multiselect/multiselect.js"></script>
-
+</screenshot>
 </body>
 <!-- END BODY -->
 </html>

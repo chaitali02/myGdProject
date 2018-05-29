@@ -132,7 +132,7 @@ var InferyxApp = angular.module("InferyxApp", [
 }]);
 
 
-InferyxApp.run(['Idle','$sessionStorage','$rootScope','$http','$cookieStore','validator','$timeout','$filter', function(Idle,$sessionStorage,$rootScope,$http,$cookieStore,validator,$timeout,$filter) {
+InferyxApp.run(['Idle','$sessionStorage','$rootScope','$http','$cookieStore','validator','$timeout','$filter','commentService', function(Idle,$sessionStorage,$rootScope,$http,$cookieStore,validator,$timeout,$filter,commentService) {
 	Idle.watch();
 	validator.setValidElementStyling(false);
 	validator.setInvalidElementStyling(true);
@@ -143,7 +143,9 @@ InferyxApp.run(['Idle','$sessionStorage','$rootScope','$http','$cookieStore','va
 		$rootScope.role=localStorage.role;
 		$rootScope.baseUrl=JSON.parse(localStorage.userdetail).baseUrl
 	}
-	$rootScope.time= new Date();
+    $rootScope.time= new Date();
+    // $rootScope.isCommentDisabled=true;
+    // $rootScope.isPanelOpen=commentService.isPanelOpen;
 	$rootScope.tzName = $rootScope.time.toLocaleString('en', {
 	    timeZoneName: 'short'
 	}).split(' ').pop();
@@ -155,6 +157,12 @@ InferyxApp.run(['Idle','$sessionStorage','$rootScope','$http','$cookieStore','va
     $timeout(update, 1000);
 }]);
 
+InferyxApp.factory('commentService', function() {
+    var comment= {
+        isPanelOpen:false,
+    }  
+    return comment;
+  });
 
 
 
@@ -748,7 +756,13 @@ InferyxApp.controller('LogoutController',function($scope,$rootScope,$cookieStore
 
 
 /* Setup App Main Controller */
-InferyxApp.controller('AppController', ['$scope', '$rootScope', function($scope, $rootScope) {
+InferyxApp.controller('AppController', ['$scope', '$rootScope','commentService', function($scope, $rootScope,commentService) {
+    $rootScope.isCommentDisabled=true;
+    $scope.isPanelOpen=commentService.isPanelOpen;
+    $rootScope.onPanelClose=function(data){
+        commentService.isPanelOpen=false
+        $scope.isPanelOpen=false
+	}
     $scope.$on('$viewContentLoaded', function() {
         //App.initComponents(); // init core components
         //Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
