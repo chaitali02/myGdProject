@@ -143,7 +143,9 @@ InferyxApp.run(['Idle','$sessionStorage','$rootScope','$http','$cookieStore','va
 		$rootScope.role=localStorage.role;
 		$rootScope.baseUrl=JSON.parse(localStorage.userdetail).baseUrl
 	}
-	$rootScope.time= new Date();
+    $rootScope.time= new Date();
+    $rootScope.isCommentDisabled=true;
+    $rootScope.isPanelOpen=false;
 	$rootScope.tzName = $rootScope.time.toLocaleString('en', {
 	    timeZoneName: 'short'
 	}).split(' ').pop();

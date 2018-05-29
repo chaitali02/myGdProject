@@ -11,6 +11,7 @@ MetadataModule.controller('MetadataController', function ($location, $filter, da
 		$sessionStorage.fromStateName = fromState.name
 		$sessionStorage.fromParams = fromParams
 	});
+
 	$scope.action = function (data, mode) {
 		console.log(data);
 		var uuid = data.uuid;
@@ -224,11 +225,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
 	}
 	else {
 		$scope.isAdd = true;
@@ -267,6 +270,16 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		content: 'Dashboard deleted Successfully',
 		timeout: 3000 //time in ms
 	};
+
+	$rootScope.isCommentDisabled=false;
+	//$scope.isPanelOpen=false;
+	// $scope.panelOpen=function(){
+	// 	$rootScope.isPanelOpen=true;
+	// }
+	// $scope.closePanelNav=function(){
+	// 	debugger
+	// 	$rootScope.isPanelOpen=!$rootScope.isPanelOpen;
+	// }
 
 	$scope.pagination = {
 		currentPage: 1,

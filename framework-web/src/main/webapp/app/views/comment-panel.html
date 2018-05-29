@@ -1,0 +1,135 @@
+<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+<div class="comment-panel" ng-class="panelOpen ==true?'comment-panel-width':'comment-panel-without-width'">
+    <div class="comment-panel-header clearfix">
+        <div class="col-md-3 pull-left">
+            <h4 style="color:white;">Comment</h4>
+        </div>
+        <div class="col-md-1 pull-right">
+            <div class="sidebar-toggler" ng-click="closePanelNav();">
+                <i ng-class="panelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="comment-panel-body clearfix" style="padding:1%;height:72%;color:white;overflow-x: hidden;overflow-y:auto;">
+        <div class="mt-comments">
+            <div class="mt-comment">
+                <div class="mt-comment-img">
+                    <img src="assets/pages/media/users/avatar1.jpg"> </div>
+                <div class="mt-comment-body">
+                    <div class="mt-comment-info">
+                        <span class="mt-comment-author">Michael Baker</span>
+                    </div>
+                    <div class="mt-comment-text"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. </div>
+                    <div class="mt-comment-details">
+                        <!-- <span class="mt-comment-status mt-comment-status-pending">Pending</span> -->
+                        <ul class="mt-comment-actions">
+                            <li>
+                                <a href="#">View</a>
+                            </li>
+                            <li>
+                                <a href="#">Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-comment">
+                <div class="mt-comment-img">
+                    <img src="assets/pages/media/users/avatar1.jpg"> </div>
+                <div class="mt-comment-body">
+                    <div class="mt-comment-info">
+                        <span class="mt-comment-author">Michael Baker</span>
+                    
+                    </div>
+                    <div class="mt-comment-text"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. </div>
+                    <div class="mt-comment-details">
+                        <!-- <span class="mt-comment-status mt-comment-status-pending">Pending</span> -->
+                        <ul class="mt-comment-actions">
+                            <li>
+                                <a href="#">View</a>
+                            </li>
+                            <li>
+                                <a href="#">Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-comment">
+                <div class="mt-comment-img">
+                    <img src="assets/pages/media/users/avatar1.jpg"> </div>
+                <div class="mt-comment-body">
+                    <div class="mt-comment-info">
+                        <span class="mt-comment-author">Michael Baker</span>
+                    </div>
+                    <div class="mt-comment-text"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. </div>
+                    <div class="mt-comment-details">
+                         <ul class="mt-comment-actions">
+                            <li>
+                                <a href="#">View</a>
+                            </li>
+                            <li>
+                                <a href="#">Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-comment">
+                <div class="mt-comment-img">
+                    <img src="assets/pages/media/users/avatar1.jpg"> </div>
+                <div class="mt-comment-body">
+                    <div class="mt-comment-info">
+                        <span class="mt-comment-author">Michael Baker</span>
+                    </div>
+                    <div class="mt-comment-text"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. </div>
+                    <div class="mt-comment-details">
+                         <ul class="mt-comment-actions">
+                            <li>
+                                <a href="#">View</a>
+                            </li>
+                            <li>
+                                <a href="#">Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-quick-sidebar-chat-user-form">
+        <div class="mt-comments">
+            <div class="mt-comment">
+                <div class="mt-comment-img">
+                    <img src="assets/pages/media/users/avatar1.jpg"> </div>
+                <div class="mt-comment-body">
+                    <div class="mt-comment-info">
+                        <span class="mt-comment-author">Michael Baker</span>
+                    </div>
+                    <div class="mt-comment-text">
+                        <div class="input-group">
+                            <input type="text" class="form-control" ng-model="commentDesc" placeholder="Type a comment here...">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn green" ng-click="submit()">
+                                    <i class="icon-paper-clip"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-comment-details">
+                         <ul class="mt-comment-actions">
+                            <!-- <li>
+                              <a href="#">View</a>
+                          </li>
+                          <li>
+                              <a href="#">Delete</a>
+                          </li> -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

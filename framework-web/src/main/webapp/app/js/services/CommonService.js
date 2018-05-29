@@ -754,6 +754,18 @@
   
       return deferred.promise;
     }
+    this.submit = function(data,type){
+      var deferred = $q.defer();
+      var url="common/submit?action=edit&type="+type
+      CommonFactory.httpPost(url,data).then(function (response) { onSuccess(response.data) });
+      var onSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    }
   });
-
+  
+  
 })();
