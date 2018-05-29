@@ -217,7 +217,14 @@ export class OperatorComponent implements OnInit {
       this.goBack()
     }, 1000);
   }
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/dataScience/operatortype', uuid, version, 'false']);
+  }
 
+
+  showview(uuid, version) {
+    this.router.navigate(['app/dataScience/operatortype', uuid, version, 'true']);
+  }
 
 }
 
