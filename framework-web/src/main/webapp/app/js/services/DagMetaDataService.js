@@ -155,9 +155,9 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     {
       displayName: 'Action',
       name: 'action',
-     
+      cellClass: 'text-center',
       headerCellClass: 'text-center',
-      minWidth:100,
+      maxWidth:150,
       cellTemplate: [
         '<div class="ui-grid-cell-contents">',
         '<div class="col-md-12" style="display:inline-flex;">',   

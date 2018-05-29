@@ -52,11 +52,11 @@
   </div>
   <!-- END PAGE HEADER-->
   <br>
-  {{isPanelOpen}}
+  
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
   <!-- BEGIN MAIN CONTENT --> 
  
-  <div ng-if="isPanelOpen" panelopen="isPanelOpen" type="'datapod'" comment-data="datapoddata" comment-panel-directive></div>
+  <div ng-if="isPanelOpen" panelopen="isPanelOpen" type="'datapod'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="datapoddata" comment-panel-directive></div>
   <div class="row">
     <div class="col-md-12">
       <!-- BEGIN: ACCORDION DEMO -->
