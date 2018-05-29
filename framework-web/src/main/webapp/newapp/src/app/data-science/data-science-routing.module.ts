@@ -1,7 +1,5 @@
 import { ParamlistComponent } from './paramlist/paramlist.component';
 import { AlgorithmComponent } from './algorithm/algorithm.component';
-
-
 import { DataScienceComponent } from './data-science.component';
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -10,8 +8,10 @@ import { ModelComponent } from './model/model.component';
 import { ParamsetComponent } from './paramset/paramset.component';
 import { ResultsComponent } from './results/results.component';
 import {TrainingComponent } from './training/training.component';
-import {DistributionComponent } from './distribution/distribution.component'
-
+import {DistributionComponent } from './distribution/distribution.component';
+import {PredictionComponent } from './prediction/prediction.component';
+import {SimulationComponent} from './simulation/simulation.component'
+import {OperatorComponent} from './operator/operator.component';
 
 const routes: Routes = [
     {
@@ -37,7 +37,15 @@ const routes: Routes = [
             {path: 'distribution/:id/:version/:mode', component: DistributionComponent,pathMatch:'full' },
             {path: 'distribution/distribution/:id/:version/:mode', component:DistributionComponent, pathMatch: 'full'},
             {path: 'distribution', component:DistributionComponent, pathMatch: 'full'},
-            
+            {path: 'operatortype/:id/:version/:mode', component: OperatorComponent,pathMatch:'full' },
+            {path: 'operatortype/operatortype/:id/:version/:mode', component:OperatorComponent, pathMatch: 'full'},
+            {path: 'operatortype', component:OperatorComponent, pathMatch: 'full'},
+            {path: 'prediction/:id/:version/:mode', component: PredictionComponent,pathMatch:'full' },
+            {path: 'prediction/prediction/:id/:version/:mode', component:PredictionComponent, pathMatch: 'full'},
+            {path: 'prediction', component:PredictionComponent, pathMatch: 'full'},
+            {path: 'simulation/:id/:version/:mode', component: SimulationComponent,pathMatch:'full' },
+            {path: 'simulation/simulation/:id/:version/:mode', component:SimulationComponent, pathMatch: 'full'},
+            {path: 'simulation', component:SimulationComponent, pathMatch: 'full'},
          ]
     }
 ]

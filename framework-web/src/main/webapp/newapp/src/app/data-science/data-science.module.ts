@@ -32,6 +32,12 @@ import { TrainingService } from '../metadata/services/training.service';
 import { DistributionComponent } from './distribution/distribution.component';
 import { DistributionService } from '../metadata/services/distribution.service';
 import { DatasetService } from '../metadata/services/dataset.service';
+import { OperatorComponent } from './operator/operator.component';
+import { OperatorService } from '../metadata/services/operator.service';
+import { PredictionComponent } from './prediction/prediction.component';
+import { PredictionService } from '../metadata/services/prediction.service';
+import {SimulationComponent } from './simulation/simulation.component';
+import {SimulationService } from '../metadata/services/simulation.service';
 
 @NgModule({
     imports:[
@@ -62,7 +68,9 @@ import { DatasetService } from '../metadata/services/dataset.service';
         ResultsComponent,
         TrainingComponent,
         DistributionComponent,
-      
+        PredictionComponent,
+        SimulationComponent,
+        OperatorComponent,
         
     ],
     providers:[
@@ -70,7 +78,14 @@ import { DatasetService } from '../metadata/services/dataset.service';
         ModelService,
         TrainingService,
         DistributionService,
+<<<<<<< HEAD
         DatasetService
+=======
+        PredictionService, 
+        SimulationService,
+        OperatorService,
+        OperatorComponent
+>>>>>>> c9d0cec15b87e0844f3227e2b7f138c952585ff0
     ]
 })
  

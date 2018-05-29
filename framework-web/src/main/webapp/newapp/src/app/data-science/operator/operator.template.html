@@ -10,7 +10,7 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{distribution.name}}
+            <i class="fa fa-gift"></i>{{operator.name}}
           </div>
           <div class="tools">
             <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
@@ -49,11 +49,11 @@
           </div>
 
           <div class="form-body" style="padding-top:50px;">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitDistribution()" #myNewForm="ngForm">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitOperatorType()" #myNewForm="ngForm">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="distribution.uuid" name="uuid" placeholder="" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="operator.uuid" name="uuid" placeholder="" [disabled]="true">
                 </div>
               </div>
 
@@ -62,7 +62,7 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="distribution.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="operator.name" name="name" placeholder="" [disabled]="mode == 'true'">
                 </div>
               </div>
               <div class="form-group" *ngIf="mode">
@@ -84,22 +84,21 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="distribution.createdOn" name="createdOn">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="operator.createdOn" name="createdOn">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="distribution.tags" [disable]="mode == 'true'" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
+                  <tag-input [(ngModel)]="operator.tags" [disable]="mode == 'true'" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="distribution.desc" name="desc" class="form-control noresize " rows="2"
-                    style="resize:none;"></textarea>
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="operator.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
 
@@ -107,7 +106,7 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="distribution.active"
+                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="operator.active"
                       name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
@@ -117,35 +116,14 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="distribution.published"
+                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="operator.published"
                       name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">Library
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <p-dropdown [options]="librarytypesOption" [(ngModel)]="distribution.library" name="library" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
-                    [disabled]="mode == 'true'">
-                  </p-dropdown>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Class Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="distribution.className" name="className" placeholder="" [disabled]="mode == 'true'">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Parameter List</label>
-                <div class="col-md-6">
+                <label class="col-md-3 control-label">Parameter List</label>                <div class="col-md-6">
                   <p-dropdown [options]="arrayParamList" [(ngModel)]="paramList" datakey="uuid" name="type" [style]="{'width':'100%','padding':'3px','x-index':'100'}"
                     [disabled]="mode == 'true'">
                   </p-dropdown>
