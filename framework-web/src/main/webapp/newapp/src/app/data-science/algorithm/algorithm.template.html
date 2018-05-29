@@ -121,19 +121,19 @@
                 </div>
               </div>
 
-              <div class="form-group" >
-                <label class="col-md-3 control-label">Type
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <p-dropdown [options]="typesOption"          
-                    [(ngModel)]="algorithm.type"
-                    name="type"
-                    [style]="{'width':'100%','padding':'3px','z-index':'100'}"
-                    [disabled]="mode == 'true'">
-                  </p-dropdown>
-                </div>
-              </div> 
+            <div class="form-group" >
+              <label class="col-md-3 control-label">Type
+                <span class="required" aria-required="true"> * </span>
+              </label>
+              <div class="col-md-6">
+                <p-dropdown [options]="typesOption"          
+                  [(ngModel)]="algorithm.type"
+                  name="type"
+                  [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                  [disabled]="mode == 'true'">
+                </p-dropdown>
+              </div>
+            </div> 
 
               <div class="form-group" >
                 <label class="col-md-3 control-label">Library

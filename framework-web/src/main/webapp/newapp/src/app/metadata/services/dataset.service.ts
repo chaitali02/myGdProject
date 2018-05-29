@@ -12,7 +12,7 @@ export class DatasetService {
   
   constructor(@Inject(Http) private http: Http,private _sharedService: SharedService) { }
   
-  getFormulaByType2(uuid:Number,type:Number): Observable<any[]> {
+  getFormulaByType2(uuid:Number,type:any): Observable<any[]> {
     let url ='/metadata/getFormulaByType2?action=view&uuid='+uuid+'&type='+type;
     return this._sharedService.getCall(url)
     .map((response: Response) => {

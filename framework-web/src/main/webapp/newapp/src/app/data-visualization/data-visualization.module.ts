@@ -55,7 +55,8 @@ import { VizpodService } from  '../metadata/services/vizpod.service';
     providers: [
         CommonService,
         DashboardService,
-        VizpodService
+        VizpodService,
+
     ],
   //  entryComponents: [DropdownComponent],
 })

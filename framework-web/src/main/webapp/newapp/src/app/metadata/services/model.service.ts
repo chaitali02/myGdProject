@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, Input } from '@angular/core';
-import { Http,Response } from '@angular/http'
+import { Http,Response,Headers } from '@angular/http'
 import { SharedService } from '../../shared/shared.service';
 // import 'rxjs/add/operator/map';
 // import 'rxjs/add/operator/catch';
@@ -8,7 +8,7 @@ import { SharedService } from '../../shared/shared.service';
 
 @Injectable()
 export class ModelService{
-    
+  headers: Headers;
   constructor(@Inject(Http) private http: Http,private _sharedService: SharedService) { }
   
   getExecuteModel(uuid:Number,version:String): Observable<any[]> {
@@ -56,6 +56,42 @@ export class ModelService{
    .catch(this.handleError);
   }
 
+  getParamListByFormula(uuid:any,type:String): Observable<any[]> {
+    let url ='metadata/getParamListByFormula?action=view&uuid='+uuid+'&type='+type;
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
+
+  getFormulaByType2(type:any): Observable<any[]> {
+    let url ='/metadata/getFormulaByType2?action=view&type='+type+'&formulaType=custom';
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+  .catch(this.handleError);
+  }
+
+  getModelScript(uuid:any,version:any): Observable<any[]> {
+    let url ='/model/getModelScript?action=view&uuid='+uuid+'&version='+version;
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      let body:string = response['_body'];
+      return body;
+  })
+   .catch(this.handleError);
+  }
+  
+  uploadFile(extension, data, fileType) {
+    let baseUrl = 'http://localhost:8080'
+    var url = baseUrl + '/common/upload?action=edit&extension=' + extension + '&fileType=' + fileType;
+    let body = data;
+    return this.http
+      .post(url, body, { headers: this.headers })
+  }
+
   getModelResults(uuid:any,version:any): Observable<any[]> {
     let url ='/model/getResults?action=view&uuid='+uuid+'&version='+version;
     return this._sharedService.getCall(url)
@@ -64,6 +100,7 @@ export class ModelService{
   })
    .catch(this.handleError);
   }
+  
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
 }

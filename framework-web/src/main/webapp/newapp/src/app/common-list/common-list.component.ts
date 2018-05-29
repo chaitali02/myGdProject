@@ -312,9 +312,6 @@ export class CommonListComponent {
                 "caption":this.metaconfig.getMetadataDefs((this.type).toLowerCase())['caption'],
                 "routeurl":null
               }]
-
-
-
         });
     }
 
@@ -336,17 +333,13 @@ export class CommonListComponent {
             
             let _moduleUrl=this.metaconfig.getMetadataDefs(this.type)['moduleState']
             this.routerUrl=this.metaconfig.getMetadataDefs(this.type)['resultState']
-            this.router.navigate(["./"+_moduleUrl+"/"+this.routerUrl,uuid, version,this.type, 'true'],{relativeTo:this.activeroute});
-      
+            this.router.navigate(["./"+_moduleUrl+"/"+this.routerUrl,uuid, version,this.type, 'true'],{relativeTo:this.activeroute});      
         }
-        else{
-            
+        else{           
             let _moduleUrl=this.metaconfig.getMetadataDefs(this.type)['moduleState']
             this.routerUrl=this.metaconfig.getMetadataDefs(this.type)['detailState']
             this.router.navigate(["./"+_moduleUrl+"/"+this.routerUrl, uuid, version, 'true'],{relativeTo:this.activeroute});
-       }
-        
-        
+       }               
     }
     edit(uuid,version) {
         let _moduleUrl=this.metaconfig.getMetadataDefs(this.type)['moduleState']
@@ -410,7 +403,6 @@ export class CommonListComponent {
         "message":"Export",
         "functionName":"okExport()"
         }
-
     }
     execute(uuid,version) {
         this.executeId=uuid
@@ -432,7 +424,6 @@ export class CommonListComponent {
         "message":"Kill",
         "functionName":"okKill()"
         }
-
     }
     restart(uuid,version) {
         this.restartId=uuid
