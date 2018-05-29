@@ -90,6 +90,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 		var deferred = $q.defer();
 		MetadataDatapodFactory.findDatapodSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
+			//console.log(response)
 			deferred.resolve({
 				data: response
 			});

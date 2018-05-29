@@ -57,6 +57,11 @@
             "type" : "oracle",
             "name" : "avg",
             "paramInfoHolder" : []
+        },
+        {
+            "type" : "postgres",
+            "name" : "avg",
+            "paramInfoHolder" : []
         }
     ],
     "funcType" : "hive",

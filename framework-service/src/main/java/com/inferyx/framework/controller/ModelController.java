@@ -36,12 +36,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
-import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Predict;
@@ -221,15 +221,16 @@ public class ModelController {
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
 		try {
-			
+
+			RunMode runMode = Helper.getExecutionMode(mode);
 			Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictUUID, predictVersion,
 					MetaType.predict.toString());
 
 			PredictExec predictExec = null;
 			predictExec = modelServiceImpl.create(predict, execParams, null, predictExec);
-			modelServiceImpl.predict(predict, execParams, predictExec);
+			modelServiceImpl.predict(predict, execParams, predictExec, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -254,7 +255,7 @@ public class ModelController {
 			return modelServiceImpl.simulate(simulate, execParams, simulateExec, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e);
 			
 		}
 	}
@@ -275,7 +276,7 @@ public class ModelController {
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
-			modelServiceImpl.setRunMode(runMode);
+
 			TrainExec trainExec = null;
 			List<ParamMap> paramMapList = new ArrayList<>();
 
@@ -288,16 +289,15 @@ public class ModelController {
 				paramMapList = paramSetServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion());
 			}
 			if (paramMapList.size() > 0) {
-
 				for (ParamMap paramMap : paramMapList) {
 					trainExec = modelServiceImpl.create(train, model, execParams, paramMap, trainExec);
 					Thread.sleep(1000); // Should be parameterized in a class
-					modelServiceImpl.train(train, model, trainExec, execParams, paramMap);
+					modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
 					trainExec = null;
 				}
 			} else {
 				trainExec = modelServiceImpl.create(train, model, execParams, null, trainExec);
-				modelServiceImpl.train(train, model, trainExec, execParams, null);
+				modelServiceImpl.train(train, model, trainExec, execParams, null, runMode);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

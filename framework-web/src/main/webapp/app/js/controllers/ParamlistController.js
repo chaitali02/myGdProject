@@ -36,6 +36,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.parantType=$stateParams.parantType;
 	$scope.isSubmitEnable = true;
 	$scope.paramlistData;
 	$scope.showForm = true;
@@ -45,7 +46,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.paramlist.versions = [];
 	$scope.isshowmodel = false;
 	$scope.paramtable = null;
-	$scope.typeSimple = ["string", "double", "date", "integer", "row"];
+	$scope.typeSimple = ["string", "double", "date", "integer", "list"];
 	$scope.type = [
 		{"name":"string","caption":"string"},
 		{"name":"double","caption":"double"},
@@ -56,7 +57,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"attribute","caption":"attribute"},
 		{"name":"attributes","caption":"attribute[s]"},
 		{"name":"distribution","caption":"distribution"},
-		{"name":"datapod","caption":"datapod"}];
+		{"name":"datapod","caption":"datapod"},
+	    {"name":"list","caption":"list"}, ];
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['paramlist'] || [];
@@ -67,10 +69,21 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		content: '',
 		timeout: 3000 //time in ms
 	};
+	
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['paramlist'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+   
+	$scope.close=function(){
+		$scope.parantType=$stateParams.parantType;
+		$scope.type=$stateParams.type;
+		var state=$scope.type
+		if($scope.parantType){
+			state=state+$scope.parantType
+		}
+		$state.go(state); 
+	}
 
 	$scope.showPage = function () {
 		$scope.showForm = true;
@@ -207,6 +220,10 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		paramlistJson.desc = $scope.paramlistData.desc
 		paramlistJson.active = $scope.paramlistData.active;
 		paramlistJson.published = $scope.paramlistData.published;
+		if($scope.parantType){
+	    	paramlistJson.paramListType = $scope.parantType;
+			
+		}
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -217,7 +234,6 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 
 		var paramInfoArray = [];
 		if ($scope.paramtable.length > 0) {
-			debugger
 			for (var i = 0; i < $scope.paramtable.length; i++) {
 				var paraminfo = {};
 				paraminfo.paramId = $scope.paramtable[i].paramId;
@@ -276,7 +292,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$('#paramlistsave').css("dispaly", "none");
 		var hidemode = "yes";
 		if (hidemode == 'yes') {
-			setTimeout(function () { $state.go("paramlist"); }, 2000);
+			
+			setTimeout(function () { $scope.close(); }, 2000);
 		}
 	}
 });

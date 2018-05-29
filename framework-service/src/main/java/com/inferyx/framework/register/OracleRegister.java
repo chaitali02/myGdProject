@@ -41,7 +41,7 @@ import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Stage;

@@ -18,18 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
@@ -159,7 +155,7 @@ public class MapOperator implements Operator {
 	}
 
 	@Override
-	public String execute(OperatorType operatorType, ExecParams execParams,
+	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
 			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
@@ -167,7 +163,7 @@ public class MapOperator implements Operator {
 	}
 
 	@Override
-	public java.util.Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
+	public java.util.Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
 			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
 			RunMode runMode) throws Exception {
@@ -176,7 +172,7 @@ public class MapOperator implements Operator {
 	}
 
 	@Override
-	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub

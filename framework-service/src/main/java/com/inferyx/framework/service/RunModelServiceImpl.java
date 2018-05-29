@@ -11,7 +11,9 @@
 package com.inferyx.framework.service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import javax.xml.bind.JAXBException;
@@ -30,6 +32,7 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -42,6 +45,7 @@ import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 
 public class RunModelServiceImpl implements Callable<TaskHolder> {
@@ -662,8 +666,14 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 				
 				//Object va = exec.assembleDF(fieldArray, (tableName+"_train_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
-				
-				PipelineModel trngModel = exec.trainModel(paramMap, fieldArray, model.getLabel(), algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				Map<String, String> mappingList = new LinkedHashMap<>();
+				for(FeatureAttrMap featureAttrMap : train.getFeatureAttrMap()) {
+					mappingList.put(featureAttrMap.getAttribute().getAttrName(), featureAttrMap.getFeature().getFeatureName());
+				}
+
+				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
+				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
+				PipelineModel trngModel = exec.trainModel(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
 				result = trngModel;
 				
 				List<String> customDirectories = new ArrayList<>();

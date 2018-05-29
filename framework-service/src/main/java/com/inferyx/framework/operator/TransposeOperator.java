@@ -26,7 +26,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
@@ -96,7 +95,7 @@ public class TransposeOperator implements Operator {
 	}
 	
 	@Override
-	public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		ParamListHolder sourceDatapodInfo = paramSetServiceImpl.getParamByName(execParams, "sourceDatapod");
@@ -124,17 +123,18 @@ public class TransposeOperator implements Operator {
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		
-		String newVersion = Helper.getVersion();
-		locationDatapod.setVersion(newVersion);
+//		String newVersion = Helper.getVersion();
+//		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
-			
+		logger.info("otherParams in transposeOperator : "+ otherParams);
+		
 		return otherParams;
 		
 	}
 	
 	@Override
-	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		return null;
@@ -144,7 +144,7 @@ public class TransposeOperator implements Operator {
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.lang.Object, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
 	 */
 	@Override
-	public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		logger.info("Executing TransposeOperator");

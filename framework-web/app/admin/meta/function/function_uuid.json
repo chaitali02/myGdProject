@@ -138,6 +138,11 @@
             "type" : "oracle",
             "name" : "SYS_GUID",
             "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "postgres",
+            "name" : "uuid",
+            "paramInfoHolder" : []
         }
     ]
 }

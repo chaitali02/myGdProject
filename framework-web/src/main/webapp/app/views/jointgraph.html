@@ -193,7 +193,8 @@
                   <div class="form-group row">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" id="typeOprator1" style="padding-left: 22px; padding-top: 7px;">{{popupModel.operatorTypeText =='Operator'?'Type': popupModel.operatorTypeText || 'Type'}}</label>
                     <div class="col-md-6">
-                      <select select2 class="form-control" ng-disabled="popupModel.type == 'operatortype' || isModelDisable" typeid="droppop" ng-change="onChangeOperatorInfo()"
+                        <!-- popupModel.type == 'operator' || -->
+                      <select select2 class="form-control" ng-disabled="isModelDisable" typeid="droppop" ng-change="onChangeOperatorInfo(true)"
                         ng-model="popupModel.selectedType" ng-options="option.uuid+'|'+option.name as option.name for option in operatorinfoMapInfo">
                       </select>
                     </div>
@@ -287,7 +288,7 @@
                               </span>
                             </td>
                             <td width="15%">
-                              <div ng-if="['simple','distribution'].indexOf(listHolder.selectedParamValueType) !=-1">
+                              <div ng-if="['simple','distribution','list'].indexOf(listHolder.selectedParamValueType) !=-1">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                   <input type="text" ng-model="listHolder.paramType" ng-disabled="true" class="form-control">
                                 </span>
@@ -306,9 +307,15 @@
                                 <div ng-if="listHolder.selectedParamValueType =='simple'">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <input ng-if="listHolder.paramType !='integer'" ng-disabled="isModelDisable" type="text" ng-model="listHolder.paramValue" class="form-control" disable-validation-message="">
-                                    <input ng-if="listHolder.paramType =='integer'" ng-disabled="isModelDisable" type="text " ng-model="listHolder.paramValue" class="form-control" disable-validation-message=""
-                                      s>
+                                    <input ng-if="listHolder.paramType =='integer'" ng-disabled="isModelDisable" type="text " ng-model="listHolder.paramValue" class="form-control" disable-validation-message="">
                                   </span>
+                                </div>
+                                <div ng-if="listHolder.selectedParamValueType =='list'">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select select2 class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" data-ng-model="listHolder.paramValue" 
+                                      ng-options="r for r in listHolder.allListInfo" required disable-validation-message="">
+                                    </select>
+                                    <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.paramValue" required disable-validation-message=""/> </span>
                                 </div>
                                 <div ng-if="listHolder.selectedParamValueType =='datapod'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -337,7 +344,7 @@
                                       />
                                     </span>
                                     </div>
-                                 <div ng-if="listHolder.selectedParamValueType =='distribution'" ng-init="getAllLatest('distribution',$index,false);onChangeDistribution(listHolder.selectedParamValue,$index)">
+                                 <div ng-if="listHolder.selectedParamValueType =='distribution'" ng-init="getAllLatest('distribution',$index,false);">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <select select2 class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" ng-change="onChangeDistribution(listHolder.selectedParamValue,$index)"
                                       data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDistribution track by r.uuid"
@@ -346,7 +353,7 @@
                                     <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required disable-validation-message=""/>
                                   </span>
                                 </div>
-                                <div style="text-align:center;" ng-if="['datapod','rule','dataset','distribution','simple'].indexOf(listHolder.selectedParamValueType) ==-1">
+                                <div style="text-align:center;" ng-if="['datapod','rule','dataset','distribution','simple','list'].indexOf(listHolder.selectedParamValueType) ==-1">
                                   NA
                                 </div>
                               </div>

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.connector;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -21,8 +20,6 @@ import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;

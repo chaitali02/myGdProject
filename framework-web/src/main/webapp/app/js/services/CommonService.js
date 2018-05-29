@@ -250,11 +250,16 @@
     this.uploadFile=function(dataUuid,data,type){
       var url="datapod/upload?action=edit&datapodUuid="+dataUuid+"&type="+type
   		var deferred = $q.defer();
-  	    CommonFactory.uploadFile(url,data).then(function(response){onSuccess(response.data)});
+  	    CommonFactory.uploadFile(url,data).then(function(response){onSuccess(response.data)},function(response){onError(response)});
     	    var onSuccess=function(response){
       	    deferred.resolve({
                 data:response
              });
+          }
+          var onError = function (response) {
+            deferred.reject({
+              data: response
+            })
           }
          return deferred.promise;
   	}
@@ -305,12 +310,46 @@
         OnSuccess(response.data)
       });
       var OnSuccess = function(response) {
+        if(response){
+          for (var i = 0; i < response.length; i++) {
+          response[i].isupload=false;
+          response[i].index=i;
+          }
+        }
         deferred.resolve({
           data: response
         });
       }
       return deferred.promise;
     } /*End getBaseEntityByCriteria*/
+    
+    this.getParamListByRule = function(type, name, userName, startDate, endDate, tags, active, published) {
+      var deferred = $q.defer();
+      var url = "metadata/getParamListByRule?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;
+      CommonFactory.httpGet(url).then(function(response) {
+        OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End getParamListByRule*/
+
+    this.getParamListByModel = function(type, name, userName, startDate, endDate, tags, active, published) {
+      var deferred = $q.defer();
+      var url = "metadata/getParamListByModel?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;
+      CommonFactory.httpGet(url).then(function(response) {
+        OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End getParamListByModel*/
 
     /*Start getAll*/
     this.getAll = function(type) {
@@ -341,6 +380,36 @@
       }
       return deferred.promise;
     } /*End getGraphResults*/
+
+     /*Start getTreeGraphResults*/
+     this.getTreeGraphResults = function(uuid, version, degree) {
+      var deferred = $q.defer();
+      var url = "graph/getTreeGraphResults?action=view&uuid=" + uuid + "&version=" + version + "&degree=" + degree;
+      CommonFactory.httpGet(url).then(function(response) {
+        onSuccess(response.data)
+      });
+      var onSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End getTreeGraphResults*/
+
+       /*Start getTreeGraphResults*/
+       this.getOperatorByOperatorType = function(operatorType) {
+        var deferred = $q.defer();
+        var url = "operator/getOperatorByOperatorType?action=view&operatorType="+operatorType;
+        CommonFactory.httpGet(url).then(function(response) {
+          onSuccess(response.data)
+        });
+        var onSuccess = function(response) {
+          deferred.resolve({
+            data: response
+          });
+        }
+        return deferred.promise;
+      } /*End getTreeGraphResults*/
 
     this.execute = function(type, uuid, version, data) {
       var url;
@@ -443,6 +512,7 @@
       else if(type == "operatortype"){
         url = "metadata/getParamListByOperatorType?uuid=" + uuid+"&type="+type;
       }
+    
       else if(type =='distribution'){
         url="metadata/getParamListByDistribution?uuid=" + uuid+"&type="+type;
       }
@@ -453,7 +523,7 @@
       var onSuccess = function(response) {
         var paramListHolder=[];
         var type=["ONEDARRAY","TWODARRAY"];
-        var type1=['distribution','attribute','attributes','datapod'];
+        var type1=['distribution','attribute','attributes','datapod','list'];
         if(response.length >0){
           for(var i=0;i<response.length;i++){
             var paramList={};
@@ -474,11 +544,21 @@
               paramList.isParamType=response[i].paramType;
               paramList.selectedParamValueType=response[i].paramType=="distribution" ?response[i].paramType:"datapod";
               paramList.paramValue=response[i].paramValue;
-              if(response[i].paramValue !=null){
+              if(response[i].paramValue !=null && response[i].paramValue !='list'){
               var selectedParamValue={};
               selectedParamValue.uuid=response[i].paramValue.ref.uuid;
               selectedParamValue.type=response[i].paramValue.ref.type;
               paramList.selectedParamValue=selectedParamValue;
+              }
+              if( response[i].paramValue && response[i].paramType =='list'){
+                paramList.selectedParamValueType="list";
+                var listvalues=response[i].paramValue.value.split(',');
+                var selectedParamValue={};
+                selectedParamValue.type=response[i].paramValue.ref.type;
+                selectedParamValue.value=listvalues[0];
+                paramList.paramValue=selectedParamValue;
+                paramList.selectedParamValue=selectedParamValue;
+                paramList.allListInfo=listvalues;
               }
             }else{
               paramList.isParamType="datapod";

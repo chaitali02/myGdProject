@@ -16,7 +16,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Edge {
 	String src;
 	String dst;
+
 	String relationType;
+	
+	private GraphMetaIdentifierHolder srcInfo;
+	private GraphMetaIdentifierHolder dstInfo;
+
+	public GraphMetaIdentifierHolder getSrcMetaRef() {
+		return srcInfo;
+	}
+	public void setSrcMetaRef(GraphMetaIdentifierHolder srcInfo) {
+		this.srcInfo = srcInfo;
+	}
+	public GraphMetaIdentifierHolder getDstMetaRef() {
+		return dstInfo;
+	}
+	public void setDstMetaRef(GraphMetaIdentifierHolder dstInfo) {
+		this.dstInfo = dstInfo;
+	}
 
 	public String getSrc() {
 		return src;
@@ -37,15 +54,32 @@ public class Edge {
 		this.relationType = relationType;
 	}
 	
-	public Edge (String src, String dst, String relationType) {
+	/*public Edge (String src, String dst, String relationType) {
 		this.src = src;
 		this.dst = dst;
 		this.relationType = relationType;
 	}
 	
+	
+	
 	@Override
 	public String toString() {
 		return "Edge [src=" + src + ", dst=" + dst + ", relationType=" + relationType + "]";
+	}*/
+	
+	
+	@Override
+	public String toString() {
+		return "Edge [src=" + src + ", dst=" + dst + ", relationType=" + relationType + ", srcInfo=" + srcInfo
+				+ ", dstInfo=" + dstInfo + "]";
+	}
+	public Edge(String src, String dst, String relationType, GraphMetaIdentifierHolder srcInfo,
+			GraphMetaIdentifierHolder dstInfo) {
+		this.src = src;
+		this.dst = dst;
+		this.relationType = relationType;
+		this.srcInfo = srcInfo;
+		this.dstInfo = dstInfo;
 	}
 	
 }

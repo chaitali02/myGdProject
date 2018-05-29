@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -39,13 +40,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.spark.sql.Dataset;
 import org.codehaus.jettison.json.JSONException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json4s.jackson.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -63,6 +69,7 @@ import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
+import com.inferyx.framework.dao.ICommentDao;
 import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.dao.IDagExecDao;
@@ -141,6 +148,9 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.FeatureAttrMap;
+import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Log;
 import com.inferyx.framework.domain.Message;
@@ -148,7 +158,8 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -159,6 +170,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
@@ -166,6 +178,8 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.GraphRegister;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.UpdateResult;
 
 @Service
 public class CommonServiceImpl <T> {
@@ -398,7 +412,17 @@ public class CommonServiceImpl <T> {
 	IOperatorExecDao iOperatorExecDao;
 	@Autowired
 	IOperatorDao iOperatorDao;
+	@Autowired
+	ICommentDao iCommentDao;
 	
+	public ICommentDao getiCommentDao() {
+		return iCommentDao;
+	}
+
+	public void setiCommentDao(ICommentDao iCommentDao) {
+		this.iCommentDao = iCommentDao;
+	}
+
 	/**
 	 * @Ganesh
 	 *
@@ -1515,11 +1539,33 @@ public class CommonServiceImpl <T> {
 						paramSet.setParamInfo(paramInfos);
 						object = paramSet;
 					}
+					/*if (method.getName().contains("ParamListInfo") && method.getName().startsWith(GET) && (object instanceof ExecParams))  {
+						System.out.println();
+						List<ParamListHolder> paramListInfo = (List<ParamListHolder>) method.invoke(object);
+						System.out.println();
+					}*/
+					if ((method.getName().contains("OperatorParams") || (object instanceof ExecParams)) && method.getName().startsWith(GET))  {
+						if(method.getName().contains("OperatorParams")){
+							@SuppressWarnings("unchecked")
+							HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
+							if(operatorParams != null) {
+								if(operatorParams.containsKey("EXEC_PARAMS")) {
+									ObjectMapper mapper = new ObjectMapper();
+									ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+									execParams = resolveExecParams(execParams);
+									operatorParams.put("EXEC_PARAMS", execParams);
+								}
+							}
+						} else if((object instanceof ExecParams)) {
+							object = resolveExecParams((ExecParams)object);
+						}
+						
+					}
 					
-					if (method.getName().contains("OperatorParams") && method.getName().startsWith(GET))  {
-						HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
-						if(operatorParams != null)
-							object = resolveOperatorParams(operatorParams, object);
+					if ((method.getName().contains("FeatureAttrMap")) && object instanceof Train && method.getName().startsWith(GET))  {
+						@SuppressWarnings("unchecked")
+						List<FeatureAttrMap> featureAttrMap = (List<FeatureAttrMap>) method.invoke(object);
+						object = resolveFeatureAttrMap(featureAttrMap, object);
 					}
 					
 					Object invokedObj = method.invoke(object);
@@ -1566,10 +1612,7 @@ public class CommonServiceImpl <T> {
 	 * @return
 	 * @throws JsonProcessingException 
 	 */
-	private Object resolveOperatorParams(HashMap<String, Object> operatorParams, Object object) throws JsonProcessingException {
-			if(operatorParams.containsKey("EXEC_PARAMS")) {
-				ObjectMapper mapper = new ObjectMapper();
-				ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+	private ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
 				List<ParamListHolder> paramListInfo= execParams.getParamListInfo();
 				
 				if(paramListInfo != null)
@@ -1621,10 +1664,8 @@ public class CommonServiceImpl <T> {
 								}
 							}
 						}
-					}
-				operatorParams.put("EXEC_PARAMS", execParams);
-			}
-		return object;
+					}				
+		return execParams;
 	}
 
 	public T resolveName(String uuid, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
@@ -2171,7 +2212,6 @@ public class CommonServiceImpl <T> {
 		return resolveBaseEntityList(baseEntityList);
 	}
 	
-	@SuppressWarnings("unused")
 	public List<MetaStatsHolder> getMetaStats(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, JsonProcessingException {
 		logger.info("Inside getMetaStats - type : " + type);
 		String appUuid = null;
@@ -2190,11 +2230,14 @@ public class CommonServiceImpl <T> {
 				if (appUuid == null) {
 					//count = (long) iDao.getClass().getMethod("count").invoke(iDao);
 					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
-
-				}else{
+           
+				}
+				
+				else{
 					/*Query query = new Query();
 					query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));    
 					count = mongoTemplate.count(query, Helper.getDomainClass(Helper.getMetaType(mType.toString().toLowerCase())));*/
+				
 					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
 					//count = getAllLatest(mType.toString(), "Y").size();
 				}
@@ -2206,6 +2249,13 @@ public class CommonServiceImpl <T> {
 					String nameLastUpdatedBy = (String) ref.getClass().getMethod("getName").invoke(ref);
 					String lastUpdatedOn = (String) metaobjNew.getClass().getMethod("getCreatedOn").invoke(metaobjNew);
 					countHolder.add(new MetaStatsHolder(mType.toString().toLowerCase(), Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+					if(mType.toString().equalsIgnoreCase(MetaType.paramlist.toString())){
+						count= metadataServiceImpl.getParamList(MetaType.rule.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistrule", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+						count= metadataServiceImpl.getParamList(MetaType.model.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistmodel", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+			
+					}	
 				}				
 			}
 		}else{
@@ -3163,7 +3213,7 @@ public class CommonServiceImpl <T> {
 		 * @param operator
 		 * @return
 		 */
-		public ExecParams getExecParams (Operator operator) {
+		public ExecParams getExecParams (TaskOperator operator) {
 			if (operator == null 
 					|| operator.getOperatorParams() == null 
 					|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)
@@ -3177,4 +3227,69 @@ public class CommonServiceImpl <T> {
 			return execParams;
 		}
 		
+		private Object resolveFeatureAttrMap(List<FeatureAttrMap> featureAttrMapList, Object object) throws JsonProcessingException {
+			try {
+				for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+					FeatureRefHolder featureHolder = featureAttrMap.getFeature(); 
+					AttributeRefHolder attributeHolder = featureAttrMap.getAttribute();
+					
+					MetaIdentifier featureIdentifier = featureHolder.getRef();
+					MetaIdentifier attributeIdentifier = attributeHolder.getRef();
+					Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString());
+					Datapod datapod = (Datapod) getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString());
+					for(Feature feature : model.getFeatures()) {
+						if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
+							featureHolder.setFeatureName(feature.getName());
+							featureAttrMap.setFeature(featureHolder);
+						}
+					}
+					for(Attribute attribute : datapod.getAttributes()) {
+						if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
+							attributeHolder.setAttrName(attribute.getName());
+							featureAttrMap.setAttribute(attributeHolder);
+						}
+					}
+				}
+				Train train = (Train) object;
+				train.setFeatureAttrMap(featureAttrMapList);
+				object = train;
+				return object;				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return object;
+		}
+		
+
+		
+		public String resolveLabel(AttributeRefHolder labelInfo) throws JsonProcessingException {
+			String attributeName = null;
+			Object source = getOneByUuidAndVersion(labelInfo.getRef().getUuid(), labelInfo.getRef().getVersion(), labelInfo.getRef().getType().toString());
+			if(source instanceof Datapod) {
+				Datapod datapod = (Datapod) source;
+				attributeName = datapod.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			} else if(source instanceof Dataset) {
+				DataSet dataset = (DataSet) source;
+				attributeName = dataset.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			} else if(source instanceof Rule) {
+				Rule rule = (Rule) source;
+				attributeName = rule.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			}		
+			return attributeName;
+		}
+		@SuppressWarnings("unchecked")
+		public List<BaseEntity> getResolveNameByUuidandType(String uuid,String type)  {
+			Query query = new Query();
+			query.fields().include("uuid");
+			query.fields().include("name");
+			query.fields().include("type");
+			
+			query.addCriteria(Criteria.where("uuid").is(uuid));
+			List<BaseEntity> obj=new ArrayList<>();
+			obj = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(Helper.getMetaType(type)));
+			//String name=obj.getName();
+			
+			return obj;
+			
+		}
 }

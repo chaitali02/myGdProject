@@ -15,9 +15,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +31,11 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IEdgeDao;
 import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.domain.Edge;
+import com.inferyx.framework.domain.GraphMetaIdentifier;
+import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.NodeDetail;
 import com.inferyx.framework.domain.NodeDetails;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.Vertex;
@@ -53,23 +59,24 @@ public class MongoGraphServiceImpl {
 	}
 	
 	protected  Map<String, Object> getEdgeMap(Edge edge) {
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new LinkedHashMap<>();
 		if (edge == null) {
 			return null;
 		}
 		map.put("src", edge.getSrc());
-		map.put("dst", edge.getDst());
+/*		map.put("src", edge.getSrcMetaRef().getRef().getUuid());
+*/		map.put("dst", edge.getDst());
 		map.put("relationType", edge.getRelationType());
 		return map;
 	}
 
 	
 	protected  Map<String, Object> getVertexMap(Vertex vertex) {
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new LinkedHashMap<>();
 		if (vertex == null) {
 			return null;
 		}
-		map.put("id", vertex.getUuid());
+		//map.put("id", vertex.getUuid());
 		  map.put("version", vertex.getVersion());
 	///If user's name is "user" then resolve it using method "getLatestByUuidWithoutAppUuid"	  
 		  if(vertex.getName().toLowerCase().equalsIgnoreCase(MetaType.user.toString().toLowerCase())) {
@@ -93,13 +100,28 @@ public class MongoGraphServiceImpl {
 		  map.put("dataType", vertex.getDataType());
 		  map.put("desc", vertex.getDesc());
 		  map.put("createdOn", vertex.getCreatedOn());
+		  map.put("parent", vertex.getParent());
 		  map.put("active", vertex.getActive());
-		  MetaIdentifier mi = new MetaIdentifier();
-		  mi.setType(Helper.getMetaType(vertex.getNodeType()));	  
+		  GraphMetaIdentifierHolder graphmetaholder=new GraphMetaIdentifierHolder();
+		  GraphMetaIdentifier graphmi = new GraphMetaIdentifier();
+		  if(vertex.getGraphMetaHolder() != null) {
+
+			  graphmi.setType(vertex.getGraphMetaHolder().getRef().getType());
+			  graphmi.setUuid(vertex.getGraphMetaHolder().getRef().getUuid());
+		  }	 else {
+		  graphmi.setType(vertex.getNodeType());
+		  
 		  String[] tokens =vertex.getUuid().split("_");
-		  mi.setUuid(tokens[0]);
-		  mi.setVersion(vertex.getVersion());	  
-		  map.put("metaRef",mi);
+		  graphmi.setUuid(tokens[0]);
+		  graphmi.setVersion(vertex.getVersion());	 
+		  }
+		  //graphmi.setName(vertex.getName());	  
+		  graphmetaholder.setRef(graphmi);
+		/*  if(graphmetaholder.equals(null)  ) {
+		  map.put("metaRef",graphmetaholder);
+		  }*/
+		  map.put("metaRef",graphmetaholder);
+
 		return map;
 	}
 
@@ -108,8 +130,8 @@ public class MongoGraphServiceImpl {
 		String result = null;
 		List<Map<String,Object>> graphVertex = new ArrayList<>();
 		List<Map<String,Object>> graphEdge = new ArrayList<>();
-		Map<String, Edge> edgeMap = new HashMap<>();
-		Map<String, Vertex> vertexMap = new HashMap<>();
+		Map<String, Edge> edgeMap = new LinkedHashMap<>();
+		Map<String, Vertex> vertexMap = new LinkedHashMap<>();
 		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
 		List<String> uuidList = null;
@@ -155,6 +177,91 @@ public class MongoGraphServiceImpl {
 		}
 		return result;
 
+	}
+	
+	
+	
+	public String getTreeGraphJson(String uuid, String version, String degree) {
+		NodeDetail nodeDetail = new NodeDetail();
+		String result = null;
+		List<Map<String,Object>> graphVertex = new ArrayList<>();
+		List<Map<String,Object>> graphEdge = new ArrayList<>();
+		Map<String, Edge> edgeMap = new LinkedHashMap<>();
+		Map<String, Vertex> vertexMap = new LinkedHashMap<>();
+		List<Edge> edgeList = null;
+		List<Vertex> vertexList = null;
+
+		Vertex parentvertex = null;
+		List<String> uuidList = null;
+		edgeList = iEdgeDao.findAllBySrc(uuid);
+
+		// Get all dsts from edgeList
+		if (edgeList != null) {
+		uuidList = new ArrayList<>();
+		for (Edge edge : edgeList) {
+		edgeMap.put(edge.getSrc()+"_"+edge.getDst(), edge);
+		}
+		for (String edgeKey : edgeMap.keySet()) {
+		Edge edge = edgeMap.get(edgeKey);
+		uuidList.add(edge.getDst());
+		graphEdge.add(getEdgeMap(edge));
+
+		}
+		}
+
+		uuidList.add(uuid);
+		parentvertex=iVertexDao.findOneByUuid(uuid);
+
+		vertexList = iVertexDao.findAllByUuidContaining(uuidList);
+		if (vertexList != null) {
+
+		for (Vertex vertex : vertexList) {
+
+		vertexMap.put(vertex.getUuid(), vertex);
+		}
+		for (String vertexKey : vertexMap.keySet()) {
+		Vertex vertex = vertexMap.get(vertexKey);
+
+		if(!vertex.getUuid().equals(uuid)) {
+		//vertex.setParent(parentvertex.getName());
+		Map<String, Object> mapresult=getVertexMap(vertex);
+	//	mapresult.put("id",mapresult.get("id")+parentvertex.getUuid());
+		graphVertex.add(mapresult);
+		}
+		}
+		} 
+		if(parentvertex != null) {
+		nodeDetail.setName(parentvertex.getName());
+		//nodeDetail.setParent("null");
+		nodeDetail.setActive(parentvertex.getActive());
+		nodeDetail.setCreatedOn(parentvertex.getCreatedOn());
+		String id=parentvertex.getUuid()+parentvertex.getName();
+	//	nodeDetail.setId(id);
+		nodeDetail.setNodeType(parentvertex.getNodeType());
+		nodeDetail.setDataType(parentvertex.getDataType());
+		nodeDetail.setVersion(parentvertex.getVersion());
+		GraphMetaIdentifier graphMeta =new GraphMetaIdentifier();
+		graphMeta.setUuid(parentvertex.getUuid());
+		graphMeta.setName(parentvertex.getName());
+		graphMeta.setType(parentvertex.getNodeType());
+		GraphMetaIdentifierHolder graphMetaIdentifierHolder=new GraphMetaIdentifierHolder();
+		graphMetaIdentifierHolder.setRef(graphMeta);
+
+		nodeDetail.setMetaRef(graphMetaIdentifierHolder);;
+		nodeDetail.setChildren(graphVertex);
+		// nodeDetail.setParent(parentvertex);
+		//nodeDetails.setLinks(graphEdge);
+		//nodeDetail.setJsonName("graph");
+		}
+		try {
+		ObjectWriter writer = new ObjectMapper().writer()
+		.withDefaultPrettyPrinter();
+		result = writer.writeValueAsString(nodeDetail);
+
+		} catch (IOException e) {
+		e.printStackTrace();
+		}
+		return result;
 	}
 
 }

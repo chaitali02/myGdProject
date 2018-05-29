@@ -190,7 +190,8 @@ public class DQOperator {
 
 		if (dq.getAttribute() != null) {
 			select = select.concat(" CAST(").concat(datapod.getName()).concat(DOT).concat(attributeName)
-					.concat(dataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) ? " AS CHAR(50)) "
+					.concat((dataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) 
+							|| dataSource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) ? " AS CHAR(50)) "
 							: (dataSource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
 									? " AS VARCHAR2(70)) "
 									: " AS STRING)"));
@@ -512,7 +513,8 @@ public class DQOperator {
 			colName = LENGTH_CHECK_PASS;
 			if (containsLB && containsUB) {
 				check = " LENGTH(CAST(".concat(tableAttr)
-						.concat(dataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) ? " AS CHAR(50)) "
+						.concat((dataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) 
+								|| dataSource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) ? " AS CHAR(50)) "
 								: (dataSource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
 										? " AS VARCHAR2(70)) "
 										: " AS STRING)"))
@@ -520,7 +522,8 @@ public class DQOperator {
 				dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 			} else if (containsLB) {
 				check = " LENGTH(CAST(".concat(tableAttr)
-						.concat(dataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) ? " AS CHAR(50)) "
+						.concat((dataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) 
+								|| dataSource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) ? " AS CHAR(50)) "
 								: (dataSource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
 										? " AS VARCHAR2(70)) "
 										: " AS STRING)"))
@@ -528,7 +531,8 @@ public class DQOperator {
 				dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 			} else if (containsUB) {
 				check = " LENGTH(CAST(".concat(tableAttr)
-						.concat(dataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) ? " AS CHAR(50)) "
+						.concat((dataSource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) 
+								|| dataSource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) ? " AS CHAR(50)) "
 								: (dataSource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
 										? " AS VARCHAR2(70)) "
 										: " AS STRING)"))

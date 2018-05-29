@@ -25,6 +25,10 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 	$scope.logicalOperator = ["OR", "AND"];
 	$scope.relation = ["relation", "dataset", "datapod"];
 	$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN"];
+	$scope.lshType = [
+		{ "text": "string", "caption": "string" },
+		{ "text": "datapod", "caption": "attribute" },
+		{ "text": "formula", "caption": "formula" }]
 	$scope.filter = {};
 	$scope.filter.versions = [];
 	$scope.filterTableArray = null;
@@ -101,6 +105,8 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 		}
 	}
 
+
+
 	$scope.checkAllFilterRow = function () {
 		if (!$scope.selectedAllFitlerRow) {
 			$scope.selectedAllFitlerRow = true;
@@ -117,10 +123,21 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 			$scope.filterTableArray = [];
 		}
 		var filertable = {};
+		filertable.islhsDatapod = false;
+		filertable.islhsFormula = false;
+		filertable.islhsSimple = true;
+		filertable.isrhsDatapod = false;
+		filertable.isrhsFormula = false;
+		filertable.isrhsSimple = true;
 		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0]
 		filertable.operator = $scope.operator[0]
+		filertable.lhstype = $scope.lshType[0]
+		filertable.rhstype = $scope.lshType[0]
+		filertable.rhsvalue = "''";
+		filertable.lhsvalue = "''";
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
 	}
+
 
 	$scope.removeRow = function () {
 		var newDataList = [];
@@ -144,6 +161,60 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 		}
 		return resultjoint.toString().replace(/,/g, " ");
 	}
+	
+	$scope.selectlhsType = function (type, index) {
+		if (type == "string") {
+			$scope.filterTableArray[index].islhsSimple = true;
+			$scope.filterTableArray[index].islhsDatapod = false;
+			$scope.filterTableArray[index].lhsvalue = "''";
+			$scope.filterTableArray[index].islhsFormula = false;
+		}
+		else if (type == "datapod") {
+
+			$scope.filterTableArray[index].islhsSimple = false;
+			$scope.filterTableArray[index].islhsDatapod = true;
+			$scope.filterTableArray[index].islhsFormula = false;
+		}
+		else if (type == "formula") {
+
+			$scope.filterTableArray[index].islhsFormula = true;
+			$scope.filterTableArray[index].islhsSimple = false;
+			$scope.filterTableArray[index].islhsDatapod = false;
+			MetadataFilterSerivce.getFormulaByType($scope.filterRelation.defaultoption.uuid, $scope.selectRelation).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.expressionFormula = response;
+			}
+		}
+
+
+	}
+	$scope.selectrhsType = function (type, index) {
+
+		if (type == "string") {
+			$scope.filterTableArray[index].isrhsSimple = true;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].rhsvalue = "''";
+		}
+		else if (type == "datapod") {
+
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = true;
+			$scope.filterTableArray[index].isrhsFormula = false;
+		}
+		else if (type == "formula") {
+
+			$scope.filterTableArray[index].isrhsFormula = true;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			MetadataFilterSerivce.getFormulaByType($scope.filterRelation.defaultoption.uuid, $scope.selectRelation).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.expressionFormula = response;
+			}
+		}
+
+	}
+
 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
@@ -180,6 +251,10 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 					$scope.filterDatapod = response
 					$scope.lhsdatapodattributefilter = response;
 				}
+			}
+			MetadataFilterSerivce.getFormulaByType($scope.filterdata.dependsOn.ref.uuid, $scope.filterdata.dependsOn.ref.type).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.expressionFormula = response;
 			}
 			$scope.selectRelation = response.filter.dependsOn.ref.type
 			for (var j = 0; j < $scope.filterdata.filterInfo.length; j++) {
@@ -232,6 +307,10 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 					$scope.lhsdatapodattributefilter = response;
 				}
 			}
+			MetadataFilterSerivce.getFormulaByType($scope.filterdata.dependsOn.ref.uuid, $scope.filterdata.dependsOn.ref.type).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.expressionFormula = response;
+			}
 			$scope.selectRelation = response.filter.dependsOn.ref.type
 			for (var j = 0; j < $scope.filterdata.filterInfo.length; j++) {
 				var lhsoperand = {};
@@ -282,49 +361,83 @@ MetadataModule.controller('MetadataFilterController', function ($state, $scope, 
 		filterJson.dependsOn = dependsOn;
 		filterJson.active = $scope.filterdata.active
 		filterJson.published = $scope.filterdata.published
-
+		
+		
 		var filterInfoArray = [];
-		for (var i = 0; i < $scope.filterTableArray.length; i++) {
-			var filterInfo = {};
-			var operand = [];
-			var operandfirst = {};
-			var reffirst = {};
-			var operandsecond = {};
-			var refsecond = {};
-			if ($scope.selectRelation == "dataset") {
+		if ($scope.filterTableArray.length > 0) {
+			for (var i = 0; i < $scope.filterTableArray.length; i++) {
+				var  filterInfo  = {};
+				var operand = []
+				var lhsoperand = {}
+				var lhsref = {}
+				var rhsoperand = {}
+				var rhsref = {};
+				if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
+					filterInfo.logicalOperator=""
+				}
+				else{
+					filterInfo.logicalOperator=$scope.filterTableArray[i].logicalOperator
+				}
+				//filterInfo .logicalOperator = $scope.filterTableArray[i].logicalOperator;
+				filterInfo .operator = $scope.filterTableArray[i].operator;
+				if ($scope.filterTableArray[i].lhstype.text == "string") {
 
-				reffirst.type = "dataset";
-			}
-			else {
-				reffirst.type = "datapod"
-			}
-			reffirst.uuid = $scope.filterTableArray[i].lhsFilter.uuid
-			operandfirst.ref = reffirst;
-			operandfirst.attributeId = $scope.filterTableArray[i].lhsFilter.attributeId
-			operand[0] = operandfirst;
-			refsecond.type = "simple";
-			operandsecond.ref = refsecond;
-			if (typeof $scope.filterTableArray[i].filtervalue == "undefined") {
-				operandsecond.value = "";
-			}
-			else {
+					lhsref.type = "simple";
+					lhsoperand.ref = lhsref;
+					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
+				}
+				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
+					if ($scope.selectRelation == "dataset") {
+						lhsref.type = "dataset";
 
-				operandsecond.value = $scope.filterTableArray[i].filtervalue
-			}
+					}
+					else {
+						lhsref.type = "datapod";
+					}
+					lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
 
-			operand[1] = operandsecond;
-			if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
-				filterInfo.logicalOperator = ""
-			}
-			else {
-				filterInfo.logicalOperator = $scope.filterTableArray[i].logicalOperator
-			}
-			filterInfo.operator = $scope.filterTableArray[i].operator
-			filterInfo.operand = operand;
+					lhsoperand.ref = lhsref;
+					lhsoperand.attributeId = $scope.filterTableArray[i].lhsdatapodAttribute.attributeId;
+				}
+				else if ($scope.filterTableArray[i].lhstype.text == "formula") {
 
-			filterInfoArray[i] = filterInfo;
+					lhsref.type = "formula";
+					lhsref.uuid = $scope.filterTableArray[i].lhsformula.uuid;
+					lhsoperand.ref = lhsref;
+				}
+				operand[0] = lhsoperand;
+				if ($scope.filterTableArray[i].rhstype.text == "string") {
+
+					rhsref.type = "simple";
+					rhsoperand.ref = rhsref;
+					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
+					if ($scope.selectRelation == "dataset") {
+						rhsref.type = "dataset";
+
+					}
+					else {
+						rhsref.type = "datapod";
+					}
+					rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
+
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeId = $scope.filterTableArray[i].rhsdatapodAttribute.attributeId;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "formula") {
+
+					rhsref.type = "formula";
+					rhsref.uuid = $scope.filterTableArray[i].rhsformula.uuid;
+					rhsoperand.ref = rhsref;
+				}
+				operand[1] = rhsoperand;
+				 filterInfo .operand = operand;
+				 filterInfoArray[i] =  filterInfo 
+			}
 
 		}
+		
 		filterJson.filterInfo = filterInfoArray;
 		console.log(JSON.stringify(filterJson))
 		MetadataFilterSerivce.submit(filterJson, 'filter').then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });

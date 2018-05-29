@@ -4,13 +4,7 @@
 MetadataModule = angular.module('MetadataModule');
 MetadataModule.factory('MetadataExpressionFactory', function ($http, $location) {
 	var factory = {}
-	factory.getGraphData = function (uuid, version, degree) {
-		var url = $location.absUrl().split("app")[0]
-		return $http({
-			url: url + "graph/getGraphResults?action=view&uuid=" + uuid + "&version=" + version + "&degree=" + degree,
-			method: "GET",
-		}).then(function (response) { return response })
-	};
+
 	factory.findLatestByUuid = function (uuid, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
@@ -38,13 +32,7 @@ MetadataModule.factory('MetadataExpressionFactory', function ($http, $location) 
 			data: JSON.stringify(data),
 		}).success(function (response) { return response })
 	}
-	factory.findGraphData = function (uuid, version, degree) {
-		var url = $location.absUrl().split("app")[0]
-		return $http({
-			url: url + "graph/getGraphResults?action=view&uuid=" + uuid + "&version=" + version + "&degree=" + degree,
-			method: "GET"
-		}).then(function (response) { return response })
-	};
+
 	factory.findOneById = function (id, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
@@ -206,17 +194,7 @@ MetadataModule.service('MetadataExpressionSerivce', function ($q, sortFactory, M
 		}
 		return deferred.promise;
 	}
-	this.getGraphData = function (uuid, version, degree) {
-		var deferred = $q.defer();
-		MetadataExpressionFactory.getGraphData(uuid, version, degree).then(function (response) { onSuccess(response.data) });
-		var onSuccess = function (response) {
-			deferred.resolve({
-				data: response
-			})
-		}
 
-		return deferred.promise;
-	}
 	this.getAllVersionByUuid = function (uuid, type) {
 		var deferred = $q.defer();
 		MetadataExpressionFactory.findAllVersionByUuid(uuid, type).then(function (response) { onSuccess(response.data) });
@@ -402,16 +380,7 @@ MetadataModule.service('MetadataExpressionSerivce', function ($q, sortFactory, M
 		}
 		return deferred.promise;
 	}
-	this.getGraphData = function (uuid, version, degree) {
-		var deferred = $q.defer();
-		MetadataExpressionFactory.findGraphData(uuid, version, degree).then(function (response) { onSuccess(response.data) });
-		var onSuccess = function (response) {
-			deferred.resolve({
-				data: response
-			})
-		}
-		return deferred.promise;
-	};
+
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
 		MetadataExpressionFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
@@ -570,11 +539,9 @@ MetadataModule.service('MetadataExpressionSerivce', function ($q, sortFactory, M
 		var deferred = $q.defer();
 		MetadataExpressionFactory.findAllLatest(type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
-
 			var data = {};
 			data.options = [];
 			var defaultoption = {};
-
 			response.sort(sortFactory.sortByProperty("name"));
 			defaultoption.name = response[0].name;
 			defaultoption.uuid = response[0].uuid;

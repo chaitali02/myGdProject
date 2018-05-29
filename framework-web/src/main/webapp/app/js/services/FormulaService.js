@@ -150,6 +150,17 @@ MetadataModule.factory('MetadataFormulaFactory', function ($http, $location) {
 				return response;
 			})
 	}
+	factory.findDatapodByRule = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getAttributesByRule?action=view&uuid=" + uuid + "&type=" + type,
+
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	return factory;
 });
 
@@ -284,6 +295,27 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 				deferred.resolve({
 					data: attributes
 				})
+			}
+
+		}
+		if (type == "rule") {
+
+			MetadataFormulaFactory.findDatapodByRule(uuid, type).then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.datapodname = response[j].ref.name;
+					attributedetail.name = response[j].attrName;
+					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributes.push(attributedetail)
+				}
+				deferred.resolve({
+					data: attributes
+				})
+				//console.log(JSON.stringify(response))
 			}
 
 		}
@@ -470,7 +502,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 					formulainfo.value = response.formulaInfo[i].value;
 
 				}
-				else if (response.formulaInfo[i].ref.type == "datapod" || response.formulaInfo[i].ref.type == "dataset") {
+				else if (response.formulaInfo[i].ref.type == "datapod" || response.formulaInfo[i].ref.type == "dataset" ||  response.formulaInfo[i].ref.type == "rule") {
 
 					formulainfo.type = response.formulaInfo[i].ref.type;
 					formulainfo.uuid = response.formulaInfo[i].ref.uuid;
