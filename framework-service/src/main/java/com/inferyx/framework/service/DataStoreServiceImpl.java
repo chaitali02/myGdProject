@@ -446,7 +446,7 @@ public class DataStoreServiceImpl {
 		} 
 		datastore = findLatestByMeta(dataStoreMetaUUID, dataStoreMetaVer);
 		if (datastore == null) {
-			logger.error("No data found for datapod " + dp.getUuid());
+			//logger.error("No data found for datapod " + dp.getUuid());
 			logger.error("No data found for datapod "+dp.getName()+".");
 			throw new Exception("No data found for datapod "+dp.getName()+".");
 		}

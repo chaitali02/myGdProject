@@ -18,7 +18,7 @@ CREATE TABLE framework.dp_rule_results
   numnull integer,
   pernull double precision,
   sixsigma double precision,
-  load_date integer,
+  load_date text,
   load_id integer,
   version integer
 )

@@ -25,14 +25,14 @@ public class Edge {
 	public GraphMetaIdentifierHolder getSrcMetaRef() {
 		return srcInfo;
 	}
-	public void setSrcMetaRef(GraphMetaIdentifierHolder srcMetaRef) {
-		this.srcInfo = srcMetaRef;
+	public void setSrcMetaRef(GraphMetaIdentifierHolder srcInfo) {
+		this.srcInfo = srcInfo;
 	}
 	public GraphMetaIdentifierHolder getDstMetaRef() {
 		return dstInfo;
 	}
-	public void setDstMetaRef(GraphMetaIdentifierHolder dstMetaRef) {
-		this.dstInfo = dstMetaRef;
+	public void setDstMetaRef(GraphMetaIdentifierHolder dstInfo) {
+		this.dstInfo = dstInfo;
 	}
 
 	public String getSrc() {
@@ -70,16 +70,16 @@ public class Edge {
 	
 	@Override
 	public String toString() {
-		return "Edge [src=" + src + ", dst=" + dst + ", relationType=" + relationType + ", srcMetaRef=" + srcInfo
-				+ ", dstMetaRef=" + dstInfo + "]";
+		return "Edge [src=" + src + ", dst=" + dst + ", relationType=" + relationType + ", srcInfo=" + srcInfo
+				+ ", dstInfo=" + dstInfo + "]";
 	}
-	public Edge(String src, String dst, String relationType, GraphMetaIdentifierHolder srcMetaRef,
-			GraphMetaIdentifierHolder dstMetaRef) {
+	public Edge(String src, String dst, String relationType, GraphMetaIdentifierHolder srcInfo,
+			GraphMetaIdentifierHolder dstInfo) {
 		this.src = src;
 		this.dst = dst;
 		this.relationType = relationType;
-		this.srcInfo = srcMetaRef;
-		this.dstInfo = dstMetaRef;
+		this.srcInfo = srcInfo;
+		this.dstInfo = dstInfo;
 	}
 	
 }
