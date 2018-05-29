@@ -234,30 +234,28 @@ public class SparkExecutor implements IExecutor {
 						.option("spark.driver.extraClassPath", datasource.getDriver())
 						.option("spark.executor.extraClassPath", datasource.getDriver())
 						.option("driver", datasource.getDriver())
-						.option("url",
-								"jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/"
-										+ datasource.getDbname())
-						.option("user", datasource.getUsername()).option("password", datasource.getPassword())
+						.option("url", "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname())
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ") as mysql_table").load();
 				rsHolder.setDataFrame(dataFrame);
 				rsHolder.setType(ResultType.dataframe);
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 				Dataset<Row> dataFrame = sqlContext.read().format("jdbc")
 						.option("driver", datasource.getDriver())
-						.option("url",
-								"jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":"
-										+ datasource.getDbname())
-						.option("user", datasource.getUsername()).option("password", datasource.getPassword())
+						.option("url", "jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":" + datasource.getDbname())
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ")  oracle_table").load();
 				rsHolder.setDataFrame(dataFrame);
 				rsHolder.setType(ResultType.dataframe);
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 				Dataset<Row> dataFrame = sqlContext.read().format("jdbc")
 						.option("driver", datasource.getDriver())
-						.option("url",
-								"jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/"
-										+ datasource.getDbname())
-						.option("user", datasource.getUsername()).option("password", datasource.getPassword())
+						.option("url", "jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname())
+						.option("lazyInit", "true")
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ") as postgres_table").load();
 				rsHolder.setDataFrame(dataFrame);
 				rsHolder.setType(ResultType.dataframe);
