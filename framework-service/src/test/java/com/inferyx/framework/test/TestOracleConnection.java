@@ -7,7 +7,7 @@ class TestOracleConnection {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			System.out.println("Driver sucess..");
-			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@10.10.0.30:1521/framework","framework","admin");
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@10.10.0.30:1521/framework","inferyx","inferyx");
 			//"jdbc:mysql://10.10.0.30:3306/framework?autoReconnect=true&useSSL=false", "root", "root");
 			// here sonoo is database name, root is username and password
 			System.out.println("connection sucess..");
