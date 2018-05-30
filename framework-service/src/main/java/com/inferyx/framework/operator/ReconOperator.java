@@ -304,7 +304,7 @@ public class ReconOperator {
 	
 	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
-		if (datapodList != null && datapodList.contains(datapod.getUuid())) {
+		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
 					dagExec.getVersion());
 		}
