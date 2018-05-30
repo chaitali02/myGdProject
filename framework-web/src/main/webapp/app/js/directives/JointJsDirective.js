@@ -1519,7 +1519,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          },
          
          validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
-           
+          
            if(!$scope.editMode || $scope.isTemplate){
              return false;
            }

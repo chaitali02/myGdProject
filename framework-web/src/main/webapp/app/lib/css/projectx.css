@@ -944,6 +944,9 @@ font-weight:bold;
 font-weight:normtal;
 }
 
+.comment-panel-parent{
+
+}
 .comment-panel {
   height: 50%;
   width:0;
@@ -955,14 +958,18 @@ font-weight:normtal;
   transition: 0.5s;
   padding-top: 25px;
   overflow: hidden;
-}       
+  transition: right 1m;
+}   
+
 .comment-panel-width{
 width:40%;
 right: 1%;
+transition: right 1m
 }
 .comment-panel-without-width{
 width:0%;
 right:0%;
+transition: right 1m
 }
 
 .mt-comment:hover{
