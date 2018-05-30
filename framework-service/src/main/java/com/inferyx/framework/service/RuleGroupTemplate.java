@@ -370,9 +370,10 @@ public abstract class RuleGroupTemplate {
 		if (ruleExecList == null || ruleExecList.isEmpty()) {
 			return null;
 		}
+		HashMap<String, String> otherParams = dagExec.getExecParams().getOtherParams();
 		for (MetaIdentifierHolder ruleExecMeta : ruleExecList) {
 			ruleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecMeta.getRef().getUuid(), ruleExecMeta.getRef().getVersion(), ruleExecType.toString());
-			ruleExec = baseRuleService.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+			ruleExec = baseRuleService.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 		}
 		return baseGroupExec;
 	}

@@ -8,7 +8,7 @@ import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { MessagesModule, MessageModule } from 'primeng/primeng';
-import { CheckboxModule} from 'primeng/primeng';
+import { CheckboxModule, DataTableModule} from 'primeng/primeng';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
@@ -31,6 +31,7 @@ import {TrainingComponent } from './training/training.component';
 import { TrainingService } from '../metadata/services/training.service';
 import { DistributionComponent } from './distribution/distribution.component';
 import { DistributionService } from '../metadata/services/distribution.service';
+import { DatasetService } from '../metadata/services/dataset.service';
 import { OperatorComponent } from './operator/operator.component';
 import { OperatorService } from '../metadata/services/operator.service';
 import { PredictionComponent } from './prediction/prediction.component';
@@ -54,6 +55,7 @@ import {SimulationService } from '../metadata/services/simulation.service';
         DropdownModule,
         GrowlModule,
         CheckboxModule,
+        DataTableModule
         
 
     ],
@@ -76,6 +78,7 @@ import {SimulationService } from '../metadata/services/simulation.service';
         ModelService,
         TrainingService,
         DistributionService,
+        DatasetService,
         PredictionService, 
         SimulationService,
         OperatorService,

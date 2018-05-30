@@ -80,6 +80,11 @@
                     "paramDefVal" : "'yyyy/mm/dd'"
                 }
             ]
+        }, 
+        {
+            "type" : "postgres",
+            "name" : "CURRENTDATE",
+            "paramInfoHolder" : []
         }
     ],
     "funcType" : "hive",

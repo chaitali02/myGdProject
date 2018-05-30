@@ -33,7 +33,6 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.enums.RunMode;
@@ -134,14 +133,14 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		}
 
 		@Override
-		public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+		public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
+		public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
 				MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap,
 				HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
 				RunMode runMode) throws Exception {
@@ -150,7 +149,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		}
 
 		@Override
-		public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+		public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 				Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 			// TODO Auto-generated method stub

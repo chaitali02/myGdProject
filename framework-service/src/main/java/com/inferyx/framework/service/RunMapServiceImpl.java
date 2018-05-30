@@ -59,7 +59,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	private HDFSInfo hdfsInfo;
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	protected Map map;
-	protected String dagExecVersion;
 	protected DataStore dataStore;
 	protected Dataset<Row> df;
 	private ExecutorFactory execFactory;
@@ -304,14 +303,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 //		}
 //	}
 	
-	public String getDagExecVersion() {
-		return dagExecVersion;
-	}
-
-	public void setDagExecVersion(String dagExecVersion) {
-		this.dagExecVersion = dagExecVersion;
-	}
-
 	public DataStore getDataStore() {
 		return dataStore;
 	}
@@ -357,9 +348,9 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			String filePath = String.format("/%s/%s/%s", 
 					datapodKey.getUUID(), 
 					datapodKey.getVersion(), 
-					StringUtils.isNotBlank(dagExecVersion)?dagExecVersion:mapExec.getVersion());
+					mapExec.getVersion());
 			String mapTableName  = null;
-			mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), StringUtils.isNotBlank(dagExecVersion)?dagExecVersion:mapExec.getVersion());
+			mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersionWithoutAppUuid(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			/*String executionEngine = engine.getExecEngine();
@@ -384,7 +375,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 						|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString()))
 					sql = "INSERT OVERWRITE TABLE " + mapTableName +" "+ partitionClause + " " + sql;
 				else if(datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-						|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))	
+						|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+						|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString()))	
 						sql = "INSERT INTO " + mapTableName + " " + sql;
 			}
 

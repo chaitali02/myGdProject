@@ -16,6 +16,8 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 	else {
 		$scope.isAdd = true;
 	}
+
+	$scope.operatorType=['GenerateData','Transpose'];
 	
 	$scope.mode = false;
 	$scope.isSubmitInProgress = false;
@@ -97,23 +99,24 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.Operator.defaultVersion = defaultversion;
-			if($scope.OperatorData.operatorType !=null){
-				OperatorService.getAllLatest("operatortype").then(function (response) { onSuccessGetAllLatestoperatortype(response.data) });
-				var onSuccessGetAllLatestoperatortype = function (response) {
-					$scope.allOperatorType = response;
-					var operatorType = {};
-					operatorType.uuid = $scope.OperatorData.operatorType.ref.uuid;
-					operatorType.name = ""
-					$scope.selectedOperatorType = operatorType;
+			$scope.selectedOperatorType=response.operatorType;
+			if($scope.OperatorData.paramList !=null){
+				OperatorService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+				var onSuccessGetAllLatestParamlist = function (response) {
+					$scope.allParamlist = response;
+					var paramlist = {};
+					paramlist.uuid = $scope.OperatorData.paramList.ref.uuid;
+					paramlist.name = ""
+					$scope.selectedParamlist = paramlist;
 				}
 		    }
 		}
 	}//End If
 	else {
-		OperatorService.getAllLatest("operatortype").then(function (response) { onSuccessGetAllLatestoperatortype(response.data) });
-		var onSuccessGetAllLatestoperatortype = function (response) {
-			$scope.allOperatorType = response;
-			$scope.selectedOperatorType = $scope.allOperatorType[0];
+		OperatorService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+		var onSuccessGetAllLatestParamlist = function (response) {
+			$scope.allParamlist = response;
+			$scope.selectedParamlist = $scope.allParamlist[0];
 		}
 	}
 
@@ -131,14 +134,15 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			defaultversion.uuid = response.uuid;
 			$scope.Operator.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
-			if($scope.OperatorData.operatorType !=null){
-				OperatorService.getAllLatest("operatortype").then(function (response) { onSuccessGetAllLatestoperatortype(response.data) });
-				var onSuccessGetAllLatestoperatortype = function (response) {
-					$scope.allOperatorType = response;
-					var operatortype = {};
-					operatortype.uuid = $scope.OperatorData.operatortype.ref.uuid;
-					operatortype.name = ""
-					$scope.selectedOperatorType = operatortype;
+			$scope.selectedOperatorType=response.operatorType;
+			if($scope.OperatorData.paramList !=null){
+				OperatorService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+				var onSuccessGetAllLatestParamlist = function (response) {
+					$scope.allParamlist = response;
+					var paramlist = {};
+					paramlist.uuid = $scope.OperatorData.paramList.ref.uuid;
+					paramlist.name = ""
+					$scope.selectedParamlist = paramlist;
 				}
 		    }
 		}
@@ -156,6 +160,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		OperatorJson.desc = $scope.OperatorData.desc
 		OperatorJson.active = $scope.OperatorData.active;
 		OperatorJson.published = $scope.OperatorData.published;
+		OperatorJson.operatorType=$scope.selectedOperatorType;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var countTag = 0; countTag < $scope.tags.length; countTag++) {
@@ -163,17 +168,17 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			}
 		}
 		OperatorJson.tags = tagArray;
-		var operatortype = {};
-		if($scope.selectedOperatorType !=null){
+		var paramlist = {};
+		if($scope.selectedParamlist !=null){
 			var ref = {};
-			ref.type = "operatortype";
-			ref.uuid = $scope.selectedOperatorType.uuid;
-			operatortype.ref = ref;
+			ref.type = "paramlist";
+			ref.uuid = $scope.selectedParamlist.uuid;
+			paramlist.ref = ref;
 			
 		}else{
-			operatortype=null;
+			paramlist=null;
 		}
-		OperatorJson.operatorType = operatortype
+		OperatorJson.paramList = paramlist
 		console.log(JSON.stringify(OperatorJson));
 		OperatorService.submit(OperatorJson, 'operator').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {

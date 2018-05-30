@@ -889,9 +889,34 @@ public class MetadataController {
 	}
 	
 	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET)
-	public @ResponseBody List<ParamList> getParamListByRule(
-			@RequestParam(value = "type", required = false,defaultValue = "rule") String collectionType) throws JsonProcessingException {		
-		return metadataServiceImpl.getParamList(collectionType);
+	public @ResponseBody List<BaseEntity> getParamListByRule(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "tags", required = false) String tags,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "published", required = false) String published,
+			@RequestParam(value = "collectionType", required = false,defaultValue="rule") String collectionType)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
+	}
+	@RequestMapping(value = "/getParamListByModel", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntity> getParamListByModel(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "tags", required = false) String tags,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "published", required = false) String published,
+			@RequestParam(value = "collectionType", required = false,defaultValue="model") String collectionType)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
 	}
 	/*@RequestMapping(value = "/getParamListBySimulate", method = RequestMethod.GET,params = {"simulate"})
 	public @ResponseBody List<ParamList> getParamListBySimulate(	

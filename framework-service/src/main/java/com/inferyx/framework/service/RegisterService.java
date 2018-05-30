@@ -45,7 +45,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
@@ -110,9 +109,9 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.CSVRegister;
 import com.inferyx.framework.register.HiveRegister;
-import com.inferyx.framework.register.ImpalaRegister;
 import com.inferyx.framework.register.MySqlRegister;
 import com.inferyx.framework.register.OracleRegister;
+import com.inferyx.framework.register.PostGresRegister;
 import com.inferyx.framework.view.metadata.DQView;
 import com.inferyx.framework.view.metadata.DashboardView;
 import com.inferyx.framework.view.metadata.DatasetView;
@@ -124,15 +123,9 @@ public class RegisterService {
 
 	static final Logger logger = Logger.getLogger(RegisterService.class);
 	@Autowired
-	private AlgorithmServiceImpl algorithmServiceImpl;
-	@Autowired
-	private ModelServiceImpl modelServiceImpl;
-	@Autowired
 	private ModelExecServiceImpl modelExecServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	private FilterServiceImpl filterServiceImpl;
 	@Autowired
 	private RelationServiceImpl relationServiceImpl;
 	@Autowired
@@ -140,15 +133,9 @@ public class RegisterService {
 	@Autowired
 	private DagServiceImpl dagServiceImpl;
 	@Autowired
-	private MapServiceImpl mapServiceImpl;
-	@Autowired
 	private ExpressionServiceImpl expressionServiceImpl;
 	@Autowired
-	private MetadataServiceImpl metadataServiceImpl;
-	@Autowired
 	private DagExecServiceImpl dagExecServiceImpl;
-	@Autowired
-	private ConditionServiceImpl conditionServiceImpl;
 	@Autowired
 	private VizpodServiceImpl vizpodServiceImpl;
 	@Autowired
@@ -157,45 +144,19 @@ public class RegisterService {
 	 * @Autowired private GroupServiceImpl groupServiceImpl;
 	 */
 	@Autowired
-	private LoadServiceImpl loadServiceImpl;
-	@Autowired
 	private UserServiceImpl userServiceImpl;
 	@Autowired
 	private SessionServiceImpl sessionServiceImpl;
 	@Autowired
 	private ActivityServiceImpl activityServiceImpl;
 	@Autowired
-	private RoleServiceImpl roleServiceImpl;
-	@Autowired
-	private GroupServiceImpl groupServiceImpl;
-	@Autowired
-	private PrivilegeServiceImpl privilegeServiceImpl;
-	@Autowired
-	private GraphServiceImpl graphServiceImpl;
-	@Autowired
-	private DimensionServiceImpl dimensionServiceImpl;
-	@Autowired
-	private MeasureServiceImpl measureServiceImpl;
-	@Autowired
-	private VizExecServiceImpl vizExecServiceImpl;
-	@Autowired
-	private RuleGroupServiceImpl ruleGroupServiceImpl;
-	@Autowired
 	private DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	private ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	private DatasourceServiceImpl datasourceServiceImpl;
-	@Autowired
-	private DashboardServiceImpl dashboardServiceImpl;
 	@Autowired
 	private DatasetViewServiceImpl datasetViewServiceImpl;
 	@Autowired
 	private DashboardViewServiceImpl dashboardViewServiceImpl;
 	@Autowired
 	private DataQualServiceImpl dataQualServiceImpl;
-	@Autowired
-	private DataQualGroupServiceImpl dataQualGroupServiceImpl;
 	@Autowired
 	private DataQualExecServiceImpl dataQualExecServiceImpl;
 	@Autowired
@@ -217,11 +178,11 @@ public class RegisterService {
 	@Autowired
 	private HiveRegister hiveRegister;
 	@Autowired
-	private ImpalaRegister impalaRegister;
-	@Autowired
 	private MySqlRegister mysqlRegister;
 	@Autowired
 	private OracleRegister oracleRegister;
+	@Autowired
+	private PostGresRegister postGresRegister;
 	@Autowired
 	private LoadExecServiceImpl loadExecServiceImpl;
 	@Autowired
@@ -231,23 +192,15 @@ public class RegisterService {
 	@Autowired
 	private MapExecServiceImpl mapExecServiceImpl;
 	@Autowired
-	private ProfileServiceImpl profileServiceImpl;
-	@Autowired
 	private ProfileExecServiceImpl profileExecServiceImpl;
 	@Autowired
-	private ProfileGroupServiceImpl profileGroupServiceImpl;
-	@Autowired
 	private ProfileGroupExecServiceImpl profileGroupExecServiceImpl;
-	@Autowired
-	private ParamListServiceImpl paramListServiceImpl;
 	@Autowired
 	private ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ConnectionFactory connectionFactory;
 	@Autowired
 	protected ExecutorFactory execFactory;
-    @Autowired
-    private MetadataUtil daoRegister;
     @Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
     @Autowired
@@ -2551,6 +2504,11 @@ public class RegisterService {
 		return mongoGraphServiceImpl.getGraphJson(uuid,version,degree);
 
 	}
+	public String getTreeGraphResults(String uuid,String version, String degree) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		//return graphServiceImpl.getGraphJson(uuid,version,degree);
+		return mongoGraphServiceImpl.getTreeGraphJson(uuid,version,degree);
+
+	}
 	
 	/* public String getGraphJson() { 
 		 return mongoGraphServiceImpl.getGraphJson();
@@ -3308,7 +3266,7 @@ public class RegisterService {
 				tables = metastore.getAllTables(hiveDBName);
 				logger.info("Tables are :: " + tables);
 				
-				List<Datapod> datapodList = null;
+				/*List<Datapod> datapodList = null;
 				int i = 1;
 				for (String table : tables) {
 					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);					
@@ -3346,10 +3304,11 @@ public class RegisterService {
 						registry.setRegisteredOn(null);
 						registry.setStatus("UnRegistered");
 						registryList.add(registry);
-
 					}
 					i++;
-				}
+				}*/
+				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+				registryList.addAll(datapodList);
 
 			} catch (MetaException e) {
 				e.printStackTrace();
@@ -3370,7 +3329,7 @@ public class RegisterService {
 				logger.info("Mysql Tables :  " + tables);
 				rs.close();				
 
-				List<Datapod> datapodList = null;
+				/*List<Datapod> datapodList = null;
 				int i = 1;
 				for (String table : tables) {
 					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
@@ -3396,7 +3355,6 @@ public class RegisterService {
 									registry.setRegisteredOn(null);
 									registry.setStatus("UnRegistered");
 									registryList.add(registry);
-
 								}
 							}
 						}
@@ -3409,10 +3367,11 @@ public class RegisterService {
 						registry.setRegisteredOn(null);
 						registry.setStatus("UnRegistered");
 						registryList.add(registry);
-
 					}
 					i++;
-				}
+				}*/
+				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+				registryList.addAll(datapodList);
 			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
 					| ClassNotFoundException e1) {
 				e1.printStackTrace();
@@ -3435,53 +3394,14 @@ public class RegisterService {
 				logger.info("Oracle Tables :  " + tables);
 				rs.close();
 
-				List<Datapod> datapodList = null;
-				int i = 1;
-				for (String table : tables) {
-					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
-					if (datapodList.size() > 0){
-						for (Datapod datapod : datapodList) {
-							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setDesc(datapod.getDesc());
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setStatus("Registered");
-									registryList.add(registry);
-									break;
-								} else {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(null);
-									registry.setDesc(null);
-									registry.setRegisteredOn(null);
-									registry.setStatus("UnRegistered");
-									registryList.add(registry);
-
-								}
-							}
-						}
-					} else {
-						Registry registry = new Registry();
-						registry.setId(Integer.toString(i));
-						registry.setName(table);
-						registry.setRegisteredOn(null);
-						registry.setDesc(null);
-						registry.setRegisteredOn(null);
-						registry.setStatus("UnRegistered");
-						registryList.add(registry);
-
-					}
-					i++;
-				}
+				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+				registryList.addAll(datapodList);
+				
 			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException | ClassNotFoundException e1) {
 				e1.printStackTrace();
 			}
-		} else if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+		} 
+		else if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			File folder = new File(datasource.getPath());
 			File[] listOfFiles = folder.listFiles();
 			List<String> fileList = new ArrayList<String>();
@@ -3495,7 +3415,7 @@ public class RegisterService {
 					logger.info("Directory " + listOfFiles[i].getName());
 				}
 			}
-			List<Datapod> datapodList = null;
+			/*List<Datapod> datapodList = null;
 			int i = 1;
 			for (String table : fileList) {
 				datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
@@ -3522,7 +3442,6 @@ public class RegisterService {
 								registry.setRegisteredOn(null);
 								registry.setStatus("UnRegistered");
 								registryList.add(registry);
-
 							}
 						}
 					}
@@ -3538,15 +3457,39 @@ public class RegisterService {
 
 				}
 				i++;
+			}*/
+			List<Registry> datapodList = createDatapodList(fileList, datasourceUuid, appUuid);
+			registryList.addAll(datapodList);
+		}
+		//for Postgres
+		else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+			List<String> tables = new ArrayList<String>();
+			try {
+				Class.forName(datasource.getDriver());
+				Connection con = DriverManager.getConnection("jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort()
+						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
+				DatabaseMetaData md = con.getMetaData();
+
+				String[] types = {"TABLE"};
+				ResultSet rs = md.getTables(null, null, "%", types);
+				
+				while (rs.next()) 
+					tables.add(rs.getString(3));
+				logger.info("PostGres Tables :  " + tables);				
+				rs.close();		
+				
+				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+				registryList.addAll(datapodList);
+			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
+					| ClassNotFoundException e1) {
+				e1.printStackTrace();
 			}
 		}
 		
 		if (status.equalsIgnoreCase("UnRegistered")) {
 			int count = 1;
-			for (Registry unRegiser : registryList) {
-				
-				if (unRegiser.getStatus().equalsIgnoreCase("UnRegistered")) {
-					
+			for (Registry unRegiser : registryList) {				
+				if (unRegiser.getStatus().equalsIgnoreCase("UnRegistered")) {		
 					unRegiser.setId(Integer.toString(count));
 					unRegisterList.add(unRegiser);
 					count++;
@@ -3555,10 +3498,8 @@ public class RegisterService {
 			return unRegisterList;
 		} else if (status.equals("Registered")) {
 			int count = 1;
-			for (Registry register : registryList) {
-				
-				if (register.getStatus().equals("Registered")) {
-					
+			for (Registry register : registryList) {				
+				if (register.getStatus().equals("Registered")) {					
 					register.setId(Integer.toString(count));
 					registerList.add(register);
 					count++;
@@ -3569,6 +3510,52 @@ public class RegisterService {
 			return registryList;
 		}
 
+	}
+
+	private List<Registry> createDatapodList(List<String> tables, String datasourceUuid, String appUuid) throws JsonProcessingException {
+		List<Registry> registryList = new ArrayList<Registry>();
+		List<Datapod> datapodList = null;
+		int i = 1;
+		for (String table : tables) {
+			datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
+			if (datapodList.size() > 0){
+				for (Datapod datapod : datapodList) {
+					for (int j = 0; j < datapod.getAppInfo().size(); j++) {
+						if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
+							Registry registry = new Registry();
+							registry.setId(Integer.toString(i));
+							registry.setName(table);
+							registry.setRegisteredOn(datapod.getCreatedOn());
+							registry.setDesc(datapod.getDesc());
+							registry.setRegisteredOn(datapod.getCreatedOn());
+							registry.setStatus("Registered");
+							registryList.add(registry);
+							break;
+						} else {
+							Registry registry = new Registry();
+							registry.setId(Integer.toString(i));
+							registry.setName(table);
+							registry.setRegisteredOn(null);
+							registry.setDesc(null);
+							registry.setRegisteredOn(null);
+							registry.setStatus("UnRegistered");
+							registryList.add(registry);
+						}
+					}
+				}
+			} else {
+				Registry registry = new Registry();
+				registry.setId(Integer.toString(i));
+				registry.setName(table);
+				registry.setRegisteredOn(null);
+				registry.setDesc(null);
+				registry.setRegisteredOn(null);
+				registry.setStatus("UnRegistered");
+				registryList.add(registry);
+			}
+			i++;
+		}
+		return registryList;
 	}
 
 	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode)
@@ -3583,6 +3570,8 @@ public class RegisterService {
 			return mysqlRegister.registerDB(uuid, version, registryList);
 		} else if (type.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			return oracleRegister.registerDB(uuid, version, registryList);
+		} else if (type.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				return postGresRegister.registerDB(uuid, version, registryList);
 		} else {
 			return null;
 		}

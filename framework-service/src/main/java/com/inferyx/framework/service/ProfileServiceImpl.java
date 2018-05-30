@@ -483,7 +483,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 		// e.printStackTrace();
 		// }
 		try {
-			profileExec = (ProfileExec) parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null,
+			HashMap<String, String> otherParams = execParams.getOtherParams();
+			profileExec = (ProfileExec) parse(profileExec.getUuid(), profileExec.getVersion(), null, otherParams, null, null,
 					runMode);
 			execute(profileExec.getDependsOn().getRef().getUuid(), profileExec.getDependsOn().getRef().getVersion(),
 					profileExec, null, null, execParams, runMode);
@@ -517,7 +518,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 	}
 
 	@Override
-	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		ProfileExec profileExec =null;
 		try {
@@ -533,7 +534,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 				profileOperator = profileOperatorFactory.getOperator(runMode);
 				String sql = profileOperator.generateSql(profile, profileExec,
 						profile.getAttributeInfo().get(i).getAttrId(), datapodList, dagExec, runMode);
-				sbProfileSelect.append(sql).append(" UNION ALL ");
+				if(sql != null)
+					sbProfileSelect.append(sql).append(" UNION ALL ");
 			}
 
 			profileExec.setExec(sbProfileSelect.substring(0, sbProfileSelect.length() - 10).toString());

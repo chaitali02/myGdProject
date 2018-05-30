@@ -50,12 +50,12 @@ public class ParquetWriter implements IWriter {
 		try { 
 			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 			if(datapod !=null) {
-				List<Attribute> attributes=datapod.getAttributes();
+				List<Attribute> attributes = datapod.getAttributes();
 				for(Attribute attribute : attributes){	
 					df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)exec.getDataType(attribute.getType())));
 				} 				
 			} 
-			df.printSchema();
+
 			df.show(true);
 			if(saveMode.equalsIgnoreCase("append"))	{
 				df.write().mode(SaveMode.Append).parquet(filePathUrl);
@@ -84,7 +84,8 @@ public class ParquetWriter implements IWriter {
 					throw new RuntimeException((message != null) ? message : "File path not exist.");
 				}
 				throw new RuntimeException((message != null) ? message : "File path not exist.");
-			}
+			} else 
+				throw new RuntimeException(e);
 		}
 	}
 }

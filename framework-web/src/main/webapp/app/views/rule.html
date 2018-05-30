@@ -22,7 +22,8 @@
             <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
           </div>
         </div>
-      </div><!-- END PAGE HEADER-->
+      </div>
+      <!-- END PAGE HEADER-->
       <br>
       <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
       <div class="portlet light bordered" id="form_wizard_1">
@@ -84,7 +85,7 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="ruleData.uuid" version="rule.defaultVersion.version"></div>
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="ruleData.uuid" version="rule.defaultVersion.version"></div>
           </div>
           <div class="form-wizard" ng-show="showFrom">
             <div class="form-body" style="padding-top: 20px;">
@@ -176,7 +177,7 @@
                       <label class="control-label col-md-3">Desc
                       </label>
                       <div class="col-md-6">
-                        <textarea class="form-control" ng-disabled="{{mode}}" ng-model="ruleData.desc" rows="2" style="resize:none;"></textarea>
+                        <textarea class="form-control textarea-overflow" ng-disabled="{{mode}}" ng-model="ruleData.desc" rows="2" style="resize:none;"></textarea>
                       </div>
                     </div>
                     <div class="form-group">
@@ -268,50 +269,93 @@
                               </modal-footer>
                             </modal>
                           </div>
-                          <table class=" row-border hover table  table-striped table-bordered">
+                          <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
                             <thead>
                               <tr>
-                                <th style="text-align: center; Vertical-align:middle;width:10%;">
+                                <th style="text-align: center; Vertical-align:middle;width:7%;">
                                   <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                  <input style="width: 16px;height:16px;" type="checkbox" ng-model="checkAll" ng-click="checkAllFilterRow()"
-                                    ng-disabled="{{mode}}"/>
+                                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="checkAll" ng-click="checkAllFilterRow()" ng-disabled="{{mode}}"
+                                    />
                                   </span>
                                 </th>
-                                <th style="text-align: center;width:20%;">Logical Operator</th>
-                                <th style="text-align: center;width:25%;">LHS Attribute</th>
-                                <th style="text-align: center;width:20%;">Operator</th>
-                                <th style="text-align: center;width:25%;">RHS Attribute</th>
+                                <th style="width:15%;text-align:center;">Logical Operator</th>
+                                <th style="width:14%;text-align:center;"> LHS Type</th>
+                                <th style="width:190px;text-align:center;">LHS Attribute</th>
+                                <th style="width:13%;text-align:center;">Operator</th>
+                                <th style="width:14%;text-align:center;">RHS Type</th>
+                                <th style="width:190px;text-align:center;">RHS Attribute</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr ng-repeat="data in filterTableArray">
-                                <td style="text-align: center; Vertical-align: middle;width:10%;">
-                                  <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/>
-                                </span>
-                                </td>
-                                <td style="width:20%;">
-                                  <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <select ng-model="data.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="{{mode}} || $first"
-                                    class="form-control"></select>
+                              <tr ng-repeat="tabledata in filterTableArray">
+                                <td style="text-align:center;Vertical-align:middle;">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
                                   </span>
                                 </td>
-                                <td style="width:25%;">
-                                  <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <select select2 ng-model="data.lhsFilter" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first ||{{mode}}" class="form-control"></select>
+                                  </span>
+                                </td>
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select ng-change="selectlhsType(tabledata.lhstype.text,$index)" ng-model="tabledata.lhstype" ng-options="x as x.caption for x in lshType track by x.text"
+                                      ng-disabled=" {{mode}}" class="form-control">
                                     </select>
                                   </span>
                                 </td>
-                                <td style="width:20%;">
-                                  <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <select ng-disabled="{{mode}}" ng-model="data.operator" ng-options="x for x in operator"
-                                    ng-disabled="{{mode}}" class="form-control"></select>
+                                <td width="190px">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
+                                      ng-show="tabledata.islhsSimple" ng-change="onChangeSimple()">
+                                  </span>
+                                  <div width="190px" ng-show="tabledata.islhsDatapod">
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
+                                      ng-change="onChangeAttribute()" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                      </select>
+                                    </span>
+                                  </div>
+                                  <div  ng-show="tabledata.islhsFormula">
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <select select2 class="form-control" ng-change="selectmetlhsType()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in ruleLodeFormula track by r.uuid"
+                                        ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula" ng-change="onChangeFromula()">
+                                      </select>
+                                    </span>
+                                  </div>
+                                </td>
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select ng-init="tabledata.operator" ng-disabled="{{mode}}" ng-model="tabledata.operator" ng-options="x for x in operator"
+                                      ng-disabled="{{mode}}" class="form-control" ng-change="onChangeOperator()"></select>
                                   </span>
                                 </td>
-                                <td style="width:25%;">
-                                  <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <input type="text" class="form-control" ng-model="data.filtervalue" title="{{data.filtervalue}}" ng-disabled="{{mode}}">
+                                <td>
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption for x in lshType track by x.text"
+                                      ng-disabled=" {{mode}}" class="form-control">
+                                    </select>
                                   </span>
+                                </td>
+                                <td style="width:200px;">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <input type="text" ng-disabled="{{mode}}" class="form-control" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
+                                      ng-show="tabledata.isrhsSimple" ng-change="onChangeSimple()">
+                                  </span>
+                                  <div ng-show="tabledata.isrhsDatapod">
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeAttribute()" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                      </select>
+                                    </span>
+                                  </div>
+                                  <div ng-show="tabledata.isrhsFormula">
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <select select2 class="form-control" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in ruleLodeFormula track by r.uuid"
+                                        ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula" ng-change="onChangeFromula()">
+                                      </select>
+                                    </span>
+                                  </div>
                                 </td>
                               </tr>
                             </tbody>
@@ -361,8 +405,8 @@
                               <tr>
                                 <th style="text-align: center; Vertical-align: middle;width:5%;">
                                   <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="checkAllAttribute" ng-click="checkAllAttributeRow()"
-                                      ng-disabled="{{mode}}"/>
+                                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="checkAllAttribute" ng-click="checkAllAttributeRow()" ng-disabled="{{mode}}"
+                                    />
                                   </span>
                                 </th>
                                 <th style="width:7%; text-align:center">ID</th>
@@ -375,7 +419,7 @@
                               <tr ng-repeat="data in attributeTableArray">
                                 <td style="text-align: center; Vertical-align: middle;width:5%;">
                                   <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/>
+                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" />
                                   </span>
                                 </td>
                                 <td>
@@ -390,9 +434,8 @@
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <select ng-model="data.sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
-                                      ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
-                                      class="form-control"></select>
+                                    <select ng-model="data.sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
+                                      ng-disabled="{{mode}}" class="form-control"></select>
                                   </span>
                                 </td>
                                 <td>
@@ -401,34 +444,33 @@
                                   </span>
                                   <div ng-show="data.isSourceAtributeDatapod">
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}"
-                                      class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute track by c.uuid+c.attributeId"
-                                      ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"></select>
+                                      <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}" class="form-control"
+                                        ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute track by c.uuid+c.attributeId"
+                                        ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"></select>
                                     </span>
                                   </div>
                                   <div ng-show="data.isSourceAtributeFormula">
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                      <select select2 ng-model="data.sourceformula" ng-disabled="{{mode}}" class="form-control"
-                                      ng-options="c as  c.name for c in ruleLodeFormula track by c.uuid" ng-change="onChangeFormula(data.sourceformula,$index)"></select>
+                                      <select select2 ng-model="data.sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFormula track by c.uuid"
+                                        ng-change="onChangeFormula(data.sourceformula,$index)"></select>
                                     </span>
                                   </div>
                                   <div ng-show="data.isSourceAtributeExpression">
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                      <select select2 ng-model="data.sourceexpression" ng-disabled="{{mode}}" class="form-control"
-                                      ng-options="c as  c.name for c in ruleLodeExpression track by c.uuid" ng-change="onChangeExpression(data.sourceexpression,$index)"></select>
+                                      <select select2 ng-model="data.sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeExpression track by c.uuid"
+                                        ng-change="onChangeExpression(data.sourceexpression,$index)"></select>
                                     </span>
-                                    </div>
+                                  </div>
                                   <div ng-show="data.isSourceAtributeFunction">
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                      <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control"
-                                      ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid" ng-change="onChangeFunction(data.sourcefunction,$index)"></select>
+                                      <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
+                                        ng-change="onChangeFunction(data.sourcefunction,$index)"></select>
                                     </span>
                                   </div>
                                   <div ng-show="data.isSourceAtributeParamList">
                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                      <select select2 ng-model="data.sourceparamlist" ng-show="data.isSourceAtributeParamList"
-                                      ng-disabled="{{mode}}" class="form-control" ng-options="c as c.name for c in ruleLodeParamList track by c.uuid+c.attrId"
-                                      ng-change="onChangeAttributeParamlist(data.sourceparamlist,$index)"></select>
+                                      <select select2 ng-model="data.sourceparamlist" ng-show="data.isSourceAtributeParamList" ng-disabled="{{mode}}" class="form-control"
+                                        ng-options="c as c.name for c in ruleLodeParamList track by c.uuid+c.attrId" ng-change="onChangeAttributeParamlist(data.sourceparamlist,$index)"></select>
                                     </span>
                                   </div>
                                 </td>
@@ -483,7 +525,8 @@
                             <tr>
                               <th style="text-align:center;Vertical-align: middle;width:5%;">
                                 <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                  <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"/>
+                                  <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"
+                                  />
                                 </span>
                               </th>
                               <th style="width:6%;text-align:center">ID</th>
@@ -500,7 +543,7 @@
                               <td style="width:6%;">
                                 <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                   <input type="text" ng-model="tabledata.paramSetId" ng-disabled="true" class="form-control">
-                                </span> 
+                                </span>
                               </td>
                               <td style="width:20%;" ng-repeat="tablecol in tabledata.paramSetVal">
                                 <span class="form-group" style="margin-left:0px;margin-right:0px;">
@@ -526,12 +569,16 @@
                       </div>
                     </div>
                   </form>
-                </div><!-- End Tab4 -->
-              </div><!--End tab-content-->
-            </div><!--End form-body-->
+                </div>
+                <!-- End Tab4 -->
+              </div>
+              <!--End tab-content-->
+            </div>
+            <!--End form-body-->
           </div>
         </div>
-      </div><!--End form-wizard-->
+      </div>
+      <!--End form-wizard-->
     </div>
   </div>
 </div>

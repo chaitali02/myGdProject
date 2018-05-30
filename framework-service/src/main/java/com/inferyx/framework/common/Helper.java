@@ -26,16 +26,18 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.util.CharArrayMap.EntrySet;
+import org.apache.spark.ml.linalg.VectorUDT;
+import org.apache.spark.sql.types.DataTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.Condition;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
@@ -72,8 +74,8 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
@@ -254,10 +256,10 @@ public class Helper {
 				case recongroupExec : return "iReconGroupExecDao";
 				case distribution : return "iDistributionDao";
 				case appConfig : return "iAppConfigDao";
-				case operatortype : return "iOperatorTypeDao";
+//				case operatortype : return "iOperatorTypeDao";
 				case operatorExec : return "iOperatorExecDao";
 				case operator : return "iOperatorDao";
-				
+				case comment : return "iCommentDao";
 				default:
 					return null;
 			}
@@ -360,9 +362,10 @@ public class Helper {
 		case recongroupExec : return ReconGroupExec.class;
 		case distribution : return Distribution.class;
 		case appConfig : return AppConfig.class;
-		case operatortype : return OperatorType.class;
+//		case operatortype : return Operator.class;
 		case operatorExec : return OperatorExec.class;
 		case operator : return Operator.class;
+		case comment : return Comment.class;
 
 		default:
 			return null;
@@ -437,9 +440,10 @@ public class Helper {
 				case "recongroupexec" : return MetaType.recongroupExec;
 				case "distribution" : return MetaType.distribution;
 				case "appconfig" : return MetaType.appConfig;
-				case "operatortype" : return MetaType.operatortype;
+//				case "operatortype" : return MetaType.operatortype;
 				case "operatorexec" : return MetaType.operatorExec;
 				case "operator" : return MetaType.operator;
+				case "comment" : return MetaType.comment;
 
 				default : return null;
 			}
@@ -569,6 +573,7 @@ public class Helper {
 				case "file": return (executionEngine != null && executionEngine == "livy_spark") ? ExecContext.livy_spark : ExecContext.FILE;
 				case "r" : return ExecContext.R;
 				case "python" : return ExecContext.PYTHON;
+				case "postgres" : return ExecContext.POSTGRES;
 				default : return null;
 			}
 		else
@@ -719,6 +724,27 @@ public class Helper {
 			destMap.put(key, sourceMap.get(key));
 		}
 		return destMap;
+	}
+	
+	public Object getDataType(String dataType) throws NullPointerException {
+		if(dataType == null)
+			return null;
+
+		if(dataType.contains("(")) {
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
+		switch (dataType.toLowerCase()) {
+			case "integer": return DataTypes.IntegerType;
+			case "double": return DataTypes.DoubleType;
+			case "date": return DataTypes.DateType;
+			case "string": return DataTypes.StringType;
+			case "timestamp": return DataTypes.TimestampType;
+			case "decimal" : return DataTypes.createDecimalType();
+			case "vector" : return new VectorUDT();
+			
+            default: return null;
+		}
 	}
 	
 }

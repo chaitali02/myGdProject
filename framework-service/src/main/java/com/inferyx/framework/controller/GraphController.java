@@ -55,6 +55,14 @@ public class GraphController {
 		return registerService.getGraphResults(uuid,version,degree);
 		
 	}
+	@RequestMapping(value="/getTreeGraphResults",method=RequestMethod.GET)
+	public @ResponseBody String  getTreeGraphResults(@RequestParam("uuid") String uuid,
+			@RequestParam("version") String version,@RequestParam("degree") String degree,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException{
+		return registerService.getTreeGraphResults(uuid,version,degree);
+		
+	}
   
   /*	@RequestMapping(value="/loadGraph",method=RequestMethod.GET)
 	public @ResponseBody boolean reloadGraph(

@@ -8,13 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
-import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -66,4 +68,11 @@ public class OperatorController {
 		return operatorServiceImpl.getOperatorResults(operatorExecUuid, operatorExecVersion, rowLimit);
 	}
 
+	
+	@RequestMapping(value = "/getOperatorByOperatorType", method = RequestMethod.GET)
+	public @ResponseBody List<Operator> getOperatorByOperatorType(
+			@RequestParam(value ="operatorType" ,defaultValue="GenerateData") String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return operatorServiceImpl.getOperatorByOperatorType(type);
+	}
 }

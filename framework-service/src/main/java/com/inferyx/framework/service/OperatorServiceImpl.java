@@ -25,6 +25,8 @@ import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -35,19 +37,19 @@ import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
-import com.inferyx.framework.datascience.Math3Distribution;
 import com.inferyx.framework.datascience.MonteCarloSimulation;
-import com.inferyx.framework.datascience.Operator;
+import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
@@ -122,23 +124,23 @@ public class OperatorServiceImpl {
 			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
 		logger.info("Inside OperatorServiceImpl.create ");
 		List<Status> statusList = null;
-		OperatorType operatorType = null;
+		Operator operator = null;
 		if (StringUtils.isBlank(uuid)) {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
 			return null;
 		}
-		operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type.toString());
-		if (operatorType == null || type == null || execType == null) {
+		operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type.toString());
+		if (operator == null || type == null || execType == null) {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
 			return null;
 		}
-		MetaIdentifierHolder baseRuleMeta = new MetaIdentifierHolder(new MetaIdentifier(type, operatorType.getUuid(), operatorType.getVersion()));
+		MetaIdentifierHolder baseRuleMeta = new MetaIdentifierHolder(new MetaIdentifier(type, operator.getUuid(), operator.getVersion()));
 		if (operatorExec == null) {
 			operatorExec = new OperatorExec();
 			operatorExec.setDependsOn(baseRuleMeta);
 			operatorExec.setBaseEntity();
-			operatorExec.setName(operatorType.getName());
-			operatorExec.setAppInfo(operatorType.getAppInfo());
+			operatorExec.setName(operator.getName());
+			operatorExec.setAppInfo(operator.getAppInfo());
 			synchronized (operatorExec.getUuid()) {
 				commonServiceImpl.save(execType.toString(), operatorExec);
 			}
@@ -171,14 +173,14 @@ public class OperatorServiceImpl {
 			RunMode runMode) throws Exception {
 		logger.info("Inside OperatorServiceImpl.parse");	
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.NotStarted);
-		OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
+		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
 				operatorExec.getDependsOn().getRef().getVersion(), 
-				MetaType.operatortype.toString());
-		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(operatorType.getName());
+				MetaType.operator.toString());
+		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(operator.getName());
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
-		return newOperator.populateParams(operatorType, 
+		return newOperator.populateParams(operator, 
 									execParams, 
 									new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()), 
 									null, 
@@ -198,15 +200,15 @@ public class OperatorServiceImpl {
 						HashMap<String, String> otherParams, 
 						RunMode runMode) throws Exception {
 		logger.info("Inside OperatorServiceImpl.execute");
-		OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
+		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
 																				operatorExec.getDependsOn().getRef().getVersion(), 
-																				MetaType.operatortype.toString());
-		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(operatorType.getName());
+																				MetaType.operator.toString());
+		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(operator.getName());
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.InProgress);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
-		newOperator.execute(operatorType, execParams, new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()), null, otherParams, new HashSet<>(), runMode);
+		newOperator.execute(operator, execParams, new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()), null, otherParams, new HashSet<>(), runMode);
 		operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getUuid(), operatorExec.getVersion(), MetaType.operatorExec.toString());
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Completed);
 		synchronized (operatorExec) {
@@ -291,9 +293,7 @@ public class OperatorServiceImpl {
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
-			MetaIdentifierHolder operatorTypeHolder = operator.getOperatorType();
-			OperatorType operatorType = (OperatorType) commonServiceImpl.getOneByUuidAndVersion(operatorTypeHolder.getRef().getUuid(), operatorTypeHolder.getRef().getVersion(), operatorTypeHolder.getRef().getType().toString());
-			MetaIdentifierHolder paramListHolder = operatorType.getParamList();
+			MetaIdentifierHolder paramListHolder = operator.getParamList();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(), paramListHolder.getRef().getType().toString());
 			List<Param> params = paramList.getParams();
 			if(execParams != null) {
@@ -390,4 +390,27 @@ public class OperatorServiceImpl {
 		}
 		return operatorExec;
 	}	
+	
+	public List<Operator> getOperatorByOperatorType(String type){
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+		query.fields().include("active");
+		query.fields().include("desc");
+		query.fields().include("published");
+		query.fields().include("paramList");
+		query.fields().include("operatorType");
+
+		
+		query.addCriteria(Criteria.where("operatorType").is(type));
+
+		List<Operator>  operators = new ArrayList<>();
+		operators = (List<Operator>) mongoTemplate.find(query, Operator.class);
+		return operators;
+		
+	}
 }

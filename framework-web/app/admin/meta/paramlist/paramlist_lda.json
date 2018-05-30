@@ -72,7 +72,8 @@
 		"0.1.0"
 	],
 	"active": "Y",
-	"published": "N",
+	"published": "N",	
+    "paramListType" : "model",
 	"appInfo": [
 			{
             "ref" : {

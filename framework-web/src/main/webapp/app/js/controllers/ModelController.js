@@ -382,7 +382,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
-          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type [i].type =="string"?true:false;
+          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type=="string"?true:false;
           if($scope.selectedDependsOnType== "formula" && $scope.modeldata.features[i].paramListInfo !=null){
             var paramListInfo={};
             paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;
@@ -567,7 +567,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
       ModelService.submit(modelJson, 'model').then(function(response) { onSuccess(response.data)},function(response){onError(response.data)});
     }
     else{
-      modelJson.customeFlag="Y"
+      modelJson.customFlag="Y"
       var blob = new Blob([$scope.scriptCode], { type: "text/xml"});
       var fd = new FormData();
       fd.append('file', blob)

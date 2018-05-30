@@ -19,6 +19,7 @@
   .formula-color {
     color: #0095b3;
     font-size: 15px;
+    cursor: pointer;
   }
 
   .formula-default {
@@ -128,7 +129,7 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="formuladata.uuid" version="formula.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="formuladata.uuid" version="formula.defaultVersion.version">
             </div>
           </div>
           <div class="form-body" data-ng-show="showFrom" style="padding-top:50px;">
@@ -226,7 +227,7 @@
                 <label class="col-md-3 control-label">FormulaInfo</label>
                 <div class="col-md-6">
                   <div id="formulaInfo" contenteditable="false" ng-model="textarea" ng-disabled="{{mode}}">
-                    <span ng-init="getFunctionInfo($index,data)" ng-class="data.type =='simple' ? 'formula-default' : (data.type =='function' ? 'formula-default' : 'formula-color')"
+                    <span ng-init="getFunctionInfo($index,data)" title="{{data.title}}" ng-dblclick="onDbclcikEdit(data.type,$index)" ng-mouseenter="onMouseEnterTitle(data.type,$index)" ng-class="data.type =='simple' ? 'formula-default' : (data.type =='function' ? 'formula-default' : 'formula-color')"
                       ng-repeat="data in formulainfoarray track by $index">{{data.value}}
                     </span>
                   </div>
@@ -257,7 +258,7 @@
                 </div>
                 <div class="col-md-3 col-sm-3 col-xs-12" style="margin-left:-19px;width:29%;">
                   <div ng-show="isSourceAtributeDatapod">
-                    <select class="form-control" select2 data-ng-model="attributeinfo" ng-options="attr as attr.dname for attr in allAttribute"
+                    <select class="form-control" select2 data-ng-model="attributeinfo" ng-options="attr as attr.dname for attr in allAttribute track by attr.uuid+attr.attributeId"
                       ng-disabled="{{mode}}">
                     </select>
                   </div>

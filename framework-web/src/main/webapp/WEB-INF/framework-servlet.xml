@@ -333,6 +333,13 @@
 	<bean id="pythonConnector" class="com.inferyx.framework.connector.PythonConnector"/>
 	<bean id="pythonExecutor" class="com.inferyx.framework.executor.PythonExecutor"/>
 	
+	<bean id="postGresConnector" class="com.inferyx.framework.connector.PostGresConnector"/>
+	<bean id="postGresExecutor" class="com.inferyx.framework.executor.PostGresExecutor"/>
+	<!-- <bean id="postGresWriter" class="com.inferyx.framework.writer.PostGresWriter"/>
+	<bean id="postGresReader" class="com.inferyx.framework.reader.PostGresReader"/> -->
+	<bean id="postGresRegister" class="com.inferyx.framework.register.PostGresRegister"/> 
+	<bean id="profilePostGresOperator" class="com.inferyx.framework.operator.ProfilePostGresOperator"/>
+	
 	<bean id="reconOperator" class="com.inferyx.framework.operator.ReconOperator"/>
 	<bean id="reconExecServiceImpl" class="com.inferyx.framework.service.ReconExecServiceImpl"/>
 	<bean id="reconGroupServiceImpl" class="com.inferyx.framework.service.ReconGroupServiceImpl"/> 
@@ -344,7 +351,6 @@
 	<bean id="simulateMLOperator" class="com.inferyx.framework.operator.SimulateMLOperator"/>
 	<bean id="predictMLOperator" class="com.inferyx.framework.operator.PredictMLOperator"/>
 	
-	<bean id="mlDistribution" class="com.inferyx.framework.datascience.Math3Distribution"/>
 	<bean id="transposeOldOperator" class="com.inferyx.framework.operator.TransposeOldOperator"/>
 		
 	<!-- AOP beans mapping -->	

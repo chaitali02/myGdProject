@@ -46,7 +46,7 @@ import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.Recon;
@@ -699,14 +699,15 @@ public class RunStageServiceImpl implements Callable<String> {
 						&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.rule) 
+							|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.simulate) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
-							|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype))) {
+							/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
+							|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
 					continue;
 					}
 				}
@@ -823,13 +824,15 @@ public class RunStageServiceImpl implements Callable<String> {
 							&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.rule)
 								|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup)
 								|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.simulate)
 								|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype))) {
+								/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
+								|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
 						continue;
 						}
 					}
@@ -977,6 +980,11 @@ public class RunStageServiceImpl implements Callable<String> {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Failed, stageId);
 					}
 					return true;
+				} else if (statusHolder.getFailed()) {
+					synchronized (dagExecUUID) {
+						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Failed, stageId);
+					}
+					return true;					
 				} else if (statusHolder.getCompleted()) {
 					synchronized (dagExecUUID) {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Completed, stageId);
@@ -1142,7 +1150,7 @@ public class RunStageServiceImpl implements Callable<String> {
 		indivTaskExe.setFilePath(filePath);
 		indivTaskExe.setDagServiceImpl(dagServiceImpl);
 		indivTaskExe.setHdfsInfo(hdfsInfo);
-		Operator operator = indvTask.getOperators().get(0); 
+		TaskOperator operator = indvTask.getOperators().get(0); 
 		indivTaskExe.setOperatorInfo(operator.getOperatorInfo());
 		indivTaskExe.setCommonServiceImpl(commonServiceImpl);
 		indivTaskExe.setOperatorType(operator.getOperatorType());

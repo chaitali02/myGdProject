@@ -72,7 +72,7 @@ a, a:hover, a:active, a:visited, a:focus {
   display: flex;
   height: 100%;
   justify-content: center;
-  align-items: center;"
+  align-items: center;
 }
 .spinner > div {
   width: 18px;
@@ -209,7 +209,7 @@ th, td{vertical-align: middle !important}
     background: rgba(20,20,20,0.9);
     color: white;
     border: 1px solid rgba(200,200,200,0.85);
-    position:absolute;
+    /* position:absolute; */
   }
   
   .sidepanal{
@@ -894,4 +894,52 @@ vertical-align: middle;
   line-height: 25px;
   border: 1px solid #acacac;
   border-radius: 3px;
+}
+
+.textarea-overflow{
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+
+    
+.node {
+    cursor: pointer;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: #99ccff;;
+  stroke-width: 3px;
+}
+
+.node text {
+  font: 12px sans-serif;
+}
+
+path.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+.link text {
+  font: 10px sans-serif;
+  /* fill: #CC0000; */
+}
+
+.hyper {
+color: red;
+text-decoration: underline;
+}
+
+.hyper:hover {
+color:yellow;
+text-decoration: none;
+}   
+.selected {
+font-weight:bold;
+}
+.not-selected {
+font-weight:normtal;
 }

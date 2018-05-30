@@ -19,6 +19,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +30,15 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.neo4j.cypher.internal.compiler.v2_3.planner.logical.steps.outerHashJoin;
+import org.python.antlr.ast.While;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Criteria;
 import static org.springframework.data.mongodb.core.query.Criteria.*; 
@@ -46,7 +52,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMetaDao;
-import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
@@ -65,8 +70,8 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
@@ -78,6 +83,8 @@ import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.ParamDataType;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
@@ -676,6 +683,7 @@ public class MetadataServiceImpl {
 		}
 
 		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+
 		Aggregation ruleExecAggr;
 		if (criteriaList.size() > 0) {
 			ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
@@ -1232,10 +1240,8 @@ public class MetadataServiceImpl {
 	public List<ParamListHolder> getParamListByOperator(String operatorUuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 			
-		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorUuid, MetaType.operator.toString(),"N");			
-		
-		OperatorType operatorType = (OperatorType) commonServiceImpl.getLatestByUuid(operator.getOperatorType().getRef().getUuid(), MetaType.operatortype.toString(),"N");			
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operatorType.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
+		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorUuid, MetaType.operator.toString(),"N");
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operator.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
 	
 		for(Param param : paramList.getParams()) {
 			ParamListHolder paramListHolder = new ParamListHolder();
@@ -1248,7 +1254,7 @@ public class MetadataServiceImpl {
 //			else 
 //				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));	
 			
-			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, operatorType.getUuid(), paramList.getVersion()));
+			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());
 			holderList.add(paramListHolder);
 		}
@@ -1258,8 +1264,8 @@ public class MetadataServiceImpl {
 	public List<ParamListHolder> getParamListByOperatorType(String operatorTypeUuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 			
-		OperatorType operatorType = (OperatorType) commonServiceImpl.getLatestByUuid(operatorTypeUuid, MetaType.operatortype.toString(),"N");			
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operatorType.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
+		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorTypeUuid, MetaType.operator.toString(),"N");			
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(operator.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
 	
 		for(Param param : paramList.getParams()) {
 			ParamListHolder paramListHolder = new ParamListHolder();
@@ -1278,44 +1284,130 @@ public class MetadataServiceImpl {
 		}
 		return holderList;
 	}
+	
+//	public List<ParamList> getmaxVersionList(List<ParamList> paramList)
+//	{
+//		HashMap<String,String> Uuid_version = new HashMap<String,String>();
+//		for(ParamList param:paramList) {
+//		Uuid_version.put(param.getVersion(),param.getUuid());
+//		}
+//		
+//		
+//		return paramList;
+//	}
+	
 	@SuppressWarnings("unchecked")
-	public List<ParamList> getParamList(String collectionType) {
-		Query query = new Query();
+	public List<BaseEntity> getParamList(String collectionType,String type,String name, String userName, String startDate,
+			String endDate, String tags, String active, String uuid, String version, String published) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		
+		MetaType metaType = Helper.getMetaType(type);
+		Criteria criteria = new Criteria();
+		List<Criteria> criteriaList = new ArrayList<Criteria>();
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+
+		String appUuid = commonServiceImpl.findAppId(type);
+
+		try {
+			if (appUuid != null)
+				criteriaList.add(where("appInfo.ref.uuid").is(appUuid));
+			if (name != null && !name.isEmpty())
+				criteriaList.add(where("name").is(name));
+			if (userName != null && !userName.isEmpty()) {
+				User user = userServiceImpl.findUserByName(userName);
+				if (user != null && user.getUuid().equals(getCurrentUser().getUuid())) {
+					criteriaList.add(where("createdBy.ref.uuid").is(user.getUuid()));
+				} else {
+					if (user != null)
+						criteriaList.add(where("_id").ne("1").andOperator(
+								where("createdBy.ref.uuid").is(user.getUuid()), where("published").is("Y")));
+				}
+			}
+
+			if ((startDate != null && !startDate.isEmpty()) && (endDate != null && !endDate.isEmpty())) {
+				criteriaList.add(where("_id").ne("1").and("createdOn").lte(simpleDateFormat.parse(endDate))
+						.gte(simpleDateFormat.parse(startDate)));
+			}
+
+			else if (startDate != null && !startDate.isEmpty())
+				criteriaList.add(where("createdOn").gte(simpleDateFormat.parse(startDate)));
+			else if (endDate != null && !endDate.isEmpty())
+				criteriaList.add(where("createdOn").lte(simpleDateFormat.parse(endDate)));
+			if (tags != null && !tags.isEmpty()) {
+				ArrayList<?> tagList = new ArrayList<>(Arrays.asList(tags.split(",")));
+				criteriaList.add(where("tags").all(tagList));
+			}
+			if (active != null && !active.isEmpty()) {
+				criteriaList.add(where("active").is(active));
+			}
+			if (StringUtils.isNotBlank(uuid)) {
+				criteriaList.add(where("uuid").is(uuid));
+			}
+			if (StringUtils.isNotBlank(version)) {
+				criteriaList.add(where("version").is(version));
+			}
+			if (StringUtils.isNotBlank(published)) {
+				criteriaList.add(where("published").is(published));
+			}
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return null;
+		}
+		List<ParamList> paramList = new ArrayList<>();
+		List<String> versionList = new ArrayList<>();
+		List<String> uuidList = new ArrayList<>();
+
+		List<ParamList> metaObjectList = new ArrayList<>();
+
+		Class<?> className = Helper.getDomainClass(metaType);
+		if (className == null) {
+			return null;
+		}
+		if (collectionType.equalsIgnoreCase(MetaType.rule.toString())) {
+			criteriaList.add(where("paramListType").is(MetaType.rule.toString()));
+		}
+
+		if (collectionType.equalsIgnoreCase(MetaType.model.toString())) {
+			criteriaList.add(where("paramListType").is(MetaType.model.toString()));
+		}
+
+		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+		Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
+		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.paramlist.toString(),
+				className);
+		metaObjectList = ruleExecResults.getMappedResults();
+		// loop metaObjectList to get uuid,version list...
+		for (ParamList paramlist : metaObjectList) {
+			uuidList.add(paramlist.getId());
+			versionList.add(paramlist.getVersion());
+		}
 		Query query2 = new Query();
-		query.fields().include("paramList");
 		query2.fields().include("uuid");
 		query2.fields().include("version");
 		query2.fields().include("name");
 		query2.fields().include("createdOn");
+		query2.fields().include("tags");
+		query2.fields().include("createdBy");
 		query2.fields().include("appInfo");
 		query2.fields().include("active");
 		query2.fields().include("desc");
 		query2.fields().include("published");
-		query2.fields().include("params");
 
-		List<Simulate> simulateList = new ArrayList<>();
-		List<ParamList> paramList = new ArrayList<>();
-		HashSet<String> setUuid = new HashSet<String>();
-
-		if (collectionType.equals(MetaType.rule.toString())) {
-			List<String> listUuid = mongoTemplate.getCollection("rule").distinct("paramList.ref.uuid");
-			query2.addCriteria(Criteria.where("uuid").in(listUuid));
+		if (collectionType.toString().equalsIgnoreCase(MetaType.rule.toString())) {
+			query2.addCriteria(
+					Criteria.where("uuid").in(uuidList).andOperator(Criteria.where("version").in(versionList)));
 			paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
 
 		}
-
-		if (collectionType.equals(MetaType.simulate.toString())) {
-			// Without distinct
-			query.addCriteria(Criteria.where("paramList.ref.uuid").exists(true));
-			simulateList = (List<Simulate>) mongoTemplate.find(query, Simulate.class);
-			for (Simulate simulate1 : simulateList) {
-				setUuid.add(simulate1.getParamList().getRef().getUuid());
-			}
-			query2.addCriteria(Criteria.where("uuid").in(setUuid));
+		if (collectionType.toString().equalsIgnoreCase(MetaType.model.toString())) {
+			query2.addCriteria(
+					Criteria.where("uuid").in(uuidList).andOperator(Criteria.where("version").in(versionList)));
 			paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
-		}
 
-		return paramList;
+		}
+		List<BaseEntity> baseEntities = new ArrayList<>(paramList);
+		return commonServiceImpl.resolveBaseEntityList(baseEntities);
 	}
 	
 }

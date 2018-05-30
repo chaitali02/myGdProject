@@ -17,7 +17,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="paramlist")
 public class ParamList extends BaseEntity{
 	List<Param> params;
+	String paramListType; 
 	
+	public String getParamListType() {
+		return paramListType;
+	}
+
+	public void setParamListType(String paramListType) {
+		this.paramListType = paramListType;
+	}
+
 	public List<Param> getParams() {
 		return params;
 	}

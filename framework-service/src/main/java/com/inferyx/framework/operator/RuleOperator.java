@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,6 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
@@ -54,15 +54,17 @@ public class RuleOperator implements Operator {
 	FilterOperator filterOperator;
 	@Autowired
 	DataStoreServiceImpl datastoreServiceImpl;
+	static final Logger logger = Logger.getLogger(RuleOperator.class);
 	
 	public String generateSql(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap,HashMap<String, String> otherParams, 
 								Set<MetaIdentifier> usedRefKeySet,	ExecParams execParams, RunMode runMode) throws Exception {
-		return generateSelect(rule, refKeyMap, otherParams, execParams, runMode)
+		String sql = generateSelect(rule, refKeyMap, otherParams, execParams, runMode)
 				.concat(getFrom())
 				.concat(generateFrom(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(generateWhere())
 				.concat(generateFilter(rule, refKeyMap, otherParams, usedRefKeySet, execParams))
 				.concat(selectGroupBy(rule, refKeyMap, otherParams, execParams));
+		return sql;
 	}
 	
 	private List<AttributeMap> createAttrMap (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap) {
@@ -143,14 +145,14 @@ public class RuleOperator implements Operator {
 	}
 
 	@Override
-	public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
+	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
 			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
@@ -158,7 +160,7 @@ public class RuleOperator implements Operator {
 	}
 
 	@Override
-	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
+	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub

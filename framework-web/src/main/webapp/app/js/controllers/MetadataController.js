@@ -243,7 +243,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 	$scope.data = null;
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
-	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer'];
+	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer','decimal'];
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;
@@ -489,14 +489,23 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 				$scope.gridOptions.columnDefs.push(attribute)
 			}
 			$scope.counter = 0;
-			angular.forEach(response[0], function (value, key) {
-				if (key != "rownum" && key != "version") {
-					$scope.gridOptions.columnDefs[$scope.counter].name = key;
-					console.log(key, value)
-					$scope.counter++
-				}
-			});
+			
+			// angular.forEach(response[0], function (value, key) {
+			// 	debugger
+			// 	if (key != "rownum" && key != "version") {
+			// 		if($scope.gridOptions.columnDefs[$scope.counter].name.toLowerCase() == key){
+			// 			$scope.gridOptions.columnDefs[$scope.counter].name = key;
+			// 		}else{
+			// 			$scope.gridOptions.columnDefs[$scope.counter].name = key;
+			// 			$scope.gridOptions.columnDefs[$scope.counter].displayName = key;
+			// 		}
+
+			// 		console.log(key, value)
+			// 		$scope.counter++
+			// 	}
+			// });
 			//$scope.gridOptions.data = response;
+			console.log($scope.gridOptions.columnDefs)
 			$scope.originalData = response;
 			if ($scope.originalData.length > 0) {
 				$scope.getResults($scope.originalData);
@@ -539,6 +548,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
 		var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
 		$scope.gridOptions.data = params.slice(offset, limit);
+		console.log($scope.gridOptions.data)
 	}
 	$scope.refreshData = function () {
 		var data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);

@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +45,8 @@ public class RelationOperator {
 	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	
+	static final Logger logger = Logger.getLogger(RelationOperator.class);
+	
 //	private final String FROM = " FROM ";
 	
 	public String generateSql(Relation relation
@@ -64,14 +67,18 @@ public class RelationOperator {
 		String table = "";
 		MetaIdentifier fromDatapodRef = new MetaIdentifier(MetaType.datapod, fromDatapod.getUuid(), fromDatapod.getVersion());
 		usedRefKeySet.add(fromDatapodRef);
+		logger.info("OtherParams in relationOperator : " + otherParams);
 		
 /*		DataStore dataStore = getDatastoreByDim(fromDatapod.getUuid(), hasDimensions?execParams.getDimInfo():null); 
 		if (dataStore != null && hasDimensions) {	// If we get dataStore by dimension then use that for table name
 			table = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 			dataStore = null;
 		} else */if (otherParams == null 
-				|| otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()))) == null) {
+				|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()))) == null
+				&& otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName") == null)) {
 			table = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(fromDatapod.getUuid(), fromDatapod.getVersion()), runMode);
+		} else if (otherParams.containsKey("datapodUuid_"+fromDatapod.getUuid()+"_tableName")) {
+			table = otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName");
 		} else {
 			String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()));
 			table = otherParams.get(tableKey);
@@ -98,9 +105,15 @@ public class RelationOperator {
 			if (dataStore != null && hasDimensions) {	// If we get dataStore by dimension then use that for table name
 				rightTable = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 				dataStore = null;
-			} else */if (otherParams == null 
-					|| otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()))) == null) {
+			} else */
+			logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
+			if (otherParams == null 
+					|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()))) == null  
+					&& otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")) == null)) {
 				rightTable = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if (otherParams.containsKey("datapodUuid_".concat(datapod.getUuid()).concat("_tableName"))) {
+				String tableKey = "datapodUuid_".concat(datapod.getUuid()).concat("_tableName");
+				rightTable = otherParams.get(tableKey);
 			} else {
 				String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()));
 				rightTable = otherParams.get(tableKey);
