@@ -16,7 +16,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     content: 'Dashboard deleted Successfully',
     timeout: 3000 //time in ms
   };
-
+  $rootScope.isCommentDisabled=true;
   var cached = cacheService.getCache('searchCriteria', $scope.select);
   $scope.isJobExec = $stateParams.isJobExec;
   $scope.isExec = $stateParams.isExec;

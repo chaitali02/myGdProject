@@ -215,53 +215,44 @@ public class SparkExecutor implements IExecutor {
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		try {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			Dataset<Row> df = null;
 			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-				ConnectionHolder conHolder = connector.getConnection();
-				Object obj = conHolder.getStmtObject();
-				if (obj instanceof SparkSession) {
-					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-					Dataset<Row> df = sparkSession.sql(sql);
-					df.show(true);
-					rsHolder.setDataFrame(df);
-					rsHolder.setType(ResultType.dataframe);
-				}
+					df = sparkSession.sql(sql);
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-				Dataset<Row> dataFrame = sqlContext.read().format("jdbc")
+				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("spark.driver.extraClassPath", datasource.getDriver())
 						.option("spark.executor.extraClassPath", datasource.getDriver())
 						.option("driver", datasource.getDriver())
-						.option("url",
-								"jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/"
-										+ datasource.getDbname())
-						.option("user", datasource.getUsername()).option("password", datasource.getPassword())
+						.option("url", "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname())
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ") as mysql_table").load();
-				rsHolder.setDataFrame(dataFrame);
-				rsHolder.setType(ResultType.dataframe);
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-				Dataset<Row> dataFrame = sqlContext.read().format("jdbc")
+				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("driver", datasource.getDriver())
-						.option("url",
-								"jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":"
-										+ datasource.getDbname())
-						.option("user", datasource.getUsername()).option("password", datasource.getPassword())
+						.option("url", "jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":" + datasource.getDbname())
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ")  oracle_table").load();
-				rsHolder.setDataFrame(dataFrame);
-				rsHolder.setType(ResultType.dataframe);
-			} else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-				Dataset<Row> dataFrame = sqlContext.read().format("jdbc")
+			} else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {				
+				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("driver", datasource.getDriver())
-						.option("url",
-								"jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/"
-										+ datasource.getDbname())
-						.option("user", datasource.getUsername()).option("password", datasource.getPassword())
+						.option("url", "jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname())
+						.option("lazyInit", "true")
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ") as postgres_table").load();
-				rsHolder.setDataFrame(dataFrame);
-				rsHolder.setType(ResultType.dataframe);
 			}
+			df.show(true);
+			rsHolder.setCountRows(df.count());
+			rsHolder.setDataFrame(df);
+			rsHolder.setType(ResultType.dataframe);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | NullPointerException | ParseException e) {
 			e.printStackTrace();

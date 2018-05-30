@@ -1413,12 +1413,13 @@ public class MetadataServiceImpl {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<BaseEntity> getCommentByType(String uuid, String type) {
+	public List<BaseEntity> getCommentByType(String uuid, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
 		query.fields().include("name");
 		query.fields().include("type");
+		query.fields().include("createdBy");
 		query.fields().include("createdOn");
 		query.fields().include("appInfo");
 		query.fields().include("active");
@@ -1428,7 +1429,7 @@ public class MetadataServiceImpl {
 		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(uuid));
 		List<BaseEntity> result = new ArrayList<BaseEntity>();
 		result = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.comment));
-		return result;
+		return commonServiceImpl.resolveBaseEntityList(result);
 	}
 	
 }
