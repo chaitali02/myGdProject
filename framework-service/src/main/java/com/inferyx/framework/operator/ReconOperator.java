@@ -188,6 +188,7 @@ public class ReconOperator {
 			      + "sourceAttributeId" + COMMA
 			      + "sourceAttributeName"		      
 			      + BRACKET_CLOSE
+			      + "source2"
 
 			      + CROSS_JOIN 
 			      
@@ -212,9 +213,9 @@ public class ReconOperator {
 			      + "targetAttributeId" + COMMA
 			      + "targetAttributeName"
 			      + BRACKET_CLOSE
+			      + " target2"
 			      
-			      + BRACKET_CLOSE
-			      + " reconTab ";
+			      + BRACKET_CLOSE;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			LOGGER.error(e);
@@ -285,7 +286,7 @@ public class ReconOperator {
 	}
 	
 	public String generateCheck(String sourceVal, String targetVal) {
-		return "sourceValue" + "==" + "targetValue";
+		return "sourceValue" + "=" + "targetValue";
 	}
 	
 	public String generateVal(Function function, String attrName) throws Exception {
