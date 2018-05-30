@@ -2812,8 +2812,8 @@ public class CommonServiceImpl <T> {
 			defaultStatus.setStage(Status.Stage.Completed);
 		}
 
-		System.out.println("mapStatus"+stausMap.toString());
-		System.out.println("FinalStatus"+defaultStatus.getStage().toString());
+		logger.info("mapStatus: "+stausMap.toString());
+		logger.info("FinalStatus: "+defaultStatus.getStage().toString());
 		return defaultStatus;
  
       }
