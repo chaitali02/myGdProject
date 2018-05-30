@@ -37,7 +37,7 @@
         <div class="centercontent" ng-if="commentResult.length ==0"> No Comment</div>
     </div>
 
-    <div class="page-quick-sidebar-chat-user-form" style="padding:1%;">
+    <div class="page-quick-sidebar-chat-user-form" style="padding:1% 1% 0 1%;margin-top:-2%;">
         <div class="mt-comments">
             <div class="mt-comment comment-panel-mt-comment">
                 <div class="mt-comment-img">
@@ -49,9 +49,9 @@
                     <div class="mt-comment-text">
                         <form novalidate="novalidate" name="myform" ng-submit="submit()">
                             <div class="input-group form-group">
-                                <input type="text" required class="form-control"  name="desc" ng-model="commentDesc" placeholder="Type a comment here..."  disable-validation-message="">
+                                <input type="text" required class="form-control" ng-disabled="isPrivlage" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."  disable-validation-message="">
                                 <div class="input-group-btn">
-                                    <button type="submit"  class="btn green" >
+                                    <button type="submit" class="btn green" ng-disabled="isPrivlage">
                                         <i class="icon-paper-clip"></i>
                                     </button>
                                 </div>
@@ -60,10 +60,10 @@
                     </div>
                     <div class="mt-comment-details">
                          <ul class="mt-comment-actions">
-                            <!-- <li>
-                              <a href="#">View</a>
+                            <li>
+                              <a href="#"><i class="fa fa-upload"></i></a>
                           </li>
-                          <li>
+                          <!-- <li>
                               <a href="#">Delete</a>
                           </li>  -->
                         </ul>
