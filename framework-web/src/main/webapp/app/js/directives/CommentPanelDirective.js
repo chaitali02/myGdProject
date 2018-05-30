@@ -4,20 +4,34 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, CommonService,
         scope: {
             type:"=",
             commentData:"=",
-            panelopen:"=",
             currentUser:"=",
             mode:'=',
             onClose:'=',
+            options: '=',
         }, 
         link: function (scope, element, attrs) {
-            var notify = {
-                type: 'success',
-                title: 'Success',
-                content: '',
-                timeout: 3000 //time in ms
-            };
-            scope.panelOpen=scope.panelopen;
-            
+           
+            scope.panelOpen=false
+            angular.extend(scope.options, {
+                panelToggle: function(data){
+                  scope.panelOpen=data;
+                  if(data=true){
+                    scope.getCommentByType();
+                  }
+                },
+                closePanel: function(){
+                    scope.panelOpen=false;
+                  }
+            });
+            element.bind("keyup", function(event){
+                scope.$apply(function() {
+                if(event.which == 27){
+                  console.log("escape has been pressed");
+                 
+                }
+        
+                });
+              });       
             scope.getCommentByType=function(){
                 CommonService.getCommentByType(scope.commentData.uuid,scope.type).then(function (response) { onSuccess(response.data)});
                 var onSuccess=function(response){
@@ -25,12 +39,11 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, CommonService,
                     scope.len=scope.commentResult.length+1;
                 }
             }
-            scope.getCommentByType();
+            
             scope.closePanle=function(){
                 scope.onClose({"panelOpen":false});
             }
             scope.submit=function(desc){
-                debugger
                 var commentJson={};
                 commentJson.desc=scope.commentDesc;
                 var dependsOn={}
@@ -43,13 +56,8 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, CommonService,
                 CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
                 var onSuccess=function(response){
                 console.log(response);
-                scope.commentDesc="";
+                scope.commentDesc=" ";
                 scope.getCommentByType();
-                
-                notify.type = 'success',
-                notify.title = 'Success',
-                notify.content = 'Comment Saved Successfully'
-                scope.$emit('notify', notify);
                 }
             }
         },

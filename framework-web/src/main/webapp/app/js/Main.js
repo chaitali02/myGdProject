@@ -759,9 +759,15 @@ InferyxApp.controller('LogoutController',function($scope,$rootScope,$cookieStore
 InferyxApp.controller('AppController', ['$scope', '$rootScope','commentService', function($scope, $rootScope,commentService) {
     $rootScope.isCommentDisabled=true;
     $scope.isPanelOpen=commentService.isPanelOpen;
+    $rootScope.dirOptions={};
+    $rootScope.onPanelOpen=function(){
+        $scope.isPanelOpen=!$scope.isPanelOpen;
+        $rootScope.dirOptions.panelToggle($scope.isPanelOpen);
+    }
     $rootScope.onPanelClose=function(data){
-        commentService.isPanelOpen=false
-        $scope.isPanelOpen=false
+         $scope.isPanelOpen=false ;
+         $rootScope.dirOptions.closePanel();
+       
 	}
     $scope.$on('$viewContentLoaded', function() {
         //App.initComponents(); // init core components
