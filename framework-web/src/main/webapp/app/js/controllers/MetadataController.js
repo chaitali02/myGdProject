@@ -248,7 +248,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
 	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer','decimal'];
-	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle']
+	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle', 'postgres']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;
 	$scope.isShowSimpleData = false
