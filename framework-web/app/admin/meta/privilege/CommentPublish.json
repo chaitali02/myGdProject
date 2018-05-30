@@ -1,0 +1,35 @@
+{
+	"uuid": "402de49c-3570-4cb1-9923-7f7069476fca",
+	"name": "CommentPublish",
+	"version": "1464977196",
+	"desc": "Privilage for Publish",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active": "Y",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		},
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"privType": "Publish",
+	"metaId": {
+		"ref": {
+			"type": "meta",
+			"uuid": "4f80b13c-e542-49c1-817f-452c163ceb2b"
+		}
+	}
+}
