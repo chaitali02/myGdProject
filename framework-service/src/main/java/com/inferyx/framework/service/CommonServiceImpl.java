@@ -3292,4 +3292,24 @@ public class CommonServiceImpl <T> {
 			return obj;
 			
 		}
+		
+	public MetaIdentifier uploadCommentFile(MultipartFile multiPartFile, String filename, String fileType)
+			throws FileNotFoundException, IOException, JSONException, ParseException {
+		UploadExec uploadExec = new UploadExec();
+		uploadExec.setBaseEntity();
+		String directoryPath = Helper.getPropertyValue("framework.file.comment.upload.path");
+		String location = directoryPath + "/" + uploadExec.getUuid() + ".comment";
+		uploadExec.setLocation(location);
+		File dest = new File(location);
+		multiPartFile.transferTo(dest);
+		uploadExec.setFileName(uploadExec.getUuid() + ".comment");
+		save(MetaType.uploadExec.toString(), uploadExec);
+		
+		MetaIdentifier identifier = new MetaIdentifier();
+		identifier.setUuid(uploadExec.getUuid());
+		identifier.setName(uploadExec.getFileName());
+		identifier.setType(MetaType.uploadExec);
+		
+		return identifier;
+	}
 }

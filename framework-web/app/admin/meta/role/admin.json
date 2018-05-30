@@ -5204,15 +5204,6 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "c773ade7-bfb1-4025-a523-1e49b63bfa13",
-		 			"version" : null,
-		            "name" : "CommentUnpublish"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
 		 			"uuid" : "ca6fb3eb-3de7-4741-8a89-6baa09499a2d",
 		 			"version" : null,
 		            "name" : "CommentRestore"
@@ -5222,54 +5213,9 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "402de49c-3570-4cb1-9923-7f7069476fca",
-		 			"version" : null,
-		            "name" : "CommentPublish"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
-		 			"uuid" : "79c09a24-a14b-4aef-8dac-afa91b6cb53f",
-		 			"version" : null,
-		            "name" : "CommentExport"
-				},
-				"value" : null
-		},		
-		{
-			"ref" : {
-					"type" : "privilege",
-		 			"uuid" : "a0fd5245-8a46-4475-869f-280f933d8efe",
-		 			"version" : null,
-		            "name" : "CommentExecute"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
-		 			"uuid" : "6faa1a3f-14df-4cce-9dd3-606c739ec562",
-		 			"version" : null,
-		            "name" : "CommentEdit"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
 		 			"uuid" : "49964d5c-1a45-4ee0-9669-c79921bd5c33",
 		 			"version" : null,
 		            "name" : "CommentDelete"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
-		 			"uuid" : "48cff3ca-814e-4cfe-9ffb-ce1e7e756e2b",
-		 			"version" : null,
-		            "name" : "CommentClone"
 				},
 				"value" : null
 		},
