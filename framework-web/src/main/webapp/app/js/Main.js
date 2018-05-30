@@ -756,12 +756,25 @@ InferyxApp.controller('LogoutController',function($scope,$rootScope,$cookieStore
 
 
 /* Setup App Main Controller */
-InferyxApp.controller('AppController', ['$scope', '$rootScope','commentService', function($scope, $rootScope,commentService) {
+InferyxApp.controller('AppController', ['$scope', '$rootScope','commentService','privilegeSvc', function($scope, $rootScope,commentService,privilegeSvc) {
     $rootScope.isCommentDisabled=true;
+    $scope.privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = $scope.privileges.indexOf('View') == -1;
+    $scope.$on('privilegesUpdated', function (e, data) {
+        $scope.privileges = privilegeSvc.privileges['comment'] || [];
+        $rootScope.isCommentVeiwPrivlage = $scope.privileges.indexOf('View') == -1;
+        
+    });    
     $scope.isPanelOpen=commentService.isPanelOpen;
+    $rootScope.dirOptions={};
+    $rootScope.onPanelOpen=function(){
+        $scope.isPanelOpen=!$scope.isPanelOpen;
+        $rootScope.dirOptions.panelToggle($scope.isPanelOpen);
+    }
     $rootScope.onPanelClose=function(data){
-        commentService.isPanelOpen=false
-        $scope.isPanelOpen=false
+         $scope.isPanelOpen=false ;
+         $rootScope.dirOptions.closePanel();
+       
 	}
     $scope.$on('$viewContentLoaded', function() {
         //App.initComponents(); // init core components
@@ -2940,6 +2953,7 @@ InferyxApp.factory('privilegeSvc',function ($http, $location, $rootScope) {
 	obj = {};
 	$rootScope.privileges = obj.privileges = {};
 	covertPrivileges = function (arr) {
+        obj.privileges={};
 		angular.forEach(arr,function (val,key) {
 			obj.privileges[val.type] = val.privInfo;
 		});
@@ -2969,5 +2983,5 @@ InferyxApp.factory('privilegeSvc',function ($http, $location, $rootScope) {
 InferyxApp.run(["$rootScope","settings", "$state","privilegeSvc", function($rootScope,settings, $state, privilegeSvc) {
 	$rootScope.$state = $state; // state to be accessed from view
     $rootScope.$settings = settings; // state to be accessed from view
-	privilegeSvc.getUpdated();
+    privilegeSvc.getUpdated();
 }]);
