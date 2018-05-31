@@ -33,8 +33,8 @@ export class SimulationComponent implements OnInit {
   selectSourceType: any;
   sourceTypes: any[];
   allModel: any[];
-  simulationTypes: { 'value': String, 'label': String }[];
-  selectSimulationType: any;
+  type: { 'value': String, 'label': String }[];
+  simulationtypesOption: any;
   name: any;
   version: any;
   arrayParamList: any[];
@@ -86,7 +86,7 @@ export class SimulationComponent implements OnInit {
     }
     ];
 
-    this.simulationTypes = [
+    this.simulationtypesOption = [
       { "value": "DEFAULT", "label": "DEFAULT" },
       { "value": "MONTECARLO", "label": "MONTECARLO" }
 
@@ -346,37 +346,103 @@ export class SimulationComponent implements OnInit {
     this.getAllLatestTarget(this.selectTargetType)
     //this.getAttribute()
 
-    var featureMapTableArray = [];
-    for(var i=0;i<response.featureAttrMap.length;i++){
-      var featureMap = {};
-      var sourceFeature = {};
-      var targetFeature = {};
-      featureMap["featureMapId"] = response.featureAttrMap[i].featureMapId;
-      // sourceFeature.datapodname = response.featureMap[i].sourceFeature.ref.name;
-      // sourceFeature.name = response.featureMap[i].sourceFeature.attrName;
-      // sourceFeature.attributeId = response.featureMap[i].sourceFeature.attrId;
-      // sourceFeature.id = response.featureMap[i].sourceFeature.ref.uuid + "_" + response.featureMap[i].sourceFeature.attrId;
-      // sourceFeature.dname = response.featureMap[i].sourceFeature.ref.name + "." + response.featureMap[i].sourceFeature.attrName;
-      sourceFeature["uuid"] = response.featureAttrMap[i].feature.ref.uuid;
-      sourceFeature["type"] = response.featureAttrMap[i].feature.ref.type;
-      sourceFeature["featureId"] = response.featureAttrMap[i].feature.featureId;
-      sourceFeature["featureName"] = response.featureAttrMap[i].feature.featureName;
-      sourceFeature["featureType"] = response.featureAttrMap[i].feature.type;
-      sourceFeature["featureDesc"] = response.featureAttrMap[i].feature.desc;
-      sourceFeature["featureminVal"] = response.featureAttrMap[i].feature.minVal;
-      sourceFeature["featuremaxVal"] = response.featureAttrMap[i].feature.maxVal
-      featureMap["sourceFeature"] = sourceFeature;
-      targetFeature["uuid"] = response.featureAttrMap[i].attribute.ref.uuid;
-      targetFeature["type"] = response.featureAttrMap[i].attribute.ref.type;
-      targetFeature["datapodname"] = response.featureAttrMap[i].attribute.ref.name;
-      targetFeature["name"] = response.featureAttrMap[i].attribute.attrName;
-      targetFeature["attributeId"] = response.featureAttrMap[i].attribute.attrId;
-      targetFeature["id"] = response.featureAttrMap[i].attribute.ref.uuid + "_" + response.featureAttrMap[i].attribute.attrId;
-      targetFeature["dname"] = response.featureAttrMap[i].attribute.ref.name + "." + response.featureAttrMap[i].attribute.attrName;
-      featureMap["targetFeature"] = targetFeature;
-      featureMapTableArray[i] = featureMap;
-    }
-    this.featureMapTableArray = featureMapTableArray;
+  //   var featureMapTableArray = [];
+  //   for(var i=0;i<response.featureAttrMap.length;i++){
+  //     var featureMap = {};
+  //     var sourceFeature = {};
+  //     var targetFeature = {};
+  //     featureMap["featureMapId"] = response.featureAttrMap[i].featureMapId;
+  //     // sourceFeature.datapodname = response.featureMap[i].sourceFeature.ref.name;
+  //     // sourceFeature.name = response.featureMap[i].sourceFeature.attrName;
+  //     // sourceFeature.attributeId = response.featureMap[i].sourceFeature.attrId;
+  //     // sourceFeature.id = response.featureMap[i].sourceFeature.ref.uuid + "_" + response.featureMap[i].sourceFeature.attrId;
+  //     // sourceFeature.dname = response.featureMap[i].sourceFeature.ref.name + "." + response.featureMap[i].sourceFeature.attrName;
+  //     sourceFeature["uuid"] = response.featureAttrMap[i].feature.ref.uuid;
+  //     sourceFeature["type"] = response.featureAttrMap[i].feature.ref.type;
+  //     sourceFeature["featureId"] = response.featureAttrMap[i].feature.featureId;
+  //     sourceFeature["featureName"] = response.featureAttrMap[i].feature.featureName;
+  //     sourceFeature["featureType"] = response.featureAttrMap[i].feature.type;
+  //     sourceFeature["featureDesc"] = response.featureAttrMap[i].feature.desc;
+  //     sourceFeature["featureminVal"] = response.featureAttrMap[i].feature.minVal;
+  //     sourceFeature["featuremaxVal"] = response.featureAttrMap[i].feature.maxVal
+  //     featureMap["sourceFeature"] = sourceFeature;
+  //     targetFeature["uuid"] = response.featureAttrMap[i].attribute.ref.uuid;
+  //     targetFeature["type"] = response.featureAttrMap[i].attribute.ref.type;
+  //     targetFeature["datapodname"] = response.featureAttrMap[i].attribute.ref.name;
+  //     targetFeature["name"] = response.featureAttrMap[i].attribute.attrName;
+  //     targetFeature["attributeId"] = response.featureAttrMap[i].attribute.attrId;
+  //     targetFeature["id"] = response.featureAttrMap[i].attribute.ref.uuid + "_" + response.featureAttrMap[i].attribute.attrId;
+  //     targetFeature["dname"] = response.featureAttrMap[i].attribute.ref.name + "." + response.featureAttrMap[i].attribute.attrName;
+  //     featureMap["targetFeature"] = targetFeature;
+  //     featureMapTableArray[i] = featureMap;
+  //   }
+  //   this.featureMapTableArray = featureMapTableArray;
+
+
+
+
+  // var featureMapTableArray=[];
+  // for(var i=0;i<response.featureAttrMap.length;i++){
+  //   var featureMap={};
+  //   var sourceFeature={};
+  //   var targetFeature={};
+  //   featureMap["featureMapId"]=response.featureAttrMap[i].featureMapId;
+  //   // sourceFeature.datapodname = response.featureMap[i].sourceFeature.ref.name;
+  //   // sourceFeature.name = response.featureMap[i].sourceFeature.attrName;
+  //   // sourceFeature.attributeId = response.featureMap[i].sourceFeature.attrId;
+  //   // sourceFeature.id = response.featureMap[i].sourceFeature.ref.uuid + "_" + response.featureMap[i].sourceFeature.attrId;
+  //   // sourceFeature.dname = response.featureMap[i].sourceFeature.ref.name + "." + response.featureMap[i].sourceFeature.attrName;
+  //   sourceFeature["uuid"] = response.featureAttrMap[i].feature.ref.uuid;
+  //   sourceFeature["type"] = response.featureAttrMap[i].feature.ref.type;
+  //   sourceFeature["featureId"] = response.featureAttrMap[i].feature.featureId;
+  //   sourceFeature["featureName"] = response.featureAttrMap[i].feature.featureName;
+  //   featureMap["sourceFeature"]=sourceFeature;
+  //   targetFeature["uuid"] = response.featureAttrMap[i].attribute.ref.uuid;
+  //   targetFeature["type"] = response.featureAttrMap[i].attribute.ref.type;
+  //   targetFeature["datapodname"] = response.featureAttrMap[i].attribute.ref.name;
+  //   targetFeature["name"] = response.featureAttrMap[i].attribute.attrName;
+  //   targetFeature["attributeId"] = response.featureAttrMap[i].attribute.attrId;
+  //   targetFeature["id"] = response.featureAttrMap[i].attribute.ref.uuid + "_" + response.featureAttrMap[i].attribute.attrId;
+  //   targetFeature["dname"] = response.featureAttrMap[i].attribute.ref.name + "." + response.featureAttrMap[i].attribute.attrName;
+  //   featureMap["targetFeature"]=targetFeature;
+  //   featureMapTableArray[i]=featureMap;
+  // }
+  // this.featureMapTableArray=featureMapTableArray;
+
+
+
+  var featureMapTableArray = [];
+  for (var i = 0; i < response.features.length; i++) {
+    var featureMap = {};
+    var sourceFeature = {};
+    var targetFeature = {};
+    featureMap["featureMapId"] = i;
+    sourceFeature["uuid"] = response.uuid;
+    sourceFeature["type"] = "model";
+    sourceFeature["featureId"] = response.features[i].featureId;
+    sourceFeature["featureName"] = response.features[i].name;
+    sourceFeature["featureType"] = response.features[i].type;
+    sourceFeature["featureDesc"] = response.features[i].desc;
+    sourceFeature["featureminVal"] = response.features[i].minVal
+    sourceFeature["featuremaxVal"] = response.features[i].maxVal
+    featureMap["sourceFeature"] = sourceFeature;
+    featureMapTableArray[i] = featureMap;
+  }
+  this.featureMapTableArray = featureMapTableArray;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
   
   OnSuccesgetAllLatest(response) {
@@ -407,6 +473,7 @@ export class SimulationComponent implements OnInit {
     this.VersionList = temp
   }
   onChangeModel() {
+    debugger
     // simulateService.getOneByUuidandVersion(this.selectModel.uuid,this.selectModel.version,"model").then(function(response) { onSuccessGetLatestByUuid(response.data)});
     this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version, 'model')
       .subscribe(
@@ -416,6 +483,7 @@ export class SimulationComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
   onSuccessonChangeModel(response) {
+    debugger
     var featureMapTableArray = [];
     for (var i = 0; i < response.features.length; i++) {
       var featureMap = {};
@@ -471,7 +539,7 @@ export class SimulationComponent implements OnInit {
     simulateJson["active"] = this.simulation.active == true ? 'Y' : "N";
     simulateJson["published"] = this.simulation.published == true ? 'Y' : "N";
     simulateJson["numIterations"] = this.simulation.numIterations;
-    simulateJson["type"] = this.simulation.selectSimulationType;
+    simulateJson["type"] = this.simulation.type;
     // let tagArray=[];
     // if(this.dqdata.tags !=null){
     //   for(var counttag=0;counttag<this.dqdata.tags.length;counttag++){

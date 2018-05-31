@@ -140,16 +140,18 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">Type
-                                                <span class="required" aria-required="true"> * </span>
-                                            </label>
-                                            <div class="col-md-6">
-                                                <p-dropdown [options]="simulationTypes" [(ngModel)]="simulation.selectSimulationType" name="selectSimulationType" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
-                                                    [disabled]="mode == 'true'">
-                                                </p-dropdown>
-                                            </div>
-                                        </div>
+                                        
+              <div class="form-group">
+                <label class="col-md-3 control-label">Type
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <p-dropdown [options]="simulationtypesOption" [(ngModel)]="simulation.type" name="type" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                    [disabled]="mode == 'true'">
+                  </p-dropdown>
+                </div>
+              </div>
+
 
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
