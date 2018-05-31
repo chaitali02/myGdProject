@@ -281,6 +281,7 @@ public class CommonController<T> {
 		return null;
     }
 	
+	
 	@RequestMapping(value = "/getAllLatestCompleteObjects", method = RequestMethod.GET)
 	public @ResponseBody String getAllLatestCompleteObjects(@RequestParam("type") String type,
 			@RequestParam(value="active", required=false) String active,
@@ -293,16 +294,33 @@ public class CommonController<T> {
 	
 	
 	@RequestMapping(value = "/uploadCommentFile", method = RequestMethod.POST)
-	public @ResponseBody MetaIdentifierHolder uploadCommentFile(HttpServletRequest request,
-											   @RequestParam("file") MultipartFile multiPartFile, 
+	public @ResponseBody boolean uploadCommentFile(HttpServletRequest request,
+											   @RequestParam("file") List<MultipartFile> multiPartFile, 
 											   @RequestParam("fileName") String filename,
+											   @RequestParam("uuid") String uuid,
 											   @RequestParam(value = "type", required = false) String type,
 											   @RequestParam(value = "action", required = false) String action)
 											throws IOException, JSONException, ParseException {
-		MetaIdentifierHolder result = null;
-		result = commonServiceImpl.uploadCommentFile(multiPartFile, filename, type);
+		boolean result = commonServiceImpl.uploadCommentFile(multiPartFile, filename, type,uuid);
 		
 		return result;
 	}
+	
+	
+	@RequestMapping("/comment/download")
+    public HttpServletResponse download(@RequestParam(value = "fileType",required = false) String fileType,
+    						@RequestParam(value = "fileName") String fileName,
+    						HttpServletRequest request,
+    						HttpServletResponse response,
+    						@RequestParam(value = "uuid" ) String uuid){
+		try {
+			response = commonServiceImpl.download(fileType, fileName, response,uuid);
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+    }
 
 }

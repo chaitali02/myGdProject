@@ -999,14 +999,15 @@ public class GraphServiceImpl {
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
-										refName = MetaType.simple.toString();
+										continue;
+
 									}
 									if (StringUtils.isBlank(refName)) {
 										refName = childType;
 									}
 								}
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName + "_" + i, name, null);
+										edgeRowMap, refName + "_" + i, key, null);
 							} else if (attr != "" && attr != null) {
 							    GraphMetaIdentifierHolder graphMetaHolder=new GraphMetaIdentifierHolder();
 /*							    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();

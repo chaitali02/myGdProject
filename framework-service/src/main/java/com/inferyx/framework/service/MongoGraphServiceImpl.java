@@ -240,14 +240,14 @@ public class MongoGraphServiceImpl {
 		nodeDetail.setNodeType(parentvertex.getNodeType());
 		nodeDetail.setDataType(parentvertex.getDataType());
 		nodeDetail.setVersion(parentvertex.getVersion());
-		GraphMetaIdentifier graphMeta =new GraphMetaIdentifier();
+		/*GraphMetaIdentifier graphMeta =new GraphMetaIdentifier();
 		graphMeta.setUuid(parentvertex.getUuid());
 		graphMeta.setName(parentvertex.getName());
 		graphMeta.setType(parentvertex.getNodeType());
 		GraphMetaIdentifierHolder graphMetaIdentifierHolder=new GraphMetaIdentifierHolder();
 		graphMetaIdentifierHolder.setRef(graphMeta);
-
-		nodeDetail.setMetaRef(graphMetaIdentifierHolder);;
+*/
+		nodeDetail.setMetaRef(parentvertex.getGraphMetaHolder());
 		nodeDetail.setChildren(graphVertex);
 		// nodeDetail.setParent(parentvertex);
 		//nodeDetails.setLinks(graphEdge);
