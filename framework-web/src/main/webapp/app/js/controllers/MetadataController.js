@@ -225,14 +225,33 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
-		$rootScope.isCommentDisabled=false;
+		
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = $scope.privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});   
+		
+		
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
 		$scope.isPanelActiveOpen=true;
-		$rootScope.isCommentDisabled=false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = $scope.privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});   ;
 	}
 	else {
 		$scope.isAdd = true;
@@ -248,7 +267,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
 	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer','decimal'];
-	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle']
+	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle', 'postgres']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;
 	$scope.isShowSimpleData = false
