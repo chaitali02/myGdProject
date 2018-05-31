@@ -147,7 +147,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group" *ngIf="type">
+                                        <div class="form-group" >
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Custom script</label>
                                                 <div class="col-md-6">
                                                         <!-- <input ng-disabled="{{mode}} || scriptType=='SPARK'" type="checkbox" ng-model="checkboxCustom">
@@ -233,15 +233,15 @@
                                                 </div>
                                                 <div class="form-body" style="padding-top:50px;">
                                                     <p-dataTable [value]="featuresArray" [(selection)]="selectedRows" [editable]="true" [rows]="15" [immutable]="false" resizableColumns="true">
-                                                        <p-column [style]="{'width':'3%'}" selectionMode="multiple" [editable]="false" *ngIf="mode == 'false'">
+                                                        <p-column [style]="{'width':'2%'}" selectionMode="multiple" [editable]="false" *ngIf="mode == 'false'">
                                                         </p-column>
-                                                        <p-column [style]="{'width':'3%'}" *ngIf="mode == 'true'">
+                                                        <p-column [style]="{'width':'2%'}" *ngIf="mode == 'true'">
                                                             <ng-template pTemplate="body">
                                                                 <input type="checkbox" [disabled]="true" />
                                                             </ng-template>
                                                         </p-column>
                                                         <p-column field="featureId" header="FeatureId" [editable]="false" [style]="{'width':'10%','text-align':'center'}"></p-column>
-                                                        <p-column field="name" header="Name" [editable]="mode == 'false'" [style]="{'width':'25%','text-align':'center'}">
+                                                        <p-column field="name" header="Name" [editable]="mode == 'false' || !mode" [style]="{'width':'15%','text-align':'center'}">
                                                             <!-- <p-column *ngFor="let col of cols" [field]="col.field [header]="col.header">     -->
                                                             <!-- <ng-template let-col let-row="rowData" pTemplate type="header" *ngIf="isParamColEnable">
                                                                             {{row[col.field]}}
@@ -256,24 +256,28 @@
                                                                             {{row[cols[0].field]}} --displays first column cell.
                                                                     </ng-template>
                                                                   </p-column> -->
-                                                        <p-column field="type" header="Type" [editable]="mode == 'false'" [style]="{'width':'20%'}">
+                                                        <p-column field="type" header="Type" [style]="{'width':'15%','text-align':'center'}">
                                                             <ng-template let-col let-row="rowData" let-i="rowIndex" pTemplate type="header">
 
-                                                                <p-dropdown [(ngModel)]="row[col.field]" [options]="typeOfArray" (onChange)="disableMinMAxVal(i)" [autoWidth]="false" [style]="{'width':'100%'}" required="true" name="type" appendTo="body"></p-dropdown>
+                                                                <p-dropdown  [options]="typeOfArray" [(ngModel)]="row[col.field]" (onChange)="disableMinMAxVal(i)"  appendTo="body" required="true" [autoWidth]="false" [style]="{'width':'100%'}"
+                                                                 name="type">
+                                                                </p-dropdown>
 
                                                             </ng-template>
                                                         </p-column>
-                                                        <p-column field="minVal" header="MinVal" [editable]="mode == 'false'" [style]="{'width':'10%','text-align':'center'}">
+                                                        <p-column field="minVal" header="MinVal" [editable]="mode == 'false' || !mode" [style]="{'width':'10%','text-align':'center'}" >
                                                             <!-- <ng-template let-col let-row="rowData" pTemplate type="header"> -->
                                                             <!-- <p-dropdown [(ngModel)]="row[col.field]" [options]="typeOfArray"  [autoWidth]="false" [style]="{'width':'100%'}" required="true" name="type" appendTo="body"></p-dropdown> -->
-
+                                                              
                                                             <!-- </ng-template> -->
                                                         </p-column>
-                                                        <p-column field="maxVal" header="MaxVal" [editable]="mode == 'false'" [style]="{'width':'10%','text-align':'center','z-index':'100'}"></p-column>
-                                                        <p-column field="param" header="Param" *ngIf="isParamColEnable" [style]="{'width':'20%'}">
+                                                        <p-column field="maxVal" header="MaxVal" [editable]="mode == 'false' || !mode " [style]="{'width':'10%','text-align':'center','z-index':'100'}"></p-column>
+                                                        
+                                                        <p-column field="param" header="Param" *ngIf="isParamColEnable" [style]="{'width':'20%','text-align':'center'}">
                                                             <ng-template let-col let-row="rowData" let-i="rowIndex" pTemplate type="header">
                                                                 <p-dropdown [options]="getParamArray" [(ngModel)]="row[col.field]" (onChange)="changeName(i)" appendTo="body" required="true" [autoWidth]="false"
-                                                                    name="param" [style]="{'width':'100%'}"></p-dropdown>
+                                                                    name="param" [style]="{'width':'100%'}" placeholder="Select">
+                                                                </p-dropdown>
                                                             </ng-template>
                                                         </p-column>
                                                     </p-dataTable>

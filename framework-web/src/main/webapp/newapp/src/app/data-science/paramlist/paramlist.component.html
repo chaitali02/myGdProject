@@ -155,8 +155,8 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let data of paramArrayTable;let i=index">                              
-                            <td style="text-align:center;Vertical-align:middle;">
+                          <tr *ngFor="let data of paramArrayTable;let i=index">                             
+                            <td style="text-align:center;Vertical-align:middle;">{{data | json}} 
                               <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'"/>
                             </td>
                             <td style="width:10%;"><input style="text-align:center;" type="text" [value]="i" name="id[i]" [disabled]="true" class="form-control">                  
@@ -167,12 +167,25 @@
                                 name="type+{{i}}"
                                 [disabled]="mode == 'true'"
                                 [style]="{'width':'100%','padding':'3px'}"
-                                [filter]="true">
+                                [filter]="true" (onChange)="onChangeParamType(data.type,i)">
                               </p-dropdown>                                       
                             </td>
-                            <td>                       
-                              <input type="text" class="form-control" [(ngModel)]="data.value.value"  name="value+{{i}}" [disabled]="mode == 'true'">                                
-                            </td>                            
+                            <td *ngIf="data.type == 'string' || 'double' || 'date' || 'integer' || 'list'">{{data.value}}                       
+                              <input type="text" class="form-control" [(ngModel)]="data.value"  name="value+{{i}}" [disabled]="mode == 'true'">                                
+                            </td>     
+                            <!-- <td *ngIf="data.type == 'distribution'" (click)="getAllLatest("distribution",i)">  {{data.name}}                     
+                              <input type="text" class="form-control" [(ngModel)]="data.name"  name="value+{{i}}" [disabled]="mode == 'true'">                                
+                             <p-dropdown [options]="types"        
+                              [(ngModel)]="data.type"
+                              name="type+{{i}}"
+                              [disabled]="mode == 'true'"
+                              [style]="{'width':'100%','padding':'3px'}"
+                              [filter]="true">
+                            </p-dropdown>  
+                            </td> 
+                            <td>{{data.type}}
+                              <input type="text" class="form-control" [(ngModel)]="data.type"  name="value+{{i}}" [disabled]="mode == 'true'">                                
+                            </td>       -->                 
                           </tr> 
                         </tbody> 
                       </table>

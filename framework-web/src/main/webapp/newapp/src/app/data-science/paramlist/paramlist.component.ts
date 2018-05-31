@@ -42,6 +42,9 @@ export class ParamlistComponent implements OnInit {
   selectAllAttributeRow : any;
   msgs : any;
   isSubmitEnable:any;
+  allDistribution : any;
+  typeSimple : any;
+  params : any;
 
   constructor(private _location: Location,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showParamlist = true;
@@ -51,7 +54,14 @@ export class ParamlistComponent implements OnInit {
     this.types = [{'value': 'date', 'label': 'date' },
     {'value': 'double', 'label': 'double' },
     {'value': 'integer', 'label': 'integer' },
-    {'value': 'string', 'label': 'string' }]
+    {'value': 'string', 'label': 'string' },
+    {'value': 'list', 'label': 'list' },
+    {'value': 'distribuion', 'label': 'distribution' },
+    {'value': 'attribute', 'label': 'attribute' },
+    {'value': 'attribute[s]', 'label': 'attribute[s]' },
+    {'value': 'datapod', 'label': 'datapod' }]
+
+    this.typeSimple = ["string", "double", "date", "integer", "list"];
 
     this.breadcrumbDataFrom=[{
       "caption":"Data Science",
@@ -103,19 +113,21 @@ export class ParamlistComponent implements OnInit {
     this.active = response['active'];
     if(this.active === 'Y') { this.active = true; } else { this.active = false; }
     this.tags = response['tags']; 
-    
+    debugger
     this.paramlist.published=response["published"] == 'Y' ? true : false
     this.paramlist.active=response["active"] == 'Y' ? true : false
     
     this.breadcrumbDataFrom[2].caption=response.name;
 
+    this.params= response.params;
     let paramArray=[];
     if( response.params !=null){
     for(let i=0;i<response.params.length;i++){
       let paramObj={};
       paramObj["name"]=response.params[i].paramName;
       paramObj["type"]=response.params[i].paramType;
-      paramObj["value"]=response.params[i].paramValue;
+      paramObj["value"]=response.params[i].paramValue.value;
+
       paramArray[i]=paramObj
     }
   }
@@ -142,6 +154,37 @@ export class ParamlistComponent implements OnInit {
       temp[i]=ver;
     }
     this.VersionList=temp
+  }
+
+  
+  onChangeParamType(type,index){
+		if(this.typeSimple.indexOf(type) !=-1){
+			this.params[index].paramValueType='simple';
+		}else{
+			this.params[index].paramValueType=type;
+		}
+  }
+  
+  getAllLatest(type,index){
+    debugger
+    this._commonService.getAllLatest("distribution").subscribe(
+      response => {this.onSuccessgetAllLatest(response,index)},
+      error => console.log("Error ::"+error)
+    )
+  }
+
+  // $scope.getAllLatest=function(type,index){
+	// 	ParamListService.getAllLatest(type).then(function (response) { onGetAllLatest(response.data) });
+	// 	var onGetAllLatest = function (response) {
+	// 		$scope.allDistribution=response;
+	// 		$scope.paramtable[index].selectedParamValue=response[0];
+	// 	}
+	// }
+
+  onSuccessgetAllLatest(response,index){
+    console.log(response);
+    this.allDistribution=response;
+    this.paramArrayTable[index].selectedParamValue=response[0];
   }
 
   onChangeActive(event) {
