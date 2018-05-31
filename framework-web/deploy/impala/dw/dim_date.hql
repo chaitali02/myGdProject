@@ -15,7 +15,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `dim_date`(
   `julian_day_num_of_year` int, 
   `julian_day_num_absolute` int, 
   `is_weekday` string, 
-  `is_us_civil_holiday` string, 
+  `is_usa_civil_holiday` string, 
   `is_last_day_of_week` string, 
   `is_last_day_of_month` string, 
   `is_last_day_of_quarter` string, 
