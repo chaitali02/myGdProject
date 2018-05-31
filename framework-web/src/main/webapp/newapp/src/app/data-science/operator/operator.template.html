@@ -49,7 +49,7 @@
           </div>
 
           <div class="form-body" style="padding-top:50px;">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitOperatorType()" #myNewForm="ngForm">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitoperator()" #myNewForm="ngForm">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
@@ -121,6 +121,19 @@
                   </div>
                 </div>
               </div>
+
+             
+              <div class="form-group">
+                <label class="col-md-3 control-label">Type
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <p-dropdown [options]="operatortypesOption" [(ngModel)]="operator.operatorType" name="operatorType" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
+                    [disabled]="mode == 'true'">
+                  </p-dropdown>
+                </div>
+              </div>
+
 
               <div class="form-group">
                 <label class="col-md-3 control-label">Parameter List</label>                <div class="col-md-6">

@@ -153,7 +153,7 @@ export class SidebarComponent {
       },
       {
         name:"Operator",
-        type:"operatortype"
+        type:"operator"
       },
       {
         name:"Training",
