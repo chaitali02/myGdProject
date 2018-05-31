@@ -1425,8 +1425,9 @@ public class MetadataServiceImpl {
 		query.fields().include("active");
 		query.fields().include("desc");
 		query.fields().include("published");
-		//query.fields().include("dependsOn");
+		query.fields().include("uploadExec");
 		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(uuid));
+		query.addCriteria(Criteria.where("active").is('Y'));
 		List<BaseEntity> result = new ArrayList<BaseEntity>();
 		result = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.comment));
 		return commonServiceImpl.resolveBaseEntityList(result);

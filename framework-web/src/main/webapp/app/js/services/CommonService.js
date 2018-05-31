@@ -247,8 +247,8 @@
           }
          return deferred.promise;
     }
-    this.uploadCommentFile=function(filename,data,type){
-      var url="common/uploadCommentFile?action=edit&fileName="+filename+"&type="+type
+    this.uploadCommentFile=function(filename,data,uuid,type){
+      var url="common/uploadCommentFile?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid
   		var deferred = $q.defer();
   	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
     	    var onSuccess=function(response){

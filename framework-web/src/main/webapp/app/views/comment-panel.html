@@ -1,89 +1,108 @@
-
 <div class="">
-<div class="comment-panel " ng-class="(panelOpen ==true?'comment-panel-width':'comment-panel-without-width')">
-    <div class="comment-panel-header tabbable-line clearfix">
-        <div class="col-md-3 pull-left">
-            <h4 class="caption-subject font-dark bold">Comment</h4>
-        </div>
-        <div class="col-md-1 pull-right">
-            <div class="" ng-click="closePanle()">
-                <i ng-class="panelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>
+    <div class="comment-panel " ng-class="(panelOpen ==true?'comment-panel-width':'comment-panel-without-width')">
+        <div class="comment-panel-header tabbable-line clearfix">
+            <div class="col-md-3 pull-left">
+                <h4 class="caption-subject font-dark bold">Comment</h4>
             </div>
-        </div>
-    </div>
-    
-    <div class="comment-panel-body clearfix" style="padding:1%;height:67%;color:white;overflow-x: hidden;overflow-y:auto;">
-        <div class="mt-comments">
-            <div class="mt-comment" ng-repeat="data in commentResult" ng-if="commentResult.length >0">
-                <div class="mt-comment-img">
-                    <img  class =" img-circle" width="45px"  ng-src="avatars/{{data.createdBy.ref.uuid}}?$index" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';" />
-                </div>
-                <div class="mt-comment-body">
-                    <div class="mt-comment-info">
-                        <span class="mt-comment-author">{{data.createdBy.ref.name}}</span>
-                    </div>
-                    <div class="mt-comment-text" >
-                            <show-more text="data.desc" limit="50"> </show-more> </div>
-                    <div class="mt-comment-details">
-                        <ul class="mt-comment-actions" style="padding-right:3%;">
-                            <li>
-                                <a href="#" tooltip-placement="top" uib-tooltip="Delete"><i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i></a>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="col-md-1 pull-right">
+                <div class="" ng-click="closePanle()">
+                    <i ng-class="panelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>
                 </div>
             </div>
         </div>
-        <div class="centercontent" ng-if="commentResult.length ==0"> No Comment</div>
-    </div>
-
-    <div class="page-quick-sidebar-chat-user-form" style="margin-top:-3%;height:20%;padding: 0 0 0 1%;">
-        <div class="mt-comments">
-            <div class="mt-comment comment-panel-mt-comment">
-                <div class="mt-comment-img">
-                    <img  class =" img-circle" width="45px" ng-src="avatars/{{currentUser.uuid}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';" /></div>
-                <div class="mt-comment-body">
-                    <div class="mt-comment-info">
-                        <span class="mt-comment-author">{{currentUser.name}}</span>
-                    </div>
-                    <div class="mt-comment-text">
-                        <form novalidate="novalidate" name="myform" ng-submit="submit()">
-                            <div class="input-group form-group">
-                                <input type="text" required class="form-control" ng-disabled="isPrivlage" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."  disable-validation-message="">
-                                <div class="input-group-btn">
-                                    <button type="submit" class="btn green" ng-disabled="isPrivlage">
-                                        <i class="icon-paper-clip"></i>
-                                    </button>
-                                </div>
+        <div style="padding:1%;height:90%;overflow-x: hidden;overflow-y:auto;">
+            <div class="comment-panel-body clearfix">
+                <div class="mt-comments">
+                    <div class="mt-comment" ng-repeat="data in commentResult" ng-if="commentResult.length >0">
+                        <div class="mt-comment-img">
+                            <img class=" img-circle" width="45px" ng-src="avatars/{{data.createdBy.ref.uuid}}?$index" class="lock-avatar" alt="No Avatar"
+                                onerror="this.src='avatars/default.png';" />
+                        </div>
+                        <div class="mt-comment-body">
+                            <div class="mt-comment-info">
+                                <span class="mt-comment-author">{{data.createdBy.ref.name}}</span>
                             </div>
-                        </form>
+                            <div class="mt-comment-text">
+                                <show-more text="data.desc" limit="50"> </show-more>
+                            </div>
+                            <div class="mt-comment-details">
+                                <ul class="mt-comment-actions" style="padding-right:3%;">
+                                    <li ng-if="data.isDownloadable">
+                                        <a href="#" tooltip-placement="top" uib-tooltip="Download">
+                                            <i class="fa fa-download" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" tooltip-placement="top" uib-tooltip="Delete" ng-disabled="privileges.indexOf('Delete') == -1" ng-click="delete(data.id)">
+                                            <i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mt-comment-details">
-                           
-                        <ul class="mt-comment-actions" style="padding-right:6%;margin-top:-4px;">
-                            <li>                          
-                                <label class="input-group-btn" style="width:auto" tooltip-placement="top" uib-tooltip="upload">
-                                    <input id="avatar" onchange="readfileName(this)" type="file" ng-model="file"  style="display:none">
-                                    <i class="fa fa-upload" style="font-size: 20px;color: #79869a;"></i>         
-                                </label>
-                          </li>
-                        </ul>
-                        <br>
-                        <div ng-show="isFileUpload" style="background-color: #f5f5f5;
+                </div>
+                <div class="centercontent" style="color:blue" ng-if="commentResult.length ==0"> No Comment</div>
+            </div>
+            <!-- style="height:20%;padding: 0 0 0 1%;overflow-y:auto" -->
+            <div class="page-quick-sidebar-chat-user-form">
+                <div class="mt-comments">
+                    <div class="mt-comment comment-panel-mt-comment">
+                        <div class="mt-comment-img">
+                            <img class=" img-circle" width="45px" ng-src="avatars/{{currentUser.uuid}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';"/>
+                        </div>
+                        <div class="mt-comment-body">
+                            <div class="mt-comment-info">
+                                <span class="mt-comment-author">{{currentUser.name}}</span>
+                            </div>
+                            <div class="mt-comment-text">
+                                <form novalidate="novalidate" name="myform" ng-submit="submit()">
+                                    <div class="input-group form-group">
+                                        <input type="text" required class="form-control" ng-disabled="isPrivlage" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."
+                                            disable-validation-message="">
+                                        <div class="input-group-btn">
+                                            <button type="submit" class="btn green" ng-disabled="isPrivlage">
+                                                <i class="icon-paper-clip"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-comment-details">
+                                <ul class="mt-comment-actions" style="padding-right:6%;margin-top:-4px;">
+                                    <li>
+                                        <label class="input-group-btn" style="width:auto" tooltip-placement="top" uib-tooltip="upload">
+                                            <input id="avatar" onchange="readfileName(this)" type="file" ng-model="file" style="display:none">
+                                            <i class="fa fa-upload" style="font-size: 20px;color: #79869a;"></i>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <br>
+                                <div ng-show="file.length >0" ng-repeat="f in file" style="background-color: #f5f5f5;
                         border: 1px solid #dcdcdc;
                         font-weight: bold;
                         margin: 0 7px 9px;
                         overflow-y: hidden;
                         padding: 4px 4px 4px 8px;
                         max-width: 448px;">
-                            <span style="color: #15c;">{{file.name}}</span>
-                            <span >({{file.size}}K)</span>
-                            <i class="fa fa-time" ng-click="clearFile()" style="float:right;"></i>
+                                    <span style="color: #15c;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            display: inline-block;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            vertical-align: bottom;
+                            white-space: nowrap;
+                            max-width: 315px;">{{f.name}}</span>
+                                    <span>({{f.size}}K)</span>
+                                    <i class="fa fa-time" ng-click="clearFile($index)" style="float:right;"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>

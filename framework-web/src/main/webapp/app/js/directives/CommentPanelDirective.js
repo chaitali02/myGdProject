@@ -11,8 +11,11 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
         }, 
         link: function (scope, element, attrs) {
             scope.panelOpen=false;
-            var privileges = privilegeSvc.privileges['comment'] || [];
-            scope.isPrivlage = privileges.indexOf('Add') == -1;
+            scope.isFileUpload=false;
+            scope.file=[];
+            scope.fd=[];
+            scope.privileges = privilegeSvc.privileges['comment'] || [];
+            scope.isPrivlage = scope.privileges.indexOf('Add') == -1;
             angular.extend(scope.options, {
                 panelToggle: function(data){
                   scope.panelOpen=data;
@@ -34,14 +37,22 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 });
             }); 
             scope.$on('privilegesUpdated', function (e, data) {
-                var privileges = privilegeSvc.privileges['comment'] || [];
-                scope.isPrivlage =privileges.indexOf('Add') == -1;
+                scope.privileges = privilegeSvc.privileges['comment'] || [];
+                scope.isPrivlage = scope.privileges.indexOf('Add') == -1;
                 
             });      
             scope.getCommentByType=function(){
                 CommonService.getCommentByType(scope.commentData.uuid,scope.type).then(function (response) { onSuccess(response.data)});
                 var onSuccess=function(response){
                     scope.commentResult=response;
+                    if(response.length>0){
+                        for(var i=0;i< response.length;i++){
+                            
+                           if(response[i].uploadExec !=null){
+                            scope.commentResult[i].isDownloadable=true
+                           }
+                        }
+                    }
                     scope.len=scope.commentResult.length+1;
                 }
             }
@@ -50,21 +61,40 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 scope.onClose({"panelOpen":false});
             }
 
+            scope.delete=function(uuid){
+                CommonService.delete(uuid,'comment').then(function (response){onSuccess(response.data)})
+                var onSuccess=function(response){
+                    scope.getCommentByType();
+
+                }
+            }
             window.readfileName=function(input){
                 if (input.files && input.files[0]) {
                     scope.$apply();
+                    var fileLen=scope.file.length;
+                    var fdLen=scope.file.length;  
                     scope.isFileUpload=true;
-                    scope.file=input.files[0]
-                    scope.fd = new FormData();
-                    scope.fd.append('file',input.files[0]);
+                    scope.file[fileLen]=input.files[0]
+                    scope.fd[fdLen] = new FormData();
+                    scope.fd[fdLen].append('file',input.files[0]);
                     console.log(input.files[0]);
                 }
             }
-            scope.clearFile=function(){
+            scope.clearFile=function(index){
                 scope.isFileUpload=false;
-                scope.file=null;
-                scope.fd=null;
+                debugger
+                scope.file.splice(index,1);
+                scope.fd.splice(index,1);
 
+            }
+            scope.uploadFiles=function(){
+                CommonService.uploadCommentFile(null, scope.fd, "comment").then(function (response) { onSuccess(response.data) });
+                var onSuccess = function (response) {
+                    scope.file=null;
+                    scope.fd=null;
+                    scope.commentDesc=" ";
+                    scope.getCommentByType();
+                }
             }
             scope.submit=function(desc){
                 var commentJson={};
@@ -77,25 +107,15 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 commentJson.dependsOn=dependsOn;
                 commentJson.uploadExec=null;
                 console.log(JSON.stringify(commentJson));
-                if(scope.isFileUpload ==false){
-                    CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
-                    var onSuccess=function(response){
+                CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
+                var onSuccess=function(response){
                     console.log(response);
-                    scope.commentDesc=" ";
-                    scope.getCommentByType();
-                    }
-                }else{
-                    CommonService.uploadCommentFile(scope.file.name, scope.fd, "comment").then(function (response) { onSuccess(response.data) });
-                    var onSuccess = function (response) {
-                        commentJson.uploadExec=response;
-                        CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
-                        var onSuccess=function(response){
-                        console.log(response);
+                    if(scope.file.length ==0 && scope.fd.length ==0){
                         scope.commentDesc=" ";
                         scope.getCommentByType();
-                        }
+                    }else{
+                        scope.uploadFiles();
                     }
-
                 }
             }
         },
