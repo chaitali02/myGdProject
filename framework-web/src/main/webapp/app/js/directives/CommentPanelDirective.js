@@ -49,6 +49,23 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             scope.closePanle=function(){
                 scope.onClose({"panelOpen":false});
             }
+
+            window.readfileName=function(input){
+                if (input.files && input.files[0]) {
+                    scope.$apply();
+                    scope.isFileUpload=true;
+                    scope.file=input.files[0]
+                    scope.fd = new FormData();
+                    scope.fd.append('file',input.files[0]);
+                    console.log(input.files[0]);
+                }
+            }
+            scope.clearFile=function(){
+                scope.isFileUpload=false;
+                scope.file=null;
+                scope.fd=null;
+
+            }
             scope.submit=function(desc){
                 var commentJson={};
                 commentJson.desc=scope.commentDesc;
@@ -58,12 +75,27 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 ref.type=scope.type;
                 dependsOn.ref=ref;
                 commentJson.dependsOn=dependsOn;
+                commentJson.uploadExec=null;
                 console.log(JSON.stringify(commentJson));
-                CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
-                var onSuccess=function(response){
-                console.log(response);
-                scope.commentDesc=" ";
-                scope.getCommentByType();
+                if(scope.isFileUpload ==false){
+                    CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
+                    var onSuccess=function(response){
+                    console.log(response);
+                    scope.commentDesc=" ";
+                    scope.getCommentByType();
+                    }
+                }else{
+                    CommonService.uploadCommentFile(scope.file.name, scope.fd, "comment").then(function (response) { onSuccess(response.data) });
+                    var onSuccess = function (response) {
+                        commentJson.uploadExec=response;
+                        CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
+                        var onSuccess=function(response){
+                        console.log(response);
+                        scope.commentDesc=" ";
+                        scope.getCommentByType();
+                        }
+                    }
+
                 }
             }
         },
@@ -115,4 +147,5 @@ InferyxApp.filter('subString', function() {
             return str.substr(start, end);
         }
     }
-})
+});
+

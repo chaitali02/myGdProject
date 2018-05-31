@@ -246,6 +246,17 @@
              });
           }
          return deferred.promise;
+    }
+    this.uploadCommentFile=function(filename,data,type){
+      var url="common/uploadCommentFile?action=edit&fileName="+filename+"&type="+type
+  		var deferred = $q.defer();
+  	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
+    	    var onSuccess=function(response){
+      	    deferred.resolve({
+                data:response
+             });
+          }
+         return deferred.promise;
   	}
     this.uploadFile=function(dataUuid,data,type){
       var url="datapod/upload?action=edit&datapodUuid="+dataUuid+"&type="+type

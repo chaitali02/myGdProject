@@ -1,9 +1,9 @@
 
-<div class="comment-panel-parent">
+<div class="">
 <div class="comment-panel " ng-class="(panelOpen ==true?'comment-panel-width':'comment-panel-without-width')">
-    <div class="comment-panel-header clearfix">
+    <div class="comment-panel-header tabbable-line clearfix">
         <div class="col-md-3 pull-left">
-            <h4 style="color:white;">Comment</h4>
+            <h4 class="caption-subject font-dark bold">Comment</h4>
         </div>
         <div class="col-md-1 pull-right">
             <div class="" ng-click="closePanle()">
@@ -12,7 +12,7 @@
         </div>
     </div>
     
-    <div class="comment-panel-body clearfix" style="padding:1%;height:73%;color:white;overflow-x: hidden;overflow-y:auto;">
+    <div class="comment-panel-body clearfix" style="padding:1%;height:67%;color:white;overflow-x: hidden;overflow-y:auto;">
         <div class="mt-comments">
             <div class="mt-comment" ng-repeat="data in commentResult" ng-if="commentResult.length >0">
                 <div class="mt-comment-img">
@@ -20,14 +20,14 @@
                 </div>
                 <div class="mt-comment-body">
                     <div class="mt-comment-info">
-                        <span class="mt-comment-author" style="color:#657b8d">{{data.createdBy.ref.name}}</span>
+                        <span class="mt-comment-author">{{data.createdBy.ref.name}}</span>
                     </div>
                     <div class="mt-comment-text" >
                             <show-more text="data.desc" limit="50"> </show-more> </div>
                     <div class="mt-comment-details">
-                        <ul class="mt-comment-actions">
+                        <ul class="mt-comment-actions" style="padding-right:3%;">
                             <li>
-                                <a href="#"><i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;"></i></a>
+                                <a href="#" tooltip-placement="top" uib-tooltip="Delete"><i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -37,14 +37,14 @@
         <div class="centercontent" ng-if="commentResult.length ==0"> No Comment</div>
     </div>
 
-    <div class="page-quick-sidebar-chat-user-form" style="padding:1% 1% 0 1%;margin-top:-2%;">
+    <div class="page-quick-sidebar-chat-user-form" style="margin-top:-3%;height:20%;padding: 0 0 0 1%;">
         <div class="mt-comments">
             <div class="mt-comment comment-panel-mt-comment">
                 <div class="mt-comment-img">
                     <img  class =" img-circle" width="45px" ng-src="avatars/{{currentUser.uuid}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';" /></div>
                 <div class="mt-comment-body">
                     <div class="mt-comment-info">
-                        <span class="mt-comment-author" style="color:#657b8d">{{currentUser.name}}</span>
+                        <span class="mt-comment-author">{{currentUser.name}}</span>
                     </div>
                     <div class="mt-comment-text">
                         <form novalidate="novalidate" name="myform" ng-submit="submit()">
@@ -59,14 +59,27 @@
                         </form>
                     </div>
                     <div class="mt-comment-details">
-                         <ul class="mt-comment-actions">
-                            <li>
-                              <a href="#"><i class="fa fa-upload"></i></a>
+                           
+                        <ul class="mt-comment-actions" style="padding-right:6%;margin-top:-4px;">
+                            <li>                          
+                                <label class="input-group-btn" style="width:auto" tooltip-placement="top" uib-tooltip="upload">
+                                    <input id="avatar" onchange="readfileName(this)" type="file" ng-model="file"  style="display:none">
+                                    <i class="fa fa-upload" style="font-size: 20px;color: #79869a;"></i>         
+                                </label>
                           </li>
-                          <!-- <li>
-                              <a href="#">Delete</a>
-                          </li>  -->
                         </ul>
+                        <br>
+                        <div ng-show="isFileUpload" style="background-color: #f5f5f5;
+                        border: 1px solid #dcdcdc;
+                        font-weight: bold;
+                        margin: 0 7px 9px;
+                        overflow-y: hidden;
+                        padding: 4px 4px 4px 8px;
+                        max-width: 448px;">
+                            <span style="color: #15c;">{{file.name}}</span>
+                            <span >({{file.size}}K)</span>
+                            <i class="fa fa-time" ng-click="clearFile()" style="float:right;"></i>
+                        </div>
                     </div>
                 </div>
             </div>
