@@ -95,9 +95,20 @@
       "dispName": "SourceAttributeName",
       "active": "Y",
       "expr": null
-    },    
+    },
     {
       "attributeId": 5,
+      "name": "sourcevalue",
+      "type": "Double",
+      "desc": "Computed value from source",
+      "key": null,
+      "partition": "Y",
+      "dispName": "SourceValue",
+      "active": "Y",
+      "expr": null
+    },    
+    {
+      "attributeId": 6,
       "name": "targetdatapoduuid",
       "type": "string",
       "desc": "TargetDatapodUUID",
@@ -108,7 +119,7 @@
       "expr": null
     },
     {
-      "attributeId": 6,
+      "attributeId": 7,
       "name": "targetdatapodversion",
       "type": "string",
       "desc": "TargetDatapodVersion",
@@ -119,7 +130,7 @@
       "expr": null
     },
     {
-      "attributeId": 7,
+      "attributeId": 8,
       "name": "targetdatapodname",
       "type": "string",
       "desc": "TargetDatapodName",
@@ -130,7 +141,7 @@
       "expr": null
     },
     {
-      "attributeId": 8,
+      "attributeId": 9,
       "name": "targetattributeid",
       "type": "string",
       "desc": "Id of target attribute",
@@ -141,24 +152,13 @@
       "expr": null
     },
     {
-      "attributeId": 9,
+      "attributeId": 10,
       "name": "targetattributename",
       "type": "string",
       "desc": "Name of target attribute",
       "key": null,
       "partition": "N",
       "dispName": "TargetAttributeName",
-      "active": "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 10,
-      "name": "sourcevalue",
-      "type": "Double",
-      "desc": "Computed value from source",
-      "key": null,
-      "partition": "Y",
-      "dispName": "SourceValue",
       "active": "Y",
       "expr": null
     },
@@ -185,7 +185,7 @@
       "expr": null
     },
     {
-      "attributeId": 15,
+      "attributeId": 13,
       "name": "version",
       "type": "Integer",
       "desc": "version",
