@@ -15,7 +15,7 @@ CREATE TABLE `dim_date` (
   `julian_day_num_of_year` int(11) DEFAULT NULL,
   `julian_day_num_absolute` int(11) DEFAULT NULL,
   `is_weekday` varchar(45) DEFAULT NULL,
-  `is_us_civil_holiday` varchar(45) DEFAULT NULL,
+  `is_usa_civil_holiday` varchar(45) DEFAULT NULL,
   `is_last_day_of_week` varchar(45) DEFAULT NULL,
   `is_last_day_of_month` varchar(45) DEFAULT NULL,
   `is_last_day_of_quarter` varchar(45) DEFAULT NULL,
@@ -64,8 +64,9 @@ CREATE TABLE `dim_date` (
   PRIMARY KEY (`date_id`,`load_date`),
   UNIQUE KEY `date_val` (`date_val`,`load_date`)
 );
+
 ALTER TABLE `dim_date` PARTITION BY KEY(load_date) PARTITIONS 1;
-LOAD DATA LOCAL INFILE '/var/lib/mysql-files/dim_date.csv'  IGNORE INTO TABLE dim_date FIELDS TERMINATED BY ','  LINES TERMINATED BY '\r' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/dim_date.csv' IGNORE INTO TABLE dim_date FIELDS TERMINATED BY ','  LINES TERMINATED BY '\r' IGNORE 1 LINES;
 
 
 
