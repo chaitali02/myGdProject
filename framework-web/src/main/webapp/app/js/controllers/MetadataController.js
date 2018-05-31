@@ -227,7 +227,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		$scope.isAdd = false;
 		
 		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage = $scope.privileges.indexOf('View') == -1;
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
@@ -244,7 +244,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		$scope.isAdd = false;
 		$scope.isPanelActiveOpen=true;
 		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage = $scope.privileges.indexOf('View') == -1;
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];

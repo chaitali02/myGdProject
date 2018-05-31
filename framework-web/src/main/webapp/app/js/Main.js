@@ -1,4 +1,6 @@
 
+
+
 /* inferyx App*/
 
 var InferyxApp = angular.module("InferyxApp", [
@@ -140,8 +142,8 @@ InferyxApp.run(['Idle','$sessionStorage','$rootScope','$http','$cookieStore','va
 	if(localStorage.userdetail){
         //$rootScope.baseUrl=$cookieStore.get('userdetail').baseUrl
         $rootScope.productDetail=(JSON.parse(localStorage.userdetail).productDetail);
-		$rootScope.role=localStorage.role;
-		$rootScope.baseUrl=JSON.parse(localStorage.userdetail).baseUrl
+	$rootScope.role=localStorage.role;
+	$rootScope.baseUrl=JSON.parse(localStorage.userdetail).baseUrl
 	}
     $rootScope.time= new Date();
     // $rootScope.isCommentDisabled=true;
@@ -188,8 +190,8 @@ InferyxApp.factory('settings', ['$rootScope', function($rootScope) {
 InferyxApp.factory('ajaxCallFactory',function($http,$location){
 	var ajaxCallServiceFactory={};
     ajaxCallServiceFactory.getCall=function(url,sessionId){
-		 var base_url=$location.absUrl().split("app")[0];
-		 url = base_url + url;
+	 var base_url=$location.absUrl().split("app")[0];
+	 url = base_url + url;
     	 var xhttp = new XMLHttpRequest();
     	  xhttp.onreadystatechange = function() {
     	    if (this.readyState == 4 && this.status == 200) {
@@ -324,14 +326,14 @@ InferyxApp.controller('TabController',function($timeout,$state,$scope,$rootScope
 InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedProperties,$state,$window,$cookieStore,LhsService){
 	$rootScope.metaStats = {};
 	$scope.deInitTabs=function () {
-		var param={};
-		param.index=null;
-		$rootScope.$broadcast('onDeInitTabs',param);
+	var param={};
+	param.index=null;
+	$rootScope.$broadcast('onDeInitTabs',param);
 	}
     
     if(typeof localStorage.userdetail =="undefined"){
-		$window.location.href = 'login.html';
-		return false;
+	$window.location.href = 'login.html';
+	return false;
 	}
     
     if(!$rootScope.$$listenerCount['CallFromAppRoleController']){
@@ -345,24 +347,24 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
 
     $scope.metadatasubmenu;
     $scope.Metadata= {
-		    "caption":"Data Preparation",
+	    "caption":"Data Preparation",
             "name":"metadata",
             "class":"fa fa-link",
             "submenu":[]
         };
 
     $scope.Datadiscovery= {
-    		"caption":"Data Discovery",
-    		"name":"datadiscovery",
-    		"class":"fa fa-binoculars",
-    		"submenu":[]
+    	"caption":"Data Discovery",
+    	"name":"datadiscovery",
+    	"class":"fa fa-binoculars",
+    	"submenu":[]
         };
         
     $scope.MetaDatanavigator= {
-			"caption":"Metadata Navigator",
-			"name":"metadatanavigator",
-			"class":"fa fa-paper-plane",
-			"submenu":[]
+	"caption":"Metadata Navigator",
+	"name":"metadatanavigator",
+	"class":"fa fa-paper-plane",
+	"submenu":[]
         };
         
     $scope.Ruledata={
@@ -395,7 +397,7 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
          	        {"name":"viewdataquality","type":"dq","uuid":"null","caption":"Rule"},
          	        {"name":"viewdataqualitygroup","type":"dqgroup","uuid":"null","caption":"Rule Group"},
          	        {"name":"viewdqresults","type":"dqexec","uuid":"null","caption":"Rule Results"}
-				]
+	]
         }
         
     $scope.Profiledata={
@@ -406,8 +408,8 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
          	        {"name":"viewprofile","type":"profile","uuid":"null","caption":"Rule"},
          	        {"name":"viewprofilegroup","type":"profilegroup","uuid":"null","caption":"Rule Group"},
                     {"name":"viewprofileresults","type":"profileexec","uuid":"null","caption":"Rule Results"},
-				]
-		};
+	]
+	};
     $scope.Dagworkflow={
             "caption":"Data Pipeline",
             "name":"workflow",
@@ -420,7 +422,7 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
         };
         
   $scope.Datascience={
-		    "caption":"Data Science",
+	    "caption":"Data Science",
             "name":"datascience",
             "class":"fa fa-flask",
             "submenu":[
@@ -439,7 +441,7 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
         };
 
   $scope.Datavisualization={
-		    "caption":"Data Visualization",
+	    "caption":"Data Visualization",
             "name":"datavisualization",
             "class":"fa fa-desktop",
             "submenu":[
@@ -449,7 +451,7 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
         	]
         }
     $scope.Admindata={
-		    "caption":"Admin",
+	    "caption":"Admin",
   	        "name":"admin",
   	        "class":"fa fa-wrench",
   	        "submenu":[]
@@ -462,28 +464,28 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
 	        "submenu":[]
 	    },
     $scope.Vizpoddata= {
-		    "caption":"Viz Pod",
-		    "name":"vizpod",
-		    "class":"fa fa-bar-chart",
-		    "submenu":[]
+	    "caption":"Viz Pod",
+	    "name":"vizpod",
+	    "class":"fa fa-bar-chart",
+	    "submenu":[]
         };
         
     $scope.JobExecutor= {
-		    "caption":"Job Monitoring",
+	    "caption":"Job Monitoring",
             "name":"jobexecutor",
             "class":"fa fa-tasks",
             "submenu":[]
         };
 	$scope.SystemMonitering= {
-			"caption":"System Monitoring",
-			"name":"systemmonitering",
-			"class":"fa fa-tasks",
-			"submenu":[]
-		};
+	"caption":"System Monitoring",
+	"name":"systemmonitering",
+	"class":"fa fa-tasks",
+	"submenu":[]
+	};
 
     $scope.convertUppdercase=function(value){
         if(!value)
-		    return value;
+	    return value;
         var resultvalue =value.split("_");
         var resultjoint = [];
         for (j = 0; j < resultvalue.length; j++) {
@@ -493,31 +495,31 @@ InferyxApp.controller('lhscontroller',function($scope,$rootScope,SharedPropertie
     }
 
  	$scope.updateMetaData=function(){
-		// if(!localStorage.isAppRoleExists){//!$cookieStore.get('isAppRoleSubmit')){
+	// if(!localStorage.isAppRoleExists){//!$cookieStore.get('isAppRoleSubmit')){
 	    //     return false
-		// }
+	// }
   	    // else{
-   		    LhsService.getMetadata().then(function(response){onMetadataSuccess(response.data)});
+   	    LhsService.getMetadata().then(function(response){onMetadataSuccess(response.data)});
     	    var onMetadataSuccess=function(metadata){
                // debugger
-   			    var countMeta=0;
-   			    var countAdmin=0;
-	 			for(var i=0;i<metadata.length;i++){
-					var meta={};
-					if(metadata[i].menu == 'DataPreparation' && metadata[i].active == 'Y'){
-						meta.name=metadata[i].name;
-			        meta.uuid=metadata[i].uuid
-			        meta.caption=$scope.convertUppdercase(metadata[i].name)
-			        $scope.Metadata.submenu[countMeta]=meta
-			        countMeta=countMeta+1;
-		            }
+   	    var countMeta=0;
+   	    var countAdmin=0;
+	 	for(var i=0;i<metadata.length;i++){
+	var meta={};
+	if(metadata[i].menu == 'DataPreparation' && metadata[i].active == 'Y'){
+	meta.name=metadata[i].name;
+	        meta.uuid=metadata[i].uuid
+	        meta.caption=$scope.convertUppdercase(metadata[i].name)
+	        $scope.Metadata.submenu[countMeta]=meta
+	        countMeta=countMeta+1;
+	            }
 	                else if(metadata[i].menu == 'admin' && metadata[i].active == 'Y'){
-		     	        meta.name=metadata[i].name;
-		                meta.uuid=metadata[i].uuid
-		 	            meta.caption=$scope.convertUppdercase(metadata[i].name)
-			            $scope.Admindata.submenu[countAdmin]=meta
-			            countAdmin=countAdmin+1;
-		            }
+	     	        meta.name=metadata[i].name;
+	                meta.uuid=metadata[i].uuid
+	 	            meta.caption=$scope.convertUppdercase(metadata[i].name)
+	            $scope.Admindata.submenu[countAdmin]=meta
+	            countAdmin=countAdmin+1;
+	            }
                 }
                 if(localStorage.isAppRoleExists){
                     LhsService.getMetaStats().then(function(response){onSuccessGetMetaStats(response.data)});
@@ -558,56 +560,56 @@ InferyxApp.controller('AppRoleController',function($scope,$rootScope,$cookieStor
     }
 	AppRoleService.getAppRole($rootScope.setUserName).then(function(response){onAppSuccess(response.data)})
 	var onAppSuccess = function (response) {
-		$scope.AppData=response
-		$scope.RoleData=response[0].roleInfo
-		$scope.selectedRole=response[0].roleInfo[0]
-		$scope.selectedApp=response[0]
-		$rootScope.appUuid=$scope.selectedApp.appId.ref.uuid;
-		localStorage.appName=$scope.selectedApp.appId.ref.name;
-		$scope.selectAppStatus=true;
-		$scope.selectRoleStatus=true;
-		localStorage.role=$scope.selectedRole.ref.name;
-		$rootScope.role=localStorage.role;
-		AppRoleService.getTZ().then(function(responseTz){onSuccessgetTZ(responseTz.data)});
-		var onSuccessgetTZ = function(responseTz){
-			localStorage.serverTz=responseTz;
-		}
+	$scope.AppData=response
+	$scope.RoleData=response[0].roleInfo
+	$scope.selectedRole=response[0].roleInfo[0]
+	$scope.selectedApp=response[0]
+	$rootScope.appUuid=$scope.selectedApp.appId.ref.uuid;
+	localStorage.appName=$scope.selectedApp.appId.ref.name;
+	$scope.selectAppStatus=true;
+	$scope.selectRoleStatus=true;
+	localStorage.role=$scope.selectedRole.ref.name;
+	$rootScope.role=localStorage.role;
+	AppRoleService.getTZ().then(function(responseTz){onSuccessgetTZ(responseTz.data)});
+	var onSuccessgetTZ = function(responseTz){
+	localStorage.serverTz=responseTz;
+	}
 	};
 
 	
 	$scope.getselectApp=function(){
-		if($scope.selectedApp !=null){
+	if($scope.selectedApp !=null){
             localStorage.appName=$scope.selectedApp.appId.ref.name
             $rootScope.appUuid=$scope.selectedApp.appId.ref.uuid
-			$scope.selectAppStatus=true;
-			$scope.selectRoleStatus=true;
-			$scope.RoleData=$scope.selectedApp.roleInfo
-			$scope.selectedRole=$scope.selectedApp.roleInfo[0]
-			localStorage.role=$scope.selectedRole.ref.name
-			$rootScope.role=localStorage.role;
-		}
-		else{
-			$scope.selectAppStatus=false;
-			$scope.selectRoleStatus=false;
-		}
+	$scope.selectAppStatus=true;
+	$scope.selectRoleStatus=true;
+	$scope.RoleData=$scope.selectedApp.roleInfo
+	$scope.selectedRole=$scope.selectedApp.roleInfo[0]
+	localStorage.role=$scope.selectedRole.ref.name
+	$rootScope.role=localStorage.role;
+	}
+	else{
+	$scope.selectAppStatus=false;
+	$scope.selectRoleStatus=false;
+	}
 	}
 
 	$scope.getselectRole=function(){
 	 	if($scope.selectedRole !=null){
-	 		$scope.selectRoleStatus=true;
-	 		localStorage.role=$scope.selectedRole.ref.name
-	 		$rootScope.role=localStorage.role;
+	 	$scope.selectRoleStatus=true;
+	 	localStorage.role=$scope.selectedRole.ref.name
+	 	$rootScope.role=localStorage.role;
 	 	}
 	 	else {
-	 		$scope.selectRoleStatus=false;
+	 	$scope.selectRoleStatus=false;
 	 	}
 	}
 
 	$scope.open = function() {
-		if(!localStorage.isAppRoleExists){//!$cookieStore.get('isAppRoleSubmit')){
-	 		$('#myModal').modal({
-	 		  backdrop: 'static',
-	 		  keyboard: false
+	if(!localStorage.isAppRoleExists){//!$cookieStore.get('isAppRoleSubmit')){
+	 	$('#myModal').modal({
+	 	  backdrop: 'static',
+	 	  keyboard: false
 	 	  });
 	 	}
   };
@@ -648,21 +650,21 @@ InferyxApp.controller('UnloadController',function($rootScope,$scope,$sessionStor
 
 	$scope.isErrorShow=false;
 	$scope.initOpen=function(){
-		if($sessionStorage.unlockStatus == true){
-			$('#unlockmodel').modal({
-			      backdrop: 'static',
-			      keyboard: false
-		   });
-		 }
+	if($sessionStorage.unlockStatus == true){
+	$('#unlockmodel').modal({
+	      backdrop: 'static',
+	      keyboard: false
+	   });
+	 }
 	}
    $scope.open=function(){
       $sessionStorage.unlockStatus =true;
       $scope.unlockusername="";
       $scope.unlockpassword="";
 	   $('#unlockmodel').modal({
-		      backdrop: 'static',
-		      keyboard: false
-		});
+	      backdrop: 'static',
+	      keyboard: false
+	});
 
 	}
    $scope.hideErrorMessage=function(){
@@ -675,27 +677,27 @@ InferyxApp.controller('UnloadController',function($rootScope,$scope,$sessionStor
 	   $scope.unlockusername="";
        $scope.unlockpassword="";
 	   var onSuccess=function(response){
-		   if(response == true){
-			   $sessionStorage.unlockStatus =false;
+	   if(response == true){
+	   $sessionStorage.unlockStatus =false;
 
-			   $('#unlockmodel').modal('hide');
-		   }
-		  else{
-			  $scope.isErrorShow=true;
-			  $scope.error="Invalid Login"
-		  }
+	   $('#unlockmodel').modal('hide');
+	   }
+	  else{
+	  $scope.isErrorShow=true;
+	  $scope.error="Invalid Login"
+	  }
 	   }
 	  }
-		$scope.notYpalrecha=function(){
-			$rootScope.$emit('CallFromAppRoleControllerLogout', {});
-		}
+	$scope.notYpalrecha=function(){
+	$rootScope.$emit('CallFromAppRoleControllerLogout', {});
+	}
 });
 
 
 
 InferyxApp.controller('LogoutController',function($scope,$rootScope,$cookieStore,$window,LogoutService){
 	 $scope.$on('IdleStart', function() {
-		 $scope.logout();
+	 $scope.logout();
 
 	      });
 	   $scope.$on('IdleEnd', function() {
@@ -708,44 +710,44 @@ InferyxApp.controller('LogoutController',function($scope,$rootScope,$cookieStore
 	      });
 	 $rootScope.$on("CallFromAppRoleControllerLogout", function() {
 
-		 $scope.logout();
-		});
+	 $scope.logout();
+	});
      $scope.logout = function() {
 
     	 LogoutService.securitylogoutSession($.cookie("sessionId")).then(function(response){onSecuritySuccess(response)},function(response){onError(response)})
     	 var onSecuritySuccess =function(response){
 
-    		 console.log(JSON.stringify(response.data))
-    		 //alert(response.data.userInfo.ref.uuid)
-    		 if(response.data.userInfo.ref.uuid == JSON.parse(localStorage.userdetail).userUUID){//$cookieStore.get('userdetail').userUUID){
-    			// $cookieStore.remove('sessionId');
-					localStorage.removeItem('userdetail');
-    			 //$cookieStore.remove('userdetail');
-    			// $cookieStore.remove('selectAppStatus')
-    			// $cookieStore.remove('selectRoleStatus')
-    			 //$cookieStore.remove('setAppName');
-    			// $cookieStore.remove('name');
-    			 //$cookieStore.remove('isAppRoleSubmit');
-					 localStorage.removeItem('isAppRoleExists');
-					 localStorage.clear();
-    		     if(typeof localStorage.userdetail =="undefined"){
-    		 		    $window.location.href = 'login.html';
-    		 	    }
+    	 console.log(JSON.stringify(response.data))
+    	 //alert(response.data.userInfo.ref.uuid)
+    	 if(response.data.userInfo.ref.uuid == JSON.parse(localStorage.userdetail).userUUID){//$cookieStore.get('userdetail').userUUID){
+    	// $cookieStore.remove('sessionId');
+	localStorage.removeItem('userdetail');
+    	 //$cookieStore.remove('userdetail');
+    	// $cookieStore.remove('selectAppStatus')
+    	// $cookieStore.remove('selectRoleStatus')
+    	 //$cookieStore.remove('setAppName');
+    	// $cookieStore.remove('name');
+    	 //$cookieStore.remove('isAppRoleSubmit');
+	 localStorage.removeItem('isAppRoleExists');
+	 localStorage.clear();
+    	     if(typeof localStorage.userdetail =="undefined"){
+    	 	    $window.location.href = 'login.html';
+    	 	    }
            	 }
     	 }
     	 var onError=function(response){
-    		 //$cookieStore.remove('sessionId');
-    		// $cookieStore.remove('userdetail');
-    		// $cookieStore.remove('selectAppStatus')
-    		// $cookieStore.remove('selectRoleStatus')
-    		 //$cookieStore.remove('setAppName');
-    		 //$cookieStore.remove('name');
-    		 //$cookieStore.remove('isAppRoleSubmit');
-				 localStorage.removeItem('userdetail');
-				  localStorage.removeItem('isAppRoleExists');
-					localStorage.clear();
+    	 //$cookieStore.remove('sessionId');
+    	// $cookieStore.remove('userdetail');
+    	// $cookieStore.remove('selectAppStatus')
+    	// $cookieStore.remove('selectRoleStatus')
+    	 //$cookieStore.remove('setAppName');
+    	 //$cookieStore.remove('name');
+    	 //$cookieStore.remove('isAppRoleSubmit');
+	 localStorage.removeItem('userdetail');
+	  localStorage.removeItem('isAppRoleExists');
+	localStorage.clear();
     	     if(typeof localStorage.userdetail =="undefined"){
-    	 		    $window.location.href = 'login.html';
+    	 	    $window.location.href = 'login.html';
     	 	    }
     	 }
 
@@ -756,15 +758,9 @@ InferyxApp.controller('LogoutController',function($scope,$rootScope,$cookieStore
 
 
 /* Setup App Main Controller */
-InferyxApp.controller('AppController', ['$scope', '$rootScope','commentService','privilegeSvc', function($scope, $rootScope,commentService,privilegeSvc) {
+InferyxApp.controller('AppController', ['$scope', '$rootScope','commentService', function($scope, $rootScope,commentService) {
     $rootScope.isCommentDisabled=true;
-    $scope.privileges = privilegeSvc.privileges['comment'] || [];
-    $rootScope.isCommentVeiwPrivlage = $scope.privileges.indexOf('View') == -1;
-    $scope.$on('privilegesUpdated', function (e, data) {
-        $scope.privileges = privilegeSvc.privileges['comment'] || [];
-        $rootScope.isCommentVeiwPrivlage = $scope.privileges.indexOf('View') == -1;
-        
-    });    
+   
     $scope.isPanelOpen=commentService.isPanelOpen;
     $rootScope.dirOptions={};
     $rootScope.onPanelOpen=function(){
@@ -788,27 +784,27 @@ InferyxApp.controller('AppController', ['$scope', '$rootScope','commentService',
 InferyxApp.controller('HeaderController', ['$uibModal','$scope','$rootScope','$cookieStore','$stateParams','$state','dagMetaDataService', function($uibModal,$scope,$rootScope,$cookieStore, $stateParams, $state, dagMetaDataService) {
 	$rootScope.dummyArg = 1;
 	$rootScope.caseConverter=function(str) {
-		var temp= str.charAt(0).toUpperCase() + str.slice(1);
-		return temp.replace(/([A-Z][a-z])/g, " $1");
+	var temp= str.charAt(0).toUpperCase() + str.slice(1);
+	return temp.replace(/([A-Z][a-z])/g, " $1");
 	}
 	$rootScope.genericClose = function (e,type) {
-		 if($stateParams.returnBack == "true" && $rootScope.previousState){
-					//revertback
-					e.preventDefault();
-					$state.go($rootScope.previousState.name,$rootScope.previousState.params);
-					$rootScope.previousState = undefined;
-		 }
-		 else if(type) {
-			 //var sref = $(this).attr('data-ui-sref');
+	 if($stateParams.returnBack == "true" && $rootScope.previousState){
+	//revertback
+	e.preventDefault();
+	$state.go($rootScope.previousState.name,$rootScope.previousState.params);
+	$rootScope.previousState = undefined;
+	 }
+	 else if(type) {
+	 //var sref = $(this).attr('data-ui-sref');
             $scope.statedetail={};
             $scope.statedetail.name=dagMetaDataService.elementDefs[type].listState
             $scope.statedetail.params={type:type}
             $state.go($scope.statedetail.name,$scope.statedetail.params)
-		 }
+	 }
  }
  	$rootScope.broadcastRefreshData = function () {
 
-		$rootScope.$broadcast('refreshData');
+	$rootScope.$broadcast('refreshData');
  	}
 	$scope.setAppStatus=false;
 	$rootScope.$on('callsetapp',function() {
@@ -818,8 +814,8 @@ InferyxApp.controller('HeaderController', ['$uibModal','$scope','$rootScope','$c
    $scope.getAppName=function(){
 
 	        if(localStorage.appName){//$cookieStore.get('setAppName')){
-					$scope.selectApp=localStorage.appName//$cookieStore.get('setAppName');
-		    	$scope.setAppStatus=true;
+	$scope.selectApp=localStorage.appName//$cookieStore.get('setAppName');
+	    	$scope.setAppStatus=true;
 
 	       }
    }
@@ -828,15 +824,15 @@ InferyxApp.controller('HeaderController', ['$uibModal','$scope','$rootScope','$c
         Layout.initHeader(); // init header
     });
 
-		$scope.uploadAvatar = function () {
-			var modalInstance = $uibModal.open({
+	$scope.uploadAvatar = function () {
+	var modalInstance = $uibModal.open({
 	      templateUrl: 'views/upload-profile-image.html',
 	      controller: 'ProfileImageCtrl',
 	      size: 'md',
-				windowTopClass : 'avatar-modal',
-				scope: $scope
+	windowTopClass : 'avatar-modal',
+	scope: $scope
 	    });
-		};
+	};
 
 }]);
 
@@ -857,43 +853,43 @@ InferyxApp.controller('ProfileImageCtrl',function ($timeout,$rootScope,$scope,$u
 
 	window.readURL = function (input) {
       if (input.files && input.files[0]) {
-					$scope.$apply();
+	$scope.$apply();
           var reader = new FileReader();
 
           reader.onload = function (e) {
               $('#avatar-preview')
                   .attr('src', e.target.result)
-									.show();
+	.show();
           };
 
           reader.readAsDataURL(input.files[0]);
       }
   }
 	$scope.upload = function (file) {
-		var f = document.getElementById('avatar').files[0];
-		console.log(f);
-		var type = f.type.split('/')[1];
-		console.log(type);
-		var fd=new FormData();
+	var f = document.getElementById('avatar').files[0];
+	console.log(f);
+	var type = f.type.split('/')[1];
+	console.log(type);
+	var fd=new FormData();
         fd.append('file',f);
         fd.append('fileName',$rootScope.setUseruuid);
 
-		var baseUrl = $location.absUrl().split("app")[0];
-		var url = baseUrl+"metadata/uploadProfileImage";
-		$http.post(url,fd,
+	var baseUrl = $location.absUrl().split("app")[0];
+	var url = baseUrl+"metadata/uploadProfileImage";
+	$http.post(url,fd,
     {
 	    transformRequest: angular.identity,
 	    headers: {'Content-Type': undefined}
     }).success(function(d){
     	console.log(d);
-			$scope.$parent.dummyArg++;
-			$scope.cancel()
+	$scope.$parent.dummyArg++;
+	$scope.cancel()
     })
 
 
 	}
 	$scope.cancel = function () {
-		$uibModalInstance.dismiss('cancel');
+	$uibModalInstance.dismiss('cancel');
 	}
 })
 
@@ -902,9 +898,9 @@ InferyxApp.controller('SidebarController', ['$state', '$scope', 'cacheService', 
     $scope.$on('$includeContentLoaded', function() {
         Layout.initSidebar($state); // init sidebar
     });
-		$scope.clearCache = function () {
-			cacheService.searchCriteria = {};
-		}
+	$scope.clearCache = function () {
+	cacheService.searchCriteria = {};
+	}
 }]);
 
 
@@ -951,7 +947,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         controller: function($scope,$rootScope, $stateParams,$window) {
         	//$window.location.href = 'index.html';
         },
-		data: {pageTitle: 'Data Discovery'},
+	data: {pageTitle: 'Data Discovery'},
     })
     
     // metadata
@@ -1306,10 +1302,10 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
 
 
 	.state('rulerestult', {
-		url: "/RuleResultList",
-		templateUrl: "views/common-list.html",
-		data: { pageTitle: 'Business Rules'},
-		params: {type:'ruleexec',isExec:true}
+	url: "/RuleResultList",
+	templateUrl: "views/common-list.html",
+	data: { pageTitle: 'Business Rules'},
+	params: {type:'ruleexec',isExec:true}
 	})
     
     .state('rulerestultpage', {
@@ -1402,9 +1398,9 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
 
     .state('paramlistrule', {
         url:"/BusinessRules/ParamList",
-		templateUrl:"views/common-list.html",
-		data: {pageTitle: 'Business Rules'},
-		params:{type:'paramlist',parantType:'rule'}
+	templateUrl:"views/common-list.html",
+	data: {pageTitle: 'Business Rules'},
+	params:{type:'paramlist',parantType:'rule'}
 
     })
 
@@ -1509,7 +1505,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
     })
     .state('datareconrulerestult', {
         url: "/ListDataReconcilationResult",
-		templateUrl: "views/common-list.html",
+	templateUrl: "views/common-list.html",
         data: { pageTitle: 'Data Reconciliation'},
         params: {type:'reconexec',isExec:true}
     })
@@ -1534,7 +1530,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
     })
     .state('viewdataquality', {
         url: "/ListDataQuality",
-		templateUrl: "views/common-list.html",
+	templateUrl: "views/common-list.html",
         data: { pageTitle: 'Data Quality'},
         params:{type:'dq'}
     })
@@ -1592,10 +1588,10 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
     })
 
 	.state('viewdqresults', {
-		url: "/DataQualityResultList",
-		templateUrl: "views/common-list.html",
-		data: { pageTitle: 'Data Quality'},
-		params: {type:'dqexec',isExec:true}
+	url: "/DataQualityResultList",
+	templateUrl: "views/common-list.html",
+	data: { pageTitle: 'Data Quality'},
+	params: {type:'dqexec',isExec:true}
 	})
         
     .state('viewdqresultspage', {
@@ -1628,7 +1624,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         url: "/ListProfileGroup",
         templateUrl: "views/common-list.html",
         data: { pageTitle: 'Data Profiling'},
-		params:{ type:'profilegroup'}
+	params:{ type:'profilegroup'}
 
     })
 
@@ -1673,7 +1669,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         url: "/ProfileResultList",
         templateUrl: "views/common-list.html",
         data: { pageTitle: 'Data Profiling'},
-		params: {type:'profileexec',isExec:true}
+	params: {type:'profileexec',isExec:true}
     })
     
     .state('profilecompare', {
@@ -1963,8 +1959,8 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
                 return $ocLazyLoad.load({
                     name: 'Admin',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-					files: [
-						'js/controllers/RegisterSourceController.js',
+	files: [
+	'js/controllers/RegisterSourceController.js',
                         'js/services/RegisterSourceServie.js'
                     ]
                 });
@@ -1982,8 +1978,8 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
                 return $ocLazyLoad.load({
                     name: 'Admin',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-					files: [
-						'js/controllers/FileMangegerController.js',
+	files: [
+	'js/controllers/FileMangegerController.js',
                         'js/services/FileManagerService.js'
                     ]
                 });
@@ -2040,9 +2036,9 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
                 return $ocLazyLoad.load({
                     name: 'Admin',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-					files: [
-						'js/controllers/MigrationAssistController.js',
-						'js/services/MigrationAssistServices.js'
+	files: [
+	'js/controllers/MigrationAssistController.js',
+	'js/services/MigrationAssistServices.js'
                     ]
                 });
             }]
@@ -2059,9 +2055,9 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
                 return $ocLazyLoad.load({
                     name: 'Admin',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-					files: [
-						'js/controllers/MigrationAssistController.js',
-						'js/services/MigrationAssistServices.js'
+	files: [
+	'js/controllers/MigrationAssistController.js',
+	'js/services/MigrationAssistServices.js'
                     ]
                 });
             }]
@@ -2144,7 +2140,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         url:"/DataPipeline/ResultList?dagid",
         templateUrl:"views/common-list.html",
         data: { pageTitle: 'Data Pipeline'},
-		params: {type:'dagexec',isExec:true}
+	params: {type:'dagexec',isExec:true}
     })
     
     .state('resultgraphwf', {
@@ -2219,16 +2215,16 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
     })
     .state('model', {
         url:"/Datascience/ModelList",
-		templateUrl:"views/common-list.html",
-		data: { pageTitle: 'Data Science'},
-		params:{ type:'model'}
+	templateUrl:"views/common-list.html",
+	data: { pageTitle: 'Data Science'},
+	params:{ type:'model'}
     })
         
     .state('train', {
         url:"/Datascience/trainList",
-		templateUrl:"views/common-list.html",
-		data: { pageTitle: 'Data Science'},
-		params:{type:'train'}
+	templateUrl:"views/common-list.html",
+	data: { pageTitle: 'Data Science'},
+	params:{type:'train'}
 
     })
        
@@ -2262,9 +2258,9 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
        
     .state('predict', {
         url:"/Datascience/predictList",
-		templateUrl:"views/common-list.html",
-		data: { pageTitle: 'Data Science'},
-		params:{type:'predict'}
+	templateUrl:"views/common-list.html",
+	data: { pageTitle: 'Data Science'},
+	params:{type:'predict'}
 
     })
     
@@ -2299,9 +2295,9 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         
     .state('simulate', {
         url:"/Datascience/simulateList",
-		templateUrl:"views/common-list.html",
-		data: { pageTitle: 'Data Science'},
-		params:{type:'simulate'}
+	templateUrl:"views/common-list.html",
+	data: { pageTitle: 'Data Science'},
+	params:{type:'simulate'}
 
     })
         
@@ -2401,9 +2397,9 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
 
     .state('paramlistmodel', {
         url:"/DataScience/ParamList",
-		templateUrl:"views/common-list.html",
-		data: {pageTitle: 'Data Science'},
-		params:{type:'paramlist',parantType:'model'}
+	templateUrl:"views/common-list.html",
+	data: {pageTitle: 'Data Science'},
+	params:{type:'paramlist',parantType:'model'}
 
     })
     
@@ -2429,9 +2425,9 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
           
     .state('paramset', {
         url:"/ParamSet",
-		templateUrl:"views/common-list.html",
-		data: {pageTitle: 'Data Science'},
-		params:{type:'paramset'}
+	templateUrl:"views/common-list.html",
+	data: {pageTitle: 'Data Science'},
+	params:{type:'paramset'}
 
     })
 
@@ -2478,7 +2474,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
         url: "/JobMonitoringList?type",
         templateUrl:"views/common-list.html",
         data:{ pageTitle:'Job Monitoring'},
-		params:{isJobExec:true}
+	params:{isJobExec:true}
     })
 
     .state('jobmonitoringlistloadexec', {
@@ -2838,59 +2834,59 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
     })
     
 	.state('commonlistpage', {
-		url: "/list?type",
+	url: "/list?type",
 	    templateUrl: "views/common-list.html",
-		data: { pageTitle: 'List Page'},
-		//controller: "BlankController",
-		resolve: {
-		    deps: ['$ocLazyLoad', function($ocLazyLoad) {
-		        return $ocLazyLoad.load({
-		            name: 'InferyxApp',
-		            insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-		            files: [
+	data: { pageTitle: 'List Page'},
+	//controller: "BlankController",
+	resolve: {
+	    deps: ['$ocLazyLoad', function($ocLazyLoad) {
+	        return $ocLazyLoad.load({
+	            name: 'InferyxApp',
+	            insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+	            files: [
                         'js/controllers/commonlistcontroller.js',
                     ]
-		        });
-		    }]
-		}
+	        });
+	    }]
+	}
     })
     
 	.state('systemmonitering', {
-		url: "/SystemMonitoring?type",
-		templateUrl: "views/systemmonitering.html",
+	url: "/SystemMonitoring?type",
+	templateUrl: "views/systemmonitering.html",
 	    data: { pageTitle: 'System Monitoring'},
-		//controller: "BlankController",
-		resolve: {
-			deps: ['$ocLazyLoad', function($ocLazyLoad) {
-				return $ocLazyLoad.load({
-					name: 'InferyxApp',
-					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-					files: [
+	//controller: "BlankController",
+	resolve: {
+	deps: ['$ocLazyLoad', function($ocLazyLoad) {
+	return $ocLazyLoad.load({
+	name: 'InferyxApp',
+	insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+	files: [
                         'js/controllers/SystemMoniteringController.js',
-						'js/services/SystemMoniteringService.js',
-						'js/directives/ChartDirective.js',
-					]
-				});
-			}]
-		}
+	'js/services/SystemMoniteringService.js',
+	'js/directives/ChartDirective.js',
+	]
+	});
+	}]
+	}
     })
     .state('createappconfig', {
-		url: "/AppConfig?id&mode&returnBack&version",
-		templateUrl: "views/appconfig.html",
+	url: "/AppConfig?id&mode&returnBack&version",
+	templateUrl: "views/appconfig.html",
 	    data: { pageTitle: 'Admin'},
-		//controller: "BlankController",
-		resolve: {
-			deps: ['$ocLazyLoad', function($ocLazyLoad) {
-				return $ocLazyLoad.load({
-					name: 'InferyxApp',
-					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-					files: [
+	//controller: "BlankController",
+	resolve: {
+	deps: ['$ocLazyLoad', function($ocLazyLoad) {
+	return $ocLazyLoad.load({
+	name: 'InferyxApp',
+	insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+	files: [
                         'js/controllers/AppConfigController.js',
-						'js/services/AppConfigService.js',
-					]
-				});
-			}]
-		}
+	'js/services/AppConfigService.js',
+	]
+	});
+	}]
+	}
     })
 
     .state('operatortype', {
@@ -2901,22 +2897,22 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
     })
 
     .state('createoperatortype', {
-		url: "/Datascience/OperatorType?id&mode&returnBack&version",
-		templateUrl: "views/operatorType.html",
+	url: "/Datascience/OperatorType?id&mode&returnBack&version",
+	templateUrl: "views/operatorType.html",
 	    data: { pageTitle: 'Data Science'},
-		//controller: "BlankController",
-		resolve: {
-			deps: ['$ocLazyLoad', function($ocLazyLoad) {
-				return $ocLazyLoad.load({
-					name: 'InferyxApp',
-					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-					files: [
+	//controller: "BlankController",
+	resolve: {
+	deps: ['$ocLazyLoad', function($ocLazyLoad) {
+	return $ocLazyLoad.load({
+	name: 'InferyxApp',
+	insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+	files: [
                        'js/controllers/OperatorTypeController.js',
-						'js/services/OperatorTypeService.js',
-					]
-				});
-			}]
-		}
+	'js/services/OperatorTypeService.js',
+	]
+	});
+	}]
+	}
     })
     .state('operator', {
         url:"/Datascience/OperatorList",
@@ -2926,22 +2922,22 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvide
     })
 
     .state('createoperator', {
-		url: "/Datascience/Operator?id&mode&returnBack&version",
-		templateUrl: "views/operator.html",
+	url: "/Datascience/Operator?id&mode&returnBack&version",
+	templateUrl: "views/operator.html",
 	    data: { pageTitle: 'Data Science'},
-		//controller: "BlankController",
-		resolve: {
-			deps: ['$ocLazyLoad', function($ocLazyLoad) {
-				return $ocLazyLoad.load({
-					name: 'InferyxApp',
-					insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-					files: [
+	//controller: "BlankController",
+	resolve: {
+	deps: ['$ocLazyLoad', function($ocLazyLoad) {
+	return $ocLazyLoad.load({
+	name: 'InferyxApp',
+	insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+	files: [
                        'js/controllers/OperatorController.js',
-						'js/services/OperatorService.js',
-					]
-				});
-			}]
-		}
+	'js/services/OperatorService.js',
+	]
+	});
+	}]
+	}
     })
     
  }]);
@@ -2953,28 +2949,28 @@ InferyxApp.factory('privilegeSvc',function ($http, $location, $rootScope) {
 	obj = {};
 	$rootScope.privileges = obj.privileges = {};
 	covertPrivileges = function (arr) {
-        obj.privileges={};
-		angular.forEach(arr,function (val,key) {
-			obj.privileges[val.type] = val.privInfo;
-		});
-		$rootScope.$broadcast('privilegesUpdated');
+        $rootScope.privileges =obj.privileges = {};
+	angular.forEach(arr,function (val,key) {
+	obj.privileges[val.type] = val.privInfo;
+	});
+	$rootScope.$broadcast('privilegesUpdated');
 	}
 	obj.get = function () {
-		if(obj.privileges == {}){
-			$http.get(url).then(function (response) {
-				covertPrivileges(response.data);
-			});
-			return obj.privileges;
-		}
-		else {
-			return obj.privileges;
-		}
+	if(obj.privileges == {}){
+	$http.get(url).then(function (response) {
+	covertPrivileges(response.data);
+	});
+	return obj.privileges;
+	}
+	else {
+	return obj.privileges;
+	}
 	}
 	obj.getUpdated = function () {
-		$http.get(url).then(function (response) {
-			covertPrivileges(response.data);
-		});
-		return obj.privileges;
+	$http.get(url).then(function (response) {
+	covertPrivileges(response.data);
+	});
+	return obj.privileges;
 	}
 	return obj
 })
@@ -2983,5 +2979,5 @@ InferyxApp.factory('privilegeSvc',function ($http, $location, $rootScope) {
 InferyxApp.run(["$rootScope","settings", "$state","privilegeSvc", function($rootScope,settings, $state, privilegeSvc) {
 	$rootScope.$state = $state; // state to be accessed from view
     $rootScope.$settings = settings; // state to be accessed from view
-    privilegeSvc.getUpdated();
+	privilegeSvc.getUpdated();
 }]);

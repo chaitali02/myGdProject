@@ -11,8 +11,8 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
         }, 
         link: function (scope, element, attrs) {
             scope.panelOpen=false;
-            scope.privileges = privilegeSvc.privileges['comment'] || [];
-            scope.isPrivlage = scope.privileges.indexOf('Add') == -1;
+            var privileges = privilegeSvc.privileges['comment'] || [];
+            scope.isPrivlage = privileges.indexOf('Add') == -1;
             angular.extend(scope.options, {
                 panelToggle: function(data){
                   scope.panelOpen=data;
@@ -34,10 +34,9 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 });
             }); 
             scope.$on('privilegesUpdated', function (e, data) {
-                scope.privileges = privilegeSvc.privileges['comment'] || [];
-                scope.isPrivlage = scope.privileges.indexOf('Add') == -1;
-                console.log(scope.privileges)
-                console.log(scope.isPrivlage)
+                var privileges = privilegeSvc.privileges['comment'] || [];
+                scope.isPrivlage =privileges.indexOf('Add') == -1;
+                
             });      
             scope.getCommentByType=function(){
                 CommonService.getCommentByType(scope.commentData.uuid,scope.type).then(function (response) { onSuccess(response.data)});
