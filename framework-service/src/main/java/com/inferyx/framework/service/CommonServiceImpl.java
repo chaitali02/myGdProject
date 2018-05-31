@@ -142,6 +142,7 @@ import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
+import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
@@ -3293,7 +3294,7 @@ public class CommonServiceImpl <T> {
 			
 		}
 		
-	public MetaIdentifier uploadCommentFile(MultipartFile multiPartFile, String filename, String fileType)
+	public MetaIdentifierHolder uploadCommentFile(MultipartFile multiPartFile, String filename, String fileType)
 			throws FileNotFoundException, IOException, JSONException, ParseException {
 		UploadExec uploadExec = new UploadExec();
 		uploadExec.setBaseEntity();
@@ -3304,12 +3305,12 @@ public class CommonServiceImpl <T> {
 		multiPartFile.transferTo(dest);
 		uploadExec.setFileName(uploadExec.getUuid() + ".comment");
 		save(MetaType.uploadExec.toString(), uploadExec);
-		
+		MetaIdentifierHolder metaIdentifierHolder=new MetaIdentifierHolder();
 		MetaIdentifier identifier = new MetaIdentifier();
 		identifier.setUuid(uploadExec.getUuid());
 		identifier.setName(uploadExec.getFileName());
 		identifier.setType(MetaType.uploadExec);
-		
-		return identifier;
+		metaIdentifierHolder.setRef(identifier);
+		return metaIdentifierHolder;
 	}
 }
