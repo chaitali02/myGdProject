@@ -401,7 +401,7 @@ export class ModelComponent implements OnInit {
       dependsOn1["ref"] = ref;
       this.modelJson["dependsOn"] = dependsOn1;
 
-      this.modelJson["label"] = "";
+      this.modelJson["label"] = this.model.label;
 
       let featuresArray1 = [];
       for (let i = 0; i < this.featuresArray.length; i++) {
@@ -410,8 +410,8 @@ export class ModelComponent implements OnInit {
         featureObj["name"] = this.featuresArray[i].name;
         featureObj["type"] = this.featuresArray[i].type;
         featureObj["desc"] = this.featuresArray[i].desc;
-        featureObj["minVal"] = this.featuresArray[i].type == "string" ? "" : this.featuresArray[i].minVal;
-        featureObj["maxVal"] = this.featuresArray[i].type == "string" ? "" : this.featuresArray[i].maxVal;
+        featureObj["minVal"] = this.featuresArray[i].type == "string" ? " " : this.featuresArray[i].minVal;
+        featureObj["maxVal"] = this.featuresArray[i].type == "string" ? " " : this.featuresArray[i].maxVal;
         
         if(this.dependsOn.type == "formula" )
         {
