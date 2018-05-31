@@ -7,13 +7,13 @@ CREATE TABLE `rc_rule_results` (
     `sourcedatapodname` varchar(45) DEFAULT NULL,
     `sourceattributeid` varchar(45) DEFAULT NULL,
     `sourceattributename` varchar(45) DEFAULT NULL,
+    `sourcevalue` double DEFAULT NULL,
     `targetdatapoduuid` varchar(45) DEFAULT NULL,
     `targetdatapodversion` varchar(45) DEFAULT NULL,
     `targetdatapodname` varchar(45) DEFAULT NULL,
     `targetattributeid` varchar(45) DEFAULT NULL,
     `targetattributename` varchar(45) DEFAULT NULL,
-    `sourcevalue` double precision,
-    `targetvalue` double precision,
+    `targetvalue`  double DEFAULT NULL,
     `status` varchar(45) DEFAULT NULL,
     `version` int(11) DEFAULT NULL
 );

@@ -7,12 +7,12 @@ CREATE TABLE rc_rule_results (
     `sourcedatapodname` string,
     `sourceattributeid` string,
     `sourceattributename` string,
+    `sourcevalue` BIGINT,
     `targetdatapoduuid` string,
     `targetdatapodversion` string,
     `targetdatapodname` string,
     `targetattributeid` string,
     `targetattributename` string,
-    `sourcevalue` BIGINT,
     `targetvalue` BIGINT,
     `status` string,
     `version` int

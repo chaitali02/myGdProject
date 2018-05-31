@@ -3294,23 +3294,96 @@ public class CommonServiceImpl <T> {
 			
 		}
 		
-	public MetaIdentifierHolder uploadCommentFile(MultipartFile multiPartFile, String filename, String fileType)
+	public boolean uploadCommentFile(List<MultipartFile> multiPartFile, String filename, String fileType,String uuid)
 			throws FileNotFoundException, IOException, JSONException, ParseException {
-		UploadExec uploadExec = new UploadExec();
-		uploadExec.setBaseEntity();
+
 		String directoryPath = Helper.getPropertyValue("framework.file.comment.upload.path");
-		String location = directoryPath + "/" + uploadExec.getUuid() + ".comment";
-		uploadExec.setLocation(location);
-		File dest = new File(location);
-		multiPartFile.transferTo(dest);
-		uploadExec.setFileName(uploadExec.getUuid() + ".comment");
-		save(MetaType.uploadExec.toString(), uploadExec);
-		MetaIdentifierHolder metaIdentifierHolder=new MetaIdentifierHolder();
-		MetaIdentifier identifier = new MetaIdentifier();
-		identifier.setUuid(uploadExec.getUuid());
-		identifier.setName(uploadExec.getFileName());
-		identifier.setType(MetaType.uploadExec);
-		metaIdentifierHolder.setRef(identifier);
-		return metaIdentifierHolder;
+		if (null != multiPartFile && multiPartFile.size() > 0) {
+			for (MultipartFile multipartFile : multiPartFile) {
+				String fileName = multipartFile.getOriginalFilename();
+				String fileExtention = fileName.substring(fileName.lastIndexOf("."));
+				String filename1 = fileName.substring(0, fileName.lastIndexOf("."));
+				String location = directoryPath + "/" + filename1 + fileExtention;
+				File dest = new File(location);
+				multipartFile.transferTo(dest);
+				UploadExec uploadExec = new UploadExec();
+				uploadExec.setBaseEntity();
+				uploadExec.setLocation(location);
+				uploadExec.setFileName(filename1 + fileExtention);
+				MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
+				MetaIdentifier identifier = new MetaIdentifier();
+				identifier.setUuid(uuid);
+				identifier.setName(filename1 + fileExtention);
+				identifier.setType(MetaType.comment);
+				metaIdentifierHolder.setRef(identifier);
+				uploadExec.setDependsOn(metaIdentifierHolder);
+				save(MetaType.uploadExec.toString(), uploadExec);
+			}
+		}
+		return true;
+	}
+	
+	
+	public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response,String uuid) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+		try {
+			UploadExec uploadExec = new UploadExec();
+			Query query = new Query();
+			query.fields().include("uuid");
+			query.fields().include("name");
+			query.fields().include("type");
+			query.addCriteria(Criteria.where("uuid").is(uuid));
+	
+			uploadExec = (UploadExec) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
+			
+			
+			FileType type = Helper.getFileType(fileType);			
+        	
+            String directoryLocation = Helper.getFileDirectoryByFileType(type);
+            String filePath = directoryLocation+"/" + fileName;
+            File file = new File(filePath);
+            
+            if (file.exists()) {
+            	logger.info("File found.");
+                String mimeType = null;//context.getMimeType(file.getPath());
+ 
+                if (mimeType == null) {
+                    mimeType = "application/octet-stream";
+                }
+ 
+                response.setContentType(mimeType);
+                response.setContentLength((int) file.length());
+                response.setContentType("application/xml charset=utf-16");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename",fileName);
+                ServletOutputStream os = response.getOutputStream();
+                FileInputStream fis = new FileInputStream(file);
+                Long fileSize = file.length();
+                byte[] buffer = new byte[fileSize.intValue()];
+                int b = -1;
+ 
+                while ((b = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, b);
+                }
+ 
+                fis.close();
+                os.close();
+            } else {
+            	logger.info("Requested " + fileName + " file not found!!");
+            	response.setStatus(300);
+            	throw new FileNotFoundException("Requested " + fileName + " file not found!!");
+            }
+        } catch (IOException e) {
+        	logger.error(e.getMessage());
+        	e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
+        }
+	return response;
 	}
 }

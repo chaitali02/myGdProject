@@ -6,12 +6,12 @@ CREATE TABLE framework.rc_rule_results (
     sourcedatapodname text,
     sourceattributeid text,
     sourceattributename text,
+    sourcevalue double precision,
     targetdatapoduuid text,
     targetdatapodversion text,
     targetdatapodname text,
     targetattributeid text,
     targetattributename text,
-    sourcevalue double precision,
     targetvalue double precision,
     status text,
     version integer
