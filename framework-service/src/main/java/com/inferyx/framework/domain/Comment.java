@@ -16,9 +16,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Comment extends BaseEntity
 {
 	MetaIdentifierHolder dependsOn;
-	
+	MetaIdentifierHolder uploadExec;
 
 	
+	public MetaIdentifierHolder getUploadExec() {
+		return uploadExec;
+	}
+
+	public void setUploadExec(MetaIdentifierHolder uploadExec) {
+		this.uploadExec = uploadExec;
+	}
+
 	public MetaIdentifierHolder getDependsOn() {
 		return dependsOn;
 	}

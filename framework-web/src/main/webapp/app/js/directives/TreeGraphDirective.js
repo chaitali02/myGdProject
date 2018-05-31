@@ -408,7 +408,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
             function getColorCode(d) {
                 try {
-                    var color = dagMetaDataService.elementDefs[d.nodeType.toLowerCase()].color
+                    var color = dagMetaDataService.elementDefs[d.metaRef.ref.type.toLowerCase()].color
                 } 
                 catch (e) {
                     if (d.nodeType.toLowerCase().indexOf("from_base") != -1) {

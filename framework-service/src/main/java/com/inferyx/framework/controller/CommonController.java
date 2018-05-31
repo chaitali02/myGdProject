@@ -40,6 +40,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
@@ -292,13 +293,13 @@ public class CommonController<T> {
 	
 	
 	@RequestMapping(value = "/uploadCommentFile", method = RequestMethod.POST)
-	public @ResponseBody MetaIdentifier uploadCommentFile(HttpServletRequest request,
+	public @ResponseBody MetaIdentifierHolder uploadCommentFile(HttpServletRequest request,
 											   @RequestParam("file") MultipartFile multiPartFile, 
 											   @RequestParam("fileName") String filename,
 											   @RequestParam(value = "type", required = false) String type,
 											   @RequestParam(value = "action", required = false) String action)
 											throws IOException, JSONException, ParseException {
-		MetaIdentifier result = null;
+		MetaIdentifierHolder result = null;
 		result = commonServiceImpl.uploadCommentFile(multiPartFile, filename, type);
 		
 		return result;
