@@ -3260,6 +3260,42 @@
                 "name" : "OperatorTypeView"
             },
             "value" : null
-        }
+        },
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "afb224a3-52b0-4e14-9b71-a2cf2da327df",
+		 			"version" : null,
+		            "name" : "CommentView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "ca6fb3eb-3de7-4741-8a89-6baa09499a2d",
+		 			"version" : null,
+		            "name" : "CommentRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "49964d5c-1a45-4ee0-9669-c79921bd5c33",
+		 			"version" : null,
+		            "name" : "CommentDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "239a3ddf-dc0b-4bb9-9f21-fd739d84c586",
+		 			"version" : null,
+		            "name" : "CommentAdd"
+				},
+				"value" : null
+		}
     ]
 }
