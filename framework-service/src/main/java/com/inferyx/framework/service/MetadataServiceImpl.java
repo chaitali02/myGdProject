@@ -1420,6 +1420,7 @@ public class MetadataServiceImpl {
 	@SuppressWarnings("unchecked")
 	public List<CommentView> getCommentByType(String uuid, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
 		Query query = new Query();
+		query.fields().include("id");
 		query.fields().include("uuid");
 		query.fields().include("version");
 		query.fields().include("name");
@@ -1443,6 +1444,7 @@ public class MetadataServiceImpl {
 
 		for(BaseEntity baseEntity:result){
 			CommentView commentView=new CommentView();
+			commentView.setId(baseEntity.getId());
 			commentView.setUuid(baseEntity.getUuid());
 			commentView.setName(baseEntity.getName());
 			commentView.setVersion(baseEntity.getVersion());

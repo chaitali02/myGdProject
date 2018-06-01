@@ -11,7 +11,7 @@
             </div>
         </div>
         <div style="padding:1%;height:90%;overflow-x: hidden;overflow-y:auto;">
-            <div class="comment-panel-body clearfix" style="min-height:76%;">
+            <div class="comment-panel-body clearfix" style="padding:1%;min-height:76%;">
                 <div class="mt-comments">
                     <div class="mt-comment" ng-repeat="data in commentResult" ng-if="commentResult.length >0">
                         <div class="mt-comment-img">
@@ -27,17 +27,24 @@
                             </div>
                             <div class="mt-comment-details">
                                 <ul class="mt-comment-actions" style="padding-right:3%;">
-                                    <li ng-if="data.isDownloadable">
+                                    <!-- <li ng-if="data.isDownloadable">
                                         <a href="#" tooltip-placement="top" uib-tooltip="Download">
                                             <i class="fa fa-download" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i>
                                         </a>
-                                    </li>
+                                    </li> -->
                                     <li>
                                         <a href="#" tooltip-placement="top" uib-tooltip="Delete" ng-disabled="privileges.indexOf('Delete') == -1" ng-click="delete(data.id)">
                                             <i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i>
                                         </a>
                                     </li>
                                 </ul>
+                                <br>
+                                <div class="list-files" ng-show="data.uploadExecInfo.length >0" ng-repeat="f in data.uploadExecInfo | limitTo: data.limitUploadExecInfo">
+                                    <span class="list-file-name">{{f.ref.name}}</span>
+                                    <i class="fa fa-download" style="float:right;color: #777;" ng-click="download(f)"></i>
+                                </div>
+                                <a href="javascript;;" ng-show ="data.uploadExecInfo.length >1 && data.limitUploadExecInfo ==1"  style="padding:11px" ng-click="ShowMore($index);" >Show More</a>
+                                <a href="javascript;;" ng-show ="data.uploadExecInfo.length >0 && data.limitUploadExecInfo >1" style="padding:11px" ng-click="ShowLess($index);" >Show Less</a>
                             </div>
                         </div>
                     </div>

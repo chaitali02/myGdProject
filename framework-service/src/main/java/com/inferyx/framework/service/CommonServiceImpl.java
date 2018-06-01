@@ -3332,12 +3332,16 @@ public class CommonServiceImpl <T> {
 			query.fields().include("uuid");
 			query.fields().include("name");
 			query.fields().include("location");
+			query.fields().include("fileName");
 			query.addCriteria(Criteria.where("uuid").is(uuid));
 	
 			uploadExec = (List<UploadExec>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
 			
 		//fileName=uploadExec.get(0).getFileName();
             String filePath = uploadExec.get(0).getLocation();
+            String FileName =uploadExec.get(0).getFileName();
+			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
+			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
             File file = new File(filePath);
             
             if (file.exists()) {
@@ -3352,7 +3356,7 @@ public class CommonServiceImpl <T> {
                 response.setContentLength((int) file.length());
                 response.setContentType("application/xml charset=utf-16");
 				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename",fileName);
+				response.setHeader("filename",fileName+fileExtention);
                 ServletOutputStream os = response.getOutputStream();
                 FileInputStream fis = new FileInputStream(file);
                 Long fileSize = file.length();

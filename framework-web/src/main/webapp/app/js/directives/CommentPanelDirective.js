@@ -14,6 +14,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             scope.isFileUpload=false;
             scope.file=[];
             scope.isSubmitDisabled=false;
+            scope.limitUploadExecInfo=1;
             scope.privileges = privilegeSvc.privileges['comment'] || [];
             scope.isPrivlage = scope.privileges.indexOf('Add') == -1;
             angular.extend(scope.options, {
@@ -47,9 +48,9 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                     scope.commentResult=response;
                     if(response.length>0){
                         for(var i=0;i< response.length;i++){
-                            
-                           if(response[i].uploadExec !=null){
-                            scope.commentResult[i].isDownloadable=true
+                           if(response[i].uploadExecInfo !=null){
+                            scope.commentResult[i].isDownloadable=true;
+                            scope.commentResult[i].limitUploadExecInfo=1;
                            }
                         }
                     }
@@ -60,7 +61,15 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             scope.closePanle=function(){
                 scope.onClose({"panelOpen":false});
             }
-
+            
+            scope.ShowMore=function(index){
+                debugger
+                scope.commentResult[index].limitUploadExecInfo=scope.commentResult[index].uploadExecInfo.length;
+            }
+            scope.ShowLess=function(index){
+                
+                scope.commentResult[index].limitUploadExecInfo=1;
+            }
             scope.delete=function(uuid){
                 CommonService.delete(uuid,'comment').then(function (response){onSuccess(response.data)})
                 var onSuccess=function(response){
@@ -69,15 +78,37 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 }
             }
 
+            scope.download=function(data){
+                CommonService.download(data.ref.name+" ",data.ref.uuid).then(function (response){ onSuccess(response.data)});
+                var onSuccess = function (response) {
+                  var filename =response.headers('filename');
+                  var contentType = response.headers('content-type'); 
+                  var linkElement = document.createElement('a');
+                  try {
+                    var blob = new Blob([response.data], {
+                    type: contentType
+                  });
+                  var url = window.URL.createObjectURL(blob);
+                  linkElement.setAttribute('href', url);
+                  linkElement.setAttribute("download",filename);
+                  var clickEvent = new MouseEvent("click", {
+                    "view": window,
+                    "bubbles": true,
+                    "cancelable": false
+                  });
+                  linkElement.dispatchEvent(clickEvent);
+                  } catch (ex) {
+                  console.log(ex);
+                  }
+                }
+              }
+
             window.readfileName=function(input){
                 if (input.files && input.files[0]) {
                     scope.$apply();
-                    var fileLen=scope.file.length;
-                    var fdLen=scope.file.length;  
+                    var fileLen=scope.file.length; 
                     scope.isFileUpload=true;
                     scope.file[fileLen]=input.files[0]
-                    scope.fd[fdLen] = new FormData();
-                    scope.fd[fdLen].append('file',input.files[0]);
                     console.log(input.files[0]);
                 }
             }

@@ -794,6 +794,18 @@
       return deferred.promise;
     }
     
+    this.download=function(fileName,uuid,fileType){
+      var url="common/comment/download?action=view&type=downloadexec&fileType="+fileType+"&fileName="+fileName+"&uuid="+uuid;
+      var deferred = $q.defer();
+      CommonFactory.httpGet(url).then(function(response){onSuccess(response)});
+      var onSuccess=function(response){
+          deferred.resolve({
+              data:response
+          });
+      }
+      return deferred.promise;
+  }
+    
   });
   
   
