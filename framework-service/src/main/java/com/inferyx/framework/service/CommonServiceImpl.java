@@ -3324,22 +3324,20 @@ public class CommonServiceImpl <T> {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response,String uuid) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
 		try {
-			UploadExec uploadExec = new UploadExec();
+			List<UploadExec> uploadExec = new ArrayList<UploadExec>();
 			Query query = new Query();
 			query.fields().include("uuid");
 			query.fields().include("name");
-			query.fields().include("type");
+			query.fields().include("location");
 			query.addCriteria(Criteria.where("uuid").is(uuid));
 	
-			uploadExec = (UploadExec) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
+			uploadExec = (List<UploadExec>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
 			
-			
-			FileType type = Helper.getFileType(fileType);			
-        	
-            String directoryLocation = Helper.getFileDirectoryByFileType(type);
-            String filePath = directoryLocation+"/" + fileName;
+		//fileName=uploadExec.get(0).getFileName();
+            String filePath = uploadExec.get(0).getLocation();
             File file = new File(filePath);
             
             if (file.exists()) {
