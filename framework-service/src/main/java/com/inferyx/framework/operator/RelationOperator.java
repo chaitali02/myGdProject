@@ -106,10 +106,10 @@ public class RelationOperator {
 				rightTable = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 				dataStore = null;
 			} else */
-			logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 			if (otherParams == null 
 					|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()))) == null  
 					&& otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")) == null)) {
+				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				rightTable = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else if (otherParams.containsKey("datapodUuid_".concat(datapod.getUuid()).concat("_tableName"))) {
 				String tableKey = "datapodUuid_".concat(datapod.getUuid()).concat("_tableName");

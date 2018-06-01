@@ -30,6 +30,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.neo4j.cypher.internal.compiler.v2_3.planner.logical.steps.outerHashJoin;
 import org.python.antlr.ast.While;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.Comment;
+import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
@@ -96,6 +98,7 @@ import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.StatusHolder;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 
 
@@ -117,6 +120,8 @@ public class MetadataServiceImpl {
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	UploadExecServiceImpl uploadExecServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(MetadataServiceImpl.class);
 	private static final String GET = "get";
@@ -1413,7 +1418,7 @@ public class MetadataServiceImpl {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<BaseEntity> getCommentByType(String uuid, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<CommentView> getCommentByType(String uuid, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -1429,7 +1434,49 @@ public class MetadataServiceImpl {
 		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(uuid));
 		List<BaseEntity> result = new ArrayList<BaseEntity>();
 		result = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.comment));
-		return commonServiceImpl.resolveBaseEntityList(result);
+		result=commonServiceImpl.resolveBaseEntityList(result);
+		
+		List<CommentView> CommentViewList=new ArrayList<CommentView>();
+		//query2.addCriteria(Criteria.where("dependsOn.ref.uuid").in(baseEntity.getUuid()));
+		
+
+		for(BaseEntity baseEntity:result){
+			CommentView commentView=new CommentView();
+			commentView.setUuid(baseEntity.getUuid());
+			commentView.setName(baseEntity.getName());
+			commentView.setVersion(baseEntity.getVersion());
+			commentView.setCreatedBy(baseEntity.getCreatedBy());
+			commentView.setCreatedOn(baseEntity.getCreatedOn());
+			commentView.setAppInfo(baseEntity.getAppInfo());
+			commentView.setActive(baseEntity.getActive());
+			commentView.setDesc(baseEntity.getDesc());
+			List<MetaIdentifierHolder> uploadExecHolder=new ArrayList<MetaIdentifierHolder>();
+			List<UploadExec> result1 = new ArrayList<UploadExec>();
+		//
+			result1= uploadExecServiceImpl.findAllByDependOn(baseEntity.getUuid());
+			
+			//result1 = (List<BaseEntity>) mongoTemplate.find(query2, Helper.getDomainClass(MetaType.uploadExec));
+			for(BaseEntity uploadExe:result1) {
+				MetaIdentifierHolder metaIdentifierHolder=new MetaIdentifierHolder();
+				MetaIdentifier metaIdentifier=new MetaIdentifier();
+				metaIdentifier.setUuid(uploadExe.getUuid());
+				metaIdentifier.setName(uploadExe.getName());
+				metaIdentifier.setType(MetaType.uploadExec);
+				metaIdentifierHolder.setRef(metaIdentifier);
+				uploadExecHolder.add(metaIdentifierHolder);
+				commentView.setUploadExecInfo(uploadExecHolder);
+				
+			}
+			CommentViewList.add(commentView);
+			
+		}
+		
+		
+		
+	
+		
+		
+		return CommentViewList;
 	}
 	
 }
