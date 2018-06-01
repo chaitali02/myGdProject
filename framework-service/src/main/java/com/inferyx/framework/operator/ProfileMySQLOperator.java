@@ -58,9 +58,9 @@ public class ProfileMySQLOperator extends ProfileOperator {
 	}
 	
 	private String getMedianVal( String attrName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String str = "SUBSTRING_INDEX( SUBSTRING_INDEX( GROUP_CONCAT(bank_id), ',', "
-				+ "((ROUND( LENGTH( GROUP_CONCAT(bank_id)) - LENGTH"
-				+ "(REPLACE(GROUP_CONCAT(bank_id), ',', '')))/ 2 )+ 1 ) ), ',', -1)";
+		String str = "SUBSTRING_INDEX( SUBSTRING_INDEX( GROUP_CONCAT("+attrName+"), ',', "
+				+ "((ROUND( LENGTH( GROUP_CONCAT("+attrName+")) - LENGTH"
+				+ "(REPLACE(GROUP_CONCAT("+attrName+"), ',', '')))/ 2 )+ 1 ) ), ',', -1)";
 		
 		return str;
 	}
