@@ -21,6 +21,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -2983,7 +2986,6 @@ public class CommonServiceImpl <T> {
             String directoryLocation = Helper.getFileDirectoryByFileType(type);
             String filePath = directoryLocation+"/" + fileName;
             File file = new File(filePath);
-            
             if (file.exists()) {
             	logger.info("File found.");
                 String mimeType = null;//context.getMimeType(file.getPath());
@@ -3300,20 +3302,25 @@ public class CommonServiceImpl <T> {
 		String directoryPath = Helper.getPropertyValue("framework.file.comment.upload.path");
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
+				UploadExec uploadExec = new UploadExec();
+				
+				uploadExec.setBaseEntity();
+				
 				String fileName = multipartFile.getOriginalFilename();
 				String fileExtention = fileName.substring(fileName.lastIndexOf("."));
 				String filename1 = fileName.substring(0, fileName.lastIndexOf("."));
-				String location = directoryPath + "/" + filename1 + fileExtention;
+				String location = directoryPath + "/" + uploadExec.getUuid() + fileExtention;
 				File dest = new File(location);
 				multipartFile.transferTo(dest);
-				UploadExec uploadExec = new UploadExec();
-				uploadExec.setBaseEntity();
+				String contenetType = multipartFile.getContentType();
+				
+				uploadExec.setName(filename1);
 				uploadExec.setLocation(location);
-				uploadExec.setFileName(filename1 + fileExtention);
+				uploadExec.setFileName(fileName);
 				MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
 				MetaIdentifier identifier = new MetaIdentifier();
 				identifier.setUuid(uuid);
-				identifier.setName(filename1 + fileExtention);
+				identifier.setName(filename1);
 				identifier.setType(MetaType.comment);
 				metaIdentifierHolder.setRef(identifier);
 				uploadExec.setDependsOn(metaIdentifierHolder);
@@ -3346,15 +3353,15 @@ public class CommonServiceImpl <T> {
             
             if (file.exists()) {
             	logger.info("File found.");
-                String mimeType = null;//context.getMimeType(file.getPath());
- 
+                 String mimeType = null;//context.getMimeType(file.getPath());
+                 mimeType= new MimetypesFileTypeMap().getContentType(file);
                 if (mimeType == null) {
                     mimeType = "application/octet-stream";
                 }
  
                 response.setContentType(mimeType);
                 response.setContentLength((int) file.length());
-                response.setContentType("application/xml charset=utf-16");
+             //   response.setContentType("application/xml charset=utf-16");
 				response.setHeader("Content-disposition", "attachment");
 				response.setHeader("filename",fileName+fileExtention);
                 ServletOutputStream os = response.getOutputStream();
