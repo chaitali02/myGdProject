@@ -989,3 +989,23 @@ transition: right 1m
 /* .comment-panel-mt-comment:hover{
   background: #21282e !important;
 } */
+
+.list-files{
+  background-color: #f5f5f5;
+  border: 1px solid #dcdcdc;
+  font-weight: bold;
+  margin: 0 7px 9px;
+  overflow-y: hidden;
+  padding: 4px 4px 4px 8px;
+  max-width: 448px;
+}
+
+.list-file-name{
+  color: #15c;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  white-space: nowrap;
+  max-width: 250px;
+}

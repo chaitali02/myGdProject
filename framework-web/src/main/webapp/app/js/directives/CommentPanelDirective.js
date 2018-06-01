@@ -13,7 +13,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             scope.panelOpen=false;
             scope.isFileUpload=false;
             scope.file=[];
-            scope.fd=[];
+            scope.isSubmitDisabled=false;
             scope.privileges = privilegeSvc.privileges['comment'] || [];
             scope.isPrivlage = scope.privileges.indexOf('Add') == -1;
             angular.extend(scope.options, {
@@ -68,6 +68,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
 
                 }
             }
+
             window.readfileName=function(input){
                 if (input.files && input.files[0]) {
                     scope.$apply();
@@ -80,23 +81,29 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                     console.log(input.files[0]);
                 }
             }
+
             scope.clearFile=function(index){
                 scope.isFileUpload=false;
-                debugger
                 scope.file.splice(index,1);
-                scope.fd.splice(index,1);
-
             }
-            scope.uploadFiles=function(){
-                CommonService.uploadCommentFile(null, scope.fd, "comment").then(function (response) { onSuccess(response.data) });
+
+            scope.uploadFiles=function(uuid){
+                var fd=new FormData();
+                for(var i=0;i<scope.file.length;i++){
+                    fd.append('file',scope.file[i])
+                }
+                
+                CommonService.uploadCommentFile(null,fd,uuid,"comment").then(function (response) { onSuccess(response.data) });
                 var onSuccess = function (response) {
-                    scope.file=null;
-                    scope.fd=null;
+                    scope.file=[];
                     scope.commentDesc=" ";
                     scope.getCommentByType();
+                    scope.isSubmitDisabled=false;
                 }
             }
+
             scope.submit=function(desc){
+                scope.isSubmitDisabled=true;
                 var commentJson={};
                 commentJson.desc=scope.commentDesc;
                 var dependsOn={}
@@ -110,11 +117,16 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
                 var onSuccess=function(response){
                     console.log(response);
-                    if(scope.file.length ==0 && scope.fd.length ==0){
+                    if( scope.file && scope.file.length ==0){
                         scope.commentDesc=" ";
                         scope.getCommentByType();
+                        scope.isSubmitDisabled=false;
                     }else{
-                        scope.uploadFiles();
+                        CommonService.getOneById(response,'comment').then(function(response){onSuccessGetOneById(response.data)});
+                        var onSuccessGetOneById=function(response){
+                            scope.uploadFiles(response.uuid);
+                        }
+                       
                     }
                 }
             }
@@ -134,26 +146,20 @@ InferyxApp.directive('showMore', [function() {
         },
 
         template: '<div><p ng-show="largeText"> {{ text | subString :0 :end }}.... <a href="javascript:;" ng-click="showMore()" ng-show="isShowMore">Show More</a><a href="javascript:;" ng-click="showLess()" ng-hide="isShowMore">Show Less </a></p><p ng-hide="largeText">{{ text }}</p></div> ',
-
         link: function(scope, iElement, iAttrs) {
-
-            
             scope.end = scope.limit;
             scope.isShowMore = true;
             scope.largeText = true;
-
             if (scope.text.length <= scope.limit) {
                 scope.largeText = false;
             };
 
             scope.showMore = function() {
-
                 scope.end = scope.text.length;
                 scope.isShowMore = false;
             };
 
             scope.showLess = function() {
-
                 scope.end = scope.limit;
                 scope.isShowMore = true;
             };
