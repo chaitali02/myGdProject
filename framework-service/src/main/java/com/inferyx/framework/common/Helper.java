@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.util.CharArrayMap.EntrySet;
 import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.sql.types.DataTypes;
+import org.python.antlr.PythonParser.return_stmt_return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -101,6 +102,7 @@ import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.Tag;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.UploadExec;
@@ -260,6 +262,7 @@ public class Helper {
 				case operatorExec : return "iOperatorExecDao";
 				case operator : return "iOperatorDao";
 				case comment : return "iCommentDao";
+				case tag : return "iTagDao";
 				default:
 					return null;
 			}
@@ -366,6 +369,7 @@ public class Helper {
 		case operatorExec : return OperatorExec.class;
 		case operator : return Operator.class;
 		case comment : return Comment.class;
+		case tag : return Tag.class;
 
 		default:
 			return null;
@@ -444,6 +448,7 @@ public class Helper {
 				case "operatorexec" : return MetaType.operatorExec;
 				case "operator" : return MetaType.operator;
 				case "comment" : return MetaType.comment;
+				case "tag" : return MetaType.tag;
 
 				default : return null;
 			}

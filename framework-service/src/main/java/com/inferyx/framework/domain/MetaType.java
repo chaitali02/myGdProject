@@ -21,7 +21,7 @@ public enum MetaType {
 	vizpod, vizExec, usergroup, simple, file, /*hive,*/ matrixmult, mapiter, dqview, ruleview, datasetview,
 	meta, dashboardview, Import, export, message, log, downloadExec, uploadExec, predict, predictExec, simulate,
 	simulateExec, train, trainExec, recon, reconExec, recongroup, recongroupExec, reconview, distribution, 
-	appConfig, /*operatortype,*/ operatorExec, operator ,comment ,commentView;
+	appConfig, /*operatortype,*/ operatorExec, operator ,comment, commentView, tag;
 
 	public static List<MetaType> getMetaList() {
 		return Arrays.asList(MetaType.activity, MetaType.algorithm, MetaType.application, MetaType.condition,
@@ -37,7 +37,7 @@ public enum MetaType {
 				MetaType.uploadExec, MetaType.predict, MetaType.predictExec, MetaType.simulate, MetaType.simulateExec,
 				MetaType.train, MetaType.trainExec, MetaType.recon, MetaType.reconExec, MetaType.recongroup, 
 				MetaType.recongroupExec, MetaType.distribution, MetaType.appConfig, /*MetaType.operatortype,*/
-				MetaType.operatorExec, MetaType.operator ,MetaType.comment);
+				MetaType.operatorExec, MetaType.operator ,MetaType.comment, MetaType.tag);
 	}
 
 	public static List<MetaType> getMetaExecList() {
