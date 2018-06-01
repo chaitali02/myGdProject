@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.UploadExec;
 
 public interface IUploadDao extends MongoRepository<UploadExec, String> {
@@ -85,5 +86,9 @@ public interface IUploadDao extends MongoRepository<UploadExec, String> {
 
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
+	
+	@Query(value="{'dependsOn.ref.uuid' : ?0}")
+	public List<UploadExec> findAllByDependOn(String uuid);
+	
 
 }

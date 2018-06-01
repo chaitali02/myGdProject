@@ -299,6 +299,7 @@
 	<bean id="uploadExec" class="com.inferyx.framework.domain.UploadExec"/>
 	<bean id="predictExec" class="com.inferyx.framework.domain.PredictExec"/>
 	<bean id="sparkMLOperator" class="com.inferyx.framework.operator.SparkMLOperator"/>
+	<bean id="uploadExecServiceImpl" class="com.inferyx.framework.service.UploadExecServiceImpl"/>
 	
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
