@@ -537,7 +537,9 @@ public class DagServiceImpl {
 		
 		FutureTask<String> futureTask = new FutureTask<String>(parseRunDagServiceImpl);
 		dagExecutor.execute(futureTask);
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		taskThreadMap.put("Dag_" + dagExec.getUuid(), futureTask);
+		Thread.sleep(1000);
 
 		/*if (dagExec == null) {
 			// Create object

@@ -176,6 +176,7 @@ public class RunDagServiceImpl implements Callable<String> {
 	public String parseAndExecute() throws Exception {
 		try {
 			logger.info(" Inside RunDagServiceImpl.parseAndExecute ");
+			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl status RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
 			//Check if parsing has happ or not. If not then parse.
 			dagServiceImpl.setRunMode(runMode);
@@ -240,6 +241,7 @@ public class RunDagServiceImpl implements Callable<String> {
 			throw new Exception((message != null) ? message : "Pipeline execution failed.");
 		}finally {			
 			taskThreadMap.remove("Dag_"+dagExec.getUuid());
+			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 			return "Dag_"+dagExec.getUuid();
 		}
 	}

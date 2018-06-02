@@ -831,6 +831,7 @@ public class TaskServiceImpl implements Callable<String> {
 
 	@Override
 	public String call() throws JsonProcessingException, JSONException, java.text.ParseException {
+		logger.info("Thread watch : DagExec : " + dagExecUUID + " StageExec : " + stageId + " taskExec : " + indvTask.getTaskId() + " status RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 	    com.inferyx.framework.domain.Status.Stage taskStatus = null;
@@ -943,6 +944,7 @@ public class TaskServiceImpl implements Callable<String> {
 				}
 			logger.info("This is not valid for Execution");
 		}
+		logger.info("Thread watch : DagExec : " + dagExecUUID + " StageExec : " + stageId + " taskExec : " + indvTask.getTaskId() + " complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		return name;
 	}// End thread run
 	
