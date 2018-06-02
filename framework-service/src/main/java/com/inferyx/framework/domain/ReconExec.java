@@ -14,13 +14,5 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "reconexec")
 public class ReconExec extends BaseRuleExec {
-	private ExecParams execParams;
 
-	public ExecParams getExecParams() {
-		return execParams;
-	}
-
-	public void setExecParams(ExecParams execParams) {
-		this.execParams = execParams;
-	}
 }
