@@ -943,7 +943,9 @@ font-weight:bold;
 .not-selected {
 font-weight:normtal;
 }
-
+.tree-graph{
+  margin-top: -3%;
+}
 .comment-panel-parent{
   top: 0;
   bottom: 0;

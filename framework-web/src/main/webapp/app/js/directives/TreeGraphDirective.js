@@ -15,19 +15,25 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                 left: 120
             },
             width = 1060 - margin.right - margin.left,
-            height =800 - margin.top - margin.bottom;
+            height =600 - margin.top - margin.bottom;
             var i = 0,
             duration = 750;
             var tree;
             var svg ;
-         
+            scope.degree="1";
+            scope.onChangeDegree=function(){
+                console.log(scope.degree);
+                height =600 - margin.top - margin.bottom;
+                scope.getGraphData();
+               
+            }
             scope.getGraphData = function () {
                 if (scope.uuid && scope.version) {
                     var newUuid = scope.uuid
                     $('#graphloader').show();
                     $('.show-graph-body').hide();
                     $('#errorMsg').hide();
-                    CommonService.getTreeGraphResults(newUuid, scope.version, "1").then(function (result){
+                    CommonService.getTreeGraphResults(newUuid, scope.version,scope.degree).then(function (result){
                         $('#graphloader').hide();
                         if (!result.data) {
                           $('#errorMsg').text('No Results Found').show();
@@ -69,6 +75,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             scope.getGraphData();
 
             scope.$on('refreshData', function () {
+                height =600 - margin.top - margin.bottom;
                 scope.getGraphData();
               });
             var diagonal = d3.svg.diagonal()
@@ -145,11 +152,12 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     .attr("text-anchor", function (d) {
                         return d.children || d._children ? "end" : "start";
                     })
+                    .style("fill-opacity", 1e-6)
                     .text(function (d) {
                         return d.name;
                     })
-                    .style("fill-opacity", 1e-6);
-
+                  
+                     
                 // Transition nodes to their new position.
                 var nodeUpdate = node.transition()
                     .duration(duration)
@@ -432,13 +440,24 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
         },
 
         template: `
-      <div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
+      <!--<div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
         <div class="col-md-1" style="height:100px">
           <a ng-click="changeSliderForward()"><i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
           <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:1,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
             <a ng-click="changeSliderBack()"><i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
         </div>
-      </div>
+      </div>-->.
+      
+        <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="btn-group" ng-init="degree='1'">
+                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'1'" ng-disabled="{{mode}}" uncheckable>Downward</label>   
+                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'-1'" ng-disabled="{{mode}}" uncheckable>Upward</label>
+                    </div>
+                </div>
+            </div>
+        </div>
       <div class="tooltipcustom" id="divtoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;
         font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
   
@@ -465,7 +484,8 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
           </div>
         </div>
       </div>
-      <div id="network-graph-wrapper" style="height:500px;"></div>
+      <br>
+      <div id="network-graph-wrapper" style="height:500px;margin-top:2%;"></div>
       `
     };
 })
