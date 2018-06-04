@@ -24,6 +24,12 @@
             "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
         }
     },
+    "trainInfo" : {
+        "ref" : {
+            "type" : "train",
+            "uuid" : "adba4446-ff6b-4b81-b83c-acc0beb4f6ce"
+        }
+    },
     "featureAttrMap" : [ 
         {
             "featureMapId" : "0",
