@@ -334,57 +334,29 @@ export class SimulationComponent implements OnInit {
     this.getAllLatestModel()
     this.getAllLatestTarget(this.selectTargetType)
 
-    // var features = [];
-    // for (var i = 0; i < response.featureInfo.length; i++) {
-    //   var featureMap = {};
-    //   var sourceFeature = {};
-    //   var targetFeature = {};
-    //   sourceFeature["featureId"] = i;
-    //   //sourceFeature["featureName"] = response.featureInfo[i].featureName;
-    //   // sourceFeature["uuid"] = response.featureInfo[i].ref.uuid;
-    //   //  sourceFeature["type"] = "model";
-    //   //   sourceFeature["type"////ourceFeature["datapodename"]=response.featureInfo[i].features.datapodename;
-    //   //sourceFeature["desc"]=response.featureInfo[i].features.desc;
-    //   //sourceFeature["maxVal"]=response.featureInfo[i].features.maxVal;
-    //   //  sourceFeature["minVal"]=response.featureInfo[i].features.minVal;
+    var features = [];
+    for (var i = 0; i < response.featureInfo.length; i++) {
+      var featureMap = {};
+      var sourceFeature = {};
+      var targetFeature = {};
+      sourceFeature["featureId"] = i;
+      //sourceFeature["featureName"] = response.featureInfo[i].featureName;
+      // sourceFeature["uuid"] = response.featureInfo[i].ref.uuid;
+      //  sourceFeature["type"] = "model";
+      //   sourceFeature["type"////ourceFeature["datapodename"]=response.featureInfo[i].features.datapodename;
+      //sourceFeature["desc"]=response.featureInfo[i].features.desc;
+      //sourceFeature["maxVal"]=response.featureInfo[i].features.maxVal;
+      //  sourceFeature["minVal"]=response.featureInfo[i].features.minVal;
 
-    //   featureMap["sourceFeature"] = sourceFeature;
+      featureMap["sourceFeature"] = sourceFeature;
 
-    //   //  featureMap["targetFeature"]=targetFeature;
+      //  featureMap["targetFeature"]=targetFeature;
 
-    //   featureMap["sourceFeature"] = sourceFeature;
-    //   features[i] = featureMap;
-    // }
-    // this.featureMapTableArray = features;
-
-
-    var featureMapTableArray=[];
-    for(var i=0;i<response.featureInfo.length;i++){
-      var featureMap={};
-      var sourceFeature={};
-      var targetFeature={};
-      featureMap["featureMapId"]=response.featureInfo[i].featureMapId;
-      // sourceFeature.datapodname = response.featureMap[i].sourceFeature.ref.name;
-      // sourceFeature.name = response.featureMap[i].sourceFeature.attrName;
-      // sourceFeature.attributeId = response.featureMap[i].sourceFeature.attrId;
-      // sourceFeature.id = response.featureMap[i].sourceFeature.ref.uuid + "_" + response.featureMap[i].sourceFeature.attrId;
-      // sourceFeature.dname = response.featureMap[i].sourceFeature.ref.name + "." + response.featureMap[i].sourceFeature.attrName;
-      sourceFeature["uuid"] = response.featureInfo[i].feature.ref.uuid;
-      sourceFeature["type"] = response.featureInfo[i].feature.ref.type;
-      sourceFeature["featureId"] = response.featureInfo[i].feature.featureId;
-      sourceFeature["featureName"] = response.featureInfo[i].feature.featureName;
-      featureMap["sourceFeature"]=sourceFeature;
-      targetFeature["uuid"] = response.featureInfo[i].attribute.ref.uuid;
-      targetFeature["type"] = response.featureInfo[i].attribute.ref.type;
-      targetFeature["datapodname"] = response.featureInfo[i].attribute.ref.name;
-      targetFeature["name"] = response.featureInfo[i].attribute.attrName;
-      targetFeature["attributeId"] = response.featureInfo[i].attribute.attrId;
-      targetFeature["id"] = response.featureInfo[i].attribute.ref.uuid + "_" + response.featureInfo[i].attribute.attrId;
-      targetFeature["dname"] = response.featurfeatureInfoeAttrMap[i].attribute.ref.name + "." + response.featureInfo[i].attribute.attrName;
-      featureMap["targetFeature"]=targetFeature;
-      featureMapTableArray[i]=featureMap;
+      featureMap["sourceFeature"] = sourceFeature;
+      features[i] = featureMap;
     }
-    this.featureMapTableArray=featureMapTableArray;
+    this.featureMapTableArray = features;
+
 
 
   }
