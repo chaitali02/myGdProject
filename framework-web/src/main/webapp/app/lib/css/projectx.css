@@ -984,7 +984,12 @@ width:0%;
 right:0%;
 transition: right 1m
 }
-
+.mt-comment-actions > a{
+  display: none;
+}
+.mt-comment:hover .mt-comment-actions > a{
+  display: block;
+}
 /* .mt-comment:hover{
   background: #ecf0f3 !important;
 } */
@@ -994,10 +999,10 @@ transition: right 1m
 
 .list-files{
   background-color: #f5f5f5;
-  border: 1px solid #dcdcdc;
+  /* border: 1px solid #dcdcdc; */
   font-weight: bold;
-  margin: 3px 7px 9px;
-  overflow-y: hidden;
+  margin: 10px 7px 9px;
+  /* overflow-y: hidden; */
   padding: 4px 4px 4px 8px;
   max-width: 448px;
 }
