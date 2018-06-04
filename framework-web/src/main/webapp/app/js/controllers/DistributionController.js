@@ -25,7 +25,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 	$scope.showGraphDiv = false
 	$scope.distribution = {};
 	$scope.distribution.versions = [];
-	$scope.libraryTypes = ["SPARKML", "R", "JAVA"];
+	$scope.libraryTypes = ["SPARKML", "R", "JAVA","MATH3"];
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['distribution'] || [];
@@ -158,13 +158,14 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		$scope.myform.$dirty = false;
 
 		var distributionJson = {}
-		distributionJson.uuid = $scope.distributionData.uuid
-		distributionJson.name = $scope.distributionData.name
-		distributionJson.desc = $scope.distributionData.desc
+		distributionJson.uuid = $scope.distributionData.uuid;
+		distributionJson.name = $scope.distributionData.name;
+		distributionJson.desc = $scope.distributionData.desc;
 		distributionJson.active = $scope.distributionData.active;
 		distributionJson.published = $scope.distributionData.published;
 		distributionJson.library = $scope.selectedLibrary;
 		distributionJson.className = $scope.distributionData.className;
+		distributionJson.methodName = $scope.distributionData.methodName;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var countTag = 0; countTag < $scope.tags.length; countTag++) {

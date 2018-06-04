@@ -65,8 +65,6 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
 		logger.info(" Inside PostGres executor  for SQL : " + sql);
-		if(sql.contains("dp_rule_results"))
-			System.out.println();
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
 		ConnectionHolder conHolder = connector.getConnection();

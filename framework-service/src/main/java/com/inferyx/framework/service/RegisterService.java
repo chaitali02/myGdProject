@@ -4354,9 +4354,7 @@ public class RegisterService {
 						.lte(simpleDateFormat.parse(endDate)));
 			
 			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
-			System.out.println(query);
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(ruleUuid));
-			System.out.println(query);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

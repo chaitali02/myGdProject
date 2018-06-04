@@ -1031,7 +1031,6 @@ public class DatapodServiceImpl {
 			List<Attribute> dpAttrs = datapod.getAttributes();
 			int count = 0;
 			for(int i=0; i<dpAttrs.size();i++) {
-				System.out.println("index : "+i);
 				if(dpAttrs.get(i).getName().contentEquals("version")){					
 					dpAttrs.remove(dpAttrs.get(i));
 					count++;

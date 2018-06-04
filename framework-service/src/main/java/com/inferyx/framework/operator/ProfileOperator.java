@@ -164,7 +164,7 @@ public class ProfileOperator {
 
 	private String getTableName(Datapod dp, ProfileExec profileExec, List<String> datapodList, DagExec dagExec,
 			RunMode runMode) throws Exception {
-		if (datapodList != null && datapodList.contains(dp.getUuid())) {
+		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(dp.getUuid())) {
 			return String.format("%s_%s_%s", dp.getUuid().replaceAll("-", "_"), dp.getVersion(), dagExec.getVersion());
 		}
 		datastoreServiceImpl.setRunMode(runMode);

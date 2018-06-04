@@ -1,9 +1,10 @@
 <div>
-  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
   <br>
-  <p-growl [(value)]="msgs" ></p-growl>
-  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>  <!-- BEGIN MAIN CONTENT -->
-  <div class="row" >
+  <p-growl [(value)]="msgs"></p-growl>
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <!-- BEGIN MAIN CONTENT -->
+  <div class="row">
     <div class="col-md-12">
       <!-- BEGIN: ACCORDION DEMO -->
       <div class="portlet box green">
@@ -12,17 +13,20 @@
             <i class="fa fa-gift"></i>{{paramlist.name}}
           </div>
           <div class="tools">
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
+            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
+              *ngIf="mode">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
+            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;"
+              *ngIf="mode">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>
 
-            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip style="height:14px;" *ngIf="mode">
+            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip
+              style="height:14px;" *ngIf="mode">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a  title="Refresh"  data-toggle="tooltip" data-placement="top" tooltip>
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
@@ -33,20 +37,21 @@
 
 
         <div class="portlet-body form">
-          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')" *ngIf="showgraphdiv">
+          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')"
+            *ngIf="showgraphdiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <!--<div class="spinner" id="graphloader">-->
-              <!--<div class="bounce1"></div>-->
-              <!--<div class="bounce2"></div>-->
-              <!--<div class="bounce3"></div>-->
+            <!--<div class="bounce1"></div>-->
+            <!--<div class="bounce2"></div>-->
+            <!--<div class="bounce3"></div>-->
             <!--</div>-->
             <div class="form-body show-graph-body" id="graphWrapper">
               <app-d3></app-d3>
             </div>
           </div>
 
-          <div class="form-body"  style="padding-top:50px;">
-            <form  class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitParamlist()" #myNewForm = "ngForm" >
+          <div class="form-body" style="padding-top:50px;">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitParamlist()" #myNewForm="ngForm">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
@@ -66,12 +71,11 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">Version </label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="VersionList"          
-                  [(ngModel)]="selectedVersion"
+                  <p-dropdown [options]="VersionList" 
+                  [(ngModel)]="selectedVersion" 
                   name="version"
                   [style]="{'width':'100%','padding':'3px'}"
-                  [filter]="true"
-                  [disabled]="mode == 'false'"
+                  [filter]="true" [disabled]="mode == 'false'"
                   (onChange)="onVersionChange()">
                   </p-dropdown>
                 </div>
@@ -87,28 +91,30 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
-                  <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="paramlist.createdOn" name="createdOn">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="paramlist.createdOn" name="createdOn">
                 </div>
               </div>
 
               <div class="form-group taginput">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
-                  <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'"  theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                  <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="paramlist.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="paramlist.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
+
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true'" [(ngModel)]="paramlist.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true'" [(ngModel)]="paramlist.active" name="active" [checked]="active"
+                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -117,37 +123,40 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true'" [(ngModel)]="published" name="published"
+                      [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
-
+       
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-
-                  <input type="submit" class="btn btn-success" value="Submit"  name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
-                   
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
                 </div>
               </div>
 
               <div class="portlet box green">
                 <div class="portlet-title">
                   <div class="caption">
-                   <i class="fa fa-gift"></i>Parameter Details
+                    <i class="fa fa-gift"></i>Parameter Details
                   </div>
                 </div>
                 <div class="portlet-body form">
                   <div class="x_title" style="padding:10px;">
                     <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeAttribute()" [disabled]="mode == 'true'"></button>
-                    <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addAttribute()"  [disabled]="mode == 'true'"></button>
+                    <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addAttribute()" [disabled]="mode == 'true'"></button>
                   </div>
                   <div class="form-body" style="padding-top:50px;">
                     <div>
-                      <table  class=" row-border hover table  table-striped table-bordered">
+                        
+                      <table class=" row-border hover table  table-striped table-bordered">
                         <thead>
                           <tr>
-                            <th style="width:5%;text-align: center; Vertical-align: middle;"><input [disabled]="mode == 'true'"   style="width: 16px;height:16px;"  type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow" (click)="checkAllAttributeRow()" /></th> 
+                            <th style="width:5%;text-align: center; Vertical-align: middle;">
+                              <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow"
+                                (click)="checkAllAttributeRow()" />
+                            </th>
                             <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
                             <th style="text-align: center;width:15%;">Name</th>
                             <th style="text-align: center;width:35%;">Type</th>
@@ -155,39 +164,48 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let data of paramArrayTable;let i=index">                             
-                            <td style="text-align:center;Vertical-align:middle;">{{data | json}} 
-                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'"/>
+                          
+                          <tr *ngFor="let data1 of paramtableArray;let i=index">
+                            <td style="text-align:center;Vertical-align:middle;">
+                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data1.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'" />
                             </td>
-                            <td style="width:10%;"><input style="text-align:center;" type="text" [value]="i" name="id[i]" [disabled]="true" class="form-control">                  
-                            <td><input type="text" class="form-control" [(ngModel)]="data.name"  name="name+{{i}}" [disabled]="mode == 'true'"></td>
-                            <td>
-                              <p-dropdown [options]="types"          
-                                [(ngModel)]="data.type"
+                            <td style="width:10%;">
+                              <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">
+                              <td>
+                                <input type="text" class="form-control" [(ngModel)]="data1.name" name="name+{{i}}" [disabled]="mode == 'true'" class="form-control">
+                              </td>
+                              <td>
+                                <p-dropdown [options]="types" 
+                                [(ngModel)]="data1.type" 
                                 name="type+{{i}}"
-                                [disabled]="mode == 'true'"
+                                [disabled]="mode == 'true'" 
                                 [style]="{'width':'100%','padding':'3px'}"
-                                [filter]="true" (onChange)="onChangeParamType(data.type,i)">
-                              </p-dropdown>                                       
-                            </td>
-                            <td *ngIf="data.type == 'string' || 'double' || 'date' || 'integer' || 'list'">{{data.value}}                       
-                              <input type="text" class="form-control" [(ngModel)]="data.value"  name="value+{{i}}" [disabled]="mode == 'true'">                                
-                            </td>     
-                            <!-- <td *ngIf="data.type == 'distribution'" (click)="getAllLatest("distribution",i)">  {{data.name}}                     
-                              <input type="text" class="form-control" [(ngModel)]="data.name"  name="value+{{i}}" [disabled]="mode == 'true'">                                
-                             <p-dropdown [options]="types"        
-                              [(ngModel)]="data.type"
-                              name="type+{{i}}"
-                              [disabled]="mode == 'true'"
-                              [style]="{'width':'100%','padding':'3px'}"
-                              [filter]="true">
-                            </p-dropdown>  
-                            </td> 
-                            <td>{{data.type}}
-                              <input type="text" class="form-control" [(ngModel)]="data.type"  name="value+{{i}}" [disabled]="mode == 'true'">                                
-                            </td>       -->                 
-                          </tr> 
-                        </tbody> 
+                                [filter]="true" 
+                                placeholder="Select" >
+                                </p-dropdown>
+                              </td>
+
+                              <td *ngIf="typeSimple.indexOf(data1.type) != -1">
+                                <input type="text" class="form-control" [(ngModel)]="data1.value1" name="value1+{{i}}" [disabled]="mode">
+                              </td>
+                             
+                              <td *ngIf="data1.type == 'distribution'">
+                                <p-dropdown [options]="distributionListOptions" 
+                                [(ngModel)]="data1.value1" 
+                                name="value1+{{i}}"
+                                [disabled]="mode == 'true'" 
+                                [style]="{'width':'100%'}"
+                                [filter]="true" dataKey="uuid"
+                                placeholder="Select">
+                                </p-dropdown>
+                               
+                              </td>
+
+                               <td *ngIf="!(typeSimple.indexOf(data1.type) != -1) && !(data1.type == 'distribution')" >
+                                         {{"NA"}}                    
+                            </td>      
+                          </tr>
+                        </tbody>
                       </table>
                     </div>
                   </div>

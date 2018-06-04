@@ -188,6 +188,7 @@ public class ReconOperator {
 			      + "sourceAttributeId" + COMMA
 			      + "sourceAttributeName"		      
 			      + BRACKET_CLOSE
+			      + "source2"
 
 			      + CROSS_JOIN 
 			      
@@ -212,9 +213,9 @@ public class ReconOperator {
 			      + "targetAttributeId" + COMMA
 			      + "targetAttributeName"
 			      + BRACKET_CLOSE
+			      + " target2"
 			      
-			      + BRACKET_CLOSE
-			      + " reconTab ";
+			      + BRACKET_CLOSE;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			LOGGER.error(e);
@@ -285,7 +286,7 @@ public class ReconOperator {
 	}
 	
 	public String generateCheck(String sourceVal, String targetVal) {
-		return "sourceValue" + "==" + "targetValue";
+		return "sourceValue" + "=" + "targetValue";
 	}
 	
 	public String generateVal(Function function, String attrName) throws Exception {
@@ -303,7 +304,7 @@ public class ReconOperator {
 	
 	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
-		if (datapodList != null && datapodList.contains(datapod.getUuid())) {
+		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
 					dagExec.getVersion());
 		}

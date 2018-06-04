@@ -906,15 +906,15 @@ public class GraphServiceImpl {
 			edge = new Edge(srcVertex.getUuid(), srcVertex.getUuid() + "_" + position, name, srcEdgeMetaRef, dstEdgeMetaRef);
 			saveEdge(edge);
 			graphMeta.setUuid(srcVertex.getUuid() + "_" + position);
-			graphMeta.setType(name);
+			graphMeta.setType(name.toLowerCase());
 			graphMeta.setName(position);
 			graphMetaIdentifierHolder.setRef(graphMeta);
-			vertexRow = createVertex(srcVertex.getUuid() + "_" + position, "", position, name, new Date().toString(),
+			vertexRow = createVertex(srcVertex.getUuid() + "_" + position, "", position, parentName, new Date().toString(),
 					"Y", graphMetaIdentifierHolder);
 			totalVertexList.add(vertexRow);
 			verticesRowMap.put(srcVertex.getUuid() + "_" + position.concat("_").concat(name + "_" + position)
 					.concat("_").concat(name).concat("_").concat("Y"), vertexRow);
-			vertex = new Vertex(srcVertex.getUuid() + "_" + position, "", position, name.toLowerCase(), null, null,
+			vertex = new Vertex(srcVertex.getUuid() + "_" + position, "", position, parentName, null, null,
 					new Date().toString(), "Y", graphMetaIdentifierHolder);
 			saveVertex(vertex);
 			position = null;
@@ -999,14 +999,15 @@ public class GraphServiceImpl {
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
-										refName = MetaType.simple.toString();
+										continue;
+
 									}
 									if (StringUtils.isBlank(refName)) {
 										refName = childType;
 									}
 								}
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName + "_" + i, name, null);
+										edgeRowMap, refName + "_" + i, key, null);
 							} else if (attr != "" && attr != null) {
 							    GraphMetaIdentifierHolder graphMetaHolder=new GraphMetaIdentifierHolder();
 /*							    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
@@ -1068,7 +1069,7 @@ public class GraphServiceImpl {
 									refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 								} else {
-									refName = MetaType.simple.toString();
+									continue;
 								}
 								if (StringUtils.isBlank(refName)) {
 									refName = childType;
@@ -1094,7 +1095,8 @@ public class GraphServiceImpl {
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
-										refName = MetaType.simple.toString();
+										continue;
+										//refName = MetaType.simple.toString();
 									}
 									if (StringUtils.isBlank(refName)) {
 										refName = childType;
@@ -1122,7 +1124,9 @@ public class GraphServiceImpl {
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
-										refName = MetaType.simple.toString();
+
+										continue;
+										//refName = MetaType.simple.toString();
 									}
 									if (StringUtils.isBlank(refName)) {
 										refName = childType;
@@ -1153,7 +1157,8 @@ public class GraphServiceImpl {
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
-										refName = MetaType.simple.toString();
+										continue;
+										//refName = MetaType.simple.toString();
 									}
 									if (StringUtils.isBlank(refName)) {
 										refName = childType;
@@ -1184,7 +1189,8 @@ public class GraphServiceImpl {
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
-										refName = MetaType.simple.toString();
+										continue;
+										//refName = MetaType.simple.toString();
 									}
 									if (StringUtils.isBlank(refName)) {
 										refName = childType;
@@ -1230,10 +1236,13 @@ public class GraphServiceImpl {
 										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
-										refName = MetaType.simple.toString();
+										continue;
+										//refName = MetaType.simple.toString();
 									}
 									if (refName.equalsIgnoreCase(MetaType.simple.toString())) {
-										refName = name1;
+										continue;
+										//refName = MetaType.simple.toString();
+										//refName = name1;
 									}
 									if (refN1 != null && !refN1.equals("null")) {
 										refName = refName + "_" + refN1;
@@ -1402,12 +1411,12 @@ public class GraphServiceImpl {
 					graphMeta.setType(childObj.optString("type"));
 					graphMeta.setName(name);
 					graphMetaIdentifierHolder.setRef(graphMeta);
-					vertexRow = createVertex(childUuid, "", name, childObj.optString("type"), new Date().toString(),
+					vertexRow = createVertex(childUuid, "", name, parentName, new Date().toString(),
 							"Y", graphMetaIdentifierHolder);
 					totalVertexList.add(vertexRow);
-					verticesRowMap.put(childUuid.concat("_").concat(name).concat("_").concat(childObj.optString("type"))
+					verticesRowMap.put(childUuid.concat("_").concat(name).concat("_").concat(parentName)
 							.concat("_").concat("Y"), vertexRow);
-					vertex = new Vertex(childUuid, "", name, childObj.optString("type"), null, null,
+					vertex = new Vertex(childUuid, "", name, parentName, null, null,
 							new Date().toString(), "Y", graphMetaIdentifierHolder);
 					saveVertex(vertex);
 					continue;

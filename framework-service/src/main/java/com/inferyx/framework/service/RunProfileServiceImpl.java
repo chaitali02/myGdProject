@@ -31,7 +31,7 @@ public class RunProfileServiceImpl extends RunBaseRuleService {
 
 	Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
 		public void uncaughtException(Thread th, Throwable ex) {
-			System.out.println("Uncaught exception: " + ex);
+			logger.info("Uncaught exception: " + ex);
 		}
 	};
 	
