@@ -3245,19 +3245,35 @@ public class CommonServiceImpl <T> {
 					MetaIdentifier featureIdentifier = featureHolder.getRef();
 					MetaIdentifier attributeIdentifier = attributeHolder.getRef();
 					Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString());
-					Datapod datapod = (Datapod) getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString());
+					Object source = getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString());
+					
 					for(Feature feature : model.getFeatures()) {
 						if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
 							featureHolder.setFeatureName(feature.getName());
 							featureAttrMap.setFeature(featureHolder);
 						}
 					}
-					for(Attribute attribute : datapod.getAttributes()) {
-						if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
-							attributeHolder.setAttrName(attribute.getName());
-							featureAttrMap.setAttribute(attributeHolder);
+					if(source instanceof Datapod)
+						for(Attribute attribute : ((Datapod)source).getAttributes()) {
+							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
+								attributeHolder.setAttrName(attribute.getName());
+								featureAttrMap.setAttribute(attributeHolder);
+							}
 						}
-					}
+					else if(source instanceof DataSet)
+						for(AttributeSource attributeSource : ((DataSet)source).getAttributeInfo()) {
+							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+								featureAttrMap.setAttribute(attributeHolder);
+							}
+						}
+					else if(source instanceof Rule)
+						for(AttributeSource attributeSource : ((Rule)source).getAttributeInfo()) {
+							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+								featureAttrMap.setAttribute(attributeHolder);
+							}
+						}
 				}
 				Train train = (Train) object;
 				train.setFeatureAttrMap(featureAttrMapList);
@@ -3277,7 +3293,7 @@ public class CommonServiceImpl <T> {
 			if(source instanceof Datapod) {
 				Datapod datapod = (Datapod) source;
 				attributeName = datapod.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
-			} else if(source instanceof Dataset) {
+			} else if(source instanceof DataSet) {
 				DataSet dataset = (DataSet) source;
 				attributeName = dataset.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
 			} else if(source instanceof Rule) {
