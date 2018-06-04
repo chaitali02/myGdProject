@@ -735,7 +735,6 @@ public class ModelExecServiceImpl {
 		response = commonServiceImpl.download(execUUID, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulate,execUUID,execVersion)));
 		}
 		return response;
-
 	}
 	
 	public Model getModelByTrainExec(String trainExecUUID, String trainExecVersion) throws JsonProcessingException {
@@ -751,5 +750,39 @@ public class ModelExecServiceImpl {
 
 	}
 
+	public TrainExec getLatestTrainExecByTrain(String trainUuid, String trainVersion) throws Exception {
+
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("statusList");
+		query.fields().include("dependsOn");
+		query.fields().include("result");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+
+		try {
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(train.getUuid()));
+			query.addCriteria(Criteria.where("statusList.stage").is("Completed"));
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y"));
+			query.with(new Sort(Sort.Direction.DESC, "version"));
+		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
+				| ParseException e) {
+			e.printStackTrace();
+		}
+
+		List<TrainExec> trainExecList = mongoTemplate.find(query, TrainExec.class);
+		if (trainExecList.size() > 0) {
+			return trainExecList.get(0);
+		} else {
+			throw new Exception("No executed train collection available.");
+		}
+	}
 	
 }

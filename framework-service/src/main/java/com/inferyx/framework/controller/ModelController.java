@@ -394,5 +394,11 @@ public class ModelController {
 		response = modelServiceImpl.downloadLog(trainExecUUID, trainExecVersion, response, runMode);
 	}
 
-	
+	@RequestMapping(value = "/getTrainByModel", method = RequestMethod.GET)
+	public List<Train> getTrainByModel(@RequestParam(value = "uuid") String modelUuid,
+			@RequestParam(value = "version", required = false) String modelVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		return modelServiceImpl.getTrainByModel(modelUuid, modelVersion);
+	}	
 }
