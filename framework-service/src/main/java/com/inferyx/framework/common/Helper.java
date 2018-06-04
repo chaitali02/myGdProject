@@ -669,9 +669,14 @@ public class Helper {
 				case CSV : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case LOG : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case ZIP : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;		
-				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;		
+				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;	
+				
+				
 			}
 		return null;
+	}
+	public static String getFileCustomNameByFileType(FileType fileType, String extension,String type) {
+		return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 	}
 	public static FileType getFileType(String fileType) {
 		if(fileType != null)
@@ -684,6 +689,7 @@ public class Helper {
 			}
 		return null;
 	}
+	
 	public static String getFileDirectoryByFileType(FileType fileType) throws FileNotFoundException, IOException {
 		if(fileType != null)
 			switch (fileType) {
@@ -692,10 +698,50 @@ public class Helper {
 				case LOG : return getPropertyValue("framework.model.log.path");
 				case ZIP : return getPropertyValue("framework.file.zip.location");		
 				case XLS : return getPropertyValue("framework.file.download.path");		
+			//	case COMMENT :return getPropertyValue("framework.file.comment.upload.path");	
 			}
 		return null;
 	}
-	
+	public static String getFileDirectoryByFileType(String fileType,String type) throws FileNotFoundException, IOException {
+		if(fileType != null || type!=null )
+			if(type!=null&&type.equalsIgnoreCase(MetaType.comment.toString()) )	
+			{
+				return getPropertyValue("framework.file.comment.upload.path");
+			}else if(fileType.equalsIgnoreCase("script")){
+				return getPropertyValue("framework.model.script.path");
+			}else if(fileType.equalsIgnoreCase("csv")){
+				return getPropertyValue("framework.file.upload.path");
+			}else if(fileType.equalsIgnoreCase("zip")){
+				return getPropertyValue("framework.file.zip.location");
+			}else if(fileType.equalsIgnoreCase("log")){
+				return getPropertyValue("framework.model.log.path");
+			}else if(fileType.equalsIgnoreCase("xsl")){
+				return getPropertyValue("framework.file.download.path");
+			}
+		return null;
+	}
+	/*public static String getFileDirectoryByFileType1(FileType fileType,String exension) throws FileNotFoundException, IOException {
+		if(fileType != null)
+			if(fileType.toString().equalsIgnoreCase("MODEL")) {
+				if(exension.equalsIgnoreCase("SCRIPT")) {
+					return getPropertyValue("framework.model.script.path");	
+				}
+				if(exension.equalsIgnoreCase("LOG")) {
+					return getPropertyValue("framework.model.log.path");	
+				}
+			}
+			else if(fileType.toString().equalsIgnoreCase("CSV")) {
+				return getPropertyValue("framework.file.upload.path");
+			}
+			else if(fileType.toString().equalsIgnoreCase("XLS")) {
+				return getPropertyValue("framework.file.upload.path");
+			}else {
+				return null;
+
+			}
+		
+		return null;
+	}*/
 	public static ParamDataType resolveParamDataType(String paramDataType) {
 		if(paramDataType != null && !StringUtils.isBlank(paramDataType))
 			switch(paramDataType.toLowerCase()) {

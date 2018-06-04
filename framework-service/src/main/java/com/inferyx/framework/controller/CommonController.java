@@ -263,7 +263,21 @@ public class CommonController<T> {
 									   @RequestParam(value = "fileType") String fileType,
 									   @RequestParam(value = "type", required = false) String type,
 									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, JSONException, ParseException {
-					return commonServiceImpl.upload(file, extension, fileType, fileName, type);
+		return commonServiceImpl.upload(file, extension, fileType, fileName, type);
+	}
+	
+	@RequestMapping(value = "/uploadGenric", method = RequestMethod.POST, headers = ("content-type=multipart/form-data; boundary=abcd"))
+	public @ResponseBody List<MetaIdentifierHolder> uploadGenric(HttpServletRequest request,
+											   @RequestParam("file") List<MultipartFile> multiPartFile, 
+											   @RequestParam(value = "extension",required = false) String extension,
+											   @RequestParam(value = "fileType", required = false) String fileType,
+											   @RequestParam(value = "type", required = false) String type,
+											   @RequestParam(value = "uuid", required = false) String uuid,
+											   @RequestParam(value = "action", required = false) String action)
+											throws IOException, JSONException, ParseException {
+		List<MetaIdentifierHolder> result = commonServiceImpl.uploadGenric(multiPartFile,extension ,fileType, type,uuid,action);
+		
+		return result;
 	}
 	
 	@RequestMapping("/download")
@@ -305,6 +319,8 @@ public class CommonController<T> {
 		
 		return result;
 	}
+	
+
 	
 	
 	@RequestMapping("/comment/download")
