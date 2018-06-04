@@ -40,6 +40,7 @@ import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
@@ -52,7 +53,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
@@ -71,6 +71,7 @@ import com.inferyx.framework.domain.StageRef;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
@@ -536,7 +537,9 @@ public class DagServiceImpl {
 		
 		FutureTask<String> futureTask = new FutureTask<String>(parseRunDagServiceImpl);
 		dagExecutor.execute(futureTask);
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		taskThreadMap.put("Dag_" + dagExec.getUuid(), futureTask);
+		Thread.sleep(1000);
 
 		/*if (dagExec == null) {
 			// Create object
@@ -966,543 +969,96 @@ public class DagServiceImpl {
 					}
 				}
 				operator.setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
-				if (ref.getType().equals(MetaType.map)) {
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					MapExec mapExec = new MapExec();
-					MetaIdentifierHolder mapRef = new MetaIdentifierHolder();
-					mapRef.setRef(new MetaIdentifier(MetaType.map, ref.getUuid(), ref.getVersion()));
-					mapExec.setDependsOn(mapRef);
-					mapExec.setBaseEntity();
-
-					try {
-						MetaIdentifier mapExecIdentifier = new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(),
-								mapExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(mapExecIdentifier);
-						mapExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), mapExec, dagExec, stage,
-								indvExecTask, datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
-						mapExec.setRefKeyList(execParams.getRefKeyList());
-						builder = new StringBuilder(mapExec.getExec());
-						if (mapExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						statusList.remove(failedStatus);
-						statusList.add(failedStatus);
-						e.printStackTrace();
-						String message = null;
-						try {
-							message = e.getMessage();
-						}catch (Exception e2) {
-							// TODO: handle exception
-						}
-						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
-						throw new Exception((message != null) ? message : "Pipeline execution failed.");
-					} finally {
-						//mapExecServiceImpl.save(mapExec);
-						commonServiceImpl.save(MetaType.mapExec.toString(), mapExec);
-					}
-				} else if (ref.getType().equals(MetaType.rule)) {
-					logger.info("OtherParams in DagServiceImpl.parse rule " + otherParams);
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					RuleExec ruleExec = new RuleExec();
-					MetaIdentifier ruleIdentifier = new MetaIdentifier(MetaType.rule, ref.getUuid(), ref.getVersion());
-					ruleExec.setDependsOn(new MetaIdentifierHolder(ruleIdentifier));
-					ruleExec.setName(ref.getName());
-					ruleExec.setBaseEntity();
-					try {
-						/*ruleExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), refKeyMap, execParams,
-								datapodList, dagExec, ruleExec);*/
-						ruleExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), ruleExec, refKeyMap, execParams, datapodList, dagExec);
-						ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
-						ruleExec.setRefKeyList(execParams.getRefKeyList());
-						MetaIdentifier ruleExecIdentifier = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(),
-								ruleExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(ruleExecIdentifier);
-						builder = new StringBuilder(ruleExec.getExec());
-						if (ruleExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						statusList.remove(failedStatus);
-						statusList.add(failedStatus);
-						e.printStackTrace();
-					} finally {
-						//ruleExecServiceImpl.save(ruleExec);
-						commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
-					}
-				} else if (ref.getType().equals(MetaType.rulegroup)) {
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					RuleGroupExec ruleGroupExec = new RuleGroupExec();
-					MetaIdentifier ruleGroupExecIdentifier = new MetaIdentifier(MetaType.rulegroup, ref.getUuid(),
-							ref.getVersion());
-					ruleGroupExec.setDependsOn(new MetaIdentifierHolder(ruleGroupExecIdentifier));
-					ruleGroupExec.setName(ref.getName());
-					ruleGroupExec.setBaseEntity();
-					ruleGroupExecIdentifier = new MetaIdentifier(MetaType.rulegroupExec, ruleGroupExec.getUuid(),
-							ruleGroupExec.getVersion());
-					try {
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(ruleGroupExecIdentifier);
-//						MetaIdentifier ruleGroupExecMeta = ruleGroupServiceImpl.execute(ref.getUuid(), ref.getVersion(),
-//								execParams, ruleGroupExec);
-						ruleGroupExec = ruleGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
-								datapodList, ruleGroupExec, dagExec);
-						ruleGroupExec = ruleGroupServiceImpl.parse(ruleGroupExec.getUuid(), ruleGroupExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
-						
-						//ruleGroupExec = (RuleGroupExec) daoRegister.getRefObject(ruleGroupExecMeta);
-						if (ruleGroupExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						logger.error("Exception while creating ruleGroupExec : " + ruleGroupExec);
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						statusList.remove(failedStatus);
-						statusList.add(failedStatus);
-						e.printStackTrace();
-					}
-				} else if (ref.getType().equals(MetaType.dq)) {
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					DataQualExec dqExec = new DataQualExec();
-					dqExec.setDependsOn(
-							new MetaIdentifierHolder(new MetaIdentifier(MetaType.dq, ref.getUuid(), ref.getVersion())));
-					dqExec.setName(ref.getName());
-					dqExec.setBaseEntity();
-					try {
-						MetaIdentifier dqExecIdentifier = new MetaIdentifier(MetaType.dqExec, dqExec.getUuid(),
-								dqExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(dqExecIdentifier);
-						/*dqExec = dataQualServiceImpl.create(ref.getUuid(), ref.getVersion(), dqExec, refKeyMap,
-								datapodList, dagExec);*/
-						dqExec = dataQualServiceImpl.create(ref.getUuid(),ref.getVersion(),dqExec,refKeyMap,datapodList,dagExec);
-						dqExec =  (DataQualExec)dataQualServiceImpl.parse(dqExec.getUuid(), dqExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
-						dqExec.setRefKeyList(execParams.getRefKeyList());
-						builder = new StringBuilder(dqExec.getExec());
-						if (dqExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
-							statusList.remove(statusList.size() - 1);
-						}
-						statusList.add(failedStatus);
-						e.printStackTrace();
-					} finally {
-						//dataQualExecServiceImpl.save(dqExec);
-						commonServiceImpl.save(MetaType.dqExec.toString(), dqExec);
-					}
-				} else if (ref.getType().equals(MetaType.dqgroup)) {
-					/*
-					 * java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-					 * .convertRefKeyListToMap(indvExecTask.getRefKeyList());
-					 */
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					DataQualGroupExec dqGroupExec = new DataQualGroupExec();
-					MetaIdentifierHolder dqGroupRef = new MetaIdentifierHolder(
-							new MetaIdentifier(MetaType.dqgroup, ref.getUuid(), ref.getVersion()));
-					dqGroupExec.setDependsOn(dqGroupRef);
-					dqGroupExec.setName(ref.getName());
-					dqGroupExec.setBaseEntity();
-					try {
-						MetaIdentifier dqGroupExecIdentifier = new MetaIdentifier(MetaType.dqgroupExec,
-								dqGroupExec.getUuid(), dqGroupExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(dqGroupExecIdentifier);
-						/*dqGroupExec = dataQualGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
-								datapodList, dqGroupExec, dagExec);*/
-						dqGroupExec = dataQualGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
-								datapodList, dqGroupExec, dagExec);
-						dqGroupExec = dataQualGroupServiceImpl.parse(dqGroupExecIdentifier,refKeyMap, datapodList, dagExec, runMode);
-						
-						if (dqGroupExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
-							statusList.remove(statusList.size() - 1);
-						}
-						statusList.add(failedStatus);
-						e.printStackTrace();
-					} finally {
-						//dataQualGroupExecServiceImpl.save(dqGroupExec);
-						commonServiceImpl.save(MetaType.dqgroupExec.toString(), dqGroupExec);
-					}
-				} else if (ref.getType().equals(MetaType.profile)) {
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					ProfileExec profileExec = new ProfileExec();
-					MetaIdentifierHolder profileRef = new MetaIdentifierHolder();
-					profileRef.setRef(new MetaIdentifier(MetaType.profile, ref.getUuid(), ref.getVersion()));
-					profileExec.setDependsOn(profileRef);
-					profileExec.setName(ref.getName());
-					profileExec.setBaseEntity();
-					try {
-						MetaIdentifier profileExecIdentifier = new MetaIdentifier(MetaType.profileExec,
-								profileExec.getUuid(), profileExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(profileExecIdentifier);
-					/*	profileExec = profileServiceImpl.create(ref.getUuid(), ref.getVersion(), null, refKeyMap,
-								datapodList, dagExec);*/
-						profileExec = profileServiceImpl.create(ref.getUuid(),ref.getVersion(),profileExec,refKeyMap,datapodList,dagExec);
-						profileExec =  (ProfileExec)profileServiceImpl.parse(profileExec.getUuid(), profileExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+				// Have few parts in common area
+				java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
+						.convertRefKeyListToMap(execParams.getRefKeyList());
+				BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(ref.getType()), ref, indvExecTask);
 				
-						profileExec.setRefKeyList(execParams.getRefKeyList());
-						builder = new StringBuilder(profileExec.getExec());
-						if (profileExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
-							statusList.remove(statusList.size() - 1);
-						}
-						statusList.add(failedStatus);
-						e.printStackTrace();
-					} finally {
-						//profileExecServiceImpl.save(profileExec);
-						commonServiceImpl.save(MetaType.profileExec.toString(), profileExec);
-					}
-				} else if (ref.getType().equals(MetaType.profilegroup)) {
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					ProfileGroupExec profileGroupExec = new ProfileGroupExec();
-					MetaIdentifierHolder profileGroupRef = new MetaIdentifierHolder(
-							new MetaIdentifier(MetaType.profilegroup, ref.getUuid(), ref.getVersion()));
-					profileGroupExec.setDependsOn(profileGroupRef);
-					profileGroupExec.setName(ref.getName());
-					profileGroupExec.setBaseEntity();
-					try {
-						MetaIdentifier profileGroupExecIdentifier = new MetaIdentifier(MetaType.profilegroupExec,
-								profileGroupExec.getUuid(), profileGroupExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(profileGroupExecIdentifier);
-						/*profileGroupExec = profileGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams,
-								datapodList, dagExec, profileGroupExec);
-					*/	
-						profileGroupExec = profileGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
-								datapodList, dagExec,profileGroupExec);
-						profileGroupExec = (ProfileGroupExec) profileGroupServiceImpl.parse(profileGroupExecIdentifier.getUuid(),profileGroupExecIdentifier.getVersion(),refKeyMap, datapodList, dagExec, runMode);
-						if (profileGroupExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
-							statusList.remove(statusList.size() - 1);
-						}
-						statusList.add(failedStatus);
-						e.printStackTrace();
-					} finally {
-						//profileGroupExecServiceImpl.save(profileGroupExec);
-						commonServiceImpl.save(MetaType.profilegroupExec.toString(), profileGroupExec);
-					}
-				} /*else if (ref.getType().equals(MetaType.model)) {
-					ModelExec modelExec = new ModelExec();
-					MetaIdentifierHolder modelRef = new MetaIdentifierHolder();
-					modelRef.setRef(new MetaIdentifier(MetaType.model, ref.getUuid(), ref.getVersion()));
-					modelExec.setDependsOn(modelRef);
-					modelExec.setBaseEntity();
-					try {
-						MetaIdentifier modelExecIdentifier = new MetaIdentifier(MetaType.modelExec, modelExec.getUuid(),
-								modelExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(modelExecIdentifier);
-						modelExec = modelServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, null,
-								modelExec);
-						if (modelExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
-							statusList.remove(statusList.size() - 1);
-						}
-						statusList.add(failedStatus);
-						e.printStackTrace();
-						throw new Exception("Model creation failed");
-					} finally {
-						//modelExecServiceImpl.save(modelExec);
-						commonServiceImpl.save(MetaType.modelExec.toString(), modelExec);
-					}
-				}*/ else if (ref.getType().equals(MetaType.load)) {
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					LoadExec loadExec = new LoadExec();
-					MetaIdentifierHolder loadRef = new MetaIdentifierHolder();
-					loadRef.setRef(new MetaIdentifier(MetaType.load, ref.getUuid(), ref.getVersion()));
-					loadExec.setDependsOn(loadRef);
-					loadExec.setBaseEntity();
-
-					try {
-						MetaIdentifier loadExecIdentifier = new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(),
-								loadExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(loadExecIdentifier);
-						loadExec = loadServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, null, loadExec);
-						//loadExec.setRefKeyList(execParams.getRefKeyList());
-						//builder = new StringBuilder(loadExec.getExec());
-						if (loadExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						statusList.remove(failedStatus);
-						statusList.add(failedStatus);
-						e.printStackTrace();
-					} finally {
-						//loadExecServiceImpl.save(loadExec);
-						commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
-					}
-				} else if (ref.getType().equals(MetaType.train)) {
-					TrainExec trainExec = new TrainExec();
-					MetaIdentifierHolder trainRef = new MetaIdentifierHolder();
-					trainRef.setRef(new MetaIdentifier(MetaType.train, ref.getUuid(), ref.getVersion()));
-					trainExec.setDependsOn(trainRef);
-					trainExec.setBaseEntity();
-					try {
-						MetaIdentifier trainExecIdentifier = new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(),
-								trainExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(trainExecIdentifier);
+				try {
+					// If conditions with parse goes here - START
+					if (ref.getType().equals(MetaType.map)) {
+					baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, stage,
+								indvExecTask, datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
+					} else if (ref.getType().equals(MetaType.rule)) {
+						baseExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), (RuleExec) baseExec, refKeyMap, execParams, datapodList, dagExec);
+						baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode); 
+					} else if (ref.getType().equals(MetaType.rulegroup)) {
+						baseExec = ruleGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
+								datapodList, (RuleGroupExec)baseExec, dagExec);
+						baseExec = ruleGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+					} else if (ref.getType().equals(MetaType.dq)) {
+						baseExec = dataQualServiceImpl.create(ref.getUuid(),ref.getVersion(),(DataQualExec) baseExec,refKeyMap,datapodList,dagExec);
+						baseExec =  (DataQualExec)dataQualServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+					} else if (ref.getType().equals(MetaType.dqgroup)) {
+						baseExec = dataQualGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
+								datapodList, (DataQualGroupExec)baseExec, dagExec);
+						baseExec = dataQualGroupServiceImpl.parse(indvExecTask.getOperators().get(0).getOperatorInfo().getRef(),refKeyMap, datapodList, dagExec, runMode);
+					} else if (ref.getType().equals(MetaType.profile)) {
+						baseExec = profileServiceImpl.create(ref.getUuid(),ref.getVersion(),(ProfileExec)baseExec,refKeyMap,datapodList,dagExec);
+						baseExec =  (ProfileExec)profileServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+					} else if (ref.getType().equals(MetaType.profilegroup)) {
+						baseExec = profileGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
+								datapodList, dagExec, (ProfileGroupExec) baseExec);
+						baseExec = (ProfileGroupExec) profileGroupServiceImpl.parse(baseExec.getUuid(),baseExec.getVersion(),refKeyMap, datapodList, dagExec, runMode);
+					} else if (ref.getType().equals(MetaType.load)) {
+						baseExec = loadServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, null, (LoadExec)baseExec);
+					} else if (ref.getType().equals(MetaType.train)) {
 						Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
 						Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
-						trainExec = modelServiceImpl.create(train, model, execParams, null,
-								trainExec);
-						if (trainExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
-							statusList.remove(statusList.size() - 1);
-						}
-						statusList.add(failedStatus);
-						e.printStackTrace();
-						throw new Exception("Train exec creation failed");
-					} finally {
-						//modelExecServiceImpl.save(modelExec);
-						commonServiceImpl.save(MetaType.trainExec.toString(), trainExec);
-					}
-				} else if (ref.getType().equals(MetaType.predict)) {
-					PredictExec predictExec = new PredictExec();
-					MetaIdentifierHolder predictRef = new MetaIdentifierHolder();
-					predictRef.setRef(new MetaIdentifier(MetaType.predict, ref.getUuid(), ref.getVersion()));
-					predictExec.setDependsOn(predictRef);
-					predictExec.setBaseEntity();
-					try {
-						MetaIdentifier predictExecIdentifier = new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(),
-								predictExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(predictExecIdentifier);
+						baseExec = modelServiceImpl.create(train, model, execParams, null,
+								(TrainExec)baseExec);
+					}  else if (ref.getType().equals(MetaType.predict)) {
 						Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
-						predictExec = modelServiceImpl.create(predict, execParams, null, predictExec);
-						if (predictExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
-							statusList.remove(statusList.size() - 1);
-						}
-						statusList.add(failedStatus);
-						e.printStackTrace();
-						throw new Exception("Predict exec creation failed");
-					} finally {
-						//modelExecServiceImpl.save(modelExec);
-						commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
-					}
-				} else if (ref.getType().equals(MetaType.simulate)) {
-					SimulateExec simulateExec = new SimulateExec();
-					MetaIdentifierHolder simulateRef = new MetaIdentifierHolder();
-					simulateRef.setRef(new MetaIdentifier(MetaType.simulate, ref.getUuid(), ref.getVersion()));
-					simulateExec.setDependsOn(simulateRef);
-					simulateExec.setBaseEntity();
-					try {
-						MetaIdentifier simulateExecIdentifier = new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(),
-								simulateExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(simulateExecIdentifier);
+						baseExec = modelServiceImpl.create(predict, execParams, null, (PredictExec) baseExec);
+					} else if (ref.getType().equals(MetaType.simulate)) {
 						Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
-						simulateExec = modelServiceImpl.create(simulate, execParams, null, simulateExec);
-						if (simulateExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
-							statusList.remove(statusList.size() - 1);
-						}
-						statusList.add(failedStatus);
-						e.printStackTrace();
-						throw new Exception("Simulate exec creation failed");
-					} finally {
-						//modelExecServiceImpl.save(modelExec);
-						commonServiceImpl.save(MetaType.simulateExec.toString(), simulateExec);
-					}
-				} else if (ref.getType().equals(MetaType.recon)) {
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					ReconExec reconExec = new ReconExec();
-					MetaIdentifier reconIdentifier = new MetaIdentifier(MetaType.recon, ref.getUuid(), ref.getVersion());
-					reconExec.setDependsOn(new MetaIdentifierHolder(reconIdentifier));
-					reconExec.setName(ref.getName());
-					reconExec.setBaseEntity();
-					try {
-						reconExec = reconServiceImpl.create(ref.getUuid(), ref.getVersion(), reconExec, refKeyMap, datapodList, dagExec);
-						reconExec = (ReconExec) reconServiceImpl.parse(reconExec.getUuid(), reconExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
-						reconExec.setRefKeyList(execParams.getRefKeyList());
-						MetaIdentifier reconExecIdentifier = new MetaIdentifier(MetaType.reconExec, reconExec.getUuid(),
-								reconExec.getVersion());
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(reconExecIdentifier);
-						builder = new StringBuilder(reconExec.getExec());
-						if (reconExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						statusList.remove(failedStatus);
-						statusList.add(failedStatus);
-						e.printStackTrace();
-					} finally {
-						//ruleExecServiceImpl.save(ruleExec);
-						commonServiceImpl.save(MetaType.reconExec.toString(), reconExec);
-					}
-				} else if (ref.getType().equals(MetaType.recongroup)) {
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					ReconGroupExec reconGroupExec = new ReconGroupExec();
-					MetaIdentifier reconGroupExecIdentifier = new MetaIdentifier(MetaType.recongroup, ref.getUuid(),
-							ref.getVersion());
-					reconGroupExec.setDependsOn(new MetaIdentifierHolder(reconGroupExecIdentifier));
-					reconGroupExec.setName(ref.getName());
-					reconGroupExec.setBaseEntity();
-					reconGroupExecIdentifier = new MetaIdentifier(MetaType.recongroupExec, reconGroupExec.getUuid(),
-							reconGroupExec.getVersion());
-					try {
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(reconGroupExecIdentifier);
-						reconGroupExec = reconGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
-								datapodList, reconGroupExec, dagExec);
-						reconGroupExec = reconGroupServiceImpl.parse(reconGroupExec.getUuid(), reconGroupExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
-						
-						if (reconGroupExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						logger.error("Exception while creating reconGroupExec : " + reconGroupExec);
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						statusList.remove(failedStatus);
-						statusList.add(failedStatus);
-						e.printStackTrace();
-					}
-				} else if (ref.getType().equals(MetaType.operator)) {
-					logger.info("Inside parseDagExec : MetaType operator ");
-					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-							.convertRefKeyListToMap(execParams.getRefKeyList());
-					OperatorExec operatorExec = new OperatorExec();
-					MetaIdentifier operatorTypeIdentifier = new MetaIdentifier(MetaType.operator, ref.getUuid(),
-							ref.getVersion());
-					operatorExec.setDependsOn(new MetaIdentifierHolder(operatorTypeIdentifier));
-					operatorExec.setName(ref.getName());
-					operatorExec.setBaseEntity();
-					MetaIdentifier operatorExecIdentifier = new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(),
-							operatorExec.getVersion());
-					try {
-						indvExecTask.getOperators().get(0).getOperatorInfo().setRef(operatorExecIdentifier);
-						
-						operatorExec = operatorServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.operator, MetaType.operatorExec, operatorExec, 
+						baseExec = modelServiceImpl.create(simulate, execParams, null, (SimulateExec) baseExec);
+					} else if (ref.getType().equals(MetaType.recon)) {
+						baseExec = reconServiceImpl.create(ref.getUuid(), ref.getVersion(), (ReconExec) baseExec, refKeyMap, datapodList, dagExec);
+						baseExec = (ReconExec) reconServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+					} else if (ref.getType().equals(MetaType.recongroup)) {
+						baseExec = reconGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
+								datapodList, (ReconGroupExec) baseExec, dagExec);
+						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+					} else if (ref.getType().equals(MetaType.operator)) {
+						baseExec = operatorServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.operator, MetaType.operatorExec, (OperatorExec)baseExec, 
 								refKeyMap, datapodList, dagExec);
 						ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
-						otherParams = (HashMap<String, String>) operatorServiceImpl.parse(ref.getUuid(), ref.getVersion(), MetaType.operator, operatorExec, 
+						otherParams = (HashMap<String, String>) operatorServiceImpl.parse(ref.getUuid(), ref.getVersion(), MetaType.operator, (OperatorExec)baseExec, 
 																							operatorExecParams, otherParams, runMode);
 						execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
 						if (indvTask.getDependsOn().size() > 0) {
 							operatorExecParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
 							indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
 						}
-						commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
-//						operatorExec = reconGroupServiceImpl.parse(operatorExec.getUuid(), operatorExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
-						
-						
-						
-						if (operatorExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-							throw new Exception();
-						}
-					} catch (Exception e) {
-						logger.error("Exception while creating operatorExec : " + operatorExec);
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
-						List<Status> statusList = indvExecTask.getStatusList();
-						if (statusList == null) {
-							statusList = new ArrayList<Status>();
-						}
-						statusList.remove(failedStatus);
-						statusList.add(failedStatus);
-						e.printStackTrace();
 					}
+					// If conditions with parse goes here - END	
+					
+					baseExec.setRefKeyList(execParams.getRefKeyList());
+					if (baseExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
+						throw new Exception();
+					}
+				} catch (Exception e) {
+					Status failedStatus = new Status(Status.Stage.Failed, new Date());
+					List<Status> statusList = indvExecTask.getStatusList();
+					if (statusList == null) {
+						statusList = new ArrayList<Status>();
+					}
+					statusList.remove(failedStatus);
+					statusList.add(failedStatus);
+					e.printStackTrace();
+					String message = null;
+					try {
+						message = e.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
+					throw new Exception((message != null) ? message : "Pipeline execution failed.");
+				} finally {
+					commonServiceImpl.save(helper.getExecType(ref.getType()).toString(), baseExec);
 				}
-
-
-				/*if (builder == null) {
-					continue;
-				}
-*/
-				// Set Exec attr
-				//logger.info("sql: "+builder.toString());
-
+				
 				// Set Stage and Task status
 				List<Status> statusList = new ArrayList<Status>();
 				Status status = new Status(Status.Stage.NotStarted, new Date());

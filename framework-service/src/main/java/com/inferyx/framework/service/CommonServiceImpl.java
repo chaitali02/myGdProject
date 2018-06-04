@@ -25,7 +25,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -33,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -42,9 +42,6 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.spark.sql.Dataset;
 import org.codehaus.jettison.json.JSONException;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json4s.jackson.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -128,6 +125,7 @@ import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.ISimulateDao;
 import com.inferyx.framework.dao.ISimulateExecDao;
+import com.inferyx.framework.dao.ITagDao;
 import com.inferyx.framework.dao.ITrainDao;
 import com.inferyx.framework.dao.ITrainExecDao;
 import com.inferyx.framework.dao.IUploadDao;
@@ -140,9 +138,9 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
-import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
@@ -160,7 +158,6 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -171,6 +168,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
@@ -179,8 +177,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.GraphRegister;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.result.UpdateResult;
 
 @Service
 public class CommonServiceImpl <T> {
@@ -415,7 +411,20 @@ public class CommonServiceImpl <T> {
 	IOperatorDao iOperatorDao;
 	@Autowired
 	ICommentDao iCommentDao;
+	@Autowired
+	ITagDao iTagDao;
+	@Autowired
+	Helper helper;
 	
+	
+	public ITagDao getiTagDao() {
+		return iTagDao;
+	}
+
+	public void setiTagDao(ITagDao iTagDao) {
+		this.iTagDao = iTagDao;
+	}
+
 	public ICommentDao getiCommentDao() {
 		return iCommentDao;
 	}
@@ -2983,7 +2992,6 @@ public class CommonServiceImpl <T> {
             String directoryLocation = Helper.getFileDirectoryByFileType(type);
             String filePath = directoryLocation+"/" + fileName;
             File file = new File(filePath);
-            
             if (file.exists()) {
             	logger.info("File found.");
                 String mimeType = null;//context.getMimeType(file.getPath());
@@ -3300,20 +3308,25 @@ public class CommonServiceImpl <T> {
 		String directoryPath = Helper.getPropertyValue("framework.file.comment.upload.path");
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
+				UploadExec uploadExec = new UploadExec();
+				
+				uploadExec.setBaseEntity();
+				
 				String fileName = multipartFile.getOriginalFilename();
 				String fileExtention = fileName.substring(fileName.lastIndexOf("."));
 				String filename1 = fileName.substring(0, fileName.lastIndexOf("."));
-				String location = directoryPath + "/" + filename1 + fileExtention;
+				String location = directoryPath + "/" + uploadExec.getUuid() + fileExtention;
 				File dest = new File(location);
 				multipartFile.transferTo(dest);
-				UploadExec uploadExec = new UploadExec();
-				uploadExec.setBaseEntity();
+				String contenetType = multipartFile.getContentType();
+				
+				uploadExec.setName(filename1);
 				uploadExec.setLocation(location);
-				uploadExec.setFileName(filename1 + fileExtention);
+				uploadExec.setFileName(fileName);
 				MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
 				MetaIdentifier identifier = new MetaIdentifier();
 				identifier.setUuid(uuid);
-				identifier.setName(filename1 + fileExtention);
+				identifier.setName(filename1);
 				identifier.setType(MetaType.comment);
 				metaIdentifierHolder.setRef(identifier);
 				uploadExec.setDependsOn(metaIdentifierHolder);
@@ -3324,37 +3337,39 @@ public class CommonServiceImpl <T> {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response,String uuid) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
 		try {
-			UploadExec uploadExec = new UploadExec();
+			List<UploadExec> uploadExec = new ArrayList<UploadExec>();
 			Query query = new Query();
 			query.fields().include("uuid");
 			query.fields().include("name");
-			query.fields().include("type");
+			query.fields().include("location");
+			query.fields().include("fileName");
 			query.addCriteria(Criteria.where("uuid").is(uuid));
 	
-			uploadExec = (UploadExec) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
+			uploadExec = (List<UploadExec>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
 			
-			
-			FileType type = Helper.getFileType(fileType);			
-        	
-            String directoryLocation = Helper.getFileDirectoryByFileType(type);
-            String filePath = directoryLocation+"/" + fileName;
+		//fileName=uploadExec.get(0).getFileName();
+            String filePath = uploadExec.get(0).getLocation();
+            String FileName =uploadExec.get(0).getFileName();
+			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
+			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
             File file = new File(filePath);
             
             if (file.exists()) {
             	logger.info("File found.");
-                String mimeType = null;//context.getMimeType(file.getPath());
- 
+                 String mimeType = null;//context.getMimeType(file.getPath());
+                 mimeType= new MimetypesFileTypeMap().getContentType(file);
                 if (mimeType == null) {
                     mimeType = "application/octet-stream";
                 }
  
                 response.setContentType(mimeType);
                 response.setContentLength((int) file.length());
-                response.setContentType("application/xml charset=utf-16");
+             //   response.setContentType("application/xml charset=utf-16");
 				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename",fileName);
+				response.setHeader("filename",fileName+fileExtention);
                 ServletOutputStream os = response.getOutputStream();
                 FileInputStream fis = new FileInputStream(file);
                 Long fileSize = file.length();
@@ -3386,4 +3401,44 @@ public class CommonServiceImpl <T> {
         }
 	return response;
 	}
+	
+
+	/**
+	 * 
+	 * @param metaType
+	 * @param ref
+	 * @return
+	 */
+	public T createExec(MetaType metaType, MetaIdentifier ref) {
+		logger.info("Metatype string : " + metaType.toString());
+		BaseExec baseExec = helper.createExec(metaType);
+		logger.info(baseExec);
+		T object = (T) Helper.getDomainClass(metaType).cast(baseExec);
+		baseExec.setDependsOn(new MetaIdentifierHolder(ref));
+		baseExec.setBaseEntity();
+		baseExec.setName(ref.getName());
+		return object;
+	}
+	
+	/**
+	 * 
+	 * @param metaType
+	 * @param ref
+	 * @param taskExec
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
+	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		T execObject = (T)createExec(metaType, ref);
+		MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType, String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
+				String.class.cast(execObject.getClass().getMethod("getVersion", null).invoke(execObject, null)));
+		taskExec.getOperators().get(0).getOperatorInfo().setRef(metaExecIdentifier);
+		return execObject;
+	}
+
+
 }

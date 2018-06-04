@@ -10,41 +10,11 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
-import java.util.List;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "simulateexec")
-public class SimulateExec extends BaseEntity {
+public class SimulateExec extends BaseExec {
 	private String location;
-	private MetaIdentifierHolder dependsOn;
-	private MetaIdentifierHolder result; // Datastore info
-	private List<Status> statusList;
-
-
-	public List<Status> getStatusList() {
-		return statusList;
-	}
-
-	public void setStatusList(List<Status> statusList) {
-		this.statusList = statusList;
-	}
-
-	public MetaIdentifierHolder getResult() {
-		return result;
-	}
-
-	public void setResult(MetaIdentifierHolder result) {
-		this.result = result;
-	}
-
-	public MetaIdentifierHolder getDependsOn() {
-		return dependsOn;
-	}
-
-	public void setDependsOn(MetaIdentifierHolder dependsOn) {
-		this.dependsOn = dependsOn;
-	}
 
 	public String getLocation() {
 		return location;

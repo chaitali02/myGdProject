@@ -12,7 +12,5 @@ package com.inferyx.framework.domain;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "loadexec")
-public class LoadExec extends BaseExec{
-	
-}
+@Document(collection="tag")
+public class Tag extends BaseEntity{}

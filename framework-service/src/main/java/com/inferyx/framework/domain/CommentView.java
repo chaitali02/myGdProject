@@ -10,9 +10,24 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "loadexec")
-public class LoadExec extends BaseExec{
+@Document(collection="CommentView")
+public class CommentView extends BaseEntity
+{
+	List<MetaIdentifierHolder> uploadExecInfo;
+
+	public List<MetaIdentifierHolder> getUploadExecInfo() {
+		return uploadExecInfo;
+	}
+
+	public void setUploadExecInfo(List<MetaIdentifierHolder> uploadExecInfo) {
+		this.uploadExecInfo = uploadExecInfo;
+	}
+
+	
+
 	
 }

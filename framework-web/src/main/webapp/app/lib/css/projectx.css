@@ -943,24 +943,37 @@ font-weight:bold;
 .not-selected {
 font-weight:normtal;
 }
-
+.tree-graph{
+  margin-top: -3%;
+}
 .comment-panel-parent{
-
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  position: fixed;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.8);
+  display: block;
 }
 .comment-panel {
   height: 50%;
   width:0;
   position: absolute;
-  z-index: 100;
+  z-index: 10109;
   top:3.6%;
-  background-color:#21282e;
+  background-color:white;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 25px;
   overflow: hidden;
   transition: right 1m;
 }   
-
+.comment-panel-header{
+  border-bottom: 1px solid #eee;
+  padding: 0;
+  margin-bottom: 10px;
+}
 .comment-panel-width{
 width:40%;
 right: 1%;
@@ -972,9 +985,29 @@ right:0%;
 transition: right 1m
 }
 
-.mt-comment:hover{
+/* .mt-comment:hover{
   background: #ecf0f3 !important;
-}
-.comment-panel-mt-comment:hover{
+} */
+/* .comment-panel-mt-comment:hover{
   background: #21282e !important;
+} */
+
+.list-files{
+  background-color: #f5f5f5;
+  border: 1px solid #dcdcdc;
+  font-weight: bold;
+  margin: 3px 7px 9px;
+  overflow-y: hidden;
+  padding: 4px 4px 4px 8px;
+  max-width: 448px;
+}
+
+.list-file-name{
+  color: #15c;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  white-space: nowrap;
+  max-width: 250px;
 }

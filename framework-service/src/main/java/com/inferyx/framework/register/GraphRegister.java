@@ -94,6 +94,7 @@ import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.ISimulateDao;
 import com.inferyx.framework.dao.ISimulateExecDao;
+import com.inferyx.framework.dao.ITagDao;
 import com.inferyx.framework.dao.ITrainDao;
 import com.inferyx.framework.dao.ITrainExecDao;
 import com.inferyx.framework.dao.IUploadDao;
@@ -379,7 +380,17 @@ public class GraphRegister<T> {
 	IOperatorDao iOperatorDao;
 	@Autowired
 	ICommentDao iCommentDao;
+	@Autowired
+	ITagDao iTagDao;
 	
+	
+	public ITagDao getiTagDao() {
+		return iTagDao;
+	}
+
+	public void setiTagDao(ITagDao iTagDao) {
+		this.iTagDao = iTagDao;
+	}
 	public ICommentDao getiCommentDao() {
 		return iCommentDao;
 	}

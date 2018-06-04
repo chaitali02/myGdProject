@@ -1,76 +1,100 @@
-
-<div class="comment-panel-parent">
-<div class="comment-panel " ng-class="(panelOpen ==true?'comment-panel-width':'comment-panel-without-width')">
-    <div class="comment-panel-header clearfix">
-        <div class="col-md-3 pull-left">
-            <h4 style="color:white;">Comment</h4>
-        </div>
-        <div class="col-md-1 pull-right">
-            <div class="" ng-click="closePanle()">
-                <i ng-class="panelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>
+<div class="">
+    <div class="comment-panel " ng-class="(panelOpen ==true?'comment-panel-width':'comment-panel-without-width')">
+        <div class="comment-panel-header tabbable-line clearfix">
+            <div class="col-md-3 pull-left">
+                <h4 class="caption-subject font-dark bold">Comment</h4>
             </div>
-        </div>
-    </div>
-    
-    <div class="comment-panel-body clearfix" style="padding:1%;height:73%;color:white;overflow-x: hidden;overflow-y:auto;">
-        <div class="mt-comments">
-            <div class="mt-comment" ng-repeat="data in commentResult" ng-if="commentResult.length >0">
-                <div class="mt-comment-img">
-                    <img  class =" img-circle" width="45px"  ng-src="avatars/{{data.createdBy.ref.uuid}}?$index" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';" />
-                </div>
-                <div class="mt-comment-body">
-                    <div class="mt-comment-info">
-                        <span class="mt-comment-author" style="color:#657b8d">{{data.createdBy.ref.name}}</span>
-                    </div>
-                    <div class="mt-comment-text" >
-                            <show-more text="data.desc" limit="50"> </show-more> </div>
-                    <div class="mt-comment-details">
-                        <ul class="mt-comment-actions">
-                            <li>
-                                <a href="#"><i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;"></i></a>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="col-md-1 pull-right">
+                <div class="" ng-click="closePanle()">
+                    <i ng-class="panelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>
                 </div>
             </div>
         </div>
-        <div class="centercontent" ng-if="commentResult.length ==0"> No Comment</div>
-    </div>
-
-    <div class="page-quick-sidebar-chat-user-form" style="padding:1% 1% 0 1%;margin-top:-2%;">
-        <div class="mt-comments">
-            <div class="mt-comment comment-panel-mt-comment">
-                <div class="mt-comment-img">
-                    <img  class =" img-circle" width="45px" ng-src="avatars/{{currentUser.uuid}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';" /></div>
-                <div class="mt-comment-body">
-                    <div class="mt-comment-info">
-                        <span class="mt-comment-author" style="color:#657b8d">{{currentUser.name}}</span>
+        <div style="padding:1%;height:90%;overflow-x: hidden;overflow-y:auto;">
+            <div class="comment-panel-body clearfix" style="padding:1%;min-height:76%;">
+                <div class="mt-comments">
+                    <div class="mt-comment" ng-repeat="data in commentResult" ng-if="commentResult.length >0">
+                        <div class="mt-comment-img">
+                            <img class=" img-circle" width="45px" ng-src="avatars/{{data.createdBy.ref.uuid}}?$index" class="lock-avatar" alt="No Avatar"
+                                onerror="this.src='avatars/default.png';" />
+                        </div>
+                        <div class="mt-comment-body">
+                            <div class="mt-comment-info">
+                                <span class="mt-comment-author">{{data.createdBy.ref.name}}</span>
+                            </div>
+                            <div class="mt-comment-text">
+                                <show-more text="data.desc" limit="50"> </show-more>
+                            </div>
+                            <div class="mt-comment-details">
+                                <ul class="mt-comment-actions" style="padding-right:3%;">
+                                    <!-- <li ng-if="data.isDownloadable">
+                                        <a href="#" tooltip-placement="top" uib-tooltip="Download">
+                                            <i class="fa fa-download" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i>
+                                        </a>
+                                    </li> -->
+                                    <li>
+                                        <a href="#" tooltip-placement="top" uib-tooltip="Delete" ng-disabled="privileges.indexOf('Delete') == -1" ng-click="delete(data.id)">
+                                            <i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <br>
+                                <div class="list-files" ng-show="data.uploadExecInfo.length >0" ng-repeat="f in data.uploadExecInfo | limitTo: data.limitUploadExecInfo">
+                                    <span class="list-file-name">{{f.ref.name}}</span>
+                                    <i class="fa fa-download" style="float:right;color: #777;" ng-click="download(f)"></i>
+                                </div>
+                                <a href="javascript;;" ng-show ="data.uploadExecInfo.length >1 && data.limitUploadExecInfo ==1"  style="padding:11px" ng-click="ShowMore($index);" >Show More</a>
+                                <a href="javascript;;" ng-show ="data.uploadExecInfo.length >0 && data.limitUploadExecInfo >1" style="padding:11px" ng-click="ShowLess($index);" >Show Less</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mt-comment-text">
-                        <form novalidate="novalidate" name="myform" ng-submit="submit()">
-                            <div class="input-group form-group">
-                                <input type="text" required class="form-control" ng-disabled="isPrivlage" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."  disable-validation-message="">
-                                <div class="input-group-btn">
-                                    <button type="submit" class="btn green" ng-disabled="isPrivlage">
-                                        <i class="icon-paper-clip"></i>
-                                    </button>
+                </div>
+                <div class="centercontent" style="color:blue" ng-if="commentResult.length ==0"> No Comment</div>
+            </div>
+            <!-- style="height:20%;padding: 0 0 0 1%;overflow-y:auto" -->
+            <div class="page-quick-sidebar-chat-user-form">
+                <div class="mt-comments">
+                    <div class="mt-comment comment-panel-mt-comment">
+                        <div class="mt-comment-img">
+                            <img class=" img-circle" width="45px" ng-src="avatars/{{currentUser.uuid}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';"/>
+                        </div>
+                        <div class="mt-comment-body">
+                            <div class="mt-comment-info">
+                                <span class="mt-comment-author">{{currentUser.name}}</span>
+                            </div>
+                            <div class="mt-comment-text">
+                                <form novalidate="novalidate" name="myform" ng-submit="submit()">
+                                    <div class="input-group form-group">
+                                        <input type="text" required class="form-control" ng-disabled="isPrivlage" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."
+                                            disable-validation-message="">
+                                        <div class="input-group-btn">
+                                            <button type="submit" class="btn green" ng-disabled="isPrivlage || isSubmitDisabled">
+                                                <i class="icon-paper-clip"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-comment-details">
+                                <ul class="mt-comment-actions" style="padding-right:6%;margin-top:-4px;">
+                                    <li>
+                                        <label class="input-group-btn" style="width:auto" tooltip-placement="top" uib-tooltip="upload">
+                                            <input id="avatar" onchange="readfileName(this)" type="file" ng-model="file" style="display:none">
+                                            <i class="fa fa-upload" style="font-size: 20px;color: #79869a;"></i>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <br>
+                                <div class="list-files" ng-show="file.length >0" ng-repeat="f in file" style="">
+                                    <span class="list-file-name">{{f.name}}</span>
+                                    <span style="color: #777;">({{f.size}}K)</span>
+                                    <i class="fa fa-time" ng-disabled="isSubmitDisabled" ng-click="clearFile($index)" style="float:right;color: #777;"></i>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="mt-comment-details">
-                         <ul class="mt-comment-actions">
-                            <li>
-                              <a href="#"><i class="fa fa-upload"></i></a>
-                          </li>
-                          <!-- <li>
-                              <a href="#">Delete</a>
-                          </li>  -->
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
