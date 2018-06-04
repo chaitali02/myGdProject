@@ -5191,6 +5191,123 @@
 		            "name" : "OperatorAdd"
 				},
 				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "afb224a3-52b0-4e14-9b71-a2cf2da327df",
+		 			"version" : null,
+		            "name" : "CommentView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "ca6fb3eb-3de7-4741-8a89-6baa09499a2d",
+		 			"version" : null,
+		            "name" : "CommentRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "49964d5c-1a45-4ee0-9669-c79921bd5c33",
+		 			"version" : null,
+		            "name" : "CommentDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "239a3ddf-dc0b-4bb9-9f21-fd739d84c586",
+		 			"version" : null,
+		            "name" : "CommentAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "69fdc7a8-03d9-440b-b383-950879f89af9",
+		 			"version" : null,
+		            "name" : "TagView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "9459600c-cecd-4bc7-aec6-f3aecc8a2ca6",
+		 			"version" : null,
+		            "name" : "TagUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "3affec5b-9567-466d-86ae-7e1d8dc5bad7",
+		 			"version" : null,
+		            "name" : "TagRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "8dcf699d-674a-45fb-a29c-3fb9b4ccf612",
+		 			"version" : null,
+		            "name" : "TagPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "aae63a56-cf40-43a0-b0fc-3d1110742a98",
+		 			"version" : null,
+		            "name" : "TagExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "3a8a8cf1-873d-4c45-9e94-b761d4d40d2a",
+		 			"version" : null,
+		            "name" : "TagEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2e5a678e-4f94-4692-94ba-6f186c4a16ed",
+		 			"version" : null,
+		            "name" : "TagDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "32774a82-8056-4e7d-8ce2-0ad93de54ecb",
+		 			"version" : null,
+		            "name" : "TagClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "dd014185-9d1a-4d0c-bf69-7ff083ae87c8",
+		 			"version" : null,
+		            "name" : "TagAdd"
+				},
+				"value" : null
 		}
 
     ]

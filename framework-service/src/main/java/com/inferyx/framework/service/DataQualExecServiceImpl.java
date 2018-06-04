@@ -502,7 +502,6 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 		dataQualList = (List<DataQual>) mongoTemplate.find(query, DataQual.class);
 		
 		for (DataQual dq : dataQualList) {
-			System.out.println("UUID : "+dq.getUuid());
 			DataQualExecObjList = findDataQualExecByDataqual(dq.getUuid(), startDate, endDate, null, null);
 			if(!DataQualExecObjList.isEmpty()) {
 				ExecObjList.addAll(DataQualExecObjList);

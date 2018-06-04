@@ -11,16 +11,21 @@ InferyxApp.factory('dagValidationSvc',function(dagMetaDataService){
     return inboundLinks.length == 0 && s==='stage' && dagMetaDataService.validTaskTypes.indexOf(t) > -1;
   }
   function taskToTask (s,t,inboundLinks,g,cellViewS,cellViewT){
+    //console.log(g.getConnectedLinks(cellViewS, { inbound: true }))
+   // console.log(g.getConnectedLinks(cellViewT, { inbound: true }))
     var notLinkedWithStage = true;
     if(inboundLinks.length > 0){
       var firstLinkedCell = g.getCell(inboundLinks[0].attributes.source.id);
-      notLinkedWithStage = firstLinkedCell.attributes.elementType == 'stage' ? false : true;
+      console.log(g)
+      notLinkedWithStage = false//firstLinkedCell.attributes.elementType == 'stage' ? false : true;
     }
     if(cellViewS.model.attributes.parentStage && cellViewT.model.attributes.parentStage && cellViewS.model.attributes.parentStage != cellViewT.model.attributes.parentStage){
       return false;
     }
     return notLinkedWithStage && dagMetaDataService.validTaskTypes.indexOf(s) > -1 && dagMetaDataService.validTaskTypes.indexOf(t) > -1;
   }
+
+ 
   obj.validate = function (graph,cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
     var isValid = false;
     // console.log(arguments);

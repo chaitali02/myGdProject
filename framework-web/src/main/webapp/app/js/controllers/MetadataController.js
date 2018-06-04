@@ -11,6 +11,7 @@ MetadataModule.controller('MetadataController', function ($location, $filter, da
 		$sessionStorage.fromStateName = fromState.name
 		$sessionStorage.fromParams = fromParams
 	});
+
 	$scope.action = function (data, mode) {
 		console.log(data);
 		var uuid = data.uuid;
@@ -219,16 +220,38 @@ MetadataModule.controller('MetadataController', function ($location, $filter, da
 
 
 /* Start MetadataDatapodController*/
-MetadataModule.controller('MetadataDatapodController', function ($location, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope) {
+MetadataModule.controller('MetadataDatapodController', function ($location, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope,commentService) {
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});   
+		
+		
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});   ;
 	}
 	else {
 		$scope.isAdd = true;
@@ -244,7 +267,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
 	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer','decimal'];
-	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle']
+	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle', 'postgres']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;
 	$scope.isShowSimpleData = false
@@ -267,6 +290,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		content: 'Dashboard deleted Successfully',
 		timeout: 3000 //time in ms
 	};
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
+	
 
 	$scope.pagination = {
 		currentPage: 1,

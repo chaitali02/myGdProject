@@ -228,7 +228,7 @@ public class MapTaskParser extends TaskParser {
 		List<MetaIdentifier> datapodList = null;
 		
 		if (dimensionList == null || dimensionList.size() <= 0) {
-			System.out.println("No dimensions. Aborting getDimensionDefinedTables");
+			//System.out.println("No dimensions. Aborting getDimensionDefinedTables");
 			return null;
 		}
 		

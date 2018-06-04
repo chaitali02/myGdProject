@@ -37,6 +37,7 @@ if [[ $action = "refresh" ]] ; then
 	db.createCollection(\"dataset\");
 	db.createCollection(\"datasource\");
 	db.createCollection(\"dimension\");
+	db.createCollection(\"distribution\");
 	db.createCollection(\"expression\");
 	db.createCollection(\"filter\");
 	db.createCollection(\"formula\");

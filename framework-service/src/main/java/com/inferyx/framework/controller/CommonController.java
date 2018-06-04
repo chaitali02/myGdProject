@@ -39,6 +39,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Message;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
@@ -279,6 +281,7 @@ public class CommonController<T> {
 		return null;
     }
 	
+	
 	@RequestMapping(value = "/getAllLatestCompleteObjects", method = RequestMethod.GET)
 	public @ResponseBody String getAllLatestCompleteObjects(@RequestParam("type") String type,
 			@RequestParam(value="active", required=false) String active,
@@ -287,5 +290,37 @@ public class CommonController<T> {
 		List<?> baseEntityList = commonServiceImpl.getAllLatestCompleteObjects(type,active);
 		return objectWriter.writeValueAsString(baseEntityList);
 	}
+	
+	
+	
+	@RequestMapping(value = "/uploadCommentFile", method = RequestMethod.POST)
+	public @ResponseBody boolean uploadCommentFile(HttpServletRequest request,
+											   @RequestParam("file") List<MultipartFile> multiPartFile, 
+											   @RequestParam("fileName") String filename,
+											   @RequestParam("uuid") String uuid,
+											   @RequestParam(value = "type", required = false) String type,
+											   @RequestParam(value = "action", required = false) String action)
+											throws IOException, JSONException, ParseException {
+		boolean result = commonServiceImpl.uploadCommentFile(multiPartFile, filename, type,uuid);
+		
+		return result;
+	}
+	
+	
+	@RequestMapping("/comment/download")
+    public HttpServletResponse download(@RequestParam(value = "fileType",required = false) String fileType,
+    						@RequestParam(value = "fileName") String fileName,
+    						HttpServletRequest request,
+    						HttpServletResponse response,
+    						@RequestParam(value = "uuid" ) String uuid){
+		try {
+			response = commonServiceImpl.download(fileType, fileName, response,uuid);
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+    }
 
 }

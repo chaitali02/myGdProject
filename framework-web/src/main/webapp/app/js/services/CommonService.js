@@ -13,6 +13,17 @@
       return $http({
         method: 'GET',
         url:fullUrl,
+       
+      }).then(function(response, status, headers) {
+        return response;
+      })
+    }
+    factory.httpGet1 = function(url) {
+      var fullUrl = baseUrl + url
+      return $http({
+        method: 'GET',
+        url:fullUrl,
+        responseType : 'arraybuffer'
       }).then(function(response, status, headers) {
         return response;
       })
@@ -238,6 +249,17 @@
 
     this.SaveFile=function(filename,data,type){
       var url="admin/upload?action=edit&fileName="+filename+"&type="+type+"&fileType=zip"
+  		var deferred = $q.defer();
+  	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
+    	    var onSuccess=function(response){
+      	    deferred.resolve({
+                data:response
+             });
+          }
+         return deferred.promise;
+    }
+    this.uploadCommentFile=function(filename,data,uuid,type){
+      var url="common/uploadCommentFile?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid
   		var deferred = $q.defer();
   	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
     	    var onSuccess=function(response){
@@ -754,6 +776,48 @@
   
       return deferred.promise;
     }
-  });
+    this.submit = function(data,type){
+      var deferred = $q.defer();
+      var url="common/submit?action=edit&type="+type
+      CommonFactory.httpPost(url,data).then(function (response) { onSuccess(response.data) });
+      var onSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    }
 
+    this.getCommentByType = function(uuid,type) {
+      var deferred = $q.defer();
+      var url;
+        url = "metadata/getCommentByType?uuid=" + uuid+"&type="+type;
+    
+      url += '&action=view'
+      CommonFactory.httpGet(url).then(function(response) {
+        onSuccess(response.data)
+      });
+      var onSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    }
+    
+    this.download=function(fileName,uuid,fileType){
+      var url="common/comment/download?action=view&type=downloadexec&fileType="+fileType+"&fileName="+fileName+"&uuid="+uuid;
+      var deferred = $q.defer();
+      CommonFactory.httpGet1(url).then(function(response){onSuccess(response)});
+      var onSuccess=function(response){
+          deferred.resolve({
+              data:response
+          });
+      }
+      return deferred.promise;
+  }
+    
+  });
+  
+  
 })();

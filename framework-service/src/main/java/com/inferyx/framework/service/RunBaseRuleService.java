@@ -567,7 +567,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}			
-			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
