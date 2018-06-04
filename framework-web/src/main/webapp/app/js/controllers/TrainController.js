@@ -11,18 +11,24 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.isEdit=false;
     $scope.isversionEnable=false;
     $scope.isAdd=false;
+    $scope.isDragable="false";
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
+    $scope.isDragable="true";
   }
   else{
     $scope.isAdd=true;
+    $scope.isDragable="true";
   }
   $scope.mode = "false"
   $scope.isSubmitEnable = false;
   $scope.trainData;
+  $scope.trainData={};
+  $scope.trainData.trainPercent=70;
+  $scope.trainData.valPercent=30; 
   $scope.showForm = true;
   $scope.data = null;
   $scope.showGraphDiv = false
@@ -124,6 +130,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     }
   }
   $scope.getAllLetestSource = function () {
+  
     TrainService.getAllLatest($scope.selectSourceType).then(function (response) { onGetAllLatest(response.data) });
     var onGetAllLatest = function (response) {
       $scope.allSource = response;
@@ -251,13 +258,13 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       selectModel.name = response.dependsOn.ref.name;
       selectModel.version = " ";
       $scope.selectModel = selectModel;
-
+      $scope.selectSourceType=response.source.ref.type;
       var selectSource = {};
       $scope.selectSource = null;
       selectSource.uuid = response.source.ref.uuid;
       selectSource.name = response.source.ref.name;
       $scope.selectSource = selectSource;
-      $scope.getAllAttribute();
+      $scope.onChangeSourceType();
       var selectLabel = {};
       $scope.selectLabel=null
       selectLabel.uuid = response.labelInfo.ref.uuid;

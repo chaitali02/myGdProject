@@ -47,7 +47,7 @@ public class ReconExecServiceImpl extends BaseRuleExecTemplate {
 		super.kill(uuid, version, MetaType.reconExec);
 	}
 	
-public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
+	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
 		
 		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
 		MetaIdentifierHolder resultHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getResult").invoke(exec);

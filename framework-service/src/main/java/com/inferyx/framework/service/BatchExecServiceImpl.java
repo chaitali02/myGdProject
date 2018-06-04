@@ -597,6 +597,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			indivStageExe.setReconInfo(reconInfo);
 			FutureTask<String> futureTask = new FutureTask<String>(indivStageExe);
 			stageExecutor.execute(futureTask);
+			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + indvStg.getStageId() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 			taskList.add(futureTask);
 			taskThreadMap.put("Stage_" + dagExec.getUuid() + "_" + stage.getStageId(), futureTask);
 		}

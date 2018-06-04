@@ -55,7 +55,6 @@ public class ParquetWriter implements IWriter {
 				
 				List<Attribute> attributes = datapod.getAttributes();
 				for(Attribute attribute : attributes){
-					System.out.println(attribute.getName());
 					df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)exec.getDataType(attribute.getType())));
 				} 				
 			} 

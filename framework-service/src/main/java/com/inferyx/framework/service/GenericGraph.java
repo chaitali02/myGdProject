@@ -125,19 +125,19 @@ public class GenericGraph {
 		boolean findRefs = false;
     	while (iter.hasNext()) {
     		String key = iter.next();
-    		System.out.println(key);
+    		logger.info(key);
     		jsonArray = jsonObject.optJSONArray(key);
     		nestedObj = jsonObject.optJSONObject(key);
     		value = jsonObject.optString(key);
     		if (jsonArray != null) {
-    			System.out.println(" Array in : " + key);
+    			logger.info(" Array in : " + key);
     			if (key.startsWith("ref")) {
     				findRefs = Boolean.TRUE;
     			}
     			parseJsonArray(srcUuid, jsonArray, findRefs, verticesRowList, edgeRowList, verticesRowMap, edgeRowMap);
     			findRefs = Boolean.FALSE;
     		} else if (nestedObj != null) {
-    			System.out.println(" Nested object in : " + key);
+    			logger.info(" Nested object in : " + key);
     			if (key.equals("ref")) {
     				String uuid = nestedObj.getString("uuid");
     				String version = nestedObj.optString("version");
@@ -146,7 +146,7 @@ public class GenericGraph {
     					continue;
     				} else {
     					createEdge(srcUuid, uuid, version, key, edgeRowList, edgeRowMap);
-    					System.out.println("Create edge for : " + type + " : " + uuid + " : " + version);
+    					logger.info("Create edge for : " + type + " : " + uuid + " : " + version);
     				}
     			} else {
     				parseJsonObject(srcUuid, nestedObj, verticesRowList, edgeRowList, verticesRowMap, edgeRowMap);
@@ -171,15 +171,15 @@ public class GenericGraph {
     		nestedObj = jsonArray.optJSONObject(i);
     		value = jsonArray.optString(i);
     		if (nestedArray != null) {
-    			System.out.println(" Array in : " + i);
+    			logger.info(" Array in : " + i);
     			parseJsonArray(srcUUid, nestedArray, Boolean.FALSE, verticesRowList, edgeRowList, verticesRowMap, edgeRowMap);
     		} else if (nestedObj != null) {
-    			System.out.println(" Nested object in : " + i);
+    			logger.info(" Nested object in : " + i);
     			if (findRefs) {
     				String uuid = nestedObj.getString("uuid");
     				String version = nestedObj.optString("version");
     				String type = nestedObj.getString("type");
-    				System.out.println("Create edge for : " + type + " : " + uuid + " : " + version);
+    				logger.info("Create edge for : " + type + " : " + uuid + " : " + version);
     			}
     			parseJsonObject(srcUUid, nestedObj, verticesRowList, edgeRowList, verticesRowMap, edgeRowMap);
     		} else if (value != null) {

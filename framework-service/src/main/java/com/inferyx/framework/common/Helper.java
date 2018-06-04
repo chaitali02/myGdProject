@@ -25,10 +25,8 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.lucene.analysis.util.CharArrayMap.EntrySet;
 import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.sql.types.DataTypes;
-import org.python.antlr.PythonParser.return_stmt_return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +36,7 @@ import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.Condition;
 import com.inferyx.framework.domain.Dag;
@@ -47,9 +46,9 @@ import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroup;
 import com.inferyx.framework.domain.DataQualGroupExec;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Dimension;
 import com.inferyx.framework.domain.Distribution;
@@ -797,5 +796,60 @@ public class Helper {
             default: return null;
 		}
 	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public MetaType getExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case map : return MetaType.mapExec;
+		case load : return MetaType.loadExec;
+		case rule : return MetaType.ruleExec;
+		case rulegroup : return MetaType.rulegroupExec;
+		case dq : return MetaType.dqExec;
+		case dqgroup : return MetaType.dqgroupExec;
+		case profile : return MetaType.profileExec;
+		case profilegroup : return MetaType.profilegroupExec;
+		case recon : return MetaType.reconExec;
+		case recongroup : return MetaType.recongroupExec;
+		case train : return MetaType.trainExec;
+		case simulate : return MetaType.simulateExec;
+		case predict : return MetaType.predictExec;
+		case operator : return MetaType.operatorExec;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public BaseExec createExec(MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case mapExec : return new MapExec();
+		case loadExec : return new LoadExec();
+		case ruleExec : return new RuleExec();
+		case rulegroupExec : return new RuleGroupExec();
+		case dqExec : return new DataQualExec();
+		case dqgroupExec : return new DataQualGroupExec();
+		case profileExec : return new ProfileExec();
+		case profilegroupExec : return new ProfileGroupExec();
+		case reconExec : return new ReconExec();
+		case recongroupExec : return new ReconGroupExec();
+		case trainExec : return new TrainExec();
+		case simulateExec : return new SimulateExec();
+		case predictExec : return new PredictExec();
+		case operatorExec : return new OperatorExec();
+		default : return null;
+		}
+	}
+	
 	
 }

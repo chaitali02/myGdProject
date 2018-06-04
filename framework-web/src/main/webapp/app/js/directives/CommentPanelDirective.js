@@ -89,14 +89,20 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                     type: contentType
                   });
                   var url = window.URL.createObjectURL(blob);
-                  linkElement.setAttribute('href', url);
-                  linkElement.setAttribute("download",filename);
-                  var clickEvent = new MouseEvent("click", {
-                    "view": window,
-                    "bubbles": true,
-                    "cancelable": false
-                  });
-                  linkElement.dispatchEvent(clickEvent);
+                  console.log(url)
+                  const data = window.URL.createObjectURL(blob);
+                //   linkElement.setAttribute('href', url);
+                //   linkElement.setAttribute("download",filename);
+                //   var clickEvent = new MouseEvent("click", {
+                //     "view": window,
+                //     "bubbles": true,
+                //     "cancelable": false
+                //   });
+                //   linkElement.dispatchEvent(clickEvent);
+                window.URL.revokeObjectURL(data);
+                
+
+
                   } catch (ex) {
                   console.log(ex);
                   }

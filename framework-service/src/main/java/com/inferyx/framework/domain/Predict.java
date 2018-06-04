@@ -25,6 +25,25 @@ public class Predict extends BaseEntity {
 	private MetaIdentifierHolder target;
 	private List<FeatureAttrMap> featureAttrMap;
 	private AttributeRefHolder labelInfo;
+	private MetaIdentifierHolder trainInfo;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the trainInfo
+	 */
+	public MetaIdentifierHolder getTrainInfo() {
+		return trainInfo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param trainInfo the trainInfo to set
+	 */
+	public void setTrainInfo(MetaIdentifierHolder trainInfo) {
+		this.trainInfo = trainInfo;
+	}
 
 	/**
 	 * @Ganesh

@@ -394,5 +394,30 @@ public class ModelController {
 		response = modelServiceImpl.downloadLog(trainExecUUID, trainExecVersion, response, runMode);
 	}
 
+	@RequestMapping(value = "/getTrainByModel", method = RequestMethod.GET)
+	public List<Train> getTrainByModel(@RequestParam(value = "uuid") String modelUuid,
+									   @RequestParam(value = "version", required = false) String modelVersion,
+									   @RequestParam(value = "type", required = false) String type,
+									   @RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		return modelServiceImpl.getTrainByModel(modelUuid, modelVersion);
+	}	
 	
+	@RequestMapping(value = "/train/kill",  method = RequestMethod.GET)
+	public void killTrain(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action) {
+		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.trainExec);
+	}
+	
+	@RequestMapping(value = "/train/restart",  method = RequestMethod.GET)
+	public void restartTrain(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+							@RequestBody(required = false) ExecParams execParams,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action,
+							@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		modelExecServiceImpl.restartTrain(type, trainExecUuid, trainExecVersion, execParams, runMode);
+	}
 }

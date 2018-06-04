@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateModelController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location) {
+DatascienceModule.controller('CreateModelController', function($state,$stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location,$anchorScroll) {
   $scope.featuureType=["integer","string","double"];
   $scope.mode = "false";
 
@@ -11,14 +11,17 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     $scope.isEdit=false;
     $scope.isversionEnable=false;
     $scope.isAdd=false;
+    $scope.isDragable="false";
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
+    $scope.isDragable="true";
   }
   else{
     $scope.isAdd=true;
+    $scope.isDragable="true";
   }
   $scope.isSubmitEnable = true;
   $scope.modeldata;
@@ -78,6 +81,14 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   $scope.countBack = function() {
     $scope.continueCount = $scope.continueCount - 1;
     $scope.isSubmitShow = false;
+  }
+
+  $scope.focusRow = function(rowId){
+    
+    $timeout(function() {
+      $location.hash(rowId);
+      $anchorScroll();
+    });
   }
 
   $scope.showGraph = function(uuid, version) {
@@ -149,6 +160,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     feature.maxVal=""
     feature.paramListInfo={};
     $scope.featureTableArray.splice($scope.featureTableArray.length, 0, feature);
+    $scope.focusRow(len-1)
   }
 
   $scope.removeRow = function() {

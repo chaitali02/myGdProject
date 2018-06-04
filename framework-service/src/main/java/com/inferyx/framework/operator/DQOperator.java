@@ -155,7 +155,7 @@ public class DQOperator {
 		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
 					dagExec.getVersion());
-		}
+		} 
 		datastoreServiceImpl.setRunMode(runMode);
 		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 				runMode);
@@ -350,7 +350,7 @@ public class DQOperator {
 		List<Attribute> rowKeyAttrList = null;
 		rowKeyAttrList = getRowKeyList(datapod);
 		if (rowKeyAttrList == null || rowKeyAttrList.isEmpty()) {
-			System.out.println("Datapod doesnot have row key. Hence aborting ref integrity check. ");
+			//System.out.println("Datapod doesnot have row key. Hence aborting ref integrity check. ");
 			return EMPTY;
 		}
 		Datapod datapodRef = (Datapod) daoRegister.getRefObject(dq.getRefIntegrityCheck().getRef());

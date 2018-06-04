@@ -83,13 +83,13 @@ public class DataSourceFactory {
 		}
 	}
 
-	public IReader getDatapodReader(Datapod dp, MetadataUtil commonActivity) throws JsonProcessingException {
-		String dataSourceUUID = dp.getDatasource().getRef().getUuid();
-		String dataSourceVersion = dp.getDatasource().getRef().getVersion();
-
-		Datasource ds = (Datasource) commonActivity
-				.getRefObject(new MetaIdentifier(MetaType.datasource, dataSourceUUID, dataSourceVersion));
-
+	public IReader getDatapodReader(Datapod dp, MetadataUtil commonActivity) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		String dataSourceUUID = dp.getDatasource().getRef().getUuid();
+//		String dataSourceVersion = dp.getDatasource().getRef().getVersion();
+//
+//		Datasource ds = (Datasource) commonActivity
+//				.getRefObject(new MetaIdentifier(MetaType.datasource, dataSourceUUID, dataSourceVersion));
+		Datasource ds = commonServiceImpl.getDatasourceByApp();
 		String dataSourceType = ds.getType();
 
 		switch (dataSourceType.toUpperCase()) {

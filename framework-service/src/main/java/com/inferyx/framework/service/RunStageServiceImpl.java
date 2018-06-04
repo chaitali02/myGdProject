@@ -600,6 +600,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	
 	@Override
 	public String call() throws Exception {
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " status RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		checkDependencyStatus();
 		
@@ -639,6 +640,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	}
 	
 	public String execute() throws Exception {
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " start execute in RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		List<Status> stageStatusList = stageExec.getStatusList();
 		
@@ -898,6 +900,7 @@ public class RunStageServiceImpl implements Callable<String> {
 			}
 		}
 	*/	
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		return name;
 	}
 	
@@ -1163,6 +1166,7 @@ public class RunStageServiceImpl implements Callable<String> {
 		indivTaskExe.setReconServiceImpl(reconServiceImpl);
 		indivTaskExe.setReconGroupServiceImpl(reconGroupServiceImpl);
 		taskExecutor.execute(futureTask);
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " taskExec : " + indvTask.getTaskId() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		taskList.add(futureTask);
 		taskThreadMap.put("Task_" + dagExec.getUuid() + "_" + indvTaskExec.getTaskId(), futureTask);
 	}

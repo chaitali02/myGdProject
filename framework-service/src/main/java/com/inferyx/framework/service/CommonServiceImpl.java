@@ -21,13 +21,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.FileNameMap;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -45,9 +42,6 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.spark.sql.Dataset;
 import org.codehaus.jettison.json.JSONException;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json4s.jackson.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -144,9 +138,9 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
-import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
@@ -164,7 +158,6 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -175,6 +168,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
@@ -183,8 +177,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.GraphRegister;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.result.UpdateResult;
 
 @Service
 public class CommonServiceImpl <T> {
@@ -421,6 +413,8 @@ public class CommonServiceImpl <T> {
 	ICommentDao iCommentDao;
 	@Autowired
 	ITagDao iTagDao;
+	@Autowired
+	Helper helper;
 	
 	
 	public ITagDao getiTagDao() {
@@ -3251,19 +3245,35 @@ public class CommonServiceImpl <T> {
 					MetaIdentifier featureIdentifier = featureHolder.getRef();
 					MetaIdentifier attributeIdentifier = attributeHolder.getRef();
 					Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString());
-					Datapod datapod = (Datapod) getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString());
+					Object source = getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString());
+					
 					for(Feature feature : model.getFeatures()) {
 						if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
 							featureHolder.setFeatureName(feature.getName());
 							featureAttrMap.setFeature(featureHolder);
 						}
 					}
-					for(Attribute attribute : datapod.getAttributes()) {
-						if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
-							attributeHolder.setAttrName(attribute.getName());
-							featureAttrMap.setAttribute(attributeHolder);
+					if(source instanceof Datapod)
+						for(Attribute attribute : ((Datapod)source).getAttributes()) {
+							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
+								attributeHolder.setAttrName(attribute.getName());
+								featureAttrMap.setAttribute(attributeHolder);
+							}
 						}
-					}
+					else if(source instanceof DataSet)
+						for(AttributeSource attributeSource : ((DataSet)source).getAttributeInfo()) {
+							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+								featureAttrMap.setAttribute(attributeHolder);
+							}
+						}
+					else if(source instanceof Rule)
+						for(AttributeSource attributeSource : ((Rule)source).getAttributeInfo()) {
+							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+								featureAttrMap.setAttribute(attributeHolder);
+							}
+						}
 				}
 				Train train = (Train) object;
 				train.setFeatureAttrMap(featureAttrMapList);
@@ -3283,7 +3293,7 @@ public class CommonServiceImpl <T> {
 			if(source instanceof Datapod) {
 				Datapod datapod = (Datapod) source;
 				attributeName = datapod.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
-			} else if(source instanceof Dataset) {
+			} else if(source instanceof DataSet) {
 				DataSet dataset = (DataSet) source;
 				attributeName = dataset.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
 			} else if(source instanceof Rule) {
@@ -3408,8 +3418,45 @@ public class CommonServiceImpl <T> {
         }
 	return response;
 	}
+
+
+	/**
+	 * 
+	 * @param metaType
+	 * @param ref
+	 * @return
+	 */
+	public T createExec(MetaType metaType, MetaIdentifier ref) {
+		logger.info("Metatype string : " + metaType.toString());
+		BaseExec baseExec = helper.createExec(metaType);
+		logger.info(baseExec);
+		T object = (T) Helper.getDomainClass(metaType).cast(baseExec);
+		baseExec.setDependsOn(new MetaIdentifierHolder(ref));
+		baseExec.setBaseEntity();
+		baseExec.setName(ref.getName());
+		return object;
+	}
 	
-	
+	/**
+	 * 
+	 * @param metaType
+	 * @param ref
+	 * @param taskExec
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
+	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		T execObject = (T)createExec(metaType, ref);
+		MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType, String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
+				String.class.cast(execObject.getClass().getMethod("getVersion", null).invoke(execObject, null)));
+		taskExec.getOperators().get(0).getOperatorInfo().setRef(metaExecIdentifier);
+		return execObject;
+	}
+
 	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
 			String type, String uuid, String action)
 			throws FileNotFoundException, IOException, JSONException, ParseException {
@@ -3500,5 +3547,4 @@ public class CommonServiceImpl <T> {
 		return (List<MetaIdentifierHolder>) metaIdentifierHolderList;
 
 	}
-
 }
