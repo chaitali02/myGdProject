@@ -144,7 +144,7 @@ export class SidebarComponent {
         type: "model"
       },
       {
-        name: "Parammeter List",
+        name: "Parameter List",
         type: "paramlist"
       },
       {

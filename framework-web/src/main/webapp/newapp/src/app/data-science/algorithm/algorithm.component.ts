@@ -63,15 +63,17 @@ export class AlgorithmComponent implements OnInit {
     ] 
 
     this.librarytypesOption=[
-      {"value" : "sparkML", "label" : "sparkML"},
+      {"value" : "SPARKML", "label" : "SPARKML"},
       {"value" : "R", "label" : "R"},
-      {"value" : "java", "label" : "java"}
+      {"value" : "JAVA", "label" : "JAVA"}
     ]
 
     this.typesOption=[
-      {"value" : "clustering", "label" : "clustering"},
-      {"value" : "classification", "label" : "classification"},
-      {"value" : "regression", "label" : "regression"}
+      {"value" : "CLUSTERING", "label" : "CLUSTERING"},
+      {"value" : "CLASSIFICATION", "label" : "CLASSIFICATION"},
+      {"value" : "REGRESSION", "label" : "REGRESSION"},
+      {"value" : "SIMULATION", "label" : "SIMULATION"}
+
     ]
   }
 

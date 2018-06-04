@@ -122,7 +122,7 @@ export class SimulationComponent implements OnInit {
         // this.getAllLatestSource(this.selectSourceType)
         // this.getAllLatestTarget(this.selectTargetType)
         //this.getAttribute()
-        this.onChangeModel()
+        //  this.onChangeModel()
       }
 
     })
@@ -298,7 +298,6 @@ export class SimulationComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    debugger
     this.simulation = response;
     this.uuid = response.uuid;
     const version: Version = new Version;
