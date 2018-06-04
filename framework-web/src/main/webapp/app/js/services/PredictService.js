@@ -144,6 +144,17 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
         return response;
       })
   }
+  factory.findTrainByModel = function (uuid,version,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      method: 'GET',
+      url: url + "model/getTrainByModel?action=view&uuid=" + uuid +"&version="+version+"&type=" + type,
+
+    }).
+      then(function (response, status, headers) {
+        return response;
+      })
+  }
   return factory;
 })
 
@@ -152,6 +163,16 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
   this.getAllModelByType = function (flag, type) {
     var deferred = $q.defer();
     PredictFactory.findAllModelByType(flag, type).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
+  this.getTrainByModel = function (uuid,version,type) {
+    var deferred = $q.defer();
+    PredictFactory.findTrainByModel(uuid,version,type).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response

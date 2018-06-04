@@ -185,8 +185,24 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       }
       $scope.originalFeatureMapTableArray=featureMapTableArray;
       $scope.featureMapTableArray =featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);
+      $scope.getTrainByModel(true);
+    }
   }
-}
+
+  $scope.getTrainByModel=function(defaultValue){
+    PredictService.getTrainByModel($scope.selectModel.uuid,$scope.selectModel.version,"train").then(function(response) { onSuccessGetTrainByModel(response.data)});
+    var onSuccessGetTrainByModel = function(response) {
+      $scope.allTrain=response;
+      if(defaultValue){
+        $scope.selectTrain=response[0];
+      }
+    }
+  }
+  
+  $scope.onChangeTrain=function(){
+    $scope.getTrainByModel(true);
+  }
+
   $scope.onChangeTargeType=function(){
     if($scope.selectTargetType =='datapod'){
       $scope.isTargetNameDisabled=false;
@@ -236,6 +252,15 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       selectModel.uuid=response.dependsOn.ref.uuid;
       selectModel.name=response.dependsOn.ref.name;
       $scope.selectModel=selectModel;
+      $scope.getTrainByModel(false);
+      var selectTrain=null;
+      if(response.trainInfo !=null){
+        selectTrain={};
+        selectTrain.uuid=response.trainInfo.ref.uuid;
+        selectTrain.name=response.trainInfo.ref.name;
+      }
+      $scope.selectTrain=selectTrain;
+      
       var selectSource={};
       $scope.selectSource=null;
       selectSource.uuid=response.source.ref.uuid;
@@ -315,6 +340,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       $scope.getOneByUuidandVersion(uuid,version);
     },100)
   }
+
+
   $scope.submitModel = function() {
     $scope.isshowPredict = true;
     $scope.dataLoading = true;
@@ -338,6 +365,14 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     ref.uuid=$scope.selectModel.uuid;
     dependsOn.ref=ref;
     predictJson.dependsOn=dependsOn;
+
+    var trainInfo={};
+    var ref={};
+    ref.type="train";
+    ref.uuid=$scope.selectTrain.uuid;
+    trainInfo.ref=ref;
+    predictJson.trainInfo=trainInfo;
+
     var source={};
     var sourceref={};
     sourceref.type=$scope.selectSourceType;
