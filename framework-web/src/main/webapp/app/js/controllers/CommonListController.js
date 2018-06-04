@@ -66,6 +66,14 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     //console.log(fromParams)
     $sessionStorage.fromStateName = fromState.name
     $sessionStorage.fromParams = fromParams
+    console.log($http.pendingRequests)
+    $http.pendingRequests.forEach(function(request) {
+        if (request.cancel) {
+            request.cancel.resolve();
+        }
+      
+    });
+    console.log($http.pendingRequests)
   });
 
   $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype','operator'];
@@ -218,6 +226,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     });
   }
 
+  
   $scope.selectData = function (data) {
     $scope.caption = dagMetaDataService.elementDefs[data.type.toLowerCase()].caption;
     $scope.originalData = []

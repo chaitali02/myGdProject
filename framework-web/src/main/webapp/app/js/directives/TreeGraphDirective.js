@@ -453,12 +453,13 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
         </div>
       </div>-->.
       
-        <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">
+       <!-- <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">-->
+       <div class="col-md-2 col-md-offset-10" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;"> 
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="btn-group" ng-init="degree='1'">
-                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'1'" ng-disabled="{{mode}}" uncheckable>Downward</label>   
-                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'-1'" ng-disabled="{{mode}}" uncheckable>Upward</label>
+                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'1'" ng-disabled="{{mode}}" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></label>   
+                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'-1'" ng-disabled="{{mode}}" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
                     </div>
                 </div>
             </div>

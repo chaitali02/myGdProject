@@ -130,7 +130,6 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     }
   }
   $scope.getAllLetestSource = function () {
-  
     TrainService.getAllLatest($scope.selectSourceType).then(function (response) { onGetAllLatest(response.data) });
     var onGetAllLatest = function (response) {
       $scope.allSource = response;
@@ -264,7 +263,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       selectSource.uuid = response.source.ref.uuid;
       selectSource.name = response.source.ref.name;
       $scope.selectSource = selectSource;
-      $scope.onChangeSourceType();
+    //  $scope.onChangeSourceType();
+    $scope.getAllLetestSource();
+    $scope.getAllAttribute();
       var selectLabel = {};
       $scope.selectLabel=null
       selectLabel.uuid = response.labelInfo.ref.uuid;
