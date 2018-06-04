@@ -241,11 +241,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="portlet-body">
-                                                    <div class="">
                                                         <table class=" row-border hover table  table-striped table-bordered">
                                                             <thead>
                                                                 <tr>
-                                                                    <th style="width:5%; ">ID</th>
+                                                                    <th style="width:5%; ">ID</th> 
                                                                     <th style="width:15%;">Name</th>
                                                                     <th style="width:15%;">Type</th>
                                                                     <th style="width:25%;">Desc</th>
@@ -255,42 +254,42 @@
                                                                 </tr>
                                                                 <tbody>
                                                                     <tr *ngFor="let data of featureMapTableArray;let i=index">
-                                                                        <td>
+                                                                        <td>{{featureMapTableArray | json}}
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                <input type="text" class="form-control" [(ngModel)]="data.featureMapId" name="id+{{i}}" value="{{i}}" [disabled]="true">
+                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureId" name="id+{{i}}" value="{{i}}" [disabled]="true">
                                                                             </span>
-                                                                        </td>
+                                                                        </td> 
                                                                         <td>
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureName" name="sourceFeature+{{i}}" title="{{data.sourceFeature.dname}}"
+                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.datapodname" name="sourceFeature+{{i}}" title="{{data.sourceFeature.dname}}"
                                                                                     [disabled]="true">
                                                                             </span>
                                                                         </td>
                                                                         <td>
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureType" name="sourceFeature.fatureType+{{i}}"
-                                                                                    title="{{data.sourceFeature.featureType}}"
+                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.type" name="sourceFeature.type+{{i}}"
+                                                                                    title="{{data.sourceFeature.type}}"
                                                                                     [disabled]="true">
                                                                             </span>
                                                                         </td>
                                                                         <td>
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureDesc" name="sourceFeature.fatureDesc+{{i}}"
+                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.desc" name="sourceFeature.desc+{{i}}"
                                                                                     title="{{data.sourceFeature.featureDesc}}"
                                                                                     [disabled]="true">
                                                                             </span>
                                                                         </td>
                                                                         <td>
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureminVal" name="sourceFeature.fatureminVal+{{i}}"
-                                                                                    title="{{data.sourceFeature.featureminVal}}"
+                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.minVal" name="sourceFeature.minVal+{{i}}"
+                                                                                    title="{{data.sourceFeature.minVal}}"
                                                                                     [disabled]="true">
                                                                             </span>
                                                                         </td>
                                                                         <td>
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featuremaxVal" name="sourceFeature.faturemaxVal+{{i}}"
-                                                                                    title="{{data.sourceFeature.featuremaxVal}}"
+                                                                                <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.maxVal" name="sourceFeature.maxVal+{{i}}"
+                                                                                    title="{{data.sourceFeature.maxVal}}"
                                                                                     [disabled]="true">
                                                                             </span>
                                                                         </td>
@@ -305,7 +304,7 @@
                                                                       </td>-->
                                                                 </tbody>
                                                         </table>
-                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
