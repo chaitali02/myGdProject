@@ -37,6 +37,8 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Message;
+import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataFrameService;
 import com.inferyx.framework.service.MessageServiceImpl;
@@ -63,9 +65,9 @@ public class ParquetReader implements IReader
 	static final Logger logger = Logger.getLogger(ParquetReader.class);
 	
 	@Override
-	public DataFrameHolder read(Datapod dp, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds) throws IOException {
+	public ResultSetHolder read(Datapod dp, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds) throws IOException {
 		String tableName="";
-		DataFrameHolder dfmh = new DataFrameHolder();
+		ResultSetHolder rsHolder = new ResultSetHolder();
 		try {
 			String filePath = datastore.getLocation();
 			String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
@@ -83,13 +85,14 @@ public class ParquetReader implements IReader
 			DataFrameReader reader = sparkSession.read();
 			df = reader.load(filePath);
 			tableName = Helper.genTableName(filePath);
-			dfmh.setDataframe(df);
-			dfmh.setTableName(tableName);
+			rsHolder.setDataFrame(df);
+			rsHolder.setCountRows(df.count());
+			rsHolder.setType(ResultType.dataframe);
+			rsHolder.setTableName(tableName);
 		}catch (Exception e) {
 			e.printStackTrace();
 			String errorMessage = e.getMessage();
 			if(errorMessage.contains("Path does not exist:")) {
-				e.printStackTrace();
 				String message = null;
 				try {
 					message = e.getMessage();
@@ -107,9 +110,8 @@ public class ParquetReader implements IReader
 				}
 				throw new RuntimeException((message != null) ? message : "File path not exist.");
 			}
-		}
-		
-		return dfmh;
+		}		
+		return rsHolder;
 	}	
 
 }

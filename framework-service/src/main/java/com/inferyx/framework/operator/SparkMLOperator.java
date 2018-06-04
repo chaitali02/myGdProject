@@ -356,7 +356,7 @@ public class SparkMLOperator implements IModelOperator {
 
 				dfTask.printSchema();
 				IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
-				datapodWriter.write(dfTask, filePathUrl, targetDp, SaveMode.Append.toString());
+				datapodWriter.write(rsHolder, filePathUrl, targetDp, SaveMode.Append.toString());
 				return filePathUrl;
 			} else {
 				if (modelServiceImpl.save(modelName, trainedModel, sparkContext, filePathUrl))
