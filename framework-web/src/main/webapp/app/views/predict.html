@@ -204,9 +204,10 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Train Info</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                            <select name="trainName" select2 class="form-control" ng-disabled="{{mode}}" required data-ng-model="selectTrain" ng-options="r as r.name for r in allTrain track by r.uuid" ng-change="onChangeTrain()">
-                                            </select>
-                                            <input name="trainName" type="hidden"  ng-model="selectTrainl.uuid" required />
+                                               <select name="trainName" select2 class="form-control"  ng-disabled="{{mode}}" required data-ng-model="selectTrain" ng-options="r as r.name for r in allTrain track by r.uuid" ng-change="onChangeTrain()">
+                                                </select>
+                                            <input name="trainNameNull" type="hidden"   ng-model="selectTrain.uuid" required />   
+                                            
                                         </div>
                                     </div>
                                     <div class="form-group">

@@ -190,12 +190,18 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   }
 
   $scope.getTrainByModel=function(defaultValue){
-    PredictService.getTrainByModel($scope.selectModel.uuid,$scope.selectModel.version,"train").then(function(response) { onSuccessGetTrainByModel(response.data)});
+    PredictService.getTrainByModel($scope.selectModel.uuid,$scope.selectModel.version,"train").then(function(response) { onSuccessGetTrainByModel(response.data)},function(response){onError(response.data)});
     var onSuccessGetTrainByModel = function(response) {
       $scope.allTrain=response;
-      if(defaultValue){
-        $scope.selectTrain=response[0];
+      if(response && response.length ==0){
+        $scope.selectTrain=null;
       }
+      if(defaultValue){
+       // $scope.selectTrain=response[0];
+      }
+    }
+    var onError=function(response){
+      $scope.selectTrain=null;
     }
   }
   
@@ -253,6 +259,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       selectModel.name=response.dependsOn.ref.name;
       $scope.selectModel=selectModel;
       $scope.getTrainByModel(false);
+      $scope.selectTrain=null;
       var selectTrain=null;
       if(response.trainInfo !=null){
         selectTrain={};
