@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateModelController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location) {
+DatascienceModule.controller('CreateModelController', function($state,$stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location,$anchorScroll) {
   $scope.featuureType=["integer","string","double"];
   $scope.mode = "false";
 
@@ -80,6 +80,14 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     $scope.isSubmitShow = false;
   }
 
+  $scope.focusRow = function(rowId){
+    
+    $timeout(function() {
+      $location.hash(rowId);
+      $anchorScroll();
+    });
+  }
+
   $scope.showGraph = function(uuid, version) {
     $scope.showForm = false;
     $scope.showGraphDiv = true;
@@ -149,6 +157,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     feature.maxVal=""
     feature.paramListInfo={};
     $scope.featureTableArray.splice($scope.featureTableArray.length, 0, feature);
+    $scope.focusRow(len-1)
   }
 
   $scope.removeRow = function() {
