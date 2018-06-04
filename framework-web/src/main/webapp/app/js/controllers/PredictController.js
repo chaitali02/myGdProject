@@ -11,14 +11,17 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.isEdit=false;
     $scope.isversionEnable=false;
     $scope.isAdd=false;
+    $scope.isDragable="false";
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
+    $scope.isDragable="true";
   }
   else{
     $scope.isAdd=true;
+    $scope.isDragable="true";
   }
   $scope.mode="false"
   
