@@ -1767,7 +1767,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 	}
 	
 	public List<Train> getTrainByModel(String modelUuid, String modelVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		List<Train> trainList = null;
+		List<Train> trainList = new ArrayList<>();
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -1788,10 +1788,6 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		query.with(new Sort(Sort.Direction.DESC, "version"));
 		
 		trainList = mongoTemplate.find(query, Train.class);
-		if (trainList.size() > 0) {
-			return trainList;
-		} else {
-			throw new RuntimeException("No executed train collection available.");
-		}
+		return trainList;
 	}
 }
