@@ -841,7 +841,15 @@ public class SparkExecutor implements IExecutor {
 			e.printStackTrace();
 		}
 		IConnector connection = connFactory.getConnector(datasource.getType().toLowerCase());
-		IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+		IReader iReader;
+		try {
+			iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 
 		ConnectionHolder conHolder = connection.getConnection();
 		Object obj = conHolder.getStmtObject();
