@@ -1171,7 +1171,7 @@ public class GraphRegister<T> {
 		//ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		
-		System.out.println("Graph flag is set to " + graphFlag.isMode());
+		logger.info("Graph flag is set to " + graphFlag.isMode());
 		if (!graphFlag.isMode()) {
 			logger.info("Skipping building of graph.");
 		}

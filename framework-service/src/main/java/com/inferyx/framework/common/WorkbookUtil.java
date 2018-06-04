@@ -62,13 +62,11 @@ public class WorkbookUtil {
 
 		for (int i = 1; i <= rMap.size(); i++) {
 			columnDetails = rMap.get(new Integer(i).toString());
-			System.out.println(i);
 			HSSFRow nextrow = sheet3.createRow(5 + i);
 			Set<String> set = columnDetails.keySet();
 			int cellNum = 0;
 			for (String s2 : set) {
 				nextrow.createCell(cellNum).setCellValue(columnDetails.get(s2));
-				System.out.println("###########" + columnDetails.get(s2));
 				cellNum++;
 			}
 		}

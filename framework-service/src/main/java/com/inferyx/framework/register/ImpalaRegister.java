@@ -156,7 +156,8 @@ public class ImpalaRegister extends DataSourceRegister {
 
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error(e);
+			e.printStackTrace();
 		}
 		return registryList;
 	}
