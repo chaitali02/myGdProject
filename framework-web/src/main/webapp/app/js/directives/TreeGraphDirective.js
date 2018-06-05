@@ -7,47 +7,70 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
         },
         link: function (scope, element, attrs) {
             var menus = ["Show Details"];
-            var root;
+            var root, zoom;
+            var MOVE_STEP = 100;
+            scope.zoomSize = 10;
             var margin = {
                 top: 20,
                 right: 120,
                 bottom: 20,
                 left: 120
             },
-            width = 1060 - margin.right - margin.left,
-            height =600 - margin.top - margin.bottom;
+
+                width = 1060 - margin.right - margin.left,
+                height = 600 - margin.top - margin.bottom;
             var i = 0,
-            duration = 750;
+                duration = 750;
             var tree;
-            var svg ;
-            scope.degree="1";
-            scope.onChangeDegree=function(degree){
-                scope.degree=degree
+            var svg;
+            scope.degree = "1";
+            scope.onChangeDegree = function (degree) {
+                scope.degree = degree
                 console.log(scope.degree);
-                height =600 - margin.top - margin.bottom;
+                height = 600 - margin.top - margin.bottom;
                 scope.getGraphData();
-               
+
             }
+            //Create the drag and drop behavior to set for the objects crated
+            // var drag = d3.behavior.drag()
+            //     .origin(function (d) { return d; })
+            //     .on("dragstart", dragstarted)
+            //     .on("drag", dragged);
+
+            //Called when drag event starts. It stop the propagation of the click event
+            // function dragstarted(d) {
+            //     d3.event.sourceEvent.stopPropagation();
+            // }
+
+            //Called when the drag event occurs (object should be moved)
+            // function dragged(d) {
+            //     d.x = d3.event.x;
+            //     d.y = d3.event.y;
+            //     //Translate the object on the actual moved point
+            //     d3.select(this).attr({
+            //         transform: "translate(" + d.x + "," + d.y + ")"
+            //     });
+            // }
+
             scope.getGraphData = function () {
-                debugger
                 if (scope.uuid && scope.version) {
                     var newUuid = scope.uuid
                     $('#graphloader').show();
                     $('.show-graph-body').hide();
                     $('#errorMsg').hide();
-                    CommonService.getTreeGraphResults(newUuid, scope.version,scope.degree).then(function (result){
+                    CommonService.getTreeGraphResults(newUuid, scope.version, scope.degree).then(function (result) {
                         $('#graphloader').hide();
                         if (!result.data) {
-                          $('#errorMsg').text('No Results Found').show();
-                          $('.show-graph-body').hide();
+                            $('#errorMsg').text('No Results Found').show();
+                            $('.show-graph-body').hide();
                         } else {
-                          $('.show-graph-body').show();
+                            $('.show-graph-body').show();
                         }
                         scope.graphdata = result.data;
                         for (var i = 0; i < scope.graphdata.children.length; i++) {
                             scope.graphdata.children[i].index = i;
-                            if(scope.graphdata.children.length >20){
-                                height=height+30;
+                            if (scope.graphdata.children.length > 20) {
+                                height = height + 30;
                             }
                         }
                         tree = d3.layout.tree()
@@ -58,7 +81,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                         root.y0 = 0;
                         root.children.forEach(collapse);
                         update(root);
-                        scope.degree=scope.degree;
+                        scope.degree = scope.degree;
                     }, function () {
                         $('#errorMsg').text('Some Error Occured').show();
                         $('#graphloader').hide();
@@ -66,7 +89,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     });
                 }
             }
-            
+
             function collapse(d) {
                 if (d.children) {
                     d._children = d.children;
@@ -78,39 +101,44 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             scope.getGraphData();
 
             scope.$on('refreshData', function () {
-                scope.degree="1";
-                height =600 - margin.top - margin.bottom;
+                scope.degree = "1";
+                height = 600 - margin.top - margin.bottom;
                 scope.getGraphData();
-              });
-            var diagonal = d3.svg.diagonal()
-            .projection(function (d) {
-                return [d.y, d.x];
             });
-            function createSvg(){
+            var diagonal = d3.svg.diagonal()
+                .projection(function (d) {
+                    return [d.y, d.x];
+                });
+            function createSvg() {
                 d3.selectAll("div.show-graph-body #network-graph-wrapper svg.tree-graph").remove();
                 svg = d3.selectAll("div.show-graph-body #network-graph-wrapper").append("svg")
                     .attr("width", width + margin.right + margin.left)
                     .attr("height", height + margin.top + margin.bottom)
-                    .attr('class','tree-graph')
+                    .attr('class', 'tree-graph')
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                   
+                     
                 d3.select(self.frameElement).style("height", "800px");
+              //  svg.selectAll(".draggable").call(drag)
+              //  zoom = d3.behavior.zoom().scaleExtent([2.0, 0.2]).on('zoom', zoomed);
+
             }
-         
-            
+            // function zoomed() {
+            //     svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            // }
+
             function update(source) {
                 if (scope.graphdata == null) {
                     return false;
                 }
-                
+
                 var w = d3.select("svg.tree-graph").attr("width");
                 d3.select("svg.tree-graph").attr("width", parseInt(w) + 100);
                 d3.select("svg.tree-graph").attr("height", height);
 
                 // Compute the new tree layout.
                 var nodes = tree.nodes(root).reverse(),
-                links = tree.links(nodes);
+                    links = tree.links(nodes);
 
                 // Normalize for fixed-depth.
                 nodes.forEach(function (d) {
@@ -130,26 +158,26 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                         return "translate(" + source.y0 + "," + source.x0 + ")";
                     })
                     .on("click", toggleChildren)
-                    .on("mouseover",mouseoverNode)
+                    .on("mouseover", mouseoverNode)
                     .on("mouseout", function (d) {
-                        scope.nodeDetail = null; 
+                        scope.nodeDetail = null;
                         $(".tooltipcustom").css("display", "none");
-                       
+
                     })
-                    .on('contextmenu',rightClickNode);
+                    .on('contextmenu', rightClickNode);
 
                 nodeEnter.append("circle")
                     .attr("r", 10)
                     .style("stroke-width", 0.5) // set the stroke width //jitender
                     .style("stroke", "73879C") //jitender 73879C
                     .style("fill", function (d) { return d._children ? "#ccff99" : getColorCode(d); })
-                    // .call(d3.behavior.zoom().on("zoom", function () {
-                    //     svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-                    //   }))
+                // .call(d3.behavior.zoom().on("zoom", function () {
+                //     svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+                //   }))
                 nodeEnter
-                .insert("g")
-                .attr("class", "nodetext")
-                .append("text")
+                    .insert("g")
+                    .attr("class", "nodetext")
+                    .append("text")
                     .attr("x", function (d) {
                         return d.children || d._children ? -17 : 17;
                     })
@@ -162,18 +190,18 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     })
                     .style("fill-opacity", 1e-6)
                     .text(function (d) {
-                        if(d.parent ==null){
-                            return d.name.length >20 ?d.name.substring(0,20)+"...." : d.name
-                        }else{
-                        return d.name;
-                    }
+                        if (d.parent == null) {
+                            return d.name.length > 20 ? d.name.substring(0, 20) + "...." : d.name
+                        } else {
+                            return d.name;
+                        }
                     })
                     .append("text:title")
                     .text(function (d) {
                         return d.name;
                     });
-                  
-                     
+
+
                 // Transition nodes to their new position.
                 var nodeUpdate = node.transition()
                     .duration(duration)
@@ -218,7 +246,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
                 nodeExit.select("text")
                     .style("fill-opacity", 1e-6)
-              
+
                 // Update the links…
                 var link = svg.selectAll("path.link")
                     .data(links, function (d) {
@@ -301,6 +329,36 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                 });
             }
 
+            scope.$watch('zoomSize', function (data, oldValue) {
+                var tempsize = data / 10;
+                $('#network-graph-wrapper').css({
+                    '-webkit-transform': 'scale(' + tempsize + ')',
+                    '-moz-transform': 'scale(' + tempsize + ')',
+                    '-ms-transform': 'scale(' + tempsize + ')',
+                    '-o-transform': 'scale(' + tempsize + ')',
+                    'transform': 'scale(' + tempsize + ')',
+                    'transform-origin': 'center'
+                });
+            });
+
+            scope.changeSliderForward = function () {
+                scope.zoomSize = scope.zoomSize + 1;
+                // moveDrawRight();
+            }
+            scope.changeSliderBack = function () {
+                scope.zoomSize = scope.zoomSize - 1;
+            }
+
+            // function moveDrawLeft(){
+            // 	var xPosition = d3.transform(container.attr("transform")).translate[0];
+            // 	var yPosition = d3.transform(container.attr("transform")).translate[1];
+            // 	svg.attr("transform", "translate(" + (xPosition - MOVE_STEP) + ", " + yPosition + ")scale(" + zoom.scale() + ")");
+            // }
+            // function moveDrawRight(){
+            // 	var xPosition = d3.transform(svg.attr("transform")).translate[0];
+            // 	var yPosition = d3.transform(svg.attr("transform")).translate[1];
+            // 	svg.attr("transform", "translate(" + (xPosition + MOVE_STEP) + ", " + yPosition + ")scale(" + zoom.scale() + ")");
+            // }
 
             // Toggle children on click.
             function toggleChildren(d) {
@@ -308,21 +366,21 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
                     d._children = d.children;
                     d.children = null;
-                    for (var i = 0; i <  d._children.length; i++) {
-                        if(d._children.length >20){
-                            height=height-30;
+                    for (var i = 0; i < d._children.length; i++) {
+                        if (d._children.length > 20) {
+                            height = height - 30;
                         }
                     }
-                    if(d._children.length >20){
+                    if (d._children.length > 20) {
                         tree = d3.layout.tree()
-                        .size([height, width]);
+                            .size([height, width]);
                         update(d);
-                    }else{
+                    } else {
                         update(d);
                     }
-                    
+
                 }
-                else {	
+                else {
                     if (d.metaRef.ref.type == null || d.metaRef.ref.type == "simple") {
                         return false;
                     }
@@ -330,13 +388,13 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     $('#graphloader').show();
                     $('#errorMsg').hide();
                     CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.version | "", scope.degree).then(function (result) {
-                       $('.show-graph-body').show();
-                       $('#graphloader').hide();
+                        $('.show-graph-body').show();
+                        $('#graphloader').hide();
 
-                       for (var i = 0; i <  result.data.children.length; i++) {
-                        result.data.children[i].index = i;
-                            if(result.data.children.length >20){
-                                height=height+30;
+                        for (var i = 0; i < result.data.children.length; i++) {
+                            result.data.children[i].index = i;
+                            if (result.data.children.length > 20) {
+                                height = height + 30;
                             }
                         }
                         var r;
@@ -345,21 +403,21 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                         d._children = r.children
                         d.children = d._children;
                         d._children = null;
-                        if(result.data.children.length >20){
+                        if (result.data.children.length > 20) {
                             tree = d3.layout.tree()
-                            .size([height, width]);
+                                .size([height, width]);
                             update(d);
-                        }else{
+                        } else {
                             update(d);
                         }
-                        
+
                     });
                 }
             }//End ToggleChildren
-            
-            function mouseoverNode(d){
+
+            function mouseoverNode(d) {
                 var e = d3.event;
-                scope.nodeDetail=d
+                scope.nodeDetail = d
                 scope.nodeDetail.caption = getCaption(d)
                 scope.nodeDetail.color = getColorCode(d);
                 $("#colorID").css("background-color", scope.nodeDetail.color);
@@ -376,24 +434,24 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                 }
                 $(".tooltipcustom").css("left", left);
                 $(".tooltipcustom").css("top", top);
-                if(scope.nodeDetail.caption && scope.nodeDetail.color )
-                 $(".tooltipcustom").css("display", "block");
+                if (scope.nodeDetail.caption && scope.nodeDetail.color)
+                    $(".tooltipcustom").css("display", "block");
             }
-            
-            function rightClickNode(d,i){
+
+            function rightClickNode(d, i) {
                 d3.event.preventDefault();
                 var Nodedata = d
                 d3.selectAll('.context-menu').data([1])
                     .enter()
                     .append('div')
                     .attr('class', 'context-menu');
-                       
-                    // close menu
+
+                // close menu
                 d3.select('body').on('click.context-menu', function () {
                     d3.select('.context-menu').style('display', 'none');
                 });
-                    
-                    // this gets executed when a contextmenu event occurs
+
+                // this gets executed when a contextmenu event occurs
                 d3.selectAll('.context-menu')
                     .html('')
                     .append('ul')
@@ -407,9 +465,9 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     .text(function (d) {
                         return d;
                     });
-                        
-                d3.select('.context-menu').style('display', 'none');     
-                    
+
+                d3.select('.context-menu').style('display', 'none');
+
                 // show the context menu
                 d3.select('.context-menu')
                     .style('left', (d3.event.pageX - 2) + 'px')
@@ -421,19 +479,19 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             function getCaption(d) {
                 try {
                     var caption = dagMetaDataService.elementDefs[d.nodeType.toLowerCase()].caption;
-                } 
+                }
                 catch (e) {
                     var caption = d.name
-                } 
+                }
 
-                finally {}
+                finally { }
                 return caption
             }
 
             function getColorCode(d) {
                 try {
                     var color = dagMetaDataService.elementDefs[d.metaRef.ref.type.toLowerCase()].color
-                } 
+                }
                 catch (e) {
                     if (d.nodeType.toLowerCase().indexOf("from_base") != -1) {
                         var color = dagMetaDataService.elementDefs["from_base"].color
@@ -442,16 +500,16 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                         var color = '#000000'
                     }
                 }
-                finally {}
+                finally { }
                 return color;
             }
 
             function navigateTo(data, d) {
-                if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type !="attributes") {
+                if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type != "attributes") {
                     data.metaRef.ref.name = data.name
                     data.metaRef.ref.type = data.nodeType
                     dagMetaDataService.navigateTo(data.metaRef.ref);
-                }else if(d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type =="attributes") {
+                } else if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type == "attributes") {
                     data.metaRef.ref.name = data.name
                     data.metaRef.ref.type = data.nodeType
                     dagMetaDataService.navigateTo(data.parent.metaRef.ref);
@@ -460,21 +518,21 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
         },
 
         template: `
-      <!--<div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
+      <div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
         <div class="col-md-1" style="height:100px">
           <a ng-click="changeSliderForward()"><i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
           <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:1,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
             <a ng-click="changeSliderBack()"><i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
         </div>
-      </div>-->.
+      </div>
       
        <!-- <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">-->
        <div class="col-md-2 col-md-offset-10" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;"> 
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="btn-group" ng-init="degree='1'">
-                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-disabled="degree == 1?true:false" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></label>   
-                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-disabled="degree == -1?true:false" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
+                    <label class="btn btn-default"  tooltip-placement="top" uib-tooltip="Downward" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-disabled="degree == 1?true:false" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></label>   
+                    <label class="btn btn-default" ng-model="degree" tooltip-placement="top" uib-tooltip="Upward" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-disabled="degree == -1?true:false" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
                     </div>
                 </div>
             </div>
