@@ -1351,7 +1351,6 @@ public class ModelServiceImpl {
 		}
 		runModelServiceImpl.setAlgorithmServiceImpl(algorithmServiceImpl);
 		runModelServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
-		runModelServiceImpl.setSparkContext(sparkContext);
 		runModelServiceImpl.setModel(model);
 		runModelServiceImpl.setModelExecServiceImpl(modelExecServiceImpl);
 		runModelServiceImpl.setHdfsInfo(hdfsInfo);
@@ -1440,7 +1439,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 
 	}
 
-	public boolean save(String className, Object obj, SparkContext sparkContext, String path) {
+	public boolean save(String className, Object obj, String path) {
 
 		Class<?> dynamicClass = obj.getClass();
 

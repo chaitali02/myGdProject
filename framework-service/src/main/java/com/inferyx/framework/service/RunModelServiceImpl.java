@@ -58,7 +58,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private AlgorithmServiceImpl algorithmServiceImpl;
 	/*private ModelExec modelExec;*/
 	private DataStoreServiceImpl dataStoreServiceImpl;
-	private SparkContext sparkContext;
 	private Model model;
 	private ModelExecServiceImpl modelExecServiceImpl;
 	private ParamSetServiceImpl paramSetServiceImpl;
@@ -379,14 +378,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		this.model = model;
 	}
 
-	public SparkContext getSparkContext() {
-		return sparkContext;
-	}
-
-	public void setSparkContext(SparkContext sparkContext) {
-		this.sparkContext = sparkContext;
-	}
-
 	public DataStoreServiceImpl getDataStoreServiceImpl() {
 		return dataStoreServiceImpl;
 	}
@@ -682,7 +673,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					customDirectories.add(i + "_" + transformers[i].uid());
 				}
 
-				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, sparkContext, filePathUrl);
+				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, filePathUrl);
 				if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
 					try {
 						String filePathUrl_2 = null;
