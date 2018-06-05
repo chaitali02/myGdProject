@@ -416,6 +416,8 @@ public interface IExecutor {
 	
 	/**
 	 * 
+	 * @Ganesh
+	 *
 	 * @param rowObjList
 	 * @param attributes
 	 * @param tableName
@@ -447,4 +449,13 @@ public interface IExecutor {
 	ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args,
 			Class<?>[] paramtypes, List<Attribute> attributes, int numIterations, String execVersion, String tableName)
 			throws IOException, ClassNotFoundException;
+	
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param trngModel
+	 * @return
+	 */
+	List<String> getCustomDirsFromTrainedModel(Object trngModel);
 }

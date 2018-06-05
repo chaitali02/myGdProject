@@ -20,7 +20,6 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
@@ -77,8 +76,6 @@ public class SparkMLOperator implements IModelOperator {
 
 	@Autowired
 	private ParamSetServiceImpl paramSetServiceImpl;
-	@Autowired
-	private SparkContext sparkContext;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -228,7 +225,7 @@ public class SparkMLOperator implements IModelOperator {
 			 */
 
 			// Vector features = new DenseVector(values)
-			boolean result = modelServiceImpl.save(modelName, trngModel, sparkContext, filePathUrl);
+			boolean result = modelServiceImpl.save(modelName, trngModel, filePathUrl);
 			if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
 				try {
 					LOGGER.info("trainedDataSet schema : " + trainedDataSet.schema());
@@ -356,10 +353,10 @@ public class SparkMLOperator implements IModelOperator {
 
 				dfTask.printSchema();
 				IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
-				datapodWriter.write(dfTask, filePathUrl, targetDp, SaveMode.Append.toString());
+				datapodWriter.write(rsHolder, filePathUrl, targetDp, SaveMode.Append.toString());
 				return filePathUrl;
 			} else {
-				if (modelServiceImpl.save(modelName, trainedModel, sparkContext, filePathUrl))
+				if (modelServiceImpl.save(modelName, trainedModel, filePathUrl))
 					return filePathUrl + "/data";
 				else
 					return null;

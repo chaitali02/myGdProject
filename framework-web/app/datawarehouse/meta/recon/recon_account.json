@@ -2,7 +2,7 @@
   "id": "5abf8661c4adca0a47da63bc",
   "uuid": "f6a1c44a-ae52-4d9c-bd09-4fa78bcabaab",
   "version": "1522501217",	
-  "name": "recon_dim_account",
+  "name": "recon_account",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -47,7 +47,7 @@
   "targetAttr": {
     "ref": {
       "type": "datapod",
-      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
       "version": null
     },
     "value": null,

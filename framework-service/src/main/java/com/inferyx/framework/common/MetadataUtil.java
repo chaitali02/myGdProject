@@ -11,10 +11,11 @@
 package com.inferyx.framework.common;
 
 
+import org.apache.log4j.Logger;
+
 //import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IActivityDao;
@@ -39,7 +40,6 @@ import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.dao.IFormulaDao;
 import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.dao.IGroupDao;
-//import com.inferyx.framework.dao.IGroupDao;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.dao.ILoadExecDao;
 import com.inferyx.framework.dao.IMapDao;
@@ -118,13 +118,10 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 
 public class MetadataUtil {
 		
-	//Logger logger=Logger.getLogger(MetadataUtil.class);
-	
+	Logger logger = Logger.getLogger(MetadataUtil.class);	
 	
 	@Autowired
 	IActivityDao activityDao;
-
-
 	@Autowired
 	IDagDao dagDao;
 	@Autowired
@@ -169,7 +166,6 @@ public class MetadataUtil {
 	IRuleExecDao iRuleExecDao;
 	@Autowired
 	IRuleGroupExecDao iRuleGroupExecDao;
-
 	@Autowired
 	IRoleDao iroleDao;
 	@Autowired
@@ -225,9 +221,7 @@ public class MetadataUtil {
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;
     @Autowired 
-    IDistributionDao iDistributionDao;
-    
-    
+    IDistributionDao iDistributionDao;    
     
 	/**
 	 * @Ganesh
@@ -613,8 +607,6 @@ public class MetadataUtil {
 	public void setiDatasourceDao(IDatasourceDao iDatasourceDao) {
 		this.iDatasourceDao = iDatasourceDao;
 	}
-
-	
 	
 	public MetadataUtil(){
 		// private constructor to defeat instantiation

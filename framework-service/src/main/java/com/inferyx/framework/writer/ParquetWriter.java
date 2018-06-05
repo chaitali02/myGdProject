@@ -20,15 +20,13 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataType;
-import org.apache.spark.sql.types.Metadata;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -46,9 +44,10 @@ public class ParquetWriter implements IWriter {
 	SparkSession sparkSession;
 	
 	@Override
-	public void write(Dataset<Row> df, String filePathUrl, Datapod datapod, String saveMode) throws IOException {
+	public void write(ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode) throws IOException {
 		try { 
 			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
+			Dataset<Row> df = rsHolder.getDataFrame();
 			if(datapod !=null) {
 				if(df.columns().length != datapod.getAttributes().size())
 					throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
