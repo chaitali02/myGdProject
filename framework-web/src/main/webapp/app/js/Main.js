@@ -86,6 +86,15 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
 
     $httpProvider.interceptors.push(function ($rootScope, $q) {
         return {
+            'request': function (config) {
+                if (config.timeout) {
+                  config.cancel  = $q.defer();
+                  config.timeout = config.cancel.promise;            
+                }
+        
+                return config;
+              },
+        
             'responseError': function (rejection) {
                 if (rejection.status == 500) {
                     notify.type = 'error',

@@ -18,6 +18,17 @@
         return response;
       })
     }
+    factory.httpGetWithCancelable = function(url,httpRequestCanceller) {
+      var fullUrl = baseUrl + url
+      return $http({
+        method: 'GET',
+        url:fullUrl,
+        timeout: httpRequestCanceller.promise
+       
+      }).then(function(response, status, headers) {
+        return response;
+      })
+    }
     factory.httpGet1 = function(url) {
       var fullUrl = baseUrl + url
       return $http({
@@ -328,18 +339,19 @@
     this.getBaseEntityByCriteria = function(type, name, userName, startDate, endDate, tags, active, published) {
       var deferred = $q.defer();
       var url = "metadata/getBaseEntityByCriteria?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;
-      CommonFactory.httpGet(url).then(function(response) {
+      CommonFactory.httpGetWithCancelable(url,deferred).then(function(response) {
         OnSuccess(response.data)
       });
       var OnSuccess = function(response) {
-        if(response){
-          for (var i = 0; i < response.length; i++) {
-          response[i].isupload=false;
-          response[i].index=i;
+        var result=response;
+        if(result){
+          for (var i = 0; i < result.length; i++) {
+            result[i].isupload=false;
+            result[i].index=i;
           }
         }
         deferred.resolve({
-          data: response
+          data: result
         });
       }
       return deferred.promise;
