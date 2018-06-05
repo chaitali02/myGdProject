@@ -50,7 +50,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                         for(var i=0;i< response.length;i++){
                            if(response[i].uploadExecInfo !=null){
                             scope.commentResult[i].isDownloadable=true;
-                            scope.commentResult[i].limitUploadExecInfo=1;
+                            scope.commentResult[i].limitUploadExecInfo=2;
                            }
                         }
                     }
@@ -63,12 +63,11 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             }
             
             scope.ShowMore=function(index){
-                debugger
                 scope.commentResult[index].limitUploadExecInfo=scope.commentResult[index].uploadExecInfo.length;
             }
             scope.ShowLess=function(index){
                 
-                scope.commentResult[index].limitUploadExecInfo=1;
+                scope.commentResult[index].limitUploadExecInfo=2;
             }
             scope.delete=function(uuid){
                 CommonService.delete(uuid,'comment').then(function (response){onSuccess(response.data)})
@@ -90,18 +89,14 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                   });
                   var url = window.URL.createObjectURL(blob);
                   console.log(url)
-                  const data = window.URL.createObjectURL(blob);
-                //   linkElement.setAttribute('href', url);
-                //   linkElement.setAttribute("download",filename);
-                //   var clickEvent = new MouseEvent("click", {
-                //     "view": window,
-                //     "bubbles": true,
-                //     "cancelable": false
-                //   });
-                //   linkElement.dispatchEvent(clickEvent);
-                window.URL.revokeObjectURL(data);
-                
-
+                  linkElement.setAttribute('href', url);
+                  linkElement.setAttribute("download",filename);
+                  var clickEvent = new MouseEvent("click", {
+                    "view": window,
+                    "bubbles": true,
+                    "cancelable": false
+                  });
+                  linkElement.dispatchEvent(clickEvent);
 
                   } catch (ex) {
                   console.log(ex);

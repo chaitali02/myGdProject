@@ -6,7 +6,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             version: "="
         },
         link: function (scope, element, attrs) {
-            var menus = ["Knowledge Graph"];
+            var menus = ["Show Details"];
             var root;
             var margin = {
                 top: 20,
@@ -128,8 +128,9 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     .on("click", toggleChildren)
                     .on("mouseover",mouseoverNode)
                     .on("mouseout", function (d) {
+                        scope.nodeDetail = null; 
                         $(".tooltipcustom").css("display", "none");
-                        scope.nodeDetail = null;
+                       
                     })
                     .on('contextmenu',rightClickNode);
 
@@ -313,7 +314,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     $('.show-graph-body').hide();
                     $('#graphloader').show();
                     $('#errorMsg').hide();
-                    CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.version | "", "1").then(function (result) {
+                    CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.version | "", scope.degree).then(function (result) {
                        $('.show-graph-body').show();
                        $('#graphloader').hide();
 
@@ -360,7 +361,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                 }
                 $(".tooltipcustom").css("left", left);
                 $(".tooltipcustom").css("top", top);
-                if(scope.nodeDetail.caption)
+                if(scope.nodeDetail.caption && scope.nodeDetail.color )
                  $(".tooltipcustom").css("display", "block");
             }
             
@@ -431,10 +432,14 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             }
 
             function navigateTo(data, d) {
-                if (d == "Knowledge Graph" && data.metaRef.ref.type != null) {
+                if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type !="attributes") {
                     data.metaRef.ref.name = data.name
                     data.metaRef.ref.type = data.nodeType
-                    dagMetaDataService.navigateTo(data.metaRef);
+                    dagMetaDataService.navigateTo(data.metaRef.ref);
+                }else if(d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type =="attributes") {
+                    data.metaRef.ref.name = data.name
+                    data.metaRef.ref.type = data.nodeType
+                    dagMetaDataService.navigateTo(data.parent.metaRef.ref);
                 }
             }
         },
@@ -448,12 +453,13 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
         </div>
       </div>-->.
       
-        <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">
+       <!-- <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">-->
+       <div class="col-md-2 col-md-offset-10" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;"> 
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="btn-group" ng-init="degree='1'">
-                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'1'" ng-disabled="{{mode}}" uncheckable>Downward</label>   
-                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'-1'" ng-disabled="{{mode}}" uncheckable>Upward</label>
+                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'1'" ng-disabled="{{mode}}" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></label>   
+                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'-1'" ng-disabled="{{mode}}" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
                     </div>
                 </div>
             </div>
