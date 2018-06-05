@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +20,6 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
-import org.apache.spark.ml.PipelineModel;
-import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.SaveMode;
 
@@ -664,14 +660,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
-				PipelineModel trngModel = exec.trainModel(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				Object trngModel = exec.trainModel(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
 				result = trngModel;
 				
-				List<String> customDirectories = new ArrayList<>();
-				Transformer[] transformers = trngModel.stages();
-				for (int i = 0; i < transformers.length; i++) {
-					customDirectories.add(i + "_" + transformers[i].uid());
-				}
+				List<String> customDirectories = exec.getCustomDirsFromTrainedModel(trngModel);
 
 				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, filePathUrl);
 				if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {

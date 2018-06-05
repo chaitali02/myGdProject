@@ -34,6 +34,7 @@ import org.apache.spark.SparkContext;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
+import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
@@ -1750,5 +1751,17 @@ public class SparkExecutor implements IExecutor {
 		df.show(true);
 		sparkSession.sqlContext().registerDataFrameAsTable(df, tableName);
 		return tableName;
+	}
+	
+	@Override
+	public List<String> getCustomDirsFromTrainedModel(Object trngModel){
+		List<String> customDirectories = new ArrayList<>();
+		if(trngModel instanceof PipelineModel) {
+			Transformer[] transformers = ((PipelineModel)trngModel).stages();
+			for (int i = 0; i < transformers.length; i++) {
+				customDirectories.add(i + "_" + transformers[i].uid());
+			}
+		}
+		return customDirectories;
 	}
 }
