@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -31,17 +30,15 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 
 @Component
-public class HiveReader implements IReader
-{
-	static final Logger logger=Logger.getLogger(HiveReader.class);
+public class HiveReader implements IReader {
 	
-	@Autowired
-	protected MetadataUtil daoRegister;
 	@Autowired
 	protected ExecutorFactory execFactory;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 
+	static final Logger logger=Logger.getLogger(HiveReader.class);
+	
 	@Override
 	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource) throws IOException {
 		

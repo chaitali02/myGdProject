@@ -29,13 +29,14 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 
 public class OracleReader implements IReader {
-	Logger logger=Logger.getLogger(OracleReader.class);
 	@Autowired
 	protected MetadataUtil daoRegister;
 	@Autowired
 	protected ExecutorFactory execFactory;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+
+	Logger logger=Logger.getLogger(OracleReader.class);
 	
 	@Override
 	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource)
