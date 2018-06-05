@@ -266,6 +266,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				});
 				$scope.datasetRelation.options = temp
 			}
+			$scope.attributeTableArray=null;
+			$scope.addAttribute();
 			MetadataDatasetSerivce.getAllAttributeBySource($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
@@ -282,6 +284,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		var onSuccessGetDatapodByRelation = function (response) {
 			$scope.sourcedatapodattribute = response;
 			$scope.lhsdatapodattributefilter = response;
+			$scope.attributeTableArray=null;
+			$scope.addAttribute();
 			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
 				$scope.datasetLodeFormula = response
@@ -542,7 +546,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		filertable.isrhsDatapod = false;
 		filertable.isrhsFormula = false;
 		filertable.isrhsSimple = true;
-		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0]
+		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
+		filertable.logicalOperator= $scope.filterTableArray.length ==0 ? $scope.logicalOperator[0] :$scope.logicalOperator[1]
 		filertable.operator = $scope.operator[0]
 		filertable.lhstype = $scope.lshType[0]
 		filertable.rhstype = $scope.lshType[0]
@@ -678,7 +683,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		});
 		$scope.attributeTableArray = newDataList;
 	}
-
+    
 	$scope.onChangeSourceAttribute = function (type, index) {
 		if (type == "string") {
 			$scope.attributeTableArray[index].isSourceAtributeSimple = true;
@@ -738,18 +743,23 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		}
 
 	}
+	
+	$scope.onChangeSourceName=function(index){
+		$scope.attributeTableArray[index].isSourceName=true;
+	}
 
 	$scope.onChangeAttributeDatapod = function (data, index) {
-
-		if (data != null) {
+		if (data != null && !$scope.attributeTableArray[index].isSourceName) {
 			$scope.attributeTableArray[index].name = data.name
 		}
 	}
 	$scope.onChangeFormula = function (data, index) {
+		if(!$scope.attributeTableArray[index].isSourceName)
 		$scope.attributeTableArray[index].name = data.name
 	}
 
 	$scope.onChangeExpression = function (data, index) {
+		if(!$scope.attributeTableArray[index].isSourceName)
 		$scope.attributeTableArray[index].name = data.name
 	}
 

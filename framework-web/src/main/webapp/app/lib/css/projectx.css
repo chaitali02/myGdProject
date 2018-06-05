@@ -945,6 +945,7 @@ font-weight:normtal;
 }
 .tree-graph{
   margin-top: -3%;
+  padding-left: 2% !important;
 }
 .comment-panel-parent{
   top: 0;

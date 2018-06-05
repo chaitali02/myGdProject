@@ -21,13 +21,15 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             var tree;
             var svg ;
             scope.degree="1";
-            scope.onChangeDegree=function(){
+            scope.onChangeDegree=function(degree){
+                scope.degree=degree
                 console.log(scope.degree);
                 height =600 - margin.top - margin.bottom;
                 scope.getGraphData();
                
             }
             scope.getGraphData = function () {
+                debugger
                 if (scope.uuid && scope.version) {
                     var newUuid = scope.uuid
                     $('#graphloader').show();
@@ -56,6 +58,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                         root.y0 = 0;
                         root.children.forEach(collapse);
                         update(root);
+                        scope.degree=scope.degree;
                     }, function () {
                         $('#errorMsg').text('Some Error Occured').show();
                         $('#graphloader').hide();
@@ -75,6 +78,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             scope.getGraphData();
 
             scope.$on('refreshData', function () {
+                scope.degree="1";
                 height =600 - margin.top - margin.bottom;
                 scope.getGraphData();
               });
@@ -142,7 +146,10 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     // .call(d3.behavior.zoom().on("zoom", function () {
                     //     svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
                     //   }))
-                nodeEnter.append("text")
+                nodeEnter
+                .insert("g")
+                .attr("class", "nodetext")
+                .append("text")
                     .attr("x", function (d) {
                         return d.children || d._children ? -17 : 17;
                     })
@@ -155,8 +162,16 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     })
                     .style("fill-opacity", 1e-6)
                     .text(function (d) {
+                        if(d.parent ==null){
+                            return d.name.length >20 ?d.name.substring(0,20)+"...." : d.name
+                        }else{
                         return d.name;
+                    }
                     })
+                    .append("text:title")
+                    .text(function (d) {
+                        return d.name;
+                    });
                   
                      
                 // Transition nodes to their new position.
@@ -458,8 +473,8 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="btn-group" ng-init="degree='1'">
-                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'1'" ng-disabled="{{mode}}" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></label>   
-                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree()" uib-btn-radio="'-1'" ng-disabled="{{mode}}" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
+                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-disabled="degree == 1?true:false" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></label>   
+                    <label class="btn btn-default" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-disabled="degree == -1?true:false" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
                     </div>
                 </div>
             </div>
