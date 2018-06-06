@@ -141,7 +141,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		}
 		
 		private String generateLimit(DataSet dataset) {
-			return ConstantsUtil.LIMIT + dataset.getLimit() + " ";
+			return (dataset.getLimit() > 0) ? (ConstantsUtil.LIMIT + dataset.getLimit() + " ") : "";
 		}
 
 		@Override
