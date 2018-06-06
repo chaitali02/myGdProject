@@ -41,16 +41,12 @@ import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
-import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Param;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.RolePriv;
@@ -71,7 +67,6 @@ import com.inferyx.framework.service.ImportServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.PrivilegeServiceImpl;
 import com.inferyx.framework.service.RegisterService;
-import com.inferyx.framework.service.SecurityServiceImpl;
 import com.inferyx.framework.service.SystemServiceImpl;
 import com.inferyx.framework.view.parser.RefParser;
 
@@ -99,8 +94,6 @@ public class MetadataController {
 	FormulaParser formulaParser;
 	@Autowired
 	IDatasourceDao iDatasourceDao;
-	@Autowired
-	private SecurityServiceImpl securityServiceImpl;
 	@Autowired
 	protected DashboardServiceImpl dashboardServiceImpl;
 	@Autowired
