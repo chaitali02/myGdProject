@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, TrainService, $http, $location, CommonService) {
+DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, TrainService, $http, $location, CommonService,privilegeSvc) {
 
   $scope.isTargetNameDisabled = false;
   $scope.dataLoading = false;
@@ -12,17 +12,39 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.isversionEnable=false;
     $scope.isAdd=false;
     $scope.isDragable="false";
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
     $scope.isDragable="true";
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else{
     $scope.isAdd=true;
     $scope.isDragable="true";
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.mode = "false"
   $scope.isSubmitEnable = false;
   $scope.trainData;

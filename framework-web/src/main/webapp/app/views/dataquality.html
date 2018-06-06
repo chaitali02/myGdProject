@@ -28,6 +28,7 @@
       <br>
       <!-- END PAGE HEADER-->
       <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+      <div  options="dirOptions" type="'dq'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dataqualitydata" comment-panel-directive></div>
       <div class="portlet light bordered" id="form_wizard_1">
         <div class="portlet-title" style="margin-bottom:0px;">
           <div class="caption">
@@ -65,7 +66,7 @@
               tooltip ng-class="(showRule==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" ng-show="isDependencyShow"
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" ng-show="isDependencyShow"
               ng-class="showRule==false? 'currentpage':'notcurrentpage'" data-toggle="tooltip" data-placement="top" tooltip
               data-ng-click="showRuleGraph(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0;"></i>

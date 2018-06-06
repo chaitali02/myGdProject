@@ -964,7 +964,8 @@ font-weight:normtal;
   display: block;
 }
 .comment-panel {
-  height: 50%;
+  /* height: 50%; */
+  height: 550px;
   width:0;
   position: absolute;
   z-index: 10109;
@@ -982,7 +983,8 @@ font-weight:normtal;
   margin-bottom: 10px;
 }
 .comment-panel-width{
-width:40%;
+/* width:40%; */
+width: 500px;
 right: 1%;
 transition: right 1m
 }

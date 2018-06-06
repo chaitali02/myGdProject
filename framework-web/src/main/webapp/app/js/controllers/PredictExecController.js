@@ -1,6 +1,6 @@
 JobMonitoringModule = angular.module('JobMonitoringModule');
 
-JobMonitoringModule.controller('DetailPredictExecController', function ($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService) {
+JobMonitoringModule.controller('DetailPredictExecController', function ($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
@@ -8,6 +8,18 @@ JobMonitoringModule.controller('DetailPredictExecController', function ($filter,
   $scope.selectTitle = dagMetaDataService.elementDefs['predictexec'].caption;
 
   $scope.state = dagMetaDataService.elementDefs['predictexec'].listState + "({type:'" + dagMetaDataService.elementDefs['modelexec'].execType + "'})"
+  $rootScope.isCommentVeiwPrivlage=true;
+  var privileges = privilegeSvc.privileges['comment'] || [];
+  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;	
+  });
+  $scope.userDetail={}
+  $scope.userDetail.uuid= $rootScope.setUseruuid;
+  $scope.userDetail.name= $rootScope.setUserName;
   $scope.close = function () {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback

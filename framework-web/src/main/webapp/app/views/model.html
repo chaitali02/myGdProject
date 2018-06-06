@@ -29,6 +29,8 @@
       <br>
 
       <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+      <div  options="dirOptions" type="'model'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="modeldata" comment-panel-directive></div>
+
       <div class="portlet light bordered" id="form_wizard_1">
         <div class="portlet-title" style="margin-bottom:0px;">
           <div class="caption">
@@ -47,7 +49,7 @@
               tooltip  data-ng-click="showview(modeldata.uuid,modeldata.version)">
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip"
+            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " title="Knowledge Graph" data-toggle="tooltip"
               data-placement="top" ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(modeldata.uuid,modeldata.version)">
               <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
             </a>

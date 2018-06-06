@@ -26,6 +26,8 @@
         </div>
     </div><!-- END PAGE HEADER-->
     <br>
+    <div  options="dirOptions" type="'uploadExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="uploadexecdata" comment-panel-directive></div>
+
     <!-- BEGIN MAIN CONTENT -->
     <div class="row" >
         <div class="col-md-12">
@@ -38,7 +40,7 @@
     		         	<a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showuploadexec==true? 'currentpage':'notcurrentpage'" data-ng-click="showuploadexecPage()"style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a>
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showuploadexec==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(uploadexecdata.uuid,uploadexecdata.version)" style="height:14px;">
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showuploadexec==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(uploadexecdata.uuid,uploadexecdata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
                         <a  title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>

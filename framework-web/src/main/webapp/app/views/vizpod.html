@@ -29,6 +29,8 @@
 	<!-- END PAGE HEADER-->
 	<br>
 	<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+	<div  options="dirOptions" type="'vizpod'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="vizpoddata" comment-panel-directive></div>
+
 	
 	<!-- BEGIN MAIN CONTENT -->
 	<div class="row">
@@ -46,7 +48,7 @@
 							 <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showvizpod==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-click="showview(vizpoddata.uuid,vizpoddata.version)" ng-hide="isAdd" style="height:16px;">
 									 <span class="glyphicon glyphicon-file" style="color:white;"></span>
 							 </a>
-						<a title="Show Dependencies" ng-class="showvizpod==false? 'currentpage':'notcurrentpage'" ng-show="isDependencyShow" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showVizpodGraph(vizpoddata.uuid,vizpoddata.version)" >
+						<a title="Knowledge Graph" ng-class="showvizpod==false? 'currentpage':'notcurrentpage'" ng-show="isDependencyShow" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showVizpodGraph(vizpoddata.uuid,vizpoddata.version)" >
 							<i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
 						</a>
 						<a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
