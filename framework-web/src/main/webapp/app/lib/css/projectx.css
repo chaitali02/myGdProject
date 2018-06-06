@@ -707,9 +707,13 @@ vertical-align: middle;
     opacity: 0;
     position:absolute;
     right:60px;
+    top:20%;
     /*width:150px;*/
   }
-  div[graph-directive]:hover .network-graph-zoom-slider {
+  .tree-graph:hover .network-graph-zoom-slider{
+    opacity: 1;
+  }
+  div[tree-graph-directive]:hover .network-graph-zoom-slider {
     opacity: 1;
   }
 
@@ -945,7 +949,10 @@ font-weight:normtal;
 }
 .tree-graph{
   margin-top: -3%;
+  padding-left: 2% !important;
 }
+
+
 .comment-panel-parent{
   top: 0;
   bottom: 0;

@@ -308,26 +308,26 @@
                     <td>
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                         <select ng-change="selectlhsType(tabledata.lhstype.text,$index)" ng-model="tabledata.lhstype" ng-options="x as x.caption for x in lshType track by x.text"
-                          ng-disabled=" {{mode}}" class="form-control">
+                          ng-disabled=" {{mode}}" class="form-control" >
                         </select>
                       </span>
                     </td>
                     <td width="200px">
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                         <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
-                          ng-show="tabledata.islhsSimple" ng-change="onChangeSimple()">
+                          ng-if="tabledata.islhsSimple" ng-change="onChangeSimple()" required  disable-validation-message="">
                       </span>
-                      <div width="200px" ng-show="tabledata.islhsDatapod">
+                      <div width="200px" ng-if="tabledata.islhsDatapod">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
-                              ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId" ng-change="onChangeAttribute()">
+                              ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId" ng-change="onChangeAttribute()" required  disable-validation-message="">
                           </select>
                         </span>
                       </div>
-                      <div ng-show="tabledata.islhsFormula">
+                      <div ng-if="tabledata.islhsFormula">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 class="form-control" ng-change="onChangeFromula()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in allFormula track by r.uuid"
-                            ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula">
+                            ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula" required  disable-validation-message="">
                           </select>
                           
                         </span>
@@ -349,18 +349,18 @@
                     <td style="width:200px;">
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                         <input type="text" ng-disabled="{{mode}}" class="form-control" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                            ng-show="tabledata.isrhsSimple" ng-change="onChangeSimple()">
+                            ng-if="tabledata.isrhsSimple" ng-change="onChangeSimple()" required  disable-validation-message="">
                       </span>
-                      <div ng-show="tabledata.isrhsDatapod">
+                      <div ng-if="tabledata.isrhsDatapod">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeAttribute()" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                          <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeAttribute()" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId" required  disable-validation-message="">
                           </select>
                         </span>
                       </div>
-                      <div ng-show="tabledata.isrhsFormula">
+                      <div ng-if="tabledata.isrhsFormula">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 class="form-control" ng-change="onChangeFromula()" data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in allFormula  track by r.uuid"
-                            ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula">
+                            ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula" required  disable-validation-message="">
                           </select>
                         </span>
                       </div>
@@ -424,30 +424,30 @@
                           </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" class="form-control" ng-model="data.name" title="{{data.name}}" ng-disabled="{{mode}}">
+                            <input type="text" class="form-control" ng-model="data.name" required  disable-validation-message="" title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <select ng-model="data.sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
                             ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
-                            class="form-control"></select>
+                            class="form-control" required></select>
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" class="form-control" ng-model="data.sourcesimple" ng-show="data.isSourceAtributeSimple" ng-disabled="{{mode}}">
+                            <input type="text" class="form-control" ng-model="data.sourcesimple" required disable-validation-message="" ng-if="data.isSourceAtributeSimple" ng-disabled="{{mode}}">
                           </span>
-                          <div ng-show="data.isSourceAtributeDatapod">
+                          <div ng-if="data.isSourceAtributeDatapod">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                               <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}"
                               class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute track by c.uuid+c.attributeId"
-                              ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"></select>
+                              ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)" required disable-validation-message=""></select>
                             </span>
                           </div>
-                          <div ng-show="data.isSourceAtributeFormula">
+                          <div ng-if="data.isSourceAtributeFormula">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              <ui-select ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}">
+                              <ui-select required  disable-validation-message="" ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}">
                               <!-- selectize -->
                                 <ui-select-match>
                                   <span title="{{data.sourceformula.name}}">{{data.sourceformula.name}}</span>
@@ -462,9 +462,9 @@
                             </span>
                             <!--  <select select2 ng-model="data.sourceformula"  ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in datasetLodeFormula track by c.uuid" style="font-family: 'FontAwesome', Helvetica;"><option value="" ng-click="routeForFormula(x)"class="check"> &#xf067; Create New</option></select> -->
                           </div>
-                          <div ng-show="data.isSourceAtributeExpression">
+                          <div ng-if="data.isSourceAtributeExpression">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              <ui-select ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index)">
+                              <ui-select required  disable-validation-message="" ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index)">
                                 <!-- selectize -->
                                 <ui-select-match>
                                   <span title="{{data.soureexpression.name}}">{{data.sourceexpression.name}}</span>
@@ -479,10 +479,9 @@
                             </span>
                             <!-- <select select2 ng-model="data.sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in datasetLodeExpression track by c.uuid" ng-change="onChangeExpression(data.sourceexpression,$index)"></select> -->
                           </div>
-                          <div ng-show="data.isSourceAtributeFunction">
+                          <div ng-if="data.isSourceAtributeFunction">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                               <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
-                              ng-change="onChangeFunction(data.sourcefunction,$index)"></select>
                             </span>
                           </div>
                         </td>
