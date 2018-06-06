@@ -238,6 +238,7 @@ public class DatasetViewServiceImpl {
 		datasetView.setActive(resolvedDataset.getActive());
 		datasetView.setCreatedOn(resolvedDataset.getCreatedOn());
 		datasetView.setPublished(resolvedDataset.getPublished());
+		datasetView.setLimit(resolvedDataset.getLimit());
 		MetaIdentifierHolder dependsOn = resolvedDataset.getDependsOn();
 		List<AttributeRefHolder> filterInfo = resolvedDataset.getFilterInfo();
 		Filter resolvedFilter = null;

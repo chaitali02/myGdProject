@@ -816,6 +816,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		dataSetJson.desc = $scope.dataset.desc
 		dataSetJson.active = $scope.dataset.active;
 		dataSetJson.published = $scope.dataset.published;
+		dataSetJson.limit = $scope.dataset.limit;
 		dataSetJson.srcChg = "y";
 
 		if ($scope.datasetCompare == null) {
