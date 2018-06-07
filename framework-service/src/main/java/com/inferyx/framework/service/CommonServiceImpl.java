@@ -3523,7 +3523,7 @@ public class CommonServiceImpl <T> {
 				}
 				if (type != null && type.equalsIgnoreCase("comment")) {
 					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
-							Helper.getMetaType(MetaType.comment.toString()), uuid, version, filename1)));
+							Helper.getMetaType(MetaType.comment.toString()), uuid, version, null)));
 					save(MetaType.uploadExec.toString(), uploadExec);
 					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
 					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
@@ -3531,7 +3531,7 @@ public class CommonServiceImpl <T> {
 					metaIdentifierHolderList.add(metaIdentifierHolder2);
 				} else if (fileType != null && fileType.equalsIgnoreCase("script")) {
 					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
-							Helper.getMetaType(MetaType.model.toString()), uuid, version, filename1)));
+							Helper.getMetaType(MetaType.model.toString()), uuid, version, null)));
 					save(MetaType.uploadExec.toString(), uploadExec);
 					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
 /*					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.model.toString()),
@@ -3587,7 +3587,7 @@ public class CommonServiceImpl <T> {
                 response.setContentLength((int) file.length());
              //   response.setContentType("application/xml charset=utf-16");
 				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename",fileName+fileExtention);
+				response.setHeader("filename",fileName);
                 ServletOutputStream os = response.getOutputStream();
                 FileInputStream fis = new FileInputStream(file);
                 Long fileSize = file.length();
