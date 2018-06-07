@@ -168,6 +168,7 @@ public class GraphServiceImpl {
 		keywordList.add("refKeyList");
 		keywordList.add("featureAttrMap");
 		keywordList.add("configInfo");
+		keywordList.add("featureInfo");
 		}
 
 	/*
@@ -924,9 +925,9 @@ public class GraphServiceImpl {
 		// Loop each property
 		while (iter.hasNext()) {
 			String key = iter.next();
-			/*if(key.equalsIgnoreCase("dependsOn")) {
-				System.out.println("assssssd");
-			}*/
+				/*if(key.equalsIgnoreCase("featureInfo")) {
+					System.out.println("assssssd");
+				}*/
 			jsonArray = jsonObject.optJSONArray(key);
 			JSONObject childObj = jsonObject.optJSONObject(key);
 			value = jsonObject.optString(key);
@@ -947,7 +948,7 @@ public class GraphServiceImpl {
 								|| key.equalsIgnoreCase("attributeMap") || key.equalsIgnoreCase("paramInfo")
 								|| key.equalsIgnoreCase("features") || key.equalsIgnoreCase("stages")
 								|| key.equalsIgnoreCase("tasks") || key.equalsIgnoreCase("operators") 
-								|| key.equalsIgnoreCase("featureAttrMap") || key.equalsIgnoreCase("configInfo")) {
+								|| key.equalsIgnoreCase("featureAttrMap") || key.equalsIgnoreCase("configInfo")||key.equalsIgnoreCase("featureInfo")) {
 							String attr = "";
 							Map<String, String> map = new HashMap<String, String>();
 							map.put("attributes", "name");
@@ -958,6 +959,7 @@ public class GraphServiceImpl {
 							map.put("stages", "name");
 							map.put("tasks", "name");
 							map.put("configInfo", "configName");
+							map.put("featureInfo", "featureName");
 
 							if (map.containsKey(key))
 								attr = childObj.optString(map.get(key));
@@ -990,64 +992,22 @@ public class GraphServiceImpl {
 									childUuid = jsonObj4.optString("uuid");
 									childType = jsonObj4.optString("type");
 									if (!childType.equals(MetaType.simple.toString())) {
-										/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+										baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
 												null, null, null, null, null, childUuid, null, null);
 										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-												: baseEntityList.get(0).getName();*/
-										
-										baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
-										refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
 												: baseEntityList.get(0).getName();
 									} else {
-										continue;
-
+										refName = MetaType.simple.toString();
 									}
 									if (StringUtils.isBlank(refName)) {
 										refName = childType;
 									}
 								}
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-										edgeRowMap, refName + "_" + i, key, null);
-							} else if (attr != "" && attr != null) {
-							    GraphMetaIdentifierHolder graphMetaHolder=new GraphMetaIdentifierHolder();
-/*							    GraphMetaIdentifier graphMeta=new GraphMetaIdentifier();
-*/								if (childObj != null && value.startsWith("{", 0)) {
-									String attr2 = childObj.optString("sourceAttr");
-									JSONObject jsonObj3 = new JSONObject(attr2);
-									String SourceId = childObj.optString("attrSourceId");
-									String SourceName = childObj.optString("attrSourceName");
-									
-
-									if (jsonObj3 != null && attr2.startsWith("{", 0)) {
-										String attr3 = jsonObj3.optString("ref");
-										JSONObject jsonObj4 = new JSONObject(attr3);
-										
-										if (jsonObj4 != null && attr3.startsWith("{", 0)) {
-											childUuid = jsonObj4.optString("uuid");
-											childType = jsonObj4.optString("type");
-											graphMeta.setUuid(childUuid);
-											graphMeta.setType(childType);
-											//graphMeta.setName(SourceName);
-
-											graphMetaHolder.setRef(graphMeta);
-											/*baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
-													null, null, null, null, null, childUuid, null, null);
-											refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-													: baseEntityList.get(0).getName();*/
-											
-										}
-											if (StringUtils.isBlank(refName)) {
-												refName = childType;
-											}
-									}
-									createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
-											edgeRowMap, SourceName + "_" + SourceId, name, graphMetaHolder);
-								} else
-								{
+										edgeRowMap, refName + "_" + i, name, null);
+							} else if (attr != "" && attr != null)
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
 										edgeRowMap, attr, name, null);
-								}
-							}
 							else if (attr1 != "" && attr1 != null)
 								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap,
 										edgeRowMap, attr1, name, null);

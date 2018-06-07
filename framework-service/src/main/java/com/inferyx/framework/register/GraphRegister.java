@@ -1188,7 +1188,6 @@ public class GraphRegister<T> {
 		}
 		String result =null;
 		List<MetaType> metaTypes = MetaType.getMetaList();
-		 GraphMetaIdentifierHolder  graphMetaIdentifierHolder=new GraphMetaIdentifierHolder();
 		for(MetaType mType : metaTypes){
 			try {
 				//Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
@@ -1215,7 +1214,7 @@ public class GraphRegister<T> {
 		this.vertexRowMap = verticesRowMap;
 		this.edgeRowMap = edgeRowMap;
 		
-		graphServiceImpl.deleteAllVertices();
+	    graphServiceImpl.deleteAllVertices();
 		totalVertexList = createTotVertexList(verticesRowMap);
 		graphServiceImpl.saveVertices(totalVertexList, null);
 		graphServiceImpl.deleteAllEdges();

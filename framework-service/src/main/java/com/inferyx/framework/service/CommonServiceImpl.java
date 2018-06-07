@@ -3547,4 +3547,70 @@ public class CommonServiceImpl <T> {
 		return (List<MetaIdentifierHolder>) metaIdentifierHolderList;
 
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public HttpServletResponse genricDownload(String fileType, String fileName, HttpServletResponse response,String uuid) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+		try {
+			List<UploadExec> uploadExec = new ArrayList<UploadExec>();
+			Query query = new Query();
+			query.fields().include("uuid");
+			query.fields().include("name");
+			query.fields().include("location");
+			query.fields().include("fileName");
+			query.addCriteria(Criteria.where("uuid").is(uuid));
+	
+			uploadExec = (List<UploadExec>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
+			
+		//fileName=uploadExec.get(0).getFileName();
+            String filePath = uploadExec.get(0).getLocation();
+            String FileName =uploadExec.get(0).getFileName();
+			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
+			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
+            File file = new File(filePath);
+            
+            if (file.exists()) {
+            	logger.info("File found.");
+                 String mimeType = null;//context.getMimeType(file.getPath());
+                 mimeType= new MimetypesFileTypeMap().getContentType(file);
+                if (mimeType == null) {
+                    mimeType = "application/octet-stream";
+                }
+ 
+                response.setContentType(mimeType);
+                response.setContentLength((int) file.length());
+             //   response.setContentType("application/xml charset=utf-16");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename",fileName+fileExtention);
+                ServletOutputStream os = response.getOutputStream();
+                FileInputStream fis = new FileInputStream(file);
+                Long fileSize = file.length();
+                byte[] buffer = new byte[fileSize.intValue()];
+                int b = -1;
+ 
+                while ((b = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, b);
+                }
+ 
+                fis.close();
+                os.close();
+            } else {
+            	logger.info("Requested " + fileName + " file not found!!");
+            	response.setStatus(300);
+            	throw new FileNotFoundException("Requested " + fileName + " file not found!!");
+            }
+        } catch (IOException e) {
+        	logger.error(e.getMessage());
+        	e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
+        }
+	return response;
+	}
 }
