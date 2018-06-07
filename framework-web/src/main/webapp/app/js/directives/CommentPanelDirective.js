@@ -120,16 +120,20 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 scope.file.splice(index,1);
             }
 
-            scope.uploadFiles=function(uuid){
+            scope.uploadFiles=function(uuid,version){
                 var fd=new FormData();
                 for(var i=0;i<scope.file.length;i++){
                     fd.append('file',scope.file[i])
                 }
                 
-                CommonService.uploadCommentFile(null,fd,uuid,"comment").then(function (response) { onSuccess(response.data) });
+                CommonService.upload(null,fd,uuid,version,"comment",null).then(function (response) { onSuccess(response.data) });
                 var onSuccess = function (response) {
                     scope.file=[];
-                    scope.commentDesc=" ";
+                    scope.isRequire=false
+                    setTimeout(function(){ 
+                        scope.isRequire=true;
+                        scope.commentDesc="" 
+                    },100);
                     scope.getCommentByType();
                     scope.isSubmitDisabled=false;
                 }
@@ -163,7 +167,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                     }else{
                         CommonService.getOneById(response,'comment').then(function(response){onSuccessGetOneById(response.data)});
                         var onSuccessGetOneById=function(response){
-                            scope.uploadFiles(response.uuid);
+                            scope.uploadFiles(response.uuid,response.version);
                         }
                        
                     }
