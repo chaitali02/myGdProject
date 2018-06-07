@@ -10,6 +10,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             options: '=',
         }, 
         link: function (scope, element, attrs) {
+            scope.isRequire=true
             scope.panelOpen=false;
             scope.isFileUpload=false;
             scope.file=[];
@@ -134,10 +135,11 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 }
             }
 
-            scope.submit=function(desc){
+            scope.submit=function(myform){
+              //  console.log(myform.desc.$modelValue)
                 scope.isSubmitDisabled=true;
                 var commentJson={};
-                commentJson.desc=scope.commentDesc;
+                commentJson.desc=myform.desc.$modelValue;
                 var dependsOn={}
                 var ref={};
                 ref.uuid=scope.commentData.uuid;
@@ -150,7 +152,12 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 var onSuccess=function(response){
                     console.log(response);
                     if( scope.file && scope.file.length ==0){
-                        scope.commentDesc=" ";
+                        scope.isRequire=false
+                        setTimeout(function(){ 
+                            scope.isRequire=true;
+                            scope.commentDesc="" 
+                        },100);
+                        
                         scope.getCommentByType();
                         scope.isSubmitDisabled=false;
                     }else{
