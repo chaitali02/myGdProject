@@ -1459,11 +1459,11 @@ public class MetadataServiceImpl {
 			result1= uploadExecServiceImpl.findAllByDependOn(baseEntity.getUuid());
 			
 			//result1 = (List<BaseEntity>) mongoTemplate.find(query2, Helper.getDomainClass(MetaType.uploadExec));
-			for(BaseEntity uploadExe:result1) {
+			for(UploadExec uploadExe:result1) {
 				MetaIdentifierHolder metaIdentifierHolder=new MetaIdentifierHolder();
 				MetaIdentifier metaIdentifier=new MetaIdentifier();
 				metaIdentifier.setUuid(uploadExe.getUuid());
-				metaIdentifier.setName(uploadExe.getName());
+				metaIdentifier.setName(uploadExe.getFileName());
 				metaIdentifier.setType(MetaType.uploadExec);
 				metaIdentifierHolder.setRef(metaIdentifier);
 				uploadExecHolder.add(metaIdentifierHolder);

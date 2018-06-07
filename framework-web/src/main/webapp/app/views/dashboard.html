@@ -29,6 +29,8 @@
   </div><!-- END PAGE HEADER-->
   <br>
    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+   <div  options="dirOptions" type="'dashboard'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dashboarddata" comment-panel-directive></div>
+
   <!-- BEGIN MAIN CONTENT -->
   <div class="row" >
     <div class="col-md-12">
@@ -46,20 +48,30 @@
                <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-click="showview(dashboarddata.uuid,dashboarddata.version)" ng-hide="isAdd" style="height:16px;">
                    <span class="glyphicon glyphicon-file" style="color:white;"></span>
                </a>
-            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==false)? 'currentpage':'notcurrentpage'" data-ng-click="showDashboardGraph(dashboarddata.uuid,dashboarddata.version)" style="height:14px;">
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==false)? 'currentpage':'notcurrentpage'" data-ng-click="showDashboardGraph(dashboarddata.uuid,dashboarddata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
 
-            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" class="reload" ng-click="broadcastRefreshData()" style="height:14px;"> </a>
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" class="" ng-click="broadcastRefreshData()" style="height:14px;"> 
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
 
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="dashboard"  class="remove" style="height:14px;"></a><!-- metadata({type:'dashboard'}) -->
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="dashboard"  class="" style="height:14px;">
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+          
+            </a><!-- metadata({type:'dashboard'}) -->
           </div>
         </div>
 
         <div class="portlet-body form">
           <!-- BEGIN FORM-->
           <div class="form-body graph-body" ng-if="showgraphdiv">
-            <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader"></i>
+            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
             <div class="form-body show-graph-body" tree-graph-directive uuid="dashboarddata.uuid" version="dashboard.defaultVersion.version">
             </div>
           </div>

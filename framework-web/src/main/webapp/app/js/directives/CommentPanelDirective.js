@@ -10,6 +10,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             options: '=',
         }, 
         link: function (scope, element, attrs) {
+            scope.isRequire=true
             scope.panelOpen=false;
             scope.isFileUpload=false;
             scope.file=[];
@@ -50,7 +51,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                         for(var i=0;i< response.length;i++){
                            if(response[i].uploadExecInfo !=null){
                             scope.commentResult[i].isDownloadable=true;
-                            scope.commentResult[i].limitUploadExecInfo=1;
+                            scope.commentResult[i].limitUploadExecInfo=2;
                            }
                         }
                     }
@@ -63,12 +64,11 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             }
             
             scope.ShowMore=function(index){
-                debugger
                 scope.commentResult[index].limitUploadExecInfo=scope.commentResult[index].uploadExecInfo.length;
             }
             scope.ShowLess=function(index){
                 
-                scope.commentResult[index].limitUploadExecInfo=1;
+                scope.commentResult[index].limitUploadExecInfo=2;
             }
             scope.delete=function(uuid){
                 CommonService.delete(uuid,'comment').then(function (response){onSuccess(response.data)})
@@ -90,18 +90,14 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                   });
                   var url = window.URL.createObjectURL(blob);
                   console.log(url)
-                  const data = window.URL.createObjectURL(blob);
-                //   linkElement.setAttribute('href', url);
-                //   linkElement.setAttribute("download",filename);
-                //   var clickEvent = new MouseEvent("click", {
-                //     "view": window,
-                //     "bubbles": true,
-                //     "cancelable": false
-                //   });
-                //   linkElement.dispatchEvent(clickEvent);
-                window.URL.revokeObjectURL(data);
-                
-
+                  linkElement.setAttribute('href', url);
+                  linkElement.setAttribute("download",filename);
+                  var clickEvent = new MouseEvent("click", {
+                    "view": window,
+                    "bubbles": true,
+                    "cancelable": false
+                  });
+                  linkElement.dispatchEvent(clickEvent);
 
                   } catch (ex) {
                   console.log(ex);
@@ -139,10 +135,11 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 }
             }
 
-            scope.submit=function(desc){
+            scope.submit=function(myform){
+              //  console.log(myform.desc.$modelValue)
                 scope.isSubmitDisabled=true;
                 var commentJson={};
-                commentJson.desc=scope.commentDesc;
+                commentJson.desc=myform.desc.$modelValue;
                 var dependsOn={}
                 var ref={};
                 ref.uuid=scope.commentData.uuid;
@@ -155,7 +152,12 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 var onSuccess=function(response){
                     console.log(response);
                     if( scope.file && scope.file.length ==0){
-                        scope.commentDesc=" ";
+                        scope.isRequire=false
+                        setTimeout(function(){ 
+                            scope.isRequire=true;
+                            scope.commentDesc="" 
+                        },100);
+                        
                         scope.getCommentByType();
                         scope.isSubmitDisabled=false;
                     }else{

@@ -58,7 +58,6 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.reader.IReader;
 
 /**
  * @author Ganesh
@@ -419,6 +418,12 @@ public class RExecutor implements IExecutor {
 	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName,
 			Object[] args, Class<?>[] paramtypes, List<Attribute> attributes, int numIterations, String execVersion,
 			String tableName) throws IOException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getCustomDirsFromTrainedModel(Object trngModel) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -28,6 +28,8 @@
     <br>
     <!-- BEGIN MAIN CONTENT -->
       <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+      <div  options="dirOptions" type="'export'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="exportdata" comment-panel-directive></div>
+
     <div class="row" >
       <div class="col-md-12">
         <!-- BEGIN: ACCORDION DEMO -->
@@ -40,13 +42,13 @@
               <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExport==true? 'currentpage':'notcurrentpage'"  data-ng-click="showPage()" style="height:16px;">
                 <span class="glyphicon glyphicon-file" style="color:white;"></span>
               </a>
-              <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExport==false? 'currentpage':'notcurrentpage'" ng-show="isDependencyShow" data-ng-click="showGraph()" style="height:14px;">
+              <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExport==false? 'currentpage':'notcurrentpage'" ng-show="isDependencyShow" data-ng-click="showGraph()" style="height:14px;">
                 <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
               </a>
               <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip"     data-placement="top" tooltip>
                 <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
               </a>
-              <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="migrationassist({type:'export'})" class="remove" style="height:14px;">
+              <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="migrationassist({type:'export'})" class="" style="height:14px;">
                 <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
               </a>
             </div>

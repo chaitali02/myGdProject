@@ -109,12 +109,13 @@ public class RelationOperator {
 			if (otherParams == null 
 					|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()))) == null  
 					&& otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")) == null)) {
-				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				rightTable = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else if (otherParams.containsKey("datapodUuid_".concat(datapod.getUuid()).concat("_tableName"))) {
+				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				String tableKey = "datapodUuid_".concat(datapod.getUuid()).concat("_tableName");
 				rightTable = otherParams.get(tableKey);
 			} else {
+				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()));
 				rightTable = otherParams.get(tableKey);
 				if (StringUtils.isNotBlank(rightTable) && rightTable.contains(",")) {

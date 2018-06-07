@@ -1,13 +1,8 @@
-/*******************************************************************************
- * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
+/**
+ * 
+ * @Ganesh
  *
- * This unpublished material is proprietary to Inferyx Inc.
- * The methods and techniques described herein are considered  trade 
- * secrets and/or confidential. Reproduction or distribution, in whole or 
- * in part, is forbidden.
- *
- * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
- *******************************************************************************/
+ */
 package com.inferyx.framework.reader;
 
 import java.io.IOException;
@@ -28,7 +23,11 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 
-public class OracleReader implements IReader {
+/**
+ * @author Ganesh
+ *
+ */
+public class PostGresReader implements IReader {
 	@Autowired
 	protected MetadataUtil daoRegister;
 	@Autowired
@@ -36,24 +35,25 @@ public class OracleReader implements IReader {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 
-	Logger logger=Logger.getLogger(OracleReader.class);
+	Logger logger=Logger.getLogger(PostGresReader.class);
 	
+
 	@Override
-	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource)
+	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds)
 			throws IOException {
 		ResultSetHolder rsHolder = null;
 		try {
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			IExecutor executor = execFactory.getExecutor(datasource.getType());
-			String databaseName = dataSource.getDbname();
-			rsHolder = executor.executeSql("SELECT * FROM "+databaseName+"."+datapod.getName());
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			String dbName = datasource.getDbname();		
+			rsHolder = exec.executeSql("SELECT * FROM "+dbName+"."+datapod.getName());
 			rsHolder.setTableName(Helper.genTableName(datastore.getLocation()));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | NullPointerException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RuntimeException(e);
-		}
+		}		
 		return rsHolder;
 	}
 

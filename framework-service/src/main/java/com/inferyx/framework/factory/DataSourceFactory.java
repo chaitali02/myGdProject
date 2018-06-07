@@ -20,17 +20,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.reader.HiveReader;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.reader.ImpalaReader;
 import com.inferyx.framework.reader.MySqlReader;
 import com.inferyx.framework.reader.OracleReader;
 import com.inferyx.framework.reader.ParquetReader;
-import com.inferyx.framework.register.CSVRegister;
-import com.inferyx.framework.register.DataSourceRegister;
-import com.inferyx.framework.register.HiveRegister;
+import com.inferyx.framework.reader.PostGresReader;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.writer.HiveWriter;
 import com.inferyx.framework.writer.IWriter;
@@ -38,14 +34,15 @@ import com.inferyx.framework.writer.ImpalaWriter;
 import com.inferyx.framework.writer.MySqlWriter;
 import com.inferyx.framework.writer.OracleWriter;
 import com.inferyx.framework.writer.ParquetWriter;
+import com.inferyx.framework.writer.PostGresWriter;
 
 @Component
 public class DataSourceFactory {
 
-	@Autowired
-	private HiveRegister hiveRegister;
-	@Autowired
-	private CSVRegister csvRegister;
+//	@Autowired
+//	private HiveRegister hiveRegister;
+//	@Autowired
+//	private CSVRegister csvRegister;
 	@Autowired
 	private HiveReader hiveReader;
 	@Autowired
@@ -68,20 +65,26 @@ public class DataSourceFactory {
 	private MySqlWriter mySqlWriter;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private PostGresWriter postGresWriter;
+	@Autowired
+	private PostGresReader postGresReader;
 
-	public DataSourceRegister getDSRegister(String registerType) {
-		switch (registerType) {
-		case "hive":
-			return hiveRegister;
-		case "csv":
-			return csvRegister;
-		/*
-		 * case "impala": return impalaRegister;
-		 */
-		default:
-			return csvRegister;
-		}
-	}
+
+	/********************** UNUSED **********************/
+//	public DataSourceRegister getDSRegister(String registerType) {
+//		switch (registerType) {
+//		case "hive":
+//			return hiveRegister;
+//		case "csv":
+//			return csvRegister;
+//		/*
+//		 * case "impala": return impalaRegister;
+//		 */
+//		default:
+//			return csvRegister;
+//		}
+//	}
 
 	public IReader getDatapodReader(Datapod dp, MetadataUtil commonActivity) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		String dataSourceUUID = dp.getDatasource().getRef().getUuid();
@@ -103,6 +106,8 @@ public class DataSourceFactory {
 			return oracleReader;
 		case "MYSQL":
 			return mySqlReader;
+		case "POSTGRES":
+			return postGresReader;
 		// case "spark": return (dp.getName().equalsIgnoreCase("hive")? hiveReader :
 		// parquetReader);
 		default:
@@ -116,19 +121,21 @@ public class DataSourceFactory {
 		String dataSourceType = datasource.getType();
 		switch (dataSourceType.toUpperCase()) {
 		case "HIVE":// HiveWriter hr = new HiveWriter();
-			hiveWriter.setDaoRegister(daoRegister);
+//			hiveWriter.setDaoRegister(daoRegister);
 			return hiveWriter;
 		case "FILE":// ParquetWriter pr = new ParquetWriter();
 			return parquetWriter;
 		case "IMPALA":
-			impalaWriter.setDaoRegister(daoRegister);
+//			impalaWriter.setDaoRegister(daoRegister);
 			return impalaWriter;
 		case "MYSQL":
-			mySqlWriter.setDaoRegister(daoRegister);
+//			mySqlWriter.setDaoRegister(daoRegister);
 			return mySqlWriter;
 		case "ORACLE":
-			oracleWriter.setDaoRegister(daoRegister);
+//			oracleWriter.setDaoRegister(daoRegister);
 			return oracleWriter;
+		case "POSTGRES":
+			return postGresWriter;
 		default:
 		}
 		return null;
@@ -151,6 +158,8 @@ public class DataSourceFactory {
 			return oracleReader;
 		case "MYSQL":
 			return mySqlReader;
+		case "POSTGRES":
+			return postGresReader;
 		// case "spark": return (dp.getName().equalsIgnoreCase("hive")? hiveReader :
 		// parquetReader);
 		default:
@@ -166,19 +175,21 @@ public class DataSourceFactory {
 		String dataSourceType = datasource.getType();
 		switch (dataSourceType.toUpperCase()) {
 		case "HIVE":// HiveWriter hr = new HiveWriter();
-			hiveWriter.setDaoRegister(daoRegister);
+//			hiveWriter.setDaoRegister(daoRegister);
 			return hiveWriter;
 		case "FILE":// ParquetWriter pr = new ParquetWriter();
 			return parquetWriter;
 		case "IMPALA":
-			impalaWriter.setDaoRegister(daoRegister);
+//			impalaWriter.setDaoRegister(daoRegister);
 			return impalaWriter;
 		case "MYSQL":
-			mySqlWriter.setDaoRegister(daoRegister);
+//			mySqlWriter.setDaoRegister(daoRegister);
 			return mySqlWriter;
 		case "ORACLE":
-			oracleWriter.setDaoRegister(daoRegister);
+//			oracleWriter.setDaoRegister(daoRegister);
 			return oracleWriter;
+		case "POSTGRES":
+			return postGresWriter;
 		default:
 		}
 		return null;

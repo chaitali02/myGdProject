@@ -251,7 +251,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
 			
-		});   ;
+		});
 	}
 	else {
 		$scope.isAdd = true;
