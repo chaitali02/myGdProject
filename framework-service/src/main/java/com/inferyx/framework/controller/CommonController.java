@@ -317,9 +317,10 @@ public class CommonController<T> {
 											   @RequestParam(value = "fileType", required = false) String fileType,
 											   @RequestParam(value = "type", required = false) String type,
 											   @RequestParam(value = "uuid", required = false) String uuid,
+											   @RequestParam(value = "version", required = false) String version,
 											   @RequestParam(value = "action", required = false) String action)
 											throws IOException, JSONException, ParseException {
-		List<MetaIdentifierHolder> result = commonServiceImpl.uploadGenric(multiPartFile,extension ,fileType, type,uuid,action);
+		List<MetaIdentifierHolder> result = commonServiceImpl.uploadGenric(multiPartFile,extension ,fileType, type,uuid,version,action);
 		
 		return result;
 	}

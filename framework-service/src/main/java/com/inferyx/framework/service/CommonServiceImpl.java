@@ -3458,7 +3458,7 @@ public class CommonServiceImpl <T> {
 	}
 
 	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
-			String type, String uuid, String action)
+			String type, String uuid,String version, String action)
 			throws FileNotFoundException, IOException, JSONException, ParseException {
 
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
@@ -3517,28 +3517,34 @@ public class CommonServiceImpl <T> {
 																 * uploadFile(multipartFile, originalFileName));
 																 */
 					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
-					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.Import.toString()),
-							metaUuid, metaVersion, originalFileName));
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
 					metaIdentifierHolderList.add(metaIdentifierHolder2);
 				}
 				if (type != null && type.equalsIgnoreCase("comment")) {
 					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
-							Helper.getMetaType(MetaType.comment.toString()), uuid, metaVersion, filename1)));
+							Helper.getMetaType(MetaType.comment.toString()), uuid, version, filename1)));
 					save(MetaType.uploadExec.toString(), uploadExec);
 					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
-					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.comment.toString()),
-							uuid, metaVersion, filename1));
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
 					metaIdentifierHolderList.add(metaIdentifierHolder2);
 				} else if (fileType != null && fileType.equalsIgnoreCase("script")) {
 					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
-							Helper.getMetaType(MetaType.model.toString()), metaUuid, metaVersion, filename1)));
+							Helper.getMetaType(MetaType.model.toString()), uuid, version, filename1)));
 					save(MetaType.uploadExec.toString(), uploadExec);
 					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
-					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.model.toString()),
-							metaUuid, metaVersion, filename1));
+/*					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.model.toString()),
+							metaUuid, metaVersion, filename1));*/
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
 					metaIdentifierHolderList.add(metaIdentifierHolder2);
 				} else {
 					save(MetaType.uploadExec.toString(), uploadExec);
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
 				}
 
 			}
