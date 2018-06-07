@@ -1290,23 +1290,20 @@ public class GraphServiceImpl {
 										edgeRowMap, position, key, null);
 						} 
 						else if (childObj != null ) {
-							/*String refN = childObj.optString("ref");
+							String refN = childObj.optString("ref");
 					
 							JSONObject jsonObjType = new JSONObject(refN);
 							childUuid = jsonObjType.optString("uuid");
 							childType = jsonObjType.optString("type");
 							
-							baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
-									null, null, null, null, null, childUuid, null, null);
-							refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-									: baseEntityList.get(0).getName();	
+			
 
 							baseEntityList=	commonServiceImpl.getResolveNameByUuidandType(childUuid, childType);
 							refName=(baseEntityList == null || baseEntityList.isEmpty()) ? ""
-												: baseEntityList.get(0).getName();*/
+												: baseEntityList.get(0).getName();
 			
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									i + "", name, null);
+									refName, name, null);
 							}
 				}
 			} else if (childObj != null && value.startsWith("{", 0)) {
