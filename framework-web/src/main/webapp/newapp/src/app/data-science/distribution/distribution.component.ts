@@ -73,9 +73,12 @@ export class DistributionComponent implements OnInit {
     }
     ];
     this.librarytypesOption = [
-      { "value": "sparkML", "label": "sparkML" },
+      { "value": "SPARKML", "label": "SPARKML" },
       { "value": "R", "label": "R" },
-      { "value": "java", "label": "java" }
+      { "value": "JAVA", "label": "JAVA" },
+      { "value": "MATH3", "label": "MATH3" }
+
+
     ]
 
 

@@ -1047,8 +1047,9 @@ export class AppMetadata {
         parentIconCaption: 'Operator',
         allowInMenu: true,
         listState: 'operator',
+        detailState: 'operator',
+        moduleState: 'dataScience',
         moduleCaption: 'Data Science',
-        moduleState: 'Data Science',
       //  detailState: 'createoperator'
       },
       'operatorexec': {
