@@ -93,6 +93,7 @@ import com.inferyx.framework.dao.IImportDao;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.dao.ILoadExecDao;
 import com.inferyx.framework.dao.ILogDao;
+import com.inferyx.framework.dao.ILovDao;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.dao.IMeasureDao;
@@ -415,8 +416,18 @@ public class CommonServiceImpl <T> {
 	ITagDao iTagDao;
 	@Autowired
 	Helper helper;
+	@Autowired
+	ILovDao iLovDao;
 	
 	
+	public ILovDao getiLovDao() {
+		return iLovDao;
+	}
+
+	public void setiLovDao(ILovDao iLovDao) {
+		this.iLovDao = iLovDao;
+	}
+
 	public ITagDao getiTagDao() {
 		return iTagDao;
 	}
