@@ -220,37 +220,36 @@ MetadataModule.controller('MetadataController', function ($location, $filter, da
 
 
 /* Start MetadataDatapodController*/
-MetadataModule.controller('MetadataDatapodController', function ($location, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope,commentService) {
+MetadataModule.controller('MetadataDatapodController', function ($location, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope, commentService) {
+	
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
-		
 		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
-		});   
-		
-		
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
+		});
 	}
+
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
-		$scope.isPanelActiveOpen=true;
+		$scope.isPanelActiveOpen = true;
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
 		});
 	}
 	else {
@@ -266,7 +265,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 	$scope.data = null;
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
-	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer','decimal'];
+	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal'];
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle', 'postgres']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;
@@ -287,22 +286,20 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 	var notify = {
 		type: 'success',
 		title: 'Success',
-		content: 'Dashboard deleted Successfully',
+		content: '',
 		timeout: 3000 //time in ms
 	};
-	$scope.userDetail={}
-	$scope.userDetail.uuid= $rootScope.setUseruuid;
-	$scope.userDetail.name= $rootScope.setUserName;
-	
-
+	$scope.userDetail = {}
+	$scope.userDetail.uuid = $rootScope.setUseruuid;
+	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.pagination = {
 		currentPage: 1,
 		pageSize: 10,
 		paginationPageSizes: [10, 25, 50, 75, 100],
 		maxSize: 5,
 	}
-
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
+
 	
 	/*Start showPage*/
 	$scope.showPage = function () {
@@ -325,18 +322,18 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 			mode: 'false'
 		});
 	}
-	
+
 	$scope.showview = function (uuid, version) {
-		if(!$scope.isEdit){
+		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('metaListdatapod', {
 				id: uuid,
 				version: version,
 				mode: 'true'
 			});
-	    }
+		}
 	}
-	
+
 	$scope.gridOptions = {
 		rowHeight: 40,
 		enableGridMenu: true,
@@ -347,14 +344,14 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		exporterPdfDefaultStyle: { fontSize: 9 },
 		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
 	}
-	
+
 	$scope.gridOptionsDatapod = {
 		enableGridMenu: true,
 		rowHeight: 40,
 		enableRowSelection: true,
 		enableSelectAll: true
 	};
-	
+
 	$scope.canEdit = function () {
 		if ($stateParams.mode == "true") {
 			return false;
@@ -363,7 +360,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 			return true;
 		}
 	};
-	
+
 	$scope.gridOptionsDatapod.columnDefs = [
 		{
 			name: 'attributeId',
@@ -473,7 +470,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		}
 	}
 
-	
+
 
 	$scope.datapodFormChange = function () {
 		if ($scope.mode == "true") {
@@ -516,7 +513,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 				$scope.gridOptions.columnDefs.push(attribute)
 			}
 			$scope.counter = 0;
-			
+
 			// angular.forEach(response[0], function (value, key) {
 			// 	debugger
 			// 	if (key != "rownum" && key != "version") {
@@ -775,20 +772,20 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
 			notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = 'Datapod Saved Successfully'
+				notify.title = 'Success',
+				notify.content = 'Datapod Saved Successfully'
 			$scope.$emit('notify', notify);
 			$scope.okdatapodsave();
 		}
 		var onError = function (response) {
 			notify.type = 'error',
-			notify.title = 'Error',
-			notify.content = "Some Error Occurred"
+				notify.title = 'Error',
+				notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}/*End SubmitDatapod*/
-	
-	
+
+
 	$scope.addRow = function () {
 		// if($scope.attributetable == null){
 		// 	$scope.attributetable =[];
