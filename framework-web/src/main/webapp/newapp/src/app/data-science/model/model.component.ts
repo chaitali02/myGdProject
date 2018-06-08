@@ -214,7 +214,6 @@ export class ModelComponent implements OnInit {
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    debugger
     this.breadcrumbDataFrom[2].caption = response.name;
     this.model = response;
     this.uuid = response.uuid;
@@ -269,7 +268,6 @@ export class ModelComponent implements OnInit {
   }
 
   onSuccessgetAllLatest(response) {
-    debugger
     this.isParamColEnable = false;
     this.getAllArray = [];
     for (const i in response) {
@@ -286,7 +284,6 @@ export class ModelComponent implements OnInit {
   }
 
   onChangeDependsOnType1() {
-    debugger
     console.log(this.dependsType);
     if (this.dependsType == "algorithm") {
       this.getAllLatest();
@@ -305,7 +302,6 @@ export class ModelComponent implements OnInit {
   }
 
   onSuccessgetFormulaByType2(response) {
-    debugger
     this.isParamColEnable = true;
     this.getAllArray = [];
     for (const i in response) {
@@ -323,7 +319,6 @@ export class ModelComponent implements OnInit {
   }
 
   onChangeDependsOn() {
-    debugger
     if (this.dependsOnName == "formula") {
       this.getParamListByFormula();
       this.getFormulaByType2();
@@ -332,7 +327,6 @@ export class ModelComponent implements OnInit {
   }
 
   getParamListByFormula() {
-    debugger
     console.log(this.dependsOn.uuid);
     this._modelService.getParamListByFormula(this.getAllArray[0]["value"]["uuid"], "paramlsit").subscribe(
       response => { this.onSuccesgetParamListByFormula(response) },
@@ -341,7 +335,6 @@ export class ModelComponent implements OnInit {
   }
 
   onSuccesgetParamListByFormula(response) {
-    debugger
     this.allParamlist = response;
     this.getParamArray = [];
 
@@ -405,10 +398,8 @@ export class ModelComponent implements OnInit {
   }
 
   submit() {
-    debugger
     this.isSubmit = "true"
     this.modelJson = {};
-
     this.modelJson["uuid"] = this.uuid;
     this.modelJson["name"] = this.model.name;
     this.modelJson["desc"] = this.model.desc;
@@ -427,7 +418,7 @@ export class ModelComponent implements OnInit {
     }
     this.modelJson["customFlag"] = this.customFlag == true ? "Y" : "N";
     if (this.customFlag == false) {
-      debugger
+     
       let dependsOn1 = {};
       let ref = {};
       ref["type"] = this.dependsType;
@@ -447,7 +438,7 @@ export class ModelComponent implements OnInit {
         featureObj["desc"] = this.featuresArray[i].desc;
         featureObj["minVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].minVal;
         featureObj["maxVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].maxVal;
-        debugger
+        
         if (this.dependsType == "formula") {
           // if(this.featuresArray[i].param == !null){
           let paramListInfo = {};
@@ -500,7 +491,6 @@ export class ModelComponent implements OnInit {
   }
 
   onSuccesssubmit(response) {
-    debugger
     console.log(response);
     this.msgs = [];
     // this.isSubmit = "true"
