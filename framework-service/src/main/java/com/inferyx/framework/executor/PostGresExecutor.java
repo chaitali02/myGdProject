@@ -300,7 +300,7 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit,
-			String clientContext) throws Exception {
+			String targetTable, String clientContext) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -379,7 +379,7 @@ public class PostGresExecutor implements IExecutor {
 	 * @see com.inferyx.framework.executor.IExecutor#executePredict(java.lang.Object, com.inferyx.framework.domain.Datapod, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
 			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
@@ -390,7 +390,7 @@ public class PostGresExecutor implements IExecutor {
 	 * @see com.inferyx.framework.executor.IExecutor#trainModel(org.apache.spark.ml.param.ParamMap, java.lang.String[], java.lang.String, java.lang.String, double, double, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -478,6 +478,23 @@ public class PostGresExecutor implements IExecutor {
 
 	@Override
 	public List<String> getCustomDirsFromTrainedModel(Object trngModel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object loadTrainedModel(Class<?> modelClass, String location)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -13,11 +13,14 @@ import org.apache.spark.sql.types.StructField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.RowObj;
+import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.factory.RowObjFactory;
+import com.inferyx.framework.service.CommonServiceImpl;
 
 /**
  * @author joy
@@ -27,9 +30,11 @@ import com.inferyx.framework.factory.RowObjFactory;
 public class Math3RandDistribution extends RandomDistribution {
 	
 	@Autowired
-	protected Helper helper;
-	@Autowired
 	protected RowObjFactory rowObjFactory;
+	@Autowired
+	protected CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private ExecutorFactory execFactory;
 
 	/**
 	 * 
@@ -40,8 +45,8 @@ public class Math3RandDistribution extends RandomDistribution {
 
 	@Override
 	public List<RowObj> generateData(Distribution distribution, Object distributionObject, String methodName, List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws Exception {
-		StructField[] fieldArray = new StructField[attributes.size()];
-		int count = 0;
+//		StructField[] fieldArray = new StructField[attributes.size()];
+//		int count = 0;
 		
 		Class<?> returnType = distributionObject.getClass().getMethod(methodName).getReturnType();
 		if(returnType.isArray()) {
@@ -55,15 +60,17 @@ public class Math3RandDistribution extends RandomDistribution {
 				throw new RuntimeException("Insufficient number of columns.");
 		}
 
-//		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
-//		fieldArray[count] = idField;
-//		count++;
-		for(Attribute attribute : attributes){						
-			StructField field = new StructField(attribute.getName(), (DataType)helper.getDataType(attribute.getType()), true, Metadata.empty());
-//			StructField field = new StructField(attribute.getName(), DataTypes.DoubleType, true, Metadata.empty());
-			fieldArray[count] = field;
-			count ++;
-		}
+////		StructField idField = new StructField("id", DataTypes.IntegerType, true, Metadata.empty());
+////		fieldArray[count] = idField;
+////		count++;
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		IExecutor exec = execFactory.getExecutor(datasource.getType());
+//		for(Attribute attribute : attributes){						
+//			StructField field = new StructField(attribute.getName(), (DataType)exec.getDataType(attribute.getType()), true, Metadata.empty());
+////			StructField field = new StructField(attribute.getName(), DataTypes.DoubleType, true, Metadata.empty());
+//			fieldArray[count] = field;
+//			count ++;
+//		}
 		//StructType schema = new StructType(fieldArray);		
 		
 		List<RowObj> rowList = new ArrayList<>();

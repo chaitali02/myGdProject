@@ -248,7 +248,7 @@ public class OperatorServiceImpl {
 					MetaType.datastore.toString());
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			data = exec.fetchResults(datastore, null, rowLimit, commonServiceImpl.getApp().getUuid());
+			data = exec.fetchResults(datastore, null, rowLimit, null, commonServiceImpl.getApp().getUuid());
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;

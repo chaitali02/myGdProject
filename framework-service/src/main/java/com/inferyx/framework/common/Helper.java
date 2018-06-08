@@ -729,27 +729,28 @@ public class Helper {
 		}
 		return destMap;
 	}
-	
-	public Object getDataType(String dataType) throws NullPointerException {
-		if(dataType == null)
-			return null;
 
-		if(dataType.contains("(")) {
-			dataType = dataType.substring(0, dataType.indexOf("("));
-		}
-		
-		switch (dataType.toLowerCase()) {
-			case "integer": return DataTypes.IntegerType;
-			case "double": return DataTypes.DoubleType;
-			case "date": return DataTypes.DateType;
-			case "string": return DataTypes.StringType;
-			case "timestamp": return DataTypes.TimestampType;
-			case "decimal" : return DataTypes.createDecimalType();
-			case "vector" : return new VectorUDT();
-			
-            default: return null;
-		}
-	}
+	/********************** UNUSED **********************/
+//	public Object getDataType(String dataType) throws NullPointerException {
+//		if(dataType == null)
+//			return null;
+//
+//		if(dataType.contains("(")) {
+//			dataType = dataType.substring(0, dataType.indexOf("("));
+//		}
+//		
+//		switch (dataType.toLowerCase()) {
+//			case "integer": return DataTypes.IntegerType;
+//			case "double": return DataTypes.DoubleType;
+//			case "date": return DataTypes.DateType;
+//			case "string": return DataTypes.StringType;
+//			case "timestamp": return DataTypes.TimestampType;
+//			case "decimal" : return DataTypes.createDecimalType();
+//			case "vector" : return new VectorUDT();
+//			
+//            default: return null;
+//		}
+//	}
 	
 	/**
 	 * 

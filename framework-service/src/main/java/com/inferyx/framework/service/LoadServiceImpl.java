@@ -294,9 +294,8 @@ public class LoadServiceImpl {
 
 			Datapod datapod = (Datapod) daoRegister
 					.getRefObject(new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()));
-			//Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			//IExecutor exec = execFactory.getExecutor(datasource.getType());
-			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			long count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), datapodTableName,
 					datapod, securityServiceImpl.getAppInfo().getRef().getUuid());
 

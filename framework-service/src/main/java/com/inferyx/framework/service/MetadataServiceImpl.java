@@ -616,7 +616,8 @@ public class MetadataServiceImpl {
 	public List<BaseEntity> getBaseEntityByCriteria(String type, String name, String userName, String startDate,
 			String endDate, String tags, String active, String uuid, String version, String published)
 			throws ParseException, JsonProcessingException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {		MetaType metaType = Helper.getMetaType(type);
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {		
+		MetaType metaType = Helper.getMetaType(type);
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 		// Apply filter

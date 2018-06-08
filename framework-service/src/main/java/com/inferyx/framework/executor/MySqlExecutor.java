@@ -12,6 +12,7 @@ package com.inferyx.framework.executor;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -25,11 +26,23 @@ import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.SparkContext;
 import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.Metadata;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,11 +67,16 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
+import com.inferyx.framework.writer.IWriter;
 
 @Component
 public class MySqlExecutor implements IExecutor {
 	@Autowired 
 	ConnectionFactory connectionFactory;
+	@Autowired
+	private SparkExecutor sparkExecutor;
+	@Autowired
+	private SparkSession sparkSession;
 	
 	static final Logger logger = Logger.getLogger(MySqlExecutor.class);	
 	
@@ -79,8 +97,16 @@ public class MySqlExecutor implements IExecutor {
 					countRows = stmt.executeUpdate(sql);
 					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
 					rsHolder.setCountRows(countRows);
-				} else 
+				} else if(sql.toUpperCase().contains("CREATE")) {
+					boolean isCreated = stmt.execute(sql);
+					if(isCreated) {
+						logger.info("tabel created successfully.");
+					} else {
+						logger.error("tabel not created.");
+					}
+				} else {
 					rs = stmt.executeQuery(sql);
+				}
 				rsHolder.setResultSet(rs);
 				rsHolder.setType(ResultType.resultset);
 			} catch (SQLException e) {				
@@ -237,24 +263,55 @@ public class MySqlExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext)
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String targetTable, String clientContext)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT * FROM "+targetTable;
+		return executeAndFetch(sql, clientContext);
 	}
 
 	@Override
 	public List<double[]> twoDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
-		// TODO Auto-generated method stub
-		return null;
+		
+		ResultSet resultSet = executeSql(sql, clientContext).getResultSet();		
+//		ResultSetMetaData rsmd = resultSet.getMetaData();
+//		int numOfCols = rsmd.getColumnCount();
+		
+		List<String> columnIndexList = new ArrayList<>();
+		for(AttributeRefHolder attributeRefHolder : attributeInfo) {
+				columnIndexList.add(attributeRefHolder.getAttrName());
+		}	
+		
+		List<double[]> valueList = new ArrayList<>();
+		while(resultSet.next()) {
+			List<Double> covarsValList = new ArrayList<>();
+			for(String col : columnIndexList) {
+				covarsValList.add((Double)resultSet.getObject(col));
+			}
+			valueList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
+		}	
+		return valueList;
 	}
 
 	@Override
 	public List<Double> oneDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
-		// TODO Auto-generated method stub
-		return null;
+		ResultSet resultSet = executeSql(sql, clientContext).getResultSet();		
+//		ResultSetMetaData rsmd = resultSet.getMetaData();
+//		int numOfCols = rsmd.getColumnCount();
+		
+		List<String> columnIndexList = new ArrayList<>();
+		for(AttributeRefHolder attributeRefHolder : attributeInfo) {
+				columnIndexList.add(attributeRefHolder.getAttrName());
+		}	
+		
+		List<Double> valueList = new ArrayList<>();
+		while(resultSet.next()) {
+			for(String col : columnIndexList) {
+				valueList.add((Double)resultSet.getObject(col));
+			}
+		}		
+		return valueList;
 	}
 
 	@Override
@@ -274,7 +331,7 @@ public class MySqlExecutor implements IExecutor {
 	public String assembleRandomDF(String[] fieldArray, String tableName, boolean isDistribution, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return tableName;
 	}
 
 	@Override
@@ -285,15 +342,14 @@ public class MySqlExecutor implements IExecutor {
 	}
 
 	@Override
-	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
 			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		// TODO Auto-generated method stub
-		return null;
+		return sparkExecutor.predict(trainedModel, targetDp, filePathUrl, tableName, clientContext);
 	}
 
 	@Override
-	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -324,8 +380,30 @@ public class MySqlExecutor implements IExecutor {
 	 */
 	@Override
 	public Object getDataType(String dataType) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		if(dataType == null)
+			return null;
+
+		if(dataType.contains("(")) {
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
+		switch (dataType.toLowerCase()) {
+			case "integer": return "INT";
+			case "double": return "DOUBLE";
+			case "date": return "DATE";
+			case "string": return "VARCHAR(50)";
+			case "timestamp": return "TIMESTAMP";
+			case "long" : return "BIGINT";
+			case "boolean" : return "BIT(1)";
+			case "byte" : return "TINYINT";
+			case "float" : return "FLOAT";
+			case "null" : return "NULL";
+			case "short" : return "SMALLINT";
+			case "decimal" : return "DECIMAL";
+			case "vector" : return "ARRAY";
+			
+            default: return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -368,15 +446,108 @@ public class MySqlExecutor implements IExecutor {
 	public ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes,
 			String tableName, String filePath, Datapod datapod, String saveMode, String clientContext)
 			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		StringBuilder createTempTable = new StringBuilder();
+		createTempTable.append("CREATE TEMPORARY TABLE IF NOT EXISTS ");
+		createTempTable.append(tableName+"_temp");
+		createTempTable.append("(");
+		
+		for(Attribute attribute : attributes){						
+			createTempTable.append(attribute.getName()+" "+(String)getDataType(attribute.getType()));
+			createTempTable.append(", ");
+		}
+		String sql = createTempTable.substring(0, createTempTable.lastIndexOf(","));
+		sql = sql.concat(")");
+		logger.info("create temporary table query: "+sql);
+		
+		executeSql(sql, clientContext);
+		
+		StringBuilder insertQuery = new StringBuilder();
+		insertQuery.append("INSERT INTO ");
+		insertQuery.append(tableName);
+		insertQuery.append(" ");
+		//insertQuery.append(" SELECT ");
+		insertQuery.append("(");
+		for(Attribute attribute : attributes) {
+			insertQuery.append(attribute.getName());
+			insertQuery.append(", ");
+		}
+		insertQuery = new StringBuilder(insertQuery.substring(0, insertQuery.lastIndexOf(",")));
+		insertQuery.append(") ");
+		insertQuery.append(" VALUES ");
+		for(RowObj rowObj : rowObjList) {
+			insertQuery.append("(");
+			for(Object row : rowObj.getRowData()) {
+				insertQuery.append(row);
+				insertQuery.append(", ");
+			}
+			insertQuery = new StringBuilder(insertQuery.substring(0, insertQuery.lastIndexOf(",")));
+			insertQuery.append(")");
+			insertQuery.append(", ");
+		}
+		insertQuery = new StringBuilder(insertQuery.substring(0, insertQuery.lastIndexOf(",")));
+		logger.info("insert query: "+insertQuery);
+		ResultSetHolder rsHolder = executeSql(insertQuery.toString(), clientContext);
+		rsHolder.setTableName(tableName);
+
+		return rsHolder;
 	}
 
 	@Override
 	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes,
-			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException, ClassNotFoundException {
+		RDD<Double> obj = null;
+		SparkSession sparkSession = null;
+		ResultSetHolder resultSetHolder = new ResultSetHolder();
+		Object[] arguments = new Object[args.length+1];
+		Class<?>[] modParamTypes = new Class<?>[paramtypes.length+1];
+		Dataset<Row> df = null;
+		try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			Object object = conHolder.getStmtObject();
+			if (object instanceof SparkSession) {
+				sparkSession = (SparkSession) conHolder.getStmtObject();
+				arguments[0] = sparkSession.sparkContext();
+				modParamTypes[0] = SparkContext.class;
+				int count = 1;
+				for (Object arg : args) {
+					arguments[count] = arg;
+					modParamTypes[count]=paramtypes[count-1];
+					logger.info("Argument arguments["+count+"] = "+arg);
+					logger.info("Type modParamTypes["+count+"] = "+modParamTypes[count]);
+					count++;
+				}
+				count=0;
+				StructField[] fieldArray = new StructField[attributes.size()];
+				for(Attribute attribute : attributes){						
+					StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
+					fieldArray[count] = field;
+					count ++;
+				}
+				StructType schema = new StructType(fieldArray);
+				
+				StructField[] randFieldArray = new StructField[1];
+				randFieldArray[0] = new StructField(attributes.get(1).getName(), (DataType)getDataType(attributes.get(1).getType()), true, Metadata.empty());
+				schema = new StructType(randFieldArray);
+				
+				
+				obj = (RDD<Double>)(Class.forName(distribution.getClassName())).getMethod(methodName, modParamTypes).invoke(null, arguments);
+				df = sparkSession.createDataset(obj, Encoders.DOUBLE()).toDF(attributes.get(1).getName());
+			}
+			df.show();
+			df.createOrReplaceTempView(tableName+"_vw");
+			df = sparkSession.sql("select row_number() over(ORDER BY 1) as "+attributes.get(0).getDispName()+", "+attributes.get(1).getDispName()+", " + execVersion + " as "+attributes.get(2).getDispName()+" from " + tableName+"_vw");
+			resultSetHolder.setCountRows(df.count());
+			resultSetHolder.setType(ResultType.dataframe);
+			resultSetHolder.setDataFrame(df);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		return resultSetHolder;
 	}
 
 	@Override
@@ -385,4 +556,16 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
+		return sparkExecutor.predict2(trainedModel, targetDp, filePathUrl, tableName, fieldArray, trainName, label, datasource, clientContext);
+	}
+
+	@Override
+	public Object loadTrainedModel(Class<?> modelClass, String location)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException {
+		return sparkExecutor.loadTrainedModel(modelClass, location);
+	}
 }

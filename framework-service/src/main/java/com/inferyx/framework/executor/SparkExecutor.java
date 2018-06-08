@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
@@ -63,6 +64,8 @@ import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -90,6 +93,7 @@ import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
+import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
@@ -123,6 +127,9 @@ public class SparkExecutor implements IExecutor {
 	ModelExecServiceImpl modelExecServiceImpl;
 	@Autowired
 	private ConnectionFactory connFactory;
+	@Autowired
+	Engine engine;
+	
 	/*
 	 * @Autowired HiveContext hiveContext;
 	 */
@@ -134,6 +141,8 @@ public class SparkExecutor implements IExecutor {
 	private DataSourceFactory datasourceFactory;
 	@Autowired
 	private Helper helper;
+	@Autowired
+	private ModelServiceImpl modelServiceImpl;
 
 
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
@@ -178,14 +187,14 @@ public class SparkExecutor implements IExecutor {
 				count=0;
 				StructField[] fieldArray = new StructField[attributes.size()];
 				for(Attribute attribute : attributes){						
-					StructField field = new StructField(attribute.getName(), (DataType)helper.getDataType(attribute.getType()), true, Metadata.empty());
+					StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
 					fieldArray[count] = field;
 					count ++;
 				}
 				StructType schema = new StructType(fieldArray);
 				
 				StructField[] randFieldArray = new StructField[1];
-				randFieldArray[0] = new StructField(attributes.get(1).getName(), (DataType)helper.getDataType(attributes.get(1).getType()), true, Metadata.empty());
+				randFieldArray[0] = new StructField(attributes.get(1).getName(), (DataType)getDataType(attributes.get(1).getType()), true, Metadata.empty());
 				schema = new StructType(randFieldArray);
 				
 				
@@ -195,6 +204,8 @@ public class SparkExecutor implements IExecutor {
 			df.show();
 			df.createOrReplaceTempView(tableName+"_vw");
 			df = sparkSession.sql("select row_number() over(ORDER BY 1) as "+attributes.get(0).getDispName()+", "+attributes.get(1).getDispName()+", " + execVersion + " as "+attributes.get(2).getDispName()+" from " + tableName+"_vw");
+			resultSetHolder.setCountRows(df.count());
+			resultSetHolder.setType(ResultType.dataframe);
 			resultSetHolder.setDataFrame(df);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
@@ -1141,7 +1152,7 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext)
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String targetTable, String clientContext)
 			throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
 		Dataset<Row> df = null;
@@ -1539,8 +1550,8 @@ public class SparkExecutor implements IExecutor {
 	}
 	
 	@Override
-	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String assembledDFSQL = "SELECT * FROM " + tableName;
+	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String assembledDFSQL = "SELECT * FROM " + tableName + " limit 100";
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		//df.show(true);
 		@SuppressWarnings("unchecked")
@@ -1580,12 +1591,27 @@ public class SparkExecutor implements IExecutor {
 			rsHolder.setType(ResultType.dataframe);
 			rsHolder.setDataFrame(predictionDf);
 			rsHolder.setCountRows(predictionDf.count());
+			rsHolder.setTableName(tableName);
 			rsHolder.setTableName("tempPredictResult");
 			return rsHolder;
 	}
+	
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		//Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Dataset<Row> df = rsHolder.getDataFrame();
+		df.show(false);
+		String url = "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+		Properties connectionProperties = new Properties();
+		connectionProperties.put("driver", datasource.getDriver());
+		connectionProperties.put("user", datasource.getUsername());
+		connectionProperties.put("password", datasource.getPassword());
+		df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));
+		df.write().mode(SaveMode.Append).jdbc(url, rsHolder.getTableName(), connectionProperties);
+		return rsHolder;
+	}
 
 	@Override
-	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
 		PipelineModel trngModel = null;
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
@@ -1762,5 +1788,68 @@ public class SparkExecutor implements IExecutor {
 			}
 		}
 		return customDirectories;
+	}
+	
+	@Override
+	public Object loadTrainedModel(Class<?> modelClass, String location) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		Object trainedModel = null;
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		Object mlReader = modelClass.getMethod("read").invoke(modelClass);
+		
+		Object mlReader2 = mlReader.getClass().getMethod("context", SQLContext.class).invoke(mlReader, sparkSession.sqlContext());
+		trainedModel = mlReader2.getClass().getMethod("load", String.class).invoke(mlReader2, location);
+		//LinearRegressionModel.read().context(sparkSession.sqlContext()).load(arg0)
+		return trainedModel;
+	}
+
+	@Override
+	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
+		String sql = "SELECT * FROM " + tableName + " LIMIT 100";
+		Dataset<Row> df1 = executeSql(sql, clientContext).getDataFrame();
+		
+		VectorAssembler va = new VectorAssembler();
+		Dataset<Row> transformedDf = null;
+
+		if (trainName.contains("LinearRegression")
+				|| trainName.contains("LogisticRegression")) {
+			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+			Dataset<Row> trainingTmp = va.transform(df1);
+			transformedDf = trainingTmp.withColumn("label", trainingTmp.col(label).cast("Double"))
+					.select("label", "features");
+
+			logger.info("DataFrame count: " + transformedDf.count());
+
+		} else {
+			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+			transformedDf = va.transform(df1);
+		}
+		
+		transformedDf.show(false);
+		@SuppressWarnings("unchecked")
+		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
+				.invoke(trainedModel, transformedDf);
+		predictionDf.show(true);
+
+		String targetTableName = null;
+		if(targetDp != null)
+			targetTableName = modelServiceImpl.getTableNameByMetaObject(targetDp);
+		sqlContext.registerDataFrameAsTable(predictionDf, "tempPredictResult");
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setType(ResultType.dataframe);
+		rsHolder.setDataFrame(predictionDf);
+		rsHolder.setCountRows(predictionDf.count());
+		rsHolder.setTableName(targetTableName);
+		String dsType = datasource.getType();
+		if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+				&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+			persistDataframe(rsHolder, datasource);	
+		}
+		
+		rsHolder.setTableName("tempPredictResult");
+		return rsHolder;
 	}
 }
