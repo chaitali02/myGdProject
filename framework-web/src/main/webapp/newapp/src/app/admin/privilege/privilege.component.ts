@@ -145,6 +145,8 @@ export class PrivilegeComponent implements OnInit {
       let meta = {};
       meta["label"]=response[i]['name'];    
       meta["value"] = {}
+      meta["value"]["uuid"]=response[i]['uuid'];
+
       meta["value"]["name"]=response[i]['name'];
       meta["value"]["label"]=response[i]['label'];
       this.metaOptions[i]=meta;
@@ -178,6 +180,7 @@ export class PrivilegeComponent implements OnInit {
   }
 
   submitPrivilege(){
+    debugger
     let privilegeJson = {}
     privilegeJson["name"] = this.privilege.name;
     privilegeJson["uuid"] = this.privilege.uuid;
@@ -193,9 +196,10 @@ export class PrivilegeComponent implements OnInit {
 
     let metaId = {};
     let refMetaId = {};
-    refMetaId["name"] = this.meta;
-    metaId["ref"] = refMetaId;
-    privilegeJson["metaId"] = metaId;
+    metaId ["uuid"]=this.meta.uuid
+    metaId["type"]="meta"
+    refMetaId["ref"]=metaId
+    privilegeJson["metaId"] = refMetaId;
     this.isSubmitEnable=true;
     console.log(JSON.stringify(privilegeJson));
     this._commonService.submit("privilege",privilegeJson).subscribe(
