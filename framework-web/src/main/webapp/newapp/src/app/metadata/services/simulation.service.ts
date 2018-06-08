@@ -14,6 +14,14 @@ import { BindingFlags } from '@angular/core/src/view';
 export class SimulationService {
     
   constructor(@Inject(Http) private http: Http,private _sharedService: SharedService,private _commonService:CommonService) { }
+  getAllModelByType(flag:string,type:String): Observable<any[]> {
+    let url ="model/getAllModelByType?action=view&customFlag=" + flag + "&type=" + type;
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
   
 private handleError(error: Response) {
     return Observable.throw(error.statusText);

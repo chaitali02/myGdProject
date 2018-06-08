@@ -18,6 +18,7 @@ import { DatasetService } from '../../metadata/services/dataset.service';
   templateUrl: './model.template.html',
 })
 export class ModelComponent implements OnInit {
+  dependsType: any;
   IsLableSelected: boolean;
   selectallattribute: any;
   isTabelShow: boolean;
@@ -65,10 +66,10 @@ export class ModelComponent implements OnInit {
   allSourceLabel: any;
   labelArray: any;
   scriptTypes: any;
-  type: any[];
+  type: any;
   dependsOn: any;
   dependsOnName: any;
-  dependsOnTypes: any;
+  dependsOnTypes: String[];
   getAllArray: any;
   getFromulaArray: any;
   allParamlist: any;
@@ -79,11 +80,11 @@ export class ModelComponent implements OnInit {
   getParamArray: any;
   typeOfArray: any;
   isDisabled: any;
-  customFlag: any;
+  customFlag: boolean;
   scriptCode: any;
-  param : any;
+  param: any;
   paramListInfo: any;
-  modelJson : any;
+  modelJson: any;
   // featureInterface = new FeatureInterface();
   // featureObj: FeatureInterface[];
   // newCar: any;
@@ -92,6 +93,7 @@ export class ModelComponent implements OnInit {
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: ModelService, private _datasetService: DatasetService) {
     this.showModel = true;
     this.model = {};
+    this.customFlag = false;
     this.dependsOn = {};
     this.selectedRows = [];
     this.model["active"] = true;
@@ -108,9 +110,11 @@ export class ModelComponent implements OnInit {
       { "label": "R", "value": "R" }
     ]
     this.dependsOnTypes = [
-      { "label": "algorithm", "value": "algorithm" },
-      { "label": "formula", "value": "formula" }
+      // { 'label': 'formula', 'value': 'formula' },
+      // { 'label': 'algorithm', 'value': 'algorithm' }
+      "algorithm", "formula"
     ]
+    this.dependsType = "";
     this.typeOfArray = [
       { "label": "integer", "value": "integer" },
       { "label": "string", "value": "string" },
@@ -226,27 +230,34 @@ export class ModelComponent implements OnInit {
     //this.source=response["source"]["ref"].type
     //this.dependsOn = response.dependsOn.ref.type;
     //this.dependsOnName = response.dependsOn.ref.name;
-    if (response.dependsOn != null) {
-      let dependOnTemp: DependsOn = new DependsOn();
-      dependOnTemp["label"] = response["dependsOn"]["ref"]["name"];
-      dependOnTemp["type"] = response["dependsOn"]["ref"]["type"];
-      dependOnTemp["uuid"] = response["dependsOn"]["ref"]["uuid"];
-      this.dependsOn = dependOnTemp;
-    }
-    if (this.dependsOn.type == "algorithm") {
-      this.getAllLatest();
-    }
-    else {
-      this.getFormulaByType2();
-      // this.getParamListByFormula();
-    }
-    this.label = response.label;
-    this.featuresArray = response.features;
+
     this.customFlag = response["customFlag"] == 'Y' ? true : false;
     if (this.customFlag == true) {
       this.getModelScript();
     }
-    console.log(JSON.stringify(response.features));
+    else {
+      if (response.dependsOn != null) {
+        let dependOnTemp: DependsOn = new DependsOn();
+        dependOnTemp.label = response.dependsOn.ref.name;
+        //  dependOnTemp.type = response["dependsOn"]["ref"]["type"];
+        dependOnTemp.uuid = response.dependsOn.ref.uuid;
+        this.dependsOn = dependOnTemp;
+
+        this.dependsType = response.dependsOn.ref.type;
+        console.log(JSON.stringify(this.dependsOn));
+       
+        if (this.dependsType == "algorithm") {
+          this.getAllLatest();
+        }
+        else {
+          this.getFormulaByType2();
+          // this.getParamListByFormula();
+        }
+      }
+      this.label = response.label;
+      this.featuresArray = response.features;
+      console.log(JSON.stringify(response.features));
+    }
   }
 
   getAllLatest() {
@@ -261,19 +272,23 @@ export class ModelComponent implements OnInit {
     this.getAllArray = [];
     for (const i in response) {
       let getAllObj = {};
-      getAllObj["label"] = response[i].name;
+      // getAllObj["label"] = response[i]['name'];
+      // getAllObj["value"] = response[i]['uuid'];
+      getAllObj["label"] = response[i]['name'];
       getAllObj["value"] = {};
-      getAllObj["value"]["label"] = response[i].name;
-      getAllObj["value"]["uuid"] = response[i].uuid;
+      getAllObj["value"]["label"] = response[i]['name'];
+      getAllObj["value"]["uuid"] = response[i]['uuid'];
+      // getAllObj["value"]["type"] = "algorithm"
       this.getAllArray[i] = getAllObj;
     }
   }
 
-  onChangeDependsOnType() {
-    if (this.dependsOn.type == "algorithm") {
+  onChangeDependsOnType1() {
+    console.log(this.dependsType);
+    if (this.dependsType == "algorithm") {
       this.getAllLatest();
     }
-    else {
+    else if (this.dependsType == "formula") {
       this.getFormulaByType2();
 
     }
@@ -291,10 +306,13 @@ export class ModelComponent implements OnInit {
     this.getAllArray = [];
     for (const i in response) {
       let getAllObj = {};
+      //getAllObj["label"] = response[i].ref.name;
+      //getAllObj["value"] = response[i].ref.uuid;
       getAllObj["label"] = response[i].ref.name;
       getAllObj["value"] = {};
       getAllObj["value"]["label"] = response[i].ref.name;
       getAllObj["value"]["uuid"] = response[i].ref.uuid
+      // getAllObj["value"]["type"] = response[i].ref.type
       this.getAllArray[i] = getAllObj;
       this.getParamListByFormula();
     }
@@ -303,8 +321,9 @@ export class ModelComponent implements OnInit {
   onChangeDependsOn() {
     if (this.dependsOnName == "formula") {
       this.getParamListByFormula();
-
+      this.getFormulaByType2();
     }
+    this.getAllLatest();
   }
 
   getParamListByFormula() {
@@ -324,7 +343,9 @@ export class ModelComponent implements OnInit {
       getParamObj["label"] = response[i].paramName;
       getParamObj["value"] = {};
       getParamObj["value"]["label"] = response[i].paramName;
-      getParamObj["value"]["uuid"] = response[i].paramId;
+      getParamObj["value"]["uuid"] = response[i].ref.uuid;
+      getParamObj["value"]["paramId"] = response[i].paramId;
+      // getParamObj["value"]["type"] = response[i].paramType;
       this.getParamArray[i] = getParamObj;
     }
     console.log(JSON.stringify(this.getParamArray));
@@ -379,7 +400,7 @@ export class ModelComponent implements OnInit {
   submit() {
     this.isSubmit = "true"
     this.modelJson = {};
-    this.modelJson["uuid"] = this.model.uuid;
+    this.modelJson["uuid"] = this.uuid;
     this.modelJson["name"] = this.model.name;
     this.modelJson["desc"] = this.model.desc;
     let tagArray = [];
@@ -389,15 +410,20 @@ export class ModelComponent implements OnInit {
       }
     }
     this.modelJson["tags"] = tagArray;
-    this.modelJson["active"] = this.model.active == true ? 'Y' : "N"
-    this.modelJson["published"] = this.model.published == true ? 'Y' : "N"
-    this.modelJson["type"] = this.model.type;
-    this.modelJson["customFlag"] = this.customFlag == true ? 'Y' : "N";
-    if(this.customFlag == false) {
+    this.modelJson["active"] = this.model.active == true ? "Y" : "N"
+    this.modelJson["published"] = this.model.published == true ? "Y" : "N"
+    this.modelJson["type"] = this.type;
+    if (this.model.type == "SPARK") {
+      this.customFlag = false
+    }
+    this.modelJson["customFlag"] = this.customFlag == true ? "Y" : "N";
+    if (this.customFlag == false) {
+     
       let dependsOn1 = {};
       let ref = {};
-      ref["type"] = this.dependsOn.type;
+      ref["type"] = this.dependsType;
       ref["uuid"] = this.dependsOn.uuid;
+      ref["name"] = this.dependsOn.label;
       dependsOn1["ref"] = ref;
       this.modelJson["dependsOn"] = dependsOn1;
 
@@ -410,56 +436,55 @@ export class ModelComponent implements OnInit {
         featureObj["name"] = this.featuresArray[i].name;
         featureObj["type"] = this.featuresArray[i].type;
         featureObj["desc"] = this.featuresArray[i].desc;
-        featureObj["minVal"] = this.featuresArray[i].type == "string" ? " " : this.featuresArray[i].minVal;
-        featureObj["maxVal"] = this.featuresArray[i].type == "string" ? " " : this.featuresArray[i].maxVal;
+        featureObj["minVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].minVal;
+        featureObj["maxVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].maxVal;
         
-        if(this.dependsOn.type == "formula" )
-        {
-        // if(this.featuresArray[i].param == !null){
-        let paramListInfo = {};
-        let ref = {};
-        ref["type"] = "paramlist";
-        ref["uuid"] = this.featuresArray[i].param.uuid;
-        paramListInfo["ref"] = ref;
-               
-        featureObj["paramListInfo"] =  paramListInfo;
+        if (this.dependsType == "formula") {
+          // if(this.featuresArray[i].param == !null){
+          let paramListInfo = {};
+          let ref = {};
+          ref["type"] = "paramlist";
+          ref["uuid"] = this.featuresArray[i].param.uuid;
+          ref["name"] = this.featuresArray[i].param.name;
+          paramListInfo["ref"] = ref;
+          paramListInfo["paramId"] = this.featuresArray[i].param.paramId;
+          featureObj["paramListInfo"] = paramListInfo;
         }
-      else{
-        featureObj["paramListInfo"] = null;
-      }
+        else {
+          featureObj["paramListInfo"] = null;
+        }
         featuresArray1[i] = featureObj
       }
       this.modelJson["features"] = featuresArray1;
       console.log(JSON.stringify(this.modelJson));
-      this._commonService.submit("model",this.modelJson).subscribe(
+      this._commonService.submit("model", this.modelJson).subscribe(
         response => { this.onSuccesssubmit(response) },
         error => console.log("Error ::" + error)
       )
     }
 
-    else(this.customFlag == true)
-    {
-    var blob = new Blob([this.scriptCode], { type: "text/xml"});
-    var fd = new FormData();
-    fd.append('file', blob);
-    var filetype = this.model.type == "PYTHON" ?"py":"R"
-    this._modelService.uploadFile(filetype,fd,"script").subscribe(
-      response => {this.onSuccessUpload(response)},
-      error => console.log("Error ::"+error)
-    )
-    }    
+    else if (this.customFlag == true) {
+      var blob = new Blob([this.scriptCode], { type: "text/xml" });
+      var fd = new FormData();
+      fd.append('file', blob);
+      var filetype = this.model.type == "PYTHON" ? "py" : "R"
+      this._modelService.uploadFile(filetype, fd, "script").subscribe(
+        response => { this.onSuccessUpload(response) },
+        error => console.log("Error ::" + error)
+      )
+    }
   }
 
-  onSuccessUpload(response){
+  onSuccessUpload(response) {
     console.log(response);
-    let responseBody= response._body
-    this.modelJson["type"]=this.type
-    this.modelJson["scriptName"]=responseBody;
+    let responseBody = response._body
+    this.modelJson["type"] = this.type
+    this.modelJson["scriptName"] = responseBody;
     let result = responseBody.split("_")
-    this.modelJson["uuid"]=result[0]
-    this.modelJson["version"]=result[1].split(".")[0]
+    this.modelJson["uuid"] = result[0]
+    this.modelJson["version"] = result[1].split(".")[0]
     console.log(JSON.stringify(this.modelJson));
-    this._commonService.submit("model",this.modelJson).subscribe(
+    this._commonService.submit("model", this.modelJson).subscribe(
       response => { this.onSuccesssubmit(response) },
       error => console.log("Error ::" + error)
     )
@@ -468,14 +493,14 @@ export class ModelComponent implements OnInit {
   onSuccesssubmit(response) {
     console.log(response);
     this.msgs = [];
-     // this.isSubmit = "true"
-      this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Model Saved and Submited Successfully' });
-      setTimeout(() => {
-        this.goBack()
-      }, 1000);
+    // this.isSubmit = "true"
+    this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Model Saved and Submited Successfully' });
+    setTimeout(() => {
+      this.goBack()
+    }, 1000);
   }
 
- 
+
   // submit() {
   //   this.isSubmit = "true"
   //   let modelJson = {};

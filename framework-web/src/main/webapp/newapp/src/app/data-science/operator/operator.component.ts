@@ -40,6 +40,8 @@ export class OperatorComponent implements OnInit {
   VersionList: SelectItem[] = [];
   msgs: any;
   paramList: DependsOn;
+  operatortypesOption:{ 'value': String, 'label': String }[];
+  operatorType :any;
 
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: OperatorService) {
     this.operator = true;
@@ -49,11 +51,11 @@ export class OperatorComponent implements OnInit {
 
     this.breadcrumbDataFrom = [{
       "caption": "Data Science",
-      "routeurl": "/app/list/operatortype"
+      "routeurl": "/app/list/operator"
     },
     {
       "caption": "Operator",
-      "routeurl": "/app/list/operatortype"
+      "routeurl": "/app/list/operator"
     },
     {
       "caption": "",
@@ -61,7 +63,11 @@ export class OperatorComponent implements OnInit {
     }
     ];
 
+    this.operatortypesOption = [
+      { "value": "GenerateData", "label": "GenerateData" },
+      { "value": "Transpose", "label": "Transpose" }
 
+    ]
 
   }
 
@@ -79,7 +85,7 @@ export class OperatorComponent implements OnInit {
     })
   }
   getOneByUuidAndVersion() {
-    this._commonService.getOneByUuidAndVersion(this.id, this.version, 'operatortype')
+    this._commonService.getOneByUuidAndVersion(this.id, this.version, 'operator')
       .subscribe(
       response => {
         this.onSuccessgetOneByUuidAndVersion(response)
@@ -89,7 +95,7 @@ export class OperatorComponent implements OnInit {
 
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('operatortype', this.id)
+    this._commonService.getAllVersionByUuid('operator', this.id)
       .subscribe(
       response => {
         this.OnSuccesgetAllVersionByUuid(response)
@@ -109,6 +115,7 @@ export class OperatorComponent implements OnInit {
     this.createdBy = response.createdBy.ref.name;
     this.operator.published = response["published"] == 'Y' ? true : false
     this.operator.active = response["active"] == 'Y' ? true : false
+    //this.operatorType=response["operatorType"];
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["paramList"]["ref"]["name"];
     dependOnTemp.uuid = response["paramList"]["ref"]["uuid"];
@@ -157,7 +164,7 @@ export class OperatorComponent implements OnInit {
 
 
   onVersionChange() {
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'operatortype')
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'operator')
       .subscribe(
       response => {//console.log(response)},
         this.onSuccessgetOneByUuidAndVersion(response)
@@ -169,10 +176,10 @@ export class OperatorComponent implements OnInit {
 
   public goBack() {
     // this._location.back();
-    this.router.navigate(['app/list/operatortype']);
+    this.router.navigate(['app/list/operator']);
   }
 
-  submitOperatorType() {
+  submitoperator() {
     
     this.isSubmitEnable = true;
     let operatorJson = {};
@@ -192,6 +199,8 @@ export class OperatorComponent implements OnInit {
     operatorJson["desc"] = this.operator.desc;
     operatorJson["active"] = this.operator.active == true ? "Y" : "N";
     operatorJson["published"] = this.operator.published == true ? "Y" : "N";
+    operatorJson["operatorType"] = this.operator.operatorType;
+
     let paramlist = {};
     let refParam = {};
     if (this.paramList != null) {
@@ -202,7 +211,7 @@ export class OperatorComponent implements OnInit {
     }
     operatorJson["paramList"] = paramlist;
     console.log(JSON.stringify(operatorJson));
-    this._commonService.submit("operatortype", operatorJson).subscribe(
+    this._commonService.submit("operator", operatorJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
@@ -217,7 +226,14 @@ export class OperatorComponent implements OnInit {
       this.goBack()
     }, 1000);
   }
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/dataScience/operator', uuid, version, 'false']);
+  }
 
+
+  showview(uuid, version) {
+    this.router.navigate(['app/dataScience/operator', uuid, version, 'true']);
+  }
 
 }
 

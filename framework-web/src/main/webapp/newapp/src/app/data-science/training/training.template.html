@@ -16,15 +16,15 @@
                 <div class="actions">
                     <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless"
                         href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                        ng-hide="isAdd" data- (click)="enableEdit(  train  .uuid,  train  .version)" *ngIf="mode">
+                        ng-hide="isAdd" data-(click)="enableEdit(train.uuid,train.version)" *ngIf="mode">
                         <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
                     <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless"
                         href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-                        ng-hide="isAdd" data- (click)="showview(  train  .uuid,  train  .version)" *ngIf="mode">
+                        ng-hide="isAdd" data-(click)="showview(train.uuid,train.version)" *ngIf="mode">
                         <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
-                    <!--  <a class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip  ng-show="isDependencyShow" [ngClass] ="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(  train  .uuid,  train  .version)"  style="border:0px solid transparent !important;">
+                    <!--  <a class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip  ng-show="isDependencyShow" [ngClass] ="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(train.uuid,train .version)"  style="border:0px solid transparent !important;">
                            <i class="fa fa-sitemap" style="margin:2px auto;color:white;"></i>
                        </a>-->
                     <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white borderless"
@@ -78,7 +78,7 @@
                                         <div class="form-group" *ngIf="mode">
                                             <label class="col-md-3 control-label">UUID</label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" [(ngModel)]="  train.uuid" name="uuid" placeholder="" [disabled]="true">
+                                                <input type="text" class="form-control" [(ngModel)]="train.uuid" name="uuid" placeholder="" [disabled]="true">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -86,7 +86,7 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" [(ngModel)]="  train.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                                                <input type="text" class="form-control" [(ngModel)]="train.name" name="name" placeholder="" [disabled]="mode == 'true'">
                                             </div>
                                         </div>
                                         <div class="form-group" *ngIf="mode">
@@ -106,7 +106,7 @@
                                         <div class="form-group" *ngIf="mode">
                                             <label class="col-md-3 control-label">CreatedOn</label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" [disabled]="true" [(ngModel)]="  train  .createdOn" name="createdOn">
+                                                <input type="text" class="form-control" [disabled]="true" [(ngModel)]="train.createdOn" name="createdOn">
                                             </div>
                                         </div>
                                         <div class="form-group taginput">
@@ -118,14 +118,14 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                                             <div class="col-md-6">
-                                                <textarea [disabled]="mode == 'true'" [(ngModel)]="  train  .desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
+                                                <textarea [disabled]="mode == 'true'" [(ngModel)]="train.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <div class="btn-group">
-                                                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="  train.active" name="active" [checked]="active" color="#32c5d2"
+                                                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="train.active" name="active" [checked]="active" color="#32c5d2"
                                                         labelOn="Yes" labelOff="No"></ui-switch>
                                                 </div>
                                             </div>
@@ -135,7 +135,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <div class="btn-group">
-                                                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="  train .published " name="published" [checked]="published"
+                                                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="train.published " name="published" [checked]="published"
                                                         color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                                                 </div>
                                             </div>
@@ -162,21 +162,17 @@
                                                 <p-dropdown [options]="allModel" [(ngModel)]="selectModel" name="selectModel" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
                                                     [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeModel()">
                                                 </p-dropdown>
-                                                <!-- <select select2 class="form-control" [disabled]="{{mode}}" data-[(ngModel)]="selectModel" ng-options="r as r.name for r in allModel track by r.uuid" ng-change="onChangeModel()">
-                                                </select> -->
+
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Source</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <!-- <p-dropdown [options]="sourceTypes" [(ngModel)]="selectSourceType" name="selectSourceType" [style]="{'width':'100%','padding':'3px'}"
-                                                        [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSourceType()">
-                                                        </p-dropdown> -->
+
                                                 <select class="form-control" [(ngModel)]="selectSourceType" (change)="onChangeSourceType()" name="selectSourceType" [disabled]="mode == 'true'">
                                                     <option *ngFor="let app of sourceTypes" [ngValue]="app">{{app}}</option>
                                                 </select>
-                                                <!-- <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="selectSourceType" ng-options="r for r in sourceTypes" ng-change="onChangeSourceType()">
-                                                    </select> -->
+
                                             </div>
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
                                             </label>
@@ -184,8 +180,7 @@
                                                 <p-dropdown [options]="allSource" [(ngModel)]="selectSource" name="selectSource" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
                                                     [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSource()">
                                                 </p-dropdown>
-                                                <!-- <select class="form-control" select2 [disabled]="{{mode}}" ng-change="onChangeSource()" data-[(ngModel)]="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
-                                                    </select> -->
+
                                             </div>
                                         </div>
                                         <div class="row">
@@ -196,10 +191,7 @@
                                                     </div>
                                                     <div class="actions">
                                                         <div class="btn-group btn-group-devided" data-toggle="buttons">
-                                                            <!-- <div class="x_title" style="padding:10px;">
-                                                                        <button type="Button" class=" btn btn-danger fa fa-minus pull-right" [disabled]="true"></button>
-                                                                        <button type="Button" class=" btn btn-success fa fa-plus pull-right" [disabled]="true"></button>
-                                                                    </div> -->
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -209,7 +201,7 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th style="width:2%; text-align:center">ID</th>
-                                                                    <th style="width:18%;">Features</th> 
+                                                                    <th style="width:18%;">Features</th>
                                                                     <th style="width:20%;">Attributes</th>
 
                                                                 </tr>
@@ -218,14 +210,12 @@
                                                                 <tr *ngFor="let data of featureMapTableArray;let i=index">
                                                                     <td>
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <input type="text" class="form-control" [(ngModel)]="data.featureMapId"
-                                                                                name="id+{{i}}" value="{{i}}" [disabled]="true">
+                                                                            <input type="text" class="form-control" [(ngModel)]="data.featureMapId" name="id+{{i}}" value="{{i}}" [disabled]="true">
                                                                         </span>
                                                                     </td>
                                                                     <td>
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureName"
-                                                                                name="sourceFeature+{{i}}" title="{{data.sourceFeature.dname}}"
+                                                                            <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureName" name="sourceFeature+{{i}}" title="{{data.sourceFeature.dname}}"
                                                                                 [disabled]="true">
                                                                         </span>
                                                                     </td>
@@ -236,13 +226,7 @@
                                                                         </p-dropdown>
                                                                     </td>
                                                                 </tr>
-                                                                <!-- <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" [(ngModel)]="data.id" [disabled]="true"></span></td>
-                                                                          <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureName" title="{{data.sourceFeature.dname}}" [disabled]="true"></span></td>
-                                                                          <td> -->
-                                                                <!-- span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                              <<select select2 [(ngModel)]="data.targetFeature" ng-options=" x as x.dname for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" [disabled]="{{mode}}" class="form-control"></select>
-                                                                              </span>   
-                                                                          </td>-->
+
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -275,12 +259,12 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Train Percent</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
                                                 <input type="number" limit-to="2" class="form-control" name="trainPercent" min="1" max="99" style="width:64px;" [(ngModel)]="train.trainPercent"
-                                                    (onChange)="onChageTrainPercent()">
+                                                    (click)="onChangeTrainPercent()">
                                             </div>
                                             <label class="control-label col-md-4 col-sm-4 col-xs-12" style="width:11%;float:left;margin-left:-1%;">Val Percent</label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <input type="number" limit-to="2" class="form-control" name="valPercent" min="1" max="99" maxlength="2" style="width:64px;"
-                                                    [(ngModel)]="train.valPercent" (onChange)="onChageValPercent()">
+                                                    [(ngModel)]="train.valPercent" (click)="onChangeValPercent()">
                                             </div>
                                         </div>
                                         <div class="form-group">

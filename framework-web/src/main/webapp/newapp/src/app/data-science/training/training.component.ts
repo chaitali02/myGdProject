@@ -58,10 +58,6 @@ export class TrainingComponent implements OnInit {
     this.train["active"] = true;
     this.continueCount = 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
-    // this.sourceTypes = [{label:"datapod",value:"datapod"},
-    // {label:"dataset",value:"dataset"},
-    // {label:"rule",value:"rule"},
-    // ]
     this.sourceTypes = ["datapod", "dataset", "rule"]
     this.selectSourceType = this.sourceTypes[0];
     this.breadcrumbDataFrom = [{
@@ -89,7 +85,7 @@ export class TrainingComponent implements OnInit {
         this.getOneByUuidAndVersion();
         this.getAllVersionByUuid();
         this.getAllLatestModel();
-        
+
 
 
       }
@@ -97,7 +93,7 @@ export class TrainingComponent implements OnInit {
         this.getAllLatestModel()
         this.getAllLatestSource(this.selectSourceType)
         this.getAllLatestTarget(this.selectTargetType)
-        //this.getAttribute()
+
       }
 
     })
@@ -170,7 +166,6 @@ export class TrainingComponent implements OnInit {
       temp[i] = ver;
     }
     this.allTarget = temp
-    //this.selectTarget=this.allTarget[0]
   }
   onChangeSourceType() {
 
@@ -190,7 +185,6 @@ export class TrainingComponent implements OnInit {
       temp[i] = ver;
     }
     this.allSource = temp
-    //  this.selectSource=this.allSource[0]
   }
   public get value(): string {
     return
@@ -268,18 +262,11 @@ export class TrainingComponent implements OnInit {
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
     dependOnTemp.version = response["dependsOn"]["ref"]["version"];
     this.selectModel = dependOnTemp
-    // this.selectSourceType.label=response["source"]["ref"]["type"];
-    // this.selectSourceType.value=response["source"]["ref"]["type"];
     this.selectSourceType = response["source"]["ref"]["type"];
-    // this.selectTargetType=response["target"]["ref"]["type"];
     let sourceTemp: DependsOn = new DependsOn();
     sourceTemp.label = response["source"]["ref"]["name"];
     sourceTemp.uuid = response["source"]["ref"]["uuid"];
     this.selectSource = sourceTemp
-    // let targetTemp: DependsOn = new DependsOn();
-    // targetTemp.label = response["target"]["ref"]["name"];
-    // targetTemp.uuid = response["target"]["ref"]["uuid"];
-    // this.selectTarget=targetTemp
     this.getAllLatestModel()
     this.getAllLatestSource(this.selectSourceType)
     this.getAllLatestTarget(this.selectTargetType)
@@ -290,11 +277,6 @@ export class TrainingComponent implements OnInit {
       var sourceFeature = {};
       var targetFeature = {};
       featureMap["featureMapId"] = response.featureAttrMap[i].featureMapId;
-      // sourceFeature.datapodname = response.featureMap[i].sourceFeature.ref.name;
-      // sourceFeature.name = response.featureMap[i].sourceFeature.attrName;
-      // sourceFeature.attributeId = response.featureMap[i].sourceFeature.attrId;
-      // sourceFeature.id = response.featureMap[i].sourceFeature.ref.uuid + "_" + response.featureMap[i].sourceFeature.attrId;
-      // sourceFeature.dname = response.featureMap[i].sourceFeature.ref.name + "." + response.featureMap[i].sourceFeature.attrName;
       sourceFeature["uuid"] = response.featureAttrMap[i].feature.ref.uuid;
       sourceFeature["type"] = response.featureAttrMap[i].feature.ref.type;
       sourceFeature["featureId"] = response.featureAttrMap[i].feature.featureId;
@@ -402,20 +384,21 @@ export class TrainingComponent implements OnInit {
 
   }
   enableEdit(uuid, version) {
-    this.router.navigate(['app/dataScience/train  ', uuid, version, 'false']);
+    this.router.navigate(['app/dataScience/train', uuid, version, 'false']);
   }
+
 
   showview(uuid, version) {
-    this.router.navigate(['app/dataScience/train  ', uuid, version, 'true']);
+    this.router.navigate(['app/dataScience/train', uuid, version, 'true']);
   }
 
 
- onChageTrainPercent  () {
+  onChangeTrainPercent() {
     this.train.valPercent = (100 - this.train.trainPercent);
   }
 
-  onChageValPercent() {
-    
+  onChangeValPercent() {
+
     this.train.trainPercent = (100 - this.train.valPercent);
   }
 
@@ -508,7 +491,7 @@ export class TrainingComponent implements OnInit {
     }, 1000);
 
   }
-
+  30
 
 
 
