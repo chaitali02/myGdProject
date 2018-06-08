@@ -1577,6 +1577,16 @@ public class CommonServiceImpl <T> {
 						List<FeatureAttrMap> featureAttrMap = (List<FeatureAttrMap>) method.invoke(object);
 						object = resolveFeatureAttrMap(featureAttrMap, object);
 					}
+					 
+					if ((method.getName().contains("ParamListInfo")) && method.getName().startsWith(GET)){
+						ParamListHolder paramListHolder = (ParamListHolder) method.invoke(object);
+						ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
+						for(Param param : paramList.getParams()) {							
+							if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
+								paramListHolder.setParamName(param.getParamName());
+						}
+						object = object.getClass().getMethod(SET+"ParamListInfo", List.class).invoke(object, paramListHolder);
+					}
 					
 					Object invokedObj = method.invoke(object);
 					if (invokedObj == null || invokedObj.getClass().isPrimitive()) {
@@ -1605,15 +1615,7 @@ public class CommonServiceImpl <T> {
 					if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 						continue;
 					}
-					if ((method.getName().contains("ParamListInfo")) && method.getName().startsWith(GET)){
-						ParamListHolder paramListHolder = (ParamListHolder) method.invoke(object);
-						ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
-						for(Param param : paramList.getParams()) {							
-							if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
-								paramListHolder.setParamName(param.getParamName());
-						}
-						object = object.getClass().getMethod(SET+"ParamListInfo", List.class).invoke(object, paramListHolder);
-					}
+					
 					resolveName(invokedObj, type);
 				}
 			}catch (NullPointerException | NoSuchMethodException e) {
