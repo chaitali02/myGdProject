@@ -220,7 +220,7 @@ MetadataModule.controller('MetadataController', function ($location, $filter, da
 
 
 /* Start MetadataDatapodController*/
-MetadataModule.controller('MetadataDatapodController', function ($location, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope, commentService) {
+MetadataModule.controller('MetadataDatapodController', function ($location,$timeout, $http, $filter, dagMetaDataService, $state, $scope, $stateParams, $cookieStore, MetadataDatapodSerivce, $sessionStorage, privilegeSvc, $rootScope, commentService,CommonService) {
 	
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -300,7 +300,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 	}
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 
-	
+
 	/*Start showPage*/
 	$scope.showPage = function () {
 		$scope.showFrom = true;
@@ -471,7 +471,19 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 	}
 
 
-
+    $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.datapodFormChange = function () {
 		if ($scope.mode == "true") {
 			$scope.datapodHasChanged = true;
@@ -614,6 +626,15 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 		var onSuccessGetLatestByUuid = function (response) {
 			var defaultversion = {};
 			$scope.datapoddata = response.datapodata
+			var tags = [];
+			if (response.datapodata.tags != null) {
+				for (var i = 0; i < response.datapodata.tags.length; i++) {
+					var tag = {};
+					tag.text = response.datapodata.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
 			//console.log(JSON.stringify($scope.datapoddata))
 			$scope.gridOptionsDatapod.data = response.attributes;
 			/*if($sessionStorage.showgraph == true && $sessionStorage.fromStateName !="metadata"){
@@ -669,10 +690,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $htt
 				}
 			}
 			var tags = [];
-			if (response.tags != null) {
+			if (response.datapodata.tags != null) {
 				for (var i = 0; i < response.datapodata.tags.length; i++) {
 					var tag = {};
-					tag.text = response.tags[i];
+					tag.text = response.datapodata.tags[i];
 					tags[i] = tag
 					$scope.tags = tags;
 				}
