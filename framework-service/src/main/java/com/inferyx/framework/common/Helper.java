@@ -65,6 +65,7 @@ import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Log;
+import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.Measure;
@@ -262,6 +263,7 @@ public class Helper {
 				case operator : return "iOperatorDao";
 				case comment : return "iCommentDao";
 				case tag : return "iTagDao";
+				case lov : return "iLovDao";
 				default:
 					return null;
 			}
@@ -369,6 +371,8 @@ public class Helper {
 		case operator : return Operator.class;
 		case comment : return Comment.class;
 		case tag : return Tag.class;
+		case lov : return Lov.class;
+
 
 		default:
 			return null;
@@ -448,6 +452,7 @@ public class Helper {
 				case "operator" : return MetaType.operator;
 				case "comment" : return MetaType.comment;
 				case "tag" : return MetaType.tag;
+				case "lov" : return MetaType.lov;
 
 				default : return null;
 			}

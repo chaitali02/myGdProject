@@ -93,6 +93,7 @@ import com.inferyx.framework.dao.IImportDao;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.dao.ILoadExecDao;
 import com.inferyx.framework.dao.ILogDao;
+import com.inferyx.framework.dao.ILovDao;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.dao.IMeasureDao;
@@ -415,8 +416,18 @@ public class CommonServiceImpl <T> {
 	ITagDao iTagDao;
 	@Autowired
 	Helper helper;
+	@Autowired
+	ILovDao iLovDao;
 	
 	
+	public ILovDao getiLovDao() {
+		return iLovDao;
+	}
+
+	public void setiLovDao(ILovDao iLovDao) {
+		this.iLovDao = iLovDao;
+	}
+
 	public ITagDao getiTagDao() {
 		return iTagDao;
 	}
@@ -1577,6 +1588,16 @@ public class CommonServiceImpl <T> {
 						List<FeatureAttrMap> featureAttrMap = (List<FeatureAttrMap>) method.invoke(object);
 						object = resolveFeatureAttrMap(featureAttrMap, object);
 					}
+					 
+					if ((method.getName().contains("ParamListInfo")) && method.getName().startsWith(GET)){
+						ParamListHolder paramListHolder = (ParamListHolder) method.invoke(object);
+						ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
+						for(Param param : paramList.getParams()) {							
+							if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
+								paramListHolder.setParamName(param.getParamName());
+						}
+						object = object.getClass().getMethod(SET+"ParamListInfo", List.class).invoke(object, paramListHolder);
+					}
 					
 					Object invokedObj = method.invoke(object);
 					if (invokedObj == null || invokedObj.getClass().isPrimitive()) {
@@ -1605,6 +1626,7 @@ public class CommonServiceImpl <T> {
 					if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 						continue;
 					}
+					
 					resolveName(invokedObj, type);
 				}
 			}catch (NullPointerException | NoSuchMethodException e) {
