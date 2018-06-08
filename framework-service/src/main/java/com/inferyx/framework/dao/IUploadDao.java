@@ -87,8 +87,8 @@ public interface IUploadDao extends MongoRepository<UploadExec, String> {
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 	
-	@Query(value="{'dependsOn.ref.uuid' : ?0}")
-	public List<UploadExec> findAllByDependOn(String uuid);
+	@Query(value="{'dependsOn.ref.uuid' : ?0,'active':?1}")
+	public List<UploadExec> findAllByDependOn(String uuid,String active);
 	
 
 }

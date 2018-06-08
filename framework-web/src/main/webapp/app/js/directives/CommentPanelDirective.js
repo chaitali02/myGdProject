@@ -1,5 +1,5 @@
 var InferyxApp = angular.module("InferyxApp");
-InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,CommonService, dagMetaDataService,$rootScope) {
+InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,CommonService, dagMetaDataService,$rootScope,$anchorScroll) {
     return {
         scope: {
             type:"=",
@@ -37,7 +37,15 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 }
         
                 });
-            }); 
+            });
+
+            scope.focusRow = function(rowId){
+    
+                $timeout(function() {
+                  $location.hash(rowId);
+                  $anchorScroll();
+                });
+              }
             scope.$on('privilegesUpdated', function (e, data) {
                 scope.privileges = privilegeSvc.privileges['comment'] || [];
                 scope.isPrivlage = scope.privileges.indexOf('Add') == -1;
@@ -70,11 +78,31 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 
                 scope.commentResult[index].limitUploadExecInfo=2;
             }
-            scope.delete=function(uuid){
-                CommonService.delete(uuid,'comment').then(function (response){onSuccess(response.data)})
-                var onSuccess=function(response){
-                    scope.getCommentByType();
 
+            scope.ShowMoreFile=function(){
+                scope.limitUploadExecInfo=scope.file.length;
+            }
+            scope.ShowLessFile=function(){
+                
+                scope.limitUploadExecInfo=1;
+            }
+            scope.delete=function(uuid,type){
+                if(type =='comment'){
+                    CommonService.delete(uuid,'comment').then(function (response){onSuccess(response.data)})
+                    var onSuccess=function(response){
+                        scope.getCommentByType();
+
+                    }
+                }
+                else if(type == 'uploadexec'){
+                    CommonService.getOneByUuidAndVersion(uuid,'','uploadExec').then(function(response){onSuccessGetOneByUuidandVersion(response.data)});
+                        var onSuccessGetOneByUuidandVersion=function(response){
+                            CommonService.delete(response.id,'uploadExec').then(function (response){onSuccess(response.data)})
+                            var onSuccess=function(response){
+                                scope.getCommentByType();
+        
+                            }
+                        }
                 }
             }
 
@@ -155,6 +183,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
                 var onSuccess=function(response){
                     console.log(response);
+                   
                     if( scope.file && scope.file.length ==0){
                         scope.isRequire=false
                         setTimeout(function(){ 
@@ -163,6 +192,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                         },100);
                         
                         scope.getCommentByType();
+                     //   scope.focusRow(scope.commentResult.length+1)
                         scope.isSubmitDisabled=false;
                     }else{
                         CommonService.getOneById(response,'comment').then(function(response){onSuccessGetOneById(response.data)});

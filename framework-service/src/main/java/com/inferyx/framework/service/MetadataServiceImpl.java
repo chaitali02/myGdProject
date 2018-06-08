@@ -1456,7 +1456,7 @@ public class MetadataServiceImpl {
 			List<MetaIdentifierHolder> uploadExecHolder=new ArrayList<MetaIdentifierHolder>();
 			List<UploadExec> result1 = new ArrayList<UploadExec>();
 		//
-			result1= uploadExecServiceImpl.findAllByDependOn(baseEntity.getUuid());
+			result1= uploadExecServiceImpl.findAllByDependOn(baseEntity.getUuid(),"Y");
 			
 			//result1 = (List<BaseEntity>) mongoTemplate.find(query2, Helper.getDomainClass(MetaType.uploadExec));
 			for(UploadExec uploadExe:result1) {
