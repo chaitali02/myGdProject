@@ -1,12 +1,23 @@
 JobMonitoringModule= angular.module('JobMonitoringModule');
 
-JobMonitoringModule.controller('DetailDqGroupExecController', function($filter,$state,$stateParams,$rootScope,$scope,$sessionStorage,JobMonitoringService,sortFactory,dagMetaDataService) {
-
+JobMonitoringModule.controller('DetailDqGroupExecController', function($filter,$state,$stateParams,$rootScope,$scope,$sessionStorage,JobMonitoringService,sortFactory,dagMetaDataService,privilegeSvc) {
+    $rootScope.isCommentVeiwPrivlage=true;
     $scope.uuid=$stateParams.id;
     $scope.mode=$stateParams.mode;
     $scope.showdqgroupexec=true;
     $scope.selectTitle=dagMetaDataService.elementDefs['dqgroupexec'].caption;
     $scope.state=dagMetaDataService.elementDefs['dqgroupexec'].listState+"({type:'"+dagMetaDataService.elementDefs['dqgroupexec'].execType+"'})"
+    var privileges = privilegeSvc.privileges['comment'] || [];
+	$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+	$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+	$scope.$on('privilegesUpdated', function (e, data) {
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;	
+    });
+    $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
     $scope.close = function () {
         if($stateParams.returnBack == "true" && $rootScope.previousState){
             //revertback

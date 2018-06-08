@@ -3335,6 +3335,7 @@ public class CommonServiceImpl <T> {
 		String directoryPath = Helper.getPropertyValue("framework.file.comment.upload.path");
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
+				
 				UploadExec uploadExec = new UploadExec();
 				
 				uploadExec.setBaseEntity();
@@ -3428,7 +3429,7 @@ public class CommonServiceImpl <T> {
         }
 	return response;
 	}
-	
+
 
 	/**
 	 * 
@@ -3467,5 +3468,166 @@ public class CommonServiceImpl <T> {
 		return execObject;
 	}
 
+	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
+			String type, String uuid,String version, String action)
+			throws FileNotFoundException, IOException, JSONException, ParseException {
 
+		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
+		if (null != multiPartFile && multiPartFile.size() > 0) {
+			for (MultipartFile multipartFile : multiPartFile) {
+
+				FileType type1 = Helper.getFileType(fileType);
+
+				String directoryPath = Helper.getFileDirectoryByFileType(fileType, type);
+				UploadExec uploadExec = new UploadExec();
+				uploadExec.setBaseEntity();
+				String originalFileName = multipartFile.getOriginalFilename();
+				String fileExtention = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+				String filename1 = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+
+				String fileName_Uuid = Helper.getFileCustomNameByFileType(type1, fileExtention, type);
+				String splits[] = fileName_Uuid.split("_");
+				String metaUuid = splits[0];
+				String metaVersion = splits[1].substring(0, splits[1].lastIndexOf("."));
+				String location;
+				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
+						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
+					ObjectMapper mapper = new ObjectMapper();/*
+																 * uploadExec.setDependsOn(new MetaIdentifierHolder(new
+																 * MetaIdentifier(
+																 * Helper.getMetaType(MetaType.Import.toString()),
+																 * metaUuid, metaVersion, originalFileName)));
+																 */
+					mapper.writeValueAsString(importServiceImpl.uploadFile(multipartFile, originalFileName));
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.Import.toString()),
+							metaUuid, metaVersion, originalFileName));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+					continue;
+				}
+				// if req comming form admin then file name should be original
+				if (fileType != null && fileType.equalsIgnoreCase("csv") && uuid == null) {
+					location = directoryPath + "/" + originalFileName;
+				} else {
+					location = directoryPath + "/" + fileName_Uuid;
+				}
+				File dest = new File(location);
+				multipartFile.transferTo(dest);
+
+				uploadExec.setName(filename1);
+				uploadExec.setLocation(location);
+				uploadExec.setFileName(originalFileName);
+				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
+						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
+					ObjectMapper mapper = new ObjectMapper();/*
+																 * uploadExec.setDependsOn(new MetaIdentifierHolder(new
+																 * MetaIdentifier(
+																 * Helper.getMetaType(MetaType.Import.toString()),
+																 * metaUuid, metaVersion, originalFileName)));
+																 * mapper.writeValueAsString(importServiceImpl.
+																 * uploadFile(multipartFile, originalFileName));
+																 */
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+				}
+				if (type != null && type.equalsIgnoreCase("comment")) {
+					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
+							Helper.getMetaType(MetaType.comment.toString()), uuid, version, null)));
+					save(MetaType.uploadExec.toString(), uploadExec);
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+				} else if (fileType != null && fileType.equalsIgnoreCase("script")) {
+					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
+							Helper.getMetaType(MetaType.model.toString()), uuid, version, null)));
+					save(MetaType.uploadExec.toString(), uploadExec);
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+/*					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.model.toString()),
+							metaUuid, metaVersion, filename1));*/
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+				} else {
+					save(MetaType.uploadExec.toString(), uploadExec);
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+				}
+
+			}
+
+		}
+		return (List<MetaIdentifierHolder>) metaIdentifierHolderList;
+
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public HttpServletResponse genricDownload(String fileType, String fileName, HttpServletResponse response,String uuid) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+		try {
+			List<UploadExec> uploadExec = new ArrayList<UploadExec>();
+			Query query = new Query();
+			query.fields().include("uuid");
+			query.fields().include("name");
+			query.fields().include("location");
+			query.fields().include("fileName");
+			query.addCriteria(Criteria.where("uuid").is(uuid));
+	
+			uploadExec = (List<UploadExec>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
+			
+		//fileName=uploadExec.get(0).getFileName();
+            String filePath = uploadExec.get(0).getLocation();
+            String FileName =uploadExec.get(0).getFileName();
+			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
+			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
+            File file = new File(filePath);
+            
+            if (file.exists()) {
+            	logger.info("File found.");
+                 String mimeType = null;//context.getMimeType(file.getPath());
+                 mimeType= new MimetypesFileTypeMap().getContentType(file);
+                if (mimeType == null) {
+                    mimeType = "application/octet-stream";
+                }
+ 
+                response.setContentType(mimeType);
+                response.setContentLength((int) file.length());
+             //   response.setContentType("application/xml charset=utf-16");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename",fileName);
+                ServletOutputStream os = response.getOutputStream();
+                FileInputStream fis = new FileInputStream(file);
+                Long fileSize = file.length();
+                byte[] buffer = new byte[fileSize.intValue()];
+                int b = -1;
+ 
+                while ((b = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, b);
+                }
+ 
+                fis.close();
+                os.close();
+            } else {
+            	logger.info("Requested " + fileName + " file not found!!");
+            	response.setStatus(300);
+            	throw new FileNotFoundException("Requested " + fileName + " file not found!!");
+            }
+        } catch (IOException e) {
+        	logger.error(e.getMessage());
+        	e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
+        }
+	return response;
+	}
 }

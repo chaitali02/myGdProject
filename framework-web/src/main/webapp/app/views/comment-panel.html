@@ -69,10 +69,10 @@
                             </div>
                             <div class="mt-comment-text">
                                 <div class="col-md-11" style="width:88%">
-                                <form novalidate="novalidate" name="myform" ng-submit="submit()">
-                                    <div class="input-group form-group">
-                                        <input type="text" required class="form-control" ng-disabled="isPrivlage" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."
-                                            disable-validation-message="">
+                                <form novalidate="novalidate" name="myform" ng-submit="submit(myform)">
+                                    <div class="input-group form-group"  ng-if="isRequire">
+                                        <input type="text"  class="form-control" ng-disabled="isPrivlage" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."
+                                            disable-validation-message="" ng-required="isRequire">
                                         <div class="input-group-btn">
                                             <button type="submit" class="btn green" ng-disabled="isPrivlage || isSubmitDisabled">
                                                 <i class="icon-paper-clip"></i>

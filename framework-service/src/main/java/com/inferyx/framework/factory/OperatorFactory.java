@@ -6,6 +6,7 @@ package com.inferyx.framework.factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.inferyx.framework.operator.CloneDataOperator;
 import com.inferyx.framework.operator.GenerateDataForAttrRef;
 import com.inferyx.framework.operator.GenerateDataForValList;
 import com.inferyx.framework.operator.GenerateDataOperator;
@@ -27,6 +28,8 @@ public class OperatorFactory {
 	GenerateDataForAttrRef generateDataForAttrRef;
 	@Autowired
 	GenerateDataForValList generateDataForValList;
+	@Autowired
+	CloneDataOperator cloneDataOperator;
 
 	/**
 	 * 
@@ -46,6 +49,7 @@ public class OperatorFactory {
 			case "Transpose" : return transposeOperator;
 			case "Generate Data for attribute" : return generateDataForAttrRef;
 			case "Generate Data for value list" : return generateDataForValList;
+			case "Clone Data" : return cloneDataOperator;
 			default : throw new IllegalArgumentException("Invalid Operator Type");
 		}
 	}

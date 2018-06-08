@@ -257,7 +257,8 @@
       }
       return deferred.promise;
     }
-
+   
+    //use import
     this.SaveFile=function(filename,data,type){
       var url="admin/upload?action=edit&fileName="+filename+"&type="+type+"&fileType=zip"
   		var deferred = $q.defer();
@@ -269,8 +270,10 @@
           }
          return deferred.promise;
     }
-    this.uploadCommentFile=function(filename,data,uuid,type){
-      var url="common/uploadCommentFile?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid
+
+    //Genric for comment,filemanger,import,model
+    this.upload=function(filename,data,uuid,version,type,fileType){
+      var url="common/upload?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid+"&version="+version+"&fileType="+fileType
   		var deferred = $q.defer();
   	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
     	    var onSuccess=function(response){
@@ -279,7 +282,8 @@
              });
           }
          return deferred.promise;
-  	}
+    }
+    //for dataod 
     this.uploadFile=function(dataUuid,data,type){
       var url="datapod/upload?action=edit&datapodUuid="+dataUuid+"&type="+type
   		var deferred = $q.defer();
@@ -818,7 +822,7 @@
     }
     
     this.download=function(fileName,uuid,fileType){
-      var url="common/comment/download?action=view&type=downloadexec&fileType="+fileType+"&fileName="+fileName+"&uuid="+uuid;
+      var url="common/download?action=view&type=downloadexec&fileType="+fileType+"&fileName="+fileName+"&uuid="+uuid;
       var deferred = $q.defer();
       CommonFactory.httpGet1(url).then(function(response){onSuccess(response)});
       var onSuccess=function(response){

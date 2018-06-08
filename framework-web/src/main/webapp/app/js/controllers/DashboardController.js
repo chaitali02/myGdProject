@@ -9,6 +9,9 @@ MetadataModule.controller('MetadataDashboardController2',function($state,$scope,
 	$scope.prevPage = function () {
 		$scope.pageNo--;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	// $scope.sectionRows = [{
 	// 	columns : [{}]
 	// }];
@@ -17,6 +20,20 @@ MetadataModule.controller('MetadataDashboardController2',function($state,$scope,
 		$scope.sectionRows = [{
 			columns:[{edit:true}]
 		}]
+	}
+	var privileges=[];
+	$rootScope.isCommentDisabled=true
+	if($stateParams.mode == 'false'){
+		privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
+
 	}
 	// $scope.sectionRows = {
 	// 	1:{
@@ -621,6 +638,7 @@ MetadataModule.controller('MetadataDashboardController2',function($state,$scope,
 	    			}//End Inner IF
 	    			else{
 	    				dashboardjson.filterChg="n";
+		var privileges = privilegeSvc.privileges['comment'] || [];
 	    			}//End Inner Else
 
 	 	    	}//End If
@@ -725,5 +743,8 @@ MetadataModule.controller('MetadataDashboardController2',function($state,$scope,
 	      }
 	    }
 	}
+	$scope.$on('$destroy',function(){
+		privileges=[];
+	})
 
 });

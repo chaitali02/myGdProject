@@ -27,6 +27,8 @@
   </div>
   <br>
   <!-- END PAGE HEADER-->
+  <div  options="dirOptions" type="'activity'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="activitydata" comment-panel-directive></div>
+
   <div class="row">
     <div class="col-md-12">
       <div class="portlet box green">
@@ -46,7 +48,7 @@
               ng-click="showView(activitydata.uuid,activitydata.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showForm==false? 'currentpage':'notcurrentpage'"
               ng-show="isDependencyShow" data-ng-click="showGraph(activitydata.uuid,activitydata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>

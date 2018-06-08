@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateModelController', function($state,$stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location,$anchorScroll) {
+DatascienceModule.controller('CreateModelController', function($state,$stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location,$anchorScroll,privilegeSvc) {
   $scope.featuureType=["integer","string","double"];
   $scope.mode = "false";
 
@@ -12,17 +12,39 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.isversionEnable=false;
     $scope.isAdd=false;
     $scope.isDragable="false";
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
     $scope.isDragable="true";
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
+    
   }
   else{
     $scope.isAdd=true;
     $scope.isDragable="true";
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.isSubmitEnable = true;
   $scope.modeldata;
   $scope.showForm = true;
