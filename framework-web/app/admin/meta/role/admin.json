@@ -5213,6 +5213,15 @@
 		{
 			"ref" : {
 					"type" : "privilege",
+		 			"uuid" : "9972c07a-d407-41a9-8974-003df4b87903",
+		 			"version" : null,
+		            "name" : "CommentEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
 		 			"uuid" : "49964d5c-1a45-4ee0-9669-c79921bd5c33",
 		 			"version" : null,
 		            "name" : "CommentDelete"
