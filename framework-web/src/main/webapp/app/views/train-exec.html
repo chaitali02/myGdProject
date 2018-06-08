@@ -27,6 +27,8 @@
     </div>
     <!-- END PAGE HEADER-->
     <br>
+    <div  options="dirOptions" type="'trainExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="execData" comment-panel-directive></div>
+
     <!-- BEGIN MAIN CONTENT -->
     <div class="row">
         <div class="col-md-12">
@@ -41,7 +43,7 @@
                             data-ng-click="showExecPage()" style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a>
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==false? 'currentpage':'notcurrentpage'"
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==false? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(execData.uuid,execData.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>

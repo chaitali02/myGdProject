@@ -1,9 +1,22 @@
 JobMonitoringModule = angular.module('JobMonitoringModule');
 
-JobMonitoringModule.controller('DetailDataPipelineExecController', function($filter, $stateParams, $rootScope, $state, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService) {
+JobMonitoringModule.controller('DetailDataPipelineExecController', function($filter, $stateParams, $rootScope, $state, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
+  $rootScope.isCommentVeiwPrivlage=true;
+  var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+  });  
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.showdagexec = true;
   $scope.selectTitle = dagMetaDataService.elementDefs['dagexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['dagexec'].listState + "({type:'" + dagMetaDataService.elementDefs['dagexec'].execType + "'})"

@@ -183,6 +183,7 @@ public class DatasetServiceImpl {
 		dataset.setDependsOn(relationHolder);
 		dataset.setAttributeInfo(datasetView.getAttributeInfo());
 		dataset.setPublished(datasetView.getPublished());
+		dataset.setLimit(datasetView.getLimit());
 		DataSet datasetDet = save(dataset);
 		return datasetDet;
 	}

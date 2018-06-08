@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +20,6 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
-import org.apache.spark.ml.PipelineModel;
-import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.SaveMode;
 
@@ -45,7 +41,6 @@ import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 
 public class RunModelServiceImpl implements Callable<TaskHolder> {
@@ -58,7 +53,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private AlgorithmServiceImpl algorithmServiceImpl;
 	/*private ModelExec modelExec;*/
 	private DataStoreServiceImpl dataStoreServiceImpl;
-	private SparkContext sparkContext;
 	private Model model;
 	private ModelExecServiceImpl modelExecServiceImpl;
 	private ParamSetServiceImpl paramSetServiceImpl;
@@ -379,14 +373,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		this.model = model;
 	}
 
-	public SparkContext getSparkContext() {
-		return sparkContext;
-	}
-
-	public void setSparkContext(SparkContext sparkContext) {
-		this.sparkContext = sparkContext;
-	}
-
 	public DataStoreServiceImpl getDataStoreServiceImpl() {
 		return dataStoreServiceImpl;
 	}
@@ -673,16 +659,12 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
-				PipelineModel trngModel = exec.trainModel(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				Object trngModel = exec.trainModel(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
 				result = trngModel;
 				
-				List<String> customDirectories = new ArrayList<>();
-				Transformer[] transformers = trngModel.stages();
-				for (int i = 0; i < transformers.length; i++) {
-					customDirectories.add(i + "_" + transformers[i].uid());
-				}
+				List<String> customDirectories = exec.getCustomDirsFromTrainedModel(trngModel);
 
-				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, sparkContext, filePathUrl);
+				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, filePathUrl);
 				if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
 					try {
 						String filePathUrl_2 = null;

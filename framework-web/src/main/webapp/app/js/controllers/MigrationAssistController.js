@@ -295,12 +295,26 @@ AdminModule.controller('MigrationAssistController', function($location,$state,$h
     });
   };
 })
-AdminModule.controller('DetailExportController',function($state,$stateParams,$rootScope,$scope,MigrationAssistServices,CommonService,$timeout,$filter,dagMetaDataService) {
-  
+AdminModule.controller('DetailExportController',function($state,$stateParams,$rootScope,$scope,MigrationAssistServices,CommonService,$timeout,$filter,dagMetaDataService,privilegeSvc) {
+  $rootScope.isCommentVeiwPrivlage=true;
   $scope.showExport=true;
   $scope.showgraphdiv=false;
   $scope.isDependencyShow=false;
   $scope.isSubmitExportEnable=true;
+  if($stateParams.mode=="true"){
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+    });  
+  }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   var notify = {
     type: 'success',
     title: 'Success',
@@ -482,7 +496,8 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
 });
 
 
-AdminModule.controller('DetailImportController',function($state,$stateParams,$rootScope,$scope,MigrationAssistServices,CommonService,$timeout,$filter,dagMetaDataService) {
+AdminModule.controller('DetailImportController',function($state,$stateParams,$rootScope,$scope,MigrationAssistServices,CommonService,$timeout,$filter,dagMetaDataService,privilegeSvc) {
+  $rootScope.isCommentVeiwPrivlage=true;
   $scope.showImport=true;
   $scope.showgraphdiv=false;
   $scope.isDependencyShow=false;
@@ -498,12 +513,23 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
   };
   if($stateParams.mode=="true"){
     $scope.selectFeature=false;
-
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else{
     $scope.selectFeature=true;
 
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.gridOptionsDatapod = {
     enableGridMenu: true,
     rowHeight: 40,

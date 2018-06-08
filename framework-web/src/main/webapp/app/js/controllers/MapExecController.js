@@ -1,11 +1,23 @@
   JobMonitoringModule = angular.module('JobMonitoringModule');
 
-  JobMonitoringModule.controller('DetailMapExecController', function($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService) {
+  JobMonitoringModule.controller('DetailMapExecController', function($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
 
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
     $scope.showmapexec = true;
     $scope.state = dagMetaDataService.elementDefs['mapexec'].listState + "({type:'" + dagMetaDataService.elementDefs['mapexec'].execType + "'})"
+    $rootScope.isCommentVeiwPrivlage=true;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+	  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+	  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+	  $scope.$on('privilegesUpdated', function (e, data) {
+		  var privileges = privilegeSvc.privileges['comment'] || [];
+		  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;	
+    });
+    $scope.userDetail={}
+	  $scope.userDetail.uuid= $rootScope.setUseruuid;
+	  $scope.userDetail.name= $rootScope.setUserName;
     $scope.close = function() {
       if ($stateParams.returnBack == "true" && $rootScope.previousState) {
         //revertback

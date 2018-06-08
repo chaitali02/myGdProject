@@ -86,6 +86,15 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
 
     $httpProvider.interceptors.push(function ($rootScope, $q) {
         return {
+            'request': function (config) {
+                if (config.timeout) {
+                  config.cancel  = $q.defer();
+                  config.timeout = config.cancel.promise;            
+                }
+        
+                return config;
+              },
+        
             'responseError': function (rejection) {
                 if (rejection.status == 500) {
                     notify.type = 'error',
@@ -303,9 +312,11 @@ InferyxApp.controller('TabController', function ($timeout, $state, $scope, $root
                 // $scope.tabs[0].param.name= "Main Tab";
             }
         }
+        $rootScope.isCommentVeiwPrivlage=true;
     });
 
     $rootScope.$on("$stateChangeSuccess", function () {
+        $rootScope.isCommentVeiwPrivlage=true;
         if ($scope.tabs.length > 0) {
             $scope.showTabs = false;
             angular.forEach($scope.tabs, function (val, key) {

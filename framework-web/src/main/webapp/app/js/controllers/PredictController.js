@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, PredictService,$http,$location) {
+DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, PredictService,$http,$location,privilegeSvc) {
 
   $scope.isTargetNameDisabled=false;
   $scope.dataLoading = false;
@@ -11,17 +11,41 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.isEdit=false;
     $scope.isversionEnable=false;
     $scope.isAdd=false;
+    $scope.isDragable="false";
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
+    $scope.isDragable="true";
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else{
     $scope.isAdd=true;
+    $scope.isDragable="true";
   }
   $scope.mode="false"
-  
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.isSubmitEnable = false;
   $scope.predictData;
   $scope.showFrom = true;
@@ -182,8 +206,30 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       }
       $scope.originalFeatureMapTableArray=featureMapTableArray;
       $scope.featureMapTableArray =featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);
+      $scope.getTrainByModel(true);
+    }
   }
-}
+
+  $scope.getTrainByModel=function(defaultValue){
+    PredictService.getTrainByModel($scope.selectModel.uuid,$scope.selectModel.version,"train").then(function(response) { onSuccessGetTrainByModel(response.data)},function(response){onError(response.data)});
+    var onSuccessGetTrainByModel = function(response) {
+      $scope.allTrain=response;
+      if(response && response.length ==0){
+        $scope.selectTrain=null;
+      }
+      if(defaultValue){
+       // $scope.selectTrain=response[0];
+      }
+    }
+    var onError=function(response){
+      $scope.selectTrain=null;
+    }
+  }
+  
+  $scope.onChangeTrain=function(){
+    $scope.getTrainByModel(true);
+  }
+
   $scope.onChangeTargeType=function(){
     if($scope.selectTargetType =='datapod'){
       $scope.isTargetNameDisabled=false;
@@ -233,6 +279,16 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       selectModel.uuid=response.dependsOn.ref.uuid;
       selectModel.name=response.dependsOn.ref.name;
       $scope.selectModel=selectModel;
+      $scope.getTrainByModel(false);
+      $scope.selectTrain=null;
+      var selectTrain=null;
+      if(response.trainInfo !=null){
+        selectTrain={};
+        selectTrain.uuid=response.trainInfo.ref.uuid;
+        selectTrain.name=response.trainInfo.ref.name;
+      }
+      $scope.selectTrain=selectTrain;
+      
       var selectSource={};
       $scope.selectSource=null;
       selectSource.uuid=response.source.ref.uuid;
@@ -312,6 +368,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       $scope.getOneByUuidandVersion(uuid,version);
     },100)
   }
+
+
   $scope.submitModel = function() {
     $scope.isshowPredict = true;
     $scope.dataLoading = true;
@@ -335,6 +393,14 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     ref.uuid=$scope.selectModel.uuid;
     dependsOn.ref=ref;
     predictJson.dependsOn=dependsOn;
+
+    var trainInfo={};
+    var ref={};
+    ref.type="train";
+    ref.uuid=$scope.selectTrain.uuid;
+    trainInfo.ref=ref;
+    predictJson.trainInfo=trainInfo;
+
     var source={};
     var sourceref={};
     sourceref.type=$scope.selectSourceType;

@@ -27,6 +27,9 @@
   </div>
   <!-- END PAGE HEADER-->
   <br>
+  <div options="dirOptions" type="'ruleExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="ruleexecdata"
+    comment-panel-directive></div>
+
   <!-- BEGIN MAIN CONTENT -->
   <div class="row">
     <div class="col-md-12">
@@ -38,19 +41,21 @@
 
           <div class="tools">
 
-            <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showruleexec==true? 'currentpage':'notcurrentpage'" data-ng-click="showRuleExecPage()" style="height:16px;">
-                            <span class="glyphicon glyphicon-file" style="color:white;"></span>
-                        </a>
-            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showruleexec==false? 'currentpage':'notcurrentpage'" data-ng-click="showLoadGraph(ruleexecdata.uuid,ruleexecdata.version)" style="height:14px;">
+            <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showruleexec==true? 'currentpage':'notcurrentpage'"
+              data-ng-click="showRuleExecPage()" style="height:16px;">
+              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            </a>
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showruleexec==false? 'currentpage':'notcurrentpage'"
+              data-ng-click="showLoadGraph(ruleexecdata.uuid,ruleexecdata.version)" style="height:14px;">
               <!-- <img src="lib/images/check.png" style="margin:2px auto;display:block;"></img> -->
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
             <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                        </a>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
             <a title="Close" ng-click="close()" data-toggle="tooltip" data-placement="top" tooltip>
-                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-                        </a>
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+            </a>
           </div>
         </div>
 
@@ -118,7 +123,7 @@
 
               <div class="form-group">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc
-                                 </label>
+                </label>
                 <div class="col-md-6">
                   <!-- <input type="text" ng-model="loaddata.desc" class="form-control" ng-disabled="{{mode}}"> -->
                   <textarea class="form-control" ng-disabled="{{mode}}" ng-model="ruleexecdata.desc" rows="2" style="resize:none;"></textarea>
@@ -176,7 +181,7 @@
 
               <div class="form-group">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Exec
-                                 </label>
+                </label>
                 <div class="col-md-6">
                   <!-- <input type="text" ng-model="loaddata.desc" class="form-control" ng-disabled="{{mode}}"> -->
                   <textarea class="form-control" ng-disabled="{{mode}}" ng-model="ruleexecdata.exec" rows="4" style="resize:none;"></textarea>
@@ -187,12 +192,13 @@
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a href="javascript:;" ng-click="close()" class="btn btn-primary">Cancel</a>
                   <!--  loadHasChanged == false || -->
-                  <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true" value="Submit" name="submit">
+                  <input type="submit" class="btn btn-success" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
+                    value="Submit" name="submit">
                   <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
-                                        <div class="bounce1"></div>
-                                        <div class="bounce2"></div>
-                                        <div class="bounce3"></div>
-                                    </span>
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                  </span>
                 </div>
               </div>
             </form>

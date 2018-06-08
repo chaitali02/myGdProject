@@ -93,17 +93,6 @@
       "dispName": "account_status_id",
       "active": "Y",
       "expr": null
-    },
-    {
-      "attributeId": 5,
-      "name": "features",
-      "type": "vector",
-      "desc": "features",
-      "key": "",
-      "partition": "N",
-      "dispName": "features",
-      "active": "Y",
-      "expr": null
     }
   ]
 }

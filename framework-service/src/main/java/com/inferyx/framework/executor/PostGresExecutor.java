@@ -23,7 +23,6 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.HDFSInfo;
@@ -473,6 +472,12 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes,
 			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getCustomDirsFromTrainedModel(Object trngModel) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -28,7 +28,8 @@
             </div><!-- END PAGE HEADER-->
             <br>
             <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-            
+            <div  options="dirOptions" type="'train'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="trainData" comment-panel-directive></div>
+
             <div class="portlet light bordered" id="form_wizard_1">
                 <div class="portlet-title" style="margin-bottom:0px;">
                     <div class="caption">
@@ -46,9 +47,10 @@
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip   ng-hide="isAdd" ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" data-ng-click="showview(trainData.uuid,trainData.version)">
                             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(trainData.uuid,trainData.version)">
+                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" tooltip data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(trainData.uuid,trainData.version)">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
                         </a>
+                      
                         <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title="" title="" ng-class="showGraphDiv ==false? 'currentpage':'notcurrentpage'" >
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
@@ -266,8 +268,14 @@
                                                                         <th style="width:20%;">Attributes</th>
                                                                         </tr>
                                                                     </thead>
-                                                                    <tbody>
-                                                                        <tr ng-repeat="data in featureMapTableArray">
+                                                                    <tbody ng-repeat="data in featureMapTableArray">
+                                                                        <tr 
+                                                                        data-drop="true" data-drag={{isDragable}}
+                                                                        ng-model="featureMapTableArray"
+                                                                        jqyoui-droppable="{index: {{$index}}}" 
+                                                                        jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
+                                                                        data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
+                                                                        data-direction="{{data.sourceFeature.featureName.jqyouiDirection}}" >
                                                                         <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.id" ng-value="$index+1" ng-disabled="true"></span></td>
                                                                         <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.sourceFeature.featureName" title="{{data.sourceFeature.dname}}" ng-disabled="true"></span></td>
                                                                         <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">

@@ -39,6 +39,8 @@
   <!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <div  options="dirOptions" type="'dataset'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dataset" comment-panel-directive></div>
+
   <!-- BEGIN MAIN CONTENT -->
   <div class="row">
     <div class="col-md-12">
@@ -50,8 +52,8 @@
             </div>
             <div class="tools">
 
-              <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showSampleTable(dataset)"
-                style="height:16px;" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
+              <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showSampleTable(dataset)" style="height:16px;"
+                ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
                 <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
               </a>
               <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"
@@ -63,19 +65,19 @@
                 ng-click="showView(dataset.uuid,dataset.version)" ng-hide="isAdd" style="height:16px;">
                 <span class="glyphicon glyphicon-file" style="color:white;"></span>
               </a>
-              <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+              <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
                 data-ng-click="showGraph(dataset.uuid,dataset.version)" style="height:14px;">
                 <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
               </a>
-              <a title="Refresh"  ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(dataset) : broadcastRefreshData()" data-toggle="tooltip"
-                data-placement="top" tooltip>
+              <a title="Refresh" ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(dataset) : broadcastRefreshData()"
+                data-toggle="tooltip" data-placement="top" tooltip>
                 <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
               </a>
               <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="genericClose($event,'dataset')" data-ui-sref="metadata({type:'dataset'})"
-              style="height:14px;">
-              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+                style="height:14px;">
+                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
               </a>
-              
+
             </div>
           </div>
           <!--End Protlet-title-->
@@ -134,10 +136,10 @@
                 <div class="bounce2"></div>
                 <div class="bounce3"></div>
               </div>
-              <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="dataset.uuid" version="datasetversion.defaultVersion.version" >
+              <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="dataset.uuid" version="datasetversion.defaultVersion.version">
               </div>
             </div>
-            
+
             <div class="form-body" data-ng-show="showForm">
               <div class="form-body">
                 <div class="form-group" ng-show="dataset.uuid">
@@ -231,6 +233,12 @@
                     </div>
                   </div>
                 </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Limit</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="number" class="form-control" name="linit" ng-class="" ng-disabled="{{mode}}" ng-model="dataset.limit" placeholder="">
+                  </div>
+                </div>
                 <div class="form-group" style="padding-top:10px;">
                   <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                     <a ui-sref="metadata({type:'dataset'})" class="btn btn-primary">Cancel</a>
@@ -281,26 +289,26 @@
                     <th style="width:200px;text-align:center;">RHS Attribute</th>
                   </tr>
                 </thead>
-               
+
                 <tbody>
                   <tr ng-repeat="tabledata in filterTableArray">
-                  <!-- <tr class="tn-draggable" 
-                  data-drop="true" data-drag={{isDragable}}
-            ng-model="filterTableArray"
-            jqyoui-droppable="{index: {{$index}},'onOver':'onOverCallBackRow($index)'}" 
-            jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection',onStart:'onDragCallBackRow({index: $index})'}"
-            data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
-            data-direction="{{tabledata.name.jqyouiDirection}}" > -->
-                    
-                    <td class ="chek" style="text-align:center;Vertical-align:middle;" ng-mouseenter="onMouseEnter()" ng-mouseleave="onMouseLeave()">
-                       
+                    <!-- <tr class="tn-draggable" 
+                    data-drop="true" data-drag={{isDragable}}
+                    ng-model="filterTableArray"
+                    jqyoui-droppable="{index: {{$index}},'onOver':'onOverCallBackRow($index)'}" 
+                    jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection',onStart:'onDragCallBackRow({index: $index})'}"
+                    data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
+                    data-direction="{{tabledata.name.jqyouiDirection}}" > -->
+
+                    <td class="chek" style="text-align:center;Vertical-align:middle;" ng-mouseenter="onMouseEnter()" ng-mouseleave="onMouseLeave()">
+
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                         
+
                         <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
                       </span>
                     </td>
                     <td>
-                     
+
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                         <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first ||{{mode}}" class="form-control"></select>
                       </span>
@@ -315,52 +323,55 @@
                     <td width="200px">
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                         <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
-                          ng-show="tabledata.islhsSimple" ng-change="onChangeSimple()">
+                          ng-if="tabledata.islhsSimple" ng-change="onChangeSimple()" required disable-validation-message="">
                       </span>
-                      <div width="200px" ng-show="tabledata.islhsDatapod">
+                      <div width="200px" ng-if="tabledata.islhsDatapod">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
-                              ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId" ng-change="onChangeAttribute()">
+                            ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
+                            ng-change="onChangeAttribute()" required disable-validation-message="">
                           </select>
                         </span>
                       </div>
-                      <div ng-show="tabledata.islhsFormula">
+                      <div ng-if="tabledata.islhsFormula">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 class="form-control" ng-change="onChangeFromula()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in allFormula track by r.uuid"
-                            ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula">
+                            ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula" required disable-validation-message="">
                           </select>
-                          
+
                         </span>
                       </div>
                     </td>
                     <td>
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                        <select ng-init="tabledata.operator" ng-disabled="{{mode}}" ng-model="tabledata.operator" ng-options="x for x in operator" ng-disabled="{{mode}}"
-                        class="form-control" ng-change="onChangeOperator()"></select>
+                        <select ng-init="tabledata.operator" ng-disabled="{{mode}}" ng-model="tabledata.operator" ng-options="x for x in operator"
+                          ng-disabled="{{mode}}" class="form-control" ng-change="onChangeOperator()"></select>
                       </span>
                     </td>
                     <td>
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                         <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption for x in lshType track by x.text"
-                            ng-disabled=" {{mode}}" class="form-control">
+                          ng-disabled=" {{mode}}" class="form-control">
                         </select>
                       </span>
                     </td>
                     <td style="width:200px;">
                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                         <input type="text" ng-disabled="{{mode}}" class="form-control" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                            ng-show="tabledata.isrhsSimple" ng-change="onChangeSimple()">
+                          ng-if="tabledata.isrhsSimple" ng-change="onChangeSimple()" required disable-validation-message="">
                       </span>
-                      <div ng-show="tabledata.isrhsDatapod">
+                      <div ng-if="tabledata.isrhsDatapod">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeAttribute()" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                          <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeAttribute()"
+                            ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
+                            required disable-validation-message="">
                           </select>
                         </span>
                       </div>
-                      <div ng-show="tabledata.isrhsFormula">
+                      <div ng-if="tabledata.isrhsFormula">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 class="form-control" ng-change="onChangeFromula()" data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in allFormula  track by r.uuid"
-                            ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula">
+                            ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula" required disable-validation-message="">
                           </select>
                         </span>
                       </div>
@@ -395,7 +406,7 @@
                         <th style="text-align: center; Vertical-align: middle;width:5%;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <input style="width: 16px;height:16px;" type="checkbox" ng-model="selectAllAttributeRow" ng-change="checkAllAttributeRow()"
-                            ng-disabled="{{mode}}" />
+                              ng-disabled="{{mode}}" />
                           </span>
                         </th>
                         <th style="width:6%; text-align:center">ID</th>
@@ -405,50 +416,46 @@
                       </tr>
                     </thead>
                     <tbody ng-repeat="data in attributeTableArray">
-                      <tr     data-drop="true" data-drag={{isDragable}}
-                      ng-model="attributeTableArray"
-                      jqyoui-droppable="{index: {{$index}}}" 
-                      jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
-                      data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
-                      data-direction="{{data.name.jqyouiDirection}}"  >
+                      <tr data-drop="true" data-drag={{isDragable}} ng-model="attributeTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
+                        data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}">
                         <td style="text-align: center; Vertical-align: middle;width:5%;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"
-                            />
+                            <input class="form-control" ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" />
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <input type="text" class="form-control" ng-model="$index" ng-value="$index+1" ng-disabled="true">
-                          </span>   
-                          </td>
-                        <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" class="form-control" ng-model="data.name" title="{{data.name}}" ng-disabled="{{mode}}">
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <select ng-model="data.sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
-                            ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
-                            class="form-control"></select>
+                            <input type="text" class="form-control" ng-model="data.name" required disable-validation-message="" title="{{data.name}}"
+                              ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" class="form-control" ng-model="data.sourcesimple" ng-show="data.isSourceAtributeSimple" ng-disabled="{{mode}}">
+                            <select ng-model="data.sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
+                              ng-disabled="{{mode}}" class="form-control" required></select>
                           </span>
-                          <div ng-show="data.isSourceAtributeDatapod">
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input type="text" class="form-control" ng-model="data.sourcesimple" required disable-validation-message="" ng-if="data.isSourceAtributeSimple"
+                              ng-disabled="{{mode}}"/>
+                          </span>
+                          <div ng-if="data.isSourceAtributeDatapod">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}"
-                              class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute track by c.uuid+c.attributeId"
-                              ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"></select>
+                              <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}" class="form-control"
+                                ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute track by c.uuid+c.attributeId"
+                                ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)" required disable-validation-message=""></select>
                             </span>
                           </div>
-                          <div ng-show="data.isSourceAtributeFormula">
+                          <div ng-if="data.isSourceAtributeFormula">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              <ui-select ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}">
-                              <!-- selectize -->
+                              <ui-select required disable-validation-message="" ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}">
+                                <!-- selectize -->
                                 <ui-select-match>
                                   <span title="{{data.sourceformula.name}}">{{data.sourceformula.name}}</span>
                                 </ui-select-match>
@@ -462,9 +469,9 @@
                             </span>
                             <!--  <select select2 ng-model="data.sourceformula"  ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in datasetLodeFormula track by c.uuid" style="font-family: 'FontAwesome', Helvetica;"><option value="" ng-click="routeForFormula(x)"class="check"> &#xf067; Create New</option></select> -->
                           </div>
-                          <div ng-show="data.isSourceAtributeExpression">
+                          <div ng-if="data.isSourceAtributeExpression">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              <ui-select ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index)">
+                              <ui-select required disable-validation-message="" ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index)">
                                 <!-- selectize -->
                                 <ui-select-match>
                                   <span title="{{data.soureexpression.name}}">{{data.sourceexpression.name}}</span>
@@ -479,10 +486,9 @@
                             </span>
                             <!-- <select select2 ng-model="data.sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in datasetLodeExpression track by c.uuid" ng-change="onChangeExpression(data.sourceexpression,$index)"></select> -->
                           </div>
-                          <div ng-show="data.isSourceAtributeFunction">
+                          <div ng-if="data.isSourceAtributeFunction">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
-                              ng-change="onChangeFunction(data.sourcefunction,$index)"></select>
+                              <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"></select>
                             </span>
                           </div>
                         </td>
@@ -493,10 +499,8 @@
               </div>
             </div>
           </div>
-        </div>
-        <!--End portlet box green 3-->
+        </div><!--End portlet box green 3-->
       </form>
     </div>
-  </div>
-  <!-- End MAIN CONTENT -->
+  </div><!-- End MAIN CONTENT -->
 </div>

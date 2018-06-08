@@ -61,9 +61,10 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 					.concat(generateFrom(dataset, refKeyMap, otherParams, usedRefKeySet, runMode))
 					.concat(generateWhere())
 					.concat(generateFilter(dataset, refKeyMap, otherParams, usedRefKeySet))
-					.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams));
+					.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams))
+					.concat(generateLimit(dataset));
 		}
-		
+
 		public String generateSelect(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams
 									, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			// Create AttributeMap
@@ -137,6 +138,10 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 			// TODO Auto-generated method stub
 			return null;
+		}
+		
+		private String generateLimit(DataSet dataset) {
+			return (dataset.getLimit() > 0) ? (ConstantsUtil.LIMIT + dataset.getLimit() + " ") : "";
 		}
 
 		@Override

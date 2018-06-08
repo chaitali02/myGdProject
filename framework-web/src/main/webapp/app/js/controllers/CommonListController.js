@@ -1,6 +1,6 @@
 CommonModule = angular.module('CommonModule');
 
-CommonModule.controller('CommonListController', function ($location, $http, cacheService, dagMetaDataService, uiGridConstants, $state, $stateParams, $rootScope, $scope, $sessionStorage, CommonService, FileSaver, Blob, $filter, cacheService, privilegeSvc, $timeout) {
+CommonModule.controller('CommonListController', function ($location, $http, cacheService, dagMetaDataService, uiGridConstants, $state, $stateParams, $rootScope, $scope, $sessionStorage, CommonService, FileSaver, Blob, $filter, cacheService, privilegeSvc, $timeout,$q) {
   $scope.isExec = false;
   $scope.isJobExec = false;
   $scope.select = $stateParams.type.toLowerCase();
@@ -66,8 +66,18 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     //console.log(fromParams)
     $sessionStorage.fromStateName = fromState.name
     $sessionStorage.fromParams = fromParams
+    $http.pendingRequests.forEach(function(request) { 
+      if (request.cancel) {
+      request.cancel.resolve();
+    }  
+    });
   });
 
+  $scope.$on('$destroy',function(){
+    // allSitesPromise.abort();
+  //  $scope.deferred = $q.defer();
+  //  $scope.deferred.reject();
+  });
   $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype','operator'];
   $scope.isExecutable = $scope.nonExecTypes.indexOf($scope.select);
   $scope.isUpload = ($scope.select == 'datapod' ? 0 : -1)
@@ -218,6 +228,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     });
   }
 
+  
   $scope.selectData = function (data) {
     $scope.caption = dagMetaDataService.elementDefs[data.type.toLowerCase()].caption;
     $scope.originalData = []

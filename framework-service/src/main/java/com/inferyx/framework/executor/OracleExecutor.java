@@ -37,7 +37,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -58,8 +57,6 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.factory.DataSourceFactory;
-import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
 
 public class OracleExecutor implements IExecutor {
@@ -395,6 +392,12 @@ public class OracleExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes,
 			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getCustomDirsFromTrainedModel(Object trngModel) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +64,7 @@ public class Math3RandDistribution extends RandomDistribution {
 			fieldArray[count] = field;
 			count ++;
 		}
-		StructType schema = new StructType(fieldArray);		
+		//StructType schema = new StructType(fieldArray);		
 		
 		List<RowObj> rowList = new ArrayList<>();
 		for(int i=0; i<numIterations; i++) {

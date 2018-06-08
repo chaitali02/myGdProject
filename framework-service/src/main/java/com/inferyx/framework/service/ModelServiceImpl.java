@@ -44,10 +44,12 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -1029,28 +1031,44 @@ public class ModelServiceImpl {
 							if(i>0)
 								tableName_3 = exec.joinDf(tableName_3, tabName_2, i, appUuid);
 						}
+						
+						String sql = "SELECT * FROM " + tableName_3;					
+						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							result = rsHolder;						
+							count = rsHolder.getCountRows();
+							createDatastore(filePath, simulate.getName(), 
+									new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
+									new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
+									simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+									Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+						}
+						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {
 						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+						
+						String sql = "SELECT * FROM " + tableName;	
+						tableName_3 = tableName;
+						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							result = rsHolder;						
+							count = rsHolder.getCountRows();
+							createDatastore(filePath, simulate.getName(), 
+									new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
+									new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
+									simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+									Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+						}
+						
 						String[] customFldArr = new String[] {fieldArray[0]};
 						tableName_3 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 					}
 					
-					String sql = "SELECT * FROM " + tableName_3;					
-					if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
-						result = rsHolder;						
-						count = rsHolder.getCountRows();
-						createDatastore(filePath, simulate.getName(), 
-								new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
-								new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
-								simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
-								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
-					} else {
-						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
-						result = rsHolder;						
-						count = rsHolder.getCountRows();
-					}
+					String sql = "SELECT * FROM " + tableName_3;
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					result = rsHolder;						
+					count = rsHolder.getCountRows();
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
 					
 					HashMap<String, String> otherParams = execParams.getOtherParams();
@@ -1085,28 +1103,44 @@ public class ModelServiceImpl {
 							if(i>0)
 								tableName_3 = exec.joinDf(tableName_3, tabName_2, i, appUuid);
 						}
+
+						String sql = "SELECT * FROM " + tableName_3;
+						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							result = rsHolder;
+							count = rsHolder.getCountRows();
+							createDatastore(filePath, simulate.getName(), 
+									new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
+									new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
+									simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+									Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+						} 
+						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {						
 						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
-						String[] customFldArr = new String[] {fieldArray[0]};
+						
+						String sql = "SELECT * FROM " + tableName;
+						tableName_3 = tableName;
+						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+							result = rsHolder;
+							count = rsHolder.getCountRows();
+							createDatastore(filePath, simulate.getName(), 
+									new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
+									new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
+									simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
+									Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+						} 
+						
+						String[] customFldArr = new String[] {fieldArray[0]};						
 						tableName_3 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 					}
 					
-					String sql = "SELECT * FROM " + tableName_3;					
-					if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
-						result = rsHolder;
-						count = rsHolder.getCountRows();
-						createDatastore(filePath, simulate.getName(), 
-								new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion()), 
-								new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
-								simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
-								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
-					} else {
-						ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
-						result = rsHolder;
-						count = rsHolder.getCountRows();
-					}
+					String sql = "SELECT * FROM " + tableName_3;	
+					ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, null, SaveMode.Append.toString(), appUuid);	
+					result = rsHolder;
+					count = rsHolder.getCountRows();
 				}
 			}
 
@@ -1349,7 +1383,6 @@ public class ModelServiceImpl {
 		}
 		runModelServiceImpl.setAlgorithmServiceImpl(algorithmServiceImpl);
 		runModelServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
-		runModelServiceImpl.setSparkContext(sparkContext);
 		runModelServiceImpl.setModel(model);
 		runModelServiceImpl.setModelExecServiceImpl(modelExecServiceImpl);
 		runModelServiceImpl.setHdfsInfo(hdfsInfo);
@@ -1438,7 +1471,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 
 	}
 
-	public boolean save(String className, Object obj, SparkContext sparkContext, String path) {
+	public boolean save(String className, Object obj, String path) {
 
 		Class<?> dynamicClass = obj.getClass();
 
@@ -1700,8 +1733,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					count = rsHolder.getCountRows();
 				}
 			} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-				TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(),
-						model.getVersion());
+				//TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByModel(model.getUuid(), model.getVersion());
+				TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByTrain(predict.getTrainInfo().getRef().getUuid(), predict.getTrainInfo().getRef().getVersion());
 				if (trainExec == null)
 					throw new Exception("Executed model not found.");
 
@@ -1762,5 +1795,30 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode, RunMode runMode) throws Exception{
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, fileName, metaId, execId, appInfo, createdBy, SaveMode.Append.toString(), resultRef, count, persistMode);
+	}
+	
+	public List<Train> getTrainByModel(String modelUuid, String modelVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		List<Train> trainList = new ArrayList<>();
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+		
+		Application application = commonServiceImpl.getApp();
+		
+		if(modelVersion != null)
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid).andOperator(Criteria.where("dependsOn.ref.version").is(modelVersion)));
+		else
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
+		query.addCriteria(Criteria.where("active").is("Y"));
+		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(application.getUuid()).andOperator(Criteria.where("appInfo.ref.version").is(application.getVersion())));
+		query.with(new Sort(Sort.Direction.DESC, "version"));
+		
+		trainList = mongoTemplate.find(query, Train.class);
+		return trainList;
 	}
 }
