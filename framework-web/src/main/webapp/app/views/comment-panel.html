@@ -5,7 +5,7 @@
                 <h4 class="caption-subject font-dark bold">Comment</h4>
             </div>
             <div class="col-md-1 pull-right" style="padding-top: 2%;">
-                <div class="" ng-click="closePanle()">
+                <div class="" ng-click="closePanle()"  tooltip-placement="left" uib-tooltip="Close">
                     <i ng-class="panelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>
                 </div>
             </div>
@@ -18,11 +18,11 @@
                             <img class=" img-circle" width="45px" ng-src="avatars/{{data.createdBy.ref.uuid}}?$index" class="lock-avatar" alt="No Avatar"
                                 onerror="this.src='avatars/default.png';" />
                         </div>
-                        <div class="mt-comment-body">
+                        <div class="mt-comment-body" style="position: inherit;">
                             <div class="mt-comment-info ">
                                 <span class="mt-comment-author">{{data.createdBy.ref.name}}</span>
                                 <div class="mt-comment-actions">
-                                    <a href="#" tooltip-placement="top" uib-tooltip="Delete" tooltip-placement="top" uib-tooltip="Delete" ng-disabled="privileges.indexOf('Delete') == -1" ng-click="delete(data.id,'comment')" style="float:right">
+                                    <a href="#" tooltip-placement="top" uib-tooltip="Delete" ng-disabled="privileges.indexOf('Delete') == -1" ng-click="delete(data.id,'comment')" style="float:right">
                                         <i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;color:red;"></i>
                                     </a>
                                 </div>    
@@ -47,8 +47,8 @@
                                 <div class="list-files" ng-show="data.uploadExecInfo.length >0" ng-repeat="f in data.uploadExecInfo | limitTo: data.limitUploadExecInfo">
                                     <span class="list-file-name">{{f.ref.name}}</span>
                                     <ul class="mt-comment-actions">
-                                         <li><i class="fa fa-download" style="float:right;color: #777;" ng-click="download(f)"></i></li>
-                                        <li><i class="fa fa-time"  ng-click="delete(f.ref.uuid,'uploadexec')" style="float:right;color: #777;"></i></li>
+                                         <li><i class="fa fa-download"  tooltip-placement="top" uib-tooltip="Download" style="color: #777;margin: 4px auto;" ng-click="download(f)"></i></li>
+                                        <li><i class="fa fa-trash"  tooltip-placement="top" uib-tooltip="Delete" ng-click="delete(f.ref.uuid,'uploadexec')" style="color: #777;margin:0px auto;"></i></li>
                                     </ul>
                                     
                                 </div>
@@ -71,8 +71,8 @@
                             <div class="mt-comment-info">
                                 <span class="mt-comment-author">{{currentUser.name}}</span>
                             </div>
-                            <div class="mt-comment-text">
-                                <div class="col-md-11" style="width:84%">
+                            <div class="mt-comment-text" style="height:6px;">
+                                <div class="col-md-11" style="width:89%;padding-left: 0px;">
                                 <form novalidate="novalidate" name="myform" ng-submit="submit(myform)">
                                     <div class="input-group form-group"  ng-if="isRequire">
                                         <input type="text"  class="form-control" ng-disabled="isPrivlage" focus-me="true" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."
@@ -87,8 +87,8 @@
                                     </div>
                                 </form>
                                 </div>
-                                <div class="col-md-1" style="margin-top:8px;right:2px;width: 16%;">  
-                                    <label class=" input-group-btn" style="width:auto" tooltip-placement="top" uib-tooltip="Attach doc">
+                                <div class="col-md-1" style="margin-top:8px;right:0px;width:11%;">  
+                                    <label class=" input-group-btn" style="width:auto" tooltip-placement="left" uib-tooltip="Attach doc">
                                         <input id="avatar" onchange="readfileName(this)" type="file" ng-model="file" style="display:none">
                                         <i class="icon-paper-clip" style="font-size: 20px;color:#008000;"></i>
                                     </label
@@ -108,7 +108,7 @@
                                     <span class="list-file-name">{{f.name}}</span>
                                     <!-- <span style="color: #777;">({{f.size}}K)</span> -->
                                     <ul class="mt-comment-actions">
-                                        <li><i class="fa fa-time"  ng-click="clearFile($index)" style="float:right;color: #777;"></i></li>
+                                        <li><i class="fa fa-trash" tooltip-placement="top" uib-tooltip="Delete"  ng-click="clearFile($index)" style="color: #777;margin:0px auto;"></i></li>
                                     </ul>
                                 </div>
                                 <a href="javascript;;" ng-show ="file.length >1 && limitUploadExecInfo == 1"  style="padding:11px" ng-click="ShowMoreFile();" ><i class="fa fa-plus" aria-hidden="true"></i> More</a>

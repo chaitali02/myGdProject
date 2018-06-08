@@ -832,6 +832,21 @@
       }
       return deferred.promise;
   }
+
+  this.getLovByType = function(type) {
+    var deferred = $q.defer();
+    var url;
+    url = "metadata/getLovByType?type="+type+'&action=view';
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
     
   });
   
