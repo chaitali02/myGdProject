@@ -18,6 +18,7 @@
 		"DEV",
 		"0.1.0"
 	],
+    	"limit" : 0,
 	"active": "Y",
 	"published": "N",
 	"appInfo": [

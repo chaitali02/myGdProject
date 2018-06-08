@@ -28,6 +28,8 @@
   <!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <div  options="dirOptions" type="'group'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="groupdata" comment-panel-directive></div>
+
   <!-- BEGIN MAIN CONTENT -->
   <div class="row">
     <div class="col-md-12">
@@ -47,7 +49,7 @@
               ng-click="showView(groupdata.uuid,groupdata.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(groupdata.uuid,groupdata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>

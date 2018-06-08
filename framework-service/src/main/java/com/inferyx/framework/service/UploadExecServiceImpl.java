@@ -35,9 +35,9 @@ public class UploadExecServiceImpl {
 
 	static final Logger logger = Logger.getLogger(LogServiceImpl.class);
 	
-	public List<UploadExec> findAllByDependOn(String uuid) throws JsonProcessingException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException{
+	public List<UploadExec> findAllByDependOn(String uuid,String active) throws JsonProcessingException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException{
 		
-		return dao.findAllByDependOn(uuid);
+		return dao.findAllByDependOn(uuid,active);
 		
 	}
 	

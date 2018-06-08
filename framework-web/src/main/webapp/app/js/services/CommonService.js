@@ -18,6 +18,17 @@
         return response;
       })
     }
+    factory.httpGetWithCancelable = function(url,httpRequestCanceller) {
+      var fullUrl = baseUrl + url
+      return $http({
+        method: 'GET',
+        url:fullUrl,
+        timeout: httpRequestCanceller.promise
+       
+      }).then(function(response, status, headers) {
+        return response;
+      })
+    }
     factory.httpGet1 = function(url) {
       var fullUrl = baseUrl + url
       return $http({
@@ -246,7 +257,8 @@
       }
       return deferred.promise;
     }
-
+   
+    //use import
     this.SaveFile=function(filename,data,type){
       var url="admin/upload?action=edit&fileName="+filename+"&type="+type+"&fileType=zip"
   		var deferred = $q.defer();
@@ -258,8 +270,10 @@
           }
          return deferred.promise;
     }
-    this.uploadCommentFile=function(filename,data,uuid,type){
-      var url="common/uploadCommentFile?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid
+
+    //Genric for comment,filemanger,import,model
+    this.upload=function(filename,data,uuid,version,type,fileType){
+      var url="common/upload?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid+"&version="+version+"&fileType="+fileType
   		var deferred = $q.defer();
   	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
     	    var onSuccess=function(response){
@@ -268,7 +282,8 @@
              });
           }
          return deferred.promise;
-  	}
+    }
+    //for dataod 
     this.uploadFile=function(dataUuid,data,type){
       var url="datapod/upload?action=edit&datapodUuid="+dataUuid+"&type="+type
   		var deferred = $q.defer();
@@ -328,18 +343,19 @@
     this.getBaseEntityByCriteria = function(type, name, userName, startDate, endDate, tags, active, published) {
       var deferred = $q.defer();
       var url = "metadata/getBaseEntityByCriteria?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;
-      CommonFactory.httpGet(url).then(function(response) {
+      CommonFactory.httpGetWithCancelable(url,deferred).then(function(response) {
         OnSuccess(response.data)
       });
       var OnSuccess = function(response) {
-        if(response){
-          for (var i = 0; i < response.length; i++) {
-          response[i].isupload=false;
-          response[i].index=i;
+        var result=response;
+        if(result){
+          for (var i = 0; i < result.length; i++) {
+            result[i].isupload=false;
+            result[i].index=i;
           }
         }
         deferred.resolve({
-          data: response
+          data: result
         });
       }
       return deferred.promise;
@@ -806,7 +822,7 @@
     }
     
     this.download=function(fileName,uuid,fileType){
-      var url="common/comment/download?action=view&type=downloadexec&fileType="+fileType+"&fileName="+fileName+"&uuid="+uuid;
+      var url="common/download?action=view&type=downloadexec&fileType="+fileType+"&fileName="+fileName+"&uuid="+uuid;
       var deferred = $q.defer();
       CommonFactory.httpGet1(url).then(function(response){onSuccess(response)});
       var onSuccess=function(response){

@@ -1,12 +1,23 @@
   JobMonitoringModule = angular.module('JobMonitoringModule');
 
-  JobMonitoringModule.controller('DetailUploadExecController', function($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService) {
+  JobMonitoringModule.controller('DetailUploadExecController', function($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
     $scope.showuploadexec = true;
-
     $scope.selectTitle = dagMetaDataService.elementDefs['uploadexec'].caption;
     $scope.state = dagMetaDataService.elementDefs['uploadexec'].listState + "({type:'" + dagMetaDataService.elementDefs['uploadexec'].execType + "'})"
+    $rootScope.isCommentVeiwPrivlage=true;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+	  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+	  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+	  $scope.$on('privilegesUpdated', function (e, data) {
+		  var privileges = privilegeSvc.privileges['comment'] || [];
+		  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;	
+    });
+    $scope.userDetail={}
+	  $scope.userDetail.uuid= $rootScope.setUseruuid;
+	  $scope.userDetail.name= $rootScope.setUserName;
     $scope.close = function() {
       if ($stateParams.returnBack == "true" && $rootScope.previousState) {
         //revertback

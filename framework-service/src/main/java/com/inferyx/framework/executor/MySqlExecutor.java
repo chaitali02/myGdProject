@@ -379,4 +379,10 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public List<String> getCustomDirsFromTrainedModel(Object trngModel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

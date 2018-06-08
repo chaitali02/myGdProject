@@ -1,11 +1,23 @@
 JobMonitoringModule = angular.module('JobMonitoringModule');
 
-JobMonitoringModule.controller('DetailVizpodExecController', function($state, $filter, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService) {
+JobMonitoringModule.controller('DetailVizpodExecController', function($state, $filter, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
   $scope.showvizpodexec = true;
   $scope.state = dagMetaDataService.elementDefs['vizexec'].listState + "({type:'" + dagMetaDataService.elementDefs['vizexec'].execType + "'})"
+  $rootScope.isCommentVeiwPrivlage=true;
+  var privileges = privilegeSvc.privileges['comment'] || [];
+  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;	
+  });
+  $scope.userDetail={}
+  $scope.userDetail.uuid= $rootScope.setUseruuid;
+  $scope.userDetail.name= $rootScope.setUserName;
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback

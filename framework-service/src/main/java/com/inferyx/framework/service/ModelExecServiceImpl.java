@@ -31,6 +31,7 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.feature.RFormula;
+import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.codehaus.jettison.json.JSONObject;
@@ -57,6 +58,7 @@ import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureRefHolder;
@@ -79,12 +81,13 @@ import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 
 @Service
-public class ModelExecServiceImpl {
+public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
@@ -99,6 +102,8 @@ public class ModelExecServiceImpl {
 	private ExecutorFactory execFactory;
 	@Autowired
 	Helper helper;
+	@Autowired
+	ParamSetServiceImpl paramSetServiceImpl;
 
 	static final Logger logger = Logger.getLogger(ModelExecServiceImpl.class);
 
@@ -735,7 +740,6 @@ public class ModelExecServiceImpl {
 		response = commonServiceImpl.download(execUUID, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulate,execUUID,execVersion)));
 		}
 		return response;
-
 	}
 	
 	public Model getModelByTrainExec(String trainExecUUID, String trainExecVersion) throws JsonProcessingException {
@@ -751,5 +755,163 @@ public class ModelExecServiceImpl {
 
 	}
 
+	public TrainExec getLatestTrainExecByTrain(String trainUuid, String trainVersion) throws Exception {
+
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("statusList");
+		query.fields().include("dependsOn");
+		query.fields().include("result");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+
+		try {
+			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(train.getUuid()));
+			query.addCriteria(Criteria.where("statusList.stage").is("Completed"));
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("active").is("Y"));
+			query.with(new Sort(Sort.Direction.DESC, "version"));
+		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
+				| ParseException e) {
+			e.printStackTrace();
+		}
+
+		List<TrainExec> trainExecList = mongoTemplate.find(query, TrainExec.class);
+		if (trainExecList.size() > 0) {
+			return trainExecList.get(0);
+		} else {
+			throw new Exception("No executed train collection available.");
+		}
+	}
 	
+	/**
+	 * Kill meta thread if In Progress
+	 * @param uuid
+	 * @param version
+	 */
+	public void kill (String uuid, String version) {
+		super.kill(uuid, version, MetaType.trainExec);
+	}
+	
+	public void restartTrain(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.trainExec.toString());
+		try {
+			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec.getDependsOn().getRef().getType().toString());
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+			List<ParamMap> paramMapList = null;
+			if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
+					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				paramMapList = paramSetServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion());
+			}
+			if (paramMapList.size() > 0) {
+				for (ParamMap paramMap : paramMapList) {
+					Thread.sleep(1000); // Should be parameterized in a class
+					modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
+					trainExec = null;
+				}
+			} else {
+				modelServiceImpl.train(train, model, trainExec, execParams, null, runMode);
+			}
+		} catch (Exception e) {
+			synchronized (trainExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Train.");
+					throw new Exception((message != null) ? message : "Can not parse Train.");
+				}
+			}
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Train.");
+			throw new Exception((message != null) ? message : "Can not parse Train.");
+		}
+	}
+	
+	public void restartPredict(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.predictExec.toString());
+		try {
+			Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictExec.getDependsOn().getRef().getUuid(), predictExec.getDependsOn().getRef().getVersion(), predictExec.getDependsOn().getRef().getType().toString());
+			modelServiceImpl.predict(predict, execParams, predictExec, runMode);
+		} catch (Exception e) {
+			synchronized (predictExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation failed.");
+					throw new Exception((message != null) ? message : "Predict restart operation failed.");
+				}
+			}
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation failed.");
+			throw new Exception((message != null) ? message : "Predict restart operation failed.");
+		}
+	}
+	
+	public void restartSimulate(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.simulateExec.toString());
+		try {
+			Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateExec.getDependsOn().getRef().getUuid(), simulateExec.getDependsOn().getRef().getVersion(), simulateExec.getDependsOn().getRef().getType().toString());
+			modelServiceImpl.simulate(simulate, execParams, simulateExec, runMode);
+		} catch (Exception e) {
+			synchronized (simulateExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation failed.");
+					throw new Exception((message != null) ? message : "Simulate restart operation failed.");
+				}
+			}
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation failed.");
+			throw new Exception((message != null) ? message : "Simulate restart operation failed.");
+		}
+	}
 }

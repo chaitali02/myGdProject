@@ -26,7 +26,15 @@ public class DatasetView extends BaseEntity{
 	private Filter filter;	
 	private String filterChg;
 	private MetaIdentifierHolder dependsOn;
-	
+	private int limit;
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
 	
 
 	public MetaIdentifierHolder getDependsOn() {

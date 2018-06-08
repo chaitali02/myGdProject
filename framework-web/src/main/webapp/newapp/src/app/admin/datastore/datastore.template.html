@@ -106,14 +106,14 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">Meta Id
                   <span class="required" aria-required="true"> * </span>
-                </label>
+                </label>{{meta}}
                 <div class="col-md-2 col-sm-6 col-xs-12">
                   <p-dropdown [options]="metaIdOnType" [(ngModel)]="meta" name="meta" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
                     [filter]="true" [disabled]="mode == 'true'" (onChange)="selectTypeMeta()">
                   </p-dropdown>
                 </div>
                 <label class="col-md-1 control-label">Name
-                </label>{{metaId.uuid}}
+                </label>{{metaId | json}}
                 <div class="col-md-3 col-sm-6 col-xs-12">
                   <p-dropdown [options]="allNamesMetaId" [(ngModel)]="metaId.name" name="metaId" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
                     [filter]="true" [disabled]="mode == 'true'">

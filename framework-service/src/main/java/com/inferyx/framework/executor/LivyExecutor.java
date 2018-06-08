@@ -33,7 +33,6 @@ import org.springframework.stereotype.Component;
 import com.inferyx.framework.client.LivyClientImpl;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -56,7 +55,6 @@ import com.inferyx.framework.livyjob.ExecRegAndPersistJob;
 import com.inferyx.framework.livyjob.ExecuteAndRegisterJob;
 import com.inferyx.framework.livyjob.ExecuteAndResult;
 import com.inferyx.framework.livyjob.RegisterDatapodJob;
-import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.writer.IWriter;
 
 @Component
@@ -108,6 +106,7 @@ public class LivyExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder executeAndPersist(String sql, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
+		@SuppressWarnings("unused")
 		IWriter datapodWriter = null;
 		try {
 			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
@@ -124,7 +123,7 @@ public class LivyExecutor implements IExecutor {
 	public ResultSetHolder executeAndRegister(String sql, String tableName, String clientContext) throws IOException {
 		logger.info("Inside executeAndFetch sql >>>> " + sql);
 		LivyClient livyClient = null;
-		Dataset<Row> df = null;
+		//Dataset<Row> df = null;
 		ResultSetHolder rsHolder = null;
 		long countRows = -1L;
 		try {
@@ -388,6 +387,12 @@ public class LivyExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes,
 			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getCustomDirsFromTrainedModel(Object trngModel) {
 		// TODO Auto-generated method stub
 		return null;
 	}

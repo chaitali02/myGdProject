@@ -229,13 +229,14 @@
                   <div class="row">
                         <div class="col-md-12"style="margin-left:4px;font-size:12px;color: red;">
                       <div ng-show="!isFileNameValid">Special character or space not allowed in file name.</div>
+                      <div ng-show="!isFileValid">Please select csv file .</div>
                       </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+              <button type="button" data-dismiss="modal" class="btn dark btn-outline" ng-click="closeModel()">Close</button>
               <button type="button" class="btn green" ng-click="uploadFile()" ng-disabled="isSubmitDisable">Submit</button>
             </div>
           </div>
