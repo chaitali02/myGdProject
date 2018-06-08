@@ -1,5 +1,5 @@
 ReconModule = angular.module('ReconModule');
-ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService) {
+ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc) {
  
   $scope.mode = "false";
   $scope.rule = {};
@@ -19,15 +19,36 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     content: '',
     timeout: 3000 //time in ms
   };
-
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   if($stateParams.mode =='true'){
     $scope.isEdit=false;
     $scope.isAdd=false;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else{
     $scope.isAdd=true;
@@ -568,18 +589,39 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   if($stateParams.mode =='true'){
 	  $scope.isEdit=false;
 	  $scope.isversionEnable=false;
-	  $scope.isAdd=false;
+    $scope.isAdd=false;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if($stateParams.mode =='false'){
 	  $scope.isEdit=true;
 	  $scope.isversionEnable=true;
-	  $scope.isAdd=false;
+    $scope.isAdd=false;
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else{
 	$scope.isAdd=true;
 	}
   $scope.showForm = true;
-
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.mode = " ";
   $scope.rulegroup = {};
   $scope.rulegroup.versions = []

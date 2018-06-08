@@ -1,7 +1,7 @@
 
 AdminModule = angular.module('AdminModule');
 
-AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, CommonService, $state, $scope, $stateParams, $sessionStorage, $timeout, MetadataDatasourceSerivce) {
+AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, CommonService, $state,$rootScope,$scope, $stateParams, $sessionStorage, $timeout, MetadataDatasourceSerivce) {
 
 	$scope.isHiveFieldDisabled = true;
 	$scope.isFileFieldDisabled = true;
@@ -9,15 +9,38 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
+
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.mode = " ";
 	$scope.datasourcedata;
 	$scope.showFrom = true;

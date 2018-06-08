@@ -8,15 +8,37 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.isEdit = false;
     $scope.isversionEnable = false;
     $scope.isAdd = false;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if ($stateParams.mode == 'false') {
     $scope.isEdit = true;
     $scope.isversionEnable = true;
     $scope.isAdd = false;
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else {
     $scope.isAdd = true;
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.dq = {};
   $scope.dq.versions = []
   $scope.dataqualitycompare = null;
@@ -131,7 +153,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     //$scope.allDependsOn=response
     $scope.refIntegrityCheck = response
     $scope.allDependsOn = response
-    $scope.selectDependsOn = $scope.allDependsOn[0]
+    if (typeof $stateParams.id == "undefined") {
+      $scope.selectDependsOn = $scope.allDependsOn[0]
+    }
     $scope.dependsOnDataQuality();
   }
 
@@ -209,6 +233,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       var onSuccessgetAllLatest = function (response) {
 
         $scope.allDependsOn = response
+       
         DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
           onSuccess(response.data)
         });
@@ -645,15 +670,37 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     $scope.isEdit = false;
     $scope.isversionEnable = false;
     $scope.isAdd = false;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if ($stateParams.mode == 'false') {
     $scope.isEdit = true;
     $scope.isversionEnable = true;
     $scope.isAdd = false;
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else {
     $scope.isAdd = true;
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.showgraphdiv = false;
   $scope.mode = " ";
   $scope.dqgroup = {};

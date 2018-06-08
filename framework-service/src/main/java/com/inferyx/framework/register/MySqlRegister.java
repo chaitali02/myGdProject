@@ -122,11 +122,12 @@ public class MySqlRegister {
 				dp.setName(tableName);
 				ResultSet rs = md.getColumns(null, null, tableName, null);
 				int size = 0;
-				while (rs.next()) {
+				for(int j = 0; rs.next(); j++) {
 					logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + rs.getString("TYPE_NAME"));
 					Attribute attr = new Attribute();
 					String colName = rs.getString("COLUMN_NAME");
 					String colType = rs.getString("TYPE_NAME");
+					attr.setAttributeId(j);
 					attr.setName(colName);
 					attr.setType(colType);
 					attr.setDesc("");

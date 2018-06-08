@@ -269,7 +269,7 @@ public class MongoGraphServiceImpl {
 			// Get all dsts from edgeList
 			if (edgeList != null) {
 				uuidList = new ArrayList<>();
-				for (Edge edge : edgeList) {
+				for (Edge edge : edgeList  ) {
 					edgeMap.put(edge.getSrc() + "_" + edge.getDst(), edge);
 				}
 				for (String edgeKey : edgeMap.keySet()) {
@@ -301,6 +301,21 @@ public class MongoGraphServiceImpl {
 		vertexList = iVertexDao.findAllByUuidContaining(uuidList);
 		if (vertexList != null) {
 			for (Vertex vertex : vertexList) {
+				String relationName = null;
+				if(degree.equalsIgnoreCase("1")) {
+				Edge edgeRelation =iEdgeDao.findOneBySrcAndDst(parentvertex.getUuid(),vertex.getUuid());
+				if(edgeRelation != null) {
+				 relationName=edgeRelation.getRelationType();
+					vertex.setNodeType(relationName);
+				}
+				}else {
+					Edge edgeRelation =iEdgeDao.findOneByDstAndSrc(vertex.getUuid(),parentvertex.getUuid());
+					if(edgeRelation != null) {
+					 relationName=edgeRelation.getRelationType();
+						vertex.setNodeType(relationName);
+					}
+				}
+			
 				vertexMap.put(vertex.getUuid(), vertex);
 			}
 			for (String vertexKey : vertexMap.keySet()) {

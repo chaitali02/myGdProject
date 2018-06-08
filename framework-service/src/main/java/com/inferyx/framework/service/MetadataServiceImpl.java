@@ -66,6 +66,7 @@ import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.LoadExec;
+import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -1419,7 +1420,9 @@ public class MetadataServiceImpl {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CommentView> getCommentByType(String uuid, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+	public List<CommentView> getCommentByType(String uuid, String type)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
 		Query query = new Query();
 		query.fields().include("id");
 		query.fields().include("uuid");
@@ -1437,14 +1440,13 @@ public class MetadataServiceImpl {
 		query.addCriteria(Criteria.where("active").is('Y'));
 		List<BaseEntity> result = new ArrayList<BaseEntity>();
 		result = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.comment));
-		result=commonServiceImpl.resolveBaseEntityList(result);
-		
-		List<CommentView> CommentViewList=new ArrayList<CommentView>();
-		//query2.addCriteria(Criteria.where("dependsOn.ref.uuid").in(baseEntity.getUuid()));
-		
+		result = commonServiceImpl.resolveBaseEntityList(result);
 
-		for(BaseEntity baseEntity:result){
-			CommentView commentView=new CommentView();
+		List<CommentView> CommentViewList = new ArrayList<CommentView>();
+		// query2.addCriteria(Criteria.where("dependsOn.ref.uuid").in(baseEntity.getUuid()));
+
+		for (BaseEntity baseEntity : result) {
+			CommentView commentView = new CommentView();
 			commentView.setId(baseEntity.getId());
 			commentView.setUuid(baseEntity.getUuid());
 			commentView.setName(baseEntity.getName());
@@ -1454,33 +1456,40 @@ public class MetadataServiceImpl {
 			commentView.setAppInfo(baseEntity.getAppInfo());
 			commentView.setActive(baseEntity.getActive());
 			commentView.setDesc(baseEntity.getDesc());
-			List<MetaIdentifierHolder> uploadExecHolder=new ArrayList<MetaIdentifierHolder>();
+			List<MetaIdentifierHolder> uploadExecHolder = new ArrayList<MetaIdentifierHolder>();
 			List<UploadExec> result1 = new ArrayList<UploadExec>();
-		//
-			result1= uploadExecServiceImpl.findAllByDependOn(baseEntity.getUuid());
-			
-			//result1 = (List<BaseEntity>) mongoTemplate.find(query2, Helper.getDomainClass(MetaType.uploadExec));
-			for(UploadExec uploadExe:result1) {
-				MetaIdentifierHolder metaIdentifierHolder=new MetaIdentifierHolder();
-				MetaIdentifier metaIdentifier=new MetaIdentifier();
+			result1= uploadExecServiceImpl.findAllByDependOn(baseEntity.getUuid(),"Y");
+			for (UploadExec uploadExe : result1) {
+				MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
+				MetaIdentifier metaIdentifier = new MetaIdentifier();
 				metaIdentifier.setUuid(uploadExe.getUuid());
 				metaIdentifier.setName(uploadExe.getFileName());
 				metaIdentifier.setType(MetaType.uploadExec);
 				metaIdentifierHolder.setRef(metaIdentifier);
 				uploadExecHolder.add(metaIdentifierHolder);
 				commentView.setUploadExecInfo(uploadExecHolder);
-				
 			}
 			CommentViewList.add(commentView);
-			
 		}
-		
-		
-		
-	
-		
-		
 		return CommentViewList;
+	}
+	
+	public List<Lov> getLovByType(String type) {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+		query.fields().include("active");
+		query.fields().include("desc");
+		query.fields().include("published");
+		query.fields().include("value");
+		query.addCriteria(Criteria.where("type").is(type));
+		List<Lov> lov = new ArrayList<>();
+		lov = (List<Lov>) mongoTemplate.find(query, Lov.class);
+		return lov;
 	}
 	
 }

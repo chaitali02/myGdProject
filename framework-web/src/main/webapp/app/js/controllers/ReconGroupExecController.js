@@ -1,12 +1,23 @@
 JobMonitoringModule = angular.module('JobMonitoringModule');
 
-JobMonitoringModule.controller('DetailReconGroupExecController', function ($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService) {
+JobMonitoringModule.controller('DetailReconGroupExecController', function ($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
 
     $scope.uuid = $stateParams.id;
     $scope.mode = $stateParams.mode;
     $scope.showExec = true;
     $scope.selectTitle = dagMetaDataService.elementDefs['recongroupexec'].caption;
-
+    $rootScope.isCommentVeiwPrivlage=true;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+    $scope.$on('privilegesUpdated', function (e, data) {
+      var privileges = privilegeSvc.privileges['comment'] || [];
+      $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+      $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;	
+    });
+    $scope.userDetail={}
+    $scope.userDetail.uuid= $rootScope.setUseruuid;
+    $scope.userDetail.name= $rootScope.setUserName;
     $scope.onShowDetail = function (data) {
         $rootScope.previousState = {};
         $rootScope.previousState.name = dagMetaDataService.elementDefs['recongroupexec'].detailState;

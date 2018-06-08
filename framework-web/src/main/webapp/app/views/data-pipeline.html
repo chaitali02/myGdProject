@@ -28,6 +28,7 @@
                 </div>
             </div> <!-- END PAGE HEADER-->
             <br>
+            <div  options="dirOptions" type="'dag'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dagdata" comment-panel-directive></div>
 
             <div class="portlet light bordered" id="form_wizard_1">
                 <div class="portlet-title" style="margin-bottom:0px;">
@@ -47,7 +48,7 @@
                             ng-hide="isAdd" data-ng-click="showview(dagdata.uuid,dagdata.version)">
                             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                         </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip  ng-show="isDependencyShow" ng-class="showdag==false? 'currentpage':'notcurrentpage'" data-ng-click="showDagGraph(dagdata.uuid,dagdata.version)"  ><!-- showRuleGraph(dataqualitydata.uuid,dataqualitydata.version) -->
+                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip  ng-show="isDependencyShow" ng-class="showdag==false? 'currentpage':'notcurrentpage'" data-ng-click="showDagGraph(dagdata.uuid,dagdata.version)"  ><!-- showRuleGraph(dataqualitydata.uuid,dataqualitydata.version) -->
                             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
                         </a>
                         <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " ng-click="broadcastRefreshData()" data-original-title="" title="" ng-class="showgraphdiv ==false? 'currentpage':'notcurrentpage'"   >

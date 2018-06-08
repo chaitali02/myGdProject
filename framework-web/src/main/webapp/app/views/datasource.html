@@ -28,6 +28,8 @@
 	<!-- END PAGE HEADER-->
 	<br>
 	<div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+	<div  options="dirOptions" type="'datasource'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="datasourcedata" comment-panel-directive></div>
+
 	<div class="row">
 		<div class="col-md-12">
 			<div class="portlet box green">
@@ -46,7 +48,7 @@
 						 ng-click="showView(datasourcedata.uuid,datasourcedata.version)" ng-hide="isAdd" style="height:16px;">
 							<span class="glyphicon glyphicon-file" style="color:white;"></span>
 						</a>
-						<a title="Show Dependencies" data-toggle="tooltip" ng-show="isDependencyShow" data-placement="top" tooltip ng-class="showFrom ==false? 'currentpage':'notcurrentpage'"
+						<a title="Knowledge Graph" data-toggle="tooltip" ng-show="isDependencyShow" data-placement="top" tooltip ng-class="showFrom ==false? 'currentpage':'notcurrentpage'"
 						 data-ng-click="showGraph(datasourcedata.uuid,datasourcedata.version)" style="height:14px;">
 							<i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
 
