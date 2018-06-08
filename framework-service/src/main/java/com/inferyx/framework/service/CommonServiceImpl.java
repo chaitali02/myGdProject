@@ -3329,6 +3329,7 @@ public class CommonServiceImpl <T> {
 			Query query = new Query();
 			query.fields().include("uuid");
 			query.fields().include("name");
+			query.fields().include("version");
 			query.fields().include("type");
 			
 			query.addCriteria(Criteria.where("uuid").is(uuid));
