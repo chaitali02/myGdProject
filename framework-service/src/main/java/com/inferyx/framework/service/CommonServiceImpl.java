@@ -3333,7 +3333,9 @@ public class CommonServiceImpl <T> {
 			
 			query.addCriteria(Criteria.where("uuid").is(uuid));
 			List<BaseEntity> obj=new ArrayList<>();
-			obj = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(Helper.getMetaType(type)));
+			if (Helper.getDomainClass(Helper.getMetaType(type)) != null) {
+				obj = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(Helper.getMetaType(type)));
+			}
 			//String name=obj.getName();
 			
 			return obj;
