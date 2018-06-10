@@ -2245,7 +2245,6 @@ public class CommonServiceImpl <T> {
 	}
 	
 	public List<MetaStatsHolder> getMetaStats(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, JsonProcessingException {
-		logger.info("Inside getMetaStats - type : " + type);
 		String appUuid = null;
 //		if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 //			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
@@ -2256,7 +2255,8 @@ public class CommonServiceImpl <T> {
 		List<MetaStatsHolder> countHolder = new ArrayList<>();
 		List<MetaType> metaTypes = MetaType.getMetaList();
 		if(type == null){
-			for(MetaType mType : metaTypes){//logger.info("MetaType: "+mType+"\n");
+			for(MetaType mType : metaTypes){
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											logger.info("MetaType: "+mType+"\n");
 				long count = 0;
 				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase()))).invoke(this);
 				if (appUuid == null) {

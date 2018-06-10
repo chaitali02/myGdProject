@@ -39,12 +39,14 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DQInfo;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataQualDao;
 import com.inferyx.framework.dao.IDataQualExecDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
@@ -60,6 +62,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -391,18 +394,17 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	
 	public DataQualExec execute(String dataqualUUID, String dataqualVersion, DataQualExec dataqualExec,
 			DataQualGroupExec dataqualGroupExec, ExecParams execParams, RunMode runMode) throws Exception {
-		execute(dataqualUUID, dataqualVersion, null, dataqualExec, dataqualGroupExec, null, execParams, runMode);
+		execute(null, dataqualExec, null, execParams, runMode);
 		return dataqualExec;
 	}
 
-	public DataQualExec execute(String dataqualUUID, String dataqualVersion,
-			ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, DataQualGroupExec dataqualGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
+	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		Datapod targetDatapod = (Datapod) daoRegister
 				.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
 		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 				targetDatapod.getVersion());		
 		try {
-			return (DataQualExec) super.execute(dataqualUUID, dataqualVersion, MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec, dataqualGroupExec, targetDatapodKey, taskList, execParams, runMode);
+			return (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec, targetDatapodKey, taskList, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -417,10 +419,10 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 	
 	@Override
-	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
-			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
+	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor,
+			BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
-			return execute(uuid, version, metaExecutor, (DataQualExec) baseRuleExec, (DataQualGroupExec)baseGroupExec, taskList, execParams, runMode);
+			return execute(metaExecutor, (DataQualExec) baseRuleExec, taskList, execParams, runMode);
 	}
 	
 	
@@ -970,4 +972,16 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		return data;
 	}
 
+	@Override
+	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("EXECUTOR")) ? (ThreadPoolTaskExecutor)(execParams.getExecutionContext().get("EXECUTOR")) : null;
+		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("TASKLIST")) ? (List<FutureTask<TaskHolder>>)(execParams.getExecutionContext().get("TASKLIST")) : null;
+		execute(metaExecutor, (DataQualExec)baseExec, taskList, execParams, runMode);
+	}
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
+	}
+	
 }

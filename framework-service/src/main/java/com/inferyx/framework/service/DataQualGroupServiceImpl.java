@@ -28,10 +28,12 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataQualGroupDao;
 import com.inferyx.framework.dao.IDataQualGroupExecDao;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualGroup;
@@ -367,6 +369,24 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		dataQualGroupExec = parse(dataQualGroupExec.getRef(MetaType.dqgroupExec), null, null, null, runMode);
 		execute(dataQualGroupExec.getDependsOn().getRef().getUuid(),dataQualGroupExec.getDependsOn().getRef().getVersion(),null,dataQualGroupExec, runMode);
 		
+	}
+
+	/**
+	 * Override Executable.execute()
+	 */
+	@Override
+	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		execute(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), execParams, (DataQualGroupExec) baseExec, runMode);
+		
+	}
+
+	/**
+	 * Override Parsable.parse()
+	 */
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		return parse(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, 
+				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, runMode);
 	}
 	
 }

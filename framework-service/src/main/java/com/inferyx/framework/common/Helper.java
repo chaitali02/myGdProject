@@ -453,6 +453,11 @@ public class Helper {
 				case "comment" : return MetaType.comment;
 				case "tag" : return MetaType.tag;
 				case "lov" : return MetaType.lov;
+				case "generatedata" : return MetaType.GenerateData;
+				case "transpose" : return MetaType.Transpose;
+				case "clonedata" : return MetaType.CloneData;
+				case "gendataattr" : return MetaType.GenDataAttr;
+				case "gendatavallist" : return MetaType.GenDataValList;
 
 				default : return null;
 			}
@@ -806,7 +811,7 @@ public class Helper {
 	/**
 	 * 
 	 * @param type
-	 * @return
+	 * @return MetaType
 	 */
 	public MetaType getExecType (MetaType type) {
 		if(type == null)
@@ -826,6 +831,67 @@ public class Helper {
 		case simulate : return MetaType.simulateExec;
 		case predict : return MetaType.predictExec;
 		case operator : return MetaType.operatorExec;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getMetaTypeByExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case mapExec : return MetaType.map;
+		case loadExec : return MetaType.load;
+		case ruleExec : return MetaType.rule;
+		case rulegroupExec : return MetaType.rulegroup;
+		case dqExec : return MetaType.dq;
+		case dqgroupExec : return MetaType.dqgroup;
+		case profileExec : return MetaType.profile;
+		case profilegroupExec : return MetaType.profilegroup;
+		case reconExec : return MetaType.recon;
+		case recongroupExec : return MetaType.recongroup;
+		case trainExec : return MetaType.train;
+		case simulateExec : return MetaType.simulate;
+		case predictExec : return MetaType.predict;
+		case operatorExec : return MetaType.operator;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getGroupExecTypeByRuleExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case rulegroupExec : return MetaType.ruleExec;
+		case dqgroupExec : return MetaType.dqExec;
+		case profilegroupExec : return MetaType.profileExec;
+		case recongroupExec : return MetaType.reconExec;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getRuleExecTypeByGroupExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case ruleExec : return MetaType.rulegroupExec;
+		case dqExec : return MetaType.dqgroupExec;
+		case profileExec : return MetaType.profilegroupExec;
+		case reconExec : return MetaType.recongroupExec;
 		default : return null;
 		}
 	}

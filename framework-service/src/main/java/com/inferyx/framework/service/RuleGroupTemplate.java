@@ -32,12 +32,13 @@ import com.inferyx.framework.domain.BaseRuleGroup;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Executable;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.factory.RuleExecFactory;
 import com.inferyx.framework.factory.RuleServiceFactory;
@@ -47,7 +48,7 @@ import com.inferyx.framework.factory.RunRuleFactory;
  * @author joy
  *
  */
-public abstract class RuleGroupTemplate {
+public abstract class RuleGroupTemplate implements Executable, Parsable {
 	
 	@Autowired
 	protected CommonServiceImpl commonServiceImpl;

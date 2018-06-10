@@ -33,10 +33,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IRuleGroupDao;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.domain.Application;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -325,5 +327,22 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 	public RuleGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		return (RuleGroupExec) super.parse(execUuid, execVersion, MetaType.rulegroup, MetaType.rulegroupExec, MetaType.rule, MetaType.ruleExec, refKeyMap, datapodList, dagExec, runMode);
+	}
+
+	/**
+	 * Override Executable.execute()
+	 */
+	@Override
+	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		execute(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), execParams, (RuleGroupExec) baseExec, runMode);
+	}
+
+	/**
+	 * Override Parsable.parse()
+	 */
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		return parse(baseExec.getUuid(), baseExec.getVersion(), MetaType.rulegroup, MetaType.rulegroupExec, MetaType.rule, MetaType.ruleExec, 
+				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, runMode);
 	}
 }
