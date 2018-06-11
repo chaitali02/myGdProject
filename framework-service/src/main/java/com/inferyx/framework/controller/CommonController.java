@@ -182,11 +182,14 @@ public class CommonController<T> {
 			java.util.Map<String, Object> operator = mapper.convertValue(metaObject, java.util.Map.class);
 			 
 			BaseEntity baseEntity=  registerService.save(operator, type);
-			return null;
+			if (upd_tag.equalsIgnoreCase("Y")) {
+				commonServiceImpl.updateLovForTag(baseEntity);
+			}
+			return baseEntity.getId().toString();
 					 
 		} else {
 			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(type, metaObject);
-			if (upd_tag.equalsIgnoreCase("N")) {
+			if (upd_tag.equalsIgnoreCase("Y")) {
 				commonServiceImpl.updateLovForTag(baseEntity);
 			}
 			return baseEntity.getId().toString()/* objectWriter.writeValueAsString(object) */;
