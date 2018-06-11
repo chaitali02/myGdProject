@@ -304,13 +304,13 @@
             case "recon":
               metajson.caption="Reconciliation";
               metajson.icon='fa fa-compress';
-              metajson.state="recon"
+              metajson.state="datareconrule"
               metajson.param={type:'recon'};
               break;
             case "recongroup":
               metajson.caption="Recon Group";
               metajson.icon='fa fa-compress';
-              metajson.state="recongroup"
+              metajson.state="datareconrulegroup"
               metajson.param={type:'recongroup'};
               break;  
           }
