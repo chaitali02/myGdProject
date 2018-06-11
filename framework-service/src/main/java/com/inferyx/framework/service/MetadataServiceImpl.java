@@ -1478,8 +1478,6 @@ public class MetadataServiceImpl {
 			commentView.setActive(baseEntity.getActive());
 			commentView.setDesc(baseEntity.getDesc());
 			List<MetaIdentifierHolder> uploadExecHolder = new ArrayList<MetaIdentifierHolder>();
-
-
 			List<UploadExec> result11 = new ArrayList<UploadExec>();
 			//
 			result11 = uploadExecServiceImpl.findAllByDependOn(baseEntity.getUuid(),"Y");
@@ -1487,7 +1485,6 @@ public class MetadataServiceImpl {
 			// result1 = (List<BaseEntity>) mongoTemplate.find(query2,
 			// Helper.getDomainClass(MetaType.uploadExec));
 			for (UploadExec uploadExe : result11) {
-
 				MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
 				MetaIdentifier metaIdentifier = new MetaIdentifier();
 				metaIdentifier.setUuid(uploadExe.getUuid());
