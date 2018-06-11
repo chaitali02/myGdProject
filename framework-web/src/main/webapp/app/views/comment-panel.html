@@ -5,7 +5,7 @@
                 <h4 class="caption-subject font-dark bold">Comment</h4>
             </div>
             <div class="col-md-1 pull-right" style="padding-top: 2%;">
-                <div class="" ng-click="closePanle()"  tooltip-placement="left" uib-tooltip="Close">
+                <div class="" ng-click="closePanle()" tooltip-placement="left" uib-tooltip="Close">
                     <i ng-class="panelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>
                 </div>
             </div>
@@ -21,39 +21,79 @@
                         <div class="mt-comment-body" style="position: inherit;">
                             <div class="mt-comment-info ">
                                 <span class="mt-comment-author">{{data.createdBy.ref.name}}</span>
-                                <div class="mt-comment-actions">
-                                    <a href="#" tooltip-placement="top" uib-tooltip="Delete" ng-disabled="privileges.indexOf('Delete') == -1" ng-click="delete(data.id,'comment')" style="float:right">
-                                        <i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;color:red;"></i>
-                                    </a>
-                                </div>    
+                                <div class="mt-comment-details">
+                                    <ul class="mt-comment-actions">
+
+                                        <li ng-if="!data.isEditComment">
+                                            <a href="#" tooltip-placement="top" uib-tooltip="Edit" ng-disabled="privileges.indexOf('Edit') == -1" ng-click="edit($index)"
+                                                style="float:right">
+                                                <i class="fa fa-edit" aria-hidden="true" style="font-size: 20px;color:#777;"></i>
+                                            </a>
+                                        </li>
+                                    
+                                        <li>
+                                            <a href="#" tooltip-placement="top" uib-tooltip="Delete" ng-disabled="privileges.indexOf('Delete') == -1" ng-click="delete(data.id,'comment',null)"
+                                                style="float:right">
+                                                <i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;color:red;"></i>
+                                            </a>
+                                        </li>
+                                        <li ng-if="data.isEditComment">
+                                            <a href="#" tooltip-placement="top" uib-tooltip="close" ng-click="data.isEditComment=false" style="float:right">
+                                                <i class="fa fa-time" aria-hidden="true" style="font-size: 20px;color:#777;"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="mt-comment-text">
+                            <div class="mt-comment-text" ng-if="!data.isEditComment">
                                 <show-more text="data.desc" limit="50"> </show-more>
+                            </div>
+                            <div class="mt-comment-text" style="height:6px;" ng-if="data.isEditComment">
+                                <div class="col-md-11" style="width:89%;padding-left: 0px;">
+                                    <form novalidate="novalidate" name="Editform" ng-submit="submit(Editform,$parent.$index,$index,data)">
+                                        <div class="input-group form-group" ng-if="isRequire">
+                                            <input type="text" class="form-control" ng-disabled="isPrivlage" focus-me="true" name="desc" ng-model="data.desc" disable-validation-message=""
+                                                ng-required="isRequire">
+                                            <div class="input-group-btn">
+                                                <button type="submit" class="btn green" ng-disabled="isPrivlage || isSubmitDisabled">
+                                                    <!-- <i class="icon-paper-clip"></i> -->
+                                                    Submit
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-1" style="margin-top:8px;right:0px;width:11%;">
+                                    <label class=" input-group-btn" style="width:auto" tooltip-placement="left" uib-tooltip="Attach doc">
+                                        <input id="avatar" parentIndex="{{$parent.$index}}" onchange="editReadfileName(this)" type="file" ng-model="file" style="display:none">
+                                        <i class="icon-paper-clip" style="font-size: 20px;color:#008000;"></i>
+                                    </label>
+                                </div>
                             </div>
                             <div class="mt-comment-details">
                                 <ul class="mt-comment-actions" style="padding-right:3%;">
-                                    <!-- <li ng-if="data.isDownloadable">
-                                        <a href="#" tooltip-placement="top" uib-tooltip="Download">
-                                            <i class="fa fa-download" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i>
-                                        </a>
-                                    </li> -->
-                                    <!-- <li>
-                                        <a href="#" tooltip-placement="top" uib-tooltip="Delete" ng-disabled="privileges.indexOf('Delete') == -1" ng-click="delete(data.id)">
-                                            <i class="fa fa-trash" aria-hidden="true" style="font-size: 20px;color: #79869a;"></i>
-                                        </a>
-                                    </li> -->
                                 </ul>
-                               
                                 <div class="list-files" ng-show="data.uploadExecInfo.length >0" ng-repeat="f in data.uploadExecInfo | limitTo: data.limitUploadExecInfo">
-                                    <span class="list-file-name">{{f.ref.name}}</span>
-                                    <ul class="mt-comment-actions">
-                                         <li><i class="fa fa-download"  tooltip-placement="top" uib-tooltip="Download" style="color: #777;margin: 4px auto;" ng-click="download(f)"></i></li>
-                                        <li><i class="fa fa-trash"  tooltip-placement="top" uib-tooltip="Delete" ng-click="delete(f.ref.uuid,'uploadexec')" style="color: #777;margin:0px auto;"></i></li>
-                                    </ul>
-                                    
+                                    <div ng-show="f.isDelete==false">
+                                        <span class="list-file-name" ng-if="f.ref.type=='uploadExec'">{{f.ref.name}}</span>
+                                        <span class="list-file-name" ng-if="f.ref.type =='simple'">{{f.value.name}}</span>
+                                        <ul class="mt-comment-actions">
+                                            <li ng-disabled="f.ref.type =='simple'">
+                                                <i class="fa fa-download" tooltip-placement="top" uib-tooltip="Download" style="color: #777;margin: 4px auto;"
+                                                    ng-click="download(f)"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-trash" tooltip-placement="top" uib-tooltip="Delete" ng-click="delete(f.ref.uuid,f.ref.type,$parent.$index,$index,data.isEditComment)"
+                                                    style="color: #777;margin:0px auto;"></i>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <a href="javascript;;" ng-show ="data.uploadExecInfo.length >2 && data.limitUploadExecInfo ==2"  style="padding:11px" ng-click="ShowMore($index);" ><i class="fa fa-plus" aria-hidden="true"></i> More</a>
-                                <a href="javascript;;" ng-show ="data.uploadExecInfo.length >0 && data.limitUploadExecInfo >2" style="padding:11px" ng-click="ShowLess($index);" ><i class="fa fa-minus" aria-hidden="true"></i> Less</a>
+                                <a href="javascript;;" ng-show="data.uploadExecInfo.length >2 && data.limitUploadExecInfo ==2" style="padding:11px" ng-click="ShowMore($index);">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> More</a>
+                                <a href="javascript;;" ng-show="data.uploadExecInfo.length >0 && data.limitUploadExecInfo >2" style="padding:11px" ng-click="ShowLess($index);">
+                                    <i class="fa fa-minus" aria-hidden="true"></i> Less</a>
                             </div>
                         </div>
                     </div>
@@ -65,7 +105,8 @@
                 <div class="mt-comments comment-panel-mt-comment">
                     <div class="mt-comment comment-panel-mt-comment">
                         <div class="mt-comment-img">
-                            <img class=" img-circle" width="45px" ng-src="avatars/{{currentUser.uuid}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';"/>
+                            <img class=" img-circle" width="45px" ng-src="avatars/{{currentUser.uuid}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';"
+                            />
                         </div>
                         <div class="mt-comment-body">
                             <div class="mt-comment-info">
@@ -73,30 +114,30 @@
                             </div>
                             <div class="mt-comment-text" style="height:6px;">
                                 <div class="col-md-11" style="width:89%;padding-left: 0px;">
-                                <form novalidate="novalidate" name="myform" ng-submit="submit(myform)">
-                                    <div class="input-group form-group"  ng-if="isRequire">
-                                        <input type="text"  class="form-control" ng-disabled="isPrivlage" focus-me="true" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."
-                                            disable-validation-message="" ng-required="isRequire">
-                                        <div class="input-group-btn">
-                                            <button type="submit" class="btn green" ng-disabled="isPrivlage || isSubmitDisabled">
-                                                <!-- <i class="icon-paper-clip"></i> -->
-                                                Submit
-                                            </button>
+                                    <form novalidate="novalidate" name="myform" ng-submit="submit(myform,null,null,null)">
+                                        <div class="input-group form-group" ng-if="isRequire">
+                                            <input type="text" class="form-control" ng-disabled="isPrivlage" focus-me="true" name="desc" ng-model="commentDesc" placeholder="Type a comment here..."
+                                                disable-validation-message="" ng-required="isRequire">
+                                            <div class="input-group-btn">
+                                                <button type="submit" class="btn green" ng-disabled="isPrivlage || isSubmitDisabled">
+                                                    <!-- <i class="icon-paper-clip"></i> -->
+                                                    Submit
+                                                </button>
+                                            </div>
+
                                         </div>
-                                        
-                                    </div>
-                                </form>
+                                    </form>
                                 </div>
-                                <div class="col-md-1" style="margin-top:8px;right:0px;width:11%;">  
+                                <div class="col-md-1" style="margin-top:8px;right:0px;width:11%;">
                                     <label class=" input-group-btn" style="width:auto" tooltip-placement="left" uib-tooltip="Attach doc">
-                                        <input id="avatar" onchange="readfileName(this)" type="file" ng-model="file" style="display:none">
+                                        <input id="avatar" onchange="readfileName(this,null,null)" type="file" ng-model="file" style="display:none">
                                         <i class="icon-paper-clip" style="font-size: 20px;color:#008000;"></i>
-                                    </label
-                                ></div>
+                                    </label>
+                                </div>
                             </div>
                             <div class="mt-comment-details">
                                 <ul class="mt-comment-actions" style="padding-right:6%;margin-top:-4px;">
-                                    <li >
+                                    <li>
                                         <!-- <label class="input-group-btn" style="width:auto" tooltip-placement="top" uib-tooltip="upload">
                                             <input id="avatar" onchange="readfileName(this)" type="file" ng-model="file" style="display:none">
                                             <i class="fa fa-upload" style="font-size: 20px;color: #79869a;"></i>
@@ -105,14 +146,20 @@
                                 </ul>
                                 <br>
                                 <div class="list-files" ng-show="file.length >0" ng-repeat="f in file | limitTo: limitUploadExecInfo">
+                                    
                                     <span class="list-file-name">{{f.name}}</span>
                                     <!-- <span style="color: #777;">({{f.size}}K)</span> -->
                                     <ul class="mt-comment-actions">
-                                        <li><i class="fa fa-trash" tooltip-placement="top" uib-tooltip="Delete"  ng-click="clearFile($index)" style="color: #777;margin:0px auto;"></i></li>
+                                        <li>
+                                            <i class="fa fa-trash" tooltip-placement="top" uib-tooltip="Delete" ng-click="clearFile($index)"
+                                                style="color: #777;margin:0px auto;"></i>
+                                        </li>
                                     </ul>
                                 </div>
-                                <a href="javascript;;" ng-show ="file.length >1 && limitUploadExecInfo == 1"  style="padding:11px" ng-click="ShowMoreFile();" ><i class="fa fa-plus" aria-hidden="true"></i> More</a>
-                                <a href="javascript;;" ng-show ="file.length >0  && limitUploadExecInfo >1" style="padding:11px" ng-click="ShowLessFile();" ><i class="fa fa-minus" aria-hidden="true"></i> Less</a>
+                                <a href="javascript;;" ng-show="file.length >1 && limitUploadExecInfo == 1" style="padding:11px" ng-click="ShowMoreFile();">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> More</a>
+                                <a href="javascript;;" ng-show="file.length >0  && limitUploadExecInfo >1" style="padding:11px" ng-click="ShowLessFile();">
+                                    <i class="fa fa-minus" aria-hidden="true"></i> Less</a>
                             </div>
                         </div>
                     </div>
