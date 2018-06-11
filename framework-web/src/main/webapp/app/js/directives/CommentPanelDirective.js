@@ -60,6 +60,10 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                            if(response[i].uploadExecInfo !=null){
                             scope.commentResult[i].isDownloadable=true;
                             scope.commentResult[i].limitUploadExecInfo=2;
+                            scope.commentResult[i].isEditComment=false;
+                            for(var j=0;j<response[i].uploadExecInfo.length;j++){
+                                scope.commentResult[i].uploadExecInfo[j].isDelete=false;
+                            }
                            }
                         }
                     }
@@ -86,7 +90,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 
                 scope.limitUploadExecInfo=1;
             }
-            scope.delete=function(uuid,type){
+            scope.delete=function(uuid,type,parentIndex,index,isEditComment){
                 if(type =='comment'){
                     CommonService.delete(uuid,'comment').then(function (response){onSuccess(response.data)})
                     var onSuccess=function(response){
@@ -94,19 +98,35 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
 
                     }
                 }
-                else if(type == 'uploadexec'){
+                else if(type == 'uploadExec'){
                     CommonService.getOneByUuidAndVersion(uuid,'','uploadExec').then(function(response){onSuccessGetOneByUuidandVersion(response.data)});
                         var onSuccessGetOneByUuidandVersion=function(response){
                             CommonService.delete(response.id,'uploadExec').then(function (response){onSuccess(response.data)})
                             var onSuccess=function(response){
+                                if(!isEditComment)
                                 scope.getCommentByType();
-        
+                                else{
+                                    scope.commentResult[parentIndex].uploadExecInfo[index].isDelete=true;
+                                }
                             }
                         }
                 }
+                else if(type == 'simple'){
+                    scope.commentResult[parentIndex].uploadExecInfo.splice(index,1);
+                }
             }
-
+            
+            scope.edit=function(index){
+                scope.commentResult[index].isEditComment=true;
+                
+            }
+            // scope.editSubmit=function(index){
+            //     scope.submit=(null,index);
+            // }
             scope.download=function(data){
+                if(f.ref.type="simple"){
+                    return false
+                }
                 CommonService.download(data.ref.name+" ",data.ref.uuid).then(function (response){ onSuccess(response.data)});
                 var onSuccess = function (response) {
                   var filename =response.headers('filename');
@@ -132,7 +152,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                   }
                 }
               }
-
+ 
             window.readfileName=function(input){
                 if (input.files && input.files[0]) {
                     scope.$apply();
@@ -142,16 +162,32 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                     console.log(input.files[0]);
                 }
             }
+            window.editReadfileName=function(input){
+                var parentIndex=input.attributes.parentIndex.nodeValue;
+                var uploadExecInfo={}
+                var ref={}
+                ref.type='simple';
+                uploadExecInfo.ref=ref;
+                var value=input.files[0];
+                uploadExecInfo.value=value;
+                uploadExecInfo.isDelete=false
+                if(scope.commentResult[parentIndex].uploadExecInfo ==null){
+                    scope.commentResult[parentIndex].uploadExecInfo=[];
+                }
+                scope.commentResult[parentIndex].limitUploadExecInfo=2;
+                scope.commentResult[parentIndex].uploadExecInfo.push(uploadExecInfo);
+                console.log(scope.commentResult);
+            }
 
             scope.clearFile=function(index){
                 scope.isFileUpload=false;
                 scope.file.splice(index,1);
             }
 
-            scope.uploadFiles=function(uuid,version){
+            scope.uploadFiles=function(uuid,version,file){
                 var fd=new FormData();
-                for(var i=0;i<scope.file.length;i++){
-                    fd.append('file',scope.file[i])
+                for(var i=0;i<file.length;i++){
+                    fd.append('file',file[i])
                 }
                 
                 CommonService.upload(null,fd,uuid,version,"comment",null).then(function (response) { onSuccess(response.data) });
@@ -167,10 +203,26 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 }
             }
 
-            scope.submit=function(myform){
+            scope.submit=function(myform,parentIndex,index,data){
               //  console.log(myform.desc.$modelValue)
                 scope.isSubmitDisabled=true;
                 var commentJson={};
+                var file;
+                if(index !=null){
+                    commentJson.uuid=data.uuid;
+                    file=[];
+                    var count=0;
+                    for(var j=0;j<scope.commentResult[parentIndex].uploadExecInfo.length;j++){
+                        if(scope.commentResult[parentIndex].uploadExecInfo[j].ref.type =='simple'){
+                            file[count]=scope.commentResult[parentIndex].uploadExecInfo[j].value;
+                            count=count+1;
+                        }
+                        
+                    }
+                
+                }else{
+                    file=scope.file;
+                }
                 commentJson.desc=myform.desc.$modelValue;
                 var dependsOn={}
                 var ref={};
@@ -183,8 +235,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                 CommonService.submit(commentJson,'comment').then(function (response) { onSuccess(response.data)});
                 var onSuccess=function(response){
                     console.log(response);
-                   
-                    if( scope.file && scope.file.length ==0){
+                    if( file && file.length ==0){
                         scope.isRequire=false
                         setTimeout(function(){ 
                             scope.isRequire=true;
@@ -197,7 +248,8 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                     }else{
                         CommonService.getOneById(response,'comment').then(function(response){onSuccessGetOneById(response.data)});
                         var onSuccessGetOneById=function(response){
-                            scope.uploadFiles(response.uuid,response.version);
+                          
+                            scope.uploadFiles(response.uuid,response.version,file);
                         }
                        
                     }
