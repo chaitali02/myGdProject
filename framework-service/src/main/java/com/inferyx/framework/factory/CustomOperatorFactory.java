@@ -6,7 +6,7 @@ package com.inferyx.framework.factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.operator.CloneDataOperator;
 import com.inferyx.framework.operator.GenerateDataForAttrRef;
 import com.inferyx.framework.operator.GenerateDataForValList;
@@ -44,13 +44,13 @@ public class CustomOperatorFactory implements IOperatorFactory {
 	 * @param operatorTypeName
 	 * @return
 	 */
-	public Operator getOperator (MetaType operatorType) {
+	public Operator getOperator (OperatorType operatorType) {
 		switch(operatorType) {
-			case GenerateData : return generateDataOperator;
-			case Transpose : return transposeOperator;
-			case GenDataAttr : return generateDataForAttrRef;
-			case GenDataValList : return generateDataForValList;
-			case CloneData : return cloneDataOperator;
+			case generateData : return generateDataOperator;
+			case transpose : return transposeOperator;
+			case genDataAttr : return generateDataForAttrRef;
+			case genDataValList : return generateDataForValList;
+			case cloneData : return cloneDataOperator;
 			default : throw new IllegalArgumentException("Invalid Operator Type");
 		}
 	}

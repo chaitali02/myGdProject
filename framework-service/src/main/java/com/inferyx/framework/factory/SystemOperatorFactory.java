@@ -5,8 +5,7 @@ package com.inferyx.framework.factory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.operator.Operator;
 import com.inferyx.framework.operator.RuleOperator;
 
@@ -29,7 +28,7 @@ public class SystemOperatorFactory implements IOperatorFactory {
 	}
 
 	@Override
-	public Operator getOperator(MetaType operatorType) {
+	public Operator getOperator(OperatorType operatorType) {
 		switch(operatorType) {
 		case rule: return ruleOperator;
 		default: throw new IllegalArgumentException("Invalid Operator Type");

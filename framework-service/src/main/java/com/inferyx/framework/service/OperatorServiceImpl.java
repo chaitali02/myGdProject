@@ -173,8 +173,8 @@ public class OperatorServiceImpl {
 				MetaType.operator.toString());
 		logger.info("Operator type in parse : " + operator.getOperatorType()); 
 		logger.info("helper.getMetaType(operator.getOperatorType()) : " + helper.getMetaType(operator.getOperatorType())); 
-		logger.info("operatorFactory.getOperator(helper.getMetaType(operator.getOperatorType())) : " + operatorFactory.getOperator(helper.getMetaType(operator.getOperatorType())));
-		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(helper.getMetaType(operator.getOperatorType()));
+		logger.info("operatorFactory.getOperator(helper.getMetaType(operator.getOperatorType())) : " + operatorFactory.getOperator(helper.getOperatorType(operator.getOperatorType())));
+		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(helper.getOperatorType(operator.getOperatorType()));
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
@@ -202,7 +202,7 @@ public class OperatorServiceImpl {
 																				operatorExec.getDependsOn().getRef().getVersion(), 
 																				MetaType.operator.toString());
 		logger.info("Operator type in execute : " + operator.getOperatorType());
-		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(helper.getMetaType(operator.getOperatorType()));
+		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(helper.getOperatorType(operator.getOperatorType()));
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.InProgress);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);

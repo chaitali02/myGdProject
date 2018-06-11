@@ -109,6 +109,7 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -453,12 +454,24 @@ public class Helper {
 				case "comment" : return MetaType.comment;
 				case "tag" : return MetaType.tag;
 				case "lov" : return MetaType.lov;
-				case "generatedata" : return MetaType.GenerateData;
-				case "transpose" : return MetaType.Transpose;
-				case "clonedata" : return MetaType.CloneData;
-				case "gendataattr" : return MetaType.GenDataAttr;
-				case "gendatavallist" : return MetaType.GenDataValList;
+//				case "generatedata" : return MetaType.GenerateData;
+//				case "transpose" : return MetaType.Transpose;
+//				case "clonedata" : return MetaType.CloneData;
+//				case "gendataattr" : return MetaType.GenDataAttr;
+//				case "gendatavallist" : return MetaType.GenDataValList;
+				default : return null;
+			}
+		}
 
+	public static OperatorType getOperatorType(String type) throws NullPointerException {
+		if(type == null)
+			return null;
+			switch(type.toLowerCase()){
+				case "generatedata" : return OperatorType.generateData;
+				case "transpose" : return OperatorType.transpose;
+				case "clonedata" : return OperatorType.cloneData;
+				case "gendataattr" : return OperatorType.genDataAttr;
+				case "gendatavallist" : return OperatorType.genDataValList;
 				default : return null;
 			}
 		}

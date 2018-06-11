@@ -1,0 +1,526 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "model",
+            "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+        }
+    },
+    "source" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+        }
+    },
+    "featureAttrMap" : [ 
+        {
+            "featureMapId" : "0",
+            "feature" : {
+                "featureId" : "0",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "1",
+            "feature" : {
+                "featureId" : "1",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "2",
+            "feature" : {
+                "featureId" : "2",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "3",
+            "feature" : {
+                "featureId" : "3",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "4",
+            "feature" : {
+                "featureId" : "4",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "5",
+            "feature" : {
+                "featureId" : "5",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "6",
+            "feature" : {
+                "featureId" : "6",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "6",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "7",
+            "feature" : {
+                "featureId" : "7",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "7",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "8",
+            "feature" : {
+                "featureId" : "8",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "8",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "9",
+            "feature" : {
+                "featureId" : "9",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "9",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "10",
+            "feature" : {
+                "featureId" : "10",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "10",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "11",
+            "feature" : {
+                "featureId" : "11",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "11",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "12",
+            "feature" : {
+                "featureId" : "12",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "12",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "13",
+            "feature" : {
+                "featureId" : "13",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "13",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "14",
+            "feature" : {
+                "featureId" : "14",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "14",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "15",
+            "feature" : {
+                "featureId" : "15",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "15",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "16",
+            "feature" : {
+                "featureId" : "16",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "16",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "17",
+            "feature" : {
+                "featureId" : "17",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "17",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "18",
+            "feature" : {
+                "featureId" : "18",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "18",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "19",
+            "feature" : {
+                "featureId" : "19",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "19",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "20",
+            "feature" : {
+                "featureId" : "20",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "20",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "21",
+            "feature" : {
+                "featureId" : "21",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "21",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "22",
+            "feature" : {
+                "featureId" : "22",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "22",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "23",
+            "feature" : {
+                "featureId" : "23",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "23",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "24",
+            "feature" : {
+                "featureId" : "24",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "24",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "25",
+            "feature" : {
+                "featureId" : "25",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "25",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "26",
+            "feature" : {
+                "featureId" : "26",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "26",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "27",
+            "feature" : {
+                "featureId" : "27",
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "27",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            }
+        }
+    ],
+    "trainPercent" : 70.0,
+    "valPercent" : 30.0,
+    "labelInfo" : {
+        "attrId" : "30",
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+        }
+    },
+    "uuid" : "282f45f3-f080-4eb7-b3cb-e64d033af290",
+    "version" : "1528053499",
+    "name" : "Train Fraud Detection Model (Datapod)",
+    "desc" : "Train the model using CC transactions training datapod.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-06-03T19:18:19.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+                "version" : "1521430822"
+            }
+        }
+    ]
+}
