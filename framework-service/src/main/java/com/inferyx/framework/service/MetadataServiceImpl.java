@@ -1418,10 +1418,29 @@ public class MetadataServiceImpl {
 		return commonServiceImpl.resolveBaseEntityList(baseEntities);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "null" })
 	public List<CommentView> getCommentByType(String uuid, String type)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+
+		List<BaseEntity> result = new ArrayList<BaseEntity>();
+		List<BaseEntity> result1 = new ArrayList<BaseEntity>();
+		List<String> uuidList = new ArrayList<String>();
+		List<String> versionList = new ArrayList<String>();
+		List<Criteria> criteriaList = new ArrayList<Criteria>();
+		criteriaList.add(where("dependsOn.ref.uuid").is(uuid));
+		MetaType metaType = Helper.getMetaType(type);
+		Class<?> className = Helper.getDomainClass(metaType);
+		Criteria criteria = new Criteria();
+		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
+		Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
+		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.comment.toString(),
+				className);
+		result = ruleExecResults.getMappedResults();
+		for (BaseEntity baseEntity : result) {
+			uuidList.add(baseEntity.getId());
+			versionList.add(baseEntity.getVersion());
+		}
 		Query query = new Query();
 		query.fields().include("id");
 		query.fields().include("uuid");
@@ -1435,11 +1454,14 @@ public class MetadataServiceImpl {
 		query.fields().include("desc");
 		query.fields().include("published");
 		query.fields().include("uploadExec");
-		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(uuid));
+
+		query.fields().include("dependsOn");
+		query.addCriteria(Criteria.where("uuid").in(uuidList));
+		query.addCriteria(Criteria.where("version").in(versionList));
 		query.addCriteria(Criteria.where("active").is('Y'));
-		List<BaseEntity> result = new ArrayList<BaseEntity>();
-		result = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.comment));
-		result = commonServiceImpl.resolveBaseEntityList(result);
+		result1 = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.comment));
+
+		result = commonServiceImpl.resolveBaseEntityList(result1);
 
 		List<CommentView> CommentViewList = new ArrayList<CommentView>();
 		// query2.addCriteria(Criteria.where("dependsOn.ref.uuid").in(baseEntity.getUuid()));
@@ -1456,9 +1478,16 @@ public class MetadataServiceImpl {
 			commentView.setActive(baseEntity.getActive());
 			commentView.setDesc(baseEntity.getDesc());
 			List<MetaIdentifierHolder> uploadExecHolder = new ArrayList<MetaIdentifierHolder>();
-			List<UploadExec> result1 = new ArrayList<UploadExec>();
-			result1= uploadExecServiceImpl.findAllByDependOn(baseEntity.getUuid(),"Y");
-			for (UploadExec uploadExe : result1) {
+
+
+			List<UploadExec> result11 = new ArrayList<UploadExec>();
+			//
+			result11 = uploadExecServiceImpl.findAllByDependOn(baseEntity.getUuid(),"Y");
+
+			// result1 = (List<BaseEntity>) mongoTemplate.find(query2,
+			// Helper.getDomainClass(MetaType.uploadExec));
+			for (UploadExec uploadExe : result11) {
+
 				MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
 				MetaIdentifier metaIdentifier = new MetaIdentifier();
 				metaIdentifier.setUuid(uploadExe.getUuid());

@@ -264,7 +264,7 @@ public class MongoGraphServiceImpl {
 		Vertex parentvertex = null;
 		List<String> uuidList = null;
 		if(degree.equals("1")) {
-			edgeList = iEdgeDao.findAllBySrc(uuid);
+			edgeList = iEdgeDao.findAllBySrc(uuid+"_"+version);
 
 			// Get all dsts from edgeList
 			if (edgeList != null) {
@@ -279,7 +279,7 @@ public class MongoGraphServiceImpl {
 				}
 			}
 		} else if(degree.equals("-1")) {
-			edgeList = iEdgeDao.findAllByDst(uuid);
+			edgeList = iEdgeDao.findAllByDst(uuid+"_"+version);
 
 			// Get all srcs from edgeList
 			if (edgeList != null) {
@@ -295,8 +295,8 @@ public class MongoGraphServiceImpl {
 			}
 		}
 		
-		uuidList.add(uuid);
-		parentvertex = iVertexDao.findOneByUuid(uuid);
+		//uuidList.add(uuid+"_"+version);
+		parentvertex = iVertexDao.findOneByUuid(uuid+"_"+version);
 
 		vertexList = iVertexDao.findAllByUuidContaining(uuidList);
 		if (vertexList != null) {

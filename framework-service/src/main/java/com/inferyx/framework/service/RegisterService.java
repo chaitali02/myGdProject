@@ -52,6 +52,7 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DagStatusHolder;
@@ -761,11 +762,12 @@ public class RegisterService {
 		return result;
 	}
 
-	public String save(Map<String, Object> operator, String type) throws Exception {
+	public BaseEntity save(Map<String, Object> operator, String type) throws Exception {
 		// Session session=sessionServiceImpl.findOneById(sessionId);
 		// String uuid=session.getUserInfo().getRef().getUuid();
 
 		String Id = "";
+		BaseEntity baseEntity=null;
 		if (type != null && !type.isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
 			type = type.toLowerCase();
@@ -881,7 +883,7 @@ public class RegisterService {
 				break;*/
 			case "datasetview":
 				DatasetView datasetViewOptr = mapper.convertValue(operator, DatasetView.class);
-				Id = datasetServiceImpl.save(datasetViewOptr).getId();
+				baseEntity = datasetServiceImpl.save(datasetViewOptr);
 				break;
 			/*case "rulegroup":
 				RuleGroup ruleGroupOptr = mapper.convertValue(operator, RuleGroup.class);
@@ -913,11 +915,11 @@ public class RegisterService {
 				break;*/
 			case "dqview":
 				DQView dqViewOptr = mapper.convertValue(operator, DQView.class);
-				Id = dataQualServiceImpl.save(dqViewOptr).getId();
+				baseEntity = dataQualServiceImpl.save(dqViewOptr);
 				break;
 			case "ruleview":
 				RuleView ruleViewOptr = mapper.convertValue(operator, RuleView.class);
-				Id = ruleServiceImpl.save(ruleViewOptr).getId();
+				baseEntity =  ruleServiceImpl.save(ruleViewOptr);
 				break;
 			/*case "rule":
 				Rule ruleOptr = mapper.convertValue(operator, Rule.class);
@@ -961,7 +963,7 @@ public class RegisterService {
 				break;*/
 			case "dashboardview":
 				DashboardView dashboardView = mapper.convertValue(operator, DashboardView.class);
-				Id = dashboardViewServiceImpl.save(dashboardView).getId();
+				baseEntity =  dashboardViewServiceImpl.save(dashboardView);
 				break;
 			/*case "algorithm":
 				Algorithm algorithm = mapper.convertValue(operator, Algorithm.class);
@@ -985,11 +987,12 @@ public class RegisterService {
 				break;*/
 			case "reconview":
 				ReconView reconViewOptr = mapper.convertValue(operator, ReconView.class);
-				Id = reconViewServiceImpl.save(reconViewOptr).getId();
+				baseEntity = reconViewServiceImpl.save(reconViewOptr);
+				
 				break;
 			}
 		}
-		return Id;
+		return baseEntity;
 	}
 
 	/********************** UNUSED **********************/
