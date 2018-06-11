@@ -35,9 +35,11 @@ import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Executable;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -51,7 +53,7 @@ import com.inferyx.framework.register.DatapodRegister;
  * @author joy
  *
  */
-public abstract class RuleTemplate {
+public abstract class RuleTemplate implements Executable, Parsable {
 	
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
@@ -170,8 +172,7 @@ public abstract class RuleTemplate {
 	 * @return BaseRuleExec
 	 * @throws Exception
 	 */
-	public abstract BaseRuleExec execute(String uuid, String version, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception;
+	public abstract BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception;
 	
 	/**
 	 * Defines sample execute. Should be overridden if required.
@@ -187,12 +188,12 @@ public abstract class RuleTemplate {
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "unchecked", "static-access" })
-	public BaseRuleExec execute(String uuid, String version, MetaType type, MetaType execType, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
+	public BaseRuleExec execute(MetaType type, MetaType execType, 
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside BaseRuleExec.execute ");
 		BaseRule baseRule = null;
 		
-		if (StringUtils.isBlank(uuid) || baseRuleExec == null) {
+		if (baseRuleExec == null) {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
 			return null;
 		}
@@ -222,7 +223,6 @@ public abstract class RuleTemplate {
 		runBaseRuleService.setDataStoreServiceImpl(dataStoreServiceImpl);
 		runBaseRuleService.setHdfsInfo(hdfsInfo);
 		runBaseRuleService.setBaseRule(baseRule);
-		runBaseRuleService.setBaseGroupExec(baseGroupExec);
 		runBaseRuleService.setExecFactory(execFactory);
 		runBaseRuleService.setAuthentication(authentication);
 		runBaseRuleService.setBaseRuleExec(baseRuleExec);

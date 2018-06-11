@@ -37,7 +37,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
  *
  */
 @Component
-public class ProfileOperatorFactory /*extends OperatorFactory*/ {
+public class ProfileOperatorFactory /*extends CustomOperatorFactory*/ {
 	
 	@Autowired
 	MetadataUtil daoRegister;

@@ -150,7 +150,7 @@ public class PredictMLOperator {
 			List<FeatureAttrMap> predictFeatures = predict.getFeatureAttrMap();
 			
 			for(SourceAttr attr : formulaInfo) {
-				if(attr.getRef().getType().equals(MetaType.paramlist))
+				if(attr.getRef().getType().equals(MetaType.paramlist)) {
 					for(FeatureAttrMap featureAttrMap : predictFeatures) {
 						boolean flag = false;
 						for(Feature feature : modelFeatures) {
@@ -176,6 +176,7 @@ public class PredictMLOperator {
 						if(flag)
 							break;
 					}
+				}
 			}
 			
 			String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());

@@ -1,5 +1,4 @@
 {
-	"_id": ObjectId("59bb7aff81d082efbbffa751"),
 	"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
 	"version": "1464977196",
 	"name": "ypalrecha",
@@ -58,20 +57,18 @@
                 "type" : "group",
                 "uuid" : "a93baa3e-51c9-11e8-9c2d-fa7ae01bbebc"
             }
-        }
-	],
-	"roleInfo": [
-		{
-			"ref": {
-				"type": "role",
-				"uuid": "d04716df-e96a-419f-9118-c81342b47f87"
-			}
-		},
-		{
-			"ref": {
-				"type": "role",
-				"uuid": "d04716df-e96a-419f-9118-c81342b47f88"
-			}
-		}
+        },
+        {
+            "ref" : {
+                "type" : "group",
+                "uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67"
+            }
+        }, 
+         {
+            "ref" : {
+                "type" : "group",
+                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70tx"
+            }
+        }        
 	]
 }

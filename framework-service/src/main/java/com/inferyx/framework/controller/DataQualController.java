@@ -84,7 +84,7 @@ public class DataQualController {
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		DataQualExec dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, null, null, null);
 		dataQualExec = (DataQualExec) dataQualServiceImpl.parse(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, runMode);
-		dataQualExec = dataQualServiceImpl.execute(dataQualUUID, dataQualVersion, metaExecutor, dataQualExec, null, taskList, null, runMode);
+		dataQualExec = dataQualServiceImpl.execute(metaExecutor, dataQualExec, taskList, null, runMode);
 		commonServiceImpl.completeTaskThread(taskList);
 		return dataQualExec;
 	}

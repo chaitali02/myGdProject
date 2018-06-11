@@ -38,7 +38,7 @@
     CommonService.getMetaStats().then(function(response) {onSuccess(response.data)});
     var onSuccess = function(response) {
       var colorclassarray = ["blue-sharp", "green-sharp", "purple-soft", "red-haze"]
-      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype'];
+      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov'];
       var metaarray = []
       for (var i = 0; i < response.length; i++) {
         var metajson = {};
@@ -184,7 +184,7 @@
             case "paramlist":
               metajson.caption = "param List";
               metajson.icon = "fa fa-flask"
-              metajson.state = "paramlist";
+              metajson.state = "paramlistmodel";
               break;
             case "operator":
               metajson.caption = "operator";

@@ -659,7 +659,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
-				Object trngModel = exec.trainModel(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				Object trngModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
 				result = trngModel;
 				
 				List<String> customDirectories = exec.getCustomDirsFromTrainedModel(trngModel);
