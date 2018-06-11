@@ -186,7 +186,7 @@ public class CommonController<T> {
 					 
 		} else {
 			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(type, metaObject);
-			if (upd_tag.equalsIgnoreCase("N")) {
+			if (upd_tag.equalsIgnoreCase("Y")) {
 				commonServiceImpl.updateLovForTag(baseEntity);
 			}
 			return baseEntity.getId().toString()/* objectWriter.writeValueAsString(object) */;
