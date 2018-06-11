@@ -23,6 +23,8 @@ public class Lov extends BaseEntity
 	LovType type;
 	
 	
+
+	
 	public List<String> getValue() {
 		return value;
 	}
