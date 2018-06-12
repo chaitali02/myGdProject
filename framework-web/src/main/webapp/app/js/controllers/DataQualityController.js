@@ -153,7 +153,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     //$scope.allDependsOn=response
     $scope.refIntegrityCheck = response
     $scope.allDependsOn = response
-    $scope.selectDependsOn = $scope.allDependsOn[0]
+    if (typeof $stateParams.id == "undefined") {
+      $scope.selectDependsOn = $scope.allDependsOn[0]
+    }
     $scope.dependsOnDataQuality();
   }
 
@@ -231,6 +233,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       var onSuccessgetAllLatest = function (response) {
 
         $scope.allDependsOn = response
+       
         DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
           onSuccess(response.data)
         });

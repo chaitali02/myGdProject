@@ -20,5 +20,9 @@
 ./update_application.sh localhost privilege a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc
 ./update_createdOn.sh localhost
 
-
-
+rm -r /user/hive/warehouse/framework/*
+cp -r ../app/*/data/parquet/* /user/hive/warehouse/framework
+mkdir /user/hive/warehouse/framework/train
+mkdir /user/hive/warehouse/framework/predict
+mkdir /user/hive/warehouse/framework/comment
+mkdir /user/hive/warehouse/framework/upload

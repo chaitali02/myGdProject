@@ -109,6 +109,7 @@ import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -453,7 +454,24 @@ public class Helper {
 				case "comment" : return MetaType.comment;
 				case "tag" : return MetaType.tag;
 				case "lov" : return MetaType.lov;
+//				case "generatedata" : return MetaType.GenerateData;
+//				case "transpose" : return MetaType.Transpose;
+//				case "clonedata" : return MetaType.CloneData;
+//				case "gendataattr" : return MetaType.GenDataAttr;
+//				case "gendatavallist" : return MetaType.GenDataValList;
+				default : return null;
+			}
+		}
 
+	public static OperatorType getOperatorType(String type) throws NullPointerException {
+		if(type == null)
+			return null;
+			switch(type.toLowerCase()){
+				case "generatedata" : return OperatorType.generateData;
+				case "transpose" : return OperatorType.transpose;
+				case "clonedata" : return OperatorType.cloneData;
+				case "gendataattr" : return OperatorType.genDataAttr;
+				case "gendatavallist" : return OperatorType.genDataValList;
 				default : return null;
 			}
 		}
@@ -780,32 +798,33 @@ public class Helper {
 		}
 		return destMap;
 	}
-	
-	public Object getDataType(String dataType) throws NullPointerException {
-		if(dataType == null)
-			return null;
 
-		if(dataType.contains("(")) {
-			dataType = dataType.substring(0, dataType.indexOf("("));
-		}
-		
-		switch (dataType.toLowerCase()) {
-			case "integer": return DataTypes.IntegerType;
-			case "double": return DataTypes.DoubleType;
-			case "date": return DataTypes.DateType;
-			case "string": return DataTypes.StringType;
-			case "timestamp": return DataTypes.TimestampType;
-			case "decimal" : return DataTypes.createDecimalType();
-			case "vector" : return new VectorUDT();
-			
-            default: return null;
-		}
-	}
+	/********************** UNUSED **********************/
+//	public Object getDataType(String dataType) throws NullPointerException {
+//		if(dataType == null)
+//			return null;
+//
+//		if(dataType.contains("(")) {
+//			dataType = dataType.substring(0, dataType.indexOf("("));
+//		}
+//		
+//		switch (dataType.toLowerCase()) {
+//			case "integer": return DataTypes.IntegerType;
+//			case "double": return DataTypes.DoubleType;
+//			case "date": return DataTypes.DateType;
+//			case "string": return DataTypes.StringType;
+//			case "timestamp": return DataTypes.TimestampType;
+//			case "decimal" : return DataTypes.createDecimalType();
+//			case "vector" : return new VectorUDT();
+//			
+//            default: return null;
+//		}
+//	}
 	
 	/**
 	 * 
 	 * @param type
-	 * @return
+	 * @return MetaType
 	 */
 	public MetaType getExecType (MetaType type) {
 		if(type == null)
@@ -825,6 +844,67 @@ public class Helper {
 		case simulate : return MetaType.simulateExec;
 		case predict : return MetaType.predictExec;
 		case operator : return MetaType.operatorExec;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getMetaTypeByExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case mapExec : return MetaType.map;
+		case loadExec : return MetaType.load;
+		case ruleExec : return MetaType.rule;
+		case rulegroupExec : return MetaType.rulegroup;
+		case dqExec : return MetaType.dq;
+		case dqgroupExec : return MetaType.dqgroup;
+		case profileExec : return MetaType.profile;
+		case profilegroupExec : return MetaType.profilegroup;
+		case reconExec : return MetaType.recon;
+		case recongroupExec : return MetaType.recongroup;
+		case trainExec : return MetaType.train;
+		case simulateExec : return MetaType.simulate;
+		case predictExec : return MetaType.predict;
+		case operatorExec : return MetaType.operator;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getGroupExecTypeByRuleExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case rulegroupExec : return MetaType.ruleExec;
+		case dqgroupExec : return MetaType.dqExec;
+		case profilegroupExec : return MetaType.profileExec;
+		case recongroupExec : return MetaType.reconExec;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getRuleExecTypeByGroupExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case ruleExec : return MetaType.rulegroupExec;
+		case dqExec : return MetaType.dqgroupExec;
+		case profileExec : return MetaType.profilegroupExec;
+		case reconExec : return MetaType.recongroupExec;
 		default : return null;
 		}
 	}

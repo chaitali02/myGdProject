@@ -59,7 +59,7 @@ public class BaseRuleBridgeService {
 		if (baseRuleExec == null) {
 			return null;
 		}
-		return baseRuleServiceImpl.execute(uuid, version, type, execType, metaExecutor, baseRuleExec, baseGroupExec, null, taskList, execParams, runMode);
+		return baseRuleServiceImpl.execute(type, execType, metaExecutor, baseRuleExec, null, taskList, execParams, runMode);
 	}
 	
 	public BaseRuleExec createAndParse (String uuid, String version, MetaType type, MetaType execType, BaseRuleExec inputBaseRuleExec, 
@@ -81,7 +81,7 @@ public class BaseRuleBridgeService {
 			logger.info(" no Exec. So cannot proceed to execute ");
 			return null;
 		}
-		return baseRuleServiceImpl.execute(uuid, version, type, execType, metaExecutor, baseRuleExec, baseGroupExec, null, taskList, execParams, runMode);
+		return baseRuleServiceImpl.execute(type, execType, metaExecutor, baseRuleExec, null, taskList, execParams, runMode);
 	}
 
 }

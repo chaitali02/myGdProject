@@ -185,7 +185,7 @@
                                                     <label class="control-label" style="margin-top: 0;color: #dbe2ea;font-size: 14px;font-weight: 400;display: inline-block;">App
                                                         <span class="required" aria-required="true"> * </span>
                                                     </label>
-                                                    <select class="form-control model-select " ng-model="selectedApp" ng-options="app.appId.ref.name for app in AppData track by app.appId.ref.uuid"
+                                                    <select class="form-control model-select " ng-model="selectedApp" ng-options="app.appId.ref.name for app in AppData | orderBy:'appId.ref.name' track by app.appId.ref.uuid"
                                                         ng-change="getselectApp()">
                                                     </select>
                                                 </div>
@@ -193,7 +193,7 @@
                                                     <label class="control-label" style="margin-top: 0;color: #dbe2ea;font-size: 14px;font-weight: 400;display: inline-block;">Role
                                                         <span class="required" aria-required="true"> * </span>
                                                     </label>
-                                                    <select class="form-control model-select" ng-model="selectedRole" ng-options="app.ref.name for app in RoleData track by app.ref.uuid"
+                                                    <select class="form-control model-select" ng-model="selectedRole" ng-options="app.ref.name for app in RoleData | orderBy:'ref.name' track by app.ref.uuid"
                                                         ng-change="getselectRole()">
                                                     </select>
                                                 </div>

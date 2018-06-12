@@ -40,10 +40,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ReconInfo;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
@@ -55,6 +57,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
@@ -164,10 +167,10 @@ public class ReconServiceImpl extends RuleTemplate {
 	}
 
 	@Override
-	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
-			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
+	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor,
+			BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
-		return execute(uuid, version, metaExecutor, (ReconExec)baseRuleExec, (ReconGroupExec)baseGroupExec, taskList, execParams, runMode);
+		return execute(metaExecutor, (ReconExec)baseRuleExec, datapodKey, taskList, execParams, runMode);
 	}
 	
 	public ReconExec create(String reconUuid, String reconVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception{
@@ -188,7 +191,7 @@ public class ReconServiceImpl extends RuleTemplate {
 					.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));
 			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 					targetDatapod.getVersion());
-			reconExec = (ReconExec) super.execute(reconUuid, reconVersion, MetaType.recon, MetaType.reconExec, metaExecutor, reconExec, reconGroupExec, targetDatapodKey, taskList, execParams, runMode);
+			reconExec = (ReconExec) super.execute(MetaType.recon, MetaType.reconExec, metaExecutor, reconExec, targetDatapodKey, taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (reconExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Failed);
@@ -378,4 +381,16 @@ public class ReconServiceImpl extends RuleTemplate {
 		return result;
 	}
 
+	@Override
+	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("EXECUTOR")) ? (ThreadPoolTaskExecutor)(execParams.getExecutionContext().get("EXECUTOR")) : null;
+		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("TASKLIST")) ? (List<FutureTask<TaskHolder>>)(execParams.getExecutionContext().get("TASKLIST")) : null;
+		execute(metaExecutor, (ReconExec)baseExec, null, taskList, execParams, runMode);
+	}
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
+	}
+	
 }

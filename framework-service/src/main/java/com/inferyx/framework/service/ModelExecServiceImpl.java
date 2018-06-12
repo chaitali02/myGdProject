@@ -645,19 +645,20 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(
 				predictExec.getDependsOn().getRef().getUuid(), predictExec.getDependsOn().getRef().getVersion(),
 				MetaType.predict.toString());
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(predict.getSource().getRef().getUuid(),
-				predict.getSource().getRef().getVersion(), MetaType.datapod.toString());
-		if (null == datapod) {
-			datapod = (Datapod) commonServiceImpl.getLatestByUuid(predict.getSource().getRef().getUuid(),
-					MetaType.datapod.toString());
-		}
-
+		Datapod targetDp = null;
+		if(predict.getTarget().getRef().getType().equals(MetaType.datapod))
+			targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(predict.getTarget().getRef().getUuid(),
+				predict.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+		
 		DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
 				predictExec.getResult().getRef().getUuid(), predictExec.getResult().getRef().getVersion(),
 				MetaType.datastore.toString());
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		List<Map<String, Object>> strList = exec.fetchResults(datastore, datapod, rowLimit, commonServiceImpl.getApp().getUuid());
+		String targetTable = null;
+		if(targetDp != null)
+			targetTable = datasource.getDbname()+"."+targetDp.getName();
+		List<Map<String, Object>> strList = exec.fetchResults(datastore, targetDp, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
 
 		return strList;
 	}
@@ -671,7 +672,13 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 				MetaType.datastore.toString());
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		List<Map<String, Object>> strList = exec.fetchResults(datastore, null, rowLimit, commonServiceImpl.getApp().getUuid());
+		Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateExec.getDependsOn().getRef().getUuid(), simulateExec.getDependsOn().getRef().getVersion(), simulateExec.getDependsOn().getRef().getType().toString());
+		String targetTable = null;
+		if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(simulate.getTarget().getRef().getUuid(), simulate.getTarget().getRef().getVersion(), simulate.getTarget().getRef().getType().toString());
+			targetTable = datasource.getDbname()+"."+targetDp.getName();
+		}
+		List<Map<String, Object>> strList = exec.fetchResults(datastore, null, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
 
 		return strList;
 	}

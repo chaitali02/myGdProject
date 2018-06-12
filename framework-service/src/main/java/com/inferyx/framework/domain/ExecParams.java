@@ -24,7 +24,22 @@ public class ExecParams {
 	private List<ParamListHolder> paramListInfo;
 	private java.util.Map<String, String> internalVarMap;
 	private HashMap<String, String> otherParams;
+	private ExecutionContext executionContext;
 	
+	/**
+	 * @return the executionContext
+	 */
+	public ExecutionContext getExecutionContext() {
+		return executionContext;
+	}
+
+	/**
+	 * @param executionContext the executionContext to set
+	 */
+	public void setExecutionContext(ExecutionContext executionContext) {
+		this.executionContext = executionContext;
+	}
+
 	/**
 	 * @Ganesh
 	 *

@@ -45,7 +45,7 @@
     "params" : [ 
         {
             "paramId" : "0",
-            "paramName" : "saveLocation",
+            "paramName" : "sourceLocation",
             "paramType" : "datapod",
             "paramValue" : null,
             "paramRef" : null

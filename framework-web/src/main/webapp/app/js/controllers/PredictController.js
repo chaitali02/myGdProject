@@ -288,13 +288,14 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         selectTrain.name=response.trainInfo.ref.name;
       }
       $scope.selectTrain=selectTrain;
-      
+      $scope.selectSourceType=response.source.ref.type;
       var selectSource={};
       $scope.selectSource=null;
       selectSource.uuid=response.source.ref.uuid;
       selectSource.name=response.source.ref.name;
       $scope.selectSource=selectSource;
 
+      $scope.getAllLetestSource();
       $scope.getAllAttribute();
       var selectLabel = {};
       $scope.selectLabel=null

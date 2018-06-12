@@ -23,10 +23,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -153,6 +156,7 @@ import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Log;
+import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -173,6 +177,7 @@ import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.LovType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -201,6 +206,8 @@ public class CommonServiceImpl <T> {
 	IModelDao iModelDao;
 	@Autowired
 	UserServiceImpl userServiceImpl;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
 	
 	@Autowired
 	IDatapodDao iDatapodDao;
@@ -214,8 +221,6 @@ public class CommonServiceImpl <T> {
 	ILoadDao iLoadDao;
 	@Autowired
 	IFunctionDao iFunctionDao;
-	@Autowired 
-	MetadataServiceImpl metadataServiceImpl;
 	@Autowired 
 	IMapDao iMapDao;
 	
@@ -2245,7 +2250,6 @@ public class CommonServiceImpl <T> {
 	}
 	
 	public List<MetaStatsHolder> getMetaStats(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, JsonProcessingException {
-		logger.info("Inside getMetaStats - type : " + type);
 		String appUuid = null;
 //		if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 //			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
@@ -2256,7 +2260,8 @@ public class CommonServiceImpl <T> {
 		List<MetaStatsHolder> countHolder = new ArrayList<>();
 		List<MetaType> metaTypes = MetaType.getMetaList();
 		if(type == null){
-			for(MetaType mType : metaTypes){//logger.info("MetaType: "+mType+"\n");
+			for(MetaType mType : metaTypes){
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											logger.info("MetaType: "+mType+"\n");
 				long count = 0;
 				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase()))).invoke(this);
 				if (appUuid == null) {
@@ -3329,11 +3334,14 @@ public class CommonServiceImpl <T> {
 			Query query = new Query();
 			query.fields().include("uuid");
 			query.fields().include("name");
+			query.fields().include("version");
 			query.fields().include("type");
 			
 			query.addCriteria(Criteria.where("uuid").is(uuid));
 			List<BaseEntity> obj=new ArrayList<>();
-			obj = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(Helper.getMetaType(type)));
+			if (Helper.getDomainClass(Helper.getMetaType(type)) != null) {
+				obj = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(Helper.getMetaType(type)));
+			}
 			//String name=obj.getName();
 			
 			return obj;
@@ -3641,4 +3649,33 @@ public class CommonServiceImpl <T> {
         }
 	return response;
 	}
+	
+	public void updateLovForTag(BaseEntity baseEntity) {
+		List<Lov> lovs = metadataServiceImpl.getLovByType("TAG");
+		List<String> arrayOne = new ArrayList(Arrays.asList(baseEntity.getTags()));
+		List<String> arrayTwo = new ArrayList<String>();
+		for (Lov lov : lovs) {
+			arrayTwo.addAll(lov.getValue());
+			if (!arrayOne.equals(lov.getValue())) {
+				boolean boolAddAll = arrayOne.addAll(arrayTwo);
+				System.out.println(boolAddAll);
+				lov.setValue(arrayOne);
+				try {
+					save(MetaType.lov.toString(), lov);
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+	}
+	
 }

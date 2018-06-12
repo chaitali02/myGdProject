@@ -41,6 +41,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
@@ -50,9 +51,11 @@ import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -403,8 +406,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 	public ProfileExec execute(String profileUUID, String profileVersion, ProfileExec profileExec,
 			ThreadPoolTaskExecutor metaExecutor, ProfileGroupExec profileGroupExec,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
-		return (ProfileExec) execute(profileUUID, profileVersion, metaExecutor, profileExec, profileGroupExec, null,
-				taskList, execParams, runMode);
+		return (ProfileExec) execute(metaExecutor, profileExec, null, taskList, execParams, runMode);
 	}
 
 	public List<Map<String, Object>> getProfileResults(String profileExecUUID, String profileExecVersion, int offset,
@@ -562,16 +564,16 @@ public class ProfileServiceImpl extends RuleTemplate {
 	}
 
 	@Override
-	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
-			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
+	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor,
+			BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
 			Datapod targetDatapod = (Datapod) daoRegister
 					.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
 			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 					targetDatapod.getVersion());
-			return super.execute(uuid, version, MetaType.profile, MetaType.profileExec, metaExecutor, baseRuleExec,
-					baseGroupExec, targetDatapodKey, taskList, execParams, runMode);			
+			return super.execute(MetaType.profile, MetaType.profileExec, metaExecutor, baseRuleExec,
+								targetDatapodKey, taskList, execParams, runMode);			
 		}catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -753,5 +755,17 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}
 		}
 		return dataList;
+	}
+	
+	@Override
+	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("EXECUTOR")) ? (ThreadPoolTaskExecutor)(execParams.getExecutionContext().get("EXECUTOR")) : null;
+		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("TASKLIST")) ? (List<FutureTask<TaskHolder>>)(execParams.getExecutionContext().get("TASKLIST")) : null;
+		execute(metaExecutor, (ProfileExec)baseExec, null, taskList, execParams, runMode);
+	}
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
 	}
 }
