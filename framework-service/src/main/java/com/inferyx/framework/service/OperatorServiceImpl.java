@@ -16,9 +16,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
-import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
@@ -37,14 +36,11 @@ import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
-import com.inferyx.framework.datascience.MonteCarloSimulation;
-import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -56,12 +52,9 @@ import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.factory.ConnectionFactory;
+import com.inferyx.framework.factory.CustomOperatorFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.factory.OperatorFactory;
-import com.inferyx.framework.operator.DatasetOperator;
-import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.TransposeOldOperator;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -69,7 +62,7 @@ import com.inferyx.framework.register.GraphRegister;
 public class OperatorServiceImpl {
 	
 	@Autowired
-	OperatorFactory operatorFactory;
+	CustomOperatorFactory operatorFactory;
 	@Autowired
 	GraphRegister<?> registerGraph;
 	/*@Autowired
@@ -116,6 +109,8 @@ public class OperatorServiceImpl {
 	MetadataUtil commonActivity;
 	@Autowired
 	private TransposeOldOperator transposeOldOperator;
+	@Autowired
+	Helper helper;
 	
 	static final Logger logger = Logger.getLogger(OperatorServiceImpl.class);
 	
@@ -176,7 +171,10 @@ public class OperatorServiceImpl {
 		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
 				operatorExec.getDependsOn().getRef().getVersion(), 
 				MetaType.operator.toString());
-		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(operator.getName());
+		logger.info("Operator type in parse : " + operator.getOperatorType()); 
+		logger.info("helper.getMetaType(operator.getOperatorType()) : " + helper.getMetaType(operator.getOperatorType())); 
+		logger.info("operatorFactory.getOperator(helper.getMetaType(operator.getOperatorType())) : " + operatorFactory.getOperator(helper.getOperatorType(operator.getOperatorType())));
+		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(helper.getOperatorType(operator.getOperatorType()));
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
@@ -203,7 +201,8 @@ public class OperatorServiceImpl {
 		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(operatorExec.getDependsOn().getRef().getUuid(), 
 																				operatorExec.getDependsOn().getRef().getVersion(), 
 																				MetaType.operator.toString());
-		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(operator.getName());
+		logger.info("Operator type in execute : " + operator.getOperatorType());
+		com.inferyx.framework.operator.Operator newOperator =  operatorFactory.getOperator(helper.getOperatorType(operator.getOperatorType()));
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.InProgress);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
@@ -248,7 +247,7 @@ public class OperatorServiceImpl {
 					MetaType.datastore.toString());
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			data = exec.fetchResults(datastore, null, rowLimit, commonServiceImpl.getApp().getUuid());
+			data = exec.fetchResults(datastore, null, rowLimit, null, commonServiceImpl.getApp().getUuid());
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;

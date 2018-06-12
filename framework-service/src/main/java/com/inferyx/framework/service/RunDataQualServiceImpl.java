@@ -39,7 +39,7 @@ public class RunDataQualServiceImpl extends RunBaseRuleService {
 	 * @return
 	 */
 	@Override
-	protected String getFileName(BaseRuleGroupExec baseGroupExec, BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey) {
+	protected String getFileName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey) {
 		return String.format("/%s/%s/%s", datapodKey.getUuid(), datapodKey.getVersion(),
 				baseRuleExec.getVersion());
 	}
@@ -53,7 +53,7 @@ public class RunDataQualServiceImpl extends RunBaseRuleService {
 	 * @return
 	 */
 	@Override
-	protected String getTableName(BaseRuleGroupExec baseGroupExec, BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext) {
+	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext) {
 		if (execContext == null || execContext.equals(ExecContext.spark) || execContext.equals(ExecContext.FILE) || execContext.equals(ExecContext.livy_spark)) {
 			return String.format("%s_%s_%s", datapodKey.getUuid().replace("-", "_"),
 					datapodKey.getVersion(), baseRuleExec.getVersion());

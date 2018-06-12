@@ -52,7 +52,6 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
-import com.inferyx.framework.service.SecurityServiceImpl;
 
 @Component
 public class HiveRegister extends DataSourceRegister {
@@ -71,8 +70,6 @@ public class HiveRegister extends DataSourceRegister {
 	HiveContext hiveContext;*/
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private SecurityServiceImpl securityServiceImpl;
 	@Autowired
 	SparkExecutor sparkExecutor;
 

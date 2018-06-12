@@ -31,17 +31,22 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.dao.ILoadExecDao;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Executable;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
+import com.inferyx.framework.domain.Map;
+import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -294,9 +299,8 @@ public class LoadServiceImpl {
 
 			Datapod datapod = (Datapod) daoRegister
 					.getRefObject(new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()));
-			//Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			//IExecutor exec = execFactory.getExecutor(datasource.getType());
-			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			long count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), datapodTableName,
 					datapod, securityServiceImpl.getAppInfo().getRef().getUuid());
 
@@ -538,4 +542,27 @@ public class LoadServiceImpl {
 		return loadExec;
 	}
 
+	/*@Override
+	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		// Validate input
+		if (baseExec == null) {
+			throw new Exception("No executable, cannot execute. ");
+		}
+		// Create datastore 
+		DataStore dataStore = new DataStore();
+		dataStore.setCreatedBy(baseExec.getCreatedBy());
+		// Fetch Load
+		Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), baseExec.getDependsOn().getRef().getType().toString());
+		// Fetch target datapod
+		OrderKey datapodKey = load.getTarget().getRef().getKey();
+		if (DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
+			datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
+		} else {
+			Datapod targetDatapod = (Datapod) commonServiceImpl
+					.getOneByUuidAndVersion(load.getTarget().getRef().getUuid(), load.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+			datapodKey.setVersion(targetDatapod.getVersion());
+		}
+		executeSql((LoadExec) baseExec, datapodTableName, null, datapodKey, dataStore, runMode);
+	}*/
+	
 }

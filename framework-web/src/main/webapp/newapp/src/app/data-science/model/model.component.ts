@@ -157,8 +157,9 @@ export class ModelComponent implements OnInit {
     });
   }
 
-  changeName(index) {
-    this.featuresArray[index].name = this.featuresArray[index].param.label;
+  changeName(index) {debugger
+    this.featuresArray[index].name = this.featuresArray[index].newCol.label;
+    console.log(this.featuresArray[index].newCol);
   }
 
   disableMinMAxVal(index) {
@@ -235,7 +236,7 @@ export class ModelComponent implements OnInit {
     if (this.customFlag == true) {
       this.getModelScript();
     }
-    else {
+    else {debugger
       if (response.dependsOn != null) {
         let dependOnTemp: DependsOn = new DependsOn();
         dependOnTemp.label = response.dependsOn.ref.name;
@@ -250,12 +251,22 @@ export class ModelComponent implements OnInit {
           this.getAllLatest();
         }
         else {
+          this.featuresArray = response.features;
+          for(const i in response.features){
+            let value1Temp: DependsOn = new DependsOn();
+            value1Temp.label = this.featuresArray[i].paramListInfo.paramName;
+            value1Temp.id =  this.featuresArray[i].paramListInfo.paramId;
+            value1Temp.uuid =  this.featuresArray[i].paramListInfo.ref.uuid;
+          this.featuresArray[i]["newCol"] = value1Temp
+          }
+
           this.getFormulaByType2();
           // this.getParamListByFormula();
         }
       }
       this.label = response.label;
       this.featuresArray = response.features;
+     
       console.log(JSON.stringify(response.features));
     }
   }
@@ -341,14 +352,25 @@ export class ModelComponent implements OnInit {
     for (const i in response) {
       let getParamObj = {};
       getParamObj["label"] = response[i].paramName;
+      
+      //getParamObj["list"]["label"] = response[i].paramName;
       getParamObj["value"] = {};
       getParamObj["value"]["label"] = response[i].paramName;
+      getParamObj["value"]["id"] = response[i].paramId;
       getParamObj["value"]["uuid"] = response[i].ref.uuid;
-      getParamObj["value"]["paramId"] = response[i].paramId;
+     // getParamObj["list"]["value"]["paramId"] = response[i].paramId;
       // getParamObj["value"]["type"] = response[i].paramType;
+
       this.getParamArray[i] = getParamObj;
     }
     console.log(JSON.stringify(this.getParamArray));
+    // debugger
+    // let value1Temp: DependsOn = new DependsOn();
+    // value1Temp.label = this.featuresArray[0].paramListInfo.paramName;
+    // value1Temp.uuid = this.featuresArray[0].paramListInfo.paramId;
+
+    // this.featuresArray[0]["newCol"] = this.featuresArray[0].paramListInfo.paramName;
+    // console.log(JSON.stringify(this.featuresArray));
   }
 
   addAttribute() {
@@ -438,16 +460,16 @@ export class ModelComponent implements OnInit {
         featureObj["desc"] = this.featuresArray[i].desc;
         featureObj["minVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].minVal;
         featureObj["maxVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].maxVal;
-        
+        debugger
         if (this.dependsType == "formula") {
           // if(this.featuresArray[i].param == !null){
           let paramListInfo = {};
           let ref = {};
           ref["type"] = "paramlist";
-          ref["uuid"] = this.featuresArray[i].param.uuid;
-          ref["name"] = this.featuresArray[i].param.name;
+          ref["uuid"] = this.featuresArray[i].newCol.uuid;
+          ref["name"] = this.featuresArray[i].newCol.label;
           paramListInfo["ref"] = ref;
-          paramListInfo["paramId"] = this.featuresArray[i].param.paramId;
+          paramListInfo["paramId"] = this.featuresArray[i].newCol.id;
           featureObj["paramListInfo"] = paramListInfo;
         }
         else {

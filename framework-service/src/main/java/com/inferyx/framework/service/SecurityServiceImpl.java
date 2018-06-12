@@ -407,7 +407,7 @@ public class SecurityServiceImpl  implements Serializable{
           metaIdentifireHoler.setRef(metaInfoRef);
           activity.setMetaInfo(metaIdentifireHoler);
           BaseEntity activityBaseEntity = (BaseEntity) commonServiceImpl.save(MetaType.activity.toString(), activity);
-          registerGraph.updateGraph(activityBaseEntity, metatype);
+        //  registerGraph.updateGraph(activityBaseEntity, metatype);
           return activityBaseEntity.getId();
     }
 	public MetaIdentifierHolder getMetaIdentierInstance(MetaType type, String uuid, String version) {

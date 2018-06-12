@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -38,6 +39,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -45,10 +47,12 @@ import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.enums.LovType;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ImportServiceImpl;
 import com.inferyx.framework.service.MessageServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
+import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 
 
@@ -167,15 +171,25 @@ public class CommonController<T> {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public String save(@RequestBody Object metaObject, @RequestParam("type") String type,
+			@RequestParam(value = "upd_tag", required = false, defaultValue = "N") String upd_tag,
 			@RequestParam(value = "action", required = false) String action, HttpServletRequest request)
-	throws Exception {
-		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()) || type.equalsIgnoreCase(MetaType.ruleview.toString()) || type.equalsIgnoreCase(MetaType.dashboardview.toString()) || type.equalsIgnoreCase(MetaType.reconview.toString())   ){
+			throws Exception {
+		if (type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString())
+				|| type.equalsIgnoreCase(MetaType.ruleview.toString())
+				|| type.equalsIgnoreCase(MetaType.dashboardview.toString())
+				|| type.equalsIgnoreCase(MetaType.reconview.toString())) {
 			ObjectMapper mapper = new ObjectMapper();
 			java.util.Map<String, Object> operator = mapper.convertValue(metaObject, java.util.Map.class);
-			return registerService.save(operator, type);
-		}else{
-			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(type, metaObject );
-			return baseEntity.getId().toString()/*objectWriter.writeValueAsString(object)*/;
+			 
+			BaseEntity baseEntity=  registerService.save(operator, type);
+			return null;
+					 
+		} else {
+			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(type, metaObject);
+			if (upd_tag.equalsIgnoreCase("Y")) {
+				commonServiceImpl.updateLovForTag(baseEntity);
+			}
+			return baseEntity.getId().toString()/* objectWriter.writeValueAsString(object) */;
 		}
 	}
 		

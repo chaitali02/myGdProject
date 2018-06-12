@@ -240,7 +240,7 @@
                                                     <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addAttribute()" [disabled]="mode == 'true'"></button>
                                                 </div>
                                                 <div class="form-body" style="padding-top:50px;">
-                                                    <p-dataTable [value]="featuresArray" [(selection)]="selectedRows" [editable]="true" [rows]="15" [immutable]="false" resizableColumns="true">
+                                                    <p-dataTable [value]="featuresArray" [(selection)]="selectedRows" [editable]="true" [rows]="15" [immutable]="false" resizableColumns="true" >
                                                         <p-column [style]="{'width':'2%'}" selectionMode="multiple" [editable]="false" *ngIf="mode == 'false'">
                                                         </p-column>
                                                         <p-column [style]="{'width':'2%'}" *ngIf="mode == 'true'">
@@ -266,11 +266,9 @@
                                                                   </p-column> -->
                                                         <p-column field="type" header="Type" [style]="{'width':'15%','text-align':'center'}">
                                                             <ng-template let-col let-row="rowData" let-i="rowIndex" pTemplate type="header">
-
                                                                 <p-dropdown  [options]="typeOfArray" [(ngModel)]="row[col.field]" (onChange)="disableMinMAxVal(i)"  appendTo="body" required="true" [autoWidth]="false" [style]="{'width':'100%'}"
-                                                                 name="type+{{i}}">
+                                                                 name="type+{{i}}" placeholder="Select">
                                                                 </p-dropdown>
-
                                                             </ng-template>
                                                         </p-column>
                                                         <p-column field="desc" header="Desc" [editable]="mode == 'false'|| !mode" [style]="{'width':'10%','text-align':'center'}" >
@@ -284,12 +282,18 @@
 
                                                         <p-column field="maxVal" header="MaxVal" [editable]="mode == 'false' || !mode " [style]="{'width':'10%','text-align':'center','z-index':'100'}"></p-column>
                                                         
-                                                        <p-column field="param" header="Param" *ngIf="isParamColEnable" [style]="{'width':'20%','text-align':'center'}">
-                                                            <ng-template let-col let-row="rowData" let-i="rowIndex" pTemplate type="header">
-                                                                <p-dropdown [options]="getParamArray" [(ngModel)]="row[col.field]" (onChange)="changeName(i)" appendTo="body" required="true" [autoWidth]="false"
+                                                        <p-column field="newCol" header="Param" *ngIf="isParamColEnable" [style]="{'width':'20%','text-align':'center','height':'40px'}">
+                                                            <!-- <ng-template let var let-col let-row="rowData" let-i="rowIndex" pTemplate type="header">
+                                                                <p-dropdown [options]="getParamArray" [(ngModel)]="row['paramListInfo']['paramName']['label']"  appendTo="body" required="true" [autoWidth]="false"
                                                                     name="param" [style]="{'width':'100%'}" placeholder="Select">
                                                                 </p-dropdown>
-                                                                {{row['Param']}}{{row[col.field]}}
+                                                                
+                                                            </ng-template> -->
+                                                            <ng-template  let-col let-row="rowData" let-i="rowIndex" pTemplate type="header">
+                                                             
+                                                            <p-dropdown [options]="getParamArray" [(ngModel)]="row[col.field]"  appendTo="body" required="true" [autoWidth]="false" 
+                                                                name="param+{{i}}" [style]="{'width':'100%'}" placeholder="Select" (onChange)="changeName(i)">
+                                                            </p-dropdown>
                                                             </ng-template>
                                                         </p-column>
                                                     </p-dataTable>

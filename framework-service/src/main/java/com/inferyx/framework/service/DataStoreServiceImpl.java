@@ -320,7 +320,8 @@ public class DataStoreServiceImpl {
 		List<DataStore> datastoreList = mongoTemplate.find(query, DataStore.class);
 		DataStore dataStore = null;
 		try {
-			dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getUuid(), datastoreList.get(0).getVersion(), MetaType.datastore.toString());
+			if(!datastoreList.isEmpty())
+				dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getUuid(), datastoreList.get(0).getVersion(), MetaType.datastore.toString());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

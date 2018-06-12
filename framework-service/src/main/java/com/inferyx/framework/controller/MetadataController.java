@@ -44,6 +44,7 @@ import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
@@ -924,4 +925,11 @@ public class MetadataController {
 			@RequestParam(value = "uuid") String uuid) throws Exception {
 		return metadataServiceImpl.getCommentByType(uuid,type);
 	}
+	
+	@RequestMapping(value = "/getLovByType", method = RequestMethod.GET)
+	public @ResponseBody List<Lov> getLovByType(
+			@RequestParam(value ="type") String type) throws Exception {
+		return metadataServiceImpl.getLovByType(type);
+	}
+	
 }

@@ -282,7 +282,7 @@ public class PythonExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext)
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String targetTable, String clientContext)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
@@ -330,7 +330,7 @@ public class PythonExecutor implements IExecutor {
 	}
 
 	@Override
-	public ResultSetHolder executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
 			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
@@ -338,7 +338,7 @@ public class PythonExecutor implements IExecutor {
 	}
 
 	@Override
-	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -426,6 +426,23 @@ public class PythonExecutor implements IExecutor {
 
 	@Override
 	public List<String> getCustomDirsFromTrainedModel(Object trngModel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object loadTrainedModel(Class<?> modelClass, String location)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
