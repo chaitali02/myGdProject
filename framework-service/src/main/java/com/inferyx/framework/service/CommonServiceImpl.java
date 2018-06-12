@@ -25,10 +25,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -3653,12 +3656,21 @@ public class CommonServiceImpl <T> {
 	public void updateLovForTag(BaseEntity baseEntity) {
 		List<Lov> lovs = metadataServiceImpl.getLovByType("TAG");
 		List<String> arrayOne = new ArrayList(Arrays.asList(baseEntity.getTags()));
+	//	Set<String> arrayOne1 = (Set<String>) new ArrayList(Arrays.asList(baseEntity.getTags()));
+		
+		
+		Set<String> hs = new HashSet<>();
+		
 		List<String> arrayTwo = new ArrayList<String>();
 		for (Lov lov : lovs) {
 			arrayTwo.addAll(lov.getValue());
 			if (!arrayOne.equals(lov.getValue())) {
 				boolean boolAddAll = arrayOne.addAll(arrayTwo);
 				System.out.println(boolAddAll);
+				hs.addAll(arrayOne);
+				arrayOne.clear();
+				arrayOne.addAll(hs);
+				Collections.sort(arrayOne);
 				lov.setValue(arrayOne);
 				try {
 					save(MetaType.lov.toString(), lov);
