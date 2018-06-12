@@ -356,7 +356,10 @@ public class ModelServiceImpl {
 					String datapodName = datasetDO.getName();
 					predict.getFeatureAttrMap().get(i).getAttribute().getRef().setName(datapodName);
 					List<AttributeSource> attributeSourceList = datasetDO.getAttributeInfo();
-					predict.getFeatureAttrMap().get(i).setAttribute(attributeSourceList.get(i).getSourceAttr());	
+					AttributeRefHolder attributeRefHolder =new AttributeRefHolder();
+					attributeRefHolder.setAttrId(attributeSourceList.get(i).getAttrSourceId());
+					attributeRefHolder.setAttrName(attributeSourceList.get(i).getAttrSourceName());
+					predict.getFeatureAttrMap().get(i).setAttribute(attributeRefHolder);	
 				}else if(predict.getFeatureAttrMap().get(i).getAttribute().getRef().getType().equals(MetaType.datapod)) {					
 					Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(predict.getFeatureAttrMap().get(i).getAttribute().getRef().getUuid(), MetaType.datapod.toString());
 					String datapodName = datapodDO.getName();
@@ -431,7 +434,7 @@ public class ModelServiceImpl {
 					String datapodName = datapodDO.getName();
 					simulate.getFeatureInfo().get(i).getRef().setName(datapodName);
 					List<Attribute> attributeList = datapodDO.getAttributes();
-					FeatureRefHolder featureRefHolder =new FeatureRefHolder();
+					FeatureRefHolder featureRefHolder = new FeatureRefHolder();
 					featureRefHolder.setFeatureName(attributeList.get(Integer.parseInt(attributeId)).getName());
 					simulate.getFeatureInfo().get(i).setFeatureName(featureRefHolder.getFeatureName());					
 				}

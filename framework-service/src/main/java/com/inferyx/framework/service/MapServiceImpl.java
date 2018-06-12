@@ -702,7 +702,7 @@ public class MapServiceImpl implements Executable {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.");
 			throw new Exception((message != null) ? message : "Can not generate query.");
 		}
-		
+
 		return mapExec;
 	}
 
