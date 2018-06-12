@@ -977,11 +977,11 @@ public class DagServiceImpl {
 				try {
 					// If conditions with parse goes here - START
 					if (ref.getType().equals(MetaType.map)) {
-						baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, stage,
-									indvExecTask, datapodList, refKeyMap, otherParams, execParams, runMode);
+					baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, stage,
+								indvExecTask, datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
 					} else if (ref.getType().equals(MetaType.rule)) {
 						baseExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), (RuleExec) baseExec, refKeyMap, execParams, datapodList, dagExec);
-						baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode); 
+						baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 					} else if (ref.getType().equals(MetaType.rulegroup)) {
 						baseExec = ruleGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
 								datapodList, (RuleGroupExec)baseExec, dagExec);
@@ -1032,6 +1032,7 @@ public class DagServiceImpl {
 							indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
 						}
 					}
+					execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
 					// If conditions with parse goes here - END	
 					
 					baseExec.setRefKeyList(execParams.getRefKeyList());
