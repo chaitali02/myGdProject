@@ -283,6 +283,11 @@ export class CommonListComponent {
         this.getBaseEntityByCriteria();
 
     }
+    refreshSearchResults(){
+        this.rowData1 = null;
+        this.getBaseEntityByCriteria();
+
+    }
 
     ngOnInit() {
         let temp;
