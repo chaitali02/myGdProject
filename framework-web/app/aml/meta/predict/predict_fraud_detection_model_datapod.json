@@ -1,4 +1,5 @@
 {
+    "_id" : ObjectId("5b1e6f5e2c0b803daafb22df"),
     "dependsOn" : {
         "ref" : {
             "type" : "model",
@@ -15,6 +16,12 @@
         "ref" : {
             "type" : "datapod",
             "uuid" : "c78b8538-af6b-4a7f-94e7-c483780a335c"
+        }
+    },
+    "trainInfo" : {
+        "ref" : {
+            "type" : "train",
+            "uuid" : "282f45f3-f080-4eb7-b3cb-e64d033af290"
         }
     },
     "featureAttrMap" : [ 
@@ -535,7 +542,7 @@
             "type" : "train",
             "uuid" : "282f45f3-f080-4eb7-b3cb-e64d033af290"
         }
-    },    
+    },
     "uuid" : "32230ad8-775f-4eb7-a7ab-87bccfefd72e",
     "version" : "1528055075",
     "name" : "Predict Fraud Detection Model (Datapod)",
@@ -548,7 +555,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-06-03T19:44:35.000Z"),
+    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

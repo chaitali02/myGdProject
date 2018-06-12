@@ -2,7 +2,7 @@
     "dependsOn" : {
         "ref" : {
             "type" : "model",
-            "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68-"
+            "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
         }
     },
     "source" : {

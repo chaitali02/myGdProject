@@ -1,4 +1,5 @@
 {
+    "_id" : ObjectId("5b1e6f5e2c0b803daafb22e0"),
     "dependsOn" : {
         "ref" : {
             "type" : "model",
@@ -15,6 +16,12 @@
         "ref" : {
             "type" : "datapod",
             "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+        }
+    },
+    "trainInfo" : {
+        "ref" : {
+            "type" : "train",
+            "uuid" : "282f45f3-f080-4eb7-b3cb-e64d033af291"
         }
     },
     "featureAttrMap" : [ 
@@ -542,7 +549,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-06-03T19:44:35.000Z"),
+    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

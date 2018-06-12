@@ -2722,6 +2722,42 @@
             "value" : null
         }, 
         {
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "09e9c765-b649-4f5e-90a7-9d845349fd45",
+		 			"version" : null,
+		            "name" : "PredictView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "2f8f33b3-1b90-42d7-a3db-3550d67f496c",
+		 			"version" : null,
+		            "name" : "SimulateView"
+				},
+				"value" : null
+		},		
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "440c3165-1cea-42a1-bfb6-3f728b3323d7",
+		 			"version" : null,
+		            "name" : "TrainView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "b2724735-cba0-47ea-aefa-2fb425eaf38c",
+		 			"version" : null,
+		            "name" : "ReconView"
+				},
+				"value" : null
+		},
+        {
             "ref" : {
                 "type" : "privilege",
                 "uuid" : "3f829bfc-1adf-4ecd-8d03-23b92ddaac1b",
