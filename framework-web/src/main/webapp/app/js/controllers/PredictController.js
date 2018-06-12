@@ -394,13 +394,16 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     ref.uuid=$scope.selectModel.uuid;
     dependsOn.ref=ref;
     predictJson.dependsOn=dependsOn;
-
-    var trainInfo={};
-    var ref={};
-    ref.type="train";
-    ref.uuid=$scope.selectTrain.uuid;
-    trainInfo.ref=ref;
-    predictJson.trainInfo=trainInfo;
+    if($scope.selectTrain){
+      var trainInfo={};
+      var ref={};
+      ref.type="train";
+      ref.uuid=$scope.selectTrain.uuid;
+      trainInfo.ref=ref;
+      predictJson.trainInfo=trainInfo;
+    }else{
+      predictJson.trainInfo=trainInfo;
+    }
 
     var source={};
     var sourceref={};

@@ -1396,7 +1396,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
 });
 
 
-RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaDataService, $filter, $state, $cookieStore, $stateParams, $location, $rootScope, $scope, ListRuleService, NgTableParams, uuid2, uiGridConstants, CommonService) {
+RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaDataService, $filter, $state, $cookieStore,$stateParams, $location, $rootScope, $scope, ListRuleService, NgTableParams, uuid2, uiGridConstants, CommonService,privilegeSvc) {
   $scope.select = $stateParams.type;
   $scope.type = {
     text: $scope.select == 'rulegroupexec' ? 'rulegroup' : 'rule'
@@ -1427,7 +1427,20 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     content: '',
     timeout: 3000 //time in ms
   };
-
+  
+  var privileges = privilegeSvc.privileges['comment'] || [];
+  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+    
+  });
+  $scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName; 
   $scope.getGridStyle = function () {
     var style = {
       'margin-top': '10px',
@@ -1454,6 +1467,8 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     $scope.isD3RuleEexecGraphShow = false;
     if ($scope.type.text == "rulegroup") {
       $scope.isGraphRuleExec = false;
+      $scope.execDetail= $scope.rulegroupdatail;
+      $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
     } else {
       $scope.isRuleTitle = false;
       $scope.isRuleSelect = true;
@@ -1524,6 +1539,8 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
       $scope.getRuleExec(data);
       return;
     }
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
     $scope.rulegroupdatail = data;
     $scope.isRuleGroupExec = false;
     $scope.isRuleSelect = false;
@@ -1580,6 +1597,8 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
   }
 
   $scope.getRuleExec = function (data) {
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs["rule"].execType;
     $scope.testgrid = false;
     $scope.ruleexecdetail = data;
     $scope.showprogress = true;

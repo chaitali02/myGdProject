@@ -40,7 +40,7 @@ DataPipelineModule.controller('WorkflowResultListController', function ($rootSco
   
 })
 
-DataPipelineModule.controller('WorkflowResultController', function ($location, $http, $rootScope, $scope, $state, $stateParams, MetadataDagSerivce) {
+DataPipelineModule.controller('WorkflowResultController', function ($location, $http, $rootScope, $scope, $state, $stateParams, MetadataDagSerivce,privilegeSvc,dagMetaDataService) {
   
   $scope.resultsExec = true;
   $scope.fullscreen = false;
@@ -58,7 +58,20 @@ DataPipelineModule.controller('WorkflowResultController', function ($location, $
     title: 'Success',
     timeout: 3000 //time in ms
   };
-  
+
+  var privileges = privilegeSvc.privileges['comment'] || [];
+  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+    
+  });
+  $scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;  
   $scope.close = function () {
     if ($scope.showgraphdiv)
       $scope.showgraphdiv = !$scope.showgraphdiv;
@@ -179,6 +192,7 @@ DataPipelineModule.controller('WorkflowResultController', function ($location, $
     MetadataDagSerivce.getOneByUuidAndVersion(uuid, $stateParams.version, $stateParams.type).then(function (response) { onSuccessGetDagByDagExec(response.data) });
     var onSuccessGetDagByDagExec = function (response) {
      // console.log(response);
+      $scope.dagExecData=response.dagdata;
       $scope.dagExecName = response.dagdata.name;
       $scope.$broadcast('createGraph', response.dagdata);
       startStatusUpdate(uuid);
