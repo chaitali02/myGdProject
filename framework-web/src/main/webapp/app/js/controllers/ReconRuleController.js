@@ -838,7 +838,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 
 
 
-ReconModule.controller('ResultReconController', function( $http,dagMetaDataService,$timeout,$filter,$state,$stateParams,$location,$rootScope,$scope,ReconRuleService,CommonService) {
+ReconModule.controller('ResultReconController', function( $http,dagMetaDataService,$timeout,$filter,$state,$stateParams,$location,$rootScope,$scope,ReconRuleService,CommonService,privilegeSvc) {
   $scope.select = $stateParams.type;
   $scope.type = {text : $scope.select == 'recongroupexec' ? 'recongroup' : 'recon'};
   $scope.showprogress=false;
@@ -865,7 +865,19 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
     }
     return style;
   }
-
+  var privileges = privilegeSvc.privileges['comment'] || [];
+  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+    
+  });
+  $scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName; 
   $scope.filteredRows = [];
   $scope.gridOptions.onRegisterApi =function(gridApi){
     $scope.gridApi = gridApi;
@@ -894,12 +906,15 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
   $scope.onClickRuleResult=function(){
     $scope.isRuleExec=true;
     $scope.isRuleResult=false;
-    debugger
-      $scope.$emit('resultExecChanged',false);//Update Breadcrum
+    $scope.execDetail= $scope.profileGroupLastParams;
+    $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
+    $scope.$emit('resultExecChanged',false);//Update Breadcrum
   }
 
 
   $scope.getProfileExec=function(data){
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs["recon"].execType;
     var uuid=data.uuid;
     var version=data.version;
     var name=data.name;
@@ -973,6 +988,8 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
       $scope.getProfileExec(data);
       return
     }
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
     $scope.profileGroupLastParams = data;
     $scope.zoomSize = 7;
     var uuid=data.uuid;

@@ -587,7 +587,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 
 });
 
-ProfileModule.controller('ResultProfileController', function ($http, dagMetaDataService, $timeout, $filter, $state, $stateParams, $location, $rootScope, $scope, ProfileService, CommonService) {
+ProfileModule.controller('ResultProfileController', function ($http, dagMetaDataService, $timeout, $filter, $state, $stateParams, $location, $rootScope, $scope, ProfileService, CommonService,privilegeSvc) {
 	$scope.select = $stateParams.type;
 	$scope.type = { text: $scope.select == 'profilegroupexec' ? 'profilegroup' : 'profile' };
 	$scope.showprogress = false;
@@ -614,7 +614,19 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		}
 		return style;
 	}
-
+	var privileges = privilegeSvc.privileges['comment'] || [];
+	$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+	$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+	$scope.$on('privilegesUpdated', function (e, data) {
+	  var privileges = privilegeSvc.privileges['comment'] || [];
+	  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+	  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+	  
+	});
+	$scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName; 
 	$scope.filteredRows = [];
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
@@ -665,11 +677,15 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		$scope.isRuleExec = true;
 		$scope.isRuleResult = false;
 		$scope.isD3RuleEexecGraphShow=false;
+		$scope.execDetail=$scope.profileGroupLastParams
+		$scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType; 
 		$scope.$emit('resultExecChanged', false);//Update Breadcrum
 	}
 
 
 	$scope.getProfileExec = function (data) {
+		$scope.execDetail=data;
+		$scope.metaType=dagMetaDataService.elementDefs["profile"].execType; 
 		var uuid = data.uuid;
 		var version = data.version;
 		var name = data.name;
@@ -710,6 +726,10 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 			$scope.isRuleExec = false;
 			$scope.isDataInpogress = true;
 			$scope.spinner = true;
+			$scope.execDetail=params;
+			$scope.execDetail.uuid=params.id;
+			$scope.metaType=dagMetaDataService.elementDefs["profile"].execType; 
+		
 			setTimeout(function () {
 				$scope.$apply();
 				$scope.ruleExecUuid = params.id;
@@ -741,6 +761,8 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 			$scope.getProfileExec(data);
 			return
 		}
+		$scope.execDetail=data;
+		$scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType; 
 		$scope.profileGroupLastParams = data;
 		$scope.zoomSize = 7;
 		var uuid = data.uuid;

@@ -387,7 +387,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     $('.show-graph-body').hide();
                     $('#graphloader').show();
                     $('#errorMsg').hide();
-                    CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.version | "", scope.degree).then(function (result) {
+                    CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.metaRef.ref.version | "", scope.degree).then(function (result) {
                         $('.show-graph-body').show();
                         $('#graphloader').hide();
 

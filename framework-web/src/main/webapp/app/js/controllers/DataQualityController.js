@@ -973,7 +973,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
 });
 
 
-DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService) {
+DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService,privilegeSvc) {
 
   $scope.select = $stateParams.type;
   $scope.type = {
@@ -991,7 +991,7 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
   $scope.currentPage = 1;
   $scope.pageSize = 10;
   $scope.paginationPageSizes = [10, 25, 50, 75, 100],
-    $scope.maxSize = 5;
+  $scope.maxSize = 5;
   $scope.bigTotalItems = 175;
   $scope.bigCurrentPage = 1;
   $scope.testgrid = false;
@@ -1002,6 +1002,19 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     content: 'Dashboard deleted Successfully',
     timeout: 3000 //time in ms
   };
+  var privileges = privilegeSvc.privileges['comment'] || [];
+  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+    
+  });
+  $scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName; 
   $scope.gridOptions = {
     rowHeight: 40,
     useExternalPagination: true,
@@ -1091,6 +1104,9 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     $scope.isD3RuleEexecGraphShow = false;
     if ($scope.type.text == "dqgroup") {
       $scope.isGraphRuleExec = false;
+      $scope.execDetail= $scope.rulegroupdatail;
+      $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
+  
     } else {
       $scope.isRuleTitle = false;
       $scope.isRuleSelect = true;
@@ -1221,6 +1237,8 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
   }
 
   $scope.getDqExec = function (data) {
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs["dq"].execType;
     $scope.ruleexecdetail = data
     $scope.isRuleResult = true;
     $scope.isRuleExec = false;
@@ -1262,6 +1280,8 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
       $scope.getDqExec(data);
       return;
     }
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
     $scope.rulegroupdatail = data
     $scope.rGExecUuid = data.uuid;
     $scope.rGExecVersion = data.version;
