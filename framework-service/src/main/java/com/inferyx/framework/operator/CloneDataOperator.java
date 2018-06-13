@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -24,6 +25,8 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
@@ -175,12 +178,49 @@ public class CloneDataOperator implements Operator {
 				.append("("+numRecords +"- ("+numIterations+" * "+countData+"))")
 				.append(")");
 		
-		exec.executeAndPersist(sb.toString(), filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		ResultSetHolder rsHolder = exec.executeAndPersist(sb.toString(), filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
+		createDataStore(exec, rsHolder.getCountRows(), tableName, locationDatapod, execIdentifier, runMode);
 		
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param exec
+	 * @param count
+	 * @param tableName
+	 * @param locationDatapod
+	 * @param execIdentifier
+	 * @param runMode
+	 * @throws Exception
+	 */
+	protected void createDataStore (IExecutor exec, 
+						long count, 
+						String tableName, 
+						Datapod locationDatapod, 
+						MetaIdentifier execIdentifier, 
+						RunMode runMode) throws Exception {
+		String execVersion = execIdentifier.getVersion();
+		String execUuid = execIdentifier.getUuid();
+		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+
+		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
+		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
+		@SuppressWarnings("unchecked")
+		List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) metaExec.getClass().getMethod("getAppInfo").invoke(metaExec);
+		
+		dataStoreServiceImpl.setRunMode(runMode);
+		dataStoreServiceImpl.create(getFilePath(locationDatapod, execVersion), getFileName(locationDatapod, execVersion), 
+				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
+				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, count, null);
+		
+		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
+		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
+		
+	}
+	
 	public String getTableNameBySource(Object sourceData, RunMode runMode) throws Exception {
 		String sourceTableName = null;
 		if(sourceData instanceof Datapod) {
@@ -226,5 +266,13 @@ public class CloneDataOperator implements Operator {
 		return sourceTableName;
 	}
 
+
+	protected String getFilePath (Datapod locationDatapod, String execVersion) {
+		return "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
+	}
+	
+	protected String getFileName (Datapod locationDatapod, String execVersion) {
+		return String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
+	}
 	
 }
