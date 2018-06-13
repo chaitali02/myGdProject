@@ -780,7 +780,7 @@ InferyxApp.directive('datetimez', function ($rootScope) {
     }
   };
 });
-InferyxApp.directive('searchCriteriaMonitoring', function (cacheService, CommonService, SystemMonitoringService, $filter, $rootScope, dagMetaDataService) {
+InferyxApp.directive('searchCriteriaMonitoring', function (cacheService, CommonService, SystemMonitoringService, $filter, $timeout,$rootScope, dagMetaDataService) {
   return {
     restrict: 'AE',
     scope: {
@@ -805,7 +805,19 @@ InferyxApp.directive('searchCriteriaMonitoring', function (cacheService, CommonS
       $scope.endDateOnSetTime = endDateOnSetTime
       $scope.startDateBeforeRender = startDateBeforeRender
       $scope.startDateOnSetTime = startDateOnSetTime
-
+      $scope.getLovByType = function() {
+        CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+        var onSuccessGetLovByType = function (response) {
+          console.log(response)
+          $scope.lobTag=response[0].value
+        }
+      }
+      $scope.loadTag = function (query) {
+        return $timeout(function () {
+          return $filter('filter')($scope.lobTag, query);
+        });
+      };
+        $scope.getLovByType();
       function startDateOnSetTime() {
         $scope.$broadcast('start-date-changed');
       }
@@ -1058,7 +1070,7 @@ InferyxApp.directive('searchCriteriaMonitoring', function (cacheService, CommonS
     templateUrl: 'views/search-criteria-monitoring.html'
   }
 });
-InferyxApp.directive('searchCriteria', function (cacheService, CommonService, $filter, $rootScope, dagMetaDataService) {
+InferyxApp.directive('searchCriteria', function (cacheService, CommonService, $filter, $timeout, $rootScope, dagMetaDataService) {
   return {
     restrict: 'AE',
     scope: {
@@ -1083,7 +1095,19 @@ InferyxApp.directive('searchCriteria', function (cacheService, CommonService, $f
       $scope.endDateOnSetTime = endDateOnSetTime
       $scope.startDateBeforeRender = startDateBeforeRender
       $scope.startDateOnSetTime = startDateOnSetTime
-
+      $scope.getLovByType = function() {
+        CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+        var onSuccessGetLovByType = function (response) {
+          console.log(response)
+          $scope.lobTag=response[0].value
+        }
+      }
+      $scope.loadTag = function (query) {
+        return $timeout(function () {
+          return $filter('filter')($scope.lobTag, query);
+        });
+      };
+        $scope.getLovByType();
       function startDateOnSetTime() {
         $scope.$broadcast('start-date-changed');
       }
