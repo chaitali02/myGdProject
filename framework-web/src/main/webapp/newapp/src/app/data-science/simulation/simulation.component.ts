@@ -177,10 +177,9 @@ export class SimulationComponent implements OnInit {
     for (const i in response) {
       let refParam = {}
       refParam["label"] = response[i]['name'];
-      refParam["value"] = {}
-      refParam["value"]["uuid"] = response[i]["uuid"]
-      // refParam["value"]['name'] = response[i]['name'];
+      refParam["value"] = {}      
       refParam["value"]['label'] = response[i]['name'];
+      refParam["value"]["uuid"] = response[i]['uuid']
       this.arrayDistribution[i] = refParam;
 
     }
@@ -310,21 +309,27 @@ export class SimulationComponent implements OnInit {
     this.simulation.type = response.type
     this.simulation.numIterations = response["numIterations"]
     this.breadcrumbDataFrom[2].caption = response.name;
+
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["dependsOn"]["ref"]["name"];
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
     dependOnTemp.version = response["dependsOn"]["ref"]["version"];
     this.selectModel = dependOnTemp
-
+debugger
     let dependOnParamlist: DependsOn = new DependsOn();
-    dependOnTemp.label = response["dependsOn"]["ref"]["name"];
-    dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
-    this.selectParamlist = dependOnParamlist;
+    dependOnParamlist.label = response["distributionTypeInfo"]["ref"]["name"];
+    dependOnParamlist.uuid = response["distributionTypeInfo"]["ref"]["uuid"];
+    this.selectDistributionList = dependOnParamlist;
 
-    let dependOnDistribution: DependsOn = new DependsOn();
-    dependOnTemp.label = response["dependsOn"]["ref"]["name"];
-    dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
-    this.selectDistributionList = dependOnDistribution;
+    // let dependOnDistribution: DependsOn = new DependsOn();
+    // dependOnDistribution.label = response["dependsOn"]["ref"]["name"];
+    // dependOnDistribution.uuid = response["dependsOn"]["ref"]["uuid"];
+    // this.selectDistributionList = dependOnDistribution;
+
+    let selectParamlist: DependsOn = new DependsOn();
+    selectParamlist.label = response["paramList"]["ref"]["name"];
+    selectParamlist.uuid = response["paramList"]["ref"]["uuid"];
+    this.selectParamlist = selectParamlist;
 
     let targetTemp: DependsOn = new DependsOn();
     targetTemp.label = response["target"]["ref"]["name"];
@@ -356,7 +361,7 @@ export class SimulationComponent implements OnInit {
     }
     this.featureMapTableArray = features;
 
-
+    this.onChangeModel();
 
   }
 
@@ -405,7 +410,7 @@ export class SimulationComponent implements OnInit {
   onChangeModel() {
     debugger
     // simulateService.getOneByUuidandVersion(this.selectModel.uuid,this.selectModel.version,"model").then(function(response) { onSuccessGetLatestByUuid(response.data)});
-    this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version, 'model')
+    this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version || " ", 'model')
       .subscribe(
       response => {
         this.onSuccessonChangeModel(response)
@@ -420,7 +425,7 @@ export class SimulationComponent implements OnInit {
     for (var i = 0; i < response.features.length; i++) {
       var featureMap = {};
       var sourceFeature = {};
-      var targetFeature = {};
+     // var targetFeature = {};
       sourceFeature["featureId"] = response.features[i].featureId;
       sourceFeature["type"] = response.features[i].type;
       sourceFeature["datapodname"] = response.features[i].name;
