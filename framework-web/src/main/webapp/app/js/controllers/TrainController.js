@@ -78,7 +78,19 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     paginationPageSizes:["All",5,10,25,50],
     maxSize:5,
   }  
-
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
@@ -362,6 +374,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
   $scope.submitModel = function () {
+    var upd_tag="N"
     $scope.isshowTrain = true;
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
@@ -378,6 +391,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     TrainJson.tags = tagArray;
     var dependsOn = {};
@@ -432,7 +449,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     }
     TrainJson.featureAttrMap = featureMap;
     console.log(JSON.stringify(TrainJson))
-    TrainService.submit(TrainJson, 'train').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    TrainService.submit(TrainJson, 'train',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       $scope.iSSubmitEnable = true
       $scope.changemodelvalue();

@@ -44,7 +44,7 @@
   <!-- BEGIN MAIN CONTENT -->
   <div class="row">
     <div class="col-md-12">
-      <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitDataset()" form-on-change="datasetFormChange()">
+      <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitDataset()" form-on-change="datasetFormChange()" prevent-enter-submit>
         <div class="portlet box green">
           <div class="portlet-title">
             <div class="caption">
@@ -184,7 +184,12 @@
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                   <div class="col-md-6">
-                    <tags-input name="tag" ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                    <!-- <tags-input name="tag" ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
+                    <tags-input ng-model="tags" ng-disabled="{{mode}}" add-from-autocomplete-only="false" min-length="0" add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                         max-results-to-show="10">
+                      </auto-complete>
+                    </tags-input>
                   </div>
 
                 </div>

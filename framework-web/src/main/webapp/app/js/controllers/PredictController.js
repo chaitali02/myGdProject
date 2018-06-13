@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, PredictService,$http,$location,privilegeSvc) {
+DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, PredictService,$http,$location,privilegeSvc,CommonService) {
 
   $scope.isTargetNameDisabled=false;
   $scope.dataLoading = false;
@@ -75,7 +75,20 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     paginationPageSizes:["All",5,10,25,50],
     maxSize:5,
   }  
-
+  
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   
   $scope.close = function() {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
@@ -372,6 +385,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
 
 
   $scope.submitModel = function() {
+    var upd_tag="N"
     $scope.isshowPredict = true;
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
@@ -386,6 +400,10 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     predictJson.tags = tagArray;
     var dependsOn={};
@@ -454,7 +472,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     }
     predictJson.featureAttrMap=featureMap;
     //console.log(JSON.stringify(predictJson))
-    PredictService.submit(predictJson, 'predict').then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
+    PredictService.submit(predictJson, 'predict',upd_tag).then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
     var onSuccess = function(response) {
       $scope.dataLoading = false;
       $scope.iSSubmitEnable = true;

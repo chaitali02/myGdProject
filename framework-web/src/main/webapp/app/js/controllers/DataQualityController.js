@@ -1,7 +1,7 @@
 /****/
 DataQualityModule = angular.module('DataQualityModule');
 
-DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc) {
+DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc,CommonService,$timeout,$filter) {
   $scope.dataqualitydata = {};
   $scope.mode = "false";
   if ($stateParams.mode == 'true') {
@@ -67,6 +67,20 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.privileges = privilegeSvc.privileges['dq'] || [];
     $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
   });
+  
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+  $scope.getLovByType();
 
   $scope.showRulePage = function () {
     $scope.showgraph = false;
@@ -459,6 +473,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   }
 
   $scope.sbumitDataqulity = function () {
+    var upd_tag="N"
     var options = {}
     $scope.dataLoading = true;
     $scope.isshowmodel = true;
@@ -475,8 +490,11 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
-
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     dataqualityjosn.tags = tagArray;
     dataqualityjosn.active = $scope.dataqualitydata.active
@@ -620,7 +638,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
     }
     console.log(JSON.stringify(dataqualityjosn))
-    DataqulityService.submit(dataqualityjosn, "dqview").then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    DataqulityService.submit(dataqualityjosn, "dqview",upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       $scope.dataLoading = false;
       $scope.changemodelvalue()
@@ -664,7 +682,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 });
 
 
-DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService) {
+DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService,CommonService) {
   $scope.select = 'Rule Group';
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
@@ -716,12 +734,28 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     $scope.privileges = privilegeSvc.privileges['dqgroup'] || [];
     $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
   });
+  
   var notify = {
     type: 'success',
     title: 'Success',
     content: '',
     timeout: 3000 //time in ms
   };
+
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+  }
+  
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+  $scope.getLovByType();
 
   $scope.showRulGroupePage = function () {
     $scope.showRuleGroup = true;
@@ -881,7 +915,8 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
 
   }
   $scope.sbumitRuleGroup = function () {
-    var dqruleGroupJson = {}
+    var dqruleGroupJson = {};
+    var upd_tag="N"
     $scope.dataLoading = true;
     $scope.isshowmodel = true;
     $scope.myform.$dirty = false;
@@ -897,7 +932,12 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
+
     dqruleGroupJson.tags = tagArray;
     var ruleInfoArray = [];
     for (var i = 0; i < $scope.ruleTags.length; i++) {
@@ -912,7 +952,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     dqruleGroupJson.ruleInfo = ruleInfoArray;
     dqruleGroupJson.inParallel = $scope.checkboxModelparallel
     console.log(JSON.stringify(dqruleGroupJson))
-    DataqulityService.submit(dqruleGroupJson, "dqgroup").then(function (response) {
+    DataqulityService.submit(dqruleGroupJson, "dqgroup",upd_tag).then(function (response) {
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {

@@ -79,7 +79,7 @@
           </div>
 
           <div class="form-body" style="padding-top:50px;" ng-show="showFrom">
-            <form class="form-horizontal" novalidate="novalidate" ng-submit="submitPrivilege()" name="myform" form-on-change="privilegeFormChange()">
+            <form class="form-horizontal" novalidate="novalidate" ng-submit="submitPrivilege()" name="myform" form-on-change="privilegeFormChange()" prevent-enter-submit>
               <div class="form-group" ng-show="privilegedata.uuid">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
@@ -122,7 +122,12 @@
               <div class="form-group taginput">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                  <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
+                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                        max-results-to-show="10">
+                    </auto-complete>
+                  </tags-input>
                 </div>
               </div>
               <div class="form-group">

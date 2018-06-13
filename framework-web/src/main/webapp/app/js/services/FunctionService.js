@@ -29,10 +29,10 @@ MetadataModule.factory('MetadataFunctionFactory',function($http,$location){
   	   	}).then(function(response){ return  response})
   	  }
 
-    factory.functionSubmit=function(data){
+    factory.functionSubmit=function(data,type,upd_tag){
     	var url=$location.absUrl().split("app")[0]
         return $http({
-             url:url+"common/submit?action=edit&type=function",
+             url:url+"common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
 
                headers: {
                 'Accept':'*/*',
@@ -148,9 +148,9 @@ MetadataModule.service('MetadataFunctionSerivce',function($q,sortFactory,Metadat
 		}
 
 
-	this.submit=function(data,type){
+	this.submit=function(data,type,upd_tag){
 		   var deferred=$q.defer();
-		   MetadataFunctionFactory.functionSubmit(data,type).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
+		   MetadataFunctionFactory.functionSubmit(data,type,upd_tag).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
 		   var onSuccess=function(response){
 		      deferred.resolve({
 		                  data:response

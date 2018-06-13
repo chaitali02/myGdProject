@@ -53,6 +53,20 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['datastore'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
+
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['datastore'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -237,6 +251,7 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 
 	/*Start SubmitDatastore*/
 	$scope.submitDatastore = function () {
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -254,6 +269,10 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		datastroreJson.tags = tagArray;
@@ -273,7 +292,7 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		datastoreexec.ref = execref;
 		datastroreJson.execId = datastoreexec;
 		console.log(JSON.stringify(datastroreJson))
-		MetadataDatastoreSerivce.submit(datastroreJson, 'datastore').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatastoreSerivce.submit(datastroreJson, 'datastore',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

@@ -1,7 +1,7 @@
 /**
  **/
 DatascienceModule = angular.module('DatascienceModule');
-DatascienceModule.controller('CreateParamSetController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, ParamSetService, privilegeSvc) {
+DatascienceModule.controller('CreateParamSetController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, ParamSetService, privilegeSvc,CommonService,$timeout,$filter) {
 
 	$scope.mode = " ";
 	$scope.dataLoading = false;
@@ -63,6 +63,19 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		$scope.privileges = privilegeSvc.privileges['paramset'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 
 	$scope.showGraph = function (uuid, version) {
 		$scope.showFrom = false;
@@ -174,7 +187,6 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
-
 		$scope.isDependencyShow = true;
 		$scope.getAllVersion($stateParams.id)
 		ParamSetService.getOneByUuidandVersion($stateParams.id, $stateParams.version, "paramset").then(function (response) { onSuccessGetLatestByUuid(response.data) });
@@ -191,15 +203,21 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 			$scope.tags = response.paramsetdata.tags
 			ParamSetService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 			var onSuccessGetAllLatestParamlist = function (response) {
-
 				$scope.allparamlist = response;
-
 				var paramlis = {};
 				paramlis.uuid = $scope.paramsetdata.dependsOn.ref.uuid;
 				paramlis.name = "";
 				$scope.selectparamlist = paramlis;
 			}//End onSuccessGetAllLatestParamlist
-
+            var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
 
 		}
 	}//End If
@@ -239,6 +257,7 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 	}
 
 	$scope.submitParamSet = function () {
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -253,6 +272,10 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		paramsetJson.tags = tagArray;
@@ -282,7 +305,7 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		}
 		paramsetJson.paramInfo = paramInfoArray;
 		console.log(JSON.stringify(paramsetJson));
-		ParamSetService.submit(paramsetJson, 'paramset').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		ParamSetService.submit(paramsetJson, 'paramset',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

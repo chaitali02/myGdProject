@@ -85,10 +85,10 @@ MetadataModule.factory('MetadataDatasetFactory', function ($http, $location) {
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-	factory.datasetSubmit = function (data) {
+	factory.datasetSubmit = function (data,type,upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type=datasetview",
+			url: url + "common/submit?action=edit&type=datasetview&upd_tag="+upd_tag,
 
 			headers: {
 				'Accept': '*/*',
@@ -362,9 +362,9 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 
 		return deferred.promise;
 	}
-	this.submit = function (data, type) {
+	this.submit = function (data,type,upd_tag) {
 		var deferred = $q.defer();
-		MetadataDatasetFactory.datasetSubmit(data, type).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
+		MetadataDatasetFactory.datasetSubmit(data,type,upd_tag).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 
 			deferred.resolve({

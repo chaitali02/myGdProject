@@ -173,10 +173,10 @@ RuleModule.factory('RuleFactory', function ($http, $location) {
         return response;
       })
   }
-  factory.ruleSubmit = function (data, type) {
+  factory.ruleSubmit = function (data,type,upd_tag) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "common/submit?action=edit&type=" + type,
+      url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
 
       headers: {
         'Accept': '*/*',
@@ -1033,9 +1033,9 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
     return deferred.promise;
   }
 
-  factory.submit = function (data, type) {
+  factory.submit = function(data,type,upd_tag) {
     var deferred = $q.defer();
-    RuleFactory.ruleSubmit(data, type).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
+    RuleFactory.ruleSubmit(data,type,upd_tag).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response

@@ -29,10 +29,10 @@ AdminModule.factory('MetadataApplicationFactory', function ($http, $location) {
 		}).then(function (response) { return response })
 	}
 
-	factory.applicationSubmit = function (data) {
+	factory.applicationSubmit = function (data,upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type=application",
+			url: url + "common/submit?action=edit&type=application&upd_tag="+upd_tag,
 
 			headers: {
 				'Accept': '*/*',
@@ -140,9 +140,9 @@ AdminModule.service('MetadataApplicationSerivce', function ($q, sortFactory, Met
 	}
 
 
-	this.submit = function (data, type) {
+	this.submit = function (data,type,upd_tag) {
 		var deferred = $q.defer();
-		MetadataApplicationFactory.applicationSubmit(data, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataApplicationFactory.applicationSubmit(data,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
