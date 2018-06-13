@@ -1,6 +1,6 @@
 AdminModule = angular.module('AdminModule');
 
-AdminModule.controller('MetadataApplicationController', function ($state, $scope, $stateParams, $rootScope, MetadataApplicationSerivce, $sessionStorage, privilegeSvc) {
+AdminModule.controller('MetadataApplicationController', function ($state, $scope, $stateParams, $rootScope, MetadataApplicationSerivce, $sessionStorage, privilegeSvc,CommonService,$timeout,$filter) {
 	$scope.mode = " ";
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle']
 	$scope.dataLoading = false;
@@ -58,6 +58,21 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$scope.privileges = privilegeSvc.privileges['application'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
+
 	$scope.showPage = function () {
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
@@ -136,11 +151,13 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		}, 0)
 		MetadataApplicationSerivce.getOneByUuidAndVersion(uuid, version, 'application').then(function (response) { onGetByOneUuidandVersion(response.data) });
 		var onGetByOneUuidandVersion = function (response) {
+			alert("dsfs");
 			$scope.applicationdata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.application.defaultVersion = defaultversion;
+			
 		}
 
 	}//End SelectVersion
@@ -186,6 +203,17 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.application.defaultVersion = defaultversion;
+
+			var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
+
 			MetadataApplicationSerivce.getLatestDataSourceByUuid($scope.applicationdata.dataSource.ref.uuid, "datasource").then(function (response) { onSuccessGetLatestDataSourceByUuid(response.data) });
 			var onSuccessGetLatestDataSourceByUuid = function (response) {
 				$scope.selectSourceType = response.type.toLowerCase();
@@ -203,6 +231,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 
 	/*Start SubmitAplication*/
 	$scope.submitApplication = function () {
+		var upd_tag="N"
 		var applicationJson = {};
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
@@ -215,6 +244,19 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		applicationJson.desc = $scope.applicationdata.desc
 		applicationJson.active = $scope.applicationdata.active;
 		applicationJson.published = $scope.applicationdata.published;
+		debugger
+		var tagArray = [];
+		if ($scope.tags != null) {
+			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
+				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
+		}
+		applicationJson.tags = tagArray;
+
 		var datasource = {};
 		var ref = {};
 		ref.type = "datasource";
@@ -222,7 +264,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		datasource.ref = ref;
 		applicationJson.dataSource = datasource;
 
-		MetadataApplicationSerivce.submit(applicationJson, 'application').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataApplicationSerivce.submit(applicationJson, 'application',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
