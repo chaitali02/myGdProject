@@ -129,7 +129,7 @@
               <div class="tab-content">
                 <!--Start Tab1-->
                 <div class="tab-pane" id="tab1" ng-class="{'active' : continueCount == 1}">
-                  <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate">
+                  <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate" prevent-enter-submit>
                     <div class="form-group" ng-show="ruleData.uuid">
                       <label class="control-label col-md-3">UUID
                       </label>
@@ -172,7 +172,12 @@
                       <label class="control-label col-md-3">Tag
                       </label>
                       <div class="col-md-6">
-                        <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input>
+                        <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
+                        <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                          <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                              max-results-to-show="10">
+                          </auto-complete>
+                      </tags-input>
                       </div>
                     </div>
                     <div class="form-group">

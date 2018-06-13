@@ -86,9 +86,9 @@ AdminModule.service("MigrationAssistServices", function ($q, MigrationAssistFact
 		}
 		return deferred.promise;
 	}
-	this.importSubmit = function (data, type, filename) {
+	this.importSubmit = function (data, type, filename,upd_tag) {
 		var deferred = $q.defer();
-		var url = "admin/import/submit?action=add" + "&type=" + type + "&fileName=" + filename;
+		var url = "admin/import/submit?action=add" + "&type=" + type + "&fileName=" + filename +"&upd_tag="+upd_tag;
 		CommonFactory.httpPost(url, data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
@@ -102,9 +102,9 @@ AdminModule.service("MigrationAssistServices", function ($q, MigrationAssistFact
 		}
 		return deferred.promise;
 	}
-	this.exportSubmit = function (data, type) {
+	this.exportSubmit = function (data,type,upd_tag) {
 		var deferred = $q.defer();
-		var url = "admin/export/submit?action=add" + "&type=" + type;
+		var url = "admin/export/submit?action=add" + "&type=" + type+"&upd_tag="+upd_tag;
 		CommonFactory.httpPost(url, data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({

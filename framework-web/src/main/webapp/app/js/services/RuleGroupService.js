@@ -91,10 +91,10 @@ RuleModule.factory('RuleGroupFactory', function ($http, $location) {
 			})
 	}
 
-	factory.ruleSubmit = function (data, type) {
+	factory.ruleSubmit = function (data,type,upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type=" + type,
+			url: url + "common/submit?action=edit&type=" + type+"&upd_tag="+upd_tag,
 
 			headers: {
 				'Accept': '*/*',
@@ -181,9 +181,9 @@ RuleModule.service("RuleGroupService", function ($q, RuleGroupFactory, sortFacto
 	}
 
 
-	this.submit = function (data, type) {
+	this.submit = function (data,type,upd_tag){
 		var deferred = $q.defer();
-		RuleGroupFactory.ruleSubmit(data, type).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
+		RuleGroupFactory.ruleSubmit(data,type,upd_tag).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 
 			deferred.resolve({

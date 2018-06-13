@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateModelController', function($state,$stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location,$anchorScroll,privilegeSvc) {
+DatascienceModule.controller('CreateModelController', function($state,$stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location,$anchorScroll,privilegeSvc,CommonService) {
   $scope.featuureType=["integer","string","double"];
   $scope.mode = "false";
 
@@ -72,7 +72,19 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     content: 'Dashboard deleted Successfully',
     timeout: 30000 //time in ms
   };
-  
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   $scope.close = function() {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
@@ -372,6 +384,16 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.model.defaultVersion = defaultversion;
+      var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
+
       if($scope.modeldata.type=='SPARK'){
        // $scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
@@ -513,6 +535,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   }
 }
   $scope.submitModel = function() {
+    var upd_tag="N"
     $scope.isshowmodel = true;
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
@@ -530,6 +553,10 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     modelJson.tags = tagArray;
     if(!$scope.checkboxCustom){
@@ -598,7 +625,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
 
       }
       modelJson.features=featureArray;
-      ModelService.submit(modelJson, 'model').then(function(response) { onSuccess(response.data)},function(response){onError(response.data)});
+      ModelService.submit(modelJson, 'model',upd_tag).then(function(response) { onSuccess(response.data)},function(response){onError(response.data)});
     }
     else{
       modelJson.customFlag="Y"

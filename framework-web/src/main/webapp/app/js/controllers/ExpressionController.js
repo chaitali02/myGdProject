@@ -1,6 +1,6 @@
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataExpressionController', function ($state, $scope, $stateParams, $cookieStore, $sessionStorage, MetadataExpressionSerivce, privilegeSvc,$rootScope) {
+MetadataModule.controller('MetadataExpressionController', function ($state, $scope, $stateParams, $cookieStore, $sessionStorage, MetadataExpressionSerivce, privilegeSvc,$rootScope,$filter,$timeout,CommonService) {
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -71,6 +71,21 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		$scope.privileges = privilegeSvc.privileges['expression'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
+
 	$scope.showPage = function () {
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
@@ -428,6 +443,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 	}
 
 	$scope.submitexpression = function () {
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -444,7 +460,10 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
-
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		expressionjson.tags = tagArray;
@@ -557,7 +576,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		}
 		expressionjson.expressionInfo = expressioninfoArray
 		console.log(JSON.stringify(expressionjson))
-		MetadataExpressionSerivce.submit(expressionjson, 'expression').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataExpressionSerivce.submit(expressionjson, 'expression',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			var dependon = {}
 			dependon.type = "expression";

@@ -321,6 +321,19 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
     content: 'Dashboard deleted Successfully',
     timeout: 3000 //time in ms
   };
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   /*Start showExportPage*/
   $scope.showPage=function(){
     $scope.showExport=true;
@@ -351,6 +364,15 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
         metaInfoArray[i]=metainfo;
       }
       $scope.metaNameTags=metaInfoArray;
+      var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
     }
   }
   else{
@@ -445,6 +467,7 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
   }
 
   $scope.submitExport = function() {
+    var upd_tag="N"
     var exportJson = {};
     $scope.isSubmitExportEnable = true;
     $scope.dataLoading=true;
@@ -462,8 +485,19 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
       metainfoarray[i] = metainfo;
     }
     exportJson.metaInfo = metainfoarray;
+    var tagArray = [];
+		if ($scope.tags != null) {
+			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
+				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
+		}
+		exportJson.tags = tagArray;
     console.log(JSON.stringify(exportJson));
-    MigrationAssistServices.exportSubmit(exportJson, "export").then(function(response) {
+    MigrationAssistServices.exportSubmit(exportJson, "export",upd_tag).then(function(response) {
       onSuccessSubmit(response.data)
     }, function(response) {
       onError(response.data)
@@ -598,7 +632,20 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
   }
   return style;
   }
-
+  
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   /*Start showImportPage*/
   $scope.showPage=function(){
     $scope.showImport=true;
@@ -632,6 +679,15 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
         metainfoarray[i] = metainfo;
       }
       $scope.gridOptionsDatapod.data=metainfoarray;
+      var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
     }
   }
 
@@ -711,6 +767,7 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
   }
 
   $scope.submitImport = function() {
+    var upd_tag="N"
     var importJson = {};
     $scope.dataLoading=true;
     $scope.isSubmitImportEnable = true;
@@ -731,8 +788,19 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
       metainfoarray[i] = metainfo;
     }
     importJson.metaInfo = metainfoarray;
+    var tagArray = [];
+		if ($scope.tags != null) {
+			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
+				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
+    }
+    importJson.tags = tagArray;
     console.log(JSON.stringify(importJson));
-    MigrationAssistServices.importSubmit(importJson,"import",filename).then(function(response) {
+    MigrationAssistServices.importSubmit(importJson,"import",filename,upd_tag).then(function(response) {
       onSuccessSubmit(response.data)
     }, function(response) {
       onError(response.data)

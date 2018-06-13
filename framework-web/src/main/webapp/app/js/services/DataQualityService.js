@@ -104,11 +104,10 @@ DataQualityModule.factory('DataQualityFactory', function ($http, $location) {
 				return response;
 			})
 	}
-	factory.dqSubmit = function (data, type) {
+	factory.dqSubmit = function (data,type,upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type=" + type,
-
+			url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
 			headers: {
 				'Accept': '*/*',
 				'content-Type': "application/json",
@@ -686,9 +685,9 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 
 		return deferred.promise;
 	}
-	this.submit = function (data, type) {
+	this.submit = function (data,type,upd_tag) {
 		var deferred = $q.defer();
-		DataQualityFactory.dqSubmit(data, type).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
+		DataQualityFactory.dqSubmit(data,type,upd_tag).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 
 			deferred.resolve({
