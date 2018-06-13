@@ -94,7 +94,7 @@
                     <div class="form-body show-graph-body tree-graph" id="graphWrapper"  tree-graph-directive uuid="profileDetail.uuid" version="profilegroup.defaultVersion.version"></div>
                 </div>
 
-                <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()"
+                <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()"prevent-enter-submit
                     ng-show="showProfileGroup">
                     <div class="form-wizard">
                         <div class="form-body">
@@ -143,7 +143,12 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3">Tag</label>
                                 <div class="col-md-6">
-                                    <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input>
+                                    <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
+                                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                                            max-results-to-show="10">
+                                        </auto-complete>
+                                    </tags-input>
                                 </div>
                             </div>
 

@@ -147,7 +147,7 @@ public class ReconServiceImpl extends RuleTemplate {
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reconExec.toString());
 		recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(reconExec.getDependsOn().getRef().getUuid(), reconExec.getDependsOn().getRef().getVersion(), MetaType.recon.toString());
 		try {
-			reconExec.setExec(reconOperator.generateSql(recon, reconExec, datapodList, dagExec, refKeyMap, null, usedRefKeySet, runMode));
+			reconExec.setExec(reconOperator.generateSql(recon, reconExec, datapodList, dagExec, refKeyMap, otherParams, usedRefKeySet, runMode));
 			reconExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
 			synchronized (reconExec.getUuid()) {

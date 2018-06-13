@@ -581,7 +581,7 @@ public class ParamSetServiceImpl {
 			return null;
 		}
 		for (ParamListHolder param : execParams.getParamListInfo()) {
-			if (param.getParamName().equals(paramName)) {
+			if (param.getParamName().equalsIgnoreCase(paramName)) {
 				return param;
 			}
 		}

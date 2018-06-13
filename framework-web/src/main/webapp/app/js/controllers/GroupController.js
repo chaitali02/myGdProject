@@ -49,6 +49,20 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['group'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
+
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['group'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -239,7 +253,7 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 
 	/*Start submitGroup*/
 	$scope.submitGroup = function () {
-
+		var upd_tag="N"
 		var groupJson = {};
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -274,6 +288,10 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 			for (var c = 0; c < $scope.tags.length; c++) {
 				tagArray[c] = $scope.tags[c].text;
 			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
 		}
 		groupJson.tags = tagArray
 
@@ -289,7 +307,7 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		//		   	}
 		//		}
 		//       	groupJson.roleInfo=roleInfoArray
-		AdminGroupService.submit(groupJson, 'group').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		AdminGroupService.submit(groupJson, 'group',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

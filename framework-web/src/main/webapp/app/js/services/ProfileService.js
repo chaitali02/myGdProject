@@ -97,10 +97,10 @@ ProfileModule.factory('ProfileFactory',function($http,$location){
                   return response;
                })
     }
-    factory.dqSubmit=function(data,type){
+    factory.dqSubmit=function(data,type,upd_tag){
       	var url=$location.absUrl().split("app")[0]
         return $http({
-             url:url+"common/submit?action=edit&type="+type,
+             url:url+"common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
 
                headers: {
                 'Accept':'*/*',
@@ -616,9 +616,9 @@ ProfileModule.service("ProfileService",function($q,ProfileFactory,sortFactory,Co
 
 		  return deferred.promise;
 	  }
-	 this.submit=function(data,type){
+	 this.submit=function(data,type,upd_tag){
 		   var deferred=$q.defer();
-		   ProfileFactory.dqSubmit(data,type).then(function(response){onSuccess(response)},function(response){onError(response.data)});
+		   ProfileFactory.dqSubmit(data,type,upd_tag).then(function(response){onSuccess(response)},function(response){onError(response.data)});
 		     var onSuccess=function(response){
 
 		      deferred.resolve({

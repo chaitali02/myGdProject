@@ -1,5 +1,5 @@
 RuleModule = angular.module('RuleModule');
-RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService) {
+RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService,CommonService) {
   $scope.mode = "false";
   $scope.rule = {};
   $scope.rule.versions = []
@@ -108,7 +108,19 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.privileges = privilegeSvc.privileges['rule'] || [];
     $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
   });
-
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   $scope.showPage = function () {
     $scope.showFrom = true
     $scope.showGraphDiv = false
@@ -880,6 +892,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 
   $scope.submitRule = function () {
     var ruleJson = {}
+    var upd_tag="N"
     $scope.dataLoading = true;
     $scope.isSubmitDisabled=true;
     if ($scope.ruleData != null) {
@@ -901,6 +914,10 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     var source = {};
     var ref = {};
@@ -1094,7 +1111,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     ruleJson.attributeInfo = sourceAttributesArray
     console.log("Rule JSON" + JSON.stringify(ruleJson))
 
-    RuleService.submit(ruleJson, 'ruleview').then(function (response) {
+    RuleService.submit(ruleJson,'ruleview',upd_tag).then(function (response) {
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
@@ -1127,7 +1144,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 });
 
 
-RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService, privilegeSvc) {
+RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService, privilegeSvc,CommonService) {
   $scope.select = 'rules group';
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
@@ -1183,6 +1200,20 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
     $scope.privileges = privilegeSvc.privileges['rulegroup'] || [];
     $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
   });
+  
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+  $scope.getLovByType();
 
   $scope.showPage = function () {
     $scope.showForm = true;
@@ -1315,6 +1346,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   }
 
   $scope.submitRuleGroup = function () {
+    var upd_tag="N"
     $scope.dataLoading = true;
     $scope.isshowmodel = true;
     $scope.myform.$dirty = false;
@@ -1330,8 +1362,11 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
-
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     ruleGroupJson.tags = tagArray;
     var ruleInfoArray = [];
@@ -1348,7 +1383,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
     ruleGroupJson.ruleInfo = ruleInfoArray;
     ruleGroupJson.inParallel = $scope.checkboxModelparallel
     console.log(JSON.stringify(ruleGroupJson))
-    RuleGroupService.submit(ruleGroupJson, "rulegroup").then(function (response) {
+    RuleGroupService.submit(ruleGroupJson, "rulegroup",upd_tag).then(function (response) {
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
@@ -1396,7 +1431,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
 });
 
 
-RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaDataService, $filter, $state, $cookieStore, $stateParams, $location, $rootScope, $scope, ListRuleService, NgTableParams, uuid2, uiGridConstants, CommonService) {
+RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaDataService, $filter, $state, $cookieStore,$stateParams, $location, $rootScope, $scope, ListRuleService, NgTableParams, uuid2, uiGridConstants, CommonService,privilegeSvc) {
   $scope.select = $stateParams.type;
   $scope.type = {
     text: $scope.select == 'rulegroupexec' ? 'rulegroup' : 'rule'
@@ -1427,7 +1462,20 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     content: '',
     timeout: 3000 //time in ms
   };
-
+  
+  var privileges = privilegeSvc.privileges['comment'] || [];
+  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+    
+  });
+  $scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName; 
   $scope.getGridStyle = function () {
     var style = {
       'margin-top': '10px',
@@ -1454,6 +1502,8 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     $scope.isD3RuleEexecGraphShow = false;
     if ($scope.type.text == "rulegroup") {
       $scope.isGraphRuleExec = false;
+      $scope.execDetail= $scope.rulegroupdatail;
+      $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
     } else {
       $scope.isRuleTitle = false;
       $scope.isRuleSelect = true;
@@ -1524,6 +1574,8 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
       $scope.getRuleExec(data);
       return;
     }
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
     $scope.rulegroupdatail = data;
     $scope.isRuleGroupExec = false;
     $scope.isRuleSelect = false;
@@ -1580,6 +1632,8 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
   }
 
   $scope.getRuleExec = function (data) {
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs["rule"].execType;
     $scope.testgrid = false;
     $scope.ruleexecdetail = data;
     $scope.showprogress = true;

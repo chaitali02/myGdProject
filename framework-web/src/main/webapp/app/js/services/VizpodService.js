@@ -23,10 +23,10 @@
         })
       }
 
-      factory.submit = function(data, type) {
+      factory.submit = function(data,type,upd_tag){
         var url = $location.absUrl().split("app")[0]
         return $http({
-          url: url + "common/submit?action=edit&type=" + type,
+          url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
           headers: {
             'Accept': '*/*',
             'content-Type': "application/json",
@@ -470,9 +470,9 @@
         return deferred.promise;
       }
 
-      this.submit = function(data, type) {
+      this.submit = function(data,type,upd_tag) {
         var deferred = $q.defer();
-        VizpodFactory.submit(data, type).then(function(response) {
+        VizpodFactory.submit(data,type,upd_tag).then(function(response) {
           onSuccess(response.data)},
           function(response){
             onError(response.data)

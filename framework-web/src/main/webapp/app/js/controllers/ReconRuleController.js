@@ -1,5 +1,5 @@
 ReconModule = angular.module('ReconModule');
-ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc) {
+ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc,CommonService) {
  
   $scope.mode = "false";
   $scope.rule = {};
@@ -53,6 +53,19 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   else{
     $scope.isAdd=true;
   }
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
@@ -339,6 +352,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     }
   }
   $scope.submit=function(){
+    var upd_tag="N"
     $scope.isSubmitProgess=true;
     $scope.isSubmitDisable=true;
     var jsonObj={}
@@ -353,6 +367,10 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     jsonObj.tags=tagArray;
     var source = {};
@@ -532,7 +550,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       
     }
     console.log("Rule JSON" + JSON.stringify(jsonObj))
-    ReconRuleService.submit(jsonObj, 'reconview').then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
+    ReconRuleService.submit(jsonObj, 'reconview',upd_tag).then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
     var onSuccess = function(response) {
       if ($scope.isExecute == "YES") {
         ReconRuleService.getOneById(response.data, "recon").then(function(response) {onSuccessGetOneById(response.data) });
@@ -583,7 +601,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
 });
 
-ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService,privilegeSvc,dagMetaDataService) {
+ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService,privilegeSvc,dagMetaDataService,CommonService) {
   
   $scope.select = 'rules group';
   if($stateParams.mode =='true'){
@@ -639,6 +657,19 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
     content: '',
     timeout: 3000 //time in ms
   };
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -767,6 +798,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   }
 
   $scope.submitRuleGroup = function() {
+    var upd_tag="N"
     $scope.isSubmitProgess = true;
     $scope.myform.$dirty = false;
     var options = {}
@@ -781,8 +813,11 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
-
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     ruleGroupJson.tags = tagArray;
     var ruleInfoArray = [];
@@ -798,7 +833,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
     ruleGroupJson.ruleInfo = ruleInfoArray;
     ruleGroupJson.inParallel = $scope.checkboxModelparallel
     console.log(JSON.stringify(ruleGroupJson))
-    RuleGroupService.submit(ruleGroupJson, "recongroup").then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
+    RuleGroupService.submit(ruleGroupJson, "recongroup",upd_tag).then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
     var onSuccess = function(response) {
      
       if (options.execution == "YES") {
@@ -838,7 +873,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 
 
 
-ReconModule.controller('ResultReconController', function( $http,dagMetaDataService,$timeout,$filter,$state,$stateParams,$location,$rootScope,$scope,ReconRuleService,CommonService) {
+ReconModule.controller('ResultReconController', function( $http,dagMetaDataService,$timeout,$filter,$state,$stateParams,$location,$rootScope,$scope,ReconRuleService,CommonService,privilegeSvc) {
   $scope.select = $stateParams.type;
   $scope.type = {text : $scope.select == 'recongroupexec' ? 'recongroup' : 'recon'};
   $scope.showprogress=false;
@@ -865,7 +900,19 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
     }
     return style;
   }
-
+  var privileges = privilegeSvc.privileges['comment'] || [];
+  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+    
+  });
+  $scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName; 
   $scope.filteredRows = [];
   $scope.gridOptions.onRegisterApi =function(gridApi){
     $scope.gridApi = gridApi;
@@ -894,11 +941,15 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
   $scope.onClickRuleResult=function(){
     $scope.isRuleExec=true;
     $scope.isRuleResult=false;
-      $scope.$emit('resultExecChanged',false);//Update Breadcrum
+    $scope.execDetail= $scope.profileGroupLastParams;
+    $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
+    $scope.$emit('resultExecChanged',false);//Update Breadcrum
   }
 
 
   $scope.getProfileExec=function(data){
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs["recon"].execType;
     var uuid=data.uuid;
     var version=data.version;
     var name=data.name;
@@ -972,6 +1023,8 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
       $scope.getProfileExec(data);
       return
     }
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
     $scope.profileGroupLastParams = data;
     $scope.zoomSize = 7;
     var uuid=data.uuid;

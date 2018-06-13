@@ -170,6 +170,15 @@ public class Helper {
 		return tableName;
 	}
 	
+	public static String genTableName(String datapodUUID, String datapodVersion, String execVersion) 
+	{
+		String tableName = null;
+		String datapod = datapodUUID.replace("-", "_");
+		tableName = datapod+"_"+datapodVersion+"_"+execVersion;
+		logger.info("Table name is :: "+tableName);
+		return tableName;
+	}
+	
 	public static OrderKey getFirstKey(Set<OrderKey> keysets, String machingUUID) {
 		for(OrderKey key : keysets) {
 			if (key.getUUID().equalsIgnoreCase(machingUUID))

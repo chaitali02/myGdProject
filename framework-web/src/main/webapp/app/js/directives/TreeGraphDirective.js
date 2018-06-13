@@ -387,7 +387,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     $('.show-graph-body').hide();
                     $('#graphloader').show();
                     $('#errorMsg').hide();
-                    CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.version | "", scope.degree).then(function (result) {
+                    CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.metaRef.ref.version | "", scope.degree).then(function (result) {
                         $('.show-graph-body').show();
                         $('#graphloader').hide();
 
@@ -527,7 +527,9 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
       </div>
       
        <!-- <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">-->
-       <div class="col-md-2 col-md-offset-10" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;"> 
+        <!--<div class="col-md-2 col-md-offset-10" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">--> 
+      
+        <div class="col-md-2" style="margin-top-3%;position:absolute;margin: -6px -10px;"> 
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="btn-group" ng-init="degree='1'">

@@ -1,7 +1,7 @@
 /**
  **/
 DatascienceModule = angular.module('DatascienceModule');
-DatascienceModule.controller('OperatorDetailController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, OperatorService, privilegeSvc) {
+DatascienceModule.controller('OperatorDetailController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, OperatorService, privilegeSvc,$filter,$timeout) {
 	
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -56,6 +56,19 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		$scope.privileges = privilegeSvc.privileges['operator'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	
 	$scope.showPage = function () {
 		$scope.showForm = true
@@ -130,7 +143,16 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 					paramlist.name = ""
 					$scope.selectedParamlist = paramlist;
 				}
-		    }
+			}
+			var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
 		}
 	}//End If
 	else {
@@ -171,7 +193,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 	}
 
 	$scope.submit = function () {
-	
+	    var upd_tag="N"
 		$scope.isSubmitInProgress = true;
 		$scope.isSubmitEnable = false;
 		$scope.myform.$dirty = true;
@@ -187,6 +209,10 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			for (var countTag = 0; countTag < $scope.tags.length; countTag++) {
 				tagArray[countTag] = $scope.tags[countTag].text;
 			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
 		}
 		OperatorJson.tags = tagArray;
 		var paramlist = {};
@@ -201,7 +227,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		}
 		OperatorJson.paramList = paramlist
 		console.log(JSON.stringify(OperatorJson));
-		OperatorService.submit(OperatorJson, 'operator').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		OperatorService.submit(OperatorJson, 'operator',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.isSubmitInProgress = false;
 			$scope.isSubmitEnable = true;

@@ -364,7 +364,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	}
 
 	public String[] getAttributeNames(Predict predict) throws JsonProcessingException {
-		predict = modelServiceImpl.resolveName(predict);
+		//predict = modelServiceImpl.resolveName(predict);
 		List<FeatureAttrMap> featureAttrMapList = predict.getFeatureAttrMap();
 		List<String> listStr = new ArrayList<String>();
 		for (FeatureAttrMap featureAttrMap : featureAttrMapList) {
@@ -375,9 +375,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 
 	public String[] getAttributeNames(Simulate simulate) throws JsonProcessingException {
 		simulate = modelServiceImpl.resolveName(simulate);
-
 		List<FeatureRefHolder> featureMapList = simulate.getFeatureInfo();
-
 		List<String> listStr = new ArrayList<String>();
 		for (FeatureRefHolder featureRefHolder : featureMapList) {
 			listStr.add(featureRefHolder.getFeatureName());

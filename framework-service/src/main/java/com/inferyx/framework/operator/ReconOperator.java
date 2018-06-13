@@ -176,7 +176,7 @@ public class ReconOperator {
 			      + SINGLE_QUOTE + sourceAttrName + SINGLE_QUOTE + " AS sourceAttributeName" + COMMA
 			      + sourceVal + " AS sourceValue"
 			      + FROM
-			      + getTableName(sourceDp, datapodList, dagExec, runMode) 
+			      + getTableName(sourceDp, datapodList, dagExec, otherParams, runMode) 
 			      + BLANK
 			      + " source "
 			      + WHERE_1_1 
@@ -201,7 +201,7 @@ public class ReconOperator {
 			      + SINGLE_QUOTE + targetAttrName + SINGLE_QUOTE + " AS targetAttributeName" + COMMA		      
 			      + targetVal + " AS targetValue" 
 			      + FROM
-			      + getTableName(targetDp, datapodList, dagExec, runMode)
+			      + getTableName(targetDp, datapodList, dagExec, otherParams, runMode)
 			      + BLANK
 			      + " target "
 			      + WHERE_1_1 
@@ -302,11 +302,13 @@ public class ReconOperator {
 		return val.toString();
 	}
 	
-	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, RunMode runMode)
+	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode)
 			throws Exception {
 		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
 					dagExec.getVersion());
+		} else if (otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		}
 		datastoreServiceImpl.setRunMode(runMode);
 		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),

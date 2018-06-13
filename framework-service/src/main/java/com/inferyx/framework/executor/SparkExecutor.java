@@ -1715,6 +1715,7 @@ public class SparkExecutor implements IExecutor {
 			case "calendarInterval" : return DataTypes.CalendarIntervalType;
 			case "decimal" : return DataTypes.createDecimalType();
 			case "vector" : return new VectorUDT();
+			case "array" : return DataTypes.createArrayType(DataTypes.DoubleType);
 			
             default: return null;
 		}

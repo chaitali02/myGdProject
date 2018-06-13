@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.spark.sql.SQLContext;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,6 @@ import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
@@ -134,6 +134,7 @@ public class MapServiceImpl implements Executable {
 	Helper helper;
 	@Autowired
 	SessionHelper sessionHelper;
+	static final Logger logger = Logger.getLogger(MapServiceImpl.class);
 	
 	private final String WHERE_1_1 = " WHERE (1=1) ";// " WHERE \\(1=1\\) ";
 
@@ -493,36 +494,40 @@ public class MapServiceImpl implements Executable {
 	 * @throws Exception
 	 */
 	protected String getTableName(Datapod datapod, 
-			HashMap<String, String> otherParams) throws Exception {
+			HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 		if (otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		} else {
-			return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			try {
+				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} catch(Exception e) {
+				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), mapExec.getVersion());
+			}
 		}
 	}
 
 	// If Map is dependent on datapod
-	public void parseDatapodNames(Datapod datapod, HashMap<String, String> otherParams) throws Exception {
-		String table = getTableName(datapod, otherParams);
-		otherParams.put("datapod_".concat(datapod.getUuid()), table);
+	public void parseDatapodNames(Datapod datapod, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
+		String table = getTableName(datapod, otherParams, mapExec);
+		otherParams.put("datapodUuid_" + datapod.getUuid() + "_tableName", table);
 	}
 
 	// If Map is dependent on relation
 	public void parseRelDatapodNames(Relation relation, 
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 		// Get all relation tables
 		// Start with main table
 		Datapod fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
 
 		// Derive table name on the basis of depends on value.
-		String table = getTableName(fromDatapod, otherParams);
+		String table = getTableName(fromDatapod, otherParams, mapExec);
 		otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), table);
 		// Do the same for other relation tables
 
 		List<RelationInfo> relInfoList = relation.getRelationInfo();
 		for (int i = 0; i < relInfoList.size(); i++) {
 			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
-			String rightTable = getTableName(datapod, otherParams);
+			String rightTable = getTableName(datapod, otherParams, mapExec);
 			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid())),
 					rightTable);
 		} // End for
@@ -530,49 +535,52 @@ public class MapServiceImpl implements Executable {
 
 	
 	public void parseDPNames(DagExec dagExec, Task indvTask, Map map, List<String> datapodList,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 		String datapodStr = map.getTarget().getRef().getUuid();
 		if (map.getSource().getRef().getType() == MetaType.datapod) {
 			Datapod datapod = mapOperator.getDatapodFromMap(map);
-			parseDatapodNames(datapod, otherParams);
+			parseDatapodNames(datapod, otherParams, mapExec);
 		} else if (map.getSource().getRef().getType() == MetaType.relation) {
 			Relation relation = mapOperator.getRelationFromMap(map);
-			parseRelDatapodNames(relation, refKeyMap, otherParams);
+			parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec);
 		} else if (map.getSource().getRef().getType() == MetaType.dataset) {
 			DataSet dataset = mapOperator.getDatasetFromMap(map);
-			parseDSDatapodNames(dataset, refKeyMap, otherParams);
+			parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec);
 		} else if (map.getSource().getRef().getType() == MetaType.rule) {
 			Rule rule =  mapOperator.getRuleFromMap(map);
-			parseRuleDatapodNames(dagExec, indvTask, rule, datapodList, refKeyMap, otherParams);
+			parseRuleDatapodNames(dagExec, indvTask, rule, datapodList, refKeyMap, otherParams, mapExec);
 		}
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+		logger.info("adding target datapod in parseDPNames : " + datapodStr);
+		otherParams.put("datapodUuid_" + datapodStr + "_tableName", getTableName(datapod, otherParams, mapExec));
 		datapodList.add(datapodStr);// Add target datapod in datapodlist
 	}
 	
 		// If Map is dependent on rule
 		public void parseRuleDatapodNames(DagExec dagExec, Task indvTask, Rule rule, List<String> datapodList,
-				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
+				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 			if (rule.getSource().getRef().getType() == MetaType.relation) {
 				Relation relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef());
-				parseRelDatapodNames(relation, refKeyMap, otherParams);
+				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec);
 			} else if (rule.getSource().getRef().getType() == MetaType.datapod) {
 				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
-				parseDatapodNames(datapod, otherParams);
+				parseDatapodNames(datapod, otherParams, mapExec);
 			} else if (rule.getSource().getRef().getType() == MetaType.dataset) {
 				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
-				parseDSDatapodNames(dataset, refKeyMap, otherParams);
+				parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec);
 			}
 		}
 
 		// If Map is dependent on rule
 		public void parseDSDatapodNames(DataSet dataset, 
-				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
+				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 			if (dataset.getDependsOn().getRef().getType() == MetaType.relation) {
 				Relation relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef());
-				parseRelDatapodNames(relation, refKeyMap, otherParams);
+				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec);
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {
 				Datapod datapod = (Datapod) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
-				parseDatapodNames(datapod, otherParams);
+				parseDatapodNames(datapod, otherParams, mapExec);
 			}
 		}
 	
@@ -672,7 +680,7 @@ public class MapServiceImpl implements Executable {
 			
 			if (stage != null && indvExecTask != null && dagExec != null) {
 				indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-				parseDPNames(dagExec, indvTask, map, datapodList, refKeyMap, otherParams);
+				parseDPNames(dagExec, indvTask, map, datapodList, refKeyMap, otherParams, mapExec);
 			}
 			
 			Status status = new Status(Status.Stage.NotStarted, new Date());
