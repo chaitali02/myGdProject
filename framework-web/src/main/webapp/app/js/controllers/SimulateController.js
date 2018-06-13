@@ -70,7 +70,19 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     content: 'Dashboard deleted Successfully',
     timeout: 30000 //time in ms
   };
-
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
@@ -438,6 +450,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   };
 
   $scope.submitModel = function () {
+    var upd_tag="N"
     $scope.isshowSimulate = true;
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
@@ -454,6 +467,10 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     SimulateJson.tags = tagArray;
     var dependsOn = {};
@@ -514,7 +531,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     }
     SimulateJson.featureInfo = featureInfo;
     console.log(JSON.stringify(SimulateJson))
-    SimulateService.submit(SimulateJson, 'simulate').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    SimulateService.submit(SimulateJson, 'simulate',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       $scope.dataLoading = false;
       $scope.iSSubmitEnable = true;

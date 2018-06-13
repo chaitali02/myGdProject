@@ -904,10 +904,10 @@ vertical-align: middle;
   overflow-y: auto;
   overflow-x: hidden;
 }
-
-
-
-    
+.tag-scroll-height{
+ height: 33px;
+ }
+  
 .node {
     cursor: pointer;
 }

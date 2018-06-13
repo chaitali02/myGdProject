@@ -56,6 +56,23 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		$scope.privileges = privilegeSvc.privileges['profile'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+	
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+
+    $scope.getLovByType();
+
 	$scope.close = function () {
 		if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
 			//revertback
@@ -65,6 +82,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 			$state.go('viewprofile');
 		}
 	}
+
 	$scope.$watch("isshowmodel", function (newvalue, oldvalue) {
 		$scope.isshowmodel = newvalue
 		sessionStorage.isshowmodel = newvalue
@@ -237,6 +255,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	}
 
 	$scope.sbumitProfileGroup = function () {
+		var upd_tag="N"
 		var profileJson = {}
 		$scope.dataLoading = true;
 		$scope.isshowmodel = true;
@@ -252,6 +271,10 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		profileJson.tags = tagArray;
@@ -274,7 +297,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		}
 		profileJson.attributeInfo = ruleInfoArray;
 		console.log(JSON.stringify(profileJson))
-		ProfileService.submit(profileJson, "profile").then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		ProfileService.submit(profileJson,"profile",upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.changemodelvalue();
 			if (options.execution == "YES") {
@@ -367,7 +390,22 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		$scope.privileges = privilegeSvc.privileges['profilegroup'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+   
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+	$scope.getLovByType();
+	
 	$scope.showProfileGroupePage = function () {
 		$scope.showProfileGroup = true;
 		$scope.showgraphdiv = false;
@@ -519,6 +557,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 
 	}
 	$scope.sbumitProfileGroup = function () {
+		var upd_tag="N"
 		var profileGroupJson = {}
 		$scope.dataLoading = true;
 		$scope.isshowmodel = true;
@@ -535,6 +574,11 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
+			
 		}
 		profileGroupJson.tags = tagArray;
 		var ruleInfoArray = [];
@@ -550,7 +594,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		profileGroupJson.ruleInfo = ruleInfoArray;
 		profileGroupJson.inParallel = $scope.checkboxModelparallel
 		console.log(JSON.stringify(profileGroupJson))
-		ProfileService.submit(profileGroupJson, "profilegroup").then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		ProfileService.submit(profileGroupJson, "profilegroup",upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			if (options.execution == "YES") {
 				ProfileService.getOneById(response.data, 'profilegroup').then(function (response) { onSuccessGetOneById(response.data) });

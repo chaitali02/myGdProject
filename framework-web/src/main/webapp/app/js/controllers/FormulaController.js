@@ -1,6 +1,6 @@
 
 MetadataModule = angular.module('MetadataModule');
-MetadataModule.controller('MetadataFormulaController', function ($state, $scope, $stateParams, $rootScope, CommonService, MetadataSerivce, MetadataFormulaSerivce, $sessionStorage, privilegeSvc) {
+MetadataModule.controller('MetadataFormulaController', function ($state,$timeout,$filter,$scope,$stateParams, $rootScope, CommonService, MetadataSerivce, MetadataFormulaSerivce, $sessionStorage, privilegeSvc) {
 	$scope.isDependonDisabled = false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -56,7 +56,20 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		$scope.privileges = privilegeSvc.privileges['formula'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+	
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
@@ -505,6 +518,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 
 	$scope.submitFormula = function () {
 		var aggrfun = ["sum", "min", "max", "count", "avg"]
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -518,6 +532,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		formulaJson.tags = tagArray
@@ -592,7 +610,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 
 
 		console.log(JSON.stringify(formulaJson))
-		MetadataFormulaSerivce.submit(formulaJson, 'formula').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataFormulaSerivce.submit(formulaJson,'formula',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			var dependon = {}
 			dependon.type = "formula";

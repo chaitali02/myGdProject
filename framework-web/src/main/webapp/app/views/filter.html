@@ -79,7 +79,7 @@
 
                     <div class="form-body" data-ng-show="showForm" style="padding-top:50px;">
 
-                        <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitFilter()" form-on-change="filterFormChange()">
+                        <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitFilter()" form-on-change="filterFormChange()" prevent-enter-submit>
 
                             <div class="form-group" ng-show="filterdata.uuid">
                                 <label class="col-md-3 control-label">UUID</label>
@@ -124,7 +124,12 @@
                             <div class="form-group">
                                 <label for="middle-name" class="control-label col-md-3">Tags</label>
                                 <div class="col-md-6">
-                                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                                    <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
+                                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                                            max-results-to-show="10">
+                                        </auto-complete>
+                                    </tags-input>
                                 </div>
                             </div>
 

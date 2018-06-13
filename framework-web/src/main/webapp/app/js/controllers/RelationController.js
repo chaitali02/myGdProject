@@ -1,6 +1,6 @@
 
 MetadataModule = angular.module('MetadataModule');
-MetadataModule.controller('MetadataRelationController', function ($state,$rootScope,$scope, $stateParams, $cookieStore, MetadataRelationSerivce, privilegeSvc) {
+MetadataModule.controller('MetadataRelationController', function ($state,$rootScope,$scope, $stateParams, $cookieStore, MetadataRelationSerivce, privilegeSvc,CommonService,$timeout,$filter) {
 	$scope.mode = "false";
 	$scope.relationdata;
 	$scope.showFrom = true;
@@ -63,6 +63,20 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		$scope.privileges = privilegeSvc.privileges['relation'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
@@ -409,6 +423,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 	}
 
 	$scope.submitRelation = function () {
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -424,7 +439,10 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
-
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		relationjson.tags = tagArray;
@@ -510,7 +528,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		}
 		relationjson.relationInfo = relationInfoArray
 		console.log(JSON.stringify(relationjson))
-		MetadataRelationSerivce.submit(relationjson, 'relation').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataRelationSerivce.submit(relationjson,'relation',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

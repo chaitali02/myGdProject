@@ -728,8 +728,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
 			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
-			console.log(result)
-			debugger
 			if(result ==false){
 				upd_tag="Y"	
 			}

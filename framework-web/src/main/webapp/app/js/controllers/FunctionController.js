@@ -1,6 +1,6 @@
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataFunctionController', function ($state, $scope, $stateParams, $rootScope, MetadataFunctionSerivce, privilegeSvc) {
+MetadataModule.controller('MetadataFunctionController', function ($state, $scope, $stateParams, $rootScope, MetadataFunctionSerivce, privilegeSvc,CommonService,$timeout,$filter) {
 	$scope.mode = "";
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -64,7 +64,20 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		$scope.privileges = privilegeSvc.privileges['function'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+   
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
@@ -271,6 +284,7 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 
 	/*Start SubmitAplication*/
 	$scope.submitFunction = function () {
+		var upd_tag="N"
 		var functionJson = {};
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
@@ -291,6 +305,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		functionJson.tags = tagArray;
@@ -322,7 +340,7 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		}
 		functionJson.functionInfo = functionInfoArray
 		console.log(JSON.stringify(functionJson))
-		MetadataFunctionSerivce.submit(functionJson, 'function').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataFunctionSerivce.submit(functionJson, 'function',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

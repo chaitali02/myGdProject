@@ -42,10 +42,10 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
     }).then(function (response) { return response })
   }
 
-  factory.submit = function (data, type) {
+  factory.submit = function (data,type,upd_tag) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "common/submit?action=edit&type=" + type,
+      url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
       headers: {
         'Accept': '*/*',
         'content-Type': "application/json",
@@ -314,9 +314,9 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
   }
 
 
-  this.submit = function (data, type) {
+  this.submit = function (data,type,upd_tag) {
     var deferred = $q.defer();
-    TrainFactory.submit(data, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    TrainFactory.submit(data,type,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response

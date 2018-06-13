@@ -2,7 +2,7 @@
  **/
 MetadataModule = angular.module('MetadataModule');
 /* Start MetadataDatasetController*/
-MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc) {
+MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc,CommonService) {
 	$rootScope.isCommentVeiwPrivlage=true;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -111,7 +111,19 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		maxSize: 5,
 	}
 	
-
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	// $scope.onOverCallBackRow=function(event,ui,index){
 	// 	 console.log($scope.indexDragg)
 	// 	console.log(index)
@@ -825,6 +837,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$sessionStorage.datasetjosn = dataSetJson
 	}
 	$scope.submitDataset = function () {
+		var upd_tag="N"
 		delete $sessionStorage.datasetjosn;
 		delete $sessionStorage.index
 		delete $sessionStorage.dependon
@@ -856,7 +869,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
-
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		dataSetJson.tags = tagArray;
@@ -1082,27 +1098,21 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		console.log(JSON.stringify(dataSetJson))
 
 
-		MetadataDatasetSerivce.submit(dataSetJson, 'datasetview').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatasetSerivce.submit(dataSetJson, 'datasetview',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
 			$scope.changemodelvalue();
-			// 	 if($scope.isshowmodel == "true"){
-			// 	$('#datasetsave').modal({
-			// 	      backdrop: 'static',
-			// 	      keyboard: false
-			//   });
-			// 	}
 			notify.type = 'success',
-				notify.title = 'Success',
-				notify.content = 'Dataset Saved Successfully'
+			notify.title = 'Success',
+			notify.content = 'Dataset Saved Successfully'
 			$scope.$emit('notify', notify);
 			$scope.okdatasetsave();
 		}
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 

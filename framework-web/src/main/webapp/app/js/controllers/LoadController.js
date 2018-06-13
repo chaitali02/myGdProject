@@ -1,7 +1,7 @@
 
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataLoadController', function ($rootScope, $state, $scope, $stateParams, MetadataLoadSerivce, privilegeSvc) {
+MetadataModule.controller('MetadataLoadController', function ($rootScope, $state, $scope, $stateParams, MetadataLoadSerivce, privilegeSvc,CommonService,$timeout,$filter) {
 
 	$scope.mode = "";
 	$scope.dataLoading = false;
@@ -61,6 +61,20 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		$scope.privileges = privilegeSvc.privileges['load'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
@@ -207,6 +221,7 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 
 
 	$scope.submitLoad = function () {
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -225,6 +240,10 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
+			var result=(tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
 		}
 		loadJson.tags = tagArray;
 		var target = {};
@@ -242,7 +261,7 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		source.value = $scope.loaddata.source.value;
 		loadJson.source = source;
 		console.log(JSON.stringify(loadJson));
-		MetadataLoadSerivce.submit(loadJson, 'load').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataLoadSerivce.submit(loadJson, 'load',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

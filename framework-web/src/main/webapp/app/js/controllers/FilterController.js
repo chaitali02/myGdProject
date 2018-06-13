@@ -1,6 +1,6 @@
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc) {
+MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc,CommonService,$timeout,$filter) {
 	$scope.mode = "false";
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -62,6 +62,20 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		$scope.privileges = privilegeSvc.privileges['filter'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+	
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 
 	$scope.showPage = function () {
 		$scope.showForm = true;
@@ -357,6 +371,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 
 	/*Start  code of SubmitFilter*/
 	$scope.submitFilter = function () {
+		var upd_tag="N";
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -370,6 +385,10 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			if ($scope.tags.length != 0) {
 				for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 					tagArray[counttag] = $scope.tags[counttag].text;
+				}
+				var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+				if(result ==false){
+					upd_tag="Y"	
 				}
 			}
 	    }
@@ -462,7 +481,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		
 		filterJson.filterInfo = filterInfoArray;
 		console.log(JSON.stringify(filterJson))
-		MetadataFilterSerivce.submit(filterJson, 'filter').then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
+		MetadataFilterSerivce.submit(filterJson,'filter',upd_tag).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
