@@ -1,5 +1,4 @@
 {
-    "_id" : ObjectId("5b1e6f5e2c0b803daafb22e0"),
     "dependsOn" : {
         "ref" : {
             "type" : "model",
@@ -15,7 +14,7 @@
     "target" : {
         "ref" : {
             "type" : "datapod",
-            "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+            "uuid" : "c78b8538-af6b-4a7f-94e7-c483780a335c"
         }
     },
     "trainInfo" : {
