@@ -537,7 +537,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			for (int i = 0; i < profile.getAttributeInfo().size(); i++) {
 				profileOperator = profileOperatorFactory.getOperator(runMode);
 				String sql = profileOperator.generateSql(profile, profileExec,
-						profile.getAttributeInfo().get(i).getAttrId(), datapodList, dagExec, runMode);
+						profile.getAttributeInfo().get(i).getAttrId(), datapodList, dagExec, otherParams, runMode);
 				if(sql != null)
 					sbProfileSelect.append(sql).append(" UNION ALL ");
 			}

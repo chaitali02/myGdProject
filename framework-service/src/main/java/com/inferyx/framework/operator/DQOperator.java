@@ -13,6 +13,7 @@ package com.inferyx.framework.operator;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -111,7 +112,7 @@ public class DQOperator {
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,
-			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		Datapod srcDP = null;
 		DataSet dataset = null;
 		if (dataQual == null) {
@@ -123,17 +124,17 @@ public class DQOperator {
 		if (dataQual.getDependsOn().getRef().getType() == MetaType.datapod) {
 			srcDP = (Datapod) daoRegister.getRefObject(dataQual.getDependsOn().getRef());
 			if (dataQual.getAttribute() != null) {
-				logger.info("getDataQualTableName(srcDP) : " + getTableName(srcDP, datapodList, dagExec, runMode));
+				logger.info("getDataQualTableName(srcDP) : " + getTableName(srcDP, datapodList, dagExec, otherParams, runMode));
 				dataQual.getAttribute().setAttrName(
 						srcDP.getAttribute(Integer.parseInt(dataQual.getAttribute().getAttrId())).getName());
 				MetaIdentifier srcDPRef = new MetaIdentifier(MetaType.datapod, srcDP.getUuid(), srcDP.getVersion());
 				usedRefKeySet.add(srcDPRef);
-				return generateSql(dataQual, getTableName(srcDP, datapodList, dagExec, runMode),
+				return generateSql(dataQual, getTableName(srcDP, datapodList, dagExec, otherParams, runMode),
 						srcDP.getAttribute(Integer.parseInt(dataQual.getAttribute().getAttrId())).getName(),
-						datapodList, dataQualExec, dagExec, usedRefKeySet, runMode);
+						datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode);
 			} else {
-				return generateSql(dataQual, getTableName(srcDP, datapodList, dagExec, runMode), null, datapodList,
-						dataQualExec, dagExec, usedRefKeySet, runMode);
+				return generateSql(dataQual, getTableName(srcDP, datapodList, dagExec, otherParams, runMode), null, datapodList,
+						dataQualExec, dagExec, usedRefKeySet, otherParams, runMode);
 			}
 		}
 		if (dataQual.getDependsOn().getRef().getType() == MetaType.dataset) {
@@ -150,12 +151,16 @@ public class DQOperator {
 		return null;
 	}
 
-	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, RunMode runMode)
+	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode)
 			throws Exception {
+		logger.info(" OtherParams : datapod : " + otherParams + " : " + datapod.getUuid());
 		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
 					dagExec.getVersion());
-		} 
+		} else if (otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+		}
+		logger.info(" runMode : " + runMode.toString() + " : datapod : " + datapod.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(datapod.getUuid()));
 		datastoreServiceImpl.setRunMode(runMode);
 		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 				runMode);
@@ -205,14 +210,14 @@ public class DQOperator {
 	}
 
 	private String generateFrom(DataQual dq, MetaIdentifier ref, List<String> datapodList, DagExec dagExec,
-			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		Datapod srcDP = null;
 		String resp = null;
 		Relation relation = null;
 		DataSet dataSet = null;
 		if (ref.getType() == MetaType.datapod) {
 			srcDP = (Datapod) daoRegister.getRefObject(ref);
-			resp = FROM.concat(getTableName(srcDP, datapodList, dagExec, runMode)).concat("  ").concat(srcDP.getName());
+			resp = FROM.concat(getTableName(srcDP, datapodList, dagExec, otherParams, runMode)).concat("  ").concat(srcDP.getName());
 		}
 		/*
 		 * if (ref.getType() == MetaType.relation) { relation = (Relation)
@@ -225,11 +230,11 @@ public class DQOperator {
 		 * null)).concat(") as ").concat(dataSet.getName()).concat(WHERE_1_1); }
 		 */
 		return resp
-				.concat(generateRefIntFrom(dq, getTableName(srcDP, datapodList, dagExec, runMode), srcDP.getName(),
-						datapodList, dagExec, usedRefKeySet, runMode))
+				.concat(generateRefIntFrom(dq, getTableName(srcDP, datapodList, dagExec, otherParams, runMode), srcDP.getName(),
+						datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				// .concat(generateStddevFrom(dq, getDataQualTableName(srcDP, datapodList,
 				// dagExec), srcDP.getName(), datapodList, dagExec))
-				.concat(generateDupCheckFrom(dq, getTableName(srcDP, datapodList, dagExec, runMode), srcDP.getName(),
+				.concat(generateDupCheckFrom(dq, getTableName(srcDP, datapodList, dagExec, otherParams, runMode), srcDP.getName(),
 						usedRefKeySet));
 	}
 
@@ -341,7 +346,7 @@ public class DQOperator {
 	}
 
 	private String generateRefIntFrom(DataQual dq, String tableName, String attributeName, List<String> datapodList,
-			DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+			DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		String refIntStr = null;
 		if (dq == null || dq.getRefIntegrityCheck() == null || dq.getRefIntegrityCheck().getRef() == null) {
 			return EMPTY;
@@ -355,7 +360,7 @@ public class DQOperator {
 		}
 		Datapod datapodRef = (Datapod) daoRegister.getRefObject(dq.getRefIntegrityCheck().getRef());
 		usedRefKeySet.add(dq.getRefIntegrityCheck().getRef());
-		refIntStr = LEFT_OUTER_JOIN.concat(getTableName(datapodRef, datapodList, dagExec, runMode))
+		refIntStr = LEFT_OUTER_JOIN.concat(getTableName(datapodRef, datapodList, dagExec, otherParams, runMode))
 				// .concat(AS)
 				.concat(" ").concat(datapodRef.getName()).concat("_ref").concat(ON).concat(BRACKET_OPEN);
 		for (Attribute attribute : rowKeyAttrList) {
@@ -419,14 +424,14 @@ public class DQOperator {
 	}
 
 	public String generateSql(DataQual dq, String tableName, String attributeName, List<String> datapodList,
-			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, RunMode runMode)
+			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode)
 			throws Exception {
 		String select = generateSelect(dq, dataQualExec, tableName, attributeName);
 		logger.info("Select for dataQual : " + dq.getUuid() + " : " + StringUtils.isBlank(select));
 		if (StringUtils.isBlank(select)) {
 			return null;
 		}
-		return select.concat(generateFrom(dq, dq.getDependsOn().getRef(), datapodList, dagExec, usedRefKeySet, runMode))
+		return select.concat(generateFrom(dq, dq.getDependsOn().getRef(), datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				.concat(WHERE_1_1).concat(generateFilter(dq.getFilterInfo(), usedRefKeySet));
 	}
 

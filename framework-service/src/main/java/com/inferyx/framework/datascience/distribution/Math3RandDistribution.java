@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
@@ -35,6 +36,8 @@ public class Math3RandDistribution extends RandomDistribution {
 	protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private ExecutorFactory execFactory;
+	
+	static final Logger logger = Logger.getLogger(Math3RandDistribution.class);
 
 	/**
 	 * 
@@ -56,6 +59,7 @@ public class Math3RandDistribution extends RandomDistribution {
 				throw new RuntimeException("Insufficient number of columns.");
 		} else if(returnType.isPrimitive()) {
 			int expectedNumcols = 3;
+			logger.info("expectedNumcols : " + expectedNumcols + " : attributes.size() : " + attributes.size());
 			if(attributes.size() != expectedNumcols)
 				throw new RuntimeException("Insufficient number of columns.");
 		}

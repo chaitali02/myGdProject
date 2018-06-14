@@ -75,7 +75,7 @@
           </div>
 
           <div class="form-body" ng-show="showForm" style="padding-top:50px;">
-            <form class="form-horizontal" novalidate="novalidate" ng-submit="submitDatastore()" name="myform" form-on-change="datastoreFormChange()">
+            <form class="form-horizontal" novalidate="novalidate" ng-submit="submitDatastore()" name="myform" form-on-change="datastoreFormChange()" prevent-enter-submit>
 
               <div class="form-body">
                 <div class="form-group" ng-show="datastoredata.uuid">
@@ -120,7 +120,12 @@
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                   <div class="col-md-6">
-                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0">
+                    <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0">
+                    </tags-input> -->
+                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                          max-results-to-show="10">
+                      </auto-complete>
                     </tags-input>
                   </div>
                 </div>

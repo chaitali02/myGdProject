@@ -149,7 +149,12 @@
                                     <div class="form-group taginput">
                                         <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input>
+                                            <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input> -->
+                                            <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                                <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                                                    max-results-to-show="10">
+                                                </auto-complete>
+                                            </tags-input>
                                         </div>
                                     </div>
                                     
@@ -193,7 +198,7 @@
     
                           <!--Start Tab2-->
                             <div  class="tab-pane" id="tab2" ng-class="{'active' : continueCount == 2}">
-                                <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()" novalidate="novalidate">  
+                                <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()" novalidate="novalidate" prevent-enter-submit>  
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
@@ -205,8 +210,9 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Train Info</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                               <select name="trainName" select2 class="form-control"  ng-disabled="{{mode}}"  data-ng-model="selectTrain" ng-options="r as r.name for r in allTrain track by r.uuid" ng-change="onChangeTrain()">
-                                                </select>
+                                            <select name="trainName" select2 class="form-control"  ng-disabled="{{mode}}"  data-ng-model="selectTrain" ng-options="r as r.name for r in allTrain track by r.uuid" ng-change="onChangeTrain()">
+                                                <option value="">-Select-</option>    
+                                            </select>
                                             <!-- <input name="trainNameNull" type="hidden"   ng-model="selectTrain.uuid" required />    -->
                                             
                                         </div>

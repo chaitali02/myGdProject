@@ -1,222 +1,222 @@
 /**
 **/
 MetadataModule = angular.module('MetadataModule');
-MetadataModule.controller('MetadataController', function ($location, $filter, dagMetaDataService, uiGridConstants, $state, $sessionStorage, $rootScope, $cookieStore, $stateParams, $scope, MetadataDatatableService, MetadataSerivce, CommonService, FileSaver, Blob) {
+// MetadataModule.controller('MetadataController', function ($location, $filter, dagMetaDataService, uiGridConstants, $state, $sessionStorage, $rootScope, $cookieStore, $stateParams, $scope, MetadataDatatableService, MetadataSerivce, CommonService, FileSaver, Blob) {
 
-	console.log("metadatacontrollerjs" + $rootScope.baseUrl)
-	$scope.select = $stateParams.type
+// 	console.log("metadatacontrollerjs" + $rootScope.baseUrl)
+// 	$scope.select = $stateParams.type
 
-	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		console.log(fromParams)
-		$sessionStorage.fromStateName = fromState.name
-		$sessionStorage.fromParams = fromParams
-	});
+// 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+// 		console.log(fromParams)
+// 		$sessionStorage.fromStateName = fromState.name
+// 		$sessionStorage.fromParams = fromParams
+// 	});
 
-	$scope.action = function (data, mode) {
-		console.log(data);
-		var uuid = data.uuid;
-		var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
-		if (stateName)
-			$state.go(stateName, {
-				id: uuid,
-				mode: mode == 'view' ? true : false
-			});
-	}
-	$scope.selectData = function (data) {
-		$scope.gridOptions.data = data.data;
-		$scope.originalData = data.data;
-	}
-	$scope.gridOptions = {
-		paginationPageSizes: null,
-		columnDefs: [{
-			displayName: 'datapodId',
-			name: 'id',
-			visible: false,
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		},
-		{
-			displayName: 'UUID',
-			name: 'uuid',
-			minWidth: 250,
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		},
-		{
-			displayName: 'Version',
-			name: 'version',
-			cellClass: 'text-center',
-			headerCellClass: 'text-center',
-			sort: {
-				direction: uiGridConstants.DESC,
-				// priority: 0,
-			},
-		},
-		{
-			displayName: 'Name',
-			name: 'name',
-			minWidth: 250,
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		},
-		{
-			displayName: 'Created By',
-			name: 'createdBy.ref.name',
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		},
-		{
-			displayName: 'Created On',
-			name: 'createdOn',
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		},
-		{
-			displayName: 'Action',
-			name: 'action',
-			cellClass: 'text-center',
-			headerCellClass: 'text-center',
-			maxWidth: 100,
-			cellTemplate: [
-				'<div class="ui-grid-cell-contents">',
-				'  <div class="dropdown" uib-dropdown dropdown-append-to-body>',
-				'    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
-				'    <i class="fa fa-angle-down"></i></button>',
-				'    <ul uib-dropdown-menu>',
-				'    <li><a ng-click="grid.appScope.action(row.entity,\'view\')"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-				'    <li><a ng-click="grid.appScope.action(row.entity,\'edit\')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
-				'    <li><a href="javascript:;"><i class="fa fa-times" aria-hidden="true"></i>  Delete</a></li>',
-				'    <li><a ng-click="grid.appScope.createCopy(row.entity)"><i class="fa fa-clone" aria-hidden="true"></i>  Clone</a></li>',
-				'    <li><a ng-click="grid.appScope.getDetail(row.entity)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Export</a></li>',
-				'    </ul>',
-				'  </div>',
-				'</div>'
-			].join('')
-		}
-		]
-	};
-	$scope.refreshData = function () {
-		$scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
-	};
+// 	$scope.action = function (data, mode) {
+// 		console.log(data);
+// 		var uuid = data.uuid;
+// 		var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+// 		if (stateName)
+// 			$state.go(stateName, {
+// 				id: uuid,
+// 				mode: mode == 'view' ? true : false
+// 			});
+// 	}
+// 	$scope.selectData = function (data) {
+// 		$scope.gridOptions.data = data.data;
+// 		$scope.originalData = data.data;
+// 	}
+// 	$scope.gridOptions = {
+// 		paginationPageSizes: null,
+// 		columnDefs: [{
+// 			displayName: 'datapodId',
+// 			name: 'id',
+// 			visible: false,
+// 			cellClass: 'text-center',
+// 			headerCellClass: 'text-center'
+// 		},
+// 		{
+// 			displayName: 'UUID',
+// 			name: 'uuid',
+// 			minWidth: 250,
+// 			cellClass: 'text-center',
+// 			headerCellClass: 'text-center'
+// 		},
+// 		{
+// 			displayName: 'Version',
+// 			name: 'version',
+// 			cellClass: 'text-center',
+// 			headerCellClass: 'text-center',
+// 			sort: {
+// 				direction: uiGridConstants.DESC,
+// 				// priority: 0,
+// 			},
+// 		},
+// 		{
+// 			displayName: 'Name',
+// 			name: 'name',
+// 			minWidth: 250,
+// 			cellClass: 'text-center',
+// 			headerCellClass: 'text-center'
+// 		},
+// 		{
+// 			displayName: 'Created By',
+// 			name: 'createdBy.ref.name',
+// 			cellClass: 'text-center',
+// 			headerCellClass: 'text-center'
+// 		},
+// 		{
+// 			displayName: 'Created On',
+// 			name: 'createdOn',
+// 			cellClass: 'text-center',
+// 			headerCellClass: 'text-center'
+// 		},
+// 		{
+// 			displayName: 'Action',
+// 			name: 'action',
+// 			cellClass: 'text-center',
+// 			headerCellClass: 'text-center',
+// 			maxWidth: 100,
+// 			cellTemplate: [
+// 				'<div class="ui-grid-cell-contents">',
+// 				'  <div class="dropdown" uib-dropdown dropdown-append-to-body>',
+// 				'    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
+// 				'    <i class="fa fa-angle-down"></i></button>',
+// 				'    <ul uib-dropdown-menu>',
+// 				'    <li><a ng-click="grid.appScope.action(row.entity,\'view\')"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+// 				'    <li><a ng-click="grid.appScope.action(row.entity,\'edit\')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
+// 				'    <li><a href="javascript:;"><i class="fa fa-times" aria-hidden="true"></i>  Delete</a></li>',
+// 				'    <li><a ng-click="grid.appScope.createCopy(row.entity)"><i class="fa fa-clone" aria-hidden="true"></i>  Clone</a></li>',
+// 				'    <li><a ng-click="grid.appScope.getDetail(row.entity)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Export</a></li>',
+// 				'    </ul>',
+// 				'  </div>',
+// 				'</div>'
+// 			].join('')
+// 		}
+// 		]
+// 	};
+// 	$scope.refreshData = function () {
+// 		$scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
+// 	};
 
-	//MetadataDatatableService.setUuid($stateParams.type,$cookieStore.get('userdetail').sessionId).then(function(response){onSuccess(response.data)});
-	CommonService.getBaseEntityByCriteria($stateParams.type, '', '', '', '', '', '').then(function (response) { onSuccess(response.data) });
-	var onSuccess = function (response) {
-		$scope.gridOptions.data = response;
-		$scope.originalData = response;
-	}
+// 	//MetadataDatatableService.setUuid($stateParams.type,$cookieStore.get('userdetail').sessionId).then(function(response){onSuccess(response.data)});
+// 	CommonService.getBaseEntityByCriteria($stateParams.type, '', '', '', '', '', '').then(function (response) { onSuccess(response.data) });
+// 	var onSuccess = function (response) {
+// 		$scope.gridOptions.data = response;
+// 		$scope.originalData = response;
+// 	}
 
-	$scope.getDetail = function (data) {
-		$scope.selectuuid = data.split(",")[1]
-		$('#matadatafilemodal').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-	}
+// 	$scope.getDetail = function (data) {
+// 		$scope.selectuuid = data.split(",")[1]
+// 		$('#matadatafilemodal').modal({
+// 			backdrop: 'static',
+// 			keyboard: false
+// 		});
+// 	}
 
-	$scope.okMetadataFile = function () {
-		$('#matadatafilemodal').modal('hide');
-		MetadataSerivce.getByUuid($scope.selectuuid, $stateParams.type).then(function (response) { onSuccessGetUuid(response.data) });
-		var onSuccessGetUuid = function (response) {
-			var jsonobj = angular.toJson(response, true);
-			var data = new Blob([jsonobj], { type: 'application/json;charset=utf-8' });
-			FileSaver.saveAs(data, response.name + '.json');
-		}
-	}
+// 	$scope.okMetadataFile = function () {
+// 		$('#matadatafilemodal').modal('hide');
+// 		MetadataSerivce.getByUuid($scope.selectuuid, $stateParams.type).then(function (response) { onSuccessGetUuid(response.data) });
+// 		var onSuccessGetUuid = function (response) {
+// 			var jsonobj = angular.toJson(response, true);
+// 			var data = new Blob([jsonobj], { type: 'application/json;charset=utf-8' });
+// 			FileSaver.saveAs(data, response.name + '.json');
+// 		}
+// 	}
 
-	$scope.createCopy = function (data) {
-		var uuid = data.split(",")[1]
-		var version = data.split(",")[2]
-		$scope.clone = {};
-		$scope.clone.uuid = uuid;
-		$scope.clone.version = version;
-		$('#clonemodal').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-	}
-	$scope.okClone = function () {
-		$('#clonemodal').modal('hide');
-		MetadataSerivce.saveAs($scope.clone.uuid, $scope.clone.version, $scope.select).then(function (response) { onSuccessSaveAs(response.data) });
-		var onSuccessSaveAs = function (response) {
-			MetadataDatatableService.setUuid($stateParams.type, $cookieStore.get('userdetail').sessionId).then(function (response) { onSuccess(response.data) });
-			var onSuccess = function (response) {
-				$scope.data = response;
-				$scope.message = $scope.select + " Cloned Successfully"
-				$('#showMsgModel').modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-			}
-		}
-	}
+// 	$scope.createCopy = function (data) {
+// 		var uuid = data.split(",")[1]
+// 		var version = data.split(",")[2]
+// 		$scope.clone = {};
+// 		$scope.clone.uuid = uuid;
+// 		$scope.clone.version = version;
+// 		$('#clonemodal').modal({
+// 			backdrop: 'static',
+// 			keyboard: false
+// 		});
+// 	}
+// 	$scope.okClone = function () {
+// 		$('#clonemodal').modal('hide');
+// 		MetadataSerivce.saveAs($scope.clone.uuid, $scope.clone.version, $scope.select).then(function (response) { onSuccessSaveAs(response.data) });
+// 		var onSuccessSaveAs = function (response) {
+// 			MetadataDatatableService.setUuid($stateParams.type, $cookieStore.get('userdetail').sessionId).then(function (response) { onSuccess(response.data) });
+// 			var onSuccess = function (response) {
+// 				$scope.data = response;
+// 				$scope.message = $scope.select + " Cloned Successfully"
+// 				$('#showMsgModel').modal({
+// 					backdrop: 'static',
+// 					keyboard: false
+// 				});
+// 			}
+// 		}
+// 	}
 
-	$scope.excutionDag = function (data) {
-		var uuid = data.split(",")[1]
-		var version = data.split(",")[2]
-		if ($stateParams.type == "dag") {
-			MetadataSerivce.getByUuid(uuid, "dag").then(function (response) { onSuccessGetUuid(response.data) });
-			var onSuccessGetUuid = function (response) {
-				MetadataSerivce.excutionDag(response).then(function (response) { onSuccessExecutionDag(response.data) });
-				var onSuccessExecutionDag = function (response) {
-					console.log("DagExec: " + JSON.stringify(response))
-					$scope.executionmsg = "Pipeline Submited Successfully"
-					$('#executionsubmit').modal({
-						backdrop: 'static',
-						keyboard: false
-					});
-				}
-			}
-		}//End If
-		else if ($stateParams.type == "map") {
-			MetadataSerivce.executeMap(uuid, version).then(function (response) { onSuccessExecutionMap(response.data) });
-			var onSuccessExecutionMap = function (response) {
-				$scope.executionmsg = "Map Submited Successfully"
-				console.log("MapExec: " + JSON.stringify(response))
-				$('#executionsubmit').modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-			}// emd onSuccessExecutionMap
-		} //End ElseIf
-	}//End excutionDag
+// 	$scope.excutionDag = function (data) {
+// 		var uuid = data.split(",")[1]
+// 		var version = data.split(",")[2]
+// 		if ($stateParams.type == "dag") {
+// 			MetadataSerivce.getByUuid(uuid, "dag").then(function (response) { onSuccessGetUuid(response.data) });
+// 			var onSuccessGetUuid = function (response) {
+// 				MetadataSerivce.excutionDag(response).then(function (response) { onSuccessExecutionDag(response.data) });
+// 				var onSuccessExecutionDag = function (response) {
+// 					console.log("DagExec: " + JSON.stringify(response))
+// 					$scope.executionmsg = "Pipeline Submited Successfully"
+// 					$('#executionsubmit').modal({
+// 						backdrop: 'static',
+// 						keyboard: false
+// 					});
+// 				}
+// 			}
+// 		}//End If
+// 		else if ($stateParams.type == "map") {
+// 			MetadataSerivce.executeMap(uuid, version).then(function (response) { onSuccessExecutionMap(response.data) });
+// 			var onSuccessExecutionMap = function (response) {
+// 				$scope.executionmsg = "Map Submited Successfully"
+// 				console.log("MapExec: " + JSON.stringify(response))
+// 				$('#executionsubmit').modal({
+// 					backdrop: 'static',
+// 					keyboard: false
+// 				});
+// 			}// emd onSuccessExecutionMap
+// 		} //End ElseIf
+// 	}//End excutionDag
 
-	$scope.getDetailForUpload = function (data) {
-		var uuid = data.split(",")[1]
-		var version = data.split(",")[2]
-		$(":file").jfilestyle('clear')
-		$("#csv_file").val("");
-		$('#fileupload').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-	}
+// 	$scope.getDetailForUpload = function (data) {
+// 		var uuid = data.split(",")[1]
+// 		var version = data.split(",")[2]
+// 		$(":file").jfilestyle('clear')
+// 		$("#csv_file").val("");
+// 		$('#fileupload').modal({
+// 			backdrop: 'static',
+// 			keyboard: false
+// 		});
+// 	}
 
-	$scope.uploadFile = function () {
-		var file = $scope.myFile;
-		var iEl = angular.element(document.querySelector('#csv_file'));
-		var filename = iEl[0].files[0].name
-		var fd = new FormData();
-		fd.append('file', file)
-		MetadataSerivce.getFile(filename, fd).then(function (response) { onSuccess(response.data) });
-		var onSuccess = function (response) {
-			MetadataSerivce.getRegisterFile(response).then(function (response) { onSuccessGetRegisterFile(response.data) });
-			var onSuccessGetRegisterFile = function (response) {
-				$('#fileupload').modal('hide');
-				MetadataDatatableService.setUuid($stateParams.type, $cookieStore.get('userdetail').sessionId).then(function (response) { onSuccess(response.data) });
-				var onSuccess = function (response) {
-					$scope.data = response;
-				}
+// 	$scope.uploadFile = function () {
+// 		var file = $scope.myFile;
+// 		var iEl = angular.element(document.querySelector('#csv_file'));
+// 		var filename = iEl[0].files[0].name
+// 		var fd = new FormData();
+// 		fd.append('file', file)
+// 		MetadataSerivce.getFile(filename, fd).then(function (response) { onSuccess(response.data) });
+// 		var onSuccess = function (response) {
+// 			MetadataSerivce.getRegisterFile(response).then(function (response) { onSuccessGetRegisterFile(response.data) });
+// 			var onSuccessGetRegisterFile = function (response) {
+// 				$('#fileupload').modal('hide');
+// 				MetadataDatatableService.setUuid($stateParams.type, $cookieStore.get('userdetail').sessionId).then(function (response) { onSuccess(response.data) });
+// 				var onSuccess = function (response) {
+// 					$scope.data = response;
+// 				}
 
-				$scope.executionmsg = "CSV Uploaded Successfully"
-				$('#executionsubmit').modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-			}
-		}
-	}
-});
+// 				$scope.executionmsg = "CSV Uploaded Successfully"
+// 				$('#executionsubmit').modal({
+// 					backdrop: 'static',
+// 					keyboard: false
+// 				});
+// 			}
+// 		}
+// 	}
+// });
 
 
 /* Start MetadataDatapodController*/
@@ -712,6 +712,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 	/*Start SubmitDatapod*/
 	$scope.submitDatapod = function () {
 		var datapodJson = {};
+		var upd_tag="N"
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
 		$scope.datapodHasChanged = true;
@@ -720,12 +721,18 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		datapodJson.uuid = $scope.datapoddata.uuid
 		datapodJson.name = $scope.datapoddata.name
 		datapodJson.desc = $scope.datapoddata.desc
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
 		}
+
 		datapodJson.tags = tagArray
 		datapodJson.active = $scope.datapoddata.active;
 		datapodJson.published = $scope.datapoddata.published;
@@ -788,20 +795,20 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$time
 		}
 		datapodJson.attributes = attributesarray;
 		console.log(JSON.stringify(datapodJson))
-		MetadataDatapodSerivce.submit(datapodJson, 'datapod').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataDatapodSerivce.submit(datapodJson, 'datapod',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
 			notify.type = 'success',
-				notify.title = 'Success',
-				notify.content = 'Datapod Saved Successfully'
+			notify.title = 'Success',
+			notify.content = 'Datapod Saved Successfully'
 			$scope.$emit('notify', notify);
 			$scope.okdatapodsave();
 		}
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}/*End SubmitDatapod*/

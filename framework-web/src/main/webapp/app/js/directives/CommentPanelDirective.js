@@ -10,6 +10,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             options: '=',
         }, 
         link: function (scope, element, attrs) {
+            console.log(scope.commentData)
             scope.isRequire=true
             scope.panelOpen=false;
             scope.isFileUpload=false;
@@ -124,7 +125,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             //     scope.submit=(null,index);
             // }
             scope.download=function(data){
-                if(f.ref.type="simple"){
+                if(data.ref.type == "simple"){
                     return false
                 }
                 CommonService.download(data.ref.name+" ",data.ref.uuid).then(function (response){ onSuccess(response.data)});
@@ -212,14 +213,15 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
                     commentJson.uuid=data.uuid;
                     file=[];
                     var count=0;
-                    for(var j=0;j<scope.commentResult[parentIndex].uploadExecInfo.length;j++){
-                        if(scope.commentResult[parentIndex].uploadExecInfo[j].ref.type =='simple'){
-                            file[count]=scope.commentResult[parentIndex].uploadExecInfo[j].value;
-                            count=count+1;
+                    if(scope.commentResult[parentIndex].uploadExecInfo !=null){
+                        for(var j=0;j<scope.commentResult[parentIndex].uploadExecInfo.length;j++){
+                            if(scope.commentResult[parentIndex].uploadExecInfo[j].ref.type =='simple'){
+                                file[count]=scope.commentResult[parentIndex].uploadExecInfo[j].value;
+                                count=count+1;
+                            }
+                            
                         }
-                        
                     }
-                
                 }else{
                     file=scope.file;
                 }

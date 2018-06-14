@@ -822,12 +822,15 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		logger.info("Inside dataQualServiceImpl.parse");
+		if (datapodList != null) {
+			logger.info(" Size of datapodList : " + datapodList.size());
+		}
 		DataQual dataQual = null;
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dqExec.toString());
 		dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString());
 		try{
-		dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet, runMode));
+		dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode));
 		dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		
 		synchronized (dataQualExec.getUuid()) {
