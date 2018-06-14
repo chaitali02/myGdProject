@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SaveMode;
+import org.python.antlr.ast.operatorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -50,6 +51,7 @@ import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.CustomOperatorFactory;
@@ -404,8 +406,12 @@ public class OperatorServiceImpl {
 		query.fields().include("paramList");
 		query.fields().include("operatorType");
 
-		
-		query.addCriteria(Criteria.where("operatorType").is(type));
+		/** this if condition is handeled temporarily, it can be changed in future **/
+		if(type.equalsIgnoreCase(OperatorType.generateData.toString())) {
+			query.addCriteria(Criteria.where("operatorType").in("GenerateData", "GenDataAttr"));
+		}else {	
+			query.addCriteria(Criteria.where("operatorType").is(type));
+		}
 
 		List<Operator>  operators = new ArrayList<>();
 		operators = (List<Operator>) mongoTemplate.find(query, Operator.class);
