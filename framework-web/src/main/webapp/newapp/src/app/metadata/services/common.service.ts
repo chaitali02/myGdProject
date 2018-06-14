@@ -246,6 +246,20 @@ saveAs(uuid:Number,version:String,type:String): Observable<any[]> {
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
 }
+executeWithParams(type, uuid, version, action){ 
+  let url
+  if(type=='train'){
+    url = "model/train/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+    let body=null
+    return this._sharedService.postCall(url,body)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
+}
+
+
 
 execute(uuid,version,type,action): Observable<any> {
   let url;
@@ -273,6 +287,7 @@ execute(uuid,version,type,action): Observable<any> {
   if(type=="predict"){
     url = '/model/predict/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
 }
+
   let body=null
   return this._sharedService.postCall(url,body)
   .map((response: Response) => {
