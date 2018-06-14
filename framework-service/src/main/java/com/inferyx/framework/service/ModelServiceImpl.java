@@ -2214,9 +2214,21 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 								tableName_3 = exec.joinDf(tableName_3, tabName_2, i, appUuid);
 						}
 
-						String sql = "SELECT * FROM " + tableName_3;
-						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+						
+						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {							
+							String targetTable = null;
+							MetaIdentifier targetIdentifier =simulate.getTarget().getRef(); 
+							Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetIdentifier.getUuid(), targetIdentifier.getVersion(), targetIdentifier.getType().toString());
+
+							String sql = "SELECT * FROM " + tableName_3;
+							if(datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+									|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+								targetTable = String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), simulateExec.getVersion());
+							} else {
+								targetTable = datasource.getDbname() + "." + datapod.getName();
+								sql = helper.buildInsertQuery(appUuid, targetTable, datapod, sql);
+							}
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, targetTable, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2224,6 +2236,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 									new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
 									simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 									Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+							tableName_3 = targetTable;
 						} 
 						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);

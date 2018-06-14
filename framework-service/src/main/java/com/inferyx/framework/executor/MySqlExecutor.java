@@ -338,7 +338,7 @@ public class MySqlExecutor implements IExecutor {
 	public Object assembleDF(String[] fieldArray, String tableName, String trainName, String label,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return tableName;
 	}
 
 	@Override
@@ -412,7 +412,7 @@ public class MySqlExecutor implements IExecutor {
 	@Override
 	public String joinDf(String joinTabName_1, String joinTabName_2, int i, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return joinTabName_2;
 	}
 
 	/* (non-Javadoc)
@@ -422,7 +422,7 @@ public class MySqlExecutor implements IExecutor {
 	public String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return tableName;
 	}
 
 	/* (non-Javadoc)

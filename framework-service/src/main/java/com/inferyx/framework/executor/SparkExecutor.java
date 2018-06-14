@@ -1733,7 +1733,7 @@ public class SparkExecutor implements IExecutor {
 		List<String> joinColumns = new ArrayList<>();
 		joinColumns.add("id");
 		joinColumns.add("version");
-		df_1 = df_1.join(df_2,JavaConverters.asScalaBufferConverter(joinColumns).asScala());
+		df_1 = df_1.join(df_2, JavaConverters.asScalaBufferConverter(joinColumns).asScala());
 //		df_1 = df_1.crossJoin(df_2);
 		df_1.printSchema();
 		df_1.show(true);
