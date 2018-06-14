@@ -100,6 +100,14 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     }
   }
 
+  $scope.autoMapFeature=function(){
+    if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
+      for(var i=0;i<$scope.featureMapTableArray.length;i++){
+        $scope.featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
+      }
+    }
+  }
+
   $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
     //console.log(fromParams)
     $sessionStorage.fromStateName = fromState.name
