@@ -55,11 +55,11 @@ public class RelationOperator {
 		Map<String, Short> datapodTracker = new HashMap<>(); 
 		StringBuilder builder = new StringBuilder();
 		List<RelationInfo> relInfoList = relation.getRelationInfo();
-		boolean hasDimensions = false;
-		
-		if (execParams != null && execParams.getDimInfo() != null && execParams.getDimInfo().size() > 0) {
-			hasDimensions = true;
-		}
+//		boolean hasDimensions = false;
+//		
+//		if (execParams != null && execParams.getDimInfo() != null && execParams.getDimInfo().size() > 0) {
+//			hasDimensions = true;
+//		}
 		
 		Datapod fromDatapod = (Datapod) daoRegister
 				.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
@@ -73,12 +73,13 @@ public class RelationOperator {
 		if (dataStore != null && hasDimensions) {	// If we get dataStore by dimension then use that for table name
 			table = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 			dataStore = null;
-		} else */if (otherParams == null 
+		} else */
+		if (otherParams.containsKey("datapodUuid_"+fromDatapod.getUuid()+"_tableName")) {
+			table = otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName");
+		} else if (otherParams == null 
 				|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()))) == null
 				&& otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName") == null)) {
 			table = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(fromDatapod.getUuid(), fromDatapod.getVersion()), runMode);
-		} else if (otherParams.containsKey("datapodUuid_"+fromDatapod.getUuid()+"_tableName")) {
-			table = otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName");
 		} else {
 			String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()));
 			table = otherParams.get(tableKey);
@@ -106,14 +107,14 @@ public class RelationOperator {
 				rightTable = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 				dataStore = null;
 			} else */
-			if (otherParams == null 
-					|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()))) == null  
-					&& otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")) == null)) {
-				rightTable = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} else if (otherParams.containsKey("datapodUuid_".concat(datapod.getUuid()).concat("_tableName"))) {
+			if (otherParams != null && otherParams.containsKey("datapodUuid_".concat(datapod.getUuid()).concat("_tableName"))) {
 				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				String tableKey = "datapodUuid_".concat(datapod.getUuid()).concat("_tableName");
 				rightTable = otherParams.get(tableKey);
+			} else if (otherParams == null 
+					|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()))) == null  
+					&& otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")) == null)) {
+				rightTable = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else {
 				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()));
@@ -131,7 +132,7 @@ public class RelationOperator {
 				} else {
 					builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 				}
-				builder.append(" ").append(" on ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams));
+				builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams));
 			}
 		}
 		return builder.toString();
