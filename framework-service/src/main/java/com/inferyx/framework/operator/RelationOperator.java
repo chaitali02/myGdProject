@@ -74,7 +74,7 @@ public class RelationOperator {
 			table = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 			dataStore = null;
 		} else */
-		if (otherParams.containsKey("datapodUuid_"+fromDatapod.getUuid()+"_tableName")) {
+		if (otherParams != null && otherParams.containsKey("datapodUuid_"+fromDatapod.getUuid()+"_tableName")) {
 			table = otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName");
 		} else if (otherParams == null 
 				|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()))) == null
