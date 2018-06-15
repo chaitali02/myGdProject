@@ -2225,7 +2225,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                attrs: {
                  '.port-body': {
                    fill: '#fff',
-                   r:5,
+                   r:7,
                    cx:-5
                  }
                }
@@ -2234,7 +2234,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                attrs: {
                  '.port-body': {
                    fill: '#fff',
-                     r: 5,
+                     r: 7,
                      cx: 5
                  }
                }
