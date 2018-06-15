@@ -25,7 +25,6 @@
                                 "EXEC_PARAMS" : {
                                     "refKeyList" : null,
                                     "paramInfo" : null,
-                                    "dimInfo" : null,
                                     "filterInfo" : null,
                                     "stageInfo" : null,
                                     "paramSetHolder" : null,
@@ -240,7 +239,6 @@
                                 "EXEC_PARAMS" : {
                                     "refKeyList" : null,
                                     "paramInfo" : null,
-                                    "dimInfo" : null,
                                     "filterInfo" : null,
                                     "stageInfo" : null,
                                     "paramSetHolder" : null,
@@ -428,7 +426,6 @@
                                 "EXEC_PARAMS" : {
                                     "refKeyList" : null,
                                     "paramInfo" : null,
-                                    "dimInfo" : null,
                                     "filterInfo" : null,
                                     "stageInfo" : null,
                                     "paramSetHolder" : null,
