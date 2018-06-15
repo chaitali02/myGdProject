@@ -116,34 +116,14 @@ public class OperatorServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(OperatorServiceImpl.class);
 	
-	
-	public OperatorExec create(String uuid, String version, MetaType type, MetaType execType, OperatorExec operatorExec, 
-			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
+	public OperatorExec create(OperatorExec operatorExec) throws Exception {
 		logger.info("Inside OperatorServiceImpl.create ");
 		List<Status> statusList = null;
-		Operator operator = null;
-		if (StringUtils.isBlank(uuid)) {
-			logger.info(" Nothing to create exec upon. Aborting ... ");
-			return null;
-		}
-		operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type.toString());
-		if (operator == null || type == null || execType == null) {
-			logger.info(" Nothing to create exec upon. Aborting ... ");
-			return null;
-		}
-		MetaIdentifierHolder baseRuleMeta = new MetaIdentifierHolder(new MetaIdentifier(type, operator.getUuid(), operator.getVersion()));
 		if (operatorExec == null) {
-			operatorExec = new OperatorExec();
-			operatorExec.setDependsOn(baseRuleMeta);
-			operatorExec.setBaseEntity();
-			operatorExec.setName(operator.getName());
-			operatorExec.setAppInfo(operator.getAppInfo());
-			synchronized (operatorExec.getUuid()) {
-				commonServiceImpl.save(execType.toString(), operatorExec);
-			}
+			logger.info(" Nothing to create exec upon. Aborting ... ");
+			return null;
 		}
-		MetaIdentifier baseruleExecInfo = new MetaIdentifier(execType, operatorExec.getUuid(), operatorExec.getVersion());
-		
 		statusList = operatorExec.getStatusList();
 		if (Helper.getLatestStatus(statusList) != null 
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
@@ -155,15 +135,13 @@ public class OperatorServiceImpl {
 		}
 		logger.info(" Set not started status");
 		synchronized (operatorExec.getUuid()) {
-			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, execType, Status.Stage.NotStarted);
+			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.NotStarted);
 		}
 		logger.info(" After Set not started status");
 		return operatorExec;
 	}
 	
-	public Map<String, String> parse(String uuid, 
-			String version, 
-			MetaType operatortype2, 
+	public Map<String, String> parse( 
 			OperatorExec operatorExec, 
 			ExecParams execParams, 
 			HashMap<String, String> otherParams, 
@@ -191,11 +169,7 @@ public class OperatorServiceImpl {
 	}
 
 
-	public void execute(String uuid, 
-						String version, 
-						ThreadPoolTaskExecutor metaExecutor, 
-						OperatorExec operatorExec, 
-						List<FutureTask<TaskHolder>> taskList, 
+	public void execute(OperatorExec operatorExec, 
 						ExecParams execParams, 
 						HashMap<String, String> otherParams, 
 						RunMode runMode) throws Exception {

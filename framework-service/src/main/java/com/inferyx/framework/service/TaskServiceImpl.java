@@ -790,7 +790,7 @@ public class TaskServiceImpl implements Callable<String> {
 				OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.operatorExec.toString());
 				HashMap<String, String> otherParams = execParams.getOtherParams();
 				ExecParams operatorExecParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
-				operatorServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), null, operatorExec, null, operatorExecParams, otherParams, runMode);
+				operatorServiceImpl.execute(operatorExec, operatorExecParams, otherParams, runMode);
 				
 				if (Helper.getLatestStatus(operatorExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 					throw new Exception();
