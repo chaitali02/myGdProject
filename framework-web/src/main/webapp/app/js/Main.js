@@ -623,7 +623,7 @@ InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookie
                         $rootScope.metaStats[val.type] = val;
                     });
                 }
-                setTimeout(function(){$rootScope.isWelcomenOpen=false; }, 5000);
+                setTimeout(function(){$rootScope.isWelcomenOpen=false; }, 3000);
                
                 privilegeSvc.getUpdated();
               //  $('#myModal').modal('hide');
