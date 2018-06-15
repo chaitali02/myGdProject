@@ -53,6 +53,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
@@ -1021,10 +1022,20 @@ public class DagServiceImpl {
 								datapodList, (ReconGroupExec) baseExec, dagExec);
 						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
 					} else if (ref.getType().equals(MetaType.operator)) {
-						baseExec = operatorServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.operator, MetaType.operatorExec, (OperatorExec)baseExec, 
-								refKeyMap, datapodList, dagExec);
+						Operator indvOperator = (Operator) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), MetaType.operator.toString());
+						if (baseExec == null) {
+							baseExec = new OperatorExec();
+							baseExec.setDependsOn(new MetaIdentifierHolder(ref));
+							baseExec.setBaseEntity();
+							baseExec.setName(indvOperator.getName());
+							baseExec.setAppInfo(indvOperator.getAppInfo());
+							synchronized (baseExec.getUuid()) {
+								commonServiceImpl.save(MetaType.operatorExec.toString(), baseExec);
+							}
+						}
+						baseExec = operatorServiceImpl.create((OperatorExec)baseExec);
 						ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
-						otherParams = (HashMap<String, String>) operatorServiceImpl.parse(ref.getUuid(), ref.getVersion(), MetaType.operator, (OperatorExec)baseExec, 
+						otherParams = (HashMap<String, String>) operatorServiceImpl.parse((OperatorExec)baseExec, 
 																							operatorExecParams, otherParams, runMode);
 						execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
 						if (indvTask.getDependsOn().size() > 0) {

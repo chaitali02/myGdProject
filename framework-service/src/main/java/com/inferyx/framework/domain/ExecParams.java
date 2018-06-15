@@ -17,7 +17,6 @@ public class ExecParams {
 
 	private List<MetaIdentifier> refKeyList;
 	private List<ParamSetHolder> paramInfo;
-	private List<MetaIdentifierHolder> dimInfo;
 	private List<AttributeRefHolder> filterInfo;
 	private List<String> stageInfo;
 	private ParamSetHolder paramSetHolder;
@@ -88,14 +87,6 @@ public class ExecParams {
 
 	public void setRefKeyList(List<MetaIdentifier> refKeyList) {
 		this.refKeyList = refKeyList;
-	}
-
-	public List<MetaIdentifierHolder> getDimInfo() {
-		return dimInfo;
-	}
-
-	public void setDimInfo(List<MetaIdentifierHolder> filterList) {
-		this.dimInfo = filterList;
 	}
 
 	public List<String> getStageInfo() {
