@@ -24,7 +24,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
         })
       ));
 
-      var stageYPos = 50;
+      var stageYPos = 250;
       var taskXPos = 300;
       var taskYPos = -50;
       
@@ -49,7 +49,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
               }],
               isTemplate:true
             },
-            position: { x: 200 , y: stageYPos },
+            position: { x: 350 , y: stageYPos },
             attrs: {
               "model-data": {
                 uuid: "stage_0",

@@ -191,7 +191,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     .style("fill-opacity", 1e-6)
                     .text(function (d) {
                         if (d.parent == null) {
-                            return d.name.length > 20 ? d.name.substring(0, 20) + "...." : d.name
+                            return d.name.length > 20 ? d.name.substring(0, 15) + "...." : d.name
                         } else {
                             return d.name;
                         }
@@ -331,7 +331,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
             scope.$watch('zoomSize', function (data, oldValue) {
                 var tempsize = data / 10;
-                $('#network-graph-wrapper').css({
+                $('#network-graph-wrapper svg').css({
                     '-webkit-transform': 'scale(' + tempsize + ')',
                     '-moz-transform': 'scale(' + tempsize + ')',
                     '-ms-transform': 'scale(' + tempsize + ')',
@@ -440,7 +440,10 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
             function rightClickNode(d, i) {
                 d3.event.preventDefault();
-                var Nodedata = d
+                var Nodedata = d;
+                if(Nodedata.metaRef.ref.uuid.indexOf("_") !=-1){
+                    return false;
+                }
                 d3.selectAll('.context-menu').data([1])
                     .enter()
                     .append('div')
@@ -450,7 +453,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                 d3.select('body').on('click.context-menu', function () {
                     d3.select('.context-menu').style('display', 'none');
                 });
-
+                
                 // this gets executed when a contextmenu event occurs
                 d3.selectAll('.context-menu')
                     .html('')
@@ -459,6 +462,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     .data(menus).enter()
                     .append('li')
                     .on('click', function (d) {
+                    
                         navigateTo(Nodedata, d);
                         d3.select('.context-menu').style('display', 'none');
                     })
@@ -505,13 +509,14 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             }
 
             function navigateTo(data, d) {
+            
                 if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type != "attributes") {
                     data.metaRef.ref.name = data.name
-                    data.metaRef.ref.type = data.nodeType
+                    data.metaRef.ref.type = data.metaRef.ref.type
                     dagMetaDataService.navigateTo(data.metaRef.ref);
                 } else if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type == "attributes") {
                     data.metaRef.ref.name = data.name
-                    data.metaRef.ref.type = data.nodeType
+                    data.metaRef.ref.type = data.metaRef.ref.type
                     dagMetaDataService.navigateTo(data.parent.metaRef.ref);
                 }
             }
@@ -529,12 +534,12 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
        <!-- <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">-->
         <!--<div class="col-md-2 col-md-offset-10" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">--> 
       
-        <div class="col-md-2" style="margin-top-3%;position:absolute;margin: -6px -10px;"> 
+        <div class="col-md-2" style="margin-top-3%;position:absolute;margin:16px -9px;z-index:100;"> 
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="btn-group" ng-init="degree='1'">
-                    <label class="btn btn-default"  tooltip-placement="top" uib-tooltip="Downward" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-disabled="degree == 1?true:false" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></label>   
-                    <label class="btn btn-default" ng-model="degree" tooltip-placement="top" uib-tooltip="Upward" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-disabled="degree == -1?true:false" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
+                        <button type="button" class="btn btn-circle btn-default"  tooltip-placement="top" uib-tooltip="Direction" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-hide="degree == 1?true:false" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></button>   
+                        <button type="button" class="btn btn-circle btn-default" ng-model="degree" tooltip-placement="top" uib-tooltip="Direction" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-hide="degree == -1?true:false" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>
@@ -566,7 +571,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
         </div>
       </div>
       <br>
-      <div id="network-graph-wrapper" style="height:500px;margin-top:2%;"></div>
+      <div id="network-graph-wrapper" style="height:500px;"></div>
       `
     };
 })

@@ -421,10 +421,16 @@
                         <a href="#">
                             <i class="icon-lock"></i> Lock Screen </a>
                     </li>
+                    <li ng-click="OepnWelcomeWindow()">
+                        <a href="#">
+                            <i class="fa fa-pencil-square-o"></i> Change Application
+                        </a>
+                    </li>
                     <li data-ng-controller="LogoutController" data-ng-click="logout()">
                         <a href="#">
                             <i class="icon-key"></i> Log Out </a>
                     </li>
+                   
                 </ul>
             </li>
             <!-- END USER LOGIN DROPDOWN -->
@@ -442,7 +448,7 @@
      <div class="top-menu" ng-controller="HeaderController" ng-init="getAppName()" style="float:left">
         <ul class="nav navbar-nav pull-right">
 
-             <li class=" sidebar-toggler" ng-show="setAppStatus" style="
+             <li class="" ng-click="OepnWelcomeWindow()" ng-show="setAppStatus" style="
 			    color:white;
 			    padding: 15px 7px 0px 10px;
 			    width: auto;
@@ -450,7 +456,6 @@
 			    display: table;
 			    text-align: center;
 			    cursor: pointer;">
-			    <!-- <span style="display: table-cell;vertical-align: middle;">Application : </span> -->
     			<span style="display: table-cell;vertical-align: middle;padding-left:5px;"> {{selectApp}}  |  {{role}}</span></li>
 
         </ul>
