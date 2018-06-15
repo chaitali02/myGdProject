@@ -6,9 +6,9 @@ InferyxApp.factory('dagValidationSvc',function(dagMetaDataService){
   }
   function stageToStage (s,t,inboundLinks,outboundLinks){
    // console.log(inboundLinks)
-  //  if(outboundLinks.length  > 0){
-  //    return false;
-  //  }
+   if(outboundLinks.length  > 0){
+     return false;
+   }
     return inboundLinks.length == 0 && s==='stage' && t==='stage';
   }
   function stageToTask (s,t,inboundLinks){
