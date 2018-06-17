@@ -39,7 +39,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 	@Component
-	public class DatasetOperator implements Operator {
+	public class DatasetOperator {
 		
 		@Autowired
 		AttributeMapOperator attributeMapOperator;
@@ -133,32 +133,8 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(dataset.getAttributeInfo()), refKeyMap, otherParams, execParams);
 		}
 
-		@Override
-		public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
 		private String generateLimit(DataSet dataset) {
 			return (dataset.getLimit() > 0) ? (ConstantsUtil.LIMIT + dataset.getLimit() + " ") : "";
-		}
-
-		@Override
-		public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
-				MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap,
-				HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
-				RunMode runMode) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-				Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
 		}
 
 }

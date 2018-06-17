@@ -954,7 +954,7 @@ public class MapServiceImpl implements Executable {
 
 
 	@Override
-	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		// Validate input
 		if (baseExec == null) {
 			throw new Exception("No executable, cannot execute. ");
@@ -974,6 +974,7 @@ public class MapServiceImpl implements Executable {
 			datapodKey.setVersion(targetDatapod.getVersion());
 		}
 		executeSql((MapExec) baseExec, datapodKey, dataStore, runMode);
+		return null;
 	}
 
 }

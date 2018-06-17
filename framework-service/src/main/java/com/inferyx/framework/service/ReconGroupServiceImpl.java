@@ -78,8 +78,9 @@ public class ReconGroupServiceImpl extends RuleGroupTemplate {
 	 * Override Executable.execute()
 	 */
 	@Override
-	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		execute(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), execParams, (ReconGroupExec) baseExec, runMode);
+		return null;
 	}
 
 	/**

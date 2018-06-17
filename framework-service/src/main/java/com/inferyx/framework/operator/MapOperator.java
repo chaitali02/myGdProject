@@ -20,12 +20,14 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
@@ -35,7 +37,7 @@ import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 
 @Component
-public class MapOperator implements Operator {
+public class MapOperator {
 
 	@Autowired
 	protected MetadataUtil daoRegister;
@@ -152,31 +154,6 @@ public class MapOperator implements Operator {
 			return builder.toString().replaceAll("\"\\$DAGEXEC_VERSION\"", otherParams.get($DAGEXEC_VERSION));
 		}
 		return builder.toString();
-	}
-
-	@Override
-	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
-			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public java.util.Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
-			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
-			RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
