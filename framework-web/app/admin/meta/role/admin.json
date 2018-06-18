@@ -2027,15 +2027,6 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "67ed08e0-5e72-4129-9d7e-41cf4f631e41",
-		 			"version" : null,
-		            "name" : "LoadAdd"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
 		 			"uuid" : "4842735f-f75b-499c-8a02-a99b8605c1a3",
 		 			"version" : null,
 		            "name" : "LoadClone"
@@ -2048,15 +2039,6 @@
 		 			"uuid" : "86daa41b-840c-42ba-a794-d120d756da1c",
 		 			"version" : null,
 		            "name" : "LoadDelete"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
-		 			"uuid" : "2ee3ee95-10fe-4eed-94f7-6301c229dbbf",
-		 			"version" : null,
-		            "name" : "LoadEdit"
 				},
 				"value" : null
 		},
