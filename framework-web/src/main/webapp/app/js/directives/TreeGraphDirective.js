@@ -142,7 +142,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
                 // Normalize for fixed-depth.
                 nodes.forEach(function (d) {
-                    d.y = d.depth * 180;
+                    d.y = d.depth * 250; //180 jitender
                 });
 
                 // Update the nodes…
@@ -165,7 +165,8 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
                     })
                     .on('contextmenu', rightClickNode);
-
+                
+                
                 nodeEnter.append("circle")
                     .attr("r", 10)
                     .style("stroke-width", 0.5) // set the stroke width //jitender
@@ -193,7 +194,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                         if (d.parent == null) {
                             return d.name.length > 20 ? d.name.substring(0, 15) + "...." : d.name
                         } else {
-                            return d.name;
+                            return  d.name.length > 15 ? d.name.substring(0, 15) + ".." : d.name;
                         }
                     })
                     .append("text:title")
@@ -201,7 +202,20 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                         return d.name;
                     });
 
-
+                    nodeEnter.append("svg:foreignObject")
+                    .attr("width", 20)
+                    .attr("height", 20)
+                    .attr("y", "-17px")
+                    .attr("x", "17px")
+                    .append("xhtml:img")
+                        .attr("class","node-refresh")
+                        .style("display","none")
+                       .attr("src","lib/images/loadingimg.gif")
+                    // .style("-webkit-animation","node-refesh 2s linear infinite")
+                    // .style("font-family","FontAwesome")
+                    //    .attr("class", "control fa-refresh  node-refesh");
+                    
+             
                 // Transition nodes to their new position.
                 var nodeUpdate = node.transition()
                     .duration(duration)
@@ -215,7 +229,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
                 nodeUpdate.select("text")
                     .style("fill-opacity", 1);
-
+                
                 // Transition exiting nodes to the parent's new position.
                 var nodeExit = node.exit().transition()
                     .duration(duration)
@@ -301,6 +315,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     .attr("font-family", "Arial, Helvetica, sans-serif")
                     .attr("fill", "73879C")
                     .style("font", "normal 11px Arial")
+                    .attr("x", 25) //add new for link text
                     .text(function (d) {
                         return d.target.nodeType;
                     })
@@ -384,15 +399,21 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     if (d.metaRef.ref.type == null || d.metaRef.ref.type == "simple") {
                         return false;
                     }
-                    $('.show-graph-body').hide();
-                    $('#graphloader').show();
+                   
+                  //  $('.show-graph-body').hide();
+                 //   $('#graphloader').show();
+                 console.log(this)
+                    var this_node=this 
+                    $(this_node).find(".node-refresh").css("display","block");
                     $('#errorMsg').hide();
                     CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.metaRef.ref.version | "", scope.degree).then(function (result) {
+                        $(this_node).find(".node-refresh").css("display","none");
                         $('.show-graph-body').show();
                         $('#graphloader').hide();
-
+                      
                         for (var i = 0; i < result.data.children.length; i++) {
                             result.data.children[i].index = i;
+                            result.data.children[i].isProgess=false;
                             if (result.data.children.length > 20) {
                                 height = height + 30;
                             }

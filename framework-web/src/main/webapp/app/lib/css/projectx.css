@@ -186,6 +186,13 @@ th, td{vertical-align: middle !important}
     font: 10px sans-serif;
     pointer-events: none;
   }
+  .node-refesh{
+  position: static
+  }
+  @keyframes node-refesh {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
   div.tooltipFocus {
   /*position: absolute;
     text-align: center;
@@ -919,6 +926,9 @@ vertical-align: middle;
 }
 
 .node text {
+  font: 12px sans-serif;
+}
+.node span {
   font: 12px sans-serif;
 }
 

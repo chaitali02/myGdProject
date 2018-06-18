@@ -46,7 +46,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 	$scope.showGraphDiv = false
 	$scope.logicalOperator = ["OR", "AND"];
 	$scope.relation = ["relation", "dataset", "datapod"];
-	$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN"];
+	$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN","LIKE","Not LIKE","RLIKE","EXISTS","NOT EXISTS"];
 	$scope.lshType = [
 		{ "text": "string", "caption": "string" },
 		{ "text": "datapod", "caption": "attribute" },

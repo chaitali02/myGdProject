@@ -532,6 +532,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
 });
 
 InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService) {
+    $rootScope.reOpen=localStorage.reOpen;
     if (localStorage.isAppRoleExists && $rootScope.reOpen ==false) {
         $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
         $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID
@@ -556,18 +557,21 @@ InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookie
     AppRoleService.getAppRole($rootScope.setUserName).then(function (response) { onAppSuccess(response.data) })
     var onAppSuccess = function (response) {
         $scope.AppData = response
-        $scope.RoleData = response[0].roleInfo
-        $scope.selectedRole = response[0].roleInfo[0]
-        $scope.selectedApp = response[0]
-        $rootScope.appUuid = $scope.selectedApp.appId.ref.uuid;
-        localStorage.appName = $scope.selectedApp.appId.ref.name;
-        $scope.selectAppStatus = true;
-        $scope.selectRoleStatus = true;
-        localStorage.role = $scope.selectedRole.ref.name;
-        $rootScope.role = localStorage.role;
-        AppRoleService.getTZ().then(function (responseTz) { onSuccessgetTZ(responseTz.data) });
-        var onSuccessgetTZ = function (responseTz) {
-            localStorage.serverTz = responseTz;
+       
+            $scope.RoleData = response[0].roleInfo
+            $scope.selectedRole = response[0].roleInfo[0]
+            $scope.selectedApp = response[0]
+            if(!localStorage.isAppRoleExists){
+            $rootScope.appUuid = $scope.selectedApp.appId.ref.uuid;
+            localStorage.appName = $scope.selectedApp.appId.ref.name;
+            $scope.selectAppStatus = true;
+            $scope.selectRoleStatus = true;
+            localStorage.role = $scope.selectedRole.ref.name;
+            $rootScope.role = localStorage.role;
+            AppRoleService.getTZ().then(function (responseTz) { onSuccessgetTZ(responseTz.data) });
+            var onSuccessgetTZ = function (responseTz) {
+                localStorage.serverTz = responseTz;
+            }
         }
     };
     
@@ -635,6 +639,7 @@ InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookie
             $("#hideshow").addClass('display-show')
         }
         $rootScope.reOpen=false;
+        localStorage.reOpen=false;
         $state.go('datadiscovery');
     };
 
@@ -815,7 +820,8 @@ InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', 
     };
 
     $scope.OepnWelcomeWindow=function(){
-        $rootScope.reOpen=true
+        $rootScope.reOpen=true;
+        localStorage.reOpen=true;
         $state.go('/');
            $('#myModal').modal({
                 backdrop: 'static',
