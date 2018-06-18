@@ -307,7 +307,7 @@ public class ReconOperator {
 		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
 					dagExec.getVersion());
-		} else if (otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+		} else if (otherParams!= null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		}
 		datastoreServiceImpl.setRunMode(runMode);
