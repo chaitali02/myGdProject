@@ -3520,7 +3520,7 @@ public class RegisterService {
 		List<Datapod> datapodList = null;
 		int i = 1;
 		for (String table : tables) {
-			datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
+			datapodList = datapodServiceImpl.searchDatapodByName(table, datasourceUuid);
 			if (datapodList.size() > 0){
 				for (Datapod datapod : datapodList) {
 					for (int j = 0; j < datapod.getAppInfo().size(); j++) {
@@ -3566,15 +3566,15 @@ public class RegisterService {
 		if (type.equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return csvRegister.register(uuid, version, registryList, runMode);
 		} else if (type.equalsIgnoreCase(ExecContext.HIVE.toString()) | type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			return hiveRegister.registerDB(uuid, version, registryList);
+			return hiveRegister.registerDB(uuid, version, registryList, runMode);
 		} /*else if (type.equalsIgnoreCase("impala")) {
 			return impalaRegister.registerDB(uuid, version, registryList);
 		} */else if (type.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-			return mysqlRegister.registerDB(uuid, version, registryList);
+			return mysqlRegister.registerDB(uuid, version, registryList, runMode);
 		} else if (type.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-			return oracleRegister.registerDB(uuid, version, registryList);
+			return oracleRegister.registerDB(uuid, version, registryList, runMode);
 		} else if (type.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-				return postGresRegister.registerDB(uuid, version, registryList);
+				return postGresRegister.registerDB(uuid, version, registryList, runMode);
 		} else {
 			return null;
 		}
