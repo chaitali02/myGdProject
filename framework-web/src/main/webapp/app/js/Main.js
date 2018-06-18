@@ -68,12 +68,11 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
 	/* $ocLazyLoadProvider.config({
 	        // global configs go here
 	    });*/
-    //console.log("SessionId:"+$.cookie("sessionId"));
+
     if (typeof localStorage.userdetail != "undefined") {
         console.log(JSON.parse(localStorage.userdetail).sessionId)
-
-        $httpProvider.defaults.headers.common['sessionId'] = JSON.parse(localStorage.userdetail).sessionId//$.cookie("sessionId");
-    }
+        $httpProvider.defaults.headers.common['sessionId'] = JSON.parse(localStorage.userdetail).sessionId
+    } 
     //$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     //$httpProvider.defaults.headers.common['Accept'] ='application/json, text/javascript, */*; q=0.01';
@@ -147,21 +146,16 @@ InferyxApp.run(['Idle', '$sessionStorage', '$rootScope', '$http', '$cookieStore'
     Idle.watch();
     validator.setValidElementStyling(false);
     validator.setInvalidElementStyling(true);
-    //if($cookieStore.get('userdetail')){
     if (localStorage.userdetail) {
-        //$rootScope.baseUrl=$cookieStore.get('userdetail').baseUrl
-        $rootScope.productDetail = (JSON.parse(localStorage.userdetail).productDetail);
+          $rootScope.productDetail = (JSON.parse(localStorage.userdetail).productDetail);
         $rootScope.role = localStorage.role;
         $rootScope.baseUrl = JSON.parse(localStorage.userdetail).baseUrl
     }
     $rootScope.time = new Date();
-    // $rootScope.isCommentDisabled=true;
-    // $rootScope.isPanelOpen=commentService.isPanelOpen;
-    $rootScope.tzName = $rootScope.time.toLocaleString('en', {
+     $rootScope.tzName = $rootScope.time.toLocaleString('en', {
         timeZoneName: 'short'
     }).split(' ').pop();
     var update = function () {
-        //$rootScope.time = new Date();
         $rootScope.time = $filter('date')(new Date(), "MMM dd yyyy - HH:mm:ss");
         $timeout(update, 1000);
     }
@@ -299,8 +293,6 @@ InferyxApp.controller('TabController', function ($timeout, $state, $scope, $root
             state.route = toState.name;
             state.index = $scope.tabs.length + 1;
             state.param = toParams;
-            // state.param.name = "Main Tab";
-            // state.heading=state.param.name;
             state.heading = "Main Tab";
             state.active = false;
             $scope.tabs.splice($scope.tabs.length, 0, state);
@@ -309,7 +301,6 @@ InferyxApp.controller('TabController', function ($timeout, $state, $scope, $root
             if ($scope.tabs.length == 1) {
                 $scope.tabs[0].route = toState.name;
                 $scope.tabs[0].param = toParams;
-                // $scope.tabs[0].param.name= "Main Tab";
             }
         }
         $rootScope.isCommentVeiwPrivlage=true;
@@ -442,7 +433,6 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "model", "type": "model", "typeCount": "model", "uuid": "null", "caption": "Model" },
             { "name": "paramlistmodel", "type": "paramlist", "typeCount": "paramlistmodel", "uuid": "null", "caption": "Parameter List" },
             { "name": "paramset", "type": "paramset", "typeCount": "paramset", "uuid": "null", "caption": "Parameter Set" },
-            // {"name":"operatortype","type":"operatortype","uuid":"null","caption":"Operator"},
             { "name": "operator", "type": "operator", "typeCount": "operator", "uuid": "null", "caption": "Operator" },
             { "name": "train", "type": "train", "typeCount": "train", "uuid": "null", "caption": "Training" },
             { "name": "predict", "type": "predict", "typeCount": "predict", "uuid": "null", "caption": "Prediction" },
@@ -457,7 +447,6 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "class": "fa fa-desktop",
         "submenu": [
             { "name": "dashboard", "type": "dashboard", "uuid": "null", "caption": "Dashboard" },
-            // {"name":"dashboard2","type":"dashboard","uuid":"null","caption":"Dashboard 2"},
             { "name": "vizpodlist", "type": "vizpod", "uuid": "null", "caption": "Vizpod" },
         ]
     }
@@ -506,13 +495,8 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
     }
 
     $scope.updateMetaData = function () {
-        // if(!localStorage.isAppRoleExists){//!$cookieStore.get('isAppRoleSubmit')){
-        //     return false
-        // }
-        // else{
         LhsService.getMetadata().then(function (response) { onMetadataSuccess(response.data) });
         var onMetadataSuccess = function (metadata) {
-            // debugger
             var countMeta = 0;
             var countAdmin = 0;
             for (var i = 0; i < metadata.length; i++) {
@@ -548,27 +532,27 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
 });
 
 InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService) {
-
-    if (localStorage.isAppRoleExists) {
-        $rootScope.setUserName = JSON.parse(localStorage.userdetail).name//$cookieStore.get('name')
-        $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID//$cookieStore.get('userdetail').userUUID
-        $scope.username = JSON.parse(localStorage.userdetail).userName
+    if (localStorage.isAppRoleExists && $rootScope.reOpen ==false) {
+        $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
+        $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID
+        $scope.username = JSON.parse(localStorage.userdetail).userName;        
         return false;
     }
-
+  
     $scope.selectedApp;
     $scope.selectedRole;
     $scope.selectAppStatus = false;
     $scope.selectRoleStatus = false;
-    $rootScope.setUserName = JSON.parse(localStorage.userdetail).name//$cookieStore.get('name')
-    $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID//$cookieStore.get('userdetail').userUUID
+    $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
+    $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID
     $scope.username = JSON.parse(localStorage.userdetail).userName
     $rootScope.isSubmit = false;
-    //AppRoleService.getLatestByUuid($cookieStore.get('userdetail').userUUID,"user").then(function(response){onSuccessGetLatestByUuid(response.data)});
-    AppRoleService.getLatestByUuid(JSON.parse(localStorage.userdetail).userUUID, "user").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+    AppRoleService.getLatestByUuid($rootScope.setUseruuid, "user").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
+        if(response)   
         $scope.username = response.firstName
     }
+
     AppRoleService.getAppRole($rootScope.setUserName).then(function (response) { onAppSuccess(response.data) })
     var onAppSuccess = function (response) {
         $scope.AppData = response
@@ -586,8 +570,8 @@ InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookie
             localStorage.serverTz = responseTz;
         }
     };
-
-
+    
+   
     $scope.getselectApp = function () {
         if ($scope.selectedApp != null) {
             localStorage.appName = $scope.selectedApp.appId.ref.name
@@ -615,9 +599,8 @@ InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookie
             $scope.selectRoleStatus = false;
         }
     }
-
     $scope.open = function () {
-        if (!localStorage.isAppRoleExists) {//!$cookieStore.get('isAppRoleSubmit')){
+        if (!localStorage.isAppRoleExists) {
             $('#myModal').modal({
                 backdrop: 'static',
                 keyboard: false
@@ -627,6 +610,8 @@ InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookie
 
     $scope.ok = function (event) {
         event.preventDefault();
+        $('#myModal').modal('hide');
+        $rootScope.isWelcomenOpen=true;
         if ($scope.selectedApp != null) {
             AppRoleService.setSecurityAppRole($scope.selectedApp.appId.ref.uuid, $scope.selectedRole.ref.uuid).then(function (response) { onSecurityAppRoleSuccess(response) })
             var onSecurityAppRoleSuccess = function (response) {
@@ -638,9 +623,10 @@ InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookie
                         $rootScope.metaStats[val.type] = val;
                     });
                 }
-                // $rootScope.$emit("CallFromAppRoleController",{});
+                setTimeout(function(){$rootScope.isWelcomenOpen=false; }, 3000);
+               
                 privilegeSvc.getUpdated();
-                $('#myModal').modal('hide');
+              //  $('#myModal').modal('hide');
                 $rootScope.$emit("callsetapp", {});
             };
         }
@@ -648,16 +634,18 @@ InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookie
             $("#hideshow").removeClass('display-hide')
             $("#hideshow").addClass('display-show')
         }
+        $rootScope.reOpen=false;
         $state.go('datadiscovery');
     };
 
     $scope.cancelLogut = function () {
         $rootScope.$emit('CallFromAppRoleControllerLogout', {});
     }
+   
+
 });
 
 InferyxApp.controller('UnloadController', function ($rootScope, $scope, $sessionStorage, UnlockService) {
-
 
     $scope.isErrorShow = false;
     $scope.initOpen = function () {
@@ -724,21 +712,9 @@ InferyxApp.controller('LogoutController', function ($scope, $rootScope, $cookieS
         $scope.logout();
     });
     $scope.logout = function () {
-
         LogoutService.securitylogoutSession($.cookie("sessionId")).then(function (response) { onSecuritySuccess(response) }, function (response) { onError(response) })
         var onSecuritySuccess = function (response) {
-
-            console.log(JSON.stringify(response.data))
-            //alert(response.data.userInfo.ref.uuid)
-            if (response.data.userInfo.ref.uuid == JSON.parse(localStorage.userdetail).userUUID) {//$cookieStore.get('userdetail').userUUID){
-                // $cookieStore.remove('sessionId');
-                localStorage.removeItem('userdetail');
-                //$cookieStore.remove('userdetail');
-                // $cookieStore.remove('selectAppStatus')
-                // $cookieStore.remove('selectRoleStatus')
-                //$cookieStore.remove('setAppName');
-                // $cookieStore.remove('name');
-                //$cookieStore.remove('isAppRoleSubmit');
+            if (response.data.userInfo.ref.uuid == JSON.parse(localStorage.userdetail).userUUID) {
                 localStorage.removeItem('isAppRoleExists');
                 localStorage.clear();
                 if (typeof localStorage.userdetail == "undefined") {
@@ -747,13 +723,6 @@ InferyxApp.controller('LogoutController', function ($scope, $rootScope, $cookieS
             }
         }
         var onError = function (response) {
-            //$cookieStore.remove('sessionId');
-            // $cookieStore.remove('userdetail');
-            // $cookieStore.remove('selectAppStatus')
-            // $cookieStore.remove('selectRoleStatus')
-            //$cookieStore.remove('setAppName');
-            //$cookieStore.remove('name');
-            //$cookieStore.remove('isAppRoleSubmit');
             localStorage.removeItem('userdetail');
             localStorage.removeItem('isAppRoleExists');
             localStorage.clear();
@@ -794,6 +763,7 @@ InferyxApp.controller('AppController', ['$scope', '$rootScope', 'commentService'
 /* Setup Layout Part - Header */
 InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', '$cookieStore', '$stateParams', '$state', 'dagMetaDataService', function ($uibModal, $scope, $rootScope, $cookieStore, $stateParams, $state, dagMetaDataService) {
     $rootScope.dummyArg = 1;
+    
     $rootScope.caseConverter = function (str) {
         var temp = str.charAt(0).toUpperCase() + str.slice(1);
         return temp.replace(/([A-Z][a-z])/g, " $1");
@@ -823,9 +793,8 @@ InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', 
 
     });
     $scope.getAppName = function () {
-
-        if (localStorage.appName) {//$cookieStore.get('setAppName')){
-            $scope.selectApp = localStorage.appName//$cookieStore.get('setAppName');
+        if (localStorage.appName) {
+            $scope.selectApp = localStorage.appName
             $scope.setAppStatus = true;
 
         }
@@ -845,19 +814,21 @@ InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', 
         });
     };
 
+    $scope.OepnWelcomeWindow=function(){
+        $rootScope.reOpen=true
+        $state.go('/');
+           $('#myModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+            
+    }
 }]);
 
 InferyxApp.controller('FooterController', ['$scope', '$rootScope', '$cookieStore', function ($scope, $rootScope, $cookieStore) {
     if (localStorage.userdetail) {
         $rootScope.productDetail = (JSON.parse(localStorage.userdetail).productDetail);
     }
-    // $scope.getVersionDetail=function(){
-    //     $http.get('resources/framework.properties').then(function(response) {
-    //         alert(response)
-    //        });
-
-    // }
-
 }]);
 
 InferyxApp.controller('ProfileImageCtrl', function ($timeout, $rootScope, $scope, $uibModalInstance, $location, $http) {
@@ -866,7 +837,6 @@ InferyxApp.controller('ProfileImageCtrl', function ($timeout, $rootScope, $scope
         if (input.files && input.files[0]) {
             $scope.$apply();
             var reader = new FileReader();
-
             reader.onload = function (e) {
                 $('#avatar-preview')
                     .attr('src', e.target.result)
@@ -948,7 +918,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
     $urlRouterProvider.otherwise("/");
     $stateProvider.state('/', {
         url: '',
-        // templateUrl: 'index.html',
+        //templateUrl: 'index.html',
         //controller: function($scope,$rootScope, $stateParams) {}
     })
 

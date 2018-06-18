@@ -1694,7 +1694,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           attrs: {
             '.port-body': {
               fill: '#fff',
-              r:5,
+              r:7,
               cx:-5
             }
           }
@@ -1703,7 +1703,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           attrs: {
             '.port-body': {
               fill: '#fff',
-              r: 5,
+              r: 7,
               cx: 5
             },
             magnet:false

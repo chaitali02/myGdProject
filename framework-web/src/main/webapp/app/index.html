@@ -257,8 +257,11 @@
 
                     <div class="modal fade" id="unlockmodel" role="dialog" style="display:none; background-color: #465568!important;" data-ng-controller="UnloadController">
                         <div class="modal-dialog">
-                            <div class="logo-default" style="margin: 0 auto;width: 80%;text-align: center; font-family: timeburnernormal; color:white;font-size:26px;padding-bottom:3%">INFERYX
-                                <!--<span style="color:#007DC9;font-family:timeburnerbold;">YX</span>-->
+                            <!-- <div class="logo-default" style="margin: 0 auto;width: 80%;text-align: center; font-family: timeburnernormal; color:white;font-size:26px;padding-bottom:3%">INFERYX
+                                <span style="color:#007DC9;font-family:timeburnerbold;">YX</span>
+                            </div> -->
+                            <div class="logo-default" style="text-align: center; padding-bottom:1%">
+                                <img src="assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" style="height:45px;margin-top:1px"/>
                             </div>
                             <div classassets/d3-context-menu/d3-context-menu.css="">
                                 <div class="modal-header lock-head font-green"> Locked </div>
@@ -359,6 +362,15 @@
         <span aria-hidden="true" class="quick-nav-bg"></span>
     </nav>
     <div class="comment-panel-parent" ng-if="isPanelOpen"></div>
+    <div class="comment-panel-parent" ng-init="isWelcomenOpen=false" ng-if="isWelcomenOpen">
+        <div class="centercontent">
+        <div class="spinner" id="graphloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+        </div>  
+    </div>
     <div class="quick-nav-overlay"></div>
     <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <script src="bower_components/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>

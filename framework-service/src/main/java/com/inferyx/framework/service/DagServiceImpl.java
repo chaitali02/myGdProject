@@ -53,6 +53,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
@@ -945,6 +946,8 @@ public class DagServiceImpl {
 			for (TaskExec indvExecTask : dagExecTasks) {
 				otherParams = execParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
+				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());
+				logger.info(" OtherParams : " + otherParams);
 				MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
 				List<TaskOperator> operatorList = new ArrayList<>();
 				TaskOperator operator = new TaskOperator();
@@ -973,7 +976,7 @@ public class DagServiceImpl {
 				java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
 						.convertRefKeyListToMap(execParams.getRefKeyList());
 				BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(ref.getType()), ref, indvExecTask);
-				
+
 				try {
 					// If conditions with parse goes here - START
 					if (ref.getType().equals(MetaType.map)) {
@@ -1021,20 +1024,23 @@ public class DagServiceImpl {
 								datapodList, (ReconGroupExec) baseExec, dagExec);
 						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
 					} else if (ref.getType().equals(MetaType.operator)) {
-						baseExec = operatorServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.operator, MetaType.operatorExec, (OperatorExec)baseExec, 
-								refKeyMap, datapodList, dagExec);
 						ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
-						otherParams = (HashMap<String, String>) operatorServiceImpl.parse(ref.getUuid(), ref.getVersion(), MetaType.operator, (OperatorExec)baseExec, 
-																							operatorExecParams, otherParams, runMode);
-						execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
-						if (indvTask.getDependsOn().size() > 0) {
+						operatorExecParams.setOtherParams((HashMap<String, String>) helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
+						baseExec = operatorServiceImpl.create((OperatorExec)baseExec, operatorExecParams, runMode);
+						logger.info("operatorExecParams.getOtherParams : " + operatorExecParams.getOtherParams());
+						operatorServiceImpl.parse((OperatorExec)baseExec, operatorExecParams, runMode);
+						logger.info("operatorExecParams.getOtherParams : otherParams 1 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
+						otherParams = (HashMap<String, String>) helper.mergeMap(operatorExecParams.getOtherParams(), otherParams);
+						logger.info("operatorExecParams.getOtherParams : otherParams 2 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
+						/*if (indvTask.getDependsOn().size() > 0) {
 							operatorExecParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
 							indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
-						}
+						}*/
 					}
 					execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
 					// If conditions with parse goes here - END	
-					
+					logger.info(" otherParams : " + otherParams);
+					logger.info(" execParams.getOtherParams() : " + execParams.getOtherParams());
 					baseExec.setRefKeyList(execParams.getRefKeyList());
 					if (baseExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
 						throw new Exception();

@@ -1010,7 +1010,7 @@ public class ModelServiceImpl {
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
 					
 					//tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 
@@ -1030,7 +1030,7 @@ public class ModelServiceImpl {
 								}
 							}
 //							
-							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+							tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 //							String[] customFldArr = new String[] {fieldArray[i]};
 //							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
@@ -1057,7 +1057,7 @@ public class ModelServiceImpl {
 						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {
-						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+						tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 						
 						String sql = "SELECT * FROM " + tableName;	
 						tableName_3 = tableName;
@@ -1085,7 +1085,7 @@ public class ModelServiceImpl {
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
 					
 //					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 					
@@ -1105,7 +1105,7 @@ public class ModelServiceImpl {
 								}
 							}
 							
-							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+							tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 //							String[] customFldArr = new String[] {fieldArray[i]};
 //							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
@@ -1129,7 +1129,7 @@ public class ModelServiceImpl {
 						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {						
-						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+						tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 						
 						String sql = "SELECT * FROM " + tableName;
 						tableName_3 = tableName;
@@ -2115,7 +2115,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
 
 					String tabName_2 = null;
 					String tableName_3 = null;
@@ -2133,7 +2133,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 								}
 							}
 							
-							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+							tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 
 							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
 							String sql = simulateMLOperator.generateSql(simulate, tabName_2);
@@ -2159,7 +2159,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {
-						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+						tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 						
 						String sql = "SELECT * FROM " + tableName;	
 						tableName_3 = tableName;
@@ -2187,7 +2187,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
 				
 					String tabName_2 = null;
 					String tableName_3 = null;
@@ -2205,7 +2205,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 								}
 							}
 							
-							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+							tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 
 							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
 							if(i == 0)
@@ -2241,7 +2241,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {						
-						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+						tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 						
 						String sql = "SELECT * FROM " + tableName;
 						tableName_3 = tableName;

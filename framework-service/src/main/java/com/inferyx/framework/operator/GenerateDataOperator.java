@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
@@ -20,6 +19,7 @@ import com.inferyx.framework.datascience.distribution.Math3RandDistribution;
 import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.datascience.distribution.RandomDistributionFactory;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
@@ -27,6 +27,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
@@ -68,10 +69,13 @@ public class GenerateDataOperator implements Operator {
 	}
 
 	@Override
-	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
-			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-		String execVersion = execIdentifier.getVersion();
+	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		HashMap<String, String> otherParams = execParams.getOtherParams();
+		if (otherParams == null) {
+			otherParams = new HashMap<String, String>();
+			execParams.setOtherParams(otherParams);
+		}
+		String execVersion = baseExec.getVersion();
 		// Set destination
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
@@ -81,72 +85,12 @@ public class GenerateDataOperator implements Operator {
 //		String newVersion = Helper.getVersion();
 //		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		logger.info(" tableName : " + tableName);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
 		logger.info("otherParams in generateDataOperator : "+ otherParams);
 		return otherParams;
 	}
 
-	@Override
-	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
-	 */
-	@Override
-	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-	
-		String execUuid = execIdentifier.getUuid();
-		String execVersion = execIdentifier.getVersion();
-		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "distribution");
-		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(distributionInfo.getParamValue().getRef().getUuid(), distributionInfo.getParamValue().getRef().getVersion(), distributionInfo.getParamValue().getRef().getType().toString());
-		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
-		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
-		
-		List<ParamListHolder> distParamHolderList = new ArrayList<>();
-		ExecParams distExecParam = new ExecParams();
-
-		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
-		for(ParamListHolder holder : paramListInfo) {
-			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
-				distParamHolderList.add(holder);
-			}
-		}
-		distExecParam.setParamListInfo(distParamHolderList);
-		
-		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
-		int resolvedIterations = getResolvedIterations(numIterations, 0);
-		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
-		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
-		// Get exec
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-																																		
-		Object distributionObject = getDistributionObject(execParams, resolvedIterations, execVersion, otherParams);
-		
-		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
-		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
-		
-		if (randomDistribution instanceof Math3RandDistribution) {
-			List<RowObj> rowObjList = randomDistribution.generateData(distribution, distributionObject, getMethodName(execParams), locationDatapod.getAttributes(), numIterations, execVersion, tableName);
-			// Save result
-			save(exec, rowObjList, tableName, locationDatapod, execIdentifier, runMode);
-		} else {
-			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo());
-			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo());
-			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);			
-			// Save result
-			save(exec, resultSetHolder, tableName, locationDatapod, execIdentifier, runMode);
-		}
-
-		return tableName;
-	}
-	
 	/**
 	 * 
 	 * @param numIterations
@@ -275,7 +219,7 @@ public class GenerateDataOperator implements Operator {
 		
 		List<Attribute> attributes = locationDatapod.getAttributes();
 		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
-		
+		logger.info("execIdentifier : " + execIdentifier.getUuid() +":"+ execIdentifier.getVersion() +":"+ execIdentifier.getType());
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
 		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
 		@SuppressWarnings("unchecked")
@@ -288,8 +232,63 @@ public class GenerateDataOperator implements Operator {
 				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
+		logger.info("After setResult : " + ((OperatorExec)metaExec).getResult().getRef().getUuid());
 		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
 		
+	}
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		String execUuid = baseExec.getUuid();
+		String execVersion = baseExec.getVersion();
+		Map<String, String> otherParams = execParams.getOtherParams();
+		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "distribution");
+		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(distributionInfo.getParamValue().getRef().getUuid(), distributionInfo.getParamValue().getRef().getVersion(), distributionInfo.getParamValue().getRef().getType().toString());
+		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
+		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
+		
+		List<ParamListHolder> distParamHolderList = new ArrayList<>();
+		ExecParams distExecParam = new ExecParams();
+
+		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+		for(ParamListHolder holder : paramListInfo) {
+			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+				distParamHolderList.add(holder);
+			}
+		}
+		distExecParam.setParamListInfo(distParamHolderList);
+		
+		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
+		int resolvedIterations = getResolvedIterations(numIterations, 0);
+		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
+		// Get exec
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+																																		
+		Object distributionObject = getDistributionObject(execParams, resolvedIterations, execVersion, otherParams);
+		
+		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
+		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
+		
+		if (randomDistribution instanceof Math3RandDistribution) {
+			List<RowObj> rowObjList = randomDistribution.generateData(distribution, distributionObject, getMethodName(execParams), locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+			// Save result
+			save(exec, rowObjList, tableName, locationDatapod, baseExec.getRef(MetaType.operatorExec), runMode);
+		} else {
+			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo());
+			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo());
+			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);			
+			// Save result
+			save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(MetaType.operatorExec), runMode);
+		}
+		return tableName;
 	}
 
 	

@@ -823,10 +823,11 @@ public class RuleServiceImpl extends RuleTemplate {
 	}
 
 	@Override
-	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("EXECUTOR")) ? (ThreadPoolTaskExecutor)(execParams.getExecutionContext().get("EXECUTOR")) : null;
 		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("TASKLIST")) ? (List<FutureTask<TaskHolder>>)(execParams.getExecutionContext().get("TASKLIST")) : null;
 		execute(metaExecutor, (RuleExec)baseExec, taskList, execParams, runMode);
+		return null;
 	}
 
 	@Override

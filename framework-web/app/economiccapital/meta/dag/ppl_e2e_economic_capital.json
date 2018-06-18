@@ -1,5 +1,5 @@
 {
-    "xPos" : 30.0,
+    "xPos" : 0.0,
     "yPos" : 250.0,
     "templateFlg" : "N",
     "stages" : [ 
@@ -25,7 +25,6 @@
                                 "EXEC_PARAMS" : {
                                     "refKeyList" : null,
                                     "paramInfo" : null,
-                                    "dimInfo" : null,
                                     "filterInfo" : null,
                                     "stageInfo" : null,
                                     "paramSetHolder" : null,
@@ -240,7 +239,6 @@
                                 "EXEC_PARAMS" : {
                                     "refKeyList" : null,
                                     "paramInfo" : null,
-                                    "dimInfo" : null,
                                     "filterInfo" : null,
                                     "stageInfo" : null,
                                     "paramSetHolder" : null,
@@ -428,7 +426,6 @@
                                 "EXEC_PARAMS" : {
                                     "refKeyList" : null,
                                     "paramInfo" : null,
-                                    "dimInfo" : null,
                                     "filterInfo" : null,
                                     "stageInfo" : null,
                                     "paramSetHolder" : null,

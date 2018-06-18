@@ -792,7 +792,7 @@ public class Helper {
 		return null;
 	}
 	
-	public java.util.Map mergeMap (java.util.Map sourceMap, java.util.Map destMap) {
+	public static java.util.Map mergeMap (java.util.Map sourceMap, java.util.Map destMap) {
 		if (sourceMap == null || sourceMap.isEmpty()) {
 			if (destMap == null || destMap.isEmpty()) {
 				return new HashMap<>();

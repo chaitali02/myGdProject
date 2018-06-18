@@ -285,9 +285,9 @@ public class UserServiceImpl {
 	public User findUserByName(String userName)  {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		User user = null;
-		if(appUuid != null)
-			user=iUserDao.findUserByName(appUuid,userName);
-		else
+//		if(appUuid != null)
+//			user=iUserDao.findUserByName(appUuid,userName);
+//		else
 			user=iUserDao.findUserByName(userName);
 	if(user==null)
 		return null;

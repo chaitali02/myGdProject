@@ -157,10 +157,10 @@ public class DQOperator {
 		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
 					dagExec.getVersion());
-		} else if (otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+		} else if (otherParams!=null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		}
-		logger.info(" runMode : " + runMode.toString() + " : datapod : " + datapod.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(datapod.getUuid()));
+		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + datapod.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(datapod.getUuid()));
 		datastoreServiceImpl.setRunMode(runMode);
 		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 				runMode);

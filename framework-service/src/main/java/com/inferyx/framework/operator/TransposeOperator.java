@@ -19,6 +19,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -26,6 +27,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
@@ -95,11 +97,14 @@ public class TransposeOperator implements Operator {
 	}
 	
 	@Override
-	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		ParamListHolder sourceDatapodInfo = paramSetServiceImpl.getParamByName(execParams, "sourceDatapod");
-		String execVersion = execIdentifier.getVersion();
+		HashMap<String, String> otherParams = execParams.getOtherParams();
+		if (otherParams == null) {
+			otherParams = new HashMap<String, String>();
+			execParams.setOtherParams(otherParams);
+		}
+		String execVersion = baseExec.getVersion();
 		String sourceTableName = null;
 		String destTableName = null;
 		
@@ -134,9 +139,7 @@ public class TransposeOperator implements Operator {
 	}
 	
 	@Override
-	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return null;
 	}
 
@@ -144,14 +147,13 @@ public class TransposeOperator implements Operator {
 	 * @see com.inferyx.framework.operator.Operator#execute(com.inferyx.framework.domain.OperatorType, com.inferyx.framework.domain.ExecParams, java.lang.Object, java.util.Map, java.util.HashMap, java.util.Set, com.inferyx.framework.domain.Mode)
 	 */
 	@Override
-	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Executing TransposeOperator");
 		StringBuilder sb = new StringBuilder();
 		
-		String execUuid = execIdentifier.getUuid();
-		String execVersion = execIdentifier.getVersion();
+		String execUuid = baseExec.getUuid();
+		String execVersion = baseExec.getVersion();
+		Map<String, String> otherParams = execParams.getOtherParams();
 		
 		//OperatorExec operatorExec = (OperatorExec) execIdentifier;
 		
@@ -261,7 +263,7 @@ public class TransposeOperator implements Operator {
 		
 		ResultSetHolder resultSetHolder = exec.executeRegisterAndPersist(sql, tableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
-		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
+		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.operatorExec.toString());
 		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
 		@SuppressWarnings("unchecked")
 		List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) metaExec.getClass().getMethod("getAppInfo").invoke(metaExec);
@@ -269,12 +271,12 @@ public class TransposeOperator implements Operator {
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, fileName, 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
-				, new MetaIdentifier(execIdentifier.getType(), execUuid, execVersion) ,
+				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
 				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
-		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
-		return tableName;
+		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
+		return null;
 	}
 
 	public List<String> getColumnNameList(Object source, ParamListHolder holder ){
