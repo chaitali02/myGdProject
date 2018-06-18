@@ -90,6 +90,7 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
+import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
@@ -129,6 +130,8 @@ public class SparkExecutor implements IExecutor {
 	private ConnectionFactory connFactory;
 	@Autowired
 	Engine engine;
+	@Autowired
+	private ExecutorFactory execFactory;
 	
 	/*
 	 * @Autowired HiveContext hiveContext;
@@ -1600,12 +1603,13 @@ public class SparkExecutor implements IExecutor {
 		//Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		Dataset<Row> df = rsHolder.getDataFrame();
 		df.show(false);
-		String url = "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+		String url = genUrlByDatasource(datasource);
 		Properties connectionProperties = new Properties();
 		connectionProperties.put("driver", datasource.getDriver());
 		connectionProperties.put("user", datasource.getUsername());
 		connectionProperties.put("password", datasource.getPassword());
-		df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));
+		if(Arrays.asList(df.columns()).contains("features"))
+			df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));
 		df.write().mode(SaveMode.Append).jdbc(url, rsHolder.getTableName(), connectionProperties);
 		return rsHolder;
 	}
@@ -1852,5 +1856,83 @@ public class SparkExecutor implements IExecutor {
 		
 		rsHolder.setTableName("tempPredictResult");
 		return rsHolder;
+	}
+	
+	public String genUrlByDatasource(Datasource datasource) {
+		switch(datasource.getType().toLowerCase()) {
+			case "hive":  return "jdbc:hive2://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			  
+			case "impala": return "jdbc:impala://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			   
+			case "mysql": return "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			  
+			case "oracle": return "jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":" + datasource.getDbname();
+			
+			case "postgres": return "jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			   
+			default: return null;
+		}		
+	}
+	
+	public String uploadCsvToDatabase(Load load, Datasource datasource, String tableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		Dataset<Row> df = sparkSession.read().format("com.databricks.spark.csv")
+				.option("dateFormat", "dd-MM-yyyy")
+				.option("inferSchema", "true")
+				.option("header", "true").load(load.getSource().getValue());
+		df.show(false);
+		rsHolder.setDataFrame(df);
+		rsHolder.setTableName(tableName);
+		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
+		createTable(schema, datasource);
+		rsHolder = persistDataframe(rsHolder, datasource);
+		return schema;
+	}
+	
+	public String createTableSchema(StructField[] fields, Datasource datasource, String tableName) {
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		StringBuilder schema = new StringBuilder();
+		schema.append("CREATE TABLE IF NOT EXISTS ");
+		schema.append(tableName);
+		schema.append(" ( ");
+		for(StructField field : fields) {
+			schema.append(field.name())
+			.append(" ")
+			.append(exec.getDataType(field.dataType().toString()));
+			schema.append(", ");
+		}
+		schema = new StringBuilder(schema.toString().substring(0, schema.lastIndexOf(",")));
+		schema.append(" )");
+		return schema.toString();
+	}
+	
+//	public String getDataType2(String dataType) {
+//		if(dataType == null)
+//			return null;
+//		switch(dataType.toLowerCase()) {
+//		case "integer": return "INTEGER";
+//		case "double": return "DOUBLE";
+//		case "date": return "DATE";
+//		case "string": return "VARCHAR(70)";
+//		case "time": return "TIME";
+//		case "timestamp": return "TIMESTAMP";
+//		case "long" : return "BIGINT";
+//		case "binary" : return "BINARY";
+//		case "boolean" : return "BIT";
+//		case "byte" : return "TINYINT";
+//		case "float" : return "REAL";
+//		case "short" : return "SMALLINT";
+//		case "decimal" : return "DECIMAL";
+//		case "vector" : return "VARCHAR(100)";
+//		case "array" : return "VARCHAR(100)";
+//		
+//        default: return null;
+//		}
+//	}
+	
+	public String createTable(String sql, Datasource datasource) throws IOException {
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		exec.executeSql(sql, null);
+		return null;
 	}
 }

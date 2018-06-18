@@ -67,6 +67,7 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
 @Component
@@ -77,6 +78,8 @@ public class MySqlExecutor implements IExecutor {
 	private SparkExecutor sparkExecutor;
 	@Autowired
 	private SparkSession sparkSession;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(MySqlExecutor.class);	
 	
@@ -223,7 +226,8 @@ public class MySqlExecutor implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		// TODO Auto-generated method stub
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
 		return 0;
 	}
 
@@ -388,19 +392,22 @@ public class MySqlExecutor implements IExecutor {
 		}
 		
 		switch (dataType.toLowerCase()) {
-			case "integer": return "INT";
+			case "integer": return "INTEGER";
 			case "double": return "DOUBLE";
 			case "date": return "DATE";
-			case "string": return "VARCHAR(50)";
+			case "string": return "VARCHAR(70)";
+			case "time": return "TIME";
 			case "timestamp": return "TIMESTAMP";
 			case "long" : return "BIGINT";
-			case "boolean" : return "BIT(1)";
+			case "binary" : return "BINARY";
+			case "boolean" : return "BIT";
 			case "byte" : return "TINYINT";
-			case "float" : return "FLOAT";
-			case "null" : return "NULL";
+			case "float" : return "REAL";
 			case "short" : return "SMALLINT";
 			case "decimal" : return "DECIMAL";
-			case "vector" : return "ARRAY";
+			case "vector" : return "ARRAY";//"VARCHAR(100)";
+			case "array" : return "ARRAY";//"VARCHAR(100)";
+			case "null" : return "NULL";
 			
             default: return null;
 		}
