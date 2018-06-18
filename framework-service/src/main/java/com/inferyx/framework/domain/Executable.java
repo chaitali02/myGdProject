@@ -14,8 +14,9 @@ public interface Executable {
 	 * @param baseExec
 	 * @param execParams
 	 * @param runMode
+	 * @return 
 	 * @throws Exception 
 	 */
-	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception;
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception;
 
 }

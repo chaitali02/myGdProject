@@ -10,74 +10,25 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.Executable;
+import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.enums.RunMode;
 
-public interface Operator {
-	
+public interface Operator extends Parsable, Executable{
+
 	/**
 	 * 
-	 * @param operator
+	 * @param baseExec
 	 * @param execParams
-	 * @param execIdentifier
-	 * @param refKeyMap
-	 * @param otherParams
-	 * @param usedRefKeySet
-	 * @param datapodList
 	 * @param runMode
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, 
-			ExecParams execParams, 
-			MetaIdentifier execIdentifier, 
-			java.util.Map<String, MetaIdentifier> refKeyMap, 
-			HashMap<String, String> otherParams, 
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception;
-	
-	/**
-	 * 
-	 * @param operator
-	 * @param execParams
-	 * @param execIdentifier
-	 * @param refKeyMap
-	 * @param otherParams
-	 * @param usedRefKeySet
-	 * @param datapodList
-	 * @param runMode
-	 * @return
-	 * @throws Exception
-	 */
-	public String parse(com.inferyx.framework.domain.Operator operator, 
-			ExecParams execParams, 
-			MetaIdentifier execIdentifier, 
-			java.util.Map<String, MetaIdentifier> refKeyMap, 
-			HashMap<String, String> otherParams, 
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception;
-	
-	/**
-	 * 
-	 * @param operator
-	 * @param execParams
-	 * @param execIdentifier
-	 * @param refKeyMap
-	 * @param otherParams
-	 * @param usedRefKeySet
-	 * @param runMode
-	 * @return
-	 * @throws Exception
-	 */
-	public String execute(com.inferyx.framework.domain.Operator operator, 
-			ExecParams execParams, 
-			MetaIdentifier execIdentifier, 
-			java.util.Map<String, MetaIdentifier> refKeyMap, 
-			HashMap<String, String> otherParams, 
-			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception;
+	Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception;
 	
 }
+	

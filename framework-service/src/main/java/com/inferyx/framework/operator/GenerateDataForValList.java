@@ -18,12 +18,15 @@ import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.GenVal;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
@@ -63,12 +66,10 @@ public class GenerateDataForValList extends GenerateDataOperator {
 	}
 
 	@Override
-	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator,
-			ExecParams execParams, MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
-			RunMode runMode) throws Exception {
-		String execUuid = execIdentifier.getUuid();
-		String execVersion = execIdentifier.getVersion();
+	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		String execUuid = baseExec.getUuid();
+		String execVersion = baseExec.getVersion();
+		Map<String, String> otherParams = execParams.getOtherParams();
 		ParamListHolder valInfo = paramSetServiceImpl.getParamByName(execParams, "valList");
 		// Set destination
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
@@ -94,20 +95,17 @@ public class GenerateDataForValList extends GenerateDataOperator {
 	}
 
 	@Override
-	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
-			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	
 	@Override
-	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
-			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-		String execUuid = execIdentifier.getUuid();
-		String execVersion = execIdentifier.getVersion();
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		String execUuid = baseExec.getUuid();
+		String execVersion = baseExec.getVersion();
+		Map<String, String> otherParams = execParams.getOtherParams();
 		int numRepetitions = 0;
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
@@ -146,70 +144,10 @@ public class GenerateDataForValList extends GenerateDataOperator {
 		ResultSetHolder resultSetHolder = exec.executeAndRegister(rangeSql, tableName, datasource.getType());
 		
 		// save result
-		save(exec, resultSetHolder, tableName, locationDatapod, execIdentifier, runMode);
-		
-		return tableName;
+		save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(MetaType.operatorExec), runMode);
+		return null;
 	}
 
-	/*@Override
-	public String execute(com.inferyx.framework.datascience.Operator operator, ExecParams execParams,
-			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-		String execUuid = execIdentifier.getUuid();
-		String execVersion = execIdentifier.getVersion();
-		int numRepetitions = 0;
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		
-		ParamListHolder numIterationsInfo = paramSetServiceImpl.getParamByName(execParams, "numIterations");
-		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
-		
-		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
-		
-		
-		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
-		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
-
-		// Get the attribute 
-		String attributeName = "id";
-		String attrTableName = otherParams.get("datapodUuid_" + "valList" + "_tableName");
-		String countSql = "select count("+attributeName+") as " + attributeName + " from " + attrTableName;
-		// Get number of customers
-		List<Map<String, Object>> dataList = exec.executeAndFetch(countSql, commonServiceImpl.getApp().getUuid());
-		// retrieve attribute
-		if (dataList == null || dataList.isEmpty() || dataList.get(0) == null || dataList.get(0).get(attributeName) == null) {
-			numRepetitions = 0;
-		} else {
-			numRepetitions = Integer.parseInt(""+dataList.get(0).get(attributeName));
-		}
-		
-		// Get resolved numIterations
-		numRepetitions = getResolvedIterations(numIterations, numRepetitions);
-		
-		Object distributionObject = getDistributionObject(execParams, numRepetitions, execVersion, otherParams);
-		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
-		
-		// Generate Data 
-		ResultSetHolder resultSetHolder = exec.generateData(distributionObject, locationDatapod.getAttributes(), numRepetitions, execVersion, tableName);
-		
-		// Generate Bucket Id
-		String bucketsSql = getBucketsSql(numIterations, resultSetHolder);
-		resultSetHolder = exec.executeAndRegister(bucketsSql, tableName, datasource.getType());
-		
-		// Generate sequence from instrument sql
-		String seqSql = getInstrumentSql(attrTableName);
-		resultSetHolder = exec.executeAndRegister(bucketsSql, attrTableName, datasource.getType());
-		
-		// Generate Data
-		String genDataSql = genDataSql(attrTableName, tableName);
-		resultSetHolder = exec.executeAndRegister(genDataSql, tableName, datasource.getType());
-		
-		// save result
-		save(exec, resultSetHolder, tableName, locationDatapod, execIdentifier, runMode);
-		
-		return tableName;
-	}
-*/	
 public List<String> getColumnNameList(Object source, ParamListHolder holder ){
 		
 		List<String> columns = new ArrayList<>();

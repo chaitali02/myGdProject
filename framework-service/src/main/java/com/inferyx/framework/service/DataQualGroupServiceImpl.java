@@ -375,9 +375,9 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 	 * Override Executable.execute()
 	 */
 	@Override
-	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		execute(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), execParams, (DataQualGroupExec) baseExec, runMode);
-		
+		return null;
 	}
 
 	/**
