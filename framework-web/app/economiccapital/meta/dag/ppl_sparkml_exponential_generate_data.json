@@ -135,15 +135,15 @@
                             }
                         }
                     ],
-                    "xPos" : 500.0,
-                    "yPos" : 30.0,
+                    "xPos" : 850.0,
+                    "yPos" : 250.0,
                     "active" : "Y",
                     "statusList" : []
                 }
             ],
             "name" : "new stage",
-            "xPos" : 200.0,
-            "yPos" : 50.0,
+            "xPos" : 430.0,
+            "yPos" : 250.0,
             "active" : "Y",
             "statusList" : []
         }
