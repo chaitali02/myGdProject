@@ -108,7 +108,7 @@ public class ImpalaRegister extends DataSourceRegister {
 				List<Attribute> attrList = new ArrayList();
 				logger.info("Table is : " + registryListTable);
 				dp = new Datapod();
-				List<Datapod> datapodList = datapodServiceImpl.SearchDatapodByName(tableName, datasource.getUuid());
+				List<Datapod> datapodList = datapodServiceImpl.searchDatapodByName(tableName, datasource.getUuid());
 				if(datapodList.size() > 0) {
 					dp.setUuid(datapodList.get(0).getUuid());
 				}
