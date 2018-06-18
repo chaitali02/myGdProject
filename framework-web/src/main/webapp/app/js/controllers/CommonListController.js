@@ -735,7 +735,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var fd = new FormData();
     fd.append('csvFileName', file);
     $('#fileupload').modal('hide')
-    $scope.gridOptions.data[$scope,uploadDetail.index].isupload=true;
+    $scope.gridOptions.data[$scope.uploadDetail.index].isupload=true;
     CommonService.uploadFile($scope.uploaaduuid, fd, "datapod").then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
       $scope.gridOptions.data[$scope,uploadDetail.index].isupload=false;
