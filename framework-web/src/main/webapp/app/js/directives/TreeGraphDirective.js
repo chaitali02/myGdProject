@@ -205,8 +205,11 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     nodeEnter.append("svg:foreignObject")
                     .attr("width", 20)
                     .attr("height", 20)
-                    .attr("y", "-17px")
-                    .attr("x", "17px")
+                    .attr("y", "-10")
+                    .attr("x", function(d){
+                        var x="100px";
+                        return x
+                    })
                     .append("xhtml:img")
                         .attr("class","node-refresh")
                         .style("display","none")

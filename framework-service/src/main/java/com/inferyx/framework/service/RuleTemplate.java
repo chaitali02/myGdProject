@@ -139,8 +139,6 @@ public abstract class RuleTemplate implements Executable, Parsable {
 				commonServiceImpl.save(execType.toString(), inputBaseRuleExec);
 			}
 		}
-		MetaIdentifier baseruleExecInfo = new MetaIdentifier(execType, inputBaseRuleExec.getUuid(), inputBaseRuleExec.getVersion());
-		
 		statusList = inputBaseRuleExec.getStatusList();
 		if (Helper.getLatestStatus(statusList) != null 
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 

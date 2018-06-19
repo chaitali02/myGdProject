@@ -80,7 +80,7 @@ public class TaskServiceImpl implements Callable<String> {
 	private CommonServiceImpl<?> commonServiceImpl;
 	private LoadServiceImpl loadServiceImpl;
 	private DatapodServiceImpl datapodServiceImpl;
-	private OperatorServiceImpl operatorServiceImpl;
+	private CustomOperatorServiceImpl operatorServiceImpl;
 	private DagServiceImpl dagServiceImpl;
 	private HDFSInfo hdfsInfo;
 	private MapServiceImpl mapServiceImpl;
@@ -238,11 +238,11 @@ public class TaskServiceImpl implements Callable<String> {
 
 	private MetadataUtil daoRegister;		
 		
-	public OperatorServiceImpl getOperatorServiceImpl() {
+	public CustomOperatorServiceImpl getOperatorServiceImpl() {
 		return operatorServiceImpl;
 	}
 
-	public void setOperatorServiceImpl(OperatorServiceImpl operatorServiceImpl) {
+	public void setOperatorServiceImpl(CustomOperatorServiceImpl operatorServiceImpl) {
 		this.operatorServiceImpl = operatorServiceImpl;
 	}
 

@@ -135,7 +135,7 @@ public class DagServiceImpl {
 	@Autowired
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 	@Autowired
-	private OperatorServiceImpl operatorServiceImpl;
+	private CustomOperatorServiceImpl operatorServiceImpl;
 	@Autowired
 	private Helper helper;
 	
