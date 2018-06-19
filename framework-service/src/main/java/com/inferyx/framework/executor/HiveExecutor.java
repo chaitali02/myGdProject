@@ -38,6 +38,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -71,6 +72,8 @@ public class HiveExecutor implements IExecutor{
 	protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private SparkExecutor sparkExecutor;
+	@Autowired
+	private Helper helper;
 	
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
@@ -447,5 +450,14 @@ public class HiveExecutor implements IExecutor{
 			SecurityException, NullPointerException, ParseException, IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+		String sourceTableName = load.getSource().getValue();
+		String sql = "SELECT * FROM " + sourceTableName;
+		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
+		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+		return rsHolder.getCountRows();
 	}
 }

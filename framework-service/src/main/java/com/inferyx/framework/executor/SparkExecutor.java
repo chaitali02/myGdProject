@@ -1928,4 +1928,10 @@ public class SparkExecutor implements IExecutor {
 		exec.executeSql(sql, null);
 		return null;
 	}
+
+	@Override
+	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

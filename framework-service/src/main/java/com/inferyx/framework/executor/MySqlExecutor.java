@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -72,6 +73,8 @@ public class MySqlExecutor implements IExecutor {
 	private SparkExecutor sparkExecutor;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(MySqlExecutor.class);	
 	
@@ -222,7 +225,7 @@ public class MySqlExecutor implements IExecutor {
 		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
 		return rsHolder.getCountRows();
 	}
-
+	
 	@Override
 	public void registerDatapod(String tableName, Datapod datapod, DataStore dataStore, ExecContext execContext,
 			String clientContext) throws IOException {
@@ -567,5 +570,14 @@ public class MySqlExecutor implements IExecutor {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, IOException {
 		return sparkExecutor.loadTrainedModel(modelClass, location);
+	}
+
+	@Override
+	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+		String sourceTableName = load.getSource().getValue();
+		String sql = "SELECT * FROM " + sourceTableName;
+		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
+		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+		return rsHolder.getCountRows();
 	}
 }

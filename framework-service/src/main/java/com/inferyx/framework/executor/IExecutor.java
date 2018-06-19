@@ -507,4 +507,16 @@ public interface IExecutor {
 			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, IOException;
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param load
+	 * @param datapodTableName
+	 * @param datapod
+	 * @param clientContext
+	 * @return long
+	 * @throws IOException
+	 */
+	long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException;
 }
