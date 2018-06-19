@@ -14,12 +14,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.neo4j.cypher.internal.compiler.v2_3.prettifier.Comma;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,24 +27,29 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatasetServiceImpl;
+import com.inferyx.framework.service.MessageStatus;
 
 @Component
-public class DQOperator {
+public class DQOperator implements Parsable {
 
 	private String BLANK = " ";
 	private String CASE_WHEN = " CASE WHEN ";
@@ -590,6 +595,38 @@ public class DQOperator {
 		StringBuilder caseBuilder = new StringBuilder(CASE_WHEN).append(check).append(THEN).append(colName)
 				.append(BLANK);
 		return caseBuilder.toString();
+	}
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqExec.toString());
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString());
+		try{
+			dataQualExec.setExec(generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode));
+			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+			
+			synchronized (dataQualExec.getUuid()) {
+				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(
+						new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+				dataQualExec1.setExec(dataQualExec.getExec());
+				dataQualExec1.setRefKeyList(dataQualExec.getRefKeyList());
+				commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec1);
+				dataQualExec1 = null;
+			}
+			}catch(Exception e){
+				commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.Failed);
+				e.printStackTrace();
+				String message = null;
+				try {
+					message = e.getMessage();
+				}catch (Exception e2) {
+					// TODO: handle exception
+				}
+				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.");
+				throw new Exception((message != null) ? message : "Failed data quality parsing.");
+			}
+		return dataQualExec;
 	}
 
 }
