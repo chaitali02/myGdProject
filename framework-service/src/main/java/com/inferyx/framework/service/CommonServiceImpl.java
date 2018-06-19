@@ -1539,11 +1539,12 @@ public class CommonServiceImpl <T> {
 							attrId = attributeId.toString();
 						/*else
 							logger.info("resolveName method: attributeId is null for the Object " + type);*/
-						for (Method innerMethod : methodList) {
-							if (innerMethod.getName().startsWith(SET + "Attr") /*|| innerMethod.getName().startsWith(SET + "Attribute")*/ && innerMethod.getName().contains("Name")) {
-								innerMethod.invoke(object, resolveAttributeName(attrId, object));
-							}
-						}	
+						if(attributeId != null)
+							for (Method innerMethod : methodList) {
+								if (innerMethod.getName().startsWith(SET + "Attr") /*|| innerMethod.getName().startsWith(SET + "Attribute")*/ && innerMethod.getName().contains("Name")) {
+									innerMethod.invoke(object, resolveAttributeName(attrId, object));
+								}
+							}	
 					}					
 					
 					if(object instanceof ParamSet) {

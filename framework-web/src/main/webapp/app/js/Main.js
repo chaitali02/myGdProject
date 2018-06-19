@@ -209,7 +209,7 @@ InferyxApp.factory('ajaxCallFactory', function ($http, $location) {
     return ajaxCallServiceFactory;
 });
 
-InferyxApp.controller('TabController', function ($timeout, $state, $scope, $rootScope, $stateParams) {
+InferyxApp.controller('TabController', function ($timeout, $state, $scope, $rootScope, $stateParams,$sessionStorage) {
     $scope.activeTabIndex = 1;
     $rootScope.rootTabs = $scope.tabs = [];
     $scope.showTabs = true;
@@ -288,6 +288,8 @@ InferyxApp.controller('TabController', function ($timeout, $state, $scope, $root
     };
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+        $sessionStorage.fromStateName = fromState.name
+        $sessionStorage.fromParams = fromParams
         if ($scope.tabs.length == 0) {
             var state = {};
             state.route = toState.name;
@@ -531,7 +533,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
     }//End updateMetaData Method
 });
 
-InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService) {
+InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService) {
     $rootScope.reOpen=localStorage.reOpen;
     if (localStorage.isAppRoleExists && $rootScope.reOpen ==false) {
         $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
@@ -644,7 +646,19 @@ InferyxApp.controller('AppRoleController', function ($scope, $rootScope, $cookie
     };
 
     $scope.cancelLogut = function () {
-        $rootScope.$emit('CallFromAppRoleControllerLogout', {});
+        if (!localStorage.isAppRoleExists) {
+            $rootScope.$emit('CallFromAppRoleControllerLogout', {});
+        }
+        else{
+            $('#myModal').modal('hide');
+            $rootScope.reOpen=false;
+            localStorage.reOpen=false;
+            if ($sessionStorage.fromStateName){
+                $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
+            }else{
+                $state.go('datadiscovery');
+            }
+        }
     }
    
 
@@ -766,7 +780,7 @@ InferyxApp.controller('AppController', ['$scope', '$rootScope', 'commentService'
 
 
 /* Setup Layout Part - Header */
-InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', '$cookieStore', '$stateParams', '$state', 'dagMetaDataService', function ($uibModal, $scope, $rootScope, $cookieStore, $stateParams, $state, dagMetaDataService) {
+InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', '$cookieStore', '$stateParams', '$state', 'dagMetaDataService','$sessionStorage', function ($uibModal, $scope, $rootScope, $cookieStore, $stateParams, $state, dagMetaDataService,$sessionStorage) {
     $rootScope.dummyArg = 1;
     
     $rootScope.caseConverter = function (str) {
@@ -822,7 +836,12 @@ InferyxApp.controller('HeaderController', ['$uibModal', '$scope', '$rootScope', 
     $scope.OepnWelcomeWindow=function(){
         $rootScope.reOpen=true;
         localStorage.reOpen=true;
-        $state.go('/');
+        if ($sessionStorage.fromStateName){
+            $state.go($sessionStorage.fromStateName,$sessionStorage.fromParams);
+        }
+        else{
+            $state.go('/home');
+        }
            $('#myModal').modal({
                 backdrop: 'static',
                 keyboard: false
@@ -926,6 +945,14 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         url: '',
         //templateUrl: 'index.html',
         //controller: function($scope,$rootScope, $stateParams) {}
+    })
+    $stateProvider.state('/home', {
+        url: 'DataDiscovery',
+        templateUrl: 'views/data-discovery-card-list.html',
+        controller: function ($scope, $rootScope, $stateParams, $window) {
+            //$window.location.href = 'index.html';
+        },
+        data: { pageTitle: 'Data Discovery' }, 
     })
 
     $stateProvider.state('home', {
