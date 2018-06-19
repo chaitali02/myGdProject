@@ -80,6 +80,7 @@ MetadataModule.service('MetadataLoadSerivce', function ($q, sortFactory, Metadat
 				resultjson.id = response[i].id;
 				resultjson.name = response[i].name;
 				resultjson.dese = response[i].dese;
+				resultjson.path = response[i].path;
 				resultjson.registeredOn = response[i].registeredOn;
 				resultjson.registeredBy = response[i].registeredBy;
 				if (response[i].status == "UnRegistered") {

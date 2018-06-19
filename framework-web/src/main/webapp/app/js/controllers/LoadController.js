@@ -282,7 +282,7 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		sourceref.type ="datasource";
 		sourceref.uuid=$scope.allDataSource.defaultoption.uuid;
 		source.ref = sourceref;
-		source.value = $scope.SelectRegistryDatasource.name;
+		source.value = $scope.SelectRegistryDatasource.path;
 		loadJson.source = source;
 		console.log(JSON.stringify(loadJson));
 		MetadataLoadSerivce.submit(loadJson, 'load',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
