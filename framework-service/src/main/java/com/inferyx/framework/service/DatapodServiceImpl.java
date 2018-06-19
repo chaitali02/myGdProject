@@ -451,9 +451,10 @@ public class DatapodServiceImpl {
 			logger.info("Attributes:" + attributes);
 
 			// Create datapod
-			List<Datasource> datasourceList = iDatasourceDao.findDatasourceByType(appUuid, ExecContext.FILE.toString());
+//			List<Datasource> datasourceList = iDatasourceDao.findDatasourceByType(appUuid, ExecContext.FILE.toString());
 			dp = new Datapod();
-			for(Datasource datasource:datasourceList) {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//			for(Datasource datasource : datasourceList) {
 				MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(),
 						datasource.getVersion());
 				MetaIdentifierHolder mHolder = new MetaIdentifierHolder();
@@ -469,7 +470,7 @@ public class DatapodServiceImpl {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+//			}
 
 			/*
 			 * // Create relation Relation r = new Relation();
@@ -797,19 +798,19 @@ public class DatapodServiceImpl {
 		return baseEntityList;
 	}
 */
-	public List<Datapod> SearchDatapodByName(String name, String datasourceUuid) throws JsonProcessingException {		
+	public List<Datapod> searchDatapodByName(String name, String datasourceUuid) throws JsonProcessingException {		
 		 Aggregation filterAggr = 
 					newAggregation(	
 					match(Criteria.where("datasource.ref.uuid").is(datasourceUuid).andOperator(Criteria.where("name").is(name))),
 					group("uuid").max("version").as("version"));
 
 				 AggregationResults<Datapod> groupResults 
-					= mongoTemplate.aggregate(filterAggr, "datapod",Datapod.class);
+					= mongoTemplate.aggregate(filterAggr, MetaType.datapod.toString(), Datapod.class);
 				List<Datapod> datapodList = groupResults.getMappedResults();
 				List<Datapod> result = new ArrayList<Datapod>();
-				for (Datapod d : datapodList) {
+				for (Datapod datapod : datapodList) {
 					//Datapod datapodLatest = idatapodDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
-					Datapod datapodLatest = (Datapod) commonServiceImpl.getOneByUuidAndVersion(d.getId(), d.getVersion(), MetaType.datapod.toString());
+					Datapod datapodLatest = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapod.getId(), datapod.getVersion(), MetaType.datapod.toString());
 					if(datapodLatest != null)
 						result.add(datapodLatest);
 				}				

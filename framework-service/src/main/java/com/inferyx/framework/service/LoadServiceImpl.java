@@ -24,6 +24,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,26 +32,20 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.ILoadDao;
-import com.inferyx.framework.dao.ILoadExecDao;
-import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Executable;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
-import com.inferyx.framework.domain.Map;
-import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -83,15 +78,11 @@ public class LoadServiceImpl {
 	@Autowired
 	private MetadataUtil daoRegister;
 	@Autowired
-	private ILoadExecDao iLoadExecDao;
-	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private HDFSInfo hdfsInfo;
 	@Autowired
 	DataSourceFactory datasourceFactory;
 	@Autowired
@@ -253,7 +244,7 @@ public class LoadServiceImpl {
 		statusList.add(status);
 		try {
 			loadExec.setBaseEntity();
-			loadExec.setStatusList(statusList);
+			//loadExec.setStatusList(statusList);
 			status = new Status(Status.Stage.InProgress, new Date());
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
@@ -334,7 +325,6 @@ public class LoadServiceImpl {
 			loadExec.setStatusList(statusList);
 			// iLoadExecDao.save(loadExec);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
-			;
 		}
 	}
 
@@ -511,7 +501,7 @@ public class LoadServiceImpl {
 		}
 		loadExec.setExecParams(execParams);
 		try {
-			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+			//Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 			List<Status> statusList = loadExec.getStatusList();
 			if (statusList == null) {
 				statusList = new ArrayList<Status>();
@@ -565,4 +555,26 @@ public class LoadServiceImpl {
 		executeSql((LoadExec) baseExec, datapodTableName, null, datapodKey, dataStore, runMode);
 	}*/
 	
+
+	public LoadExec execute(String loadUuid, String loadVersion, LoadExec loadExec, ExecParams execParams, RunMode runMode) throws Exception, AnalysisException {
+		try {
+			Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(loadUuid, loadVersion, MetaType.load.toString());
+			MetaIdentifier targetMI = load.getTarget().getRef();
+			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
+			String targetDpTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), runMode);
+			executeSql(loadExec, null, targetDpTableName, new OrderKey(targetDp.getUuid(), targetDp.getVersion()), null, runMode);
+			return loadExec;
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Failed);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Load execution failed.");
+			throw new RuntimeException((message != null) ? message : "Load execution failed.");
+		}
+	}
 }

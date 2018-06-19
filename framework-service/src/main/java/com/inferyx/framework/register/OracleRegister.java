@@ -76,7 +76,7 @@ public class OracleRegister {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 
-	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList) throws Exception {
+	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
 
 		//Datasource datasource = iDatasourceDao.findOneByUuidAndVersion(uuid, version);
 		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
@@ -103,7 +103,7 @@ public class OracleRegister {
 				
 				List<Attribute> attrList = new ArrayList();
 				dp = new Datapod();
-				List<Datapod> datapodList = datapodServiceImpl.SearchDatapodByName(tableName, datasource.getUuid());
+				List<Datapod> datapodList = datapodServiceImpl.searchDatapodByName(tableName, datasource.getUuid());
 				
 				if(datapodList.size() > 0)
 					dp.setUuid(datapodList.get(0).getUuid());

@@ -80,7 +80,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		@Autowired
 		LoadServiceImpl loadServiceImpl;
 		@Autowired
-		OperatorServiceImpl operatorServiceImpl;
+		CustomOperatorServiceImpl operatorServiceImpl;
 		@Autowired
 		ThreadPoolTaskExecutor stageExecutor;
 		@Autowired

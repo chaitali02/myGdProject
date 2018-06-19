@@ -17,11 +17,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.LoadServiceImpl;
 
@@ -50,5 +54,17 @@ public class LoadController {
 				runMode = RunMode.ONLINE;
 			}
 			return loadServiceImpl.getLoadResults(loadExecUUID, loadExecVersion, offset, limit, sortBy, order, requestId, runMode);
+	}
+	
+	@RequestMapping(value = "/execute", method = RequestMethod.POST)
+	public LoadExec execute(@RequestParam(value = "uuid") String loadUuid,
+							@RequestParam(value = "version") String loadVersion,
+						    @RequestBody (required = false) ExecParams execParams,
+							@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);		
+		LoadExec loadExec = null;
+		loadExec = loadServiceImpl.create(loadUuid, loadVersion, execParams, null, loadExec);
+		loadExec = loadServiceImpl.execute(loadUuid, loadVersion, loadExec, execParams, runMode);
+		return loadExec;
 	}
 }

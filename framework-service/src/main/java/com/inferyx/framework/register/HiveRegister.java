@@ -45,6 +45,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -73,7 +74,7 @@ public class HiveRegister extends DataSourceRegister {
 	@Autowired
 	SparkExecutor sparkExecutor;
 
-	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList) throws Exception {
+	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
 
 		Datasource datasource = iDatasourceDao.findOneByUuidAndVersion(uuid, version);
 		List<Attribute> attrList = null;
@@ -119,7 +120,7 @@ public class HiveRegister extends DataSourceRegister {
 				Datapod dp1 = new Datapod();
 				DataStore datastore = new DataStore();
 				dp = new Datapod();
-				List<Datapod> datapodList = datapodServiceImpl.SearchDatapodByName(tableName, datasource.getUuid());
+				List<Datapod> datapodList = datapodServiceImpl.searchDatapodByName(tableName, datasource.getUuid());
 				if(datapodList.size() > 0) {
 					dp.setUuid(datapodList.get(0).getUuid());
 				}

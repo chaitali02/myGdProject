@@ -64,7 +64,7 @@ import com.inferyx.framework.operator.TransposeOldOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-public class OperatorServiceImpl implements Parsable, Executable {
+public class CustomOperatorServiceImpl implements Parsable, Executable {
 
 	@Autowired
 	CustomOperatorFactory operatorFactory;
@@ -118,7 +118,7 @@ public class OperatorServiceImpl implements Parsable, Executable {
 	@Autowired
 	Helper helper;
 
-	static final Logger logger = Logger.getLogger(OperatorServiceImpl.class);
+	static final Logger logger = Logger.getLogger(CustomOperatorServiceImpl.class);
 
 	/**
 	 * 
@@ -130,7 +130,7 @@ public class OperatorServiceImpl implements Parsable, Executable {
 	 */
 	public OperatorExec create(OperatorExec operatorExec, ExecParams execParams,
 								RunMode runMode) throws Exception {
-		logger.info("Inside OperatorServiceImpl.create ");
+		logger.info("Inside CustomOperatorServiceImpl.create ");
 		List<Status> statusList = null;
 		if (operatorExec == null) {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
@@ -377,7 +377,7 @@ public class OperatorServiceImpl implements Parsable, Executable {
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(),
 				baseExec.getVersion(), MetaType.operatorExec.toString());
-		logger.info("Inside OperatorServiceImpl.execute");
+		logger.info("Inside CustomOperatorServiceImpl.execute");
 		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(
 				operatorExec.getDependsOn().getRef().getUuid(), operatorExec.getDependsOn().getRef().getVersion(),
 				MetaType.operator.toString());
