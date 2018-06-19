@@ -10,37 +10,20 @@
  *******************************************************************************/
 package com.inferyx.framework.register;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.hadoop.hive.conf.HiveConf;
-import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
-import org.apache.hadoop.hive.metastore.api.FieldSchema;
-import org.apache.hadoop.hive.metastore.api.MetaException;
-import org.apache.hadoop.hive.metastore.api.Partition;
-import org.apache.hadoop.hive.metastore.api.Table;
-import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.log4j.Logger;
-import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.HiveInfo;
-import com.inferyx.framework.common.ImpalaInfo;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IDatapodDao;
@@ -60,7 +43,6 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.ImpalaExecutor;
-import com.inferyx.framework.executor.MySqlExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,12 +29,7 @@ import java.util.Map.Entry;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.hive.conf.HiveConf;
-import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
-import org.apache.hadoop.hive.metastore.api.MetaException;
-import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.hive.HiveContext;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -771,7 +765,7 @@ public class RegisterService {
 		// Session session=sessionServiceImpl.findOneById(sessionId);
 		// String uuid=session.getUserInfo().getRef().getUuid();
 
-		String Id = "";
+//		String Id = "";
 		BaseEntity baseEntity=null;
 		if (type != null && !type.isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
