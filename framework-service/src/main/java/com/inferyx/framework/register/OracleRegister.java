@@ -10,42 +10,31 @@
  *******************************************************************************/
 package com.inferyx.framework.register;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
+
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.apache.hadoop.hive.metastore.api.FieldSchema;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Load;
+import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.domain.Stage;
-import com.inferyx.framework.domain.Task;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -53,7 +42,6 @@ import com.inferyx.framework.executor.MySqlExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DagServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.LoadServiceImpl;
@@ -75,48 +63,44 @@ public class OracleRegister {
 	ConnectionFactory connectionFactory;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+    @Autowired 
+    LoadServiceImpl loadServiceImpl;
 
 	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
 
-		//Datasource datasource = iDatasourceDao.findOneByUuidAndVersion(uuid, version);
-		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
+		Datasource datasource = null;
 		MetaIdentifierHolder datastoreMeta = new MetaIdentifierHolder();
-		MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, uuid, version);
-
-		datastoreMeta.setRef(datasourceRef);
-		Datapod dp = null;
+		Datapod datapod = null;
 		List<Datapod> dpList = new ArrayList<>();
-
-		List<String> registryListTable = new ArrayList<String>();
-		for (int i = 0; i < registryList.size(); i++) 
-			registryListTable.add(registryList.get(i).getName());
 
 		try {
 			datasource = commonServiceImpl.getDatasourceByApp();
+			MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion());
+			datastoreMeta.setRef(datasourceRef);
+			
 			IConnector connector = connectionFactory.getConnector(datasource.getType());
 			ConnectionHolder conHolder = connector.getConnection();
 			Statement stmt = (Statement) conHolder.getStmtObject();			
 
-			for (int i = 0; i < registryListTable.size(); i++) {
-				String tableName = registryListTable.get(i).toUpperCase();
-				DataStore datastore = new DataStore();
-				
-				List<Attribute> attrList = new ArrayList();
-				dp = new Datapod();
+			for (int i = 0; i < registryList.size(); i++) {
+				String tableName = registryList.get(i).getName().toUpperCase();
+				DataStore datastore = new DataStore();				
+				List<Attribute> attrList = new ArrayList<>();
+				datapod = new Datapod();
 				List<Datapod> datapodList = datapodServiceImpl.searchDatapodByName(tableName, datasource.getUuid());
 				
 				if(datapodList.size() > 0)
-					dp.setUuid(datapodList.get(0).getUuid());
+					datapod.setUuid(datapodList.get(0).getUuid());
 				
-				dp.setName(tableName);
+				datapod.setName(tableName);
 				ResultSet rs = stmt.executeQuery("SELECT column_name, data_type FROM all_tab_columns WHERE owner='"
 						+ datasource.getDbname().toUpperCase() + "' AND table_name='" + tableName + "'");
-				int size = 0;
-				while (rs.next()) {
+				for(int j = 0; rs.next(); j++) {
 					logger.info("Col_Name: " + rs.getString(1) +",\t type: " + rs.getString(2));
 					Attribute attr = new Attribute();
 					String colName = rs.getString(1);
 					String colType = rs.getString(2);
+					attr.setAttributeId(j);
 					attr.setName(colName);
 					attr.setType(colType);
 					attr.setDesc("");
@@ -127,32 +111,52 @@ public class OracleRegister {
 					attrList.add(attr);
 				}
 				rs.close();
-				dp.setAttributes(attrList);
-				dp.setDatasource(datastoreMeta);
-				Datapod newdp = new Datapod();
-				newdp = datapodServiceImpl.save(dp);
+				datapod.setAttributes(attrList);
+				datapod.setDatasource(datastoreMeta);
+				Datapod savedDp = null;
+				savedDp = datapodServiceImpl.save(datapod);
 
 				if (registryList.get(i).getName().equals(tableName)) {
-					registryList.get(i).setRegisteredOn(newdp.getCreatedOn());
+					registryList.get(i).setRegisteredOn(savedDp.getCreatedOn());
 					registryList.get(i).setStatus("Registered");
 				}
 
 				MetaIdentifierHolder holder = new MetaIdentifierHolder();
-				MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, dp.getUuid(), dp.getVersion());
-				datastore.setName(dp.getName());
-				datastore.setDesc(dp.getDesc());
+				MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
+				datastore.setName(datapod.getName());
+				datastore.setDesc(datapod.getDesc());
 				IExecutor exec = execFactory.getExecutor(ExecContext.ORACLE.toString());
-				ResultSetHolder rsHolder = exec
-						.executeSql("SELECT * FROM " + datasource.getDbname().toUpperCase() + "." + tableName);
-				ResultSetHolder rsh = mySqlExecutor.registerDataFrameAsTable(rsHolder, tableName);
-				datastore.setNumRows(rsh.getCountRows());
-				datastore.setCreatedBy(dp.getCreatedBy());
+				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + datasource.getDbname() + "." + tableName);
+				rsHolder.getResultSet().next();
+				datastore.setNumRows(rsHolder.getResultSet().getInt(1));
+				datastore.setCreatedBy(datapod.getCreatedBy());
 				holder.setRef(datastoreRef);
 				datastore.setMetaId(holder);
 
+				//Creating load & loadExec
+				Load load = new Load();
+				load.setBaseEntity();
+				load.setHeader("Y");
+				MetaIdentifier sourceMI = new MetaIdentifier();
+				sourceMI.setType(MetaType.datasource);
+				sourceMI.setUuid(datasource.getUuid());
+				MetaIdentifierHolder sourceHolder = new MetaIdentifierHolder(sourceMI);
+				sourceHolder.setValue(datasource.getDbname() + "." + tableName);
+				load.setSource(sourceHolder);
+				MetaIdentifier targetMI = new MetaIdentifier();
+				targetMI.setType(MetaType.datapod);
+				targetMI.setUuid(datapod.getUuid());
+				MetaIdentifierHolder targetHolder = new MetaIdentifierHolder(targetMI);
+				load.setTarget(targetHolder);
+				load.setName(datapod.getName());
+				commonServiceImpl.save(MetaType.load.toString(), load);
+				LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
+				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
+				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
+				
 				//datastoreServiceImpl.save(datastore);
 				commonServiceImpl.save(MetaType.datastore.toString(), datastore);
-				dpList.add(newdp);
+				dpList.add(savedDp);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
