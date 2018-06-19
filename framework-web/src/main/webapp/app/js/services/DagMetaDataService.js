@@ -300,6 +300,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       color : '#933f5b',
       icon : 'load.svg',
       parentIconCaption:'Load',
+      childIconCaption:'Load',
       execType:'loadExec',
       metaType:'load',
       iconPath : 'assets/layouts/layout/img/load.svg',
@@ -308,7 +309,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       state : 'metaListload',
       detailState : 'metaListload',
       childMenu:[],
-      allowInChildMenu : false,
+      allowInChildMenu : true,
     },
     'profile':{
       name : 'profile',
@@ -394,7 +395,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       allowInMenu : true,
       state: 'metaListmap',
       detailState: 'metaListmap',
-      childMenu:['map'],
+      childMenu:['map','load'],
       allowInChildMenu : true,
     },
     'recon':{
