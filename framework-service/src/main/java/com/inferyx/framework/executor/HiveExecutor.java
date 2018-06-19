@@ -69,6 +69,8 @@ public class HiveExecutor implements IExecutor{
 	protected ConnectionFactory connectionFactory;
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private SparkExecutor sparkExecutor;
 	
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
@@ -216,8 +218,9 @@ public class HiveExecutor implements IExecutor{
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
+		return rsHolder.getCountRows();
 	}
 
 	@Override
@@ -343,8 +346,33 @@ public class HiveExecutor implements IExecutor{
 	 */
 	@Override
 	public Object getDataType(String dataType) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		if(dataType == null)
+			return null;
+
+		if(dataType.contains("(")) {
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
+		switch (dataType.toLowerCase()) {
+			case "integer": return "INTEGER";
+			case "double": return "DOUBLE";
+			case "date": return "DATE";
+			case "string": return "VARCHAR(70)";
+			case "time": return "TIME";
+			case "timestamp": return "TIMESTAMP";
+			case "long" : return "BIGINT";
+			case "binary" : return "BINARY";
+			case "boolean" : return "BIT";
+			case "byte" : return "TINYINT";
+			case "float" : return "REAL";
+			case "short" : return "SMALLINT";
+			case "decimal" : return "DECIMAL";
+			case "vector" : return "ARRAY";//"VARCHAR(100)";
+			case "array" : return "ARRAY";//"VARCHAR(100)";
+			case "null" : return "NULL";
+			
+            default: return null;
+		}
 	}
 
 	/* (non-Javadoc)
