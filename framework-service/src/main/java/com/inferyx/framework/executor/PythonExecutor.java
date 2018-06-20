@@ -447,4 +447,10 @@ public class PythonExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
