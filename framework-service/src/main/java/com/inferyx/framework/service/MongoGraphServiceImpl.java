@@ -312,7 +312,7 @@ public class MongoGraphServiceImpl {
 			for (Vertex vertex : vertexList) {
 				String relationName = null;
 				if(vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
-					System.out.println("********"+relationName);
+				//	System.out.println("********"+relationName);
 					}
 				if(degree.equalsIgnoreCase("1")) {
 				Edge edgeRelation =iEdgeDao.findOneBySrcAndDst(parentvertex.getUuid(),vertex.getUuid());
