@@ -315,7 +315,6 @@ export class SimulationComponent implements OnInit {
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
     dependOnTemp.version = response["dependsOn"]["ref"]["version"];
     this.selectModel = dependOnTemp
-debugger
     let dependOnParamlist: DependsOn = new DependsOn();
     dependOnParamlist.label = response["distributionTypeInfo"]["ref"]["name"];
     dependOnParamlist.uuid = response["distributionTypeInfo"]["ref"]["uuid"];
@@ -408,7 +407,7 @@ debugger
     this.VersionList = temp
   }
   onChangeModel() {
-    debugger
+    
     // simulateService.getOneByUuidandVersion(this.selectModel.uuid,this.selectModel.version,"model").then(function(response) { onSuccessGetLatestByUuid(response.data)});
     this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version || " ", 'model')
       .subscribe(
@@ -420,7 +419,6 @@ debugger
   onSuccessonChangeModel(response) {
 
 
-    debugger
     var featureMapTableArray = [];
     for (var i = 0; i < response.features.length; i++) {
       var featureMap = {};
@@ -474,7 +472,7 @@ debugger
     this.router.navigate(['app/dataScience/simulation', uuid, version, 'true']);
   }
   submit() {
-    debugger
+    
     var simulateJson = {}
     simulateJson["uuid"] = this.simulation.uuid
     simulateJson["name"] = this.simulation.name
