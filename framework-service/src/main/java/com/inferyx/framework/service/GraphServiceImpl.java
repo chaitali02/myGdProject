@@ -822,14 +822,14 @@ public class GraphServiceImpl {
 		JSONObject jsonObject = new JSONObject(jsonString);
 		
 		String srcUuid = jsonObject.optString("uuid");
-	//	String srcVersion = jsonObject.optString("version");
+		String srcVersion = jsonObject.optString("version");
 		if (keywordList == null || keywordList.isEmpty()) {
 			populateKeywordList();
 		}
 		List<BaseEntity> baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(type, null, null, null, null,
 				null, null, srcUuid, null, null);
 		String name = (baseEntityList == null || baseEntityList.isEmpty()) ? "" : baseEntityList.get(0).getName();
-		String uuid = srcUuid;
+		String uuid = srcUuid+"_"+srcVersion;
 		if (StringUtils.isBlank(name)) {
 			String n = jsonObject.optString("name");
 			name = n;
@@ -838,7 +838,7 @@ public class GraphServiceImpl {
 		GraphMetaIdentifier graphMetaIdentifier=new GraphMetaIdentifier();
 		graphMetaIdentifier.setUuid(srcUuid);
 		graphMetaIdentifier.setType(type);
-	//	graphMetaIdentifier.setVersion(srcVersion);
+		graphMetaIdentifier.setVersion(srcVersion);
 		graphMetaIdentifier.setName(name);
 		graphMetaIdentifierHolder.setRef(graphMetaIdentifier);
 		Row vertexRow = createVertex(uuid, "", name, type, new Date().toString(), "Y",graphMetaIdentifierHolder);
@@ -913,6 +913,10 @@ public class GraphServiceImpl {
 			graphMeta.setUuid(srcVertex.getUuid() + "_" + position);
 			graphMeta.setType(name.toLowerCase());
 			graphMeta.setName(position);
+			//this line for attrinuteinfo version=1528799343_first_name
+			if(parentName.equalsIgnoreCase("attributeinfo")) {
+			graphMeta.setVersion(srcVertex.getUuid().substring(srcVertex.getUuid().lastIndexOf("_") + 1)+"_"+position);
+			}
 			graphMetaIdentifierHolder.setRef(graphMeta);
 			vertexRow = createVertex(srcVertex.getUuid() + "_" + position, "", position, parentName, new Date().toString(),
 					"Y", graphMetaIdentifierHolder);
@@ -929,7 +933,7 @@ public class GraphServiceImpl {
 		// Loop each property
 		while (iter.hasNext()) {
 			String key = iter.next();
-				/*if(key.equalsIgnoreCase("featureInfo")) {
+			/*	if(key.equalsIgnoreCase("operatorInfo")) {
 					System.out.println("assssssd");
 				}*/
 			jsonArray = jsonObject.optJSONArray(key);
@@ -960,6 +964,7 @@ public class GraphServiceImpl {
 							map.put("params", "paramName");
 							map.put("functionInfo", "type");
 							map.put("sectionInfo", "name");
+							map.put("joinKey", "operator");
 							map.put("stages", "name");
 							map.put("tasks", "name");
 							map.put("configInfo", "configName");
@@ -1312,7 +1317,7 @@ public class GraphServiceImpl {
 				}
 			} else if (childObj != null && value.startsWith("{", 0)) {
 
-				if (key.equalsIgnoreCase("ref")) {
+				if(key.equalsIgnoreCase("ref")) {
 					childUuid = childObj.optString("uuid");
 					childType = childObj.optString("type");
 
@@ -1346,10 +1351,10 @@ public class GraphServiceImpl {
 						 */else {
 						name = refName;
 					}
-				//	String version = null;
-					//if(baseEntityList.isEmpty()==false) {
-					//	version=baseEntityList.get(0).getVersion();
-					//}
+					String version = null;
+					if(baseEntityList.isEmpty()==false) {
+						version=baseEntityList.get(0).getVersion();
+					}
 					name = refName;
 					srcEdgeMetaRef = new GraphMetaIdentifierHolder();
 					srcEdgeMetaIdenRef = new GraphMetaIdentifier();
@@ -1366,23 +1371,23 @@ public class GraphServiceImpl {
 					dstEdgeMetaIdenRef.setName(name);
 					dstEdgeMetaRef.setRef(dstEdgeMetaIdenRef);
 
-					edgeRow = createEdge(srcVertex.getUuid(), childUuid, parentName, new HashMap<String, Row>(),
+					edgeRow = createEdge(srcVertex.getUuid(), childUuid+"_"+version, parentName, new HashMap<String, Row>(),
 							srcEdgeMetaRef, dstEdgeMetaRef);
 					totalEdgeList.add(edgeRow);
-					edgeRowMap.put(srcVertex.getUuid() + "_" + childUuid+ "_" + name, edgeRow);
-					edge = new Edge(srcVertex.getUuid(), childUuid, parentName, srcEdgeMetaRef, dstEdgeMetaRef);
+					edgeRowMap.put(srcVertex.getUuid() + "_" + childUuid+"_"+version + "_" + name, edgeRow);
+					edge = new Edge(srcVertex.getUuid(), childUuid+"_"+version, parentName, srcEdgeMetaRef, dstEdgeMetaRef);
 					saveEdge(edge);
 					graphMeta.setUuid(childUuid);
-					//graphMeta.setVersion(version);
+					graphMeta.setVersion(version);
 					graphMeta.setType(childObj.optString("type"));
 					graphMeta.setName(name);
 					graphMetaIdentifierHolder.setRef(graphMeta);
-					vertexRow = createVertex(childUuid, "", name, parentName, new Date().toString(),
+					vertexRow = createVertex(childUuid+"_"+version, "", name, parentName, new Date().toString(),
 							"Y", graphMetaIdentifierHolder);
 					totalVertexList.add(vertexRow);
 					verticesRowMap.put(childUuid.concat("_").concat(name).concat("_").concat(parentName)
 							.concat("_").concat("Y"), vertexRow);
-					vertex = new Vertex(childUuid, "", name, parentName, null, null,
+					vertex = new Vertex(childUuid+"_"+version, "", name, parentName, null, null,
 							new Date().toString(), "Y", graphMetaIdentifierHolder);
 					saveVertex(vertex);
 					continue;

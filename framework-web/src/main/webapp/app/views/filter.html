@@ -239,8 +239,9 @@
                                             </td>
                                             <td width="200px">
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <!-- ng-pattern="/(^[0-9a-zA-Z\%-][a-zA-Z0-9\-_%']*$)/" -->
                                                     <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
-                                                        ng-if="tabledata.islhsSimple" required disable-validation-message=""  uib-tooltip="{{myform['lhsvalue'+$index].$valid ? '' : 'please enter value'}}" ng-pattern="/(^[0-9a-zA-Z\%-][a-zA-Z0-9\-_%']*$)/">
+                                                        ng-if="tabledata.islhsSimple" required disable-validation-message=""  uib-tooltip="{{myform['lhsvalue'+$index].$valid ? '' : 'enter value into single quotes'}}" ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/"> 
                                                 </span>
                                                 <div width="200px" ng-if="tabledata.islhsDatapod">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -274,11 +275,17 @@
                                             <td style="width:200px;">
                                                 <div  ng-if="tabledata.isrhsSimple">
                                                     <span class="form-group" style="margin-left:0px;margin-right:0px;"> 
-                                                        <span ng-if="['='].indexOf(tabledata.operator) !=-1">     
-                                                            <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}"  ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}" required disable-validation-message="" ng-pattern="/^[0-9a-zA-Z\_-]*$/"
-                                                            uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'please enter value'}}">
+                                                        <span ng-if="['IN'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">    
+                                                                <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
+                                                            <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}"  ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}" required disable-validation-message="" 
+                                                            uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter values into single quotes and seprated by comma'}}" ng-pattern="/([\']+[a-zA-Z0-9\-_%,]*[']+$)/" tooltip-placement="left">
                                                         </span>
-                                                        <span ng-if="spacialOperator.indexOf(tabledata.operator) !=-1">
+                                                        <span ng-if="['='].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='string'">    
+                                                                <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
+                                                            <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}"  ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}" required disable-validation-message="" 
+                                                            uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter value into single quotes'}}" ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/">
+                                                        </span>
+                                                        <span ng-if="spacialOperator.indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='integer'">
                                                             <input class="form-control" type="text"  name="rhsvalue_{{$index}}" ng-disabled="{{mode}}"  ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}" required ng-pattern="/^[0-9]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter only integer'}}">
                                                         </span>
                                                     </span>
