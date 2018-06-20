@@ -1,6 +1,6 @@
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc,CommonService,$timeout,$filter) {
+MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc,CommonService,$timeout,$filter,fILTER_OPERATOR) {
 	$scope.mode = "false";
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -47,24 +47,15 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 	$scope.logicalOperator = ["OR", "AND"];
 	$scope.relation = ["relation", "dataset", "datapod"];
 	//$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN","LIKE","Not LIKE","RLIKE","EXISTS","NOT EXISTS"];
-	$scope.operator = [{"caption":"Equal to","value":"="},
-	{"caption":"Less than","value":"<"},
-	{"caption":"Greater than","value":">"},
-	{"caption":"Less than or equal to","value":"<="},
-	{"caption":"Greater than or equal to","value":">="},
-	{"caption":"BETWEEN","value":"BETWEEN"},
-	{"caption":"LIKE","value":"LIKE"},
-	{"caption":"NOT LIKE","value":"NOT LIKE"},
-	{"caption":"RLIKE","value":"RLIKE"},
-	{"caption":"EXISTS","value":"EXISTS"},
-	{"caption":"NOT EXISTS","value":"NOT EXISTS"},
-	{"caption":"IN","value":"IN"}];
+	$scope.spacialOperator=['<','>','<=','>='];
+	$scope.operator =fILTER_OPERATOR.operator;
 	$scope.lshType = [
 		{ "text": "string", "caption": "string" },
 		{ "text": "datapod", "caption": "attribute" },
 		{ "text": "formula", "caption": "formula" }];
 	$scope.rhsType = [
 		{ "text": "string", "caption": "string" },
+		{ "text": "string", "caption": "integer" },
 		{ "text": "datapod", "caption": "attribute" },
 		{ "text": "formula", "caption": "formula" },
 		{ "text": "dataset", "caption": "dataset" }]
@@ -159,15 +150,20 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		$('#searchAttr').modal('hide')
 	}
     $scope.onChangeOperator=function(index){
+		
 		if($scope.filterTableArray[index].operator =='BETWEEN'){
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[0];
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}else if(['EXISTS','NOT EXISTS','IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
-			$scope.filterTableArray[index].rhstype=$scope.rhsType[3];
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-
-		}else{
+         
+		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
 			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		}
+		else{
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 
 		}
@@ -188,6 +184,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 	}
 
 	$scope.dependsOndd = function () {
+
 		MetadataFilterSerivce.getAllLatest($scope.selectRelation).then(function (response) { onSuccessRelation(response.data) });
 		var onSuccessRelation = function (response) {
 			$scope.filterRelation = response
@@ -195,6 +192,8 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			var onSuccessAttributeBySource = function (response) {
 				$scope.filterDatapod = response;
 				$scope.lhsdatapodattributefilter = response;
+				$scope.filterTableArray=[];
+				$scope.addRow();
 			}
 		}
 	};
@@ -225,18 +224,21 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			$scope.filterTableArray = [];
 		}
 		var filertable = {};
+		filertable.id=$scope.filterTableArray.length;
 		filertable.islhsDatapod = false;
 		filertable.islhsFormula = false;
 		filertable.islhsSimple = true;
 		filertable.isrhsDatapod = false;
 		filertable.isrhsFormula = false;
 		filertable.isrhsSimple = true;
+		if(filertable.id !=0)
+		filertable.logicalOperator=$scope.logicalOperator[1];
 		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0]
-		filertable.operator = $scope.operator[0]
+		filertable.operator = $scope.operator[0].value;
 		filertable.lhstype = $scope.lshType[0]
 		filertable.rhstype = $scope.lshType[0]
-		filertable.rhsvalue = "''";
-		filertable.lhsvalue = "''";
+		filertable.rhsvalue;
+		filertable.lhsvalue;
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
 	}
 
@@ -268,7 +270,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		if (type == "string") {
 			$scope.filterTableArray[index].islhsSimple = true;
 			$scope.filterTableArray[index].islhsDatapod = false;
-			$scope.filterTableArray[index].lhsvalue = "''";
+			$scope.filterTableArray[index].lhsvalue;
 			$scope.filterTableArray[index].islhsFormula = false;
 		}
 		else if (type == "datapod") {
@@ -297,7 +299,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			$scope.filterTableArray[index].isrhsSimple = true;
 			$scope.filterTableArray[index].isrhsDatapod = false;
 			$scope.filterTableArray[index].isrhsFormula = false;
-			$scope.filterTableArray[index].rhsvalue = "''";
+			$scope.filterTableArray[index].rhsvalue
 			$scope.filterTableArray[index].isrhsDataset = false;
 		}
 		else if (type == "datapod") {
@@ -513,23 +515,20 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 
 					lhsref.type = "simple";
 					lhsoperand.ref = lhsref;
-					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
+					lhsoperand.value = "'"+$scope.filterTableArray[i].lhsvalue+"'";
 				}
 				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
 					if ($scope.selectRelation == "dataset") {
 						lhsref.type = "dataset";
-
 					}
 					else {
 						lhsref.type = "datapod";
 					}
 					lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
-
 					lhsoperand.ref = lhsref;
 					lhsoperand.attributeId = $scope.filterTableArray[i].lhsdatapodAttribute.attributeId;
 				}
 				else if ($scope.filterTableArray[i].lhstype.text == "formula") {
-
 					lhsref.type = "formula";
 					lhsref.uuid = $scope.filterTableArray[i].lhsformula.uuid;
 					lhsoperand.ref = lhsref;
@@ -537,14 +536,16 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 				
 				operand[0] = lhsoperand;
 				if ($scope.filterTableArray[i].rhstype.text == "string") {
-
 					rhsref.type = "simple";
 					rhsoperand.ref = rhsref;
 					if( $scope.filterTableArray[i].operator =='BETWEEN'){
 						rhsoperand.value = $scope.filterTableArray[i].rhsvalue1+"and"+$scope.filterTableArray[i].rhsvalue2;
 					}
-					else{
+					else if($scope.filterTableArray[i].rhstype.caption =='integer'){
 						rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+					}
+					else if($scope.filterTableArray[i].rhstype.caption="string"){
+						rhsoperand.value ="'"+$scope.filterTableArray[i].rhsvalue+"'";
 					}
 				}
 				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
