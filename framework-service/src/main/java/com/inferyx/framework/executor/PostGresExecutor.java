@@ -450,8 +450,8 @@ public class PostGresExecutor implements IExecutor {
 			case "float" : return "REAL";
 			case "short" : return "SMALLINT";
 			case "decimal" : return "DECIMAL";
-			case "vector" : return "ARRAY";//"VARCHAR(100)";
-			case "array" : return "ARRAY";//"VARCHAR(100)";
+			case "vector" : return "ARRAY";
+			case "array" : return "ARRAY";
 			case "null" : return "NULL";
 			
             default: return null;

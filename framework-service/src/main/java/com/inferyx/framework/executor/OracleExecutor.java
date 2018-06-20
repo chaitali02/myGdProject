@@ -365,8 +365,8 @@ public class OracleExecutor implements IExecutor {
 			case "float" : return "NUMBER(19,4)";
 			case "short" : return "NUMBER(5)";
 			case "decimal" : return "NUMBER(38)";
-			case "vector" : return "ARRAY";//"VARCHAR(100)";
-			case "array" : return "ARRAY";//"VARCHAR(100)";
+			case "vector" : return "ARRAY";
+			case "array" : return "ARRAY";
 			case "null" : return "NULL";
 			
             default: return null;
