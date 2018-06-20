@@ -15,23 +15,20 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.hive.conf.HiveConf;
-import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
-import org.apache.hadoop.hive.metastore.api.MetaException;
-import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -45,6 +42,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.inferyx.framework.connector.ConnectionHolder;
+import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
@@ -766,7 +765,7 @@ public class RegisterService {
 		// Session session=sessionServiceImpl.findOneById(sessionId);
 		// String uuid=session.getUserInfo().getRef().getUuid();
 
-		String Id = "";
+//		String Id = "";
 		BaseEntity baseEntity=null;
 		if (type != null && !type.isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
@@ -3243,7 +3242,7 @@ public class RegisterService {
 		return result;
 	}
 
-	public List<Registry> getRegistryByDatasource(String datasourceUuid,String status) throws JsonProcessingException {
+	public List<Registry> getRegistryByDatasource(String datasourceUuid,String status) throws IOException, SQLException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
@@ -3253,242 +3252,117 @@ public class RegisterService {
 		List<Registry> registerList = new ArrayList<Registry>();
 		List<Registry> unRegisterList = new ArrayList<Registry>();
 
-		if (datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) | datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			String hiveDBName = datasource.getDbname();
-			String hiveHost = datasource.getHost();
-			HiveConf conf = new HiveConf(SessionState.class);
-			conf.set("fs.default.name", "hdfs://" + hiveHost + ":8020");
-			conf.set("hive.metastore.warehouse.dir", "/user/hive/warehouse");
-			conf.set("yarn.nodemanager.hostname", hiveHost);
-			conf.set("yarn.resourcemanager.hostname", hiveHost);
-			List<String> tables;
-			try {
-				HiveMetaStoreClient metastore = new HiveMetaStoreClient(conf);
-				SessionState.start(new SessionState(conf));
-
-				tables = metastore.getAllTables(hiveDBName);
-				logger.info("Tables are :: " + tables);
-				
-				/*List<Datapod> datapodList = null;
-				int i = 1;
-				for (String table : tables) {
-					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);					
-					if (datapodList.size() > 0) {
-						for (Datapod datapod : datapodList) {
-							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setDesc(datapod.getDesc());
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setStatus("Registered");
-									registryList.add(registry);
-									break;
-								} else {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(null);
-									registry.setDesc(null);
-									registry.setRegisteredOn(null);
-									registry.setStatus("UnRegistered");
-									registryList.add(registry);
-								}
-							}
-						}
-					} else {
-						Registry registry = new Registry();
-						registry.setId(Integer.toString(i));
-						registry.setName(table);
-						registry.setRegisteredOn(null);
-						registry.setDesc(null);
-						registry.setRegisteredOn(null);
-						registry.setStatus("UnRegistered");
-						registryList.add(registry);
-					}
-					i++;
-				}*/
-				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+		if (datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) 
+				|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+//			List<String> tables = new ArrayList<>();
+			Map<String, String> tablesWithPath = new Hashtable<>();
+			try {				
+				IConnector connector = connectionFactory.getConnector(datasource.getType());
+				ConnectionHolder connectionHolder = connector.getConnection();
+				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+				DatabaseMetaData dbMetaData = con.getMetaData();
+				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
+				while(rs.next()) {
+					tablesWithPath.put(rs.getString(3), (datasource.getDbname()+"."+rs.getString(3)));
+//					tables.add(rs.getString(3));
+				}
+				logger.info("Tables are :: " + tablesWithPath);				
+				List<Registry> datapodList = createDatapodList(tablesWithPath, datasourceUuid, appUuid);
 				registryList.addAll(datapodList);
 
-			} catch (MetaException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		//For Mysql
-		else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-			List<String> tables = new ArrayList<String>();
-			try {
-				Class.forName(datasource.getDriver());
-				Connection con = DriverManager.getConnection("jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort()
-						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
-				DatabaseMetaData md = con.getMetaData();
-				ResultSet rs = md.getTables(null, null, "%", null);
-				
-				while (rs.next()) 
-					tables.add(rs.getString(3));
-				logger.info("Mysql Tables :  " + tables);
-				rs.close();				
-
-				/*List<Datapod> datapodList = null;
-				int i = 1;
-				for (String table : tables) {
-					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
-					if (datapodList.size() > 0){
-						for (Datapod datapod : datapodList) {
-							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setDesc(datapod.getDesc());
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setStatus("Registered");
-									registryList.add(registry);
-									break;
-								} else {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(null);
-									registry.setDesc(null);
-									registry.setRegisteredOn(null);
-									registry.setStatus("UnRegistered");
-									registryList.add(registry);
-								}
-							}
-						}
-					} else {
-						Registry registry = new Registry();
-						registry.setId(Integer.toString(i));
-						registry.setName(table);
-						registry.setRegisteredOn(null);
-						registry.setDesc(null);
-						registry.setRegisteredOn(null);
-						registry.setStatus("UnRegistered");
-						registryList.add(registry);
-					}
-					i++;
-				}*/
-				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
-				registryList.addAll(datapodList);
-			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
-					| ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-		}
-		// For Oracle
-		else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-			List<String> tables = new ArrayList<String>();
-
-			try {			
-				Class.forName(datasource.getDriver());
-				Connection con = DriverManager.getConnection("jdbc:oracle:thin:@" + datasource.getHost() + ":"
-							+ datasource.getPort() + "/" + datasource.getSid(), datasource.getUsername(),
-							datasource.getPassword());
-				Statement stmt = con.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT table_name FROM dba_tables WHERE owner='"+datasource.getDbname().toUpperCase()+"'");
-
-				while (rs.next()) 
-					tables.add(rs.getString(1));				
-				logger.info("Oracle Tables :  " + tables);
-				rs.close();
-
-				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
-				registryList.addAll(datapodList);
-				
-			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException | ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-		} 
+		//For FILE
 		else if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			File folder = new File(datasource.getPath());
 			File[] listOfFiles = folder.listFiles();
-			List<String> fileList = new ArrayList<String>();
+//			List<String> fileList = new ArrayList<String>();
+			Map<String, String> tablesWithPath = new Hashtable<>();
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
 					logger.info("File " + listOfFiles[i].getName());
 					String fileName = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf("."));
 					logger.info(fileName);
-					fileList.add(fileName);
+//					fileList.add(fileName);
+					String path = datasource.getPath() + listOfFiles[i].getName();
+					tablesWithPath.put(fileName, path);
 				} else if (listOfFiles[i].isDirectory()) {
 					logger.info("Directory " + listOfFiles[i].getName());
 				}
 			}
-			/*List<Datapod> datapodList = null;
-			int i = 1;
-			for (String table : fileList) {
-				datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
-				if (datapodList.size() > 0) {
-					for (Datapod datapod : datapodList) {
-						for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-							if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-								Registry registry = new Registry();
-								registry.setId(Integer.toString(i));
-								registry.setName(table);
-								registry.setRegisteredOn(datapod.getCreatedOn());
-								registry.setDesc(datapod.getDesc());
-								registry.setRegisteredOn(datapod.getCreatedOn());
-								registry.setRegisteredBy(datapod.getCreatedBy().getRef().getName());
-								registry.setStatus("Registered");
-								registryList.add(registry);
-								break;
-							} else {
-								Registry registry = new Registry();
-								registry.setId(Integer.toString(i));
-								registry.setName(table);
-								registry.setRegisteredOn(null);
-								registry.setDesc(null);
-								registry.setRegisteredOn(null);
-								registry.setStatus("UnRegistered");
-								registryList.add(registry);
-							}
-						}
-					}
-				} else {
-					Registry registry = new Registry();
-					registry.setId(Integer.toString(i));
-					registry.setName(table);
-					registry.setRegisteredOn(null);
-					registry.setDesc(null);
-					registry.setRegisteredOn(null);
-					registry.setStatus("UnRegistered");
-					registryList.add(registry);
-
-				}
-				i++;
-			}*/
-			List<Registry> datapodList = createDatapodList(fileList, datasourceUuid, appUuid);
+			List<Registry> datapodList = createDatapodList(tablesWithPath, datasourceUuid, appUuid);
 			registryList.addAll(datapodList);
 		}
-		//for Postgres
-		else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-			List<String> tables = new ArrayList<String>();
-			try {
-				Class.forName(datasource.getDriver());
-				Connection con = DriverManager.getConnection("jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort()
-						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
-				DatabaseMetaData md = con.getMetaData();
-
-				String[] types = {"TABLE"};
-				ResultSet rs = md.getTables(null, null, "%", types);
-				
-				while (rs.next()) 
-					tables.add(rs.getString(3));
-				logger.info("PostGres Tables :  " + tables);				
-				rs.close();		
-				
-				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
-				registryList.addAll(datapodList);
-			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
-					| ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-		}
-		
+//		//For Mysql
+//		else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+//			List<String> tables = new ArrayList<String>();
+//			try {
+//				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
+//				ConnectionHolder connectionHolder = connector.getConnection();
+//				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+//				DatabaseMetaData dbMetaData = con.getMetaData();
+//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
+//				
+//				while (rs.next()) 
+//					tables.add(rs.getString(3));
+//				logger.info("Mysql Tables :  " + tables);
+//				rs.close();				
+//
+//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+//				registryList.addAll(datapodList);
+//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
+//		// For Oracle
+//		else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//			List<String> tables = new ArrayList<String>();
+//			try {			
+//				IConnector connector = connectionFactory.getConnector(ExecContext.ORACLE.toString());
+//				ConnectionHolder connectionHolder = connector.getConnection();
+//				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+//				DatabaseMetaData dbMetaData = con.getMetaData();
+//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
+//
+//				while (rs.next()) 
+//					tables.add(rs.getString(3));				
+//				logger.info("Oracle Tables :  " + tables);
+//				rs.close();
+//
+//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+//				registryList.addAll(datapodList);
+//				
+//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
+//				e1.printStackTrace();
+//			}
+//		} 
+//		//for Postgres
+//		else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+//			List<String> tables = new ArrayList<String>();
+//			try {
+//				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
+//				ConnectionHolder connectionHolder = connector.getConnection();
+//				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+//				DatabaseMetaData dbMetaData = con.getMetaData();
+//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
+//				
+//				while (rs.next()) 
+//					tables.add(rs.getString(3));
+//				logger.info("PostGres Tables :  " + tables);				
+//				rs.close();		
+//				
+//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+//				registryList.addAll(datapodList);
+//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
+//		
 		if (status.equalsIgnoreCase("UnRegistered")) {
 			int count = 1;
 			for (Registry unRegiser : registryList) {				
@@ -3515,19 +3389,20 @@ public class RegisterService {
 
 	}
 
-	private List<Registry> createDatapodList(List<String> tables, String datasourceUuid, String appUuid) throws JsonProcessingException {
+	private List<Registry> createDatapodList(Map<String, String> tablesWithPath, String datasourceUuid, String appUuid) throws JsonProcessingException {
 		List<Registry> registryList = new ArrayList<Registry>();
 		List<Datapod> datapodList = null;
 		int i = 1;
-		for (String table : tables) {
-			datapodList = datapodServiceImpl.searchDatapodByName(table, datasourceUuid);
+		for (Entry<String, String> tableWithPath : tablesWithPath.entrySet()) {
+			datapodList = datapodServiceImpl.searchDatapodByName(tableWithPath.getKey(), datasourceUuid);
 			if (datapodList.size() > 0){
 				for (Datapod datapod : datapodList) {
 					for (int j = 0; j < datapod.getAppInfo().size(); j++) {
 						if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
 							Registry registry = new Registry();
 							registry.setId(Integer.toString(i));
-							registry.setName(table);
+							registry.setName(tableWithPath.getKey());
+							registry.setPath(tableWithPath.getValue());
 							registry.setRegisteredOn(datapod.getCreatedOn());
 							registry.setDesc(datapod.getDesc());
 							registry.setRegisteredOn(datapod.getCreatedOn());
@@ -3537,7 +3412,8 @@ public class RegisterService {
 						} else {
 							Registry registry = new Registry();
 							registry.setId(Integer.toString(i));
-							registry.setName(table);
+							registry.setName(tableWithPath.getKey());
+							registry.setPath(tableWithPath.getValue());
 							registry.setRegisteredOn(null);
 							registry.setDesc(null);
 							registry.setRegisteredOn(null);
@@ -3549,7 +3425,8 @@ public class RegisterService {
 			} else {
 				Registry registry = new Registry();
 				registry.setId(Integer.toString(i));
-				registry.setName(table);
+				registry.setName(tableWithPath.getKey());
+				registry.setPath(tableWithPath.getValue());
 				registry.setRegisteredOn(null);
 				registry.setDesc(null);
 				registry.setRegisteredOn(null);

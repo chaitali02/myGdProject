@@ -46,11 +46,28 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 	$scope.showGraphDiv = false
 	$scope.logicalOperator = ["OR", "AND"];
 	$scope.relation = ["relation", "dataset", "datapod"];
-	$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN","LIKE","Not LIKE","RLIKE","EXISTS","NOT EXISTS"];
+	//$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN","LIKE","Not LIKE","RLIKE","EXISTS","NOT EXISTS"];
+	$scope.operator = [{"caption":"Equal to","value":"="},
+	{"caption":"Less than","value":"<"},
+	{"caption":"Greater than","value":">"},
+	{"caption":"Less than or equal to","value":"<="},
+	{"caption":"Greater than or equal to","value":">="},
+	{"caption":"BETWEEN","value":"BETWEEN"},
+	{"caption":"LIKE","value":"LIKE"},
+	{"caption":"NOT LIKE","value":"NOT LIKE"},
+	{"caption":"RLIKE","value":"RLIKE"},
+	{"caption":"EXISTS","value":"EXISTS"},
+	{"caption":"NOT EXISTS","value":"NOT EXISTS"},
+	{"caption":"IN","value":"IN"}];
 	$scope.lshType = [
 		{ "text": "string", "caption": "string" },
 		{ "text": "datapod", "caption": "attribute" },
-		{ "text": "formula", "caption": "formula" }]
+		{ "text": "formula", "caption": "formula" }];
+	$scope.rhsType = [
+		{ "text": "string", "caption": "string" },
+		{ "text": "datapod", "caption": "attribute" },
+		{ "text": "formula", "caption": "formula" },
+		{ "text": "dataset", "caption": "dataset" }]
 	$scope.filter = {};
 	$scope.filter.versions = [];
 	$scope.filterTableArray = null;
@@ -106,7 +123,56 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		timeout: 3000 //time in ms
 	};
 	
+	$scope.SearchAttribute=function(index){
+		$scope.selectDatasetAttr=$scope.filterTableArray[index].rhsdataset
+		MetadataFilterSerivce.getAllLatest("dataset").then(function (response) { onSuccessRelation(response.data) });
+		$scope.searchAttrIndex=index;
+		var onSuccessRelation = function (response) {
+			$scope.allDataset = response;
+			if (typeof $stateParams.id != "undefined" && $scope.selectDatasetAtt) {
+				var defaultoption={};
+				defaultoption.uuid=$scope.selectDatasetAttr.uuid;
+				defaultoption.name="";
+				$scope.allDataset.defaultoption=defaultoption;
+			}
+			$('#searchAttr').modal({
+				backdrop: 'static',
+				keyboard: false
+			  });
+			MetadataFilterSerivce.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
+			var onSuccessAttributeBySource = function (response) {
+				$scope.allDatasetAttr = response;
+			}
+		}
+		
+	}
+    $scope.onChangeDataset=function(){
+		MetadataFilterSerivce.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
+		var onSuccessAttributeBySource = function (response) {
+			$scope.allDatasetAttr = response;
+		}
+	}
 
+	$scope.SubmitSearchAttr=function(){
+		console.log($scope.selectDatasetAttr);
+		$scope.filterTableArray[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr;
+		$('#searchAttr').modal('hide')
+	}
+    $scope.onChangeOperator=function(index){
+		if($scope.filterTableArray[index].operator =='BETWEEN'){
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[0];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		}else if(['EXISTS','NOT EXISTS','IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[3];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+
+		}else{
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+
+		}
+		
+	}
 	$scope.filterFormChange = function () {
 		if ($scope.mode == "true") {
 			$scope.filterHasChanged = true;
@@ -220,7 +286,8 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			var onSuccressGetFormula = function (response) {
 				$scope.expressionFormula = response;
 			}
-		}
+		 }
+		 
 
 
 	}
@@ -231,21 +298,34 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			$scope.filterTableArray[index].isrhsDatapod = false;
 			$scope.filterTableArray[index].isrhsFormula = false;
 			$scope.filterTableArray[index].rhsvalue = "''";
+			$scope.filterTableArray[index].isrhsDataset = false;
 		}
 		else if (type == "datapod") {
 
 			$scope.filterTableArray[index].isrhsSimple = false;
 			$scope.filterTableArray[index].isrhsDatapod = true;
 			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
 		}
 		else if (type == "formula") {
 
 			$scope.filterTableArray[index].isrhsFormula = true;
 			$scope.filterTableArray[index].isrhsSimple = false;
 			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
 			MetadataFilterSerivce.getFormulaByType($scope.filterRelation.defaultoption.uuid, $scope.selectRelation).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				$scope.expressionFormula = response;
+			}
+		}
+		else if (type == "dataset") {
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = true;
+			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
+			var onSuccressGetAllLatestDataset = function (response) {
+				$scope.allDataset = response;
 			}
 		}
 
@@ -291,6 +371,10 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			MetadataFilterSerivce.getFormulaByType($scope.filterdata.dependsOn.ref.uuid, $scope.filterdata.dependsOn.ref.type).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				$scope.expressionFormula = response;
+			}
+			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
+			var onSuccressGetAllLatestDataset = function (response) {
+				$scope.allDataset = response;
 			}
 			$scope.selectRelation = response.filter.dependsOn.ref.type
 			for (var j = 0; j < $scope.filterdata.filterInfo.length; j++) {
@@ -346,6 +430,10 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			MetadataFilterSerivce.getFormulaByType($scope.filterdata.dependsOn.ref.uuid, $scope.filterdata.dependsOn.ref.type).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				$scope.expressionFormula = response;
+			}
+			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
+			var onSuccressGetAllLatestDataset = function (response) {
+				$scope.allDataset = response;
 			}
 			$scope.selectRelation = response.filter.dependsOn.ref.type
 			for (var j = 0; j < $scope.filterdata.filterInfo.length; j++) {
@@ -446,12 +534,18 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 					lhsref.uuid = $scope.filterTableArray[i].lhsformula.uuid;
 					lhsoperand.ref = lhsref;
 				}
+				
 				operand[0] = lhsoperand;
 				if ($scope.filterTableArray[i].rhstype.text == "string") {
 
 					rhsref.type = "simple";
 					rhsoperand.ref = rhsref;
-					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+					if( $scope.filterTableArray[i].operator =='BETWEEN'){
+						rhsoperand.value = $scope.filterTableArray[i].rhsvalue1+"and"+$scope.filterTableArray[i].rhsvalue2;
+					}
+					else{
+						rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+					}
 				}
 				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
 					if ($scope.selectRelation == "dataset") {
@@ -471,6 +565,13 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 					rhsref.type = "formula";
 					rhsref.uuid = $scope.filterTableArray[i].rhsformula.uuid;
 					rhsoperand.ref = rhsref;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "dataset") {
+
+					rhsref.type = "dataset";
+					rhsref.uuid = $scope.filterTableArray[i].rhsdataset.uuid;
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeId = $scope.filterTableArray[i].rhsdataset.attributeId;
 				}
 				operand[1] = rhsoperand;
 				 filterInfo .operand = operand;

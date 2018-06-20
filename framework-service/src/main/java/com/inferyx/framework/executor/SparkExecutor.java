@@ -105,9 +105,6 @@ import scala.collection.Seq;
 @Component
 public class SparkExecutor implements IExecutor {
 
-	/*
-	 * @Autowired HiveContext hiveContext;
-	 */
 	@Autowired
 	ConnectionFactory connectionFactory;
 	@Autowired
@@ -132,18 +129,12 @@ public class SparkExecutor implements IExecutor {
 	Engine engine;
 	@Autowired
 	private ExecutorFactory execFactory;
-	
-	/*
-	 * @Autowired HiveContext hiveContext;
-	 */
 	@Autowired
 	private SparkSession sparkSession;
 	@Autowired
 	private MetadataUtil daoRegister;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
-	@Autowired
-	private Helper helper;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
 
@@ -163,6 +154,7 @@ public class SparkExecutor implements IExecutor {
 	 * @throws IOException
 	 * @throws ClassNotFoundException 
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes, List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException, ClassNotFoundException {
 		RDD<Double> obj = null;
@@ -194,11 +186,11 @@ public class SparkExecutor implements IExecutor {
 					fieldArray[count] = field;
 					count ++;
 				}
-				StructType schema = new StructType(fieldArray);
+//				StructType schema = new StructType(fieldArray);
 				
-				StructField[] randFieldArray = new StructField[1];
-				randFieldArray[0] = new StructField(attributes.get(1).getName(), (DataType)getDataType(attributes.get(1).getType()), true, Metadata.empty());
-				schema = new StructType(randFieldArray);
+//				StructField[] randFieldArray = new StructField[1];
+//				randFieldArray[0] = new StructField(attributes.get(1).getName(), (DataType)getDataType(attributes.get(1).getType()), true, Metadata.empty());
+//				schema = new StructType(randFieldArray);
 				
 				
 				obj = (RDD<Double>)(Class.forName(distribution.getClassName())).getMethod(methodName, modParamTypes).invoke(null, arguments);
@@ -1874,7 +1866,7 @@ public class SparkExecutor implements IExecutor {
 		}		
 	}
 	
-	public String uploadCsvToDatabase(Load load, Datasource datasource, String tableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+	public ResultSetHolder uploadCsvToDatabase(Load load, Datasource datasource, String tableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		Dataset<Row> df = sparkSession.read().format("com.databricks.spark.csv")
 				.option("dateFormat", "dd-MM-yyyy")
@@ -1886,7 +1878,8 @@ public class SparkExecutor implements IExecutor {
 		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
 		createTable(schema, datasource);
 		rsHolder = persistDataframe(rsHolder, datasource);
-		return schema;
+		rsHolder.setCountRows(df.count());
+		return rsHolder;
 	}
 	
 	public String createTableSchema(StructField[] fields, Datasource datasource, String tableName) {
@@ -1934,5 +1927,11 @@ public class SparkExecutor implements IExecutor {
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		exec.executeSql(sql, null);
 		return null;
+	}
+
+	@Override
+	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

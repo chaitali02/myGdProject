@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
@@ -33,10 +31,9 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -65,6 +62,10 @@ public class ImpalaExecutor implements IExecutor {
 	ConnectionFactory  connectionFactory;
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private SparkExecutor sparkExecutor;
+	@Autowired
+	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(ImpalaExecutor.class);
 
@@ -128,19 +129,19 @@ public class ImpalaExecutor implements IExecutor {
 				}
 				data.add(object);
 			}
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-			if(requestAttributes != null) {
-				HttpServletRequest request = requestAttributes.getRequest();
-				if(request != null) {
-					HttpSession session = request.getSession();
-					if(session != null) {
-						session.setAttribute("rsHolder", rsHolder);
-					}else
-						logger.info("HttpSession is \""+null+"\"");
-				}else
-					logger.info("HttpServletResponse is \""+null+"\"");
-			}else
-				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
+//			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//			if(requestAttributes != null) {
+//				HttpServletRequest request = requestAttributes.getRequest();
+//				if(request != null) {
+//					HttpSession session = request.getSession();
+//					if(session != null) {
+//						session.setAttribute("rsHolder", rsHolder);
+//					}else
+//						logger.info("HttpSession is \""+null+"\"");
+//				}else
+//					logger.info("HttpServletResponse is \""+null+"\"");
+//			}else
+//				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw new IOException("Failed to execute SQL query.");
@@ -211,8 +212,9 @@ public class ImpalaExecutor implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
+		return rsHolder.getCountRows();
 	}
 
 	@Override
@@ -323,8 +325,33 @@ public class ImpalaExecutor implements IExecutor {
 	 */
 	@Override
 	public Object getDataType(String dataType) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		if(dataType == null)
+			return null;
+
+		if(dataType.contains("(")) {
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
+		switch (dataType.toLowerCase()) {
+			case "integer": return "INTEGER";
+			case "double": return "DOUBLE";
+			case "date": return "DATE";
+			case "string": return "VARCHAR(70)";
+			case "time": return "TIME";
+			case "timestamp": return "TIMESTAMP";
+			case "long" : return "BIGINT";
+			case "binary" : return "BINARY";
+			case "boolean" : return "BIT";
+			case "byte" : return "TINYINT";
+			case "float" : return "REAL";
+			case "short" : return "SMALLINT";
+			case "decimal" : return "DECIMAL";
+			case "vector" : return "ARRAY";//"VARCHAR(100)";
+			case "array" : return "ARRAY";//"VARCHAR(100)";
+			case "null" : return "NULL";
+			
+            default: return null;
+		}
 	}
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.executor.IExecutor#joinDf(java.lang.String, java.lang.String, int, java.lang.String)
@@ -391,5 +418,13 @@ public class ImpalaExecutor implements IExecutor {
 			SecurityException, NullPointerException, ParseException, IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+		String sourceTableName = load.getSource().getValue();
+		String sql = "SELECT * FROM " + sourceTableName;
+		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
+		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+		return rsHolder.getCountRows();
 	}
 }

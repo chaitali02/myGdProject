@@ -288,12 +288,23 @@ public class LoadServiceImpl {
 			 * SaveMode.Overwrite.toString());
 			 */
 
+			String appUuid = commonServiceImpl.getApp().getUuid();
 			Datapod datapod = (Datapod) daoRegister
 					.getRefObject(new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()));
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			long count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), datapodTableName,
-					datapod, securityServiceImpl.getAppInfo().getRef().getUuid());
+			long count = 0; 
+			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))	{
+				count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), datapodTableName,
+					datapod, appUuid);
+			} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
+					|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
+					|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
+					|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				count = exec.load(load, datapodTableName, datapod, appUuid);
+			}
 
 			dataStoreServiceImpl.setRunMode(runMode);
 			dataStoreServiceImpl.create(filePath, datapodTableName,

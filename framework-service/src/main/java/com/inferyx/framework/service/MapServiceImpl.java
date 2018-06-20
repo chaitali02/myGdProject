@@ -678,10 +678,12 @@ public class MapServiceImpl implements Executable {
 			mapExec.setName(map.getName());
 			mapExec.setAppInfo(map.getAppInfo());
 			
+			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - START ******/
 			if (stage != null && indvExecTask != null && dagExec != null) {
 				indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
 				parseDPNames(dagExec, indvTask, map, datapodList, refKeyMap, otherParams, mapExec);
 			}
+			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - END ******/
 			
 			Status status = new Status(Status.Stage.NotStarted, new Date());
 			List<Status> statusList = new ArrayList<>();		
