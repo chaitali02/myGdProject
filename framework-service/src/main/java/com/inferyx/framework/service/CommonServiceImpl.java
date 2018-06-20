@@ -1597,7 +1597,7 @@ public class CommonServiceImpl <T> {
 						object = resolveFeatureAttrMap(featureAttrMap, object);
 					}
 					 
-					if ((method.getName().contains("ParamListInfo")) && method.getName().startsWith(GET)){
+					if ((method.getName().contains("ParamListInfo")) && method.getReturnType().equals(ParamListHolder.class) && method.getName().startsWith(GET)){
 						ParamListHolder paramListHolder = (ParamListHolder) method.invoke(object);
 						ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
 						for(Param param : paramList.getParams()) {							
