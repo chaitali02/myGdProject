@@ -911,6 +911,7 @@ public class DagServiceImpl {
 
 	@SuppressWarnings({ "unused", "unlikely-arg-type", "unchecked" })
 	public DagExec parseDagExec(Dag dag, DagExec dagExec) throws Exception {
+
 		mapServiceImpl.setRunMode(runMode);
 		if (dagExec == null) {
 			logger.info("Nothing to parse. Aborting parseDagExec");
@@ -944,6 +945,7 @@ public class DagServiceImpl {
 							// consider inactive stage)
 			}
 			for (TaskExec indvExecTask : dagExecTasks) {
+
 				otherParams = execParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
 				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());

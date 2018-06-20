@@ -17,9 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -45,7 +43,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -236,57 +233,22 @@ public class LoadServiceImpl {
 	 * refMeta.setRef(ref); return refMeta; }
 	 */
 
-	public void executeSql(LoadExec loadExec, String dagExecVer, String datapodTableName, OrderKey datapodKey,
-			DataStore dataStore/*, Dataset<Row> dfTask*/, RunMode runMode)
+	public void executeSql(LoadExec loadExec, String dagExecVer, String datapodTableName, OrderKey datapodKey, RunMode runMode)
 			throws JsonProcessingException, JSONException, ParseException {
 		List<Status> statusList = new ArrayList<>();
 		Status status = new Status(Status.Stage.NotStarted, new Date());
 		statusList.add(status);
 		try {
 			loadExec.setBaseEntity();
-			//loadExec.setStatusList(statusList);
 			status = new Status(Status.Stage.InProgress, new Date());
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
-			// iLoadExecDao.save(loadExec);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
 			Load load = (Load) daoRegister.getRefObject(loadExec.getDependsOn().getRef());
-
-			/*
-			 * Dataset<Row> dfTmp =
-			 * dataFrameService.getDataFrame(load.getSource().getValue()); // DataFrame
-			 * dfTmp =
-			 * hiveContext.read().format("com.databricks.spark.csv").option("inferSchema",
-			 * "true") // .option("header", "true").load(load.getSource().getValue()); long
-			 * count = dfTmp.count(); dataFrameService.registerDataFrameAsTable(dfTmp,
-			 * "dfLoadTemp"); //hiveContext.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
-			 * 
-			 * Datasource datasource = commonServiceImpl.getDatasourceByApp(); //IExecutor
-			 * exec = execFactory.getExecutor(ExecContext.spark.toString()); IExecutor exec
-			 * = execFactory.getExecutor(datasource.getType()); ResultSetHolder rsHolder =
-			 * null; if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-			 * || datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-			 * rsHolder = exec.executeSql("SELECT *, "+ ((dagExecVer == null) ?
-			 * loadExec.getVersion():dagExecVer) + " AS version FROM dfLoadTemp", null);
-			 * dfTask = rsHolder.getDataFrame(); } else { dfTask = dfTmp; } //dfTask =
-			 * hiveContext.sql("select *, "+ dagExecVer +
-			 * " as version from dfLoadTemp").coalesce(4); dfTask.cache();
-			 * hiveContext.registerDataFrameAsTable(dfTask, datapodTableName);
-			 */
 
 			// Form file and table name
 			String filePath = String.format("/%s/%s/%s", datapodKey.getUUID(), datapodKey.getVersion(),
 					StringUtils.isNotBlank(dagExecVer) ? dagExecVer : loadExec.getVersion());
-
-			/*
-			 * logger.info("Going to datapodWriter"); dfTask.printSchema(); Datapod datapod
-			 * = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod,
-			 * datapodKey.getUUID(), datapodKey.getVersion())); IWriter datapodWriter =
-			 * datasourceFactory.getDatapodWriter(datapod, daoRegister); String filePathUrl
-			 * = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(),
-			 * filePath); datapodWriter.write(dfTask, filePathUrl, datapod,
-			 * SaveMode.Overwrite.toString());
-			 */
 
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			Datapod datapod = (Datapod) daoRegister
@@ -305,28 +267,19 @@ public class LoadServiceImpl {
 					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 				count = exec.load(load, datapodTableName, datapod, appUuid);
 			}
+			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 
 			dataStoreServiceImpl.setRunMode(runMode);
 			dataStoreServiceImpl.create(filePath, datapodTableName,
 					new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()),
 					new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()), load.getAppInfo(),
-					load.getCreatedBy(), SaveMode.Overwrite.toString(), new MetaIdentifierHolder(), count,
-					Helper.getPersistModeFromRunMode(runMode.toString()));
+					load.getCreatedBy(), SaveMode.Overwrite.toString(), resultRef, count,
+					Helper.getPersistModeFromRunMode(runMode.toString()));				
 
-			/*
-			 * dataStoreServiceImpl.persistDataStore(dfTask, datapodTableName, null,
-			 * filePath, new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(),
-			 * datapodKey.getVersion()), new MetaIdentifier(MetaType.loadExec,
-			 * loadExec.getUuid(), loadExec.getVersion()), null, load.getAppInfo(),
-			 * SaveMode.Overwrite.toString(), null, dataStore, runMode);
-			 */
-
-			// persistDataStore(dfTask, datapodTableName, null, filePath, datapodKey,
-			// loadExec, load);
 			status = new Status(Status.Stage.Completed, new Date());
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
-			// iLoadExecDao.save(loadExec);
+			loadExec.setResult(resultRef);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -334,7 +287,6 @@ public class LoadServiceImpl {
 			status = new Status(Status.Stage.Failed, new Date());
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
-			// iLoadExecDao.save(loadExec);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
 		}
 	}
@@ -417,6 +369,7 @@ public class LoadServiceImpl {
 
 		StringBuilder orderBy = new StringBuilder();
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(loadExecUUID, loadExecVersion);
+		dataStoreServiceImpl.setRunMode(runMode);
 		String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
 				runMode);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -573,7 +526,7 @@ public class LoadServiceImpl {
 			MetaIdentifier targetMI = load.getTarget().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
 			String targetDpTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), runMode);
-			executeSql(loadExec, null, targetDpTableName, new OrderKey(targetDp.getUuid(), targetDp.getVersion()), null, runMode);
+			executeSql(loadExec, null, targetDpTableName, new OrderKey(targetDp.getUuid(), targetDp.getVersion()), runMode);
 			return loadExec;
 		} catch (Exception e) {
 			e.printStackTrace();
