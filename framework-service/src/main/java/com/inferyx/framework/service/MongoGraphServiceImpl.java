@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class MongoGraphServiceImpl {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected Map<String, Object> getEdgeMap(Edge edge) {
+  	protected Map<String, Object> getEdgeMap(Edge edge) {
 		Map<String, Object> map = new LinkedHashMap<>();
 		if (edge == null) {
 			return null;
@@ -99,7 +100,7 @@ public class MongoGraphServiceImpl {
 		GraphMetaIdentifierHolder graphmetaholder = new GraphMetaIdentifierHolder();
 		GraphMetaIdentifier graphmi = new GraphMetaIdentifier();
 		if (vertex.getGraphMetaHolder() != null) {
-
+			graphmi.setVersion(vertex.getGraphMetaHolder().getRef().getVersion());
 			graphmi.setType(vertex.getGraphMetaHolder().getRef().getType());
 			graphmi.setUuid(vertex.getGraphMetaHolder().getRef().getUuid());
 		} else {
@@ -256,21 +257,23 @@ public class MongoGraphServiceImpl {
 		String result = null;
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
-		Map<String, Edge> edgeMap = new LinkedHashMap<>();
-		Map<String, Vertex> vertexMap = new LinkedHashMap<>();
+		Map<String, Edge> edgeMap = new HashMap<>();
+		Map<String, Vertex> vertexMap = new HashMap<>();
 		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
 
 		Vertex parentvertex = null;
 		List<String> uuidList = null;
 		if(degree.equals("1")) {
+			if(!version.equalsIgnoreCase("0")) {
+			edgeList = iEdgeDao.findAllBySrc(uuid+"_"+version);
+			}else {
 			edgeList = iEdgeDao.findAllBySrc(uuid);
-
-			// Get all dsts from edgeList
+			}// Get all dsts from edgeList
 			if (edgeList != null) {
 				uuidList = new ArrayList<>();
 				for (Edge edge : edgeList  ) {
-					edgeMap.put(edge.getSrc() + "_" + edge.getDst(), edge);
+					edgeMap.put(edge.getSrc() + "_" + edge.getDst()+"_"+edge.getRelationType(), edge);
 				}
 				for (String edgeKey : edgeMap.keySet()) {
 					Edge edge = edgeMap.get(edgeKey);
@@ -279,7 +282,7 @@ public class MongoGraphServiceImpl {
 				}
 			}
 		} else if(degree.equals("-1")) {
-			edgeList = iEdgeDao.findAllByDst(uuid);
+			edgeList = iEdgeDao.findAllByDst(uuid+"_"+version);
 
 			// Get all srcs from edgeList
 			if (edgeList != null) {
@@ -295,15 +298,26 @@ public class MongoGraphServiceImpl {
 			}
 		}
 		
-		uuidList.add(uuid);
-		parentvertex = iVertexDao.findOneByUuid(uuid);
+		//uuidList.add(uuid+"_"+version);
+		if(!version.equalsIgnoreCase("0")) {
+		parentvertex = iVertexDao.findOneByUuid(uuid+"_"+version);
+		}else { 
+			parentvertex = iVertexDao.findOneByUuid(uuid);
+
+		}
+		
 
 		vertexList = iVertexDao.findAllByUuidContaining(uuidList);
 		if (vertexList != null) {
 			for (Vertex vertex : vertexList) {
 				String relationName = null;
+				if(vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
+					System.out.println("********"+relationName);
+					}
 				if(degree.equalsIgnoreCase("1")) {
 				Edge edgeRelation =iEdgeDao.findOneBySrcAndDst(parentvertex.getUuid(),vertex.getUuid());
+					//Added this method for same src ,dst uuid ...
+				//Edge edgeRelation =iEdgeDao.findOneBySrcAndDstAndRelationType(parentvertex.getUuid(),vertex.getUuid(),vertex.getNodeType());
 				if(edgeRelation != null) {
 				 relationName=edgeRelation.getRelationType();
 					vertex.setNodeType(relationName);
@@ -315,8 +329,13 @@ public class MongoGraphServiceImpl {
 						vertex.setNodeType(relationName);
 					}
 				}
-			
-				vertexMap.put(vertex.getUuid(), vertex);
+				/*if(vertex.getUuid().equalsIgnoreCase("ed47f654-2d4b-483c-971f-804ee88f092f_1488620292") ) {
+					System.out.println(vertex.getNodeType());
+					}
+			if(relationName.equalsIgnoreCase("refIntegrityCheck") ||vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
+				System.out.println("********"+relationName);
+				}*/
+				vertexMap.put(vertex.getUuid()+"_"+relationName, vertex);
 			}
 			for (String vertexKey : vertexMap.keySet()) {
 				Vertex vertex = vertexMap.get(vertexKey);

@@ -1317,7 +1317,7 @@ public class GraphServiceImpl {
 				}
 			} else if (childObj != null && value.startsWith("{", 0)) {
 
-				if (key.equalsIgnoreCase("ref")) {
+				if(key.equalsIgnoreCase("ref")) {
 					childUuid = childObj.optString("uuid");
 					childType = childObj.optString("type");
 
