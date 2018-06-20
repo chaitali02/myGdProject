@@ -62,6 +62,7 @@ import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 
@@ -575,11 +576,11 @@ public class TaskServiceImpl implements Callable<String> {
 			try {
 				Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(operator.getOperatorInfo().getRef().getUuid(), operator.getOperatorInfo().getRef().getVersion(), MetaType.load.toString());
 				LoadExec loadExec = (LoadExec) daoRegister.getRefObject(dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().getRef());
-
-				if(runMode.equals(RunMode.BATCH)) {
+				Datasource datasource = commonServiceImpl.getDatasourceByApp();
+				if(!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+						&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 					MetaIdentifier targetMI = load.getTarget().getRef();
 					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
-					Datasource datasource = commonServiceImpl.getDatasourceByApp();
 					datapodTableName = datasource.getDbname()+"."+datapod.getName();
 				}
 				
