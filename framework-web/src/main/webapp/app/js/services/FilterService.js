@@ -364,7 +364,7 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.islhsSimple = true;
 					filterInfo.islhsDatapod = false;
 					filterInfo.islhsFormula = false;
-					filterInfo.lhsvalue = response.filterInfo[i].operand[0].value;
+					filterInfo.lhsvalue = response.filterInfo[i].operand[0].value.replace(/["']/g, "");
 				}
 				else if (response.filterInfo[i].operand[0].ref.type == "datapod" || response.filterInfo[i].operand[0].ref.type == "dataset") {
 					var lhsdatapodAttribute = {}
@@ -406,11 +406,16 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.isrhsFormula = false;
 					filterInfo.isrhsDataset = false;
 					if(response.filterInfo[i].operator =="BETWEEN"){
-						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value;
+						obj.caption = "integer";
+					//	filterInfo.rhsvalue = response.filterInfo[i].operand[1].value;
 						filterInfo.rhsvalue1=response.filterInfo[i].operand[1].value.split("and")[0];
 						filterInfo.rhsvalue2=response.filterInfo[i].operand[1].value.split("and")[1];	
+					}else if(['<','>',"<=",'>='].indexOf(response.filterInfo[i].operator) !=-1){
+						obj.caption = "integer";
 					}
-					filterInfo.rhsvalue = response.filterInfo[i].operand[1].value;
+					else{
+					filterInfo.rhsvalue = response.filterInfo[i].operand[1].value.replace(/["']/g, "");
+				    }
 				}
 				else if (response.filterInfo[i].operand[1].ref.type == "datapod") {
 					var rhsdatapodAttribute = {}
