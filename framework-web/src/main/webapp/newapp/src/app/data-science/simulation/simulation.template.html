@@ -254,7 +254,7 @@
                                                                 </tr>
                                                                 <tbody>
                                                                     <tr *ngFor="let data of featureMapTableArray;let i=index">
-                                                                        <td>{{featureMapTableArray | json}}
+                                                                        <td>
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                 <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureId" name="id+{{i}}" value="{{i}}" [disabled]="true">
                                                                             </span>
