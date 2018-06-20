@@ -1203,9 +1203,10 @@ public class GraphRegister<T> {
 		for(MetaType mType : metaTypes){
 			try {
 				//Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
+				
 				@SuppressWarnings("unchecked")
 				List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
-				if (objectList == null) {
+				if (objectList == null ) {
 					continue;
 				}
 				for (Object obj : objectList) {
