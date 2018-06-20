@@ -13,5 +13,8 @@ InferyxApp.constant("fILTER_OPERATOR",{
 	{"caption":"EXISTS","value":"EXISTS"},
 	{"caption":"NOT EXISTS","value":"NOT EXISTS"},
 	{"caption":"IN","value":"IN"}]
-   
 });
+
+InferyxApp.constant("META_TYPE",[
+	{"datapod":"datapod"},{"dataset":"datapod"}
+	]);
