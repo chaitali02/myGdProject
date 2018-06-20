@@ -26,6 +26,7 @@ import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -46,6 +47,7 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
+import com.inferyx.framework.service.CommonServiceImpl;
 
 /**
  * @author Ganesh
@@ -55,6 +57,12 @@ public class PostGresExecutor implements IExecutor {
 
 	@Autowired 
 	ConnectionFactory connectionFactory;
+	@Autowired
+	private SparkExecutor sparkExecutor;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private Helper helper;
 	
 	static Logger logger = Logger.getLogger(PostGresExecutor.class); 
 	
@@ -241,8 +249,9 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
+		return rsHolder.getCountRows();
 	}
 
 	/* (non-Javadoc)
@@ -421,8 +430,32 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public Object getDataType(String dataType) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		if(dataType == null)
+			return null;
+
+		if(dataType.contains("(")) {
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
+		switch (dataType.toLowerCase()) {
+			case "integer": return "INTEGER";
+			case "double": return "DOUBLE PRECISION";
+			case "date": return "DATE";
+			case "string": return "VARCHAR(100)";
+			case "time": return "TIME";
+			case "timestamp": return "TIMESTAMP";
+			case "long" : return "BIGINT";
+			case "boolean" : return "BOOLEAN";
+			case "byte" : return "TINYINT";
+			case "float" : return "REAL";
+			case "short" : return "SMALLINT";
+			case "decimal" : return "DECIMAL";
+			case "vector" : return "ARRAY";
+			case "array" : return "ARRAY";
+			case "null" : return "NULL";
+			
+            default: return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -497,6 +530,15 @@ public class PostGresExecutor implements IExecutor {
 			SecurityException, NullPointerException, ParseException, IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+		String sourceTableName = load.getSource().getValue();
+		String sql = "SELECT * FROM " + sourceTableName;
+		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
+		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+		return rsHolder.getCountRows();
 	}
 
 }

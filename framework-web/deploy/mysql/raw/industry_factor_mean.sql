@@ -7,4 +7,4 @@ CREATE TABLE `industry_factor_mean` (
     `reporting_date` varchar(45) DEFAULT NULL,
     `version` int(11) DEFAULT NULL
 );
-
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework_bck/upload/industry_factor_mean.csv' IGNORE INTO TABLE industry_factor_mean FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\r' IGNORE 1 LINES;
