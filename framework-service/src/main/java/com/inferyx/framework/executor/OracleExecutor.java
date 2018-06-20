@@ -352,19 +352,19 @@ public class OracleExecutor implements IExecutor {
 		}
 		
 		switch (dataType.toLowerCase()) {
-			case "integer": return "INTEGER";
-			case "double": return "DOUBLE";
+			case "integer": return "NUMBER(10)";
+			case "double": return "NUMBER(19,4)";
 			case "date": return "DATE";
-			case "string": return "VARCHAR(70)";
-			case "time": return "TIME";
-			case "timestamp": return "TIMESTAMP";
-			case "long" : return "BIGINT";
+			case "string": return "VARCHAR(225)";
+			case "time": return "DATE";
+			case "timestamp": return "DATE";
+			case "long" : return "NUMBER(19)";
 			case "binary" : return "BINARY";
-			case "boolean" : return "BIT";
-			case "byte" : return "TINYINT";
-			case "float" : return "REAL";
-			case "short" : return "SMALLINT";
-			case "decimal" : return "DECIMAL";
+			case "boolean" : return "NUMBER(1)";
+			case "byte" : return "NUMBER(3)";
+			case "float" : return "NUMBER(19,4)";
+			case "short" : return "NUMBER(5)";
+			case "decimal" : return "NUMBER(38)";
 			case "vector" : return "ARRAY";//"VARCHAR(100)";
 			case "array" : return "ARRAY";//"VARCHAR(100)";
 			case "null" : return "NULL";

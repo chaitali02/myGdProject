@@ -438,15 +438,14 @@ public class PostGresExecutor implements IExecutor {
 		}
 		
 		switch (dataType.toLowerCase()) {
-			case "integer": return "INT4";
-			case "double": return "DOUBLE";
+			case "integer": return "INTEGER";
+			case "double": return "DOUBLE PRECISION";
 			case "date": return "DATE";
-			case "string": return "VARCHAR(70)";
+			case "string": return "VARCHAR(100)";
 			case "time": return "TIME";
 			case "timestamp": return "TIMESTAMP";
 			case "long" : return "BIGINT";
-			case "binary" : return "BINARY";
-			case "boolean" : return "BIT";
+			case "boolean" : return "BOOLEAN";
 			case "byte" : return "TINYINT";
 			case "float" : return "REAL";
 			case "short" : return "SMALLINT";

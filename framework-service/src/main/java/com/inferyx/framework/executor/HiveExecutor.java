@@ -357,22 +357,23 @@ public class HiveExecutor implements IExecutor{
 		}
 		
 		switch (dataType.toLowerCase()) {
-			case "integer": return "INTEGER";
+			case "integer": return "INT";
 			case "double": return "DOUBLE";
 			case "date": return "DATE";
-			case "string": return "VARCHAR(70)";
+			case "string": return "STRING";
 			case "time": return "TIME";
 			case "timestamp": return "TIMESTAMP";
 			case "long" : return "BIGINT";
 			case "binary" : return "BINARY";
 			case "boolean" : return "BIT";
 			case "byte" : return "TINYINT";
-			case "float" : return "REAL";
+			case "float" : return "FLOAT";
 			case "short" : return "SMALLINT";
 			case "decimal" : return "DECIMAL";
-			case "vector" : return "ARRAY";//"VARCHAR(100)";
-			case "array" : return "ARRAY";//"VARCHAR(100)";
+			case "vector" : return "ARRAY";
+			case "array" : return "ARRAY";
 			case "null" : return "NULL";
+			case "char" : return "CHAR";
 			
             default: return null;
 		}
