@@ -49,8 +49,6 @@ public class DagParser {
 	private MetadataUtil daoRegister;
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
-	private TaskParserFactory taskParserFactory;
 	
 	public DagExec createDAGExec(Dag dag, ExecParams execParams) throws JsonProcessingException {
 		
@@ -252,7 +250,7 @@ public class DagParser {
 	
 	
 
-	public DagExec parseDagExec(Dag dag, DagExec dagExec) throws Exception {
+	/*public DagExec parseDagExec(Dag dag, DagExec dagExec) throws Exception {
 		if (dagExec == null) {
 			logger.error("Nothing to parse. Aborting parseDagExec");
 			return null;
@@ -295,7 +293,7 @@ public class DagParser {
 		}
 		return dagExec;
 	}
-
+*/
 	public OrderKey getLatestMetaKey(Set<OrderKey> keySet, OrderKey key) {
 		if (key.getVersion() != null) {
 			logger.info(String.format("getLatestMetaKey: existing %s  %s", key.getUUID(), key.getVersion()));
