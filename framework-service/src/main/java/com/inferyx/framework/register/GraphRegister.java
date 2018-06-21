@@ -1206,7 +1206,9 @@ public class GraphRegister<T> {
 				//Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
 				
 				@SuppressWarnings("unchecked")
-				List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
+				//change method findAllLatestWithoutAppUuid to findAll due to version concept...
+				//List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
+				List<T> objectList = (List<T>) commonServiceImpl.findAll(mType);
 				if (objectList == null ) {
 					continue;
 				}
