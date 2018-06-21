@@ -97,4 +97,7 @@ public interface IVertexDao extends MongoRepository<Vertex, String> {
 	
 	@Query("{ uuid: { $in: ?0 } }")
     List<Vertex> findAllByUuidContaining(List<String> uuids);
+	
+	@Query("{ uuid: { $in: ?0 } ,nodeType: { $in: ?1 }}")
+    List<Vertex> findAllByUuidAndnodeTypeContaining(List<String> uuids,List<String> nodeType);
 }
