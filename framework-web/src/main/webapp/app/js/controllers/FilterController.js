@@ -1,6 +1,6 @@
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc,CommonService,$timeout,$filter,fILTER_OPERATOR) {
+MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc,CommonService,$timeout,$filter,CONSTANT_FOR_FILTER) {
 	$scope.mode = "false";
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -48,7 +48,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 	$scope.relation = ["relation", "dataset", "datapod"];
 	//$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN","LIKE","Not LIKE","RLIKE","EXISTS","NOT EXISTS"];
 	$scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
-	$scope.operator =fILTER_OPERATOR.operator;
+	$scope.operator =CONSTANT_FOR_FILTER.operator;
 	$scope.lshType = [
 		{ "text": "string", "caption": "string" },
 		{ "text": "string", "caption": "integer"},
@@ -199,10 +199,9 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			//$scope.disableRhsType(['attribute','formula','dataset']);
 			$scope.filterTableArray[index].rhstype=$scope.rhsType[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-
 		}
-		
 	}
+	
 	$scope.filterFormChange = function () {
 		if ($scope.mode == "true") {
 			$scope.filterHasChanged = true;

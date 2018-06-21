@@ -1,6 +1,6 @@
 InferyxApp=angular.module('InferyxApp');
 
-InferyxApp.constant("fILTER_OPERATOR",{
+InferyxApp.constant("CONSTANT_FOR_FILTER",{
 	operator :[{"caption":"Equal to","value":"="},
 	{"caption":"Less than","value":"<"},
 	{"caption":"Greater than","value":">"},
