@@ -122,7 +122,7 @@ public class CreateGraphOperator implements Operator {
 		if (otherParams.containsKey("datapodUuid_" + nodeIdentifier.getUuid() + "_tableName")) {
 			tableName = otherParams.get("datapodUuid_" + nodeIdentifier.getUuid() + "_tableName");
 		} else {
-			tableName = getTableNameBySource(nodeObj, runMode);
+//			tableName = getTableNameBySource(nodeObj, runMode);
 			otherParams.put("datapodUuid_" + nodeIdentifier.getUuid() + "_tableName", tableName);
 		}
 		/*************** Input Node - END ****************/
@@ -138,7 +138,7 @@ public class CreateGraphOperator implements Operator {
 		if (otherParams.containsKey("datapodUuid_" + edgeIdentifier.getUuid() + "_tableName")) {
 			tableName = otherParams.get("datapodUuid_" + edgeIdentifier.getUuid() + "_tableName");
 		} else {
-			tableName = getTableNameBySource(edgeObj, runMode);
+	//		tableName = getTableNameBySource(edgeObj, runMode);
 			otherParams.put("datapodUuid_" + edgeIdentifier.getUuid() + "_tableName", tableName);
 		}
 		/*************** Input Edge - END ****************/
