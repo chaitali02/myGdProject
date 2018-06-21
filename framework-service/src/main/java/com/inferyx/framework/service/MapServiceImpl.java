@@ -53,6 +53,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.RelationInfo;
 import com.inferyx.framework.domain.Rule;
@@ -69,7 +70,7 @@ import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-public class MapServiceImpl implements Executable {
+public class MapServiceImpl implements Parsable, Executable {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
@@ -136,9 +137,9 @@ public class MapServiceImpl implements Executable {
 	SessionHelper sessionHelper;
 	static final Logger logger = Logger.getLogger(MapServiceImpl.class);
 	
-	private final String WHERE_1_1 = " WHERE (1=1) ";// " WHERE \\(1=1\\) ";
+//	private final String WHERE_1_1 = " WHERE (1=1) ";// " WHERE \\(1=1\\) ";
 
-	private final String $DAGEXEC_VERSION = "$DAGEXEC_VERSION";
+//	private final String $DAGEXEC_VERSION = "$DAGEXEC_VERSION";
 	
 	java.util.Map<String, String> requestMap = new HashMap<String, String>();
 
@@ -534,7 +535,7 @@ public class MapServiceImpl implements Executable {
 	}
 
 	
-	public void parseDPNames(DagExec dagExec, Task indvTask, Map map, List<String> datapodList,
+	public void parseDPNames(Map map, List<String> datapodList,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 		String datapodStr = map.getTarget().getRef().getUuid();
 		if (map.getSource().getRef().getType() == MetaType.datapod) {
@@ -548,7 +549,7 @@ public class MapServiceImpl implements Executable {
 			parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec);
 		} else if (map.getSource().getRef().getType() == MetaType.rule) {
 			Rule rule =  mapOperator.getRuleFromMap(map);
-			parseRuleDatapodNames(dagExec, indvTask, rule, datapodList, refKeyMap, otherParams, mapExec);
+			parseRuleDatapodNames(rule, datapodList, refKeyMap, otherParams, mapExec);
 		}
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
 		logger.info("adding target datapod in parseDPNames : " + datapodStr);
@@ -557,7 +558,7 @@ public class MapServiceImpl implements Executable {
 	}
 	
 		// If Map is dependent on rule
-		public void parseRuleDatapodNames(DagExec dagExec, Task indvTask, Rule rule, List<String> datapodList,
+		public void parseRuleDatapodNames(Rule rule, List<String> datapodList,
 				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 			if (rule.getSource().getRef().getType() == MetaType.relation) {
 				Relation relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef());
@@ -651,7 +652,7 @@ public class MapServiceImpl implements Executable {
 	 */
 	@SuppressWarnings("unused")
 	public MapExec generateSql(String uuid, String version, MapExec mapExec, 
-			DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList, 
+			DagExec dagExec, List<String> datapodList, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			ExecParams execParams, RunMode runMode) throws Exception {
 		try {
@@ -679,10 +680,7 @@ public class MapServiceImpl implements Executable {
 			mapExec.setAppInfo(map.getAppInfo());
 			
 			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - START ******/
-			if (stage != null && indvExecTask != null && dagExec != null) {
-				indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-				parseDPNames(dagExec, indvTask, map, datapodList, refKeyMap, otherParams, mapExec);
-			}
+			parseDPNames(map, datapodList, refKeyMap, otherParams, mapExec);
 			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - END ******/
 			
 			Status status = new Status(Status.Stage.NotStarted, new Date());
@@ -774,15 +772,11 @@ public class MapServiceImpl implements Executable {
 		return builder;
 	}// End method
 */	
-	public MapExec executeSql(MapExec mapExec, OrderKey datapodKey, DataStore dataStore, RunMode runMode) throws Exception {
+	public MapExec executeSql(MapExec mapExec, OrderKey datapodKey, RunMode runMode) throws Exception {
 		//String sql = null;
 		if(mapExec == null)	{
 			mapExec = new MapExec();
 			mapExec.setBaseEntity();
-		}
-		if (dataStore == null) {
-			dataStore = new DataStore();
-			dataStore.setBaseEntity();
 		}
 		Map map = (Map) daoRegister.getRefObject(mapExec.getDependsOn().getRef());
 		MetaIdentifierHolder dependsOnHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.map, map.getUuid(), map.getVersion()));
@@ -812,7 +806,6 @@ public class MapServiceImpl implements Executable {
 		runMapServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
 		runMapServiceImpl.setHdfsInfo(hdfsInfo);
 		runMapServiceImpl.setMap(map);
-		runMapServiceImpl.setDataStore(dataStore);
 		runMapServiceImpl.setExecFactory(execFactory);
 		runMapServiceImpl.setDatapodKey(datapodKey);
 		runMapServiceImpl.setCommonServiceImpl(commonServiceImpl);
@@ -847,91 +840,12 @@ public class MapServiceImpl implements Executable {
 	
 	public List<java.util.Map<String, Object>> getMapResults(String mapExecUUID, String mapExecVersion, int offset, int limit,
 			String sortBy, String order, String requestId, RunMode runMode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
-		String appUuid = commonServiceImpl.getApp().getUuid();
+		//String appUuid = commonServiceImpl.getApp().getUuid();
 		List<java.util.Map<String, Object>> data = new ArrayList<>();
 		limit = offset + limit;
 		offset = offset + 1;
-
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(mapExecUUID, mapExecVersion);
-		
 		data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
-		
-		/*boolean requestIdExistFlag = false;
-		StringBuilder orderBy = new StringBuilder();
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(mapExecUUID, mapExecVersion);
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-
-		if(requestId == null || requestId.equals("null") || requestId.isEmpty()) {
-			if(datasource.getType().toUpperCase().equalsIgnoreCase(ExecContext.spark.toString())
-					|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-				data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM " + tableName + ") AS tab WHERE rownum >= " +offset+ " AND rownum <= " + limit, appUuid);
-			}else {
-				if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-					data = exec.executeAndFetch("SELECT * FROM  " + tableName + " WHERE rownum< " + limit, appUuid);
-				else
-					data = exec.executeAndFetch("SELECT * FROM  " + tableName + " LIMIT " + limit, appUuid);
-			}
-		}else {
-			 List<String> orderList = Arrays.asList(order.split("\\s*,\\s*"));
-			 List<String> sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
-
-			if (StringUtils.isNotBlank(sortBy) || StringUtils.isNotBlank(order) ) {
-				for (int i = 0; i < sortList.size(); i++) {
-					orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));
-				}
-				if (requestId != null) {
-				String tabName = null;
-				for (java.util.Map.Entry<String, String> entry : requestMap.entrySet()) {
-					String id = entry.getKey();
-					if (id.equals(requestId)) {
-						requestIdExistFlag = true;
-					}
-				}
-				if (requestIdExistFlag) {	
-					tabName = requestMap.get(requestId);
-					if(datasource.getType().toUpperCase().equalsIgnoreCase(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-						data = exec.executeAndFetch("SELECT * FROM "+tabName+" WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-					}else {
-						if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " WHERE rownum< " + limit, appUuid);
-						else
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " LIMIT " + limit, appUuid);
-					}
-				} else {
-					if(datasource.getType().toUpperCase().equalsIgnoreCase(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-						data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
-								+tableName+" ORDER BY "+ orderBy.toString() +") AS tab) AS tab1", appUuid);	
-						tabName = requestId.replace("-", "_");
-						requestMap.put(requestId, tabName);	
-					}
-					else {
-						if(datasource.getType().toLowerCase().toLowerCase().contains(ExecContext.ORACLE.toString()))
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " WHERE rownum< " + limit, appUuid);
-						else
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " LIMIT " + limit, appUuid);
-						
-						tabName = requestId.replace("-", "_");
-						requestMap.put(requestId, tabName);
-					}
-					
-					if(datasource.getType().toUpperCase().equalsIgnoreCase(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-						data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-					}else {
-						if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " WHERE rownum< " + limit, appUuid);
-						else
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " LIMIT " + limit, appUuid);
-					}
-				}
-			}
-		}
-	}*/
 		return data;
 	}
 	
@@ -961,9 +875,6 @@ public class MapServiceImpl implements Executable {
 		if (baseExec == null) {
 			throw new Exception("No executable, cannot execute. ");
 		}
-		// Create datastore 
-		DataStore dataStore = new DataStore();
-		dataStore.setCreatedBy(baseExec.getCreatedBy());
 		// Fetch Map
 		Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), baseExec.getDependsOn().getRef().getType().toString());
 		// Fetch target datapod
@@ -975,7 +886,15 @@ public class MapServiceImpl implements Executable {
 					.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
 			datapodKey.setVersion(targetDatapod.getVersion());
 		}
-		executeSql((MapExec) baseExec, datapodKey, dataStore, runMode);
+		executeSql((MapExec) baseExec, datapodKey, runMode);
+		return null;
+	}
+
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		generateSql(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), (MapExec) baseExec, null, 
+				null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), execParams, runMode);
 		return null;
 	}
 

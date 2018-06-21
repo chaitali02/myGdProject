@@ -30,7 +30,7 @@ public class SystemOperatorFactory implements IOperatorFactory {
 	@Override
 	public Operator getOperator(OperatorType operatorType) {
 		switch(operatorType) {
-		case rule: return ruleOperator;
+		case rule: return (Operator) ruleOperator;
 		default: throw new IllegalArgumentException("Invalid Operator Type");
 		}
 	}

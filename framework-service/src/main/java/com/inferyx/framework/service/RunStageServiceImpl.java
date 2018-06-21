@@ -107,6 +107,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	private ModelExecServiceImpl modelExecServiceImpl;
 	private String name;
 	private StageExec stageExec;
+	@SuppressWarnings("rawtypes")
 	ConcurrentHashMap taskThreadMap;
 	DQInfo dqInfo;
 	MetadataUtil daoRegister;
@@ -542,11 +543,11 @@ public class RunStageServiceImpl implements Callable<String> {
 		this.stageExec = stageExec;
 	}
 
-	public ConcurrentHashMap getTaskThreadMap() {
+	public ConcurrentHashMap<?, ?> getTaskThreadMap() {
 		return taskThreadMap;
 	}
 
-	public void setTaskThreadMap(ConcurrentHashMap taskThreadMap) {
+	public void setTaskThreadMap(ConcurrentHashMap<?, ?> taskThreadMap) {
 		this.taskThreadMap = taskThreadMap;
 	}
 
@@ -610,7 +611,8 @@ public class RunStageServiceImpl implements Callable<String> {
 	public void checkDependencyStatus() throws JsonProcessingException {
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		boolean checkDependencyStatus = false;
-		boolean checkDependencyFailed = false;
+//		boolean checkDependencyFailed = false;
+		@SuppressWarnings("unused")
 		boolean checkDependencyKilled = false;
 		String dependencyStatus = null;
 		
@@ -639,14 +641,15 @@ public class RunStageServiceImpl implements Callable<String> {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public String execute() throws Exception {
 		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " start execute in RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
-		List<Status> stageStatusList = stageExec.getStatusList();
+//		List<Status> stageStatusList = stageExec.getStatusList();
 		
 		List<TaskExec> dagTaskExecs = DagExecUtil.castToTaskExecList(stageExec.getTasks());
 		List<FutureTask> taskList = new ArrayList<FutureTask>();
-		Status.Stage stageStatus = Helper.getLatestStatus(stageStatusList).getStage();
+//		Status.Stage stageStatus = Helper.getLatestStatus(stageStatusList).getStage();
 		List<TaskExec> depTaskExecs = new ArrayList<>();
 		
 		try {
@@ -662,7 +665,6 @@ public class RunStageServiceImpl implements Callable<String> {
 		do {
 			//Start the tasks which has on dependency
 			for (TaskExec indvTaskExec : dagTaskExecs) {
-	
 				OrderKey datapodKey = null;
 				
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvTaskExec.getTaskId());
@@ -905,6 +907,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	}
 	
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Boolean waitAndComplete (List<FutureTask> taskList) throws Exception {
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		logger.info(" Inside waitAndComplete for RunStageServiceImpl ");
@@ -1088,6 +1091,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	 * @param taskList
 	 * @throws JsonProcessingException 
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setTaskAndSubmit(TaskExec indvTaskExec, OrderKey datapodKey, Task indvTask, MetaIdentifierHolder operationInfoHolder, List<FutureTask> taskList, RunMode runMode) throws JsonProcessingException {
 		TaskServiceImpl indivTaskExe = new TaskServiceImpl();
 		if (!dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.OnHold) 
@@ -1143,7 +1147,6 @@ public class RunStageServiceImpl implements Callable<String> {
 		
 		DataStore datastore = new DataStore();
 		datastore.setCreatedBy(dagExec.getCreatedBy());
-		indivTaskExe.setDataStore(datastore);
 		
 		indivTaskExe.setiDataStore(dataStoreServiceImpl);
 		indivTaskExe.setDatapodServiceImpl(datapodServiceImpl);

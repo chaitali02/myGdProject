@@ -4193,13 +4193,15 @@ public class RegisterService {
 				break;
 			case "reconexec":
 				result = ow.writeValueAsString(reconExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
-				break;
-			
+				break;			
 			case "mapexec":
 				result = ow.writeValueAsString(mapExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
 				break;
 			case "operatorexec":
 				result = ow.writeValueAsString(modelExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
+			case "loadexec":
+				result = ow.writeValueAsString(loadExecServiceImpl.getNumRowsbyExec(execUuid, execVersion));
 				break;
 			}
 		}
