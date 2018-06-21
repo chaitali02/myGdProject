@@ -91,7 +91,7 @@ public class MapController {
 		MapExec mapExec = null;
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
-			mapExec = mapServiceImpl.generateSql(uuid, version, null, null, null, null, null, null, null, execParams, runMode);
+			mapExec = mapServiceImpl.generateSql(uuid, version, null, null, null, null, null, execParams, runMode);
 			/*com.inferyx.framework.domain.Map map = mapServiceImpl.findLatestByUuid(uuid);*/
 			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) commonServiceImpl.getLatestByUuid(uuid, "map");
 			OrderKey datapodKey = map.getTarget().getRef().getKey();
