@@ -232,16 +232,22 @@
                                             </td>
                                             <td>
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                    <select ng-change="selectlhsType(tabledata.lhstype.text,$index)" ng-model="tabledata.lhstype" ng-options="x as x.caption for x in lshType track by x.text"
+                                                    <select ng-change="selectlhsType(tabledata.lhstype.text,$index)" ng-model="tabledata.lhstype" ng-options="x as x.caption for x in lshType track by x.text+x.caption"
                                                         ng-disabled=" {{mode}}" class="form-control">
                                                     </select>
                                                 </span>
                                             </td>
                                             <td width="200px">
-                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <!-- ng-pattern="/(^[0-9a-zA-Z\%-][a-zA-Z0-9\-_%']*$)/" -->
-                                                    <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
-                                                        ng-if="tabledata.islhsSimple" required disable-validation-message=""  uib-tooltip="{{myform['lhsvalue'+$index].$valid ? '' : 'enter value into single quotes'}}" ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/"> 
+                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-if="tabledata.islhsSimple">
+                                                    <span ng-if="tabledata.lhstype.caption=='string'">
+                                                        <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
+                                                         required disable-validation-message=""  uib-tooltip="{{myform['lhsvalue'+$index].$valid ? '' : 'enter value into single quotes'}}" ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/"> 
+                                                    </span>
+                                                    <span ng-if="tabledata.lhstype.caption=='integer'">
+                                                        <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
+                                                        required disable-validation-message=""  uib-tooltip="{{myform['lhsvalue'+$index].$valid ? '' : 'enter only interger'}}" ng-pattern="/^[0-9]{1,20}$/"> 
+                                                    </span>
+                                                        
                                                 </span>
                                                 <div width="200px" ng-if="tabledata.islhsDatapod">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">

@@ -365,6 +365,9 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.islhsDatapod = false;
 					filterInfo.islhsFormula = false;
 					filterInfo.lhsvalue = response.filterInfo[i].operand[0].value//.replace(/["']/g, "");
+					if(response.filterInfo[i].operand[0].value.indexOf("'") ==-1){
+						obj.caption = "integer";
+					}
 				}
 				else if (response.filterInfo[i].operand[0].ref.type == "datapod" || response.filterInfo[i].operand[0].ref.type == "dataset") {
 					var lhsdatapodAttribute = {}

@@ -51,7 +51,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 	$scope.operator =fILTER_OPERATOR.operator;
 	$scope.lshType = [
 		{ "text": "string", "caption": "string" },
-		// { "text": "string", "caption": "integer"},
+		{ "text": "string", "caption": "integer"},
 		{ "text": "datapod", "caption": "attribute"},
 		{ "text": "formula", "caption": "formula"}];
 	$scope.rhsType = [
