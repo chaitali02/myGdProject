@@ -479,7 +479,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
 		//	$scope.disableRhsType(['string','attribute','formula','dataset'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-		}else if(['EXISTS','NOT EXISTS','IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+		}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
 			// if(['IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
 			// 	$scope.disableRhsType([]);
 			// }else{
