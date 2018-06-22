@@ -84,7 +84,7 @@ public class HiveExecutor implements IExecutor{
 		Object obj = conHolder.getStmtObject();
 		if(obj instanceof Statement) {
 			Statement stmt = (Statement) conHolder.getStmtObject();
-			ResultSet rs=null;
+			ResultSet rs = null;
 			try {
 				if(sql.toUpperCase().contains("INSERT")) {
 					stmt.execute("SET hive.exec.dynamic.partition="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition=", "true")+";");
@@ -96,9 +96,13 @@ public class HiveExecutor implements IExecutor{
 						logger.info("Successfull insertion operation. Num. of rows changed: "+result);
 					else 
 						logger.info("Unsuccessfull insertion operation.");
-				}
-				else
+				} else if(sql.toUpperCase().contains("LOAD DATA")) {
+					stmt.execute("SET hive.exec.dynamic.partition="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition=", "true")+";");
+					stmt.execute("SET hive.exec.dynamic.partition.mode="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition.mode", "nonstrict")+";");
+					stmt.executeUpdate(sql);
+				} else {
 					rs = stmt.executeQuery(sql);
+				}
 				rsHolder.setResultSet(rs);
 				rsHolder.setType(ResultType.resultset);
 			} catch (SQLException 
@@ -458,10 +462,10 @@ public class HiveExecutor implements IExecutor{
 	}
 
 	@Override
-	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		String sourceTableName = load.getSource().getValue();
 		String sql = "SELECT * FROM " + sourceTableName;
-		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
+		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);
 		ResultSetHolder rsHolder = executeSql(sql, clientContext);
 		return rsHolder.getCountRows();
 	}

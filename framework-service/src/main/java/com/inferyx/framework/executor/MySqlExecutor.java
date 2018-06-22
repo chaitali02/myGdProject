@@ -577,7 +577,7 @@ public class MySqlExecutor implements IExecutor {
 	}
 
 	@Override
-	public long load(Load load, String targetTableName, Datapod datapod, String clientContext) throws IOException {
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		String sourceTableName = load.getSource().getValue();
 		String sql = "SELECT * FROM " + sourceTableName;
 		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);

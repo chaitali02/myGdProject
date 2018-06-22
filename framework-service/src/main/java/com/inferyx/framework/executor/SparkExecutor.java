@@ -235,21 +235,21 @@ public class SparkExecutor implements IExecutor {
 						.option("spark.driver.extraClassPath", datasource.getDriver())
 						.option("spark.executor.extraClassPath", datasource.getDriver())
 						.option("driver", datasource.getDriver())
-						.option("url", "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname())
+						.option("url", genUrlByDatasource(datasource))
 						.option("user", datasource.getUsername())
 						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ") as mysql_table").load();
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("driver", datasource.getDriver())
-						.option("url", "jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":" + datasource.getDbname())
+						.option("url", genUrlByDatasource(datasource))
 						.option("user", datasource.getUsername())
 						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ")  oracle_table").load();
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {				
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("driver", datasource.getDriver())
-						.option("url", "jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname())
+						.option("url", genUrlByDatasource(datasource))
 						.option("lazyInit", "true")
 						.option("user", datasource.getUsername())
 						.option("password", datasource.getPassword())
@@ -1860,7 +1860,7 @@ public class SparkExecutor implements IExecutor {
 			  			   
 			case "mysql": return "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
 			  			  
-			case "oracle": return "jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":" + datasource.getDbname();
+			case "oracle": return "jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":" + datasource.getSid();
 			
 			case "postgres": return "jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
 			  			   
@@ -1868,17 +1868,21 @@ public class SparkExecutor implements IExecutor {
 		}		
 	}
 	
-	public ResultSetHolder uploadCsvToDatabase(Load load, Datasource datasource, String tableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+	public ResultSetHolder uploadCsvToDatabase(Load load, Datasource datasource, String targetTableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		ResultSetHolder rsHolder = new ResultSetHolder();
-		Dataset<Row> df = sparkSession.read().format("com.databricks.spark.csv")
-				.option("dateFormat", "dd-MM-yyyy")
-				.option("inferSchema", "true")
-				.option("header", "true").load(load.getSource().getValue());
+		Dataset<Row> df = sparkSession.read()
+									  .format("com.databricks.spark.csv")
+									  .option("dateFormat", "dd-MM-yyyy")
+									  .option("inferSchema", "true")
+									  .option("header", "true")
+									  .option("treatEmptyValuesAsNulls", true)
+									  .option("nullValue", "0")
+									  .load(load.getSource().getValue());
 		df.show(false);
 		rsHolder.setDataFrame(df);
-		rsHolder.setTableName(tableName);
-		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
-		createTable(schema, datasource);
+		rsHolder.setTableName(targetTableName);
+//		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
+//		createTable(schema, datasource);
 		rsHolder = persistDataframe(rsHolder, datasource);
 		rsHolder.setCountRows(df.count());
 		return rsHolder;
@@ -1901,30 +1905,6 @@ public class SparkExecutor implements IExecutor {
 		return schema.toString();
 	}
 	
-//	public String getDataType2(String dataType) {
-//		if(dataType == null)
-//			return null;
-//		switch(dataType.toLowerCase()) {
-//		case "integer": return "INTEGER";
-//		case "double": return "DOUBLE";
-//		case "date": return "DATE";
-//		case "string": return "VARCHAR(70)";
-//		case "time": return "TIME";
-//		case "timestamp": return "TIMESTAMP";
-//		case "long" : return "BIGINT";
-//		case "binary" : return "BINARY";
-//		case "boolean" : return "BIT";
-//		case "byte" : return "TINYINT";
-//		case "float" : return "REAL";
-//		case "short" : return "SMALLINT";
-//		case "decimal" : return "DECIMAL";
-//		case "vector" : return "VARCHAR(100)";
-//		case "array" : return "VARCHAR(100)";
-//		
-//        default: return null;
-//		}
-//	}
-	
 	public String createTable(String sql, Datasource datasource) throws IOException {
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		exec.executeSql(sql, null);
@@ -1932,7 +1912,7 @@ public class SparkExecutor implements IExecutor {
 	}
 
 	@Override
-	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return 0;
 	}

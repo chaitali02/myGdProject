@@ -452,11 +452,19 @@ public class OracleExecutor implements IExecutor {
 	}
 
 	@Override
-	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
-		String sourceTableName = load.getSource().getValue();
-		String sql = "SELECT * FROM " + sourceTableName;
-		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
-		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
+//		String sourceTableName = load.getSource().getValue();
+//		String sql = "SELECT * FROM " + sourceTableName;
+//		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);
+//		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+		ResultSetHolder rsHolder = null;
+		try {
+			rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return rsHolder.getCountRows();
 	}
 

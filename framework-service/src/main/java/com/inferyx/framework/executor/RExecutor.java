@@ -446,7 +446,7 @@ public class RExecutor implements IExecutor {
 	}
 
 	@Override
-	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+	public long load(Load load, String datapodTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
