@@ -102,14 +102,18 @@ public class LoadOperator implements IOperator {
 				loadQuery.replace(loadQuery.indexOf("INPATH"), loadQuery.indexOf("INPATH")+5, "INFILE");
 			return null;//generatePostgresLoadQuery(targetTableName, targetHolder, filePathUrl);
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-			loadQuery.append(" PARTITION ( " + Helper.getPartitionColumns(targetDatapod) +" ) ");
+			String partitionClos = Helper.getPartitionColumns(targetDatapod);
+			if(partitionClos.length() > 0)
+				loadQuery.append(" PARTITION ( " + Helper.getPartitionColumns(targetDatapod) +" ) ");
 
 			logger.info("hive load query: "+loadQuery);
 			return loadQuery.toString();
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			loadQuery.append(" PARTITION ( " + Helper.getPartitionColumns(targetDatapod) +" ) ");
+			String partitionClos = Helper.getPartitionColumns(targetDatapod);
+			if(partitionClos.length() > 0)
+				loadQuery.append(" PARTITION ( " + Helper.getPartitionColumns(targetDatapod) +" ) ");
 
-			logger.info("hive load query: "+loadQuery);
+			logger.info("impala load query: "+loadQuery);
 			return loadQuery.toString();
 		}
 		return null;
