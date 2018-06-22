@@ -43,23 +43,20 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.LoadOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class LoadServiceImpl {
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*
-	 * @Autowired JavaSparkContext javaSparkContext;
-	 */
-	/*@Autowired
-	HiveContext hiveContext;*/
 	@Autowired
 	ILoadDao iLoadDao;
 	@Autowired
@@ -84,6 +81,8 @@ public class LoadServiceImpl {
 	DataSourceFactory datasourceFactory;
 	@Autowired
 	DataFrameService dataFrameService;
+	@Autowired
+	private LoadOperator loadOperator;
 
 	static final Logger logger = Logger.getLogger(LoadServiceImpl.class);
 
@@ -233,7 +232,7 @@ public class LoadServiceImpl {
 	 * refMeta.setRef(ref); return refMeta; }
 	 */
 
-	public void executeSql(LoadExec loadExec, String dagExecVer, String datapodTableName, OrderKey datapodKey, RunMode runMode)
+	public void executeSql(LoadExec loadExec, String dagExecVer, String targetTableName, OrderKey datapodKey, RunMode runMode)
 			throws JsonProcessingException, JSONException, ParseException {
 		List<Status> statusList = new ArrayList<>();
 		Status status = new Status(Status.Stage.NotStarted, new Date());
@@ -258,19 +257,26 @@ public class LoadServiceImpl {
 			long count = 0; 
 			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))	{
-				count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), datapodTableName,
+				count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), targetTableName,
 					datapod, appUuid);
 			} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-				count = exec.load(load, datapodTableName, datapod, appUuid);
+//				MetaIdentifierHolder targetHolder = load.getTarget();
+//				String filePathUrl = load.getSource().getValue();//load.getSource().getValue().contains(hdfsInfo.getHdfsURL()) ? load.getSource().getValue() : (hdfsInfo.getHdfsURL()+load.getSource().getValue());
+//				String sql = loadOperator.generateSql(targetTableName, targetHolder, filePathUrl);
+				loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
+				exec.executeSql(loadExec.getExec(), appUuid);
+				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + targetTableName, appUuid);
+				rsHolder.getResultSet().next();
+				count = rsHolder.getResultSet().getLong(1);
 			}
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 
 			dataStoreServiceImpl.setRunMode(runMode);
-			dataStoreServiceImpl.create(filePath, datapodTableName,
+			dataStoreServiceImpl.create(filePath, targetTableName,
 					new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()),
 					new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()), load.getAppInfo(),
 					load.getCreatedBy(), SaveMode.Overwrite.toString(), resultRef, count,
@@ -288,6 +294,7 @@ public class LoadServiceImpl {
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
+			throw new RuntimeException(e);
 		}
 	}
 

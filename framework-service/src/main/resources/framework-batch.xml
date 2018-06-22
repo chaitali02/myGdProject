@@ -323,6 +323,8 @@
 	<bean id="pythonConnector" class="com.inferyx.framework.connector.PythonConnector"/>
 	<bean id="pythonExecutor" class="com.inferyx.framework.executor.PythonExecutor"/>
 	
+	<bean id="loadOperator" class="com.inferyx.framework.operator.LoadOperator"/>
+	
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>
 	<!--<bean id="exceptionHandlingAspect" class="com.inferyx.framework.aspect.ControllerValidation"/> -->

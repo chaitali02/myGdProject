@@ -65,6 +65,7 @@ import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MapExec;
@@ -494,6 +495,11 @@ public class MetadataServiceImpl {
 				operatorExec = (OperatorExec) metaObject;
 				execStatus = (List<Status>) operatorExec.getStatusList();	
 			}
+			/*else if(type.equalsIgnoreCase(MetaType.graphExec.toString())){
+				GraphExec graphExec = new GraphExec();
+				graphExec = (GraphExec) metaObject;
+				execStatus = (List<Status>) graphExec.getStatusList();	
+			}*/
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
 			BaseEntity baseEntityTmp = (BaseEntity) metaObject;			

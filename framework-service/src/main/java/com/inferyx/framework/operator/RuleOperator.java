@@ -37,7 +37,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;
-import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
@@ -46,12 +45,12 @@ import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 @Component
-public class RuleOperator implements Parsable {
+public class RuleOperator implements IParsable {
 	
 	@Autowired
 	AttributeMapOperator attributeMapOperator;
 	@Autowired
-	CommonServiceImpl commonServiceImpl;
+	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	RelationOperator relationOperator;
 	@Autowired

@@ -512,11 +512,11 @@ public interface IExecutor {
 	 * @Ganesh
 	 *
 	 * @param load
-	 * @param datapodTableName
+	 * @param targetTableName
 	 * @param datapod
 	 * @param clientContext
 	 * @return long
 	 * @throws IOException
 	 */
-	long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException;
+	long load(Load load, String targetTableName, Datapod datapod, String clientContext) throws IOException;
 }

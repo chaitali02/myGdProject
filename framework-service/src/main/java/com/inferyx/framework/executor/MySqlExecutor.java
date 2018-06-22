@@ -109,6 +109,10 @@ public class MySqlExecutor implements IExecutor {
 				rsHolder.setType(ResultType.resultset);
 			} catch (SQLException e) {				
 				e.printStackTrace();
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}			
 		}		
 		return rsHolder;
@@ -573,10 +577,10 @@ public class MySqlExecutor implements IExecutor {
 	}
 
 	@Override
-	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+	public long load(Load load, String targetTableName, Datapod datapod, String clientContext) throws IOException {
 		String sourceTableName = load.getSource().getValue();
 		String sql = "SELECT * FROM " + sourceTableName;
-		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
+		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);
 		ResultSetHolder rsHolder = executeSql(sql, clientContext);
 		return rsHolder.getCountRows();
 	}

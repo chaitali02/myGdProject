@@ -46,7 +46,7 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
  *
  */
 @Service
-public class TransposeOperator implements Operator {
+public class TransposeOperator implements IOperator {
 	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;

@@ -23,7 +23,7 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
  * @author joy
  *
  */
-public class CreateGraphOperator implements Operator {
+public class CreateGraphOperator implements IOperator {
 	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
