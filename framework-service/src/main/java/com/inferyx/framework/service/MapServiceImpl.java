@@ -55,21 +55,20 @@ import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.RelationInfo;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
-import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.IExecutable;
+import com.inferyx.framework.operator.IParsable;
 import com.inferyx.framework.operator.MapIterOperator;
 import com.inferyx.framework.operator.MapOperator;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-public class MapServiceImpl implements IExecutable {
+public class MapServiceImpl implements IParsable, IExecutable {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
@@ -534,7 +533,7 @@ public class MapServiceImpl implements IExecutable {
 	}
 
 	
-	public void parseDPNames(DagExec dagExec, Task indvTask, Map map, List<String> datapodList,
+	public void parseDPNames(Map map, List<String> datapodList,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 		String datapodStr = map.getTarget().getRef().getUuid();
 		if (map.getSource().getRef().getType() == MetaType.datapod) {
@@ -548,7 +547,7 @@ public class MapServiceImpl implements IExecutable {
 			parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec);
 		} else if (map.getSource().getRef().getType() == MetaType.rule) {
 			Rule rule =  mapOperator.getRuleFromMap(map);
-			parseRuleDatapodNames(dagExec, indvTask, rule, datapodList, refKeyMap, otherParams, mapExec);
+			parseRuleDatapodNames(rule, datapodList, refKeyMap, otherParams, mapExec);
 		}
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
 		logger.info("adding target datapod in parseDPNames : " + datapodStr);
@@ -557,7 +556,7 @@ public class MapServiceImpl implements IExecutable {
 	}
 	
 		// If Map is dependent on rule
-		public void parseRuleDatapodNames(DagExec dagExec, Task indvTask, Rule rule, List<String> datapodList,
+		public void parseRuleDatapodNames(Rule rule, List<String> datapodList,
 				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 			if (rule.getSource().getRef().getType() == MetaType.relation) {
 				Relation relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef());
@@ -651,7 +650,7 @@ public class MapServiceImpl implements IExecutable {
 	 */
 	@SuppressWarnings("unused")
 	public MapExec generateSql(String uuid, String version, MapExec mapExec, 
-			DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList, 
+			DagExec dagExec, List<String> datapodList, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			ExecParams execParams, RunMode runMode) throws Exception {
 		try {
@@ -679,10 +678,7 @@ public class MapServiceImpl implements IExecutable {
 			mapExec.setAppInfo(map.getAppInfo());
 			
 			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - START ******/
-			if (stage != null && indvExecTask != null && dagExec != null) {
-				indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-				parseDPNames(dagExec, indvTask, map, datapodList, refKeyMap, otherParams, mapExec);
-			}
+			parseDPNames(map, datapodList, refKeyMap, otherParams, mapExec);
 			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - END ******/
 			
 			Status status = new Status(Status.Stage.NotStarted, new Date());
@@ -889,6 +885,14 @@ public class MapServiceImpl implements IExecutable {
 			datapodKey.setVersion(targetDatapod.getVersion());
 		}
 		executeSql((MapExec) baseExec, datapodKey, runMode);
+		return null;
+	}
+
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		generateSql(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), (MapExec) baseExec, null, 
+				null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), execParams, runMode);
 		return null;
 	}
 

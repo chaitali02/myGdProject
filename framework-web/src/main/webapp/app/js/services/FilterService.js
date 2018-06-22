@@ -356,6 +356,7 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 				var filterInfo = {};
 				filterInfo.logicalOperator = response.filterInfo[i].logicalOperator;
 				filterInfo.operator = response.filterInfo[i].operator;
+				
 				if (response.filterInfo[i].operand[0].ref.type == "simple") {
 					var obj = {}
 					obj.text = "string"
@@ -365,6 +366,9 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.islhsDatapod = false;
 					filterInfo.islhsFormula = false;
 					filterInfo.lhsvalue = response.filterInfo[i].operand[0].value//.replace(/["']/g, "");
+					if(response.filterInfo[i].operand[0].value.indexOf("'") ==-1){
+						obj.caption = "integer";
+					}
 				}
 				else if (response.filterInfo[i].operand[0].ref.type == "datapod" || response.filterInfo[i].operand[0].ref.type == "dataset") {
 					var lhsdatapodAttribute = {}
@@ -405,6 +409,8 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.isrhsDatapod = false;
 					filterInfo.isrhsFormula = false;
 					filterInfo.isrhsDataset = false;
+					
+					
 					if(response.filterInfo[i].operator =="BETWEEN"){
 						obj.caption = "integer";
 					//	filterInfo.rhsvalue = response.filterInfo[i].operand[1].value;
@@ -421,11 +427,14 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.rhsvalue = response.filterInfo[i].operand[1].value//.replace(/["']/g, "");
 				    }
 				}
-				else if (response.filterInfo[i].operand[1].ref.type == "datapod") {
+				else if (response.filterInfo[i].operand[1].ref.type == "datapod"  ||  response.filterInfo[i].operand[1].ref.type == "dataset") {
 					var rhsdatapodAttribute = {}
 					var obj = {}
 					obj.text = "datapod"
 					obj.caption = "attribute"
+					if(response.filterInfo[i].operand[1].ref.type == "dataset"  && response.dependsOn.ref.uuid != response.filterInfo[i].operand[1].ref.uuid){
+                    return false;
+					}
 					filterInfo.rhstype = obj;
 					filterInfo.isrhsSimple = false;
 					filterInfo.isrhsFormula = false

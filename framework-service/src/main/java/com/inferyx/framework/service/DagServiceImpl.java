@@ -982,8 +982,8 @@ public class DagServiceImpl {
 				try {
 					// If conditions with parse goes here - START
 					if (ref.getType().equals(MetaType.map)) {
-						baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, stage,
-									indvExecTask, datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
+						baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, 
+								datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
 					} else if (ref.getType().equals(MetaType.rule)) {
 						baseExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), (RuleExec) baseExec, refKeyMap, execParams, datapodList, dagExec);
 						baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);

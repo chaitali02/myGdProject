@@ -264,78 +264,97 @@ public class MongoGraphServiceImpl {
 
 		Vertex parentvertex = null;
 		List<String> uuidList = null;
-		if(degree.equals("1")) {
-			if(!version.equalsIgnoreCase("0")) {
-			edgeList = iEdgeDao.findAllBySrc(uuid+"_"+version);
-			}else {
-			edgeList = iEdgeDao.findAllBySrc(uuid);
-			}// Get all dsts from edgeList
+		List<String> nodetype = null;
+		if (degree.equals("1")) {
+			if (!version.equalsIgnoreCase("0")) {
+				edgeList = iEdgeDao.findAllBySrc(uuid + "_" + version);
+			} else {
+				edgeList = iEdgeDao.findAllBySrc(uuid);
+			} // Get all dsts from edgeList
 			if (edgeList != null) {
 				uuidList = new ArrayList<>();
-				for (Edge edge : edgeList  ) {
-					edgeMap.put(edge.getSrc() + "_" + edge.getDst()+"_"+edge.getRelationType(), edge);
+				nodetype = new ArrayList<>();
+				for (Edge edge : edgeList) {
+					edgeMap.put(edge.getSrc() + "_" + edge.getDst() + "_" + edge.getRelationType(), edge);
 				}
 				for (String edgeKey : edgeMap.keySet()) {
 					Edge edge = edgeMap.get(edgeKey);
 					uuidList.add(edge.getDst());
+					nodetype.add(edge.getRelationType());
 					graphEdge.add(getEdgeMap(edge));
 				}
 			}
-		} else if(degree.equals("-1")) {
-			edgeList = iEdgeDao.findAllByDst(uuid+"_"+version);
+		} else if (degree.equals("-1")) {
 
+			if (!version.equalsIgnoreCase("0")) {
+				edgeList = iEdgeDao.findAllByDst(uuid + "_" + version);
+			} else {
+				edgeList = iEdgeDao.findAllByDst(uuid);
+			}
 			// Get all srcs from edgeList
 			if (edgeList != null) {
 				uuidList = new ArrayList<>();
+				nodetype = new ArrayList<>();
 				for (Edge edge : edgeList) {
-					edgeMap.put(edge.getDst() + "_" + edge.getSrc(), edge);
+					edgeMap.put(edge.getDst() + "_" + edge.getSrc() + "_" + edge.getRelationType(), edge);
 				}
 				for (String edgeKey : edgeMap.keySet()) {
 					Edge edge = edgeMap.get(edgeKey);
 					uuidList.add(edge.getSrc());
+					nodetype.add(edge.getRelationType());
 					graphEdge.add(getEdgeMap(edge));
 				}
 			}
 		}
-		
-		//uuidList.add(uuid+"_"+version);
-		if(!version.equalsIgnoreCase("0")) {
-		parentvertex = iVertexDao.findOneByUuid(uuid+"_"+version);
-		}else { 
+
+		// uuidList.add(uuid+"_"+version);
+		if (!version.equalsIgnoreCase("0")) {
+			parentvertex = iVertexDao.findOneByUuid(uuid + "_" + version);
+		} else {
 			parentvertex = iVertexDao.findOneByUuid(uuid);
 
 		}
-		
 
-		vertexList = iVertexDao.findAllByUuidContaining(uuidList);
+		// vertexList = iVertexDao.findAllByUuidContaining(uuidList);
+		vertexList = iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
 		if (vertexList != null) {
 			for (Vertex vertex : vertexList) {
 				String relationName = null;
-				if(vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
-				//	System.out.println("********"+relationName);
+				// if(vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
+				// System.out.println("********"+relationName);
+				// s }
+				if (degree.equalsIgnoreCase("1")) {
+					// Edge edgeRelation
+					// =iEdgeDao.findOneBySrcAndDst(parentvertex.getUuid(),vertex.getUuid());
+					Edge edgeRelation = iEdgeDao.findOneBySrcAndDstAndRelationType(parentvertex.getUuid(),
+							vertex.getUuid(), vertex.getNodeType());
+					// Added this method for same src ,dst uuid ...
+					// Edge edgeRelation
+					// =iEdgeDao.findOneBySrcAndDstAndRelationType(parentvertex.getUuid(),vertex.getUuid(),vertex.getNodeType());
+					if (edgeRelation != null) {
+						relationName = edgeRelation.getRelationType();
+						vertex.setNodeType(relationName);
 					}
-				if(degree.equalsIgnoreCase("1")) {
-				Edge edgeRelation =iEdgeDao.findOneBySrcAndDst(parentvertex.getUuid(),vertex.getUuid());
-					//Added this method for same src ,dst uuid ...
-				//Edge edgeRelation =iEdgeDao.findOneBySrcAndDstAndRelationType(parentvertex.getUuid(),vertex.getUuid(),vertex.getNodeType());
-				if(edgeRelation != null) {
-				 relationName=edgeRelation.getRelationType();
-					vertex.setNodeType(relationName);
-				}
-				}else {
-					Edge edgeRelation =iEdgeDao.findOneByDstAndSrc(vertex.getUuid(),parentvertex.getUuid());
-					if(edgeRelation != null) {
-					 relationName=edgeRelation.getRelationType();
+				} else {
+					Edge edgeRelation = iEdgeDao.findOneBySrcAndDstAndRelationType(parentvertex.getUuid(),
+							vertex.getUuid(), vertex.getNodeType());
+
+					// Edge edgeRelation
+					// =iEdgeDao.findOneByDstAndSrcAndRelationType(vertex.getUuid(),parentvertex.getUuid(),vertex.getNodeType());
+					if (edgeRelation != null) {
+						relationName = edgeRelation.getRelationType();
 						vertex.setNodeType(relationName);
 					}
 				}
-				/*if(vertex.getUuid().equalsIgnoreCase("ed47f654-2d4b-483c-971f-804ee88f092f_1488620292") ) {
-					System.out.println(vertex.getNodeType());
-					}
-			if(relationName.equalsIgnoreCase("refIntegrityCheck") ||vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
-				System.out.println("********"+relationName);
-				}*/
-				vertexMap.put(vertex.getUuid()+"_"+relationName, vertex);
+				/*
+				 * if(vertex.getUuid().equalsIgnoreCase(
+				 * "ed47f654-2d4b-483c-971f-804ee88f092f_1488620292") ) {
+				 * System.out.println(vertex.getNodeType()); }
+				 * if(relationName.equalsIgnoreCase("refIntegrityCheck")
+				 * ||vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
+				 * System.out.println("********"+relationName); }
+				 */
+				vertexMap.put(vertex.getUuid() + "_" + relationName, vertex);
 			}
 			for (String vertexKey : vertexMap.keySet()) {
 				Vertex vertex = vertexMap.get(vertexKey);

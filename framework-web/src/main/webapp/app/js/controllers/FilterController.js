@@ -1,6 +1,6 @@
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc,CommonService,$timeout,$filter,fILTER_OPERATOR) {
+MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc,CommonService,$timeout,$filter,CONSTANT_FOR_FILTER) {
 	$scope.mode = "false";
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -47,19 +47,19 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 	$scope.logicalOperator = ["OR", "AND"];
 	$scope.relation = ["relation", "dataset", "datapod"];
 	//$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN","LIKE","Not LIKE","RLIKE","EXISTS","NOT EXISTS"];
-	$scope.spacialOperator=['<','>','<=','>=','='];
-	$scope.operator =fILTER_OPERATOR.operator;
+	$scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
+	$scope.operator =CONSTANT_FOR_FILTER.operator;
 	$scope.lshType = [
 		{ "text": "string", "caption": "string" },
-		// { "text": "string", "caption": "integer"},
+		{ "text": "string", "caption": "integer"},
 		{ "text": "datapod", "caption": "attribute"},
 		{ "text": "formula", "caption": "formula"}];
 	$scope.rhsType = [
-		{ "text": "string", "caption": "string" },
-		{ "text": "string", "caption": "integer" },
-		{ "text": "datapod", "caption": "attribute" },
-		{ "text": "formula", "caption": "formula" },
-		{ "text": "dataset", "caption": "dataset" }]
+		{ "text": "string", "caption": "string","disabled":false },
+		{ "text": "string", "caption": "integer" ,"disabled":false },
+		{ "text": "datapod", "caption": "attribute","disabled":false },
+		{ "text": "formula", "caption": "formula","disabled":false },
+		{ "text": "dataset", "caption": "dataset" ,"disabled":false }]
 	$scope.filter = {};
 	$scope.filter.versions = [];
 	$scope.filterTableArray = null;
@@ -121,12 +121,16 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		$scope.searchAttrIndex=index;
 		var onSuccessRelation = function (response) {
 			$scope.allDataset = response;
-			if (typeof $stateParams.id != "undefined" && $scope.selectDatasetAtt) {
-				var defaultoption={};
-				defaultoption.uuid=$scope.selectDatasetAttr.uuid;
-				defaultoption.name="";
-				$scope.allDataset.defaultoption=defaultoption;
+			debugger
+			var temp;
+			if($scope.selectRelation == "dataset"){
+				temp = response.options.filter(function(el) {
+					return el.uuid !== $scope.filterRelation.defaultoption.uuid;
+				});
+				$scope.allDataset.options=temp;
+				$scope.allDataset.defaultoption=temp[0]
 			}
+            
 			$('#searchAttr').modal({
 				backdrop: 'static',
 				keyboard: false
@@ -134,6 +138,16 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			MetadataFilterSerivce.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
 			var onSuccessAttributeBySource = function (response) {
 				$scope.allDatasetAttr = response;
+				debugger
+				if (typeof $stateParams.id != "undefined" && $scope.selectDatasetAtt) {
+					var defaultoption={};
+					defaultoption.uuid=$scope.selectDatasetAttr.uuid;
+					defaultoption.name="";
+					$scope.allDataset.defaultoption=defaultoption;
+				}else{
+					$scope.selectDatasetAtt=$scope.allDatasetAttr[0]
+				}
+
 			}
 		}
 		
@@ -150,26 +164,44 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		$scope.filterTableArray[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr;
 		$('#searchAttr').modal('hide')
 	}
-    $scope.onChangeOperator=function(index){
-		
+
+	// $scope.disableRhsType=function(arrayStr){
+	// 	for(var i=0;i<$scope.rhsType.length;i++){
+	// 		$scope.rhsType[i].disabled=false;
+	// 		if(arrayStr.length >0){
+	// 			var index=arrayStr.indexOf($scope.rhsType[i].caption);
+	// 			if(index !=-1){
+	// 				$scope.rhsType[i].disabled=true;
+	// 			}
+	// 	    }
+	// 	}
+	// }
+
+    $scope.onChangeOperator=function(index){	
 		if($scope.filterTableArray[index].operator =='BETWEEN'){
 			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
+		//	$scope.disableRhsType(['string','attribute','formula','dataset'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-		}else if(['EXISTS','NOT EXISTS','IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+		}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+			// if(['IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+			// 	$scope.disableRhsType([]);
+			// }else{
+			// 	$scope.disableRhsType(['string','integer','attribute','formula']);
+	 	    // }
 			$scope.filterTableArray[index].rhstype=$scope.rhsType[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-         
 		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
+           // $scope.disableRhsType(['string','dataset']);
 			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
 		}
 		else{
+			//$scope.disableRhsType(['attribute','formula','dataset']);
 			$scope.filterTableArray[index].rhstype=$scope.rhsType[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-
 		}
-		
 	}
+	
 	$scope.filterFormChange = function () {
 		if ($scope.mode == "true") {
 			$scope.filterHasChanged = true;
@@ -239,6 +271,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		filertable.lhstype = $scope.lshType[0]
 		filertable.rhstype = $scope.lshType[0]
 		filertable.rhsvalue;
+		filertable.rhsTypeDisables=['attribute','formula','dataset'];
 		filertable.lhsvalue;
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
 	}

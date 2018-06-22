@@ -13,6 +13,7 @@ package com.inferyx.framework.register;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1199,13 +1200,15 @@ public class GraphRegister<T> {
 			logger.info("Skipping building of graph.");
 		}
 		String result =null;
-		List<MetaType> metaTypes = MetaType.getMetaList();
+		List<MetaType> metaTypes =  MetaType.getMetaList();
 		for(MetaType mType : metaTypes){
 			try {
 				//Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
 				
 				@SuppressWarnings("unchecked")
-				List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
+				//change method findAllLatestWithoutAppUuid to findAll due to version concept...
+				//List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
+				List<T> objectList = (List<T>) commonServiceImpl.findAll(mType);
 				if (objectList == null ) {
 					continue;
 				}
@@ -1231,7 +1234,7 @@ public class GraphRegister<T> {
 		totalVertexList = createTotVertexList(verticesRowMap);
 		graphServiceImpl.saveVertices(totalVertexList, null);
 		graphServiceImpl.deleteAllEdges();
-		totalEdgeList = createTotEdgeList(edgeRowMap);
+		//totalEdgeList = createTotEdgeList(edgeRowMap);
 		graphServiceImpl.saveEdges(totalEdgeList, null);
 	}
 	
