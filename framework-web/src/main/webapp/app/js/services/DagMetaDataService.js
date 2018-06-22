@@ -1689,7 +1689,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       parentIconCaption:'',
       allowInMenu : false,
       listState : 'listgraphpod',
-      detailState:'metaListdatapod',
+      detailState:'creaetgraphpod',
       childMenu:[],
       allowInChildMenu : false,
     },

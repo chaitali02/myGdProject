@@ -1,7 +1,7 @@
 /****/
 DataQualityModule = angular.module('DataQualityModule');
 
-DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc,CommonService,$timeout,$filter,CONSTANT_FOR_FILTER) {
+DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc,CommonService,$timeout,$filter,CF_FILTER) {
   $scope.dataqualitydata = {};
   $scope.mode = "false";
   if ($stateParams.mode == 'true') {
@@ -48,7 +48,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   $scope.dataqualitysourceType = $scope.sourceType[0];
   $scope.logicalOperator = ["OR", "AND"];
   $scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
-  $scope.operator =CONSTANT_FOR_FILTER.operator; 
+  $scope.operator =CF_FILTER.operator; 
   $scope.lhsType = [
 		{ "text": "string", "caption": "string" },
 		{ "text": "string", "caption": "integer"},

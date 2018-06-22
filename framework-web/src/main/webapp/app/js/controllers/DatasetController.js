@@ -2,7 +2,7 @@
  **/
 MetadataModule = angular.module('MetadataModule');
 /* Start MetadataDatasetController*/
-MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc,CommonService,CONSTANT_FOR_FILTER) {
+MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc,CommonService,CF_FILTER) {
 	$rootScope.isCommentVeiwPrivlage=true;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -55,7 +55,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.logicalOperator = [" ", "OR", "AND"];
 	$scope.SourceTypes = ["datapod", "relation",'dataset']
 	$scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
-    $scope.operator =CONSTANT_FOR_FILTER.operator;
+    $scope.operator =CF_FILTER.operator;
 	$scope.isSubmitEnable = true;
 	$scope.attributeTableArray = null;
 	$scope.datsetsampledata = null;

@@ -1,5 +1,5 @@
 ReconModule = angular.module('ReconModule');
-ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc,CommonService,CONSTANT_FOR_FILTER) {
+ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc,CommonService,CF_FILTER) {
  
   $scope.mode = "false";
   $scope.rule = {};
@@ -10,9 +10,9 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.selectSourceType=$scope.SourceTypes[0];
   $scope.selectTargetType=$scope.SourceTypes[0];
   $scope.logicalOperator = ["OR", "AND"];
-  $scope.operator = CONSTANT_FOR_FILTER.operator;
-  $scope.lshType  = CONSTANT_FOR_FILTER.lhsType;
-  $scope.rhsType  = CONSTANT_FOR_FILTER.rhsType;
+  $scope.operator = CF_FILTER.operator;
+  $scope.lshType  = CF_FILTER.lhsType;
+  $scope.rhsType  = CF_FILTER.rhsType;
   $scope.continueCount=1;
   var notify = {
     type: 'success',

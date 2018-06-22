@@ -1,5 +1,5 @@
 RuleModule = angular.module('RuleModule');
-RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService,CommonService,CONSTANT_FOR_FILTER) {
+RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService,CommonService,CF_FILTER) {
   $scope.mode = "false";
   $scope.rule = {};
   $scope.rule.versions = []
@@ -10,7 +10,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   $scope.ruleSourceTypes = ["datapod", "relation", "dataset", "rule"];
   $scope.logicalOperator = ["OR", "AND"];
   $scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
-  $scope.operator = CONSTANT_FOR_FILTER.operator;//["=", "<", ">", "<=", ">=", "BETWEEN"];
+  $scope.operator = CF_FILTER.operator;//["=", "<", ">", "<=", ">=", "BETWEEN"];
   $scope.lhsType = [
 		{ "text": "string", "caption": "string" },
 		{ "text": "string", "caption": "integer"},

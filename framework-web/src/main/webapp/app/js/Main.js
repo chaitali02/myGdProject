@@ -21,6 +21,7 @@ var InferyxApp = angular.module("InferyxApp", [
     "SystemMonitoringModule",
     "DataPipelineModule",
     "DatascienceModule",
+    "GraphAnalysisModule",
     "VizpodModule",
     'dataGrid',
     'pagination',
@@ -2975,7 +2976,25 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             data: { pageTitle: 'Graph Analysis' },
             params: { type: 'graphexec', isExec: true }
         })
-       
+        
+        .state('creaetgraphpod', {
+            url: "/GraphAnalysis/Graphpod?id&mode&returnBack&version",
+            templateUrl: "views/graphpod.html",
+            data: { pageTitle: 'Graph Analysi' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/GraphpodController.js',
+                            'js/services/GraphpodService.js',
+                        ]
+                    });
+                }]
+            }
+        })
 
 }]);
 
