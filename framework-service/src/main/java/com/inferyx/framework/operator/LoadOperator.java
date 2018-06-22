@@ -75,14 +75,33 @@ public class LoadOperator implements IOperator {
 			logger.info("query: "+query);
 			return query;
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-			String version = Helper.getVersion();
+//			String version = Helper.getVersion();
+//			boolean isVersion = false;
+//			if(loadQuery.toString().contains("INPATH"))
+//				loadQuery.replace(loadQuery.indexOf("INPATH"), loadQuery.indexOf("INPATH")+6, "INFILE");
+//			
+//			loadQuery.append(" FIELDS TERMINATED BY ',' ");
+//			loadQuery.append("LINES TERMINATED BY '\\n' ");
+//			loadQuery.append(" IGNORE 1 LINES ");
+//			loadQuery.append(" ( ");
+//			for(Attribute attribute : targetDatapod.getAttributes()) {
+//				loadQuery.append(attribute.getName());
+//				loadQuery.append(", ");
+//				if(attribute.getName().equalsIgnoreCase("version")){
+//					isVersion = true;
+//				}
+//			}
+//			String query = loadQuery.subSequence(0, loadQuery.lastIndexOf(",")).toString().concat(" ) ");
+//			if(isVersion){
+//				query = query.concat("SET version="+version);
+//			}
+//			logger.info("query: "+query);
+//			return query;
+		} else if(datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {String version = Helper.getVersion();
 			boolean isVersion = false;
-			if(loadQuery.toString().contains("INPATH"))
-				loadQuery.replace(loadQuery.indexOf("INPATH"), loadQuery.indexOf("INPATH")+6, "INFILE");
-			
-			loadQuery.append(" FIELDS TERMINATED BY ',' ");
-			loadQuery.append("LINES TERMINATED BY '\\n' ");
-			loadQuery.append(" IGNORE 1 LINES ");
+			loadQuery = new StringBuilder();
+			loadQuery.append("COPY ");
+			loadQuery.append(targetTableName);
 			loadQuery.append(" ( ");
 			for(Attribute attribute : targetDatapod.getAttributes()) {
 				loadQuery.append(attribute.getName());
@@ -92,15 +111,18 @@ public class LoadOperator implements IOperator {
 				}
 			}
 			String query = loadQuery.subSequence(0, loadQuery.lastIndexOf(",")).toString().concat(" ) ");
-			if(isVersion){
-				query = query.concat("SET version="+version);
-			}
-			logger.info("query: "+query);
-			return query;
-		} else if(datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-			if(loadQuery.toString().contains("INPATH"))
-				loadQuery.replace(loadQuery.indexOf("INPATH"), loadQuery.indexOf("INPATH")+5, "INFILE");
-			return null;//generatePostgresLoadQuery(targetTableName, targetHolder, filePathUrl);
+			loadQuery = new StringBuilder(query);
+			loadQuery.append(" FROM ");
+			loadQuery.append(" '");
+			loadQuery.append(filePathUrl);
+			loadQuery.append("' ");
+			loadQuery.append("DELIMITER").append(" ',' ");
+			loadQuery.append(" csv ");
+			loadQuery.append(" header ");
+//			if(isVersion){
+//				loadQuery = loadQuery.append("SET version="+version);
+//			}
+			return loadQuery.toString();//generatePostgresLoadQuery(targetTableName, targetHolder, filePathUrl);
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 			String partitionClos = Helper.getPartitionColumns(targetDatapod);
 			if(partitionClos.length() > 0)

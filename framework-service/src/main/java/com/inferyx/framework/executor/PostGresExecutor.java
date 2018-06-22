@@ -86,7 +86,9 @@ public class PostGresExecutor implements IExecutor {
 					countRows = stmt.executeUpdate(sql);
 					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
 					rsHolder.setCountRows(countRows);
-				} else { 
+				} else if(sql.toUpperCase().contains("COPY")) {
+					stmt.executeUpdate(sql);
+					} else { 
 					rs = stmt.executeQuery(sql);
 					countRows = rs.getMetaData().getColumnCount();
 				}

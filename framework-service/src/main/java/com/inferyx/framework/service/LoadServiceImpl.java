@@ -262,16 +262,14 @@ public class LoadServiceImpl {
 			} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-//					|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
-//					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())
+					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())
 					) {
 				loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
 				exec.executeSql(loadExec.getExec(), appUuid);
 				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + targetTableName, appUuid);
 				rsHolder.getResultSet().next();
 				count = rsHolder.getResultSet().getLong(1);
-			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 				count = exec.load(load, targetTableName, datasource, datapod, appUuid);
 			}
 			
