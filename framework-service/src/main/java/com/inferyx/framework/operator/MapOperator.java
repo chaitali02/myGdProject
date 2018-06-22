@@ -34,7 +34,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Status;
@@ -46,7 +45,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 
 @Component
-public class MapOperator implements Parsable {
+public class MapOperator implements IParsable {
 
 	@Autowired
 	protected MetadataUtil daoRegister;

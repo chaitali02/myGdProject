@@ -35,11 +35,9 @@ import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Executable;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -47,13 +45,15 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.factory.RuleExecFactory;
 import com.inferyx.framework.factory.RunRuleFactory;
+import com.inferyx.framework.operator.IExecutable;
+import com.inferyx.framework.operator.IParsable;
 import com.inferyx.framework.register.DatapodRegister;
 
 /**
  * @author joy
  *
  */
-public abstract class RuleTemplate implements Executable, Parsable {
+public abstract class RuleTemplate implements IExecutable, IParsable {
 	
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;

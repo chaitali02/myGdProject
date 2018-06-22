@@ -38,7 +38,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -49,7 +48,7 @@ import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 
 @Component
-public class DQOperator implements Parsable {
+public class DQOperator implements IParsable {
 
 	private String BLANK = " ";
 	private String CASE_WHEN = " CASE WHEN ";

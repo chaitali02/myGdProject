@@ -1,8 +1,10 @@
-package com.inferyx.framework.domain;
+package com.inferyx.framework.operator;
 
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.enums.RunMode;
 
-public interface Parsable {
+public interface IParsable {
 	
 	/**
 	 * 

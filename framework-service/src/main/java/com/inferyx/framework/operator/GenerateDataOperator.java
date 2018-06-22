@@ -44,7 +44,7 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
  *
  */
 @Service
-public class GenerateDataOperator implements Operator {
+public class GenerateDataOperator implements IOperator {
 	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;

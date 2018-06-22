@@ -14,11 +14,9 @@ import java.util.Map;
 
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Executable;
-import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.enums.RunMode;
 
-public interface Operator extends Parsable, Executable{
+public interface IOperator extends IParsable, IExecutable{
 
 	/**
 	 * 

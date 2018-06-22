@@ -46,7 +46,6 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Executable;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -63,13 +62,14 @@ import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.FilterOperator;
+import com.inferyx.framework.operator.IExecutable;
 import com.inferyx.framework.operator.MapIterOperator;
 import com.inferyx.framework.operator.MapOperator;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-public class MapServiceImpl implements Executable {
+public class MapServiceImpl implements IExecutable {
 
 	@Autowired
 	GraphRegister<?> registerGraph;

@@ -42,7 +42,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 @Component
-public class RuleOperator implements Operator {
+public class RuleOperator implements IOperator {
 	
 	@Autowired
 	AttributeMapOperator attributeMapOperator;

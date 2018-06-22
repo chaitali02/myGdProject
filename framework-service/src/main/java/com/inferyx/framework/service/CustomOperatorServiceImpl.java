@@ -43,7 +43,6 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Executable;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -52,7 +51,6 @@ import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
-import com.inferyx.framework.domain.Parsable;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.RunMode;
@@ -60,11 +58,13 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.CustomOperatorFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.IExecutable;
+import com.inferyx.framework.operator.IParsable;
 import com.inferyx.framework.operator.TransposeOldOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-public class CustomOperatorServiceImpl implements Parsable, Executable {
+public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 
 	@Autowired
 	CustomOperatorFactory operatorFactory;
@@ -154,7 +154,7 @@ public class CustomOperatorServiceImpl implements Parsable, Executable {
 		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(
 				operatorExec.getDependsOn().getRef().getUuid(), operatorExec.getDependsOn().getRef().getVersion(),
 				MetaType.operator.toString());
-		com.inferyx.framework.operator.Operator newOperator = operatorFactory
+		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(helper.getOperatorType(operator.getOperatorType()));
 		Map<String, String> otherParams = newOperator.create(operatorExec, execParams, runMode);
 		logger.info(" After Set not started status");
@@ -382,7 +382,7 @@ public class CustomOperatorServiceImpl implements Parsable, Executable {
 				operatorExec.getDependsOn().getRef().getUuid(), operatorExec.getDependsOn().getRef().getVersion(),
 				MetaType.operator.toString());
 		logger.info("Operator type in execute : " + operator.getOperatorType());
-		com.inferyx.framework.operator.Operator newOperator = operatorFactory
+		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(helper.getOperatorType(operator.getOperatorType()));
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.InProgress);
 		synchronized (operatorExec) {
@@ -405,7 +405,7 @@ public class CustomOperatorServiceImpl implements Parsable, Executable {
 				baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(),
 				MetaType.operator.toString());
 		logger.info("Operator type in execute : " + operator.getOperatorType());
-		com.inferyx.framework.operator.Operator newOperator = operatorFactory
+		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(helper.getOperatorType(operator.getOperatorType()));
 		return newOperator.parse(baseExec, execParams, runMode);
 	}
