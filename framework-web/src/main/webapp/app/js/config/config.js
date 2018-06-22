@@ -13,7 +13,16 @@ InferyxApp.constant("CONSTANT_FOR_FILTER",{
 	{"caption":"EXISTS","value":"EXISTS"},
 	{"caption":"NOT EXISTS","value":"NOT EXISTS"},
 	{"caption":"IN","value":"IN"},
-    {"caption":" NOT IN","value":"NOT IN"}]
+	{"caption":" NOT IN","value":"NOT IN"}],
+	lhsType : [{"text":"string","caption":"string"},
+	{ "text": "string", "caption":"integer"},
+	{ "text": "datapod","caption":"attribute"},
+	{ "text": "formula","caption":"formula"}],
+	rhsType : [{ "text": "string", "caption": "string","disabled":false },
+	{ "text": "string", "caption": "integer" ,"disabled":false },
+	{ "text": "datapod", "caption": "attribute","disabled":false },
+	{ "text": "formula", "caption": "formula","disabled":false },
+	{ "text": "dataset", "caption": "dataset" ,"disabled":false }]
 });
 
 
@@ -37,5 +46,5 @@ InferyxApp.constant('CONSTANT_FOR_META_Type',{
     reconexec : "RECON_EXEC",recongroup : "RECONGROUP",recongroupexec : "RECONGROUP_EXEC",
     reconview : "RECONVIEW",distribution : "DISTRIBUTION",appConfig : "APPCONFIG",
     operatorexec : "OPERATOR_EXEC",operator : "OPERATOR",comment : "COMMENT",commentView : "COMMENTVIEW",
-    tag : "TAG",lov : "LOV"
-    });
+	tag : "TAG",lov : "LOV",graphpod:"graphpod",graphexec:"graphExec"
+});

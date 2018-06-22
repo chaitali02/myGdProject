@@ -1679,7 +1679,34 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState : 'operator',
       childMenu:[],
       allowInChildMenu : true,
-	  }
+    },
+    'graphpod':{
+      name : 'graphpod',
+      caption :'Graphpod',
+      execType:'graphExec',
+      metaType:'graphpod',
+      color : '#00E5FF',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'listgraphpod',
+      detailState:'metaListdatapod',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
+    'graphexec':{
+      name : 'graphexec',
+      caption : 'Graph Exec',
+      execType:'graphexec',
+      metaType:'graphexec',
+      color : '#EB54C3',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : '',
+      detailState :'',
+      resultState:'',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
   };
 
   var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator'];

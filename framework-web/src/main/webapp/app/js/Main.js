@@ -424,7 +424,16 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "resultwf", "type": "dagexec", "uuid": "null", "caption": "Results" }
         ]
     };
-
+    $scope.GraphAnalysis = {
+        "caption": "Graph Analysis ",
+        "name": "graphanalysis ",
+        "class": "fa fa-bar-chart",
+        "submenu": [
+            { "name": "createga", "type": "createga", "uuid": "null", "caption": "Create New" },
+            { "name": "listgraphpod", "type": "graphpod", "uuid": "null", "caption": "List" },
+            { "name": "resultgraphpod", "type": "graphexec", "uuid": "null", "caption": "Results" }
+        ]
+    };
     $scope.Datascience = {
         "caption": "Data Science",
         "name": "datascience",
@@ -2954,6 +2963,19 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+        .state('listgraphpod', {
+            url: "/GraphAnalysis/GraphpodList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Graph Analysis' },
+            params: { type: 'graphpod'}
+        })
+        .state('resultgraphpod', {
+            url: "/GraphAnalysis/GraphpodList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Graph Analysis' },
+            params: { type: 'graphexec', isExec: true }
+        })
+       
 
 }]);
 

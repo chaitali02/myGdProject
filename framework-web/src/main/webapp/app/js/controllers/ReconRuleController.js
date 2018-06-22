@@ -10,18 +10,9 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.selectSourceType=$scope.SourceTypes[0];
   $scope.selectTargetType=$scope.SourceTypes[0];
   $scope.logicalOperator = ["OR", "AND"];
-  $scope.operator = CONSTANT_FOR_FILTER.operator;//["=", "<", ">", "<=", ">=", "BETWEEN"];
-  $scope.lshType = [
-    { "text": "string", "caption": "string" },
-		{ "text": "string", "caption": "integer"},
-		{ "text": "datapod", "caption": "attribute"},
-		{ "text": "formula", "caption": "formula"}];
-    $scope.rhsType = [
-      { "text": "string", "caption": "string","disabled":false },
-      { "text": "string", "caption": "integer" ,"disabled":false },
-      { "text": "datapod", "caption": "attribute","disabled":false },
-      { "text": "formula", "caption": "formula","disabled":false },
-      { "text": "dataset", "caption": "dataset" ,"disabled":false }];
+  $scope.operator = CONSTANT_FOR_FILTER.operator;
+  $scope.lshType  = CONSTANT_FOR_FILTER.lhsType;
+  $scope.rhsType  = CONSTANT_FOR_FILTER.rhsType;
   $scope.continueCount=1;
   var notify = {
     type: 'success',
@@ -32,6 +23,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
 	$scope.userDetail.name= $rootScope.setUserName;
+  
   if($stateParams.mode =='true'){
     $scope.isEdit=false;
     $scope.isAdd=false;
