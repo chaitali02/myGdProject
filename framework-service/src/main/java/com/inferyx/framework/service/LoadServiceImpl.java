@@ -262,19 +262,20 @@ public class LoadServiceImpl {
 			} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-//				MetaIdentifierHolder targetHolder = load.getTarget();
-//				String filePathUrl = load.getSource().getValue();//load.getSource().getValue().contains(hdfsInfo.getHdfsURL()) ? load.getSource().getValue() : (hdfsInfo.getHdfsURL()+load.getSource().getValue());
-//				String sql = loadOperator.generateSql(targetTableName, targetHolder, filePathUrl);
+//					|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+//					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())
+					) {
 				loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
 				exec.executeSql(loadExec.getExec(), appUuid);
 				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + targetTableName, appUuid);
 				rsHolder.getResultSet().next();
 				count = rsHolder.getResultSet().getLong(1);
+			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				count = exec.load(load, targetTableName, datasource, datapod, appUuid);
 			}
+			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-
 			dataStoreServiceImpl.setRunMode(runMode);
 			dataStoreServiceImpl.create(filePath, targetTableName,
 					new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()),
