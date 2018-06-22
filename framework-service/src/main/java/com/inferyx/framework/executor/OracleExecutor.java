@@ -90,6 +90,10 @@ public class OracleExecutor implements IExecutor {
 					rsHolder.setType(ResultType.resultset);
 				} catch (SQLException e) {				
 					e.printStackTrace();
+					throw new RuntimeException(e);
+				}  catch (Exception e) {				
+					e.printStackTrace();
+					throw new RuntimeException(e);
 				}		
 			}
 //			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

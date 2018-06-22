@@ -95,10 +95,13 @@ public class ImpalaExecutor implements IExecutor {
 			} catch (SQLException 
 					| IllegalArgumentException 
 					| SecurityException 
-					| NullPointerException e) {
-				// TODO Auto-generated catch block
+					| NullPointerException e) {			
 				e.printStackTrace();
-			}
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}	
 		}
 		return rsHolder;
 	}

@@ -260,11 +260,13 @@ public class SparkExecutor implements IExecutor {
 			rsHolder.setDataFrame(df);
 			rsHolder.setType(ResultType.dataframe);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | ParseException e) {
+				| SecurityException | NullPointerException | ParseException e) {			
 			e.printStackTrace();
-		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}  catch (Exception e) {				
 			e.printStackTrace();
-		}
+			throw new RuntimeException(e);
+		}	
 		return rsHolder;
 	}
 

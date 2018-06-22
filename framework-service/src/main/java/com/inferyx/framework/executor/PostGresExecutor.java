@@ -93,8 +93,12 @@ public class PostGresExecutor implements IExecutor {
 				rsHolder.setCountRows(countRows);
 				rsHolder.setResultSet(rs);
 				rsHolder.setType(ResultType.resultset);
-			} catch (SQLException e) {				
+			}catch (SQLException e) {				
 				e.printStackTrace();
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}			
 		}		
 		return rsHolder;

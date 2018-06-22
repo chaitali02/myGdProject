@@ -108,8 +108,12 @@ public class HiveExecutor implements IExecutor{
 					| NoSuchMethodException 
 					| SecurityException 
 					| NullPointerException 
-					| ParseException e) {				
+					| ParseException e) {					
 				e.printStackTrace();
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}			
 		}		
 		return rsHolder;
