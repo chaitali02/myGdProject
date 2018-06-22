@@ -60,6 +60,8 @@ import com.inferyx.framework.dao.IExpressionDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.dao.IFormulaDao;
 import com.inferyx.framework.dao.IFunctionDao;
+import com.inferyx.framework.dao.IGraphpodDao;
+import com.inferyx.framework.dao.IGraphpodExecDao;
 import com.inferyx.framework.dao.IGroupDao;
 import com.inferyx.framework.dao.IImportDao;
 import com.inferyx.framework.dao.ILoadDao;
@@ -386,7 +388,28 @@ public class GraphRegister<T> {
 	ITagDao iTagDao;
 	@Autowired
 	ILovDao iLovDao;
+	@Autowired
+	IGraphpodDao iGraphpodDao;
+	@Autowired
+	IGraphpodExecDao iGraphpodExecDao;
 	
+	
+	
+	public IGraphpodDao getiGraphpodDao() {
+		return this.iGraphpodDao;
+	}
+
+	public void setiGraphpodDao(IGraphpodDao iGraphpodDao) {
+		this.iGraphpodDao = iGraphpodDao;
+	}
+
+	public IGraphpodExecDao getiGraphpodExecDao() {
+		return this.iGraphpodExecDao;
+	}
+
+	public void setiGraphpodExecDao(IGraphpodExecDao iGraphpodExecDao) {
+		this.iGraphpodExecDao = iGraphpodExecDao;
+	}
 	
 	public ILovDao getiLovDao() {
 		return iLovDao;

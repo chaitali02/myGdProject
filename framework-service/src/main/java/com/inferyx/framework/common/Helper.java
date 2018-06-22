@@ -57,6 +57,8 @@ import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Import;
 import com.inferyx.framework.domain.Key;
@@ -272,6 +274,8 @@ public class Helper {
 				case comment : return "iCommentDao";
 				case tag : return "iTagDao";
 				case lov : return "iLovDao";
+				case graphpod : return "iGraphpodDao";
+				case graphExec : return "iGraphpodExecDao";
 				default:
 					return null;
 			}
@@ -380,6 +384,8 @@ public class Helper {
 		case comment : return Comment.class;
 		case tag : return Tag.class;
 		case lov : return Lov.class;
+		case graphpod : return Graphpod.class;
+		case graphExec : return GraphExec.class;
 
 
 		default:
@@ -466,6 +472,8 @@ public class Helper {
 //				case "clonedata" : return MetaType.CloneData;
 //				case "gendataattr" : return MetaType.GenDataAttr;
 //				case "gendatavallist" : return MetaType.GenDataValList;
+				case "graphpod" : return MetaType.graphpod;
+				case "graphexec" : return MetaType.graphExec;
 				default : return null;
 			}
 		}
