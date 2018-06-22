@@ -21,6 +21,8 @@ import org.apache.log4j.Logger;
 
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.ExecutionContext;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
@@ -219,6 +221,29 @@ public class DagExecUtil {
 			taskList.add(taskExec);
 		}
 		return taskList;
+	}
+	
+	/**
+	 *  refKeyList - create new. Add back to execParam's refKeyList after completion
+	 *	paramInfo - not required
+	 *	filterInfo - not required
+	 *	stageInfo - not required
+	 *	paramSetHolder  - create new and copy all. Don't need to add back
+	 *	paramListInfo - not required
+	 *	internalVarMap - not required during parse. Required during execute
+	 *	otherParams - append to it
+	 *	executionContext - create new and copy all. Don't need to add back for now
+	 * @param execParams
+	 * @return
+	 */
+	public static ExecParams cloneTaskExecParams (ExecParams execParams) {
+		ExecParams taskExecParams = new ExecParams();
+		
+		taskExecParams.setRefKeyList(new ArrayList<>());
+		taskExecParams.setParamSetHolder(execParams.getParamSetHolder());
+		taskExecParams.setExecutionContext(new ExecutionContext());
+		taskExecParams.setOtherParams(execParams.getOtherParams());
+		return taskExecParams;
 	}
 	
 	/*public static fetchRefKeyList (TaskExec taskExec) {
