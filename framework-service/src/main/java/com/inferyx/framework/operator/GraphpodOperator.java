@@ -23,7 +23,7 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
  * @author joy
  *
  */
-public class CreateGraphOperator implements IOperator {
+public class GraphpodOperator implements IOperator {
 	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
@@ -38,12 +38,12 @@ public class CreateGraphOperator implements IOperator {
 	@Autowired
 	private DatasetOperator datasetOperator;
 
-	static final Logger logger = Logger.getLogger(CreateGraphOperator.class);
+	static final Logger logger = Logger.getLogger(GraphpodOperator.class);
 
 	/**
 	 * 
 	 */
-	public CreateGraphOperator() {
+	public GraphpodOperator() {
 		// TODO Auto-generated constructor stub
 	}
 
