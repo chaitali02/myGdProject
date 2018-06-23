@@ -262,8 +262,7 @@ public class LoadServiceImpl {
 			} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())
-					) {
+					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 				loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
 				exec.executeSql(loadExec.getExec(), appUuid);
 				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + targetTableName, appUuid);

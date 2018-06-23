@@ -117,6 +117,8 @@ public class LoadOperator implements IOperator {
 			loadQuery.append(" NULL ").append(" AS ").append(" 'null' ");
 			loadQuery.append(" ESCAPE ").append(" AS ").append(" '\n'");
 			loadQuery.append(" CSV ").append(" HEADER ");
+			
+			logger.info("postgresql load query: "+loadQuery);
 			return loadQuery.toString();
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 			String partitionClos = Helper.getPartitionColumns(targetDatapod);
