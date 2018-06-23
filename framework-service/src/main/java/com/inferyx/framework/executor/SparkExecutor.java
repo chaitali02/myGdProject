@@ -58,6 +58,7 @@ import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.storage.StorageLevel;
 import org.dmg.pmml.PMML;
+import org.graphframes.GraphFrame;
 import org.jpmml.model.JAXBUtil;
 import org.jpmml.model.MetroJAXBUtil;
 import org.jpmml.sparkml.ConverterUtil;
@@ -1908,6 +1909,21 @@ public class SparkExecutor implements IExecutor {
 	public String createTable(String sql, Datasource datasource) throws IOException {
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		exec.executeSql(sql, null);
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param nodeSql
+	 * @param edgeSql
+	 * @param datasource
+	 * @return
+	 * @throws IOException
+	 */
+	public String createGraphFrame (String nodeSql, String edgeSql, Datasource datasource) throws IOException {
+		ResultSetHolder nodeRsHolder = executeSql(nodeSql, null);
+		ResultSetHolder edgeRsHolder = executeSql(edgeSql, null);
+		GraphFrame graphFrame = new GraphFrame(nodeRsHolder.getDataFrame(), edgeRsHolder.getDataFrame());
 		return null;
 	}
 
