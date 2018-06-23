@@ -25,8 +25,6 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.ml.linalg.VectorUDT;
-import org.apache.spark.sql.types.DataTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -647,7 +645,8 @@ public class Helper {
 		if(partitionColls.lastIndexOf(",")>partitionColls.length()) {
 			partitionColls.deleteCharAt(partitionColls.lastIndexOf(","));
 		}
-		partitionColls.deleteCharAt(partitionColls.length()-1);
+		if(partitionColls.length() > 0)
+			partitionColls.deleteCharAt(partitionColls.length()-1);
 		logger.info("Partition collumns: "+partitionColls);
 		return partitionColls.toString();
 	}
@@ -663,7 +662,8 @@ public class Helper {
 	public String buildInsertQuery(String executionContext, String tableName, Datapod datapod, String sql) {
 		if(executionContext.equalsIgnoreCase(ExecContext.HIVE.toString())
 				|| executionContext.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			sql = "INSERT OVERWRITE table " + tableName + " PARTITION ( " + Helper.getPartitionColumns(datapod) +" ) " + " " + sql;
+			String partitionClos = getPartitionColumns(datapod);
+			sql = "INSERT OVERWRITE table " + tableName + (partitionClos.length() > 0 ? " PARTITION ( " + partitionClos +" ) " : " ") + " " + sql;
 		} else {	
 				sql = "INSERT INTO " + tableName + " " + sql;
 		}

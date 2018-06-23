@@ -3336,7 +3336,7 @@
 		{
 			"ref" : {
 					"type" : "privilege",
-		 			"uuid" : "bf9ee7ae-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"uuid" : "bf9ee920-75ec-11e8-adc0-fa7ae01bbebc",
 		 			"version" : null,
 		            "name" : "GraphpodClone"
 				},

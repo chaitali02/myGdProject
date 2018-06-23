@@ -86,8 +86,11 @@ public class ImpalaExecutor implements IExecutor {
 					countRows = stmt.executeUpdate(sql);
 					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
 					rsHolder.setCountRows(countRows);
-				}
-				else {
+				} else if(sql.toUpperCase().contains("LOAD DATA")) {
+					stmt.execute("SET hive.exec.dynamic.partition="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition=", "true")+";");
+					stmt.execute("SET hive.exec.dynamic.partition.mode="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition.mode", "nonstrict")+";");
+					stmt.execute(sql);
+				} else {
 					rs = stmt.executeQuery(sql);
 				}
 				rsHolder.setResultSet(rs);
@@ -424,10 +427,10 @@ public class ImpalaExecutor implements IExecutor {
 		return null;
 	}
 	@Override
-	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		String sourceTableName = load.getSource().getValue();
 		String sql = "SELECT * FROM " + sourceTableName;
-		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
+		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);
 		ResultSetHolder rsHolder = executeSql(sql, clientContext);
 		return rsHolder.getCountRows();
 	}

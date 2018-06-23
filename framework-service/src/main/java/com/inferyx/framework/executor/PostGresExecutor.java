@@ -86,7 +86,9 @@ public class PostGresExecutor implements IExecutor {
 					countRows = stmt.executeUpdate(sql);
 					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
 					rsHolder.setCountRows(countRows);
-				} else { 
+				} else if(sql.toUpperCase().contains("COPY")) {
+					stmt.executeUpdate(sql);
+					} else { 
 					rs = stmt.executeQuery(sql);
 					countRows = rs.getMetaData().getColumnCount();
 				}
@@ -537,11 +539,19 @@ public class PostGresExecutor implements IExecutor {
 	}
 
 	@Override
-	public long load(Load load, String datapodTableName, Datapod datapod, String clientContext) throws IOException {
-		String sourceTableName = load.getSource().getValue();
-		String sql = "SELECT * FROM " + sourceTableName;
-		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
-		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
+//		String sourceTableName = load.getSource().getValue();
+//		String sql = "SELECT * FROM " + sourceTableName;
+//		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
+//		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+		ResultSetHolder rsHolder = null;
+		try {
+			rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return rsHolder.getCountRows();
 	}
 

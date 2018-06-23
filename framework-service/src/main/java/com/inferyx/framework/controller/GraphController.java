@@ -106,6 +106,16 @@ public class GraphController {
 	  }
 	  return true;
 	}*/
+  
+  @RequestMapping(value="/getGraphPodResults",method=RequestMethod.GET)
+	public @ResponseBody String  getGraphPodResults(@RequestParam("uuid") String uuid,
+			@RequestParam("version") String version,@RequestParam("degree") String degree,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException{
+		return registerService.getGraphResults(uuid,version,degree);
+		
+	}
+  
 }
 
 
