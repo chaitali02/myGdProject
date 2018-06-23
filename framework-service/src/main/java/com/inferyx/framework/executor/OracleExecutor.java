@@ -33,7 +33,6 @@ import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -61,10 +60,6 @@ public class OracleExecutor implements IExecutor {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ConnectionFactory  connectionFactory;
-	@Autowired
-	private SparkExecutor sparkExecutor;
-	@Autowired
-	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(OracleExecutor.class);
 	@Override
@@ -220,9 +215,7 @@ public class OracleExecutor implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
-		return rsHolder.getCountRows();
+		return 0;
 	}
 
 	@Override
@@ -453,19 +446,7 @@ public class OracleExecutor implements IExecutor {
 
 	@Override
 	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
-//		String sourceTableName = load.getSource().getValue();
-//		String sql = "SELECT * FROM " + sourceTableName;
-//		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);
-//		ResultSetHolder rsHolder = executeSql(sql, clientContext);
-		ResultSetHolder rsHolder = null;
-		try {
-			rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return rsHolder.getCountRows();
+		return 0;
 	}
 
 }
