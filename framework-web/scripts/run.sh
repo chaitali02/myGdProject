@@ -32,4 +32,6 @@ mkdir /user/hive/warehouse/framework/download
 mkdir /user/hive/warehouse/framework/import
 mkdir /user/hive/warehouse/framework/export
 mkdir /user/hive/warehouse/framework/script
+mkdir /user/hive/warehouse/framework/script/r
+mkdir /user/hive/warehouse/framework/script/py
 
