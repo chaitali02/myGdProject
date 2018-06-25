@@ -22,9 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 
 /**
@@ -34,7 +32,7 @@ import com.inferyx.framework.domain.Status;
 public class BaseRuleExecTemplate {
 	
 	@Resource(name="taskThreadMap")
-	protected ConcurrentHashMap taskThreadMap;
+	protected ConcurrentHashMap<?, ?> taskThreadMap;
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
 
@@ -75,6 +73,7 @@ public class BaseRuleExecTemplate {
 			synchronized (baseRuleExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(baseRuleExec, execType, Status.Stage.Terminating);
 			}
+			@SuppressWarnings("unchecked")
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseRuleExec.getUuid()+"_"+baseRuleExec.getVersion());
 				futureTask.cancel(true);
 			synchronized (baseRuleExec.getUuid()) {
