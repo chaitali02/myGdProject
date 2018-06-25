@@ -10,20 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,13 +21,10 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.RuleExec;
-import com.inferyx.framework.domain.User;
 
 @Service
-public class LoadExecServiceImpl {
+public class LoadExecServiceImpl  extends BaseRuleExecTemplate {
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
@@ -272,4 +258,13 @@ public class LoadExecServiceImpl {
 		execHolder.setRunMode(dataStore.getRunMode());
 		return execHolder;
 	}	
+	
+	/**
+	 * Kill meta thread if In Progress
+	 * @param uuid
+	 * @param version
+	 */
+	public void kill (String uuid, String version) {
+		super.kill(uuid, version, MetaType.loadExec);
+	}
 }

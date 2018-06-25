@@ -494,7 +494,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	 */
 	protected String getTableName(Datapod datapod, 
 			HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
-		if (otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		} else {
 			try {
@@ -516,11 +516,16 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 		// Get all relation tables
 		// Start with main table
+//		if (otherParams == null) {
+//			otherParams = new HashMap<>();
+//		}
 		Datapod fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
 
 		// Derive table name on the basis of depends on value.
 		String table = getTableName(fromDatapod, otherParams, mapExec);
-		otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), table);
+		
+			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), table);
+		
 		// Do the same for other relation tables
 
 		List<RelationInfo> relInfoList = relation.getRelationInfo();
@@ -654,6 +659,12 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			ExecParams execParams, RunMode runMode) throws Exception {
 		try {
+			if (otherParams == null) {
+				otherParams = new HashMap<>();
+			}
+			if (datapodList == null) {
+				datapodList = new ArrayList<>();
+			}
 			Map map = null;
 			MetaIdentifierHolder mapRef = new MetaIdentifierHolder();
 			Task indvTask = null;

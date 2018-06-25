@@ -21,8 +21,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.spark.ml.param.ParamMap;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,13 +34,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
-import com.inferyx.framework.domain.Operator;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.Simulate;
@@ -419,5 +413,43 @@ public class ModelController {
 							@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		modelExecServiceImpl.restartTrain(type, trainExecUuid, trainExecVersion, execParams, runMode);
+	}
+	
+	@RequestMapping(value = "/predict/kill",  method = RequestMethod.GET)
+	public void killPredict(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action) {
+		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.predictExec);
+	}
+	
+	@RequestMapping(value = "/simulate/kill",  method = RequestMethod.GET)
+	public void killSimulate(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action) {
+		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.simulateExec);
+	}
+	
+	@RequestMapping(value = "/predict/restart",  method = RequestMethod.GET)
+	public void restartPredict(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+							@RequestBody(required = false) ExecParams execParams,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action,
+							@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		modelExecServiceImpl.restartPredict(type, trainExecUuid, trainExecVersion, execParams, runMode);
+	}
+	
+	@RequestMapping(value = "/simulate/restart",  method = RequestMethod.GET)
+	public void restartSimulate(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+							@RequestBody(required = false) ExecParams execParams,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action,
+							@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		modelExecServiceImpl.restartSimulate(type, trainExecUuid, trainExecVersion, execParams, runMode);
 	}
 }

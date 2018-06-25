@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -53,7 +52,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
@@ -134,6 +132,8 @@ public class DagServiceImpl {
 	private ReconServiceImpl reconServiceImpl;
 	@Autowired
 	private ReconGroupServiceImpl reconGroupServiceImpl;
+	@Autowired
+	private GraphServiceImpl graphServiceImpl;
 	@Autowired
 	private CustomOperatorServiceImpl operatorServiceImpl;
 	@Autowired
@@ -1027,19 +1027,22 @@ public class DagServiceImpl {
 						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
 					} else if (ref.getType().equals(MetaType.operator)) {
 						ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
-						operatorExecParams.setOtherParams((HashMap<String, String>) helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
+						operatorExecParams.setOtherParams((HashMap<String, String>) Helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
 						baseExec = operatorServiceImpl.create((OperatorExec)baseExec, operatorExecParams, runMode);
 						logger.info("operatorExecParams.getOtherParams : " + operatorExecParams.getOtherParams());
 						operatorServiceImpl.parse((OperatorExec)baseExec, operatorExecParams, runMode);
 						logger.info("operatorExecParams.getOtherParams : otherParams 1 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
-						otherParams = (HashMap<String, String>) helper.mergeMap(operatorExecParams.getOtherParams(), otherParams);
+						otherParams = (HashMap<String, String>) Helper.mergeMap(operatorExecParams.getOtherParams(), otherParams);
 						logger.info("operatorExecParams.getOtherParams : otherParams 2 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
 						/*if (indvTask.getDependsOn().size() > 0) {
 							operatorExecParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
 							indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
 						}*/
-					}
-					execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
+					} else if (ref.getType().equals(MetaType.graphpod)) {
+						baseExec = graphServiceImpl.create(baseExec, execParams, runMode);
+						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+					} 
+					execParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, execParams.getOtherParams()));
 					// If conditions with parse goes here - END	
 					logger.info(" otherParams : " + otherParams);
 					logger.info(" execParams.getOtherParams() : " + execParams.getOtherParams());

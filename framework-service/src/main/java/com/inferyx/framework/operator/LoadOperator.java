@@ -97,8 +97,7 @@ public class LoadOperator implements IOperator {
 //			}
 //			logger.info("query: "+query);
 //			return query;
-		} else if(datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {String version = Helper.getVersion();
-			boolean isVersion = false;
+		} else if(datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 			loadQuery = new StringBuilder();
 			loadQuery.append("COPY ");
 			loadQuery.append(targetTableName);
@@ -106,9 +105,6 @@ public class LoadOperator implements IOperator {
 			for(Attribute attribute : targetDatapod.getAttributes()) {
 				loadQuery.append(attribute.getName());
 				loadQuery.append(", ");
-				if(attribute.getName().equalsIgnoreCase("version")){
-					isVersion = true;
-				}
 			}
 			String query = loadQuery.subSequence(0, loadQuery.lastIndexOf(",")).toString().concat(" ) ");
 			loadQuery = new StringBuilder(query);
@@ -116,13 +112,14 @@ public class LoadOperator implements IOperator {
 			loadQuery.append(" '");
 			loadQuery.append(filePathUrl);
 			loadQuery.append("' ");
-			loadQuery.append("DELIMITER").append(" ',' ");
-			loadQuery.append(" csv ");
-			loadQuery.append(" header ");
-//			if(isVersion){
-//				loadQuery = loadQuery.append("SET version="+version);
-//			}
-			return loadQuery.toString();//generatePostgresLoadQuery(targetTableName, targetHolder, filePathUrl);
+			loadQuery.append(" WITH ");
+			loadQuery.append(" DELIMITER ").append(" AS ").append(" ',' ");
+			loadQuery.append(" NULL ").append(" AS ").append(" 'null' ");
+			loadQuery.append(" ESCAPE ").append(" AS ").append(" '\n'");
+			loadQuery.append(" CSV ").append(" HEADER ");
+			
+			logger.info("postgresql load query: "+loadQuery);
+			return loadQuery.toString();
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 			String partitionClos = Helper.getPartitionColumns(targetDatapod);
 			if(partitionClos.length() > 0)

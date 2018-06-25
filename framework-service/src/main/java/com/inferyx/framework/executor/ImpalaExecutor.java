@@ -45,6 +45,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
@@ -433,5 +434,10 @@ public class ImpalaExecutor implements IExecutor {
 		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);
 		ResultSetHolder rsHolder = executeSql(sql, clientContext);
 		return rsHolder.getCountRows();
+	}
+	@Override
+	public String createGraphFrame(GraphExec graphExec, DataStore dataStore) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -48,6 +48,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.LoadOperator;
@@ -83,6 +84,8 @@ public class LoadServiceImpl {
 	DataFrameService dataFrameService;
 	@Autowired
 	private LoadOperator loadOperator;
+	@Autowired
+	private SparkExecutor sparkExecutor;
 
 	static final Logger logger = Logger.getLogger(LoadServiceImpl.class);
 
@@ -262,15 +265,15 @@ public class LoadServiceImpl {
 			} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
 					|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())
-					) {
+					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 				loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
 				exec.executeSql(loadExec.getExec(), appUuid);
 				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + targetTableName, appUuid);
 				rsHolder.getResultSet().next();
 				count = rsHolder.getResultSet().getLong(1);
-			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-				count = exec.load(load, targetTableName, datasource, datapod, appUuid);
+			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {				
+				ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName);				
+				count = rsHolder.getCountRows();
 			}
 			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();

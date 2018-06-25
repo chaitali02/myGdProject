@@ -24,8 +24,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamResult;
 
@@ -81,6 +83,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
@@ -138,8 +141,8 @@ public class SparkExecutor implements IExecutor {
 	private DataSourceFactory datasourceFactory;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
-
-
+	@Resource
+	private ConcurrentHashMap graphpodMap;
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
 	/**
@@ -1920,11 +1923,21 @@ public class SparkExecutor implements IExecutor {
 	 * @return
 	 * @throws IOException
 	 */
-	public String createGraphFrame (String nodeSql, String edgeSql, Datasource datasource) throws IOException {
+	@Override
+	public String createGraphFrame (GraphExec graphExec, DataStore dataStore) throws IOException {
+		logger.info("exec inside sparkExecutor : " + graphExec.getExec());
+		String []sqlList = graphExec.getExec().split("\\|\\|\\|");
+		logger.info("exec0 inside sparkExecutor : " + sqlList[0]);
+		logger.info("exec1 inside sparkExecutor : " + sqlList[1]);
+		String nodeSql = sqlList[0];
+		String edgeSql = sqlList[1];
 		ResultSetHolder nodeRsHolder = executeSql(nodeSql, null);
 		ResultSetHolder edgeRsHolder = executeSql(edgeSql, null);
 		GraphFrame graphFrame = new GraphFrame(nodeRsHolder.getDataFrame(), edgeRsHolder.getDataFrame());
-		return null;
+		String graphExecKey = graphExec.getDependsOn().getRef().getUuid()+"_"+graphExec.getDependsOn().getRef().getVersion()+"_"+graphExec.getVersion();
+		graphpodMap.put(graphExecKey, graphFrame);
+		graphFrame.indexedVertices().show();
+		return graphExecKey;
 	}
 
 	@Override

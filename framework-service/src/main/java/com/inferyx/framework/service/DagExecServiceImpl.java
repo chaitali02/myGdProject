@@ -45,6 +45,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.dao.IDagExecDao;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DagStatusHolder;
@@ -396,7 +397,7 @@ public class DagExecServiceImpl {
 //		}
 //	}
 	
-	public DagExec setTaskOnHold(String uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
+	public BaseEntity setTaskOnHold(String uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
 		DagExec dagExec=null;		
@@ -433,9 +434,9 @@ public class DagExecServiceImpl {
 			}
 		}
 		//return iDagExec.save(dagExec);
-		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
+		return (BaseEntity) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
-	public DagExec setTaskResume(String uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
+	public BaseEntity setTaskResume(String uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
 		DagExec dagExec=null;		
@@ -478,7 +479,7 @@ public class DagExecServiceImpl {
 			}
 		}
 		//return iDagExec.save(dagExec);
-		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
+		return (BaseEntity) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 
 	public List<String> fetchAllTaskThread() {

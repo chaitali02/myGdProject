@@ -302,7 +302,8 @@ public class Helper {
 		case recon : return "ReconServiceImpl";	
 		case reconExec : return "ReconExecServiceImpl";	
 		case recongroup : return "ReconGroupServiceImpl";	
-		case recongroupExec : return "ReconGroupExecServiceImpl";	
+		case recongroupExec : return "ReconGroupExecServiceImpl";		
+		case load : return "LoadExecServiceImpl";	
 		default:
 			return null;
 		}
@@ -522,34 +523,6 @@ public class Helper {
 		//logger.info(property.getProperty(key));
 		return  property.entrySet();
 	}
-	
-	/*public HttpServletResponse setResponse(String code, String status, String msg) throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		if(requestAttributes != null) {
-			HttpServletResponse response = requestAttributes.getResponse();
-			if(response != null) {
-					Message message = new Message(code, status, msg);
-					Message savedMessage = messageServiceImpl.save(message);
-					
-					//PrintWriter out = response.getWriter();
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					//response.setCharacterEncoding("UTF-8");
-					response.setStatus(404);
-					//out.print(messageJson);
-					///out.flush();
-					response.getOutputStream().write(messageJson.getBytes());
-					//response.getOutputStream().flush();
-					response.getOutputStream().close();
-					System.out.println("\n\n");
-					return response;					
-			}else
-				logger.info("HttpServletResponse response is \""+null+"\"");
-		}else
-			logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
-		return null;
-	}*/
 	
 	public static void updateRunStatus (Status.Stage latestStatus, RunStatusHolder statusHolder) {
 		if (statusHolder == null) {
@@ -949,6 +922,7 @@ public class Helper {
 		case simulateExec : return new SimulateExec();
 		case predictExec : return new PredictExec();
 		case operatorExec : return new OperatorExec();
+		case graphExec : return new GraphExec();
 		default : return null;
 		}
 	}

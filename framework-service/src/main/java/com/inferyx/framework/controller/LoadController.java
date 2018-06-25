@@ -27,6 +27,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.service.LoadExecServiceImpl;
 import com.inferyx.framework.service.LoadServiceImpl;
 
 @RestController
@@ -35,6 +36,8 @@ public class LoadController {
 	
 	@Autowired
 	private LoadServiceImpl loadServiceImpl;
+	@Autowired
+	private LoadExecServiceImpl loadExecServiceImpl;
 	
 	@RequestMapping(value = "/getResults", method = RequestMethod.GET)
 	public List<Map<String, Object>> getResults (@RequestParam("uuid") String loadExecUUID, 
@@ -61,5 +64,19 @@ public class LoadController {
 		loadExec = loadServiceImpl.create(loadUuid, loadVersion, execParams, null, loadExec);
 		loadExec = loadServiceImpl.execute(loadUuid, loadVersion, loadExec, execParams, runMode);
 		return loadExec;
+	}
+	
+	@RequestMapping(value="/kill", method = RequestMethod.GET)
+	public boolean kill(@RequestParam(value = "uuid") String execUuid,
+						@RequestParam(value = "version", required = false) String execVersion,
+						@RequestParam(value = "type", required = false) String type) {
+		try {
+			loadExecServiceImpl.kill(execUuid, execVersion);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 }

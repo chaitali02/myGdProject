@@ -31,6 +31,7 @@ import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
+import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -217,7 +218,7 @@ public class GenerateDataOperator implements IOperator {
 		String execUuid = execIdentifier.getUuid();
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
-		List<Attribute> attributes = locationDatapod.getAttributes();
+//		List<Attribute> attributes = locationDatapod.getAttributes();
 		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		logger.info("execIdentifier : " + execIdentifier.getUuid() +":"+ execIdentifier.getVersion() +":"+ execIdentifier.getType());
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(execIdentifier.getUuid(), execIdentifier.getVersion(), execIdentifier.getType().toString());
@@ -245,7 +246,7 @@ public class GenerateDataOperator implements IOperator {
 
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		String execUuid = baseExec.getUuid();
+//		String execUuid = baseExec.getUuid();
 		String execVersion = baseExec.getVersion();
 		Map<String, String> otherParams = execParams.getOtherParams();
 		ParamListHolder distributionInfo = paramSetServiceImpl.getParamByName(execParams, "distribution");
@@ -276,20 +277,28 @@ public class GenerateDataOperator implements IOperator {
 		
 		String tableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
 		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
-		
+		MetaType execType = getMetaTypeByBaseExec(baseExec);
 		if (randomDistribution instanceof Math3RandDistribution) {
 			List<RowObj> rowObjList = randomDistribution.generateData(distribution, distributionObject, getMethodName(execParams), locationDatapod.getAttributes(), numIterations, execVersion, tableName);
 			// Save result
-			save(exec, rowObjList, tableName, locationDatapod, baseExec.getRef(MetaType.operatorExec), runMode);
+			save(exec, rowObjList, tableName, locationDatapod, baseExec.getRef(execType), runMode);
 		} else {
 			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo());
 			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo());
 			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);			
 			// Save result
-			save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(MetaType.operatorExec), runMode);
+			save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(execType), runMode);
 		}
 		return tableName;
 	}
 
-	
+	public MetaType getMetaTypeByBaseExec(BaseExec baseExec) {
+		if(baseExec instanceof SimulateExec) {
+			return MetaType.simulateExec;
+		} else if(baseExec instanceof OperatorExec) {
+			return MetaType.operatorExec;			
+		} else {
+			return null;
+		}
+	}
 }
