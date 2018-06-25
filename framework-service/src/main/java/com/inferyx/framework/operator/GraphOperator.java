@@ -72,6 +72,7 @@ public class GraphOperator implements IOperator {
 		String edgeSql = createEdgeSql(edgeList, execParams, baseExec, runMode);
 		baseExec.setExec(nodeSql.concat("|||").concat(edgeSql));
 		logger.info(" Sqls : " + baseExec.getExec());
+		commonServiceImpl.save(MetaType.graphExec.toString(), baseExec);
 		return baseExec;
 	}
 
