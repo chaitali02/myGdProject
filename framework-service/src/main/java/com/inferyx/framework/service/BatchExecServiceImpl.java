@@ -25,7 +25,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.SQLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -45,9 +44,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.RunStatusHolder;
-import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
@@ -67,8 +64,6 @@ import com.inferyx.framework.factory.ExecutorFactory;
 
 		@Autowired
 		DagExecServiceImpl dagExecServiceImpl;
-		@Autowired
-		private SQLContext sqlContext;
 		@Autowired
 		HDFSInfo hdfsInfo;
 		@Autowired
@@ -126,7 +121,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		@Autowired 
 		private ModelExecServiceImpl modelExecServiceImpl;
 		@Resource(name="taskThreadMap")
-		ConcurrentHashMap taskThreadMap;
+		ConcurrentHashMap<String, FutureTask<String>> taskThreadMap;
 		@Autowired
 		ParamSetServiceImpl paramSetServiceImpl;
 		@Autowired
@@ -144,7 +139,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		static Map<String, TaskServiceImpl> mapTaskThread = new HashMap<String, TaskServiceImpl>();
 	
 		public String killDag (String uuid, String version) throws JsonProcessingException {
-			FutureTask futureTask = null;
+			FutureTask<String> futureTask = null;
+			@SuppressWarnings("unused")
 			String status = null;
 			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 			try {
@@ -185,7 +181,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		}
 	
 		public String killStage (String uuid, String version, String stageId) throws JsonProcessingException {
-			FutureTask futureTask = null;
+			FutureTask<String> futureTask = null;
 			String status = null;
 			StageExec stageExec = null;
 			if (!taskThreadMap.containsKey("Stage_" + uuid + "_" + stageId)) {
@@ -243,7 +239,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 
 		public String killTask(String uuid, String version, String stageId, String taskId) throws JsonProcessingException {
 		//	Set<String> strSet = mapTaskThread.keySet();
-			FutureTask futureTask = null;
+			FutureTask<String> futureTask = null;
 			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 			String status = null;
 		
@@ -296,7 +292,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			return new ArrayList<String>(strSet);
 		}
 
+		@SuppressWarnings("unchecked")
 		public DagExec createDagExecBatch(Dag dag, DagExec dagExec, RunMode runMode) {
+			@SuppressWarnings("rawtypes")
 			List<FutureTask> taskList = new ArrayList<FutureTask>();
 			List<StageExec> depStageExecs = new ArrayList<>();
 			if (dagExec == null) {
@@ -315,7 +313,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			try {
 			List<StageExec> dagExecStgs = DagExecUtil.castToStageExecList(dagExec.getStages());
 			do {
-				for (StageExec stageExec : dagExecStgs) {
+				for (int i=0; i<dagExecStgs.size(); i++) {
+					StageExec stageExec = dagExecStgs.get(i);
 					status = Helper.getLatestStatus(stageExec.getStatusList());
 					if (status != null && status.equals(new Status(Status.Stage.OnHold, new Date()))) {
 						logger.info("StageExec is set to OnHold status. So continuing with next stage. ");
@@ -323,7 +322,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					}
 					StageExec indvStg = stageExec;
 					Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
-					if (indvStg != null && indvStg.getStatusList() != null && indvStg.getStatusList().contains(Status.Stage.Inactive)) {
+					if (indvStg != null && indvStg.getStatusList() != null && indvStg.getStatusList().get(i).equals(Status.Stage.Inactive)) {
 						continue;	// If inactive stage then move to next stage (don't consider inactive stage)
 					}
 						if (status.equals(new Status(Status.Stage.InProgress, new Date())) 
@@ -361,9 +360,10 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						try {
 						boolean checkDependencyStatus = false;
 						boolean checkDependencyFailed = false;
+						@SuppressWarnings("unused")
 						boolean checkDependencyKilled = false;
 						String dependencyStatus = null;
-						OrderKey datapodKey = null;
+//						OrderKey datapodKey = null;
 	
 						Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
 						
@@ -378,12 +378,12 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						// If not checkdependency status then continue after setting allDependenciesAddressed to false
 						dependencyStatus = dagExecServiceImpl.checkStageDepStatus(dag,dagExec.getUuid(),dagExec.getVersion(),stage.getStageId());
 						logger.info("Stage dependencyStatus : " + stageExec.getStageId() + " : " + dependencyStatus);
-						if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase("NotCompleted")) {
+						if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.NotStarted.toString())) {
 							checkDependencyStatus = false;
-						} else if (dependencyStatus.equalsIgnoreCase("Killed")) {
+						} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Killed.toString())) {
 							checkDependencyKilled = true;
 							break;
-						} else if (dependencyStatus.equalsIgnoreCase("Failed")) {
+						} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Failed.toString())) {
 							checkDependencyFailed = true;
 							break;
 						} else {
@@ -441,7 +441,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		 * @return
 		 * @throws Exception
 		 */
-		public Boolean waitAndComplete (DagExec dagExec, List<FutureTask> taskList) throws Exception {
+		@SuppressWarnings("unchecked")
+		public Boolean waitAndComplete (DagExec dagExec, @SuppressWarnings("rawtypes") List<FutureTask> taskList) throws Exception {
 			logger.info(" Inside waitAndComplete for Dag ");
 			String outputThreadName = null;
 			String dagExecUUID = dagExec.getUuid();
@@ -538,7 +539,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 
 	
 	
-		public void setStageAndSubmit(DagExec dagExec, StageExec indvStg, Stage stage, ExecParams execParams, Dag dag, List<FutureTask> taskList, RunMode runMode) {
+		public void setStageAndSubmit(DagExec dagExec, StageExec indvStg, Stage stage, ExecParams execParams, Dag dag, @SuppressWarnings("rawtypes") List<FutureTask> taskList, RunMode runMode) {
 			RunStageServiceImpl indivStageExe = new RunStageServiceImpl();
 			logger.info("Map name of uuid_version:" + dagExec.getUuid() + "_"
 					+ indvStg.getStageId());

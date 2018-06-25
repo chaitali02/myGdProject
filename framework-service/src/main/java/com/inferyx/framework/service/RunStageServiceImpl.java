@@ -619,9 +619,9 @@ public class RunStageServiceImpl implements Callable<String> {
 		while(!checkDependencyStatus){
 			dependencyStatus = dagExecServiceImpl.checkStageDepStatus(dag,dagExecUUID,dagExecVer,stageId);
 			logger.info("Stage dependencyStatus : " + stageId + " : " + dependencyStatus);
-			if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase("NotCompleted")) {
+			if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.NotStarted.toString())) {
 				checkDependencyStatus = false;
-			} else if (dependencyStatus.equalsIgnoreCase("Killed")) {
+			} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Killed.toString())) {
 				checkDependencyKilled = true;
 				break;
 			} else {
@@ -668,7 +668,6 @@ public class RunStageServiceImpl implements Callable<String> {
 				OrderKey datapodKey = null;
 				
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvTaskExec.getTaskId());
-				
 	//			Status taskStatus = Helper.getLatestStatus(indvTaskExec.getStatus());
 	//			if (taskStatus.equals(new Status(Status.Stage.InProgress, new Date())) 
 	//					|| taskStatus.equals(new Status(Status.Stage.Completed, new Date()))
@@ -683,10 +682,17 @@ public class RunStageServiceImpl implements Callable<String> {
 						|| taskStatus.equals(Status.Stage.OnHold)) {
 					continue;
 				}*/
+				
 				if (!taskStatus.equals(Status.Stage.NotStarted)
-						&& !taskStatus.equals(Status.Stage.InProgress)) {
+						&& !taskStatus.equals(Status.Stage.InProgress)
+						&& !taskStatus.equals(Status.Stage.Resume)) {
 					continue;
 				}
+				
+				if (taskStatus.equals(Status.Stage.Resume)) {
+					indvTaskExec.setDependsOn(new ArrayList<>());
+				}
+				
 				// Check if task has any dependents
 				if (indvTaskExec.getDependsOn() != null 
 						&& !indvTaskExec.getDependsOn().isEmpty()) {
@@ -746,6 +752,8 @@ public class RunStageServiceImpl implements Callable<String> {
 					boolean checkDependencyStatus = false;
 					boolean checkDependencyFailed = false;
 					boolean checkDependencyKilled = false;
+					boolean checkDependencyResume = false;
+					boolean checkDependencyOnHold = false;
 					String dependencyStatus = null;
 					OrderKey datapodKey = null;
 					
@@ -773,14 +781,22 @@ public class RunStageServiceImpl implements Callable<String> {
 					// If not checkdependency status then continue after setting allDependenciesAddressed to false
 					dependencyStatus = dagExecServiceImpl.checkTaskDepStatus(dag,dagExecUUID,dagExecVer,stageId,indvTaskExec.getTaskId());
 					logger.info("Task dependencyStatus : " + indvTaskExec.getTaskId() + " : " + dependencyStatus);
-					if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase("NotCompleted")) {
+					if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.NotStarted.toString())) {
 						checkDependencyStatus = false;
-					} else if (dependencyStatus.equalsIgnoreCase("Killed")) {
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Killed.toString())) {
 						checkDependencyKilled = true;
 						checkDependencyStatus = true;
 						break;
-					} else if (dependencyStatus.equalsIgnoreCase("Failed")) {
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Failed.toString())) {
 						checkDependencyFailed = true;
+						checkDependencyStatus = true;
+						break;
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.OnHold.toString())) {
+						checkDependencyOnHold = true;
+						checkDependencyStatus = true;
+						break;
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Resume.toString())) {
+						checkDependencyResume = true;
 						checkDependencyStatus = true;
 						break;
 					} else {
@@ -805,6 +821,32 @@ public class RunStageServiceImpl implements Callable<String> {
 							try {
 								logger.info("Setting status to Failed for stage : " + stageId);
 								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.Failed, stageId, indvTaskExec.getTaskId());
+								continue;
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+					
+					if (checkDependencyOnHold) {
+						synchronized (dagExecUUID) {
+							try {
+								logger.info("Setting status to OnHold for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.Resume, stageId, indvTaskExec.getTaskId());
+								continue;
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+					
+					if (checkDependencyResume) {
+						synchronized (dagExecUUID) {
+							try {
+								logger.info("Setting status to Resume for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.Resume, stageId, indvTaskExec.getTaskId());
 								continue;
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
@@ -932,7 +974,7 @@ public class RunStageServiceImpl implements Callable<String> {
 					
 				//}
 				//dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExecUUID, dagExecVer);
-					dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString());
+				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString());
 				stageExec = DagExecUtil.getStageExecFromDagExec(dagExec, stageId);
 				Status.Stage latestStatus = Helper.getLatestStatus(stageExec.getStatusList()).getStage();
 				RunStatusHolder statusHolder = new RunStatusHolder(Boolean.TRUE, 
@@ -1016,6 +1058,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	 * @return
 	 * @throws JsonProcessingException 
 	 */
+	@SuppressWarnings("unused")
 	public OrderKey fetchDatapodKey(Task indvTask) throws JsonProcessingException {
 		OrderKey datapodKey = null;
 		// Fetch datapod key
