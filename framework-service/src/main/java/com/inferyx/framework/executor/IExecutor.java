@@ -35,6 +35,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
@@ -520,4 +521,6 @@ public interface IExecutor {
 	 * @throws IOException
 	 */
 	long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException;
+
+	String createGraphFrame(GraphExec graphExec, DataStore dataStore) throws IOException;
 }

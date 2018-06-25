@@ -5,25 +5,32 @@ package com.inferyx.framework.operator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.GraphEdge;
 import com.inferyx.framework.domain.GraphNode;
 import com.inferyx.framework.domain.Graphpod;
+import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.DataStoreServiceImpl;
 
 /**
  * @author joy
@@ -35,9 +42,13 @@ public class GraphOperator implements IOperator {
 	@Autowired
 	CommonServiceImpl commonServiceImpl;
 	@Autowired
+	DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
 	AttributeMapOperator attributeMapOperator;
 	@Autowired
 	MetadataUtil daoRegister;
+	
+	private static final Logger logger = Logger.getLogger(GraphOperator.class);
 
 	/**
 	 * 
@@ -57,9 +68,10 @@ public class GraphOperator implements IOperator {
 		// Get node 
 		List<GraphNode> nodeList = graphPod.getNodeInfo();
 		List<GraphEdge> edgeList = graphPod.getEdgeInfo();
-		String nodeSql = createNodeSql(nodeList, execParams);
-		String edgeSql = createEdgeSql(edgeList, execParams);
+		String nodeSql = createNodeSql(nodeList, execParams, baseExec, runMode);
+		String edgeSql = createEdgeSql(edgeList, execParams, baseExec, runMode);
 		baseExec.setExec(nodeSql.concat("|||").concat(edgeSql));
+		logger.info(" Sqls : " + baseExec.getExec());
 		return baseExec;
 	}
 
@@ -67,16 +79,9 @@ public class GraphOperator implements IOperator {
 	 * 
 	 * @param nodeList
 	 * @return
-	 * @throws ParseException 
-	 * @throws NullPointerException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws JsonProcessingException 
+	 * @throws Exception 
 	 */
-	private String createNodeSql(List<GraphNode> nodeList, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	private String createNodeSql(List<GraphNode> nodeList, ExecParams execParams, BaseExec baseExec, RunMode runMode) throws Exception {
 		if (nodeList == null || nodeList.isEmpty()) {
 			return null;
 		}
@@ -115,8 +120,8 @@ public class GraphOperator implements IOperator {
 				sb.append(", ");
 			}
 			sb.append(ConstantsUtil.FROM);
-			BaseExec sourceExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(nodeIdRefHolder.getRef().getUuid(), nodeIdRefHolder.getRef().getVersion(), nodeIdRefHolder.getRef().getType().toString());
-			sb.append(" ").append(sourceExec.getName()).append(" ");
+			Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
+			sb.append(" ").append(getTableName(source, execParams.getOtherParams(), baseExec, runMode)).append(" ").append(source.getName()).append(" ");
 			count++;
 		}
 		nodeSql = sb.toString().replaceAll(",  FROM", " FROM");
@@ -125,19 +130,35 @@ public class GraphOperator implements IOperator {
 	
 	/**
 	 * 
+	 * @param datapod
+	 * @param indvTask
+	 * @param datapodList
+	 * @param dagExec
+	 * @param otherParams
+	 * @return
+	 * @throws Exception
+	 */
+	protected String getTableName(Datapod datapod, 
+			HashMap<String, String> otherParams, BaseExec baseExec, RunMode runMode) throws Exception {
+		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+		} else {
+			try {
+				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} catch(Exception e) {
+				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), baseExec.getVersion());
+			}
+		}
+	}
+	
+	/**
+	 * 
 	 * @param edgeList
 	 * @param execParams
 	 * @return
-	 * @throws JsonProcessingException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws ParseException
+	 * @throws Exception 
 	 */
-	private String createEdgeSql(List<GraphEdge> edgeList, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	private String createEdgeSql(List<GraphEdge> edgeList, ExecParams execParams, BaseExec baseExec, RunMode runMode) throws Exception {
 		if (edgeList == null || edgeList.isEmpty()) {
 			return null;
 		}
@@ -172,8 +193,8 @@ public class GraphOperator implements IOperator {
 				sb.append(", ");
 			}
 			sb.append(ConstantsUtil.FROM);
-			BaseExec sourceExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(sourceNodeIdRefHolder.getRef().getUuid(), sourceNodeIdRefHolder.getRef().getVersion(), sourceNodeIdRefHolder.getRef().getType().toString());
-			sb.append(" ").append(sourceExec.getName()).append(" ");
+			Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
+			sb.append(" ").append(getTableName(source, execParams.getOtherParams(), baseExec, runMode)).append(" ").append(source.getName()).append(" ");
 			count++;
 		}
 		edgeSql = sb.toString().replaceAll(",  FROM", " FROM");
@@ -194,7 +215,6 @@ public class GraphOperator implements IOperator {
 	 */
 	@Override
 	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

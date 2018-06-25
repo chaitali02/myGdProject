@@ -14,6 +14,7 @@ public class GraphEdge {
 	String edgeId;
 	String edgeType;
 	String edgeName;
+	MetaIdentifierHolder edgeSource;
 	List<AttributeRefHolder> edgeProperties;
 	AttributeRefHolder sourceNodeId;
 	String sourceNodeType;
@@ -54,6 +55,18 @@ public class GraphEdge {
 	 */
 	public void setEdgeName(String edgeName) {
 		this.edgeName = edgeName;
+	}
+	/**
+	 * @return the edgeSource
+	 */
+	public MetaIdentifierHolder getEdgeSource() {
+		return edgeSource;
+	}
+	/**
+	 * @param edgeSource the edgeSource to set
+	 */
+	public void setEdgeSource(MetaIdentifierHolder edgeSource) {
+		this.edgeSource = edgeSource;
 	}
 	/**
 	 * @return the edgeProperties

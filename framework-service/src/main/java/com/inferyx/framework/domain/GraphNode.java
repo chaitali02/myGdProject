@@ -15,6 +15,7 @@ public class GraphNode {
 	String nodeType;
 	String nodeIcon;
 	AttributeRefHolder nodeName;
+	MetaIdentifierHolder nodeSource;
 	List<AttributeRefHolder> nodeProperties;
 	/**
 	 * @return the nodeId
@@ -63,6 +64,18 @@ public class GraphNode {
 	 */
 	public void setNodeName(AttributeRefHolder nodeName) {
 		this.nodeName = nodeName;
+	}
+	/**
+	 * @return the nodeSource
+	 */
+	public MetaIdentifierHolder getNodeSource() {
+		return nodeSource;
+	}
+	/**
+	 * @param nodeSource the nodeSource to set
+	 */
+	public void setNodeSource(MetaIdentifierHolder nodeSource) {
+		this.nodeSource = nodeSource;
 	}
 	/**
 	 * @return the nodeProperties

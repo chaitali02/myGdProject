@@ -24,7 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
+import com.inferyx.framework.service.GraphServiceImpl;
 import com.inferyx.framework.service.MessageServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 
@@ -38,6 +42,8 @@ public class GraphController {
 	GraphRegister<?>  graphRegister;
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
+	@Autowired
+	GraphServiceImpl graphServiceImpl;
 	
 	public GraphRegister<?> getGraphRegister() {
 		return graphRegister;
@@ -114,6 +120,18 @@ public class GraphController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException{
 		return registerService.getGraphResults(uuid,version,degree);
 		
+	}
+  
+  @RequestMapping(value="/resgisterGraph",method=RequestMethod.POST)
+  public @ResponseBody String  registerGraph(@RequestParam("uuid") String uuid,
+			@RequestParam("version") String version,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception{
+	  RunMode runMode = RunMode.ONLINE;
+	  ExecParams execParams = new ExecParams();
+		BaseExec baseExec = graphServiceImpl.create(uuid,version,execParams, runMode);
+		baseExec = graphServiceImpl.parse(baseExec, execParams, runMode);
+		return graphServiceImpl.execute(baseExec, execParams, runMode);
 	}
   
 }

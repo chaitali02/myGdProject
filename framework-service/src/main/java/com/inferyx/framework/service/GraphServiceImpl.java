@@ -37,15 +37,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IEdgeDao;
 import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Edge;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.FilterInfo;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
+import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -53,10 +59,17 @@ import com.inferyx.framework.domain.NodeDetails;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SourceAttr;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Vertex;
+import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.GraphOperator;
+import com.inferyx.framework.operator.IExecutable;
+import com.inferyx.framework.operator.IParsable;
 
 @Service
-public class GraphServiceImpl {
+public class GraphServiceImpl implements IParsable, IExecutable {
 
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
@@ -72,6 +85,10 @@ public class GraphServiceImpl {
 	LogServiceImpl logServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	GraphOperator graphOperator;
+	@Autowired
+	private ExecutorFactory execFactory;
 
 	public LogServiceImpl getLogServiceImpl() {
 		return logServiceImpl;
@@ -1415,5 +1432,74 @@ public class GraphServiceImpl {
 			}
 		}
 	}
+
+	
+	/**********************************   GraphFrame - START   **********************************/
+	
+	/**
+	 * 
+	 * @param uuid
+	 * @param version
+	 * @param execParams
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	public BaseExec create(String uuid, String version, ExecParams execParams, RunMode runMode) throws Exception {
+		Graphpod graphPod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphpod.toString());
+		GraphExec graphExec = (GraphExec) commonServiceImpl.createExec(MetaType.graphExec, new MetaIdentifier(MetaType.graphpod, uuid, version));
+		commonServiceImpl.save(MetaType.graphExec.toString(), graphExec);
+		return create (graphExec, execParams, runMode);
+	}
+	
+	/**
+	 * 
+	 * @param baseExec
+	 * @param execParams
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	public BaseExec create (BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		logger.info("Inside GraphServiceImpl.create ");
+		
+		GraphExec graphExec = (GraphExec) baseExec;
+		List<Status> statusList = null;
+		if (graphExec == null) {
+			logger.info(" Nothing to create exec upon. Aborting ... ");
+			return null;
+		}
+		statusList = graphExec.getStatusList();
+		if (Helper.getLatestStatus(statusList) != null
+				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+			logger.info(
+					" This process is In Progress or has been completed previously or is Terminating or is On Hold. Hence it cannot be rerun. ");
+			return graphExec;
+		}
+		logger.info(" Set not started status");
+		synchronized (graphExec.getUuid()) {
+			graphExec = (GraphExec) commonServiceImpl.setMetaStatus(graphExec, MetaType.graphExec,
+					Status.Stage.NotStarted);
+		}
+		logger.info(" After Set not started status");
+		return graphExec;
+	}
+	
+	@Override
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		// Get the exec
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		return exec.createGraphFrame((GraphExec) baseExec, null);
+	}
+	
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		return graphOperator.parse(baseExec, execParams, runMode);
+	}
+	/**********************************   GraphFrame - END     **********************************/
 
 }

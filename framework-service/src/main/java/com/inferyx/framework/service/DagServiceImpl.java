@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -46,6 +45,7 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
@@ -53,7 +53,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
@@ -134,6 +133,8 @@ public class DagServiceImpl {
 	private ReconServiceImpl reconServiceImpl;
 	@Autowired
 	private ReconGroupServiceImpl reconGroupServiceImpl;
+	@Autowired
+	private GraphServiceImpl graphServiceImpl;
 	@Autowired
 	private CustomOperatorServiceImpl operatorServiceImpl;
 	@Autowired
@@ -1038,7 +1039,10 @@ public class DagServiceImpl {
 							operatorExecParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
 							indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
 						}*/
-					}
+					} else if (ref.getType().equals(MetaType.graphpod)) {
+						baseExec = graphServiceImpl.create(baseExec, execParams, runMode);
+						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+					} 
 					execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
 					// If conditions with parse goes here - END	
 					logger.info(" otherParams : " + otherParams);
