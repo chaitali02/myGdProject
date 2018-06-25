@@ -58,11 +58,11 @@ InferyxApp.constant('CF_LOV_TYPES',{
 });
 
 InferyxApp.constant("CF_FILTER",{
-	operator :[{"caption":"EQUAL TO","value":"="},
-	{"caption":"LESS THEN","value":"<"},
-	{"caption":"GREATER THEN","value":">"},
-	{"caption":"LESS / EQUAL","value":"<="},
-	{"caption":"GREATER / EQUAL","value":">="},
+	operator :[{"caption":"EQUAL TO (=)","value":"="},
+	{"caption":"LESS THAN","value":"<"},
+	{"caption":"GREATER THAN","value":">"},
+	{"caption":"LESS OR EQUAL","value":"<="},
+	{"caption":"GREATER OR EQUAL (>=) ","value":">="},
 	{"caption":"BETWEEN","value":"BETWEEN"},
 	{"caption":"LIKE","value":"LIKE"},
 	{"caption":"NOT LIKE","value":"NOT LIKE"},
@@ -83,5 +83,11 @@ InferyxApp.constant("CF_FILTER",{
 });
 
 InferyxApp.constant("CF_GRAPHPOD",{
+    nodeIcon:[{"caption":"home","value":"home","class":"fa fa-home"},
+    {"caption":"female","value":"female","class":"fa fa-female"},
+    {"caption":"male","value":"male","class":"fa fa-male"},
+    {"caption":"bank","value":"bank","class":"fa fa-university"},
+    {"caption":"office","value":"office","class":"fa fa-building"},
+    {"caption":"doller","value":"doller","class":"fa fa-usd"}]
 
 })

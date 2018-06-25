@@ -94,9 +94,49 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
     var deferred = $q.defer();
     GraphpodFactory.findOneByUuidandVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
-
+      var jsongraphpod={}
+      jsongraphpod.graphpod=response;
+      var nodeInfo=[];
+      if(response.nodeInfo !=null){
+        for(var i=0;i<response.nodeInfo.length;i++){
+          var nodeJson={};
+          var nodeId={};
+          var nodeName={};
+          nodeId.uuid=response.nodeInfo[i].nodeId.ref.uuid;
+          nodeId.datapodname=response.nodeInfo[i].nodeId.ref.name;
+          nodeId.name=response.nodeInfo[i].nodeId.attrName;
+          nodeId.dname=response.nodeInfo[i].nodeId.ref.name+"."+response.nodeInfo[i].nodeId.attrName;
+          nodeId.attributeId=response.nodeInfo[i].nodeId.attrId;
+          nodeJson.nodeId=nodeId;
+          nodeJson.nodeType=response.nodeInfo[i].nodeType;
+          nodeJson.nodeIcon=response.nodeInfo[i].nodeIcon;
+          var nodeName={};
+          nodeName.uuid=response.nodeInfo[i].nodeName.ref.uuid;
+          nodeName.datapodname=response.nodeInfo[i].nodeName.ref.name;
+          nodeName.name=response.nodeInfo[i].nodeName.attrName;
+          nodeName.dname=response.nodeInfo[i].nodeName.ref.name+"."+response.nodeInfo[i].nodeName.attrName;
+          nodeName.attributeId=response.nodeInfo[i].nodeName.attrId;
+          nodeJson.nodeName=nodeName;1
+          var nodePropertiesArr=[];
+          if(response.nodeInfo[i].nodeProperties !=null){
+            for(var j=0;j<response.nodeInfo[i].nodeProperties.length;j++){
+              var nodeProperties={};
+              nodeProperties.uuid=response.nodeInfo[i].nodeProperties[j].ref.uuid;
+              nodeProperties.datapodname=response.nodeInfo[i].nodeProperties[j].ref.name;
+              nodeProperties.name=response.nodeInfo[i].nodeProperties[j].attrName;
+              nodeProperties.dname=response.nodeInfo[i].nodeProperties[j].ref.name+"."+response.nodeInfo[i].nodeProperties[j].attrName;
+              nodeProperties.attributeId=response.nodeInfo[i].nodeProperties[j].attrId;
+              nodeProperties.id = response.nodeInfo[i].nodeProperties[j].ref.uuid+"_"+response.nodeInfo[i].nodeProperties[j].attrId;
+              nodePropertiesArr[j]=nodeProperties;
+            }
+          }
+          nodeJson.nodeProperties=nodePropertiesArr;
+          nodeInfo[i]=nodeJson;
+        }
+      }
+      jsongraphpod.nodeInfo=nodeInfo;
       deferred.resolve({
-        data: response
+        data: jsongraphpod
       });
     }
     return deferred.promise;

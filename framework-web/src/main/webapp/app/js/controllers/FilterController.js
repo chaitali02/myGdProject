@@ -121,7 +121,6 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		$scope.searchAttrIndex=index;
 		var onSuccessRelation = function (response) {
 			$scope.allDataset = response;
-			debugger
 			var temp;
 			if($scope.selectRelation == "dataset"){
 				temp = response.options.filter(function(el) {
