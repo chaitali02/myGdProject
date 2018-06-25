@@ -140,6 +140,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			$scope.graphpod.defaultVersion = defaultversion;
 			var tags = [];
 			$scope.nodeTableArray=response.nodeInfo;
+			$scope.edgeTableArray=response.edgeInfo;
 			if ($scope.graphpodData .tags != null) {
 				for (var i = 0; i < $scope.graphpodData.tags.length; i++) {
 					var tag = {};
@@ -211,7 +212,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		else{
 			setTimeout(function () {$scope.selectAttr=$scope.edgeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]; },10);
 		}
-		GraphpodService.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
+		GraphpodService.getAllLatest(CF_META_TYPES.datapod).then(function (response) { onSuccessGetAllLatest(response.data) });
 		var onSuccessGetAllLatest = function (response) {
 			$scope.allDatapod={}
 			$scope.allDatapod.options = response;
@@ -236,7 +237,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	}
 
 	$scope.onChangeDatapod=function(){
-		CommonService.getAllAttributeBySource($scope.allDatapod.defaultoption.uuid,'datapod').then(function (response) { onSuccessAttributeBySource(response.data) });
+		CommonService.getAllAttributeBySource($scope.allDatapod.defaultoption.uuid,CF_META_TYPES.datapod).then(function (response) { onSuccessAttributeBySource(response.data) });
 		var onSuccessAttributeBySource = function (response) {
 			$scope.allAttr = response;
 			if($scope.searchAttr.type =='node'){
@@ -253,11 +254,10 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	}
 
 	$scope.getAllAttributeBySource=function(data,index,type){
-		debugger
 		if(!data){
 			return null;
 		}
-		CommonService.getAllAttributeBySource(data.uuid,'datapod').then(function (response) { onSuccessAttributeBySource(response.data) });
+		CommonService.getAllAttributeBySource(data.uuid,CF_META_TYPES.datapod).then(function (response) { onSuccessAttributeBySource(response.data) });
 		var onSuccessAttributeBySource = function (response) {
 			if(type =='node'){
 		    	$scope.nodeTableArray[index].allAttributeInto=response;
@@ -304,20 +304,26 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		if($scope.nodeTableArray){
 			for(var i=0;i<$scope.nodeTableArray.length;i++){
 				var nodeJson={};
+				var nodeSource={}
+				var nodeSourceRef={};
 				var nodeId={}
 				var nodeIdRef={}
 				var nodeName={}
 				var nodeNameRef={}
 				var nodePropertiesArry=[];
+				nodeSourceRef.uuid=$scope.nodeTableArray[i].nodeSource.uuid;
+				nodeSourceRef.type=CF_META_TYPES.datapod;
+				nodeSource.ref=nodeSourceRef;
+				nodeJson.nodeSource=nodeSource;
 				nodeIdRef.uuid=$scope.nodeTableArray[i].nodeId.uuid;
-				nodeIdRef.type="datapod";
+				nodeIdRef.type=CF_META_TYPES.datapod;
 				nodeId.ref=nodeIdRef;
 				nodeId.attrId=$scope.nodeTableArray[i].nodeId.attributeId;
 				nodeJson.nodeId=nodeId;
 				nodeJson.nodeType=$scope.nodeTableArray[i].nodeType;
 				nodeJson.nodeIcon=$scope.nodeTableArray[i].nodeIcon;
 				nodeNameRef.uuid=$scope.nodeTableArray[i].nodeName.uuid;
-				nodeNameRef.type="datapod";
+				nodeNameRef.type=CF_META_TYPES.datapod;
 				nodeName.ref=nodeNameRef;
 				nodeName.attrId=$scope.nodeTableArray[i].nodeName.attributeId;
 				nodeJson.nodeName=nodeName;
@@ -325,7 +331,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					var nodeProperties={}
 					var nodePropertiesRef={}
 					nodePropertiesRef.uuid=$scope.nodeTableArray[i].nodeProperties[j].uuid;
-					nodePropertiesRef.type="datapod";
+					nodePropertiesRef.type=CF_META_TYPES.datapod;
 					nodeProperties.ref=nodeNameRef;
 					nodeProperties.attrId=$scope.nodeTableArray[i].nodeProperties[j].attributeId;
 					nodePropertiesArry[j]=nodeProperties;
@@ -340,11 +346,16 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			for(var i=0;i<$scope.edgeTableArray.length;i++){
 				var edgeJson={};
 				var edgePropertiesArry=[];
+				var edgeSource={}
+				var edgeSourceRef={};
 				var sourceNodeId={};
 				var sourceNodeIdRef={};
 				var targetNodeIdId={};
 				var targetNodeIdRef={};
-			
+				edgeSourceRef.uuid=$scope.edgeTableArray[i].edgeSource.uuid;
+				edgeSourceRef.type=CF_META_TYPES.datapod;
+				edgeSource.ref=edgeSourceRef;
+				edgeJson.edgeSource=edgeSource;
 				edgeJson.edgeId=i
 				edgeJson.edgeType=$scope.edgeTableArray[i].edgeType;
 				edgeJson.edgeName=$scope.edgeTableArray[i].edgeName
@@ -353,22 +364,22 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					var edgeProperties={}
 					var edgePropertiesRef={}
 					edgePropertiesRef.uuid=$scope.edgeTableArray[i].edgeProperties[j].uuid;
-					edgePropertiesRef.type="datapod";
-					edgeProperties.ref=nodeNameRef;
+					edgePropertiesRef.type=CF_META_TYPES.datapod;
+					edgeProperties.ref=edgePropertiesRef;
 					edgeProperties.attrId=$scope.edgeTableArray[i].edgeProperties[j].attributeId;
 					edgePropertiesArry[j]=edgeProperties;
 				}
 				edgeJson.edgeProperties=edgePropertiesArry;
 
 				sourceNodeIdRef.uuid=$scope.edgeTableArray[i].sourceNodeId.uuid;
-				sourceNodeIdRef.type="datapod";
+				sourceNodeIdRef.type=CF_META_TYPES.datapod;
 				sourceNodeId.ref=sourceNodeIdRef;
 				sourceNodeId.attrId=$scope.edgeTableArray[i].sourceNodeId.attributeId;
 				edgeJson.sourceNodeId=sourceNodeId;
 				edgeJson.sourceNodeType=$scope.edgeTableArray[i].sourceNodeType;
 
 				targetNodeIdRef.uuid=$scope.edgeTableArray[i].targetNodeId.uuid;
-				targetNodeIdRef.type="datapod";
+				targetNodeIdRef.type=CF_META_TYPES.datapod;
 				targetNodeIdId.ref=targetNodeIdRef;
 				targetNodeIdId.attrId=$scope.edgeTableArray[i].targetNodeId.attributeId;
 				edgeJson.targetNodeId=targetNodeIdId;

@@ -101,7 +101,11 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
         for(var i=0;i<response.nodeInfo.length;i++){
           var nodeJson={};
           var nodeId={};
+          var nodeSource={}; 
           var nodeName={};
+          nodeSource.uuid=response.nodeInfo[i].nodeSource.ref.uuid;
+          nodeSource.name=response.nodeInfo[i].nodeSource.ref.name;
+          nodeJson.nodeSource=nodeSource;
           nodeId.uuid=response.nodeInfo[i].nodeId.ref.uuid;
           nodeId.datapodname=response.nodeInfo[i].nodeId.ref.name;
           nodeId.name=response.nodeInfo[i].nodeId.attrName;
@@ -109,7 +113,8 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
           nodeId.attributeId=response.nodeInfo[i].nodeId.attrId;
           nodeJson.nodeId=nodeId;
           nodeJson.nodeType=response.nodeInfo[i].nodeType;
-          nodeJson.nodeIcon=response.nodeInfo[i].nodeIcon;
+          nodeJson.nodeIcon={}
+          nodeJson.nodeIcon.caption=response.nodeInfo[i].nodeIcon;
           var nodeName={};
           nodeName.uuid=response.nodeInfo[i].nodeName.ref.uuid;
           nodeName.datapodname=response.nodeInfo[i].nodeName.ref.name;
@@ -135,6 +140,50 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
         }
       }
       jsongraphpod.nodeInfo=nodeInfo;
+      var edgeInfo=[];
+      if(response.edgeInfo !=null){
+        for(var i=0;i<response.edgeInfo.length;i++){
+          var edgeJson={};
+          var edgeSource={};
+          var sourceNodeId={};
+          var targetNodeId={};
+          edgeSource.uuid=response.edgeInfo[i].edgeSource.ref.uuid;
+          edgeSource.name=response.edgeInfo[i].edgeSource.ref.name;
+          edgeJson.edgeSource=edgeSource;
+          edgeJson.edgeType=response.edgeInfo[i].edgeType;
+          edgeJson.edgeName=response.edgeInfo[i].edgeName;
+          sourceNodeId.uuid=response.edgeInfo[i].sourceNodeId.ref.uuid;
+          sourceNodeId.datapodname=response.edgeInfo[i].sourceNodeId.ref.name;
+          sourceNodeId.name=response.edgeInfo[i].sourceNodeId.attrName;
+          sourceNodeId.dname=response.edgeInfo[i].sourceNodeId.ref.name+"."+response.edgeInfo[i].sourceNodeId.attrName;
+          sourceNodeId.attributeId=response.edgeInfo[i].sourceNodeId.attrId;
+          edgeJson.sourceNodeId=sourceNodeId;
+          edgeJson.sourceNodeType=response.edgeInfo[i].sourceNodeType;
+          targetNodeId.uuid=response.edgeInfo[i].targetNodeId.ref.uuid;
+          targetNodeId.datapodname=response.edgeInfo[i].targetNodeId.ref.name;
+          targetNodeId.name=response.edgeInfo[i].targetNodeId.attrName;
+          targetNodeId.dname=response.edgeInfo[i].targetNodeId.ref.name+"."+response.edgeInfo[i].targetNodeId.attrName;
+          targetNodeId.attributeId=response.edgeInfo[i].targetNodeId.attrId;
+          edgeJson.targetNodeId=targetNodeId;
+          edgeJson.targetNodeType=response.edgeInfo[i].targetNodeType;
+          var edgePropertiesArr=[];
+          if(response.edgeInfo[i].edgeProperties !=null){
+            for(var j=0;j<response.edgeInfo[i].edgeProperties.length;j++){
+              var edgeProperties={};
+              edgeProperties.uuid=response.edgeInfo[i].edgeProperties[j].ref.uuid;
+              edgeProperties.datapodname=response.edgeInfo[i].edgeProperties[j].ref.name;
+              edgeProperties.name=response.edgeInfo[i].edgeProperties[j].attrName;
+              edgeProperties.dname=response.edgeInfo[i].edgeProperties[j].ref.name+"."+response.edgeInfo[i].edgeProperties[j].attrName;
+              edgeProperties.attributeId=response.edgeInfo[i].edgeProperties[j].attrId;
+              edgeProperties.id = response.edgeInfo[i].edgeProperties[j].ref.uuid+"_"+response.edgeInfo[i].edgeProperties[j].attrId;
+              edgePropertiesArr[j]=edgeProperties;
+            }
+          }
+          edgeJson.edgeProperties=edgePropertiesArr;
+          edgeInfo[i]=edgeJson;
+        }
+      }
+      jsongraphpod.edgeInfo=edgeInfo;
       deferred.resolve({
         data: jsongraphpod
       });
