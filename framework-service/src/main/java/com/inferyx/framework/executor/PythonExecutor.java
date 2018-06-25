@@ -49,6 +49,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
@@ -451,6 +452,12 @@ public class PythonExecutor implements IExecutor {
 	public long load(Load load, String datapodTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public String createGraphFrame(GraphExec graphExec, DataStore dataStore) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

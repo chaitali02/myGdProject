@@ -133,6 +133,8 @@ public class DagServiceImpl {
 	@Autowired
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 	@Autowired
+	private GraphServiceImpl graphServiceImpl;
+	@Autowired
 	private CustomOperatorServiceImpl operatorServiceImpl;
 	@Autowired
 	private Helper helper;
@@ -1036,7 +1038,10 @@ public class DagServiceImpl {
 							operatorExecParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
 							indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
 						}*/
-					}
+					} else if (ref.getType().equals(MetaType.graphpod)) {
+						baseExec = graphServiceImpl.create(baseExec, execParams, runMode);
+						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+					} 
 					execParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, execParams.getOtherParams()));
 					// If conditions with parse goes here - END	
 					logger.info(" otherParams : " + otherParams);

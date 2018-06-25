@@ -922,6 +922,7 @@ public class Helper {
 		case simulateExec : return new SimulateExec();
 		case predictExec : return new PredictExec();
 		case operatorExec : return new OperatorExec();
+		case graphExec : return new GraphExec();
 		default : return null;
 		}
 	}
