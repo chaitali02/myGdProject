@@ -21,11 +21,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.StructType;
@@ -42,6 +46,7 @@ import com.inferyx.framework.dao.IEdgeDao;
 import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Edge;
@@ -88,7 +93,11 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	@Autowired
 	GraphOperator graphOperator;
 	@Autowired
-	private ExecutorFactory execFactory;
+	protected ExecutorFactory execFactory;
+	@Autowired
+	protected DataStoreServiceImpl dataStoreServiceImpl;
+	@Resource
+	protected ConcurrentHashMap graphpodMap;
 
 	public LogServiceImpl getLogServiceImpl() {
 		return logServiceImpl;
@@ -1493,12 +1502,61 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Get the exec
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		return exec.createGraphFrame((GraphExec) baseExec, null);
+		String graphExecKey = exec.createGraphFrame((GraphExec) baseExec, null);
+		DataStore ds = new DataStore();
+		ds.setMetaId(new MetaIdentifierHolder(new MetaIdentifier(baseExec.getDependsOn().getRef().getType(), 
+												baseExec.getDependsOn().getRef().getUuid(), 
+												baseExec.getDependsOn().getRef().getVersion())));
+		ds.setExecId(new MetaIdentifierHolder(new MetaIdentifier(MetaType.graphExec, 
+																	baseExec.getUuid(), 
+																	baseExec.getVersion())));
+		dataStoreServiceImpl.save(ds);
+		return graphExecKey;
 	}
 	
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return graphOperator.parse(baseExec, execParams, runMode);
+	}
+	
+	/**
+	 * 
+	 * @param uuid
+	 * @param version
+	 * @param degree
+	 * @param filterId
+	 * @return
+	 * @throws Exception
+	 */
+	public String getGraphResults (String uuid, String version, String degree, String filterId) throws Exception {
+		String graphExecKey = null;
+		Boolean createGraph = Boolean.FALSE;
+		// Get the datastore. If there is no existing datastore then create graph
+		DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
+		
+		if (ds != null) {
+			graphExecKey = ds.getMetaId().getRef().getUuid()+"_"+ds.getMetaId().getRef().getVersion()+"_"+ds.getExecId().getRef().getVersion();
+			if (!graphpodMap.containsKey(graphExecKey)) {
+				createGraph = Boolean.TRUE;
+			}
+		} else {
+			createGraph = Boolean.TRUE;
+		}
+		if (createGraph) {
+			// Create graph
+			RunMode runMode = RunMode.ONLINE;
+		  	ExecParams execParams = new ExecParams();
+			BaseExec baseExec = create(uuid,version,execParams, runMode);
+			baseExec = parse(baseExec, execParams, runMode);
+			graphExecKey = execute(baseExec, execParams, runMode);
+		}
+		// Get the graphFrame and parse
+		GraphFrame graphFrame = (GraphFrame) graphpodMap.get(graphExecKey);
+		Dataset<Row> dataset = graphFrame.edges().filter("src = '"+filterId+"' or dst='"+filterId+"'");
+		logger.info("Showing filtered graph >>>>>>>>>>>>>>>>> ");
+		dataset.show();
+		// Process and get the desired results
+		return null;
 	}
 	/**********************************   GraphFrame - END     **********************************/
 

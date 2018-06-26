@@ -115,10 +115,11 @@ public class GraphController {
   
   @RequestMapping(value="/getGraphPodResults",method=RequestMethod.GET)
 	public @ResponseBody String  getGraphPodResults(@RequestParam("uuid") String uuid,
-			@RequestParam("version") String version,@RequestParam("degree") String degree,
+			@RequestParam("version") String version,@RequestParam(value = "degree", required = false) String degree,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException{
-		return registerService.getGraphResults(uuid,version,degree);
+			@RequestParam(value = "action", required = false) String action, 
+			@RequestParam(value = "filterId", required = false) String filterId) throws Exception{
+		return graphServiceImpl.getGraphResults(uuid,version,degree, filterId);
 		
 	}
   
@@ -127,8 +128,8 @@ public class GraphController {
 			@RequestParam("version") String version,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception{
-	  RunMode runMode = RunMode.ONLINE;
-	  ExecParams execParams = new ExecParams();
+	  	RunMode runMode = RunMode.ONLINE;
+	  	ExecParams execParams = new ExecParams();
 		BaseExec baseExec = graphServiceImpl.create(uuid,version,execParams, runMode);
 		baseExec = graphServiceImpl.parse(baseExec, execParams, runMode);
 		return graphServiceImpl.execute(baseExec, execParams, runMode);

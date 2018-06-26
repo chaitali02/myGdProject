@@ -1936,7 +1936,8 @@ public class SparkExecutor implements IExecutor {
 		GraphFrame graphFrame = new GraphFrame(nodeRsHolder.getDataFrame(), edgeRsHolder.getDataFrame());
 		String graphExecKey = graphExec.getDependsOn().getRef().getUuid()+"_"+graphExec.getDependsOn().getRef().getVersion()+"_"+graphExec.getVersion();
 		graphpodMap.put(graphExecKey, graphFrame);
-		graphFrame.indexedVertices().show();
+		graphFrame.vertices().show();
+		graphFrame.edges().show();
 		return graphExecKey;
 	}
 

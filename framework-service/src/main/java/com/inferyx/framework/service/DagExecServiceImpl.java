@@ -76,8 +76,6 @@ public class DagExecServiceImpl {
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
-	private IDagExecDao dagExecDao;
-	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	UserServiceImpl userServiceImpl;
@@ -108,7 +106,7 @@ public class DagExecServiceImpl {
 	@Autowired
 	IDagDao iDagDao;
 	@Resource(name="taskThreadMap")
-	ConcurrentHashMap taskThreadMap;
+	ConcurrentHashMap<?, ?> taskThreadMap;
 	@Autowired
 	MetadataUtil daoRegister;
 	@Autowired
@@ -398,28 +396,8 @@ public class DagExecServiceImpl {
 //	}
 	
 	public BaseEntity setTaskOnHold(String uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		DagExec dagExec=null;		
-		if (appUuid != null) {
-			if(StringUtils.isBlank(version)) {
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		} else {
-			if(StringUtils.isBlank(version)) {
-				//dagExec = iDagExec.findOneByUuidAndVersion(uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		}
+
+		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 		for(int i=0;i<dagExec.getStages().size();i++){
 			if(dagExec.getStages().get(i).getStageId().equals(stageId)){
 				for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
@@ -433,36 +411,15 @@ public class DagExecServiceImpl {
 				}
 			}
 		}
-		//return iDagExec.save(dagExec);
 		return (BaseEntity) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 	public BaseEntity setTaskResume(String uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		DagExec dagExec=null;		
-		if (appUuid != null) {
-			if(StringUtils.isBlank(version)) {
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		} else {
-			if(StringUtils.isBlank(version)) {
-				//dagExec = iDagExec.findOneByUuidAndVersion(uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		}
+
+		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 		for(int i=0;i<dagExec.getStages().size();i++){
 			if(dagExec.getStages().get(i).getStageId().equals(stageId)){
 				int lastStatus = dagExec.getStages().get(i).getStatusList().size() - 1;
-				if(dagExec.getStages().get(i).getStatusList().get(lastStatus).toString().toLowerCase().equals(Status.Stage.OnHold.toString().toLowerCase())) {
+				if(dagExec.getStages().get(i).getStatusList().get(lastStatus).getStage().equals(Status.Stage.OnHold)) {
 					logger.info("Stage is OnHold, can-not start the task.");
 				}else {
 					for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
@@ -478,7 +435,6 @@ public class DagExecServiceImpl {
 				
 			}
 		}
-		//return iDagExec.save(dagExec);
 		return (BaseEntity) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 
@@ -828,7 +784,6 @@ public class DagExecServiceImpl {
 		commonServiceImpl.save(MetaType.dagExec.toString(), dagexec);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setTaskComplete(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 		{
 			//DagExec dagexec = iDagExec.findOneByUuidAndVersion(appUuid, Uuid, version);
@@ -910,8 +865,11 @@ public class DagExecServiceImpl {
 	public void setStageComplete (String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
 		DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
 		boolean allTasksComplete = true;
+		@SuppressWarnings("unused")
 		boolean taskFailed = false;
+		@SuppressWarnings("unused")
 		boolean taskKilled = false;
+		@SuppressWarnings("unused")
 		boolean taskOnHold = false;
 		List<Status> stageStatusList = null;
 		List<Status> taskStatusList = null;
@@ -957,6 +915,7 @@ public class DagExecServiceImpl {
 		boolean allStagesComplete = true;
 		boolean stageFailed = false;
 		boolean stageKilled = false;
+		@SuppressWarnings("unused")
 		boolean stageOnHold = false;
 		List<Status> stageStatusList = null;
 		List<Status> dagStatusList = null;
@@ -1128,6 +1087,13 @@ public class DagExecServiceImpl {
 		return false;
 	}
 	
+	public boolean checkStatusResume(List<Status> statusList) {
+		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.Resume)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean checkStatusOnHold(List<Status> statusList) {
 		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.OnHold)) {
 			return true;
@@ -1183,36 +1149,40 @@ public class DagExecServiceImpl {
 	
 	public String checkTaskDepStatus(Dag dag, String Uuid, String version, String stageId, String taskId) throws JsonProcessingException {
 		boolean isDependencyCompleted = false;
-		Status.Stage latestStatus = null;
+//		Status.Stage latestStatus = null;
 		
 		//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
 		TaskExec depTaskExec = getTaskExec(dagexec, stageId, taskId);
 		List<String> depTaskIds = depTaskExec.getDependsOn();
 		if (depTaskIds == null || depTaskIds.isEmpty()) {
-			return "Completed";
+			return Status.Stage.Completed.toString();
 		}
 		StageExec stageExec = getStageExec(dagexec, stageId);
 		List<TaskExec> taskExecList = DagExecUtil.castToTaskExecList(stageExec.getTasks());
 		for (TaskExec taskExec : taskExecList) {
 			if (depTaskIds.contains(taskExec.getTaskId())) {
-				latestStatus = Helper.getLatestStatus(taskExec.getStatusList()).getStage();
+//				latestStatus = Helper.getLatestStatus(taskExec.getStatusList()).getStage();
 				if (checkStatusCompleted(taskExec.getStatusList())) {
 					isDependencyCompleted = true;
 				} else if (checkStatusKilled(taskExec.getStatusList())) {
-					return "Killed";
+					return Status.Stage.Killed.toString();
 				} else if (checkStatusFailed(taskExec.getStatusList())) {
-					return "Failed";
+					return Status.Stage.Failed.toString();
+				} else if (checkStatusOnHold(taskExec.getStatusList())) {
+					return Status.Stage.OnHold.toString();
+				}  else if (checkStatusResume(taskExec.getStatusList())) {
+					return Status.Stage.Resume.toString();
 				} else {
 					// Task not complete. return false
-					return "NotCompleted";
+					return Status.Stage.NotStarted.toString();
 				}
 			}
 		}		
 		if (isDependencyCompleted) {
-			return "Completed";
+			return Status.Stage.Completed.toString();
 		}
-		return "Completed";
+		return Status.Stage.Completed.toString();
 	}
 	
 	/*public String checkTaskDepStatus(Dag dag, String Uuid, String version, String stageId, String taskId) {
@@ -1317,20 +1287,20 @@ public class DagExecServiceImpl {
 		// Dag dag = (Dag) daoRegister.getRefObject(dagexec.getDag());
 		List<StageExec> listStageExecs = DagExecUtil.castToStageExecList(dagexec.getStages());
 
-		HashMap stageStatus = new HashMap();
+		HashMap<String, String> stageStatus = new HashMap<>();
 
 		List<String> stageDependsOn = new ArrayList<String>();
 		for (StageExec stageExec : listStageExecs) {
 			List<Status> statusList = stageExec.getStatusList();
 			Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
 			if (checkStatusCompleted(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "Completed");
+				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.Completed.toString());
 			} else if (checkStatusKilled(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "Killed");
+				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.Killed.toString());
 			}  else if (checkStatusFailed(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "Failed");
+				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.Failed.toString());
 			} else {
-				stageStatus.put(stageExec.getStageId().toString(), "NotCompleted");
+				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.NotStarted.toString());
 			}
 
 			if (stageExec.getStageId().equals(stageId)) {
@@ -1341,27 +1311,27 @@ public class DagExecServiceImpl {
 		
 		if (stageDependsOn == null || stageDependsOn.size() == 0) {
 			// There is no dependency, so execute this stage 
-			return "Completed";
+			return Status.Stage.Completed.toString();
 		}
 		
 		for (String stageDepId : stageDependsOn) {
 			String value = (String) stageStatus.get(stageDepId.toString());
-			if (value.equalsIgnoreCase("Completed")) {
+			if (value.equalsIgnoreCase(Status.Stage.Completed.toString())) {
 				isDependencyCompleted = true;
-			} else if (value.equalsIgnoreCase("Killed")) {
-				return "Killed";
-			} else if (value.equalsIgnoreCase("Failed")) {
-				return "Failed";
+			} else if (value.equalsIgnoreCase(Status.Stage.Killed.toString())) {
+				return Status.Stage.Killed.toString();
+			} else if (value.equalsIgnoreCase(Status.Stage.Failed.toString())) {
+				return Status.Stage.Failed.toString();
 			} else {
 				// Stage not complete. return false
-				return "NotCompleted";
+				return Status.Stage.NotStarted.toString();
 			}
 		}
 		
 		if (isDependencyCompleted) {
-			return "Completed";
+			return Status.Stage.Completed.toString();
 		} else {
-			return "NotCompleted";
+			return Status.Stage.NotStarted.toString();
 		}
 
 	}
@@ -1863,29 +1833,8 @@ public class DagExecServiceImpl {
 	}
 
 	public DagExec setStageOnHold(String uuid, String version, String stageId) throws Exception {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		DagExec dagExec=null;		
-		if (appUuid != null) {
-			if(StringUtils.isBlank(version)) {
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		} else {
-			if(StringUtils.isBlank(version)){
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		}
-		
+
+		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());		
 		for(int i=0;i<dagExec.getStages().size();i++){
 			if(dagExec.getStages().get(i).getStageId().equals(stageId)){
 				Status stageOnHoldStatus = new Status(Status.Stage.OnHold, new Date());
@@ -1909,37 +1858,14 @@ public class DagExecServiceImpl {
 				}
 			}
 		}		
-		//return iDagExec.save(dagExec);
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 	
 	public DagExec setStageFailed(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		DagExec dagExec=null;
+		
 		List<Status> dagStatusList = null;
 		Status failedStatus = new Status(Status.Stage.Failed, new Date());
-		
-		if (appUuid != null) {
-			if(StringUtils.isBlank(version)){
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		} else {
-			if(StringUtils.isBlank(version)){
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		}
-		
+		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 		for(int i=0;i<dagExec.getStages().size();i++){
 			if(dagExec.getStages().get(i).getStageId().equals(stageId)){
 				List<Status> stageStatusList = dagExec.getStages().get(i).getStatusList();
@@ -1960,37 +1886,16 @@ public class DagExecServiceImpl {
 				dagStatusList.add(failedStatus);
 			}
 		}		
-		//return iDagExec.save(dagExec);
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 	
 	public DagExec setStageResume(String uuid, String version, String stageId) throws Exception {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		DagExec dagExec=null;		
-		if (appUuid != null) {
-			if(StringUtils.isBlank(version)){
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		} else {
-			if(StringUtils.isBlank(version)){
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		}
+
+		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 		int lastDagStatus = dagExec.getStatusList().size() - 1;
-		if(dagExec.getStatusList().get(lastDagStatus).toString().toLowerCase().equals(Status.Stage.OnHold.toString().toLowerCase())) {
+		if(dagExec.getStatusList().get(lastDagStatus).getStage().equals(Status.Stage.OnHold)) {
 			
-		}else {
+		} else {
 			for(int i=0;i<dagExec.getStages().size();i++){
 				if(dagExec.getStages().get(i).getStageId().equals(stageId)){
 					Status stageOnHoldStatus = new Status(Status.Stage.Resume, new Date());
@@ -2015,7 +1920,6 @@ public class DagExecServiceImpl {
 					}
 				}
 			}
-			//return iDagExec.save(dagExec);
 			return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 		}
 		return null;
@@ -2024,41 +1928,44 @@ public class DagExecServiceImpl {
 	public String setStatusList(String uuid, String version, String stageId, String taskId, String status) throws JsonProcessingException, Exception {
 		if (!StringUtils.isBlank(status)) {
 			if (!StringUtils.isBlank(taskId) && !StringUtils.isBlank(stageId)) {
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())){
+				if(status.equalsIgnoreCase(Status.Stage.Resume.toString())){
 					return objectWriter.writeValueAsString(setTaskResume(uuid, version, stageId, taskId));
 				}
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())){
+				if(status.equalsIgnoreCase(Status.Stage.OnHold.toString())){
 					return objectWriter.writeValueAsString(setTaskOnHold(uuid, version, stageId, taskId));
 				}
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())) {
+				if(status.equalsIgnoreCase(Status.Stage.Killed.toString())) {
 					return objectWriter.writeValueAsString(kill(uuid, version, stageId, taskId));
 				}
-			}else
-				logger.info("can not perform the "+status.toUpperCase()+" operation");
+			} else {
+				logger.info("can not perform the "+status.toUpperCase()+" operation.");
+			}
 			if (!StringUtils.isBlank(stageId) && StringUtils.isBlank(taskId)) {
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())){
+				if(status.equalsIgnoreCase(Status.Stage.Resume.toString())){
 					return objectWriter.writeValueAsString(setStageResume(uuid, version, stageId));
 				}
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())){
+				if(status.equalsIgnoreCase(Status.Stage.OnHold.toString())){
 					return objectWriter.writeValueAsString(setStageOnHold(uuid, version, stageId));
 				}
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())){
+				if(status.equalsIgnoreCase(Status.Stage.Killed.toString())){
 					return objectWriter.writeValueAsString(kill(uuid, version, stageId, null));
 				}
-			}else
-				logger.info("can not perform the "+status.toUpperCase()+" operation");
+			} else {
+				logger.info("can not perform the "+status.toUpperCase()+" operation.");
+			}
 			if (StringUtils.isBlank(stageId) && StringUtils.isBlank(taskId)) {
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())){
+				if(status.equalsIgnoreCase(Status.Stage.Resume.toString())){
 					return objectWriter.writeValueAsString(setDAGResume(uuid, version));
 				}
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())){
+				if(status.equalsIgnoreCase(Status.Stage.OnHold.toString())){
 					return objectWriter.writeValueAsString(setDAGOnHold(uuid, version));
 				}
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())) {
-					return objectWriter.writeValueAsString(kill(uuid, version,null,null));
+				if(status.equalsIgnoreCase(Status.Stage.Killed.toString())) {
+					return objectWriter.writeValueAsString(kill(uuid, version, null, null));
 				}
-			}else
-				logger.info("can not perform the "+status.toUpperCase()+" operation");
+			} else {
+				logger.info("can not perform the "+status.toUpperCase()+" operation.");
+			}
 		} else {
 			logger.info("Empty status, can not perform the operation.");
 		}
@@ -2066,29 +1973,8 @@ public class DagExecServiceImpl {
 	}
 	
 	public DagExec setDAGResume(String uuid, String version) throws Exception {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-				DagExec dagExec=null;		
-				if (appUuid != null) {
-					if(StringUtils.isBlank(version)){
-						//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-						dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-					}
-					else {
-						//dagExec = findLatestByUuid(uuid);
-						dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-					}
-				} else {
-					if(StringUtils.isBlank(version)){
-						//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-						dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-					}
-					else{
-						//dagExec = findLatestByUuid(uuid);
-						dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-					}
-				}
+
+		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 			Status stageStatus = new Status(Status.Stage.Resume, new Date());
 			List<Status> dagStatusList = dagExec.getStatusList();
 			dagStatusList.remove(stageStatus);
@@ -2114,34 +2000,12 @@ public class DagExecServiceImpl {
 
 				}
 		}
-		//return iDagExec.save(dagExec);
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 	
 	public DagExec setDAGOnHold(String uuid, String version) throws Exception {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		DagExec dagExec=null;		
-		if (appUuid != null) {
-			if(StringUtils.isBlank(version)){
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		} else {
-			if(StringUtils.isBlank(version)){
-				//dagExec = iDagExec.findOneByUuidAndVersion(appUuid,uuid,version);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			}
-			else {
-				//dagExec = findLatestByUuid(uuid);
-				dagExec = (DagExec) commonServiceImpl.getLatestByUuid(uuid, MetaType.dagExec.toString());
-			}
-		}
+
+		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 		Status stageStatus = new Status(Status.Stage.Resume, new Date());
 		List<Status> dagStatusList = dagExec.getStatusList();
 		dagStatusList.remove(stageStatus);
@@ -2167,7 +2031,6 @@ public class DagExecServiceImpl {
 					}
 				}
 		}
-		//return iDagExec.save(dagExec);
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 }
