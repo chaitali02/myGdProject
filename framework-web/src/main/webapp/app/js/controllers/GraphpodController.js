@@ -51,6 +51,10 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	$scope.graphpod = {};
 	$scope.graphpod.versions = [];
 	$scope.isDependencyShow = false;
+	$scope.selectedAllNodeRow=false;
+	$scope.selectedAllEdgeRow=false;
+	$scope.allType=CF_GRAPHPOD.allType;
+	$scope.selectType=$scope.allType[0];
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.graphpod] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -160,23 +164,31 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		$scope.myform.$dirty = false;
 		GraphpodService.getOneByUuidandVersion(uuid, version,CF_META_TYPES.graphpod).then(function (response) { onGetByOneUuidandVersion(response.data) });
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.graphpodData = response
+			$scope.graphpodData = response.graphpod
 			var defaultversion = {};
-			defaultversion.version = response.version;
-			defaultversion.uuid = response.uuid;
+			defaultversion.version =$scope.graphpodData.version;
+			defaultversion.uuid = $scope.graphpodData.uuid;
 			$scope.graphpod.defaultVersion = defaultversion;
 			var tags = [];
-			if (response.tags != null) {
-				for (var i = 0; i < response.tags.length; i++) {
+			$scope.nodeTableArray=response.nodeInfo;
+			$scope.edgeTableArray=response.edgeInfo;
+			if ($scope.graphpodData .tags != null) {
+				for (var i = 0; i < $scope.graphpodData.tags.length; i++) {
 					var tag = {};
-					tag.text = response.tags[i];
+					tag.text = $scope.graphpodData .tags[i];
 					tags[i] = tag
 					$scope.tags = tags;
 				}
 			}
 		}
-
 	}
+
+	$scope.allNodeRow = function () {
+		angular.forEach($scope.nodeTableArray, function (filter) {
+			filter.selected = $scope.selectedAllNodeRow;
+		});
+	}
+    
 	$scope.addNodeRow = function () {
 		if ($scope.nodeTableArray == null) {
 			$scope.nodeTableArray = [];
@@ -188,8 +200,26 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		nodeTable.allAttributeInto=[];
 		$scope.nodeTableArray.splice($scope.nodeTableArray.length, 0, nodeTable);
 	}
-    $scope.addEdgeRow=function(){
-		
+    $scope.addNodeRow();
+	$scope.removeNodeRow=function(){
+		var newDataList = [];
+		$scope.selectedAllNodeRow = false;
+		angular.forEach($scope.nodeTableArray, function (selected) {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+		});
+		$scope.nodeTableArray = newDataList;
+	}
+	
+	
+	$scope.allEdgeRow = function () {
+		angular.forEach($scope.nodeTableArray, function (filter) {
+			filter.selected = $scope.selectedAllEdgeRow;
+		});
+	}
+    
+    $scope.addEdgeRow=function(){		
 		if ($scope.edgeTableArray == null) {
 			$scope.edgeTableArray = [];
 		}
@@ -200,19 +230,56 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		edgeTable.allAttributeInto=[];
 		$scope.edgeTableArray.splice($scope.edgeTableArray.length, 0, edgeTable);
 	}
+    $scope.addEdgeRow();
+	$scope.removeEdgeRow=function(){
+		var newDataList = [];
+		$scope.selectedAllEdgeRow = false;
+		angular.forEach($scope.edgeTableArray, function (selected) {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+		});
+		$scope.edgeTableArray = newDataList;
+	}
+
 	$scope.SearchAttribute=function(index,type,proprety){
 		$scope.searchAttr={}
 		$scope.searchAttr.index=index;
 		$scope.searchAttr.type=type;
 		$scope.searchAttr.proprety=proprety;
 		$scope.selectAttr=null;
+		var selectType=$scope.selectType;
+		$scope.selectType=null;
+		$('#searchAttr').modal({
+			backdrop: 'static',
+			keyboard: false
+		});	
 		if(type =='node'){
-			setTimeout(function () {$scope.selectAttr=$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]; },10);
+			setTimeout(function () {
+				$scope.selectAttr=$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety];
+				if($scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]){
+	            	$scope.selectType=$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety].type;
+				}else{
+					$scope.selectType=selectType
+				}
+				$scope.onChangeType();
+			},10);
 		}
 		else{
-			setTimeout(function () {$scope.selectAttr=$scope.edgeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]; },10);
+			setTimeout(function () {
+				$scope.selectAttr=$scope.edgeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety];
+				if($scope.edgeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]){
+					$scope.selectType=$scope.edgeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety].type;
+				}else{
+					$scope.selectType=selectType
+				}
+				$scope.onChangeType();
+			},10);
 		}
-		GraphpodService.getAllLatest(CF_META_TYPES.datapod).then(function (response) { onSuccessGetAllLatest(response.data) });
+	}
+
+    $scope.onChangeType=function(){
+		GraphpodService.getAllLatest($scope.selectType).then(function (response) { onSuccessGetAllLatest(response.data) });
 		var onSuccessGetAllLatest = function (response) {
 			$scope.allDatapod={}
 			$scope.allDatapod.options = response;
@@ -220,24 +287,19 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				var defaultoption={};
 				defaultoption.uuid=$scope.selectAttr.uuid;
 				defaultoption.name="";
+				defaultoption.type=$scope.selectType;
 				setTimeout(function () {
 					$scope.allDatapod.defaultoption=defaultoption;
-					$scope.onChangeDatapod();
 				 },10);
 				
 			}else{
 				$scope.allDatapod.defaultoption = response[0];
-				$scope.onChangeDatapod();
 			}
-			$('#searchAttr').modal({
-				backdrop: 'static',
-				keyboard: false
-			});	
 		}
 	}
 
 	$scope.onChangeDatapod=function(){
-		CommonService.getAllAttributeBySource($scope.allDatapod.defaultoption.uuid,CF_META_TYPES.datapod).then(function (response) { onSuccessAttributeBySource(response.data) });
+		CommonService.getAllAttributeBySource($scope.allDatapod.defaultoption.uuid,$scope.selectType).then(function (response) { onSuccessAttributeBySource(response.data) });
 		var onSuccessAttributeBySource = function (response) {
 			$scope.allAttr = response;
 			if($scope.searchAttr.type =='node'){
@@ -257,7 +319,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		if(!data){
 			return null;
 		}
-		CommonService.getAllAttributeBySource(data.uuid,CF_META_TYPES.datapod).then(function (response) { onSuccessAttributeBySource(response.data) });
+		CommonService.getAllAttributeBySource(data.uuid,data.type).then(function (response) { onSuccessAttributeBySource(response.data) });
 		var onSuccessAttributeBySource = function (response) {
 			if(type =='node'){
 		    	$scope.nodeTableArray[index].allAttributeInto=response;
@@ -269,11 +331,20 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		}
 	}
     $scope.SubmitSearchAttr=function(){
-		console.log($scope.selectAttr);
+		console.log($scope.allDatapod.defaultoption);
 		if($scope.searchAttr && $scope.searchAttr.type=='node'){
-			$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]=$scope.selectAttr;
+			$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]=$scope.allDatapod.defaultoption//$scope.selectAttr;
+			$scope.nodeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety].type=$scope.selectType;
+			$scope.nodeTableArray[$scope.searchAttr.index]["nodeProperties"]=null;
+			$scope.onChangeDatapod();
 		}else{
-			$scope.edgeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]=$scope.selectAttr;
+			$scope.edgeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety]=$scope.allDatapod.defaultoption//$scope.selectAttr;
+			$scope.edgeTableArray[$scope.searchAttr.index][$scope.searchAttr.proprety].type=$scope.selectType;
+			setTimeout(function () {
+				$scope.edgeTableArray[$scope.searchAttr.index]["edgeProperties"]=[];
+			});
+			
+			$scope.onChangeDatapod();
 		}
 		$('#searchAttr').modal('hide')
 	}
@@ -312,18 +383,18 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				var nodeNameRef={}
 				var nodePropertiesArry=[];
 				nodeSourceRef.uuid=$scope.nodeTableArray[i].nodeSource.uuid;
-				nodeSourceRef.type=CF_META_TYPES.datapod;
+				nodeSourceRef.type=$scope.nodeTableArray[i].nodeSource.type;
 				nodeSource.ref=nodeSourceRef;
 				nodeJson.nodeSource=nodeSource;
 				nodeIdRef.uuid=$scope.nodeTableArray[i].nodeId.uuid;
-				nodeIdRef.type=CF_META_TYPES.datapod;
+				nodeIdRef.type=$scope.nodeTableArray[i].nodeId.type
 				nodeId.ref=nodeIdRef;
 				nodeId.attrId=$scope.nodeTableArray[i].nodeId.attributeId;
 				nodeJson.nodeId=nodeId;
 				nodeJson.nodeType=$scope.nodeTableArray[i].nodeType;
-				nodeJson.nodeIcon=$scope.nodeTableArray[i].nodeIcon;
+				nodeJson.nodeIcon=$scope.nodeTableArray[i].nodeIcon.value;
 				nodeNameRef.uuid=$scope.nodeTableArray[i].nodeName.uuid;
-				nodeNameRef.type=CF_META_TYPES.datapod;
+				nodeNameRef.type=$scope.nodeTableArray[i].nodeName.type;
 				nodeName.ref=nodeNameRef;
 				nodeName.attrId=$scope.nodeTableArray[i].nodeName.attributeId;
 				nodeJson.nodeName=nodeName;
@@ -331,7 +402,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					var nodeProperties={}
 					var nodePropertiesRef={}
 					nodePropertiesRef.uuid=$scope.nodeTableArray[i].nodeProperties[j].uuid;
-					nodePropertiesRef.type=CF_META_TYPES.datapod;
+					nodePropertiesRef.type=$scope.nodeTableArray[i].nodeProperties[j].type;
 					nodeProperties.ref=nodeNameRef;
 					nodeProperties.attrId=$scope.nodeTableArray[i].nodeProperties[j].attributeId;
 					nodePropertiesArry[j]=nodeProperties;
@@ -353,7 +424,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				var targetNodeIdId={};
 				var targetNodeIdRef={};
 				edgeSourceRef.uuid=$scope.edgeTableArray[i].edgeSource.uuid;
-				edgeSourceRef.type=CF_META_TYPES.datapod;
+				edgeSourceRef.type=$scope.edgeTableArray[i].edgeSource.type
 				edgeSource.ref=edgeSourceRef;
 				edgeJson.edgeSource=edgeSource;
 				edgeJson.edgeId=i
@@ -364,7 +435,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					var edgeProperties={}
 					var edgePropertiesRef={}
 					edgePropertiesRef.uuid=$scope.edgeTableArray[i].edgeProperties[j].uuid;
-					edgePropertiesRef.type=CF_META_TYPES.datapod;
+					edgePropertiesRef.type=$scope.edgeTableArray[i].edgeProperties[j].type;
 					edgeProperties.ref=edgePropertiesRef;
 					edgeProperties.attrId=$scope.edgeTableArray[i].edgeProperties[j].attributeId;
 					edgePropertiesArry[j]=edgeProperties;
@@ -372,14 +443,14 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				edgeJson.edgeProperties=edgePropertiesArry;
 
 				sourceNodeIdRef.uuid=$scope.edgeTableArray[i].sourceNodeId.uuid;
-				sourceNodeIdRef.type=CF_META_TYPES.datapod;
+				sourceNodeIdRef.type=$scope.edgeTableArray[i].sourceNodeId.type;
 				sourceNodeId.ref=sourceNodeIdRef;
 				sourceNodeId.attrId=$scope.edgeTableArray[i].sourceNodeId.attributeId;
 				edgeJson.sourceNodeId=sourceNodeId;
 				edgeJson.sourceNodeType=$scope.edgeTableArray[i].sourceNodeType;
 
 				targetNodeIdRef.uuid=$scope.edgeTableArray[i].targetNodeId.uuid;
-				targetNodeIdRef.type=CF_META_TYPES.datapod;
+				targetNodeIdRef.type=$scope.edgeTableArray[i].targetNodeId.type;
 				targetNodeIdId.ref=targetNodeIdRef;
 				targetNodeIdId.attrId=$scope.edgeTableArray[i].targetNodeId.attributeId;
 				edgeJson.targetNodeId=targetNodeIdId;

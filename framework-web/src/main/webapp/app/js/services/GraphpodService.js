@@ -66,7 +66,7 @@ GraphAnalysisModule.factory('GraphpodFactory', function ($http, $location) {
   return factory;
 })
 
-GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory, $q) {
+GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,$q,CF_GRAPHPOD) {
 
   this.getAllVersionByUuid = function (uuid, type) {
     var deferred = $q.defer();
@@ -105,8 +105,10 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
           var nodeName={};
           nodeSource.uuid=response.nodeInfo[i].nodeSource.ref.uuid;
           nodeSource.name=response.nodeInfo[i].nodeSource.ref.name;
+          nodeSource.type=response.nodeInfo[i].nodeSource.ref.type;
           nodeJson.nodeSource=nodeSource;
           nodeId.uuid=response.nodeInfo[i].nodeId.ref.uuid;
+          nodeId.type=response.nodeInfo[i].nodeId.ref.type;
           nodeId.datapodname=response.nodeInfo[i].nodeId.ref.name;
           nodeId.name=response.nodeInfo[i].nodeId.attrName;
           nodeId.dname=response.nodeInfo[i].nodeId.ref.name+"."+response.nodeInfo[i].nodeId.attrName;
@@ -114,10 +116,11 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
           nodeJson.nodeId=nodeId;
           nodeJson.nodeType=response.nodeInfo[i].nodeType;
           nodeJson.nodeIcon={}
-          nodeJson.nodeIcon.caption=response.nodeInfo[i].nodeIcon;
+          nodeJson.nodeIcon=CF_GRAPHPOD.nodeIconMap[response.nodeInfo[i].nodeIcon];
           var nodeName={};
           nodeName.uuid=response.nodeInfo[i].nodeName.ref.uuid;
           nodeName.datapodname=response.nodeInfo[i].nodeName.ref.name;
+          nodeName.type=response.nodeInfo[i].nodeName.ref.type;
           nodeName.name=response.nodeInfo[i].nodeName.attrName;
           nodeName.dname=response.nodeInfo[i].nodeName.ref.name+"."+response.nodeInfo[i].nodeName.attrName;
           nodeName.attributeId=response.nodeInfo[i].nodeName.attrId;
@@ -127,6 +130,7 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
             for(var j=0;j<response.nodeInfo[i].nodeProperties.length;j++){
               var nodeProperties={};
               nodeProperties.uuid=response.nodeInfo[i].nodeProperties[j].ref.uuid;
+              nodeProperties.type=response.nodeInfo[i].nodeProperties[j].ref.type;
               nodeProperties.datapodname=response.nodeInfo[i].nodeProperties[j].ref.name;
               nodeProperties.name=response.nodeInfo[i].nodeProperties[j].attrName;
               nodeProperties.dname=response.nodeInfo[i].nodeProperties[j].ref.name+"."+response.nodeInfo[i].nodeProperties[j].attrName;
@@ -149,10 +153,12 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
           var targetNodeId={};
           edgeSource.uuid=response.edgeInfo[i].edgeSource.ref.uuid;
           edgeSource.name=response.edgeInfo[i].edgeSource.ref.name;
+          edgeSource.type=response.edgeInfo[i].edgeSource.ref.type;
           edgeJson.edgeSource=edgeSource;
           edgeJson.edgeType=response.edgeInfo[i].edgeType;
           edgeJson.edgeName=response.edgeInfo[i].edgeName;
           sourceNodeId.uuid=response.edgeInfo[i].sourceNodeId.ref.uuid;
+          sourceNodeId.type=response.edgeInfo[i].sourceNodeId.ref.type;
           sourceNodeId.datapodname=response.edgeInfo[i].sourceNodeId.ref.name;
           sourceNodeId.name=response.edgeInfo[i].sourceNodeId.attrName;
           sourceNodeId.dname=response.edgeInfo[i].sourceNodeId.ref.name+"."+response.edgeInfo[i].sourceNodeId.attrName;
@@ -160,6 +166,7 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
           edgeJson.sourceNodeId=sourceNodeId;
           edgeJson.sourceNodeType=response.edgeInfo[i].sourceNodeType;
           targetNodeId.uuid=response.edgeInfo[i].targetNodeId.ref.uuid;
+          targetNodeId.type=response.edgeInfo[i].targetNodeId.ref.type;
           targetNodeId.datapodname=response.edgeInfo[i].targetNodeId.ref.name;
           targetNodeId.name=response.edgeInfo[i].targetNodeId.attrName;
           targetNodeId.dname=response.edgeInfo[i].targetNodeId.ref.name+"."+response.edgeInfo[i].targetNodeId.attrName;
@@ -171,6 +178,7 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
             for(var j=0;j<response.edgeInfo[i].edgeProperties.length;j++){
               var edgeProperties={};
               edgeProperties.uuid=response.edgeInfo[i].edgeProperties[j].ref.uuid;
+              edgeProperties.type=response.edgeInfo[i].edgeProperties[j].ref.type;
               edgeProperties.datapodname=response.edgeInfo[i].edgeProperties[j].ref.name;
               edgeProperties.name=response.edgeInfo[i].edgeProperties[j].attrName;
               edgeProperties.dname=response.edgeInfo[i].edgeProperties[j].ref.name+"."+response.edgeInfo[i].edgeProperties[j].attrName;
