@@ -49,6 +49,7 @@ import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DagStatusHolder;
+import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -1845,8 +1846,9 @@ public class DagExecServiceImpl {
 				for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
 					int lastStatus = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 					if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.NotStarted)) {
-						logger.info("Task not started.");//raise code 
-						throw new Exception("Task not started.");
+						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 					}else{
 						Status taskOnHoldStatus = new Status(Status.Stage.OnHold, new Date());
 						List<Status> taskStatusList =dagExec.getStages().get(i).getTasks().get(j).getStatusList();
@@ -1907,8 +1909,9 @@ public class DagExecServiceImpl {
 					for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
 						int lastStatus = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 						if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.NotStarted)) {
-							logger.info("Task not started.");
-							throw new Exception("Task not started.");
+							logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+							commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+							throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 						}else{
 							Status taskOnHoldStatus = new Status(Status.Stage.Resume, new Date());
 							List<Status> taskStatusList =dagExec.getStages().get(i).getTasks().get(j).getStatusList();
@@ -1989,7 +1992,9 @@ public class DagExecServiceImpl {
 					int lastDag = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 					if (dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
 							.equals(Status.Stage.NotStarted)) {
-						throw new Exception("Task not started.");
+						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 					} else {
 						Status taskOnHoldStatus = new Status(Status.Stage.Resume, new Date());
 						List<Status> taskStatusList = dagExec.getStages().get(i).getTasks().get(j).getStatusList();
@@ -2021,7 +2026,9 @@ public class DagExecServiceImpl {
 					int lastDag = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 					if (dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
 							.equals(Status.Stage.NotStarted)) {
-						throw new Exception("Task not started.");
+						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
 					} else {
 						Status taskOnHoldStatus = new Status(Status.Stage.OnHold, new Date());
 						List<Status> taskStatusList = dagExec.getStages().get(i).getTasks().get(j).getStatusList();
