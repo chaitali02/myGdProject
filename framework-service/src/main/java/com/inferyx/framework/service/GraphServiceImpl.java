@@ -41,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IEdgeDao;
 import com.inferyx.framework.dao.IVertexDao;
@@ -57,6 +59,7 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.Graphpod;
+import com.inferyx.framework.domain.GraphpodResult;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -1528,7 +1531,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @return
 	 * @throws Exception
 	 */
-	public String getGraphResults (String uuid, String version, String degree, String filterId) throws Exception {
+	@SuppressWarnings("null")
+	public Map<String, List<GraphpodResult>> getGraphResults (String uuid, String version, String degree, String filterId) throws Exception {
 		String graphExecKey = null;
 		Boolean createGraph = Boolean.FALSE;
 		// Get the datastore. If there is no existing datastore then create graph
@@ -1552,11 +1556,74 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		}
 		// Get the graphFrame and parse
 		GraphFrame graphFrame = (GraphFrame) graphpodMap.get(graphExecKey);
-		Dataset<Row> dataset = graphFrame.edges().filter("src = '"+filterId+"' or dst='"+filterId+"'");
+		graphFrame.vertices().show();
+		Dataset<Row> edgeDf = graphFrame.edges().filter("src = '"+filterId+"' or dst='"+filterId+"'");
+	//	vertexDf.show();
 		logger.info("Showing filtered graph >>>>>>>>>>>>>>>>> ");
-		dataset.show();
+		edgeDf.show();
+		
+
+		
 		// Process and get the desired results
-		return null;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+		List<GraphpodResult> result = new ArrayList<>();
+		Row[] rows = (Row[]) edgeDf.head(Integer.parseInt(""+edgeDf.count()));
+		String[] edgeColumns = edgeDf.columns();
+		 String[] edgeValue = new String[10]; 
+		for (Row row : rows) {
+			
+			Map<String, String> source = new HashMap<>();
+			Map<String, String> target = new HashMap<>();
+			int count=0;
+			for (String edgecloumn : edgeColumns) {
+			
+				String value1 = row.getAs(edgecloumn).toString();
+				edgeValue[count]=value1;
+				count++;
+			}
+			/*String srcId = row.getAs("src");
+			String dstId = row.getAs("dst");*/
+			String relation = row.getAs(edgeColumns[2]);
+			
+			Dataset<Row> srcVertexDf = graphFrame.vertices().filter("id = '" + edgeValue[0] + "'");
+			String[] vertexColumns = srcVertexDf.columns();
+			Row[] srcrows = (Row[]) srcVertexDf.head(Integer.parseInt("" + srcVertexDf.count()));
+			for (Row srcrow : srcrows) {
+				for (String cloumn : vertexColumns) {
+					String value1 = srcrow.getAs(cloumn).toString();
+					source.put(cloumn, value1);
+
+				}
+			}
+
+			Dataset<Row> dstVertexDf = graphFrame.vertices().filter("id = '" + edgeValue[1] + "'");
+
+			Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
+			for (Row dstrow : dstrows) {
+				for (String cloumn : vertexColumns) {
+					String value1 = dstrow.getAs(cloumn).toString();
+					source.put(cloumn, value1);
+
+				}
+			}
+			GraphpodResult graphpodresult = new GraphpodResult(source, target, relation);
+			result.add(graphpodresult);
+		}
+		
+		Map<String, List<GraphpodResult>> edgeMap = new HashMap<>();
+		edgeMap.put("edges", result);
+		//String reslt = mapper.writeValueAsString(result);
+
+		return edgeMap;
 	}
 	/**********************************   GraphFrame - END     **********************************/
 
