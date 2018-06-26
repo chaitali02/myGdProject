@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +44,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.spark.sql.Dataset;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -55,6 +52,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -182,7 +180,6 @@ import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
-import com.inferyx.framework.enums.LovType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -431,9 +428,7 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	IGraphpodDao iGraphpodDao;
 	@Autowired
-	IGraphpodExecDao iGraphpodExecDao;
-	
-	
+	IGraphpodExecDao iGraphpodExecDao;	
 	
 	public IGraphpodDao getiGraphpodDao() {
 		return this.iGraphpodDao;
@@ -3392,7 +3387,7 @@ public class CommonServiceImpl <T> {
 				String location = directoryPath + "/" + uploadExec.getUuid() + fileExtention;
 				File dest = new File(location);
 				multipartFile.transferTo(dest);
-				String contenetType = multipartFile.getContentType();
+//				String contenetType = multipartFile.getContentType();
 				
 				uploadExec.setName(filename1);
 				uploadExec.setLocation(location);
@@ -3565,7 +3560,8 @@ public class CommonServiceImpl <T> {
 				uploadExec.setFileName(originalFileName);
 				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
 						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
-					ObjectMapper mapper = new ObjectMapper();/*
+//					ObjectMapper mapper = new ObjectMapper();
+																/*
 																 * uploadExec.setDependsOn(new MetaIdentifierHolder(new
 																 * MetaIdentifier(
 																 * Helper.getMetaType(MetaType.Import.toString()),
@@ -3627,8 +3623,8 @@ public class CommonServiceImpl <T> {
 			
 		//fileName=uploadExec.get(0).getFileName();
             String filePath = uploadExec.get(0).getLocation();
-            String FileName =uploadExec.get(0).getFileName();
-			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
+//            String FileName =uploadExec.get(0).getFileName();
+//			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
 			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
             File file = new File(filePath);
             
@@ -3679,7 +3675,7 @@ public class CommonServiceImpl <T> {
 	
 	public void updateLovForTag(BaseEntity baseEntity) {
 		List<Lov> lovs = metadataServiceImpl.getLovByType("TAG");
-		List<String> arrayOne = new ArrayList(Arrays.asList(baseEntity.getTags()));
+		List<String> arrayOne = new ArrayList<>(Arrays.asList(baseEntity.getTags()));
 	//	Set<String> arrayOne1 = (Set<String>) new ArrayList(Arrays.asList(baseEntity.getTags()));
 		
 		
@@ -3712,6 +3708,5 @@ public class CommonServiceImpl <T> {
 
 		}
 
-	}
-	
+	}	
 }
