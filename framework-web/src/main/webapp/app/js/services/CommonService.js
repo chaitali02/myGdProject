@@ -462,6 +462,10 @@
       } else {
         url = url + "?uuid=" + uuid + "&version=" + version;
       }
+      if(type =="graphpod"){
+        url="";
+        url="graph/resgisterGraph?uuid="+uuid+"&version="+version+"&type="+type
+      }
       url += '&action=execute'
       var deferred = $q.defer();
       CommonFactory.httpPost(url, data).then(function(response) {
