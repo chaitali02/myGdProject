@@ -1,0 +1,484 @@
+<div data-ng-controller="GraphpodDetailController">
+  <!-- BEGIN PAGE HEADER-->
+  <div class="page-bar">
+    <ul class="page-breadcrumb">
+      <li>
+        <a ui-sref="home">Home</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a ui-sref="Operator">{{$state.current.data.pageTitle}}</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a ui-sref="Operator">{{metaType}}</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <span>{{graphpodData.name | strReplace:'_':' '|capitalize}}</span>
+      </li>
+    </ul>
+    <div class="page-toolbar">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <i class="icon-calendar"></i>&nbsp;
+        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+      </div>
+    </div>
+  </div>
+  <!-- END PAGE HEADER-->
+  <br>
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <div options="dirOptions" type="'operator'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="graphpodData"
+    comment-panel-directive></div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submit()" prevent-enter-submit>
+        <div class="portlet box green">
+          <div class="portlet-title">
+            <div class="caption">
+              <i class="fa fa-gift"></i>{{graphpodData.name | strReplace:'_':' '|capitalize}}
+            </div>
+            <div class="tools">
+              <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+                data-placement="top" tooltip ng-click="enableEdit(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd"
+                style="height:16px;">
+                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+              <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true ||showForm==true) ? 'currentpage':'notcurrentpage'"
+                ng-click="showView(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd" style="height:16px;">
+                <span class="glyphicon glyphicon-file" style="color:white;"></span>
+              </a>
+              <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+                data-ng-click="showGraph(graphpodData.uuid,graphpodData.version)" style="height:14px;">
+                <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+              </a>
+              <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showForm==true? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+              </a>
+              <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="close()" style="height:14px;">
+                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+              </a>
+            </div>
+          </div>
+          <div class="portlet-body">
+            <div class="form-body graph-body" ng-if="showGraphDiv">
+              <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+              <div class="spinner" id="graphloader">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+              <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="graphpodData.uuid" version="graphpod.defaultVersion.version">
+              </div>
+            </div>
+
+            <div class="form-body" data-ng-show="showForm" style="padding-top:50px;">
+
+
+              <div class="form-group" ng-show="graphpodData.uuid">
+                <label class="col-md-3 control-label">UUID</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" data-ng-disabled="true" ng-model="graphpodData.uuid">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="graphpodData.name" required="">
+                </div>
+              </div>
+
+              <div class="form-group" ng-show="graphpodData.uuid">
+                <label class="col-md-3 control-label">Version</label>
+                <div class="col-md-6">
+                  <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion(graphpod.defaultVersion.uuid,graphpod.defaultVersion.version)"
+                    data-ng-model="graphpod.defaultVersion.version" ng-options="c.version as c.version for c in graphpod.versions">
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" ng-show="graphpodData.uuid">
+                <label class="col-md-3 control-label">CreatedBy</label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="true" ng-model="graphpodData.createdBy.ref.name">
+                </div>
+              </div>
+
+              <div class="form-group" ng-show="graphpodData.uuid">
+                <label class="col-md-3 control-label">CreatedOn</label>
+                <div class="col-md-6">
+                  <input type="text" ng-model="graphpodData.createdOn" ng-disabled="true" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group taginput">
+                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                    add-on-enter="true" add-on-space="true">
+                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                    </auto-complete>
+                  </tags-input>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                <div class="col-md-6">
+                  <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="graphpodData.desc" rows="2" style="resize:none;"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="graphpodData.active='Y'">
+                    <label class="btn btn-default" ng-model="graphpodData.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="graphpodData.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="graphpodData.published='N'">
+                    <label class="btn btn-default" ng-model="graphpodData.published" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                      uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="graphpodData.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                      uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group" style="padding-top:10px;">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                  <a ng-click="close()" class="btn btn-primary">Cancel</a>
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="isSubmitEnable || {{mode}}">
+                  <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="isSubmitInProgress">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="portlet box green" data-ng-show="showForm">
+          <div class="portlet-title">
+            <div class="caption">
+              <i class="fa fa-gift"></i>Node Detail
+            </div>
+            <div class="tools">
+            </div>
+          </div>
+          <div class="portlet-body form">
+            <!-- BEGIN FORM-->
+
+            <div class="form-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeNodeRow()" ng-disabled="{{mode}}"></button>
+                  <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addNodeRow()" ng-disabled="{{mode}}"></button>
+                </div>
+                <div class="clearfix"></div>
+                <div class=" col-md-12 table-body" style="overflow-x:scroll;">
+                  <br>
+                  <br>
+                  <table class="row-border hover table  table-striped table-bordered" style="width:1077px;">
+                    <thead>
+                      <tr>
+                        <th style="width:5%;text-align: center; Vertical-align: middle;">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllNodeRow" ng-click="allNodeRow()"
+                            />
+                          </span>
+                        </th>
+                        <th style="text-align:center;">Source</th>
+                        <th style="text-align:center;">Node Id</th>
+                        <th style="text-align:center;">Node Type</th>
+                        <th style="text-align:center;">Node Display</th>
+                        <th style="text-align:center;">Node Name</th>
+                        <th style="text-align:center;">Node Properties</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="tabledata in nodeTableArray">
+                        <td style="text-align:center;Vertical-align:middle;">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:200px;">
+                              <div class="col-md-11" style="padding:0px;">
+                                <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.nodeSource.name" title="{{tabledata.nodeSource.name}}"
+                                  required disable-validation-message="">
+                              </div>
+                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,'node','nodeSource')"></span>
+                              </div>
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:150px;">
+                              <select select2 ng-disabled="{{mode}}" ng-model="tabledata.nodeId" ng-options="x as x.name for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
+                                ng-disabled="{{mode}}" class="form-control" required disable-validation-message=""></select>
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:200px">
+                              <input type="text" class="form-control" ng-disabled="{{mode}}" name="nodeType{{$index}}" ng-model="tabledata.nodeType"
+                              ng-pattern="/^[a-zA-Z]{1,15}$/" required disable-validation-message=""
+                              uib-tooltip="{{myform['nodeType'+$index].$valid ? '' : 'enter only string 15 character without space and special character'}}"
+                              tooltip-placement="left">
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="min-width:150px;">
+                              <ui-select  name ="nodeIcon" ng-model="tabledata.nodeIcon"  theme="" ng-disabled="{{mode}}"  append-to-body="true">
+                                  <!-- selectize -->
+                                  <ui-select-match  required disable-validation-message="">
+                                   
+                                    <span title="{{tabledata.nodeIcon.caption}}"> {{tabledata.nodeIcon.caption}} </span>
+                                  </ui-select-match>
+                                  <ui-select-choices repeat="x in (nodeIcons | filter: $select.search) track by x.value " position='down'  required disable-validation-message="">
+                                    <div>
+                                        <span class="{{x.class}}" style="color:gray"></span>
+                                      <span  ng-bind-html="x.caption | highlight: $select.search"></span>
+                                    </div>
+                                  </ui-select-choices>
+                                </ui-select>
+                              <!-- <select select2 ng-disabled="{{mode}}" ng-model="tabledata.nodeIcon" ng-options="x.value as x.caption for x in nodeIcons"
+                                ng-disabled="{{mode}}" class="form-control"></select> -->
+                                <input type="hidden" name="nodeIcon" ng-model="tabledata.nodeIcon" required disable-validation-message="" >
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:200px;">
+                             
+                              <select select2 ng-disabled="{{mode}}" ng-model="tabledata.nodeName" ng-options="x as x.name for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
+                                ng-disabled="{{mode}}" class="form-control" required disable-validation-message=""></select>
+                            </div>
+
+                          </span>
+                        </td>
+                        <td ng-init="getAllAttributeBySource(tabledata.nodeProperties[0],$index,'node')">
+                          <span ng-if="tabledata.allAttributeInto.length >1" class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <div style="width:200px">
+                              <multiselect class="" multiple="true" ng-model="tabledata.nodeProperties" options="r.name for r in tabledata.allAttributeInto"
+                                change="selected()" required disable-validation-message=""></multiselect>
+                            </div>
+                          </span>
+                          <div style="width:200px;text-align:center;" ng-if="tabledata.allAttributeInto.length ==0">
+                            NA
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="portlet box green" data-ng-show="showForm">
+          <div class="portlet-title">
+            <div class="caption">
+              <i class="fa fa-gift"></i>Edge Detail
+            </div>
+            <div class="tools">
+            </div>
+          </div>
+          <div class="portlet-body form">
+            <!-- BEGIN FORM-->
+
+            <div class="form-body" style="padding-top:24px;">
+              <div class="row">
+                <div class="col-md-12">
+                  <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeEdgeRow()" ng-disabled="{{mode}}"></button>
+                  <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addEdgeRow()" ng-disabled="{{mode}}"></button>
+                </div>
+                <div class="col-md-12 table-body" style="overflow-x:scroll;">
+                  <br>
+                  <br>
+                  <table class=" row-border hover table  table-striped table-bordered" style="max-width:1100px;">
+                    <thead>
+                      <tr>
+                        <th class="text-center" colspan="5">Edge</th>
+                        <th class="text-center" colspan="2">Source</th>
+                        <th class="text-center" colspan="2">Target </th>
+                      </tr>
+                      <tr>
+                        <th style="width:5%;text-align: center; Vertical-align: middle;">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllEdgeRow" ng-click="allEdgeRow()"
+                            />
+                          </span>
+                        </th>
+                        <!-- <th style="width:13%;text-align:center;">Id</th> -->
+                        <th style="text-align:center;">Source</th>
+                        <th style="text-align:center;">Type</th>
+                        <th style="text-align:center;">Name</th>
+                        <th style="text-align:center;">Properties</th>
+                        <th style="text-align:center;">Node Id</th>
+                        <th style="text-align:center;">Node Type</th>
+                        <th style="text-align:center;">Node Id</th>
+                        <th style="text-align:center;">Node Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="tabledata in edgeTableArray">
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:150px;">
+                              <div class="col-md-11" style="padding:0px;">
+                                <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.edgeSource.name" title="{{tabledata.edgeSource.name}}"
+                                  required disable-validation-message="">
+                              </div>
+                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,'edge','edgeSource')"></span>
+                              </div>
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:120px">
+                              <input type="text" class="form-control" ng-disabled="{{mode}}" name="edgeType{{$index}}" ng-model="tabledata.edgeType"   ng-pattern="/^[a-zA-Z]{1,15}$/" required disable-validation-message=""
+                              uib-tooltip="{{myform['edgeType'+$index].$valid ? '' : 'enter only string 15 character without space and special character'}}"
+                              tooltip-placement="left">
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:120px">
+                              <input type="text" class="form-control" ng-disabled="{{mode}}" name="edgeName{{$index}}" ng-model="tabledata.edgeName" required disable-validation-message="">
+                            </div>
+                          </span>
+                        </td>
+                        <td ng-init="getAllAttributeBySource(tabledata.edgeProperties[0],$index,'edge')">
+                          <span ng-if="tabledata.allAttributeInto.length >0" class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <div style="width:195px">
+                              <multiselect class="" multiple="true" ng-model="tabledata.edgeProperties" options="r.name for r in tabledata.allAttributeInto"
+                                change="selected()">
+                              </multiselect>
+                            </div>
+
+                          </span>
+                          <div style="width:195px;text-align:center;" ng-if="tabledata.allAttributeInto.length ==0">
+                            NA
+                          </div>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:140px;">
+
+                              <select select2 ng-disabled="{{mode}}" ng-model="tabledata.sourceNodeId" ng-options="x as x.name for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
+                                ng-disabled="{{mode}}" class="form-control" required disable-validation-message=""></select>
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:120px">
+                              <input type="text" class="form-control" ng-disabled="{{mode}}" name="sourceNodeType{{$index}}" ng-model="tabledata.sourceNodeType"  ng-pattern="/^[a-zA-Z]{1,15}$/" required disable-validation-message=""
+                              uib-tooltip="{{myform['sourceNodeType'+$index].$valid ? '' : 'enter only string 15 character without space and special character'}}"
+                              tooltip-placement="left">
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:140px;">
+
+                              <select select2 ng-disabled="{{mode}}" ng-model="tabledata.targetNodeId" ng-options="x as x.name for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
+                                ng-disabled="{{mode}}" class="form-control" required disable-validation-message=""></select>
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:120px">
+                              <input type="text" class="form-control" ng-disabled="{{mode}}" name="targetNodeType{{$index}}" ng-model="tabledata.targetNodeType" ng-pattern="/^[a-zA-Z]{1,15}$/" required disable-validation-message=""
+                              uib-tooltip="{{myform['targetNodeType'+$index].$valid ? '' : 'enter only string 15 character without space and special character'}}"
+                              tooltip-placement="top">
+                            </div>
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="searchAttr" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" style="width:35%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">Search Source</h4>
+        </div>
+        <div class="modal-body">
+          <div class="slimScrollDiv" style="padding-top:10px;">
+            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+              <form class="form-horizontal" novalidate="novalidate" name="myform1">
+                 <div class="form-group">
+                  <label class="col-md-3 control-label">Type</label>
+                  <div class="col-md-8">
+                    
+                    <select select2 class="form-control" data-ng-model="selectType" ng-options="r for r in allType" ng-change="onChangeType()">
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Select</label>
+                  <div class="col-md-8">
+                    <select select2 class="form-control" ng-change="onChangeDatapod()" data-ng-model="allDatapod.defaultoption" ng-options="r as r.name for r in allDatapod.options track by r.uuid">
+                    </select>
+                  </div>
+                </div>
+                <!-- <div class="form-group">
+                  <label class="col-md-3 control-label">Attribute</label>
+                  <div class="col-md-8">
+                    <select select2 class="form-control" data-ng-model="selectAttr" ng-options="r as r.name for r in allAttr track by r.uuid+r.attributeId">
+                    </select>
+                  </div>
+                </div> -->
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+          <button type="button" class="btn green" ng-click="SubmitSearchAttr()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

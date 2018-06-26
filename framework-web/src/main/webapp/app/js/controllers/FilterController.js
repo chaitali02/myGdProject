@@ -1,6 +1,6 @@
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc,CommonService,$timeout,$filter,CONSTANT_FOR_FILTER) {
+MetadataModule.controller('MetadataFilterController', function ($rootScope,$state, $scope, $stateParams, MetadataFilterSerivce, privilegeSvc,CommonService,$timeout,$filter,CF_FILTER) {
 	$scope.mode = "false";
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -48,7 +48,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 	$scope.relation = ["relation", "dataset", "datapod"];
 	//$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN","LIKE","Not LIKE","RLIKE","EXISTS","NOT EXISTS"];
 	$scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
-	$scope.operator =CONSTANT_FOR_FILTER.operator;
+	$scope.operator =CF_FILTER.operator;
 	$scope.lshType = [
 		{ "text": "string", "caption": "string" },
 		{ "text": "string", "caption": "integer"},
@@ -121,7 +121,6 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 		$scope.searchAttrIndex=index;
 		var onSuccessRelation = function (response) {
 			$scope.allDataset = response;
-			debugger
 			var temp;
 			if($scope.selectRelation == "dataset"){
 				temp = response.options.filter(function(el) {

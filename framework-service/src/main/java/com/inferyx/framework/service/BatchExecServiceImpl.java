@@ -322,7 +322,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					}
 					StageExec indvStg = stageExec;
 					Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
-					if (indvStg != null && indvStg.getStatusList() != null && indvStg.getStatusList().get(i).equals(Status.Stage.Inactive)) {
+					if (indvStg != null && indvStg.getStatusList() != null && indvStg.getStatusList().get(i).getStage().equals(Status.Stage.Inactive)) {
 						continue;	// If inactive stage then move to next stage (don't consider inactive stage)
 					}
 						if (status.equals(new Status(Status.Stage.InProgress, new Date())) 

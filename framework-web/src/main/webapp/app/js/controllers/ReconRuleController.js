@@ -1,5 +1,5 @@
 ReconModule = angular.module('ReconModule');
-ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc,CommonService) {
+ReconModule.controller('DetailRuleController', function($state,$stateParams, $rootScope,$scope,$timeout, $filter,dagMetaDataService,ReconRuleService,privilegeSvc,CommonService,CF_FILTER) {
  
   $scope.mode = "false";
   $scope.rule = {};
@@ -7,11 +7,12 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.originalCompare = null;
   $scope.showForm = true;
   $scope.SourceTypes = ["datapod"];
-  //$scope.SourceTypes = ["datapod", "relation", "dataset", "rule"];
   $scope.selectSourceType=$scope.SourceTypes[0];
   $scope.selectTargetType=$scope.SourceTypes[0];
-  $scope.logicalOperator = [" ", "OR", "AND"];
-  $scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN"];
+  $scope.logicalOperator = ["OR", "AND"];
+  $scope.operator = CF_FILTER.operator;
+  $scope.lshType  = CF_FILTER.lhsType;
+  $scope.rhsType  = CF_FILTER.rhsType;
   $scope.continueCount=1;
   var notify = {
     type: 'success',
@@ -22,6 +23,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
 	$scope.userDetail.name= $rootScope.setUserName;
+  
   if($stateParams.mode =='true'){
     $scope.isEdit=false;
     $scope.isAdd=false;
@@ -133,22 +135,44 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   }
 
   $scope.addSourceFilterRow = function() {
-    var filterinfo = {};
     if($scope.sourceFilterTable == null) {
       $scope.sourceFilterTable = [];
     }
-    filterinfo.logicalOperator = $scope.logicalOperator[0];
-    filterinfo.lhsFilter = $scope.sourceFilterAttribute[0]
-    $scope.sourceFilterTable.splice($scope.sourceFilterTable.length, 0, filterinfo);
+    var filertable = {};
+		filertable.islhsDatapod = false;
+		filertable.islhsFormula = false;
+		filertable.islhsSimple = true;
+		filertable.isrhsDatapod = false;
+		filertable.isrhsFormula = false;
+		filertable.isrhsSimple = true;
+    filertable.lhsFilter = $scope.sourceFilterAttribute[0]
+    filertable.logicalOperator=$scope.sourceFilterTable.length >0?$scope.logicalOperator[0]:"";
+		filertable.operator = $scope.operator[0].value
+		filertable.lhstype = $scope.lshType[0]
+		filertable.rhstype = $scope.rhsType[0]
+		filertable.rhsvalue;
+		filertable.lhsvalue;
+		$scope.sourceFilterTable.splice($scope.sourceFilterTable.length, 0, filertable);
   }
   $scope.addTargetFilterRow = function() {
-    var filterinfo = {};
     if($scope.targetFilterTable == null) {
       $scope.targetFilterTable = [];
     }
-    filterinfo.logicalOperator = $scope.logicalOperator[0];
-    filterinfo.lhsFilter = $scope.targetFilterAttribute[0]
-    $scope.targetFilterTable.splice($scope.targetFilterTable.length, 0, filterinfo);
+    var filertable = {};
+    filertable.islhsDatapod = false;
+		filertable.islhsFormula = false;
+		filertable.islhsSimple = true;
+		filertable.isrhsDatapod = false;
+		filertable.isrhsFormula = false;
+    filertable.isrhsSimple = true;
+    filertable.logicalOperator=$scope.targetFilterTable.length >0?$scope.logicalOperator[0]:"";
+		filertable.lhsFilter = $scope.targetFilterAttribute[0]
+		filertable.operator = $scope.operator[0].value
+		filertable.lhstype = $scope.lshType[0]
+		filertable.rhstype = $scope.rhsType[0]
+		filertable.rhsvalue;
+		filertable.lhsvalue ;
+    $scope.targetFilterTable.splice($scope.targetFilterTable.length, 0, filertable);
   }
 
   $scope.removeSourceFilterRow = function() {
@@ -177,7 +201,238 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     }
     $scope.targetFilterTable = newDataList;
   }
+  $scope.selectSourcelhsType = function (type, index) {
+		if (type == "string") {
+			$scope.sourceFilterTable[index].islhsSimple = true;
+			$scope.sourceFilterTable[index].islhsDatapod = false;
+			$scope.sourceFilterTable[index].lhsvalue;
+			$scope.sourceFilterTable[index].islhsFormula = false;
+		}
+		else if (type == "datapod") {
 
+			$scope.sourceFilterTable[index].islhsSimple = false;
+			$scope.sourceFilterTable[index].islhsDatapod = true;
+			$scope.sourceFilterTable[index].islhsFormula = false;
+		}
+		else if (type == "formula") {
+
+			$scope.sourceFilterTable[index].islhsFormula = true;
+			$scope.sourceFilterTable[index].islhsSimple = false;
+			$scope.sourceFilterTable[index].islhsDatapod = false;
+			ReconRuleService.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.sorceFormula = response;
+			}
+		}
+  }
+  $scope.selectSourcerhsType = function (type, index) {
+
+		if (type == "string") {
+			$scope.sourceFilterTable[index].isrhsSimple = true;
+			$scope.sourceFilterTable[index].isrhsDatapod = false;
+			$scope.sourceFilterTable[index].isrhsFormula = false;
+      $scope.sourceFilterTable[index].rhsvalue;
+      $scope.sourceFilterTable[index].isrhsDataset = false;
+		}
+		else if (type == "datapod") {
+
+			$scope.sourceFilterTable[index].isrhsSimple = false;
+			$scope.sourceFilterTable[index].isrhsDatapod = true;
+      $scope.sourceFilterTable[index].isrhsFormula = false;
+      $scope.sourceFilterTable[index].isrhsDataset = false;
+		}
+		else if (type == "formula") {
+
+			$scope.sourceFilterTable[index].isrhsFormula = true;
+			$scope.sourceFilterTable[index].isrhsSimple = false;
+      $scope.sourceFilterTable[index].isrhsDatapod = false;
+      $scope.sourceFilterTable[index].isrhsDataset = false;
+			ReconRuleService.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.sorceFormula = response;
+			}
+    }
+    else if (type == "dataset") {
+			$scope.sourceFilterTable[index].isrhsFormula = false;
+			$scope.sourceFilterTable[index].isrhsSimple = false;
+			$scope.sourceFilterTable[index].isrhsDatapod = false;
+			$scope.sourceFilterTable[index].isrhsDataset = true;
+			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
+			var onSuccressGetAllLatestDataset = function (response) {
+				$scope.allDataset = response;
+			}
+		}
+  }
+  $scope.selectTargetlhsType = function (type, index) {
+		if (type == "string") {
+			$scope.targetFilterTable[index].islhsSimple = true;
+			$scope.targetFilterTable[index].islhsDatapod = false;
+			$scope.targetFilterTable[index].lhsvalue;
+      $scope.targetFilterTable[index].islhsFormula = false;
+		}
+		else if (type == "datapod") {
+
+			$scope.targetFilterTable[index].islhsSimple = false;
+			$scope.targetFilterTable[index].islhsDatapod = true;
+      $scope.targetFilterTable[index].islhsFormula = false;
+		}
+		else if (type == "formula") {
+
+			$scope.targetFilterTable[index].islhsFormula = true;
+			$scope.targetFilterTable[index].islhsSimple = false;
+      $scope.targetFilterTable[index].islhsDatapod = false;
+			ReconRuleService.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.targetFormula = response;
+			}
+    }
+  }
+  
+	$scope.selectTargetrhsType = function (type, index) {
+		if (type == "string") {
+			$scope.targetFilterTable[index].isrhsSimple = true;
+			$scope.targetFilterTable[index].isrhsDatapod = false;
+			$scope.targetFilterTable[index].isrhsFormula = false;
+      $scope.targetFilterTable[index].rhsvalue;
+      $scope.targetFilterTable[index].isrhsDataset = false;
+		}
+		else if (type == "datapod") {
+			$scope.targetFilterTable[index].isrhsSimple = false;
+			$scope.targetFilterTable[index].isrhsDatapod = true;
+      $scope.targetFilterTable[index].isrhsFormula = false;
+      $scope.targetFilterTable[index].isrhsDataset = false;
+		}
+		else if (type == "formula") {
+			$scope.targetFilterTable[index].isrhsFormula = true;
+			$scope.targetFilterTable[index].isrhsSimple = false;
+      $scope.targetFilterTable[index].isrhsDatapod = false;
+      $scope.targetFilterTable[index].isrhsDataset = false;
+			ReconRuleService.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.targetFormula = response;
+			}
+    }
+    else if (type == "dataset") {
+			$scope.targetFilterTable[index].isrhsFormula = false;
+			$scope.targetFilterTable[index].isrhsSimple = false;
+			$scope.targetFilterTable[index].isrhsDatapod = false;
+			$scope.targetFilterTable[index].isrhsDataset = true;
+			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
+			var onSuccressGetAllLatestDataset = function (response) {
+				$scope.allDataset = response;
+			}
+		}
+  }
+
+  $scope.onChangeSimple = function (filterType) {
+		if ($scope.originalCompare != null && filterType =="source") {
+			$scope.originalCompare.sourcefilterChg = "y"
+    }
+    else if($scope.originalCompare != null && filterType =="target"){
+      $scope.originalCompare.targetfilterChg = "y"
+    }
+	}
+	
+  $scope.onChangeAttribute=function(filterType){
+		if ($scope.originalCompare != null && filterType =="source") {
+			$scope.originalCompare.sourcefilterChg = "y"
+    }
+    else if($scope.originalCompare != null && filterType =="target"){
+      $scope.originalCompare.targetfilterChg = "y"
+    }
+	}
+
+	$scope.onChangeFromula=function(filterType){
+		if ($scope.originalCompare != null && filterType =="source") {
+			$scope.originalCompare.sourcefilterChg = "y"
+    }
+    else if($scope.originalCompare != null && filterType =="target"){
+      $scope.originalCompare.targetfilterChg = "y"
+    }
+	}
+  $scope.onChangeTargetOperator=function(index){
+		if($scope.originalCompare != null) {
+		  $scope.originalCompare.targetfilterChg = "y"
+		}
+		if($scope.targetFilterTable[index].operator =='BETWEEN'){
+		  $scope.targetFilterTable[index].rhstype=$scope.rhsType[1];
+			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
+    }
+    else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.targetFilterTable[index].operator) !=-1){
+		  $scope.targetFilterTable[index].rhstype=$scope.rhsType[4];
+			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
+    }
+    else if(['<','>',"<=",'>='].indexOf($scope.targetFilterTable[index].operator) !=-1){
+  		$scope.targetFilterTable[index].rhstype=$scope.rhsType[1];
+			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
+		}
+		else{
+			$scope.targetFilterTable[index].rhstype=$scope.rhsType[0];
+			$scope.selectTargetrhsType($scope.targetFilterTable[index].rhstype.text,index);
+		}
+  }
+  $scope.onChangeSourceOperator=function(index){
+		if($scope.originalCompare != null) {
+		  $scope.originalCompare.sourcefilterChg = "y"
+		}
+		if($scope.sourceFilterTable[index].operator =='BETWEEN'){
+		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[1];
+			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
+    }
+    else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.sourceFilterTable[index].operator) !=-1){
+		  $scope.sourceFilterTable[index].rhstype=$scope.rhsType[4];
+			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
+    }
+    else if(['<','>',"<=",'>='].indexOf($scope.sourceFilterTable[index].operator) !=-1){
+  		$scope.sourceFilterTable[index].rhstype=$scope.rhsType[1];
+			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
+		}
+		else{
+			$scope.sourceFilterTable[index].rhstype=$scope.rhsType[0];
+			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
+		}
+  }
+  $scope.SearchAttribute=function(index,filterType){
+    filterType =='source' ?$scope.selectDatasetAttr=$scope.sourceFilterTable[index].rhsdataset:$scope.selectDatasetAttr=$scope.targetFilterTable[index].rhsdataset
+	
+	
+		ReconRuleService.getAllLatest("dataset").then(function (response) { onSuccessRelation(response.data) });
+    $scope.searchAttrIndex=index;
+    $scope.searchAttrFilterType=filterType;
+		var onSuccessRelation = function (response) {
+			$scope.allDataset = response;
+			$('#searchAttr').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+			ReconRuleService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
+			  var onSuccessAttributeBySource = function (response) {
+          $scope.allDatasetAttr = response;
+          if (typeof $stateParams.id != "undefined" && $scope.selectDatasetAtt) {
+            var defaultoption={};
+            defaultoption.uuid=$scope.selectDatasetAttr.uuid;
+            defaultoption.name="";
+            $scope.allDataset.defaultoption=defaultoption;
+          }else{
+            $scope.selectDatasetAtt=$scope.allDatasetAttr[0]
+          }
+			 }
+		}
+		
+	}
+  $scope.onChangeDataset=function(){
+    ReconRuleService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
+		var onSuccessAttributeBySource = function (response) {
+			$scope.allDatasetAttr = response;
+		}
+	}
+
+	$scope.SubmitSearchAttr=function(){
+    console.log($scope.selectDatasetAttr);
+    $scope.searchAttrFilterType== 'source'?$scope.sourceFilterTable[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr: $scope.targetFilterTable[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr;		
+		$('#searchAttr').modal('hide')
+  }
+  
   $scope.getAllLatest=function(type,selectType,defaultValue,defaultoption){
     ReconRuleService.getAllLatest(selectType).then(function(response) { onSuccessGetAllLatest(response.data)});
     var onSuccessGetAllLatest = function(response) {
@@ -429,50 +684,84 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     if($scope.sourceFilterTable !=null){
       if($scope.sourceFilterTable.length >0){
         for (var i = 0; i < $scope.sourceFilterTable.length; i++) {
-          if ($scope.originalCompare != null && $scope.originalCompare.sourcefilter != null && $scope.originalCompare.sourcefilter.filterInfo.length == $scope.sourceFilterTable.length) {
-            if ($scope.originalCompare.sourcefilter.filterInfo[i].operand[0].ref.uuid != $scope.sourceFilterTable[i].lhsFilter.uuid ||$scope.originalCompare.sourcefilter.filterInfo[i].operand[0].attributeId != $scope.sourceFilterTable[i].lhsFilter.attributeId ||
-              $scope.sourceFilterTable[i].logicalOperator != $scope.originalCompare.sourcefilter.filterInfo[i].logicalOperator ||
-              $scope.sourceFilterTable[i].filtervalue != $scope.originalCompare.sourcefilter.filterInfo[i].operand[1].value ||
-              $scope.sourceFilterTable[i].operator != $scope.originalCompare.sourcefilter.filterInfo[i].operator) {
-
-                jsonObj.sourcefilterChg = "y";
-
-            } else {
+          if ($scope.originalCompare != null && $scope.originalCompare.sourcefilter != null 
+              && $scope.originalCompare.sourcefilter.filterInfo.length == $scope.sourceFilterTable.length) {
+            
+            if($scope.originalCompare.sourcefilterChg == "y") {
+              jsonObj.sourcefilterChg = "y";
+            }
+            else {
               jsonObj.sourcefilterChg = "n";
             }
-          } else {
+          }
+          else {
             jsonObj.sourcefilterChg = "y";
           }
-          var filterInfo = {};
-          var operand = [];
-          var operandfirst = {};
-          var reffirst = {};
-          var operandsecond = {};
-          var refsecond = {};
-          if ($scope.rulsourcetype == "dataset") {
-            reffirst.type = "dataset";
-          } else {
-            reffirst.type = "datapod"
+          var filterInfo  = {};
+          var operand = []
+          var lhsoperand = {}
+          var lhsref = {}
+          var rhsoperand = {}
+          var rhsref = {};
+          if(typeof $scope.sourceFilterTable[i].logicalOperator == "undefined") {
+            filterInfo.logicalOperator=""
           }
-          reffirst.uuid = $scope.sourceFilterTable[i].lhsFilter.uuid
-          operandfirst.ref = reffirst;
-          operandfirst.attributeId = $scope.sourceFilterTable[i].lhsFilter.attributeId
-          operand[0] = operandfirst;
-          refsecond.type = "simple";
-          operandsecond.ref = refsecond;
-          if (typeof $scope.sourceFilterTable[i].filtervalue == "undefined") {
-            operandsecond.value = "";
-          } else {
-            operandsecond.value = $scope.sourceFilterTable[i].filtervalue
+          else{
+            filterInfo.logicalOperator=$scope.sourceFilterTable[i].logicalOperator
           }
-          operand[1] = operandsecond;
-          if (typeof $scope.sourceFilterTable[i].logicalOperator == "undefined") {
-            filterInfo.logicalOperator = ""
-          } else {
-            filterInfo.logicalOperator = $scope.sourceFilterTable[i].logicalOperator
+				  filterInfo .operator = $scope.sourceFilterTable[i].operator;
+          if($scope.sourceFilterTable[i].lhstype.text == "string") {
+            lhsref.type = "simple";
+            lhsoperand.ref = lhsref;
+            lhsoperand.value = $scope.sourceFilterTable[i].lhsvalue;
           }
-          filterInfo.operator = $scope.sourceFilterTable[i].operator
-          filterInfo.operand = operand;
+          else if ($scope.sourceFilterTable[i].lhstype.text == "datapod") {
+            if ($scope.selectSourceType == "dataset") {
+              lhsref.type = "dataset";
+            }
+            else {
+              lhsref.type = "datapod";
+            }
+            lhsref.uuid = $scope.sourceFilterTable[i].lhsdatapodAttribute.uuid;
+            lhsoperand.ref = lhsref;
+            lhsoperand.attributeId = $scope.sourceFilterTable[i].lhsdatapodAttribute.attributeId;
+          }
+          else if ($scope.sourceFilterTable[i].lhstype.text == "formula") {
+            lhsref.type = "formula";
+            lhsref.uuid = $scope.sourceFilterTable[i].lhsformula.uuid;
+            lhsoperand.ref = lhsref;
+          }
+				  operand[0] = lhsoperand;
+          if ($scope.sourceFilterTable[i].rhstype.text == "string") {
+            rhsref.type = "simple";
+            rhsoperand.ref = rhsref;
+            rhsoperand.value = $scope.sourceFilterTable[i].rhsvalue;
+          }
+          else if ($scope.sourceFilterTable[i].rhstype.text == "datapod") {
+            if ($scope.selectSourceType == "dataset") {
+              rhsref.type = "dataset";
+            }
+            else {
+              rhsref.type = "datapod";
+            }
+            rhsref.uuid = $scope.sourceFilterTable[i].rhsdatapodAttribute.uuid;
+
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.sourceFilterTable[i].rhsdatapodAttribute.attributeId;
+          }
+          else if ($scope.sourceFilterTable[i].rhstype.text == "formula") {
+            rhsref.type = "formula";
+            rhsref.uuid = $scope.sourceFilterTable[i].rhsformula.uuid;
+            rhsoperand.ref = rhsref;
+          }
+          else if ($scope.sourceFilterTable[i].rhstype.text == "dataset") {
+            rhsref.type = "dataset";
+            rhsref.uuid = $scope.sourceFilterTable[i].rhsdataset.uuid;
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.sourceFilterTable[i].rhsdataset.attributeId;
+          }
+				  operand[1] = rhsoperand;
+			  	filterInfo .operand = operand;
           sourceFilterInfo[i] = filterInfo;
         }
         sourcefilter.filterInfo = sourceFilterInfo;
@@ -489,53 +778,92 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     }
     var targetFilterInfo=[];
     if($scope.targetFilterTable !=null){
-      if($scope.targetFilterTable.length >0){
-        for (var i = 0; i < $scope.targetFilterTable.length; i++) {
-          if ($scope.originalCompare != null && $scope.originalCompare.targetfilter != null && $scope.originalCompare.targetfilter.filterInfo.length == $scope.targetFilterTable.length) {
-            if ($scope.originalCompare.targetfilter.filterInfo[i].operand[0].ref.uuid != $scope.targetFilterTable[i].lhsFilter.uuid||$scope.originalCompare.targetfilter.filterInfo[i].operand[0].attributeId != $scope.targetFilterTable[i].lhsFilter.attributeId ||
-              $scope.targetFilterTable[i].logicalOperator != $scope.originalCompare.targetfilter.filterInfo[i].logicalOperator ||
-              $scope.targetFilterTable[i].filtervalue != $scope.originalCompare.targetfilter.filterInfo[i].operand[1].value ||
-              $scope.targetFilterTable[i].operator != $scope.originalCompare.targetfilter.filterInfo[i].operator) {
-
+      if($scope.targetFilterTable.length>0){
+        for(var i=0;i<$scope.targetFilterTable.length;i++) {
+          if($scope.originalCompare !=null && $scope.originalCompare.targetfilter != null 
+            && $scope.originalCompare.targetfilter.filterInfo.length == $scope.targetFilterTable.length) {
+              debugger
+              if($scope.originalCompare.targetfilterChg == "y") {
                 jsonObj.targetfilterChg = "y";
-
-            } else {
-              jsonObj.targetfilterChg = "n";
-            }
-          } else {
+              }
+              else {
+                jsonObj.targetfilterChg = "n";
+              }
+          }else{
             jsonObj.targetfilterChg = "y";
           }
 
-          var filterInfo = {};
-          var operand = [];
-          var operandfirst = {};
-          var reffirst = {};
-          var operandsecond = {};
-          var refsecond = {};
-          if ($scope.rulsourcetype == "dataset") {
-            reffirst.type = "dataset";
-          } else {
-            reffirst.type = "datapod"
+          var  filterInfo  = {};
+          var operand = []
+          var lhsoperand = {}
+          var lhsref = {}
+          var rhsoperand = {}
+          var rhsref = {};
+          if(typeof $scope.targetFilterTable[i].logicalOperator == "undefined") {
+            filterInfo.logicalOperator=""
           }
-          reffirst.uuid = $scope.targetFilterTable[i].lhsFilter.uuid
-          operandfirst.ref = reffirst;
-          operandfirst.attributeId = $scope.targetFilterTable[i].lhsFilter.attributeId
-          operand[0] = operandfirst;
-          refsecond.type = "simple";
-          operandsecond.ref = refsecond;
-          if (typeof $scope.targetFilterTable[i].filtervalue == "undefined") {
-            operandsecond.value = "";
-          } else {
-            operandsecond.value = $scope.targetFilterTable[i].filtervalue
+          else{
+            filterInfo.logicalOperator=$scope.targetFilterTable[i].logicalOperator
           }
-          operand[1] = operandsecond;
-          if (typeof $scope.targetFilterTable[i].logicalOperator == "undefined") {
-            filterInfo.logicalOperator = ""
-          } else {
-            filterInfo.logicalOperator = $scope.targetFilterTable[i].logicalOperator
+				  filterInfo .operator = $scope.targetFilterTable[i].operator;
+          if($scope.targetFilterTable[i].lhstype.text == "string") {
+
+            lhsref.type = "simple";
+            lhsoperand.ref = lhsref;
+            lhsoperand.value = $scope.targetFilterTable[i].lhsvalue;
           }
-          filterInfo.operator = $scope.targetFilterTable[i].operator
-          filterInfo.operand = operand;
+          else if ($scope.targetFilterTable[i].lhstype.text == "datapod") {
+            if ($scope.selectTargetType == "dataset") {
+              lhsref.type = "dataset";
+
+            }
+            else {
+              lhsref.type = "datapod";
+            }
+            lhsref.uuid = $scope.targetFilterTable[i].lhsdatapodAttribute.uuid;
+
+            lhsoperand.ref = lhsref;
+            lhsoperand.attributeId = $scope.targetFilterTable[i].lhsdatapodAttribute.attributeId;
+          }
+          else if ($scope.targetFilterTable[i].lhstype.text == "formula") {
+
+            lhsref.type = "formula";
+            lhsref.uuid = $scope.targetFilterTable[i].lhsformula.uuid;
+            lhsoperand.ref = lhsref;
+          }
+				  operand[0] = lhsoperand;
+          if ($scope.targetFilterTable[i].rhstype.text == "string") {
+
+            rhsref.type = "simple";
+            rhsoperand.ref = rhsref;
+            rhsoperand.value = $scope.targetFilterTable[i].rhsvalue;
+          }
+          else if ($scope.targetFilterTable[i].rhstype.text == "datapod") {
+            if ($scope.selectTargetType == "dataset") {
+              rhsref.type = "dataset";
+
+            }
+            else {
+              rhsref.type = "datapod";
+            }
+            rhsref.uuid = $scope.targetFilterTable[i].rhsdatapodAttribute.uuid;
+
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.targetFilterTable[i].rhsdatapodAttribute.attributeId;
+          }
+          else if ($scope.targetFilterTable[i].rhstype.text == "formula") {
+            rhsref.type = "formula";
+            rhsref.uuid = $scope.targetFilterTable[i].rhsformula.uuid;
+            rhsoperand.ref = rhsref;
+          }
+          else if ($scope.targetFilterTable[i].rhstype.text == "dataset") {
+            rhsref.type = "dataset";
+            rhsref.uuid = $scope.targetFilterTable[i].rhsdataset.uuid;
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.targetFilterTable[i].rhsdataset.attributeId;
+          }
+				  operand[1] = rhsoperand;
+			  	filterInfo .operand = operand;
           targetFilterInfo[i] = filterInfo;
         }
         targetfilter.filterInfo = targetFilterInfo;

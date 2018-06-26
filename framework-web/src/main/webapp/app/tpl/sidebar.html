@@ -178,6 +178,23 @@
                 </li>
             </ul>
         </li>
+        <!--GraphAnalysis-->
+        <li class="nav-item">
+            <a href="#" class="nav-link nav-toggle">
+                <i class="{{GraphAnalysis.class}}"></i>
+                <span class="title">{{GraphAnalysis.caption}}</span>
+                <span class="arrow"></span>
+            </a>
+            <ul class="sub-menu">
+                <li class="nav-item" data-ng-repeat="graphanAlysisSubMenu in GraphAnalysis.submenu | filter:searchtext"  ng-click="deInitTabs()"  >
+                    <a ui-sref="{{graphanAlysisSubMenu.name}}({type:graphanAlysisSubMenu.type})" class="nav-link">
+                        <span class="title">{{graphanAlysisSubMenu.caption}}</span>
+                        <span class="badge badge-success">{{metaStats[graphanAlysisSubMenu.typeCount].count}}</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+              
          <!--WorkFlow Menu-->
         <li class="nav-item">
           <a href="#" class="nav-link nav-toggle">

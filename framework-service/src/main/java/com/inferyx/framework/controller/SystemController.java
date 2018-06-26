@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.domain.BaseEntityStatus;
-import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.service.SecurityServiceImpl;
 import com.inferyx.framework.service.SystemServiceImpl;
 
@@ -181,5 +180,11 @@ public class SystemController {
 		logger.info(tz.getID());
 		return tz.getDisplayName();
 	
+	}
+
+	@RequestMapping(value = "/getThreadStats", method=RequestMethod.GET)
+	public Object getThreadStats(@RequestParam(value = "type", required = false) String type,
+								 @RequestParam(value = "action", required = false) String action) {		
+		return systemServiceImpl.getThreadStats();
 	}
 }
