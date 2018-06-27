@@ -281,9 +281,9 @@ execute(uuid,version,type,action): Observable<any> {
   if(type=="dag"){
       url = '/dag/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
   }
-  if(type=="model"){
-      url = '/model/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
-  }
+  if(type=="train"){
+      url = "model/train/execute?uuid=" + uuid + "&version=" + version+ '&action=view'; 
+    }
   if(type=="predict"){
     url = '/model/predict/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
 }
