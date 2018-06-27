@@ -283,7 +283,7 @@ export class CommonListComponent {
         this.getBaseEntityByCriteria();
 
     }
-    refreshSearchResults(){
+    refreshSearchResults() {
         this.rowData1 = null;
         this.getBaseEntityByCriteria();
 
@@ -324,7 +324,6 @@ export class CommonListComponent {
     }
 
     add() {
-
         if (this.type != "activity") {
             let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
             this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['detailState']
@@ -415,6 +414,7 @@ export class CommonListComponent {
         }
     }
     execute(uuid, version) {
+        ;
         this.executeId = uuid
         this.executeVersion = version;
         this.isModel = "true"
@@ -517,7 +517,8 @@ export class CommonListComponent {
             this.okExport();
         }
         if (data == "okExecute()") {
-            if (this.type == "rule" || this.type == "model") {
+
+            if (this.type == "rule" || this.type == "train") {
                 this.getParams()
             }
             else {
@@ -546,27 +547,31 @@ export class CommonListComponent {
             )
     }
     onSuccessGetParamSetByType(response) {
-        let temp = []
-        temp.push({
-            label: 'Use Default Value', value: { label: 'Use Default Value', uuid: '' }
-        });
-        for (const n in response) {
-            let allname = {};
-            allname["label"] = response[n]['name'];
-            allname["value"] = {};
-            allname["value"]["label"] = response[n]['name'];
-            allname["value"]["uuid"] = response[n]['uuid'];
-            temp[n] = allname;
-        }
-        this.allparamset = temp
+
+        // let temp = []
+        // temp.push({
+        //     label: 'Use Default Value', value: { label: 'Use Default Value', uuid: '' }
+        // });
+        // for (const n in response) {
+        //     let allname = {};
+        //     allname["label"] = response[n]['name'];
+        //     allname["value"] = {};
+        //     allname["value"]["label"] = response[n]['name'];
+        //     allname["value"]["uuid"] = response[n]['uuid'];
+        //     temp[n] = allname;
+        // }
+        // this.allparamset = temp
+        this.allparamset = response
+
     }
     onSelectparamSet() {
         var paramSetjson = {};
         var paramInfoArray = [];
-        if (this.paramsetdata != null) {
+        if (this.paramsetdata && this.paramsetdata != null) {
             for (var i = 0; i < this.paramsetdata.paramInfo.length; i++) {
                 var paramInfo = {};
                 paramInfo["paramSetId"] = this.paramsetdata.paramInfo[i].paramSetId
+                paramInfo["selected"] = false
                 var paramSetValarray = [];
                 for (var j = 0; j < this.paramsetdata.paramInfo[i].paramSetVal.length; j++) {
                     var paramSetValjson = {};
@@ -585,42 +590,58 @@ export class CommonListComponent {
             paramSetjson["paramInfoArray"] = paramInfoArray;
             this.isTabelShow = true;
         } else {
-            this.paramsetdata = " "
             this.isTabelShow = false;
         }
     }
     selectAllRow() {
-        this.paramtable.forEach((stage) => { // foreach statement
+        // this.paramtable.forEach((stage) => { // foreach statement
+        //     stage.selected = this.selectallattribute;
+        // })
+
+        if (!this.selectallattribute) {
+            this.selectallattribute = true;
+        }
+        else {
+            this.selectallattribute = false;
+        }
+        this.paramtable.forEach(stage => {
+
             stage.selected = this.selectallattribute;
-        })
+        });
     }
+
+
     executeWithExecParams() {
-        this.newDataList = [];
+        let newDataList = [];
         this.selectallattribute = false;
+        let execParams = {}
         if (this.paramtable) {
-            this.paramtable.forEach((selected) => { // foreach statement
+            this.paramtable.forEach(selected => {
                 if (selected.selected) {
-                    this.newDataList.push(selected);
+                    newDataList.push(selected);
                 }
-            })
-        }
-        var paramInfoArray = [];
-        if (this.newDataList.length > 0) {
-            var execParams = {}
-            var ref = {}
-            ref["uuid"] = this.paramsetdata.uuid;
-            ref["version"] = this.paramsetdata.version;
-            for (var i = 0; i < this.newDataList.length; i++) {
-                var paraminfo = {};
-                paraminfo["paramSetId"] = this.newDataList[i].paramSetId;
-                paraminfo["ref"] = ref;
-                paramInfoArray[i] = paraminfo;
+            });
+
+            let paramInfoArray = [];
+
+            if (this.paramtable && newDataList.length > 0) {
+                let ref = {}
+                ref["uuid"] = this.paramsetdata.uuid;
+                ref["version"] = this.paramsetdata.version;
+                for (var i = 0; i < newDataList.length; i++) {
+                    var paraminfo = {};
+                    paraminfo["paramSetId"] = newDataList[i].paramSetId;
+                    paraminfo["ref"] = ref;
+                    paramInfoArray[i] = paraminfo;
+                }
             }
-        }
-        if (paramInfoArray.length > 0) {
-            execParams["paramInfo"] = paramInfoArray;
-        } else {
-            execParams = null
+
+            if (paramInfoArray.length > 0) {
+                execParams["paramInfo"] = paramInfoArray;
+            }
+            else {
+                execParams = null
+            }
         }
         jQuery(this.ParamsModel.nativeElement).modal('hide');
         this._commonListService.executeWithParams(this.executeId, this.executeVersion, this.type, "execute", execParams)
@@ -784,32 +805,32 @@ export class CommonListComponent {
         }
         this.items = [
             {
-                label: 'View', icon: 'fa fa-eye' , command: (onclick) => {
+                label: 'View', icon: 'fa fa-eye', command: (onclick) => {
                     this.view(this.rowUUid, this.rowVersion)
                 }
             },
             {
-                label: 'Edit', icon: 'fa fa-pencil-square-o', visible: (this.Exec), disabled:(this.type== "session"), command: (onclick) => {
+                label: 'Edit', icon: 'fa fa-pencil-square-o', visible: (this.Exec), disabled: (this.type == "session"), command: (onclick) => {
                     this.edit(this.rowUUid, this.rowVersion)
                 }
             },
             {
-                label: 'Delete', icon: 'fa fa-times',visible: (this.Exec), disabled:(this.type== "session"), command: (onclick) => {
+                label: 'Delete', icon: 'fa fa-times', visible: (this.Exec), disabled: (this.type == "session"), command: (onclick) => {
                     this.delete(this.rowID)
                 }
             },
             {
-                label: 'Restore', icon: 'fa fa-retweet',visible: (this.Exec), disabled:(this.type== "session"), command: (onclick) => {
+                label: 'Restore', icon: 'fa fa-retweet', visible: (this.Exec), disabled: (this.type == "session"), command: (onclick) => {
                     this.restore(this.rowID)
                 }
             },
             {
-                label: 'Publish', icon: 'fa fa-share-alt', visible: (this.Exec), disabled:(this.type== "session"),command: (onclick) => {
+                label: 'Publish', icon: 'fa fa-share-alt', visible: (this.Exec), disabled: (this.type == "session"), command: (onclick) => {
                     this.publish(this.rowID)
                 }
             },
             {
-                label: 'Unpublish', icon: 'fa fa-shield', visible: (this.Exec), disabled:(this.type== "session"), command: (onclick) => {
+                label: 'Unpublish', icon: 'fa fa-shield', visible: (this.Exec), disabled: (this.type == "session"), command: (onclick) => {
                     this.unpublish(this.rowID)
                 }
             },
@@ -819,7 +840,7 @@ export class CommonListComponent {
                 }
             },
             {
-                label: 'Clone', icon: 'fa fa-clone', visible: (this.Exec), disabled:(this.type== "session"), command: (onclick) => {
+                label: 'Clone', icon: 'fa fa-clone', visible: (this.Exec), disabled: (this.type == "session"), command: (onclick) => {
                     this.clone(this.rowUUid, this.rowVersion)
                 }
             },
