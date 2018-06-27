@@ -37,4 +37,20 @@ export class TrainingService {
   }
 
 
+
+
+  executeWithParams(type, uuid, version, action){ 
+    let url
+    if(type=='train'){
+      url = "model/train/execute?uuid=" + uuid + "&version=" + version+ '&action=view';
+      let body=null
+      return this._sharedService.postCall(url,body)
+      .map((response: Response) => {
+        return <any[]>response.json();
+    })
+     .catch(this.handleError);
+    }
+  }
+  
+
 }
