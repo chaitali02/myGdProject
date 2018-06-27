@@ -1552,9 +1552,11 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		}
 		// Get the graphFrame and parse
 		GraphFrame graphFrame = (GraphFrame) graphpodMap.get(graphExecKey);
-		Dataset<Row> dataset = graphFrame.edges().filter("src = '"+filterId+"' or dst='"+filterId+"'");
+		Dataset<Row> edge_dataset = graphFrame.edges().filter("src = '"+filterId+"'").select("src", "dst", "edge_name", "edge_type", "edge_properties");
+		Dataset<Row> node_dataset = graphFrame.vertices().filter("id = '"+filterId+"'").select("id", "node_name", "node_type", "node_properties");
+		Dataset<Row> result_datset = edge_dataset.join(node_dataset, edge_dataset.col("src").equalTo(node_dataset.col("id")));
 		logger.info("Showing filtered graph >>>>>>>>>>>>>>>>> ");
-		dataset.show();
+		result_datset.show();
 		// Process and get the desired results
 		return null;
 	}
