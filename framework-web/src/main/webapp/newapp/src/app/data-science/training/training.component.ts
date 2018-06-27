@@ -2,28 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { SelectItem } from 'primeng/primeng';
-
 import { AppConfig } from '../../app.config';
-
 import { CommonService } from '../../metadata/services/common.service';
 import { TrainingService } from '../../metadata/services/training.service';
-
 import { Version } from '../../metadata/domain/version';
 import { DependsOn } from '../dependsOn';
 import { AttributeHolder } from '../../metadata/domain/domain.attributeHolder'
 import { ResponseOptions } from '@angular/http/src/base_response_options';
 import { DependOnExp } from '../../metadata/domain/domain.dependOnExp';
+import { Param } from '../../metadata/domain/domain.param';
 
 @Component({
   selector: 'app-training  ',
   templateUrl: './training.template.html',
 })
 export class TrainingComponent implements OnInit {
-  msgs: any[];
   checkboxModelexecution: boolean;
   isTargetNameDisabled: boolean;
   selectTarget: any;
+  paramtablecol: any;
   allTarget: any[];
+  selectallattribute: any;
   selectTargetType: string;
   allTargetAttribute: any[];
   featureMapTableArray: any[];
@@ -51,12 +50,29 @@ export class TrainingComponent implements OnInit {
   VersionList: SelectItem[] = [];
   trainPercent: any;
   valPercent: any;
-
+  modeldata: any;
+  response1: any;
+  allparamset: any;
+  isShowExecutionparam: boolean;
+  newDataList: any;
+  paramtable: any
+  paramsetdata: any
+  data: any
+  isTabelShow: boolean;
+  selectLabel: DependsOn;
+  labelInfo: any
+  allsourceLabel: any[];
+  sample: any
+  msgs: any[];
+  att: any;
 
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _trainingService: TrainingService) {
     this.train = {};
     this.train["active"] = true;
+    this.train.trainPercent = 70;
+    this.train.valPercent =30;
     this.continueCount = 1;
+    this.modeldata = []
     this.progressbarWidth = 25 * this.continueCount + "%";
     this.sourceTypes = ["datapod", "dataset", "rule"]
     this.selectSourceType = this.sourceTypes[0];
@@ -85,20 +101,14 @@ export class TrainingComponent implements OnInit {
         this.getOneByUuidAndVersion();
         this.getAllVersionByUuid();
         this.getAllLatestModel();
-
-
-
       }
       else {
         this.getAllLatestModel()
         this.getAllLatestSource(this.selectSourceType)
         this.getAllLatestTarget(this.selectTargetType)
-
       }
-
     })
   }
-
 
   getOneByUuidAndVersion() {
     this._commonService.getOneByUuidAndVersion(this.id, this.version, 'train')
@@ -107,10 +117,9 @@ export class TrainingComponent implements OnInit {
         this.onSuccessgetOneByUuidAndVersion(response)
       },
       error => console.log("Error :: " + error));
-
   }
-  getAllLatestModel() {
 
+  getAllLatestModel() {
     this._trainingService.getAllModelByType("N", "model")
       .subscribe(
       response => {
@@ -118,7 +127,6 @@ export class TrainingComponent implements OnInit {
       },
       error => console.log("Error :: " + error));
   }
-
   onSuccessgetAllLatestModel(response) {
     console.log(response)
     var temp = []
@@ -136,11 +144,11 @@ export class TrainingComponent implements OnInit {
   }
 
   getAllLatestSource(source) {
-
     this._commonService.getAllLatest(source)
       .subscribe(
       response => {
-        this.onSuccessgetAllLatestSource(response)
+        this.onSuccessgetAllLatestSource(response, true)
+
       },
       error => console.log("Error :: " + error));
   }
@@ -154,7 +162,6 @@ export class TrainingComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-
   onSuccessgetAllLatestTarget(response) {
     var temp = []
     for (const i in response) {
@@ -167,15 +174,19 @@ export class TrainingComponent implements OnInit {
     }
     this.allTarget = temp
   }
-  onChangeSourceType() {
 
+  onChangeSourceType() {
     this.getAllLatestSource(this.selectSourceType)
   }
 
-
-  onSuccessgetAllLatestSource(response) {
-
-    var temp = []
+  onSuccessgetAllLatestSource(response, Default) {
+    let temp = []
+    if (Default == true) {
+      let dependOnTemp: DependsOn = new DependsOn();
+      dependOnTemp.label = response[0]["name"];
+      dependOnTemp.uuid = response[0]["uuid"];
+      this.selectSource = dependOnTemp;
+    }
     for (const i in response) {
       let ver = {};
       ver["label"] = response[i]['name'];
@@ -185,11 +196,11 @@ export class TrainingComponent implements OnInit {
       temp[i] = ver;
     }
     this.allSource = temp
+    this.getAttribute()
   }
   public get value(): string {
     return
   }
-
 
   getAllVersionByUuid() {
     {
@@ -203,7 +214,6 @@ export class TrainingComponent implements OnInit {
     }
 
   }
-
   countContinue() {
     this.continueCount = this.continueCount + 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
@@ -215,7 +225,6 @@ export class TrainingComponent implements OnInit {
     this.progressbarWidth = 25 * this.continueCount + "%";
   }
 
-
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'train')
       .subscribe(
@@ -224,7 +233,6 @@ export class TrainingComponent implements OnInit {
       },
       error => console.log("Error :: " + error));
   }
-
 
   onChangeActive(event) {
     if (event === true) {
@@ -242,7 +250,6 @@ export class TrainingComponent implements OnInit {
       this.train.published = 'N';
     }
   }
-
 
   onSuccessgetOneByUuidAndVersion(response) {
     this.train = response;
@@ -267,6 +274,10 @@ export class TrainingComponent implements OnInit {
     sourceTemp.label = response["source"]["ref"]["name"];
     sourceTemp.uuid = response["source"]["ref"]["uuid"];
     this.selectSource = sourceTemp
+    var LabelTemp: DependsOn = new DependsOn();
+    LabelTemp.uuid = response["labelInfo"]["ref"]["uuid"]
+    LabelTemp.label = response["labelInfo"]["ref"]["name"] + "." + response["labelInfo"]["attrName"]
+    this.selectLabel = LabelTemp;
     this.getAllLatestModel()
     this.getAllLatestSource(this.selectSourceType)
     this.getAllLatestTarget(this.selectTargetType)
@@ -296,13 +307,15 @@ export class TrainingComponent implements OnInit {
   }
 
   onChangeSource() {
+    this.getAttribute();
 
-    this.getAttribute()
   }
   getAttribute() {
+
     this._commonService.getAllAttributeBySource(this.selectSource.uuid, this.selectSourceType).subscribe(
       response => {
         this.OnSuccesgetAllLatest(response)
+
       },
       error => console.log('Error :: ' + error)
     )
@@ -314,16 +327,19 @@ export class TrainingComponent implements OnInit {
       let allname = {};
       allname["label"] = response[n]['dname'];
       allname["value"] = {};
-      allname["value"]["id"] = response[n]['uuid'];
       allname["value"]["label"] = response[n]['dname'];
+      allname["value"]["attributeId"] = response[n]['attributeId']
+      allname["value"]["datapodname"] = response[n]['datapodname']
+      allname["value"]["name"] = response[n]['name']
+      allname["value"]["uuid"] = response[n]['uuid'];
       allname["value"]["id"] = response[n]['id'];
-      temp[n] = allname;
+      temp[n] = allname
     }
     this.allTargetAttribute = temp
-
+    this.allsourceLabel = temp
   }
-  onSuccessgetAllVersionByUuid(response) {
 
+  onSuccessgetAllVersionByUuid(response) {
     var temp = []
     for (const i in response) {
       let ver = {};
@@ -337,7 +353,6 @@ export class TrainingComponent implements OnInit {
   }
 
   onChangeModel() {
-
     this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version, 'model')
       .subscribe(
       response => {
@@ -347,8 +362,8 @@ export class TrainingComponent implements OnInit {
   }
 
   onSuccessonChangeModel(response) {
-
     var featureMapTableArray = [];
+    this.modeldata = response;
     for (var i = 0; i < response.features.length; i++) {
       var featureMap = {};
       var sourceFeature = {};
@@ -376,34 +391,149 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-
-
   public goBack() {
     //this._location.back();
     this.router.navigate(['/app/list/train']);
 
   }
+
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataScience/train', uuid, version, 'false']);
   }
 
-
   showview(uuid, version) {
     this.router.navigate(['app/dataScience/train', uuid, version, 'true']);
   }
-
 
   onChangeTrainPercent() {
     this.train.valPercent = (100 - this.train.trainPercent);
   }
 
   onChangeValPercent() {
-
     this.train.trainPercent = (100 - this.train.valPercent);
   }
 
-  submit() {
+  onChangeRunImmediately() {
+    if (this.checkboxModelexecution = "true" && this.modeldata.dependsOn.ref.type == "algorithm") {
+      this._trainingService.getParamSetByAlgorithm(this.modeldata.dependsOn.ref.uuid, this.modeldata.dependsOn.ref.version)
+        .subscribe(
+        response => {
+          this.onSuccessGetParamSetByAlgorithm(response)
+        },
+        error => console.log("Error :: " + error));
+    }
+    else {
+      this.isShowExecutionparam = false;
+      this.allparamset = null;
+    }
+  }
 
+  onSuccessGetParamSetByAlgorithm(response) {
+    this.allparamset = response
+    this.isShowExecutionparam = true;
+  }
+
+  selectAllRow() {
+    if (!this.selectallattribute) {
+      this.selectallattribute = true;
+    }
+    else {
+      this.selectallattribute = false;
+    }
+    this.paramtable.forEach(stage => {
+
+      stage.selected = this.selectallattribute;
+    });
+  }
+
+  changeParamertLsitType() {
+    if (this.modeldata == null) {
+      this.isShowExecutionparam = false;
+      //this.allParameterList = null;
+    }
+  }
+
+  trainExecute(modeldetail) {
+    let newDataList = [];
+    this.selectallattribute = false;
+    let execParams = {}
+    if (this.paramtable) {
+      this.paramtable.forEach(selected => {
+        if (selected.selected) {
+          newDataList.push(selected);
+        }
+      });
+
+      let paramInfoArray = [];
+
+      if (this.paramtable && newDataList.length > 0) {
+        let ref = {}
+        ref["uuid"] = this.paramsetdata.uuid;
+        ref["version"] = this.paramsetdata.version;
+        for (var i = 0; i < newDataList.length; i++) {
+          var paraminfo = {};
+          paraminfo["paramSetId"] = newDataList[i].paramSetId;
+          paraminfo["ref"] = ref;
+          paramInfoArray[i] = paraminfo;
+        }
+      }
+
+      if (paramInfoArray.length > 0) {
+        execParams["paramInfo"] = paramInfoArray;
+      }
+      else {
+        execParams = null
+      }
+    }
+    console.log(JSON.stringify(execParams));
+    this._commonService.execute(modeldetail["uuid"], modeldetail["version"], 'train', execParams).subscribe(
+      response => { this.onSuccessExecute(response) },
+      error => console.log('Error :: ' + error)
+    )
+  }
+
+  onSuccessExecute(response) {
+    {
+      this.msgs = [];
+      this.isSubmit = "true"
+      this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Model Saved and Submited Successfully' });
+      setTimeout(() => {
+        this.goBack()
+      }, 1000);
+    }
+  }
+
+  onSelectparamSet() {
+    var paramSetjson = {};
+    var paramInfoArray = [];
+    if (this.paramsetdata && this.paramsetdata != null) {
+      for (var i = 0; i < this.paramsetdata.paramInfo.length; i++) {
+        var paramInfo = {};
+        paramInfo["paramSetId"] = this.paramsetdata.paramInfo[i].paramSetId
+        paramInfo["selected"] = false
+        var paramSetValarray = [];
+        for (var j = 0; j < this.paramsetdata.paramInfo[i].paramSetVal.length; j++) {
+          var paramSetValjson = {};
+          paramSetValjson["paramId"] = this.paramsetdata.paramInfo[i].paramSetVal[j].paramId;
+          paramSetValjson["paramName"] = this.paramsetdata.paramInfo[i].paramSetVal[j].paramName;
+          paramSetValjson["value"] = this.paramsetdata.paramInfo[i].paramSetVal[j].value;
+          paramSetValjson["ref"] = this.paramsetdata.paramInfo[i].paramSetVal[j].ref;
+          paramSetValarray[j] = paramSetValjson;
+          paramInfo["paramSetVal"] = paramSetValarray;
+          paramInfo["value"] = this.paramsetdata.paramInfo[i].paramSetVal[j].value;
+        }
+        paramInfoArray[i] = paramInfo;
+      }
+      this.paramtablecol = paramInfoArray[0].paramSetVal;
+      this.paramtable = paramInfoArray;
+      paramSetjson["paramInfoArray"] = paramInfoArray;
+      this.isTabelShow = true;
+    } else {
+      this.isTabelShow = false;
+    }
+  }
+
+  submit() {
     var trainJson = {}
     trainJson["uuid"] = this.train.uuid
     trainJson["name"] = this.train.name
@@ -437,13 +567,13 @@ export class TrainingComponent implements OnInit {
     sourceref["uuid"] = this.selectSource.uuid;
     source["ref"] = sourceref;
     trainJson["source"] = source;
-    // var target={};
-    // var targetref={};
-    // targetref["type"]=this.selectTargetType;
-    // if(this.selectTargetType =="datapod")
-    // targetref["uuid"]=this.selectTarget.uuid;
-    // target["ref"]=targetref;
-    // trainJson["target"]=target;
+    let labelInfo = {};
+    var ref = {};
+    ref["type"] = this.selectSourceType
+    ref["uuid"] = this.selectLabel.uuid
+    labelInfo["ref"] = ref;
+    labelInfo["attrId"] = this.selectLabel["attributeId"]
+    trainJson["labelInfo"] = labelInfo;
     var featureMap = [];
     if (this.featureMapTableArray.length > 0) {
       for (var i = 0; i < this.featureMapTableArray.length; i++) {
@@ -458,22 +588,19 @@ export class TrainingComponent implements OnInit {
         sourceFeature["ref"] = sourceFeatureRef;
         //sourceFeature.attrId = this.featureMapTableArray[i].sourceFeature.attributeId;
         sourceFeature["featureId"] = this.featureMapTableArray[i].sourceFeature.featureId;
-        sourceFeature["featureName"] = this.featureMapTableArray[i].sourceFeature.featureName;
+        //  sourceFeature["featureName"] = this.featureMapTableArray[i].sourceFeature.featureName;
         featureMapObj["feature"] = sourceFeature;
-
         let uuid = this.featureMapTableArray[i].targetFeature.id.split("_")[0]
         var attrid = this.featureMapTableArray[i].targetFeature.id.split("_")[1]
         targetFeatureRef["uuid"] = uuid;
         targetFeatureRef["type"] = this.selectSourceType;
         targetFeature["ref"] = targetFeatureRef
         targetFeature["attrId"] = attrid;
-
         featureMapObj["attribute"] = targetFeature;
         featureMap[i] = featureMapObj;
       }
     }
     trainJson["featureAttrMap"] = featureMap;
-
     console.log(JSON.stringify(trainJson))
     this._commonService.submit("train  ", trainJson).subscribe(
       response => { this.OnSuccessubmit(response) },
@@ -481,19 +608,57 @@ export class TrainingComponent implements OnInit {
     )
   }
 
-
-
   OnSuccessubmit(response) {
-    this.msgs = [];
-    this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Train Submitted Successfully' });
-    setTimeout(() => {
-      this.goBack()
-    }, 1000);
+    if (this.checkboxModelexecution == true) {
+      this._commonService.getOneById("train", response).subscribe(
+        response => {
+          this.OnSucessGetOneById(response);
+          this.goBack();
+        },
+        error => console.log('Error :: ' + error)
+      )
+    } //End if
+    else {
+      this.msgs = [];
+      this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Predict Save Successfully' });
+      setTimeout(() => {
+        this.goBack();
 
+      }, 1000);
+    }
   }
-  30
+  OnSucessGetOneById(response) {
+    this._commonService.execute(response.uuid, response.version, "train", "execute").subscribe(
+      response => {
+        this.showMassage('train Save and Submit Successfully', 'success', 'Success Message')
+        setTimeout(() => {
 
+          this.goBack()
+        }, 1000);
+      },
+      error => console.log('Error :: ' + error)
+    )
+  }
 
-
+  showMassage(msg, msgtype, msgsumary) {
+    this.isSubmit = "false";
+    this.msgs = [];
+    this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
