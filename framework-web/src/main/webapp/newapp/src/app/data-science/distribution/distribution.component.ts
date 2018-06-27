@@ -43,7 +43,9 @@ export class DistributionComponent implements OnInit {
   arrayParamList: any;
   selectedParamlist: any;
   paramList: DependsOn;
-    constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: DistributionService) {
+
+
+  constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: DistributionService) {
     this.distribution = true;
     this.distribution = {};
     //this.paramList ={'label':"","uuid":""}
@@ -212,6 +214,7 @@ export class DistributionComponent implements OnInit {
     distributionJson["published"] = this.distribution.published == true ? "Y" : "N";
     distributionJson["library"] = this.distribution.library;
     distributionJson["className"] = this.distribution.className;
+    distributionJson["methodName"] = this.distribution.methodName
     let paramlist = {};
     let refParam = {};
     if (this.paramList != null) {
