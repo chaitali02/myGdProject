@@ -1531,13 +1531,13 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @throws Exception
 	 */
 	public Map<String, List<GraphpodResult>> getGraphResults (String uuid, String version, String degree, String filterId) throws Exception {
-	/*	GraphExec graphExec=(GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphpod.toString());
+		GraphExec graphExec=(GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphpod.toString());
 		Graphpod graphpod=(Graphpod) commonServiceImpl.getOneByUuidAndVersion(graphExec.getDependsOn().getRef().getUuid(), graphExec.getDependsOn().getRef().getVersion(), MetaType.graphpod.toString());
-	*/	String graphExecKey = null;
+		String graphExecKey = null;
 		Boolean createGraph = Boolean.FALSE;
 		// Get the datastore. If there is no existing datastore then create graph
-		//DataStore ds = dataStoreServiceImpl.findLatestByMeta(graphpod.getUuid(), graphpod.getVersion());
-		DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
+		DataStore ds = dataStoreServiceImpl.findLatestByMeta(graphpod.getUuid(), graphpod.getVersion());
+		//DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
 		
 		if (ds != null) {
 			graphExecKey = ds.getMetaId().getRef().getUuid()+"_"+ds.getMetaId().getRef().getVersion()+"_"+ds.getExecId().getRef().getVersion();
@@ -1551,7 +1551,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			// Create graph
 			RunMode runMode = RunMode.ONLINE;
 		  	ExecParams execParams = new ExecParams();
-			BaseExec baseExec = create(uuid,version,execParams, runMode);
+			BaseExec baseExec = create(graphExec.getDependsOn().getRef().getUuid(),graphExec.getDependsOn().getRef().getVersion(),execParams, runMode);
 			baseExec = parse(baseExec, execParams, runMode);
 			graphExecKey = execute(baseExec, execParams, runMode);
 		}
