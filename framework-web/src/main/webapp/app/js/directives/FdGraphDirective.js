@@ -10,11 +10,11 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
             scope.search=function(){
                 scope.isGraphShow=false;
                 scope.isGraphInProgess=true;
-                GraphpodService.getGraphPodResults(uuid,version,scope.nodeId,"2","graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)});
+                GraphpodService.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,"2","graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
                     scope.isGraphShow=true;
                     scope.isGraphInProgess=false;    
-                    data=result;
+                    data=response;
                     drawGraph();
                 }
             }
@@ -22,13 +22,13 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
             function myGraph() {
                 this.addNode = function (n) {
                     if (!findNode(n.id)) {
-                        nodes.push({ "id": n.id, "label": n.label });
+                        nodes.push({ "id": n.id, "label": n.label,"node_name":n.node_name,"node_type":n.node_type,"node_properties":n.node_properties});
                         update();
                     }
                 };
 
-                this.addLink = function (source, target, value) {
-                    links.push({ "source": findNode(source.id), "target": findNode(target.id), "value": value });
+                this.addLink = function (d) {
+                    links.push({ "source": findNode(d.source.id), "target": findNode(d.target.id), "value": d.value,"edgeName":d.edgeName,"edgeType":d.edgeType,"nodeProperties":d.nodeProperties});
                     update();
                 };
 
@@ -36,7 +36,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                     data.edges.forEach(function (d) {
                         graph.addNode(d.source);
                         graph.addNode(d.target);
-                        graph.addLink(d.source, d.target, d.value);
+                        graph.addLink(d);
                     });
                 };
 
@@ -67,19 +67,19 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                 };
 
                 var w = window.innerWidth - 20,
-                    h =500,
+                    h =800,
                     middle = w / 2;
-                var linkDistance = 300;
+                var linkDistance = 450;
 
                 var colors = d3.scale.category20();
-
+                d3.select("#fDGraph").select("svg").remove();
                 var svg = d3.select("#fDGraph")
                     .append("svg:svg")
                     .attr("width", w)
                     .attr("height", h)
                     .style("z-index", -10)
                     .attr("id", "svg");
-
+                  
                 svg.append('svg:defs').selectAll('marker')
                     .data(['end'])
                     .enter()
@@ -114,8 +114,13 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                             return d.source.id + "-" + d.value + "-" + d.target.id;
                         })
                         .attr("class", "link")
-                        .attr('marker-end', 'url(#arrowhead)');
-
+                        .attr('marker-end', 'url(#arrowhead)')
+                        .on("mouseover", mouseoverEdge)
+                        .on("mouseout", function (d) {
+                            scope.nodeDetail = null;
+                            $(".tooltipcustom").css("display", "none");
+    
+                        });;
                     path.exit().remove();
 
                     var pathInvis = svg.selectAll("path.invis")
@@ -147,7 +152,13 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
 
                     var nodeEnter = node.enter().append("g")
                         .attr("class", "node1")
-                        .call(force.drag);
+                        .call(force.drag)
+                        .on("mouseover", mouseoverNode)
+                        .on("mouseout", function (d) {
+                            scope.nodeDetail = null;
+                            $(".tooltipcustom").css("display", "none");
+    
+                        });
 
                     nodeEnter.append("svg:circle")
                         .attr("r", 10)
@@ -178,17 +189,19 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                             drx = dr,
                             dry = dr,
                             sweep = leftHand ? 0 : 1;
-                        siblingCount = countSiblingLinks(d.source, d.target)
-                        xRotation = 0,
+                            siblingCount = countSiblingLinks(d.source, d.target)
+                            xRotation = 0,
                             largeArc = 0;
 
                         if (siblingCount > 1) {
+                           
+                           
                             var siblings = getSiblingLinks(d.source, d.target);
                            // console.log(siblings);
                             var arcScale = d3.scale.ordinal()
                                 .domain(siblings)
-                                .rangePoints([1, siblingCount+2]);
-                            drx = drx / (1 + (1 / siblingCount) * (arcScale(d.value) - 1));
+                                .rangePoints([-1, siblingCount]);
+                            drx = drx / (1 + (2 / siblingCount) * (arcScale(d.value) - 1));
                             dry = dry / (1 + (1 / siblingCount) * (arcScale(d.value) - 1));
                         }
 
@@ -265,8 +278,51 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                     gNode.parentNode.appendChild(gNode);
                 });
             }
+            function mouseoverNode(d){
+                console.log(d)
+                var e = d3.event;
+                scope.nodeDetail = d;
+                scope.nodeDetail.caption="Node Detail"
+                $("#colorID").css("background-color","#0bb7ed");
+                var xPercent = e.clientX / $(window).width() * 100;
+                var left;
+                var top;
+                if (parseInt(xPercent) > 50) {
+                    left = (e.clientX - 400) + "px";
+                    top = e.clientY + "px";
+                }
+                else {
+                    left = (e.clientX + 40) + "px";
+                    top = e.clientY + "px";
+                }
+                $(".tooltipcustom").css("left", left);
+                $(".tooltipcustom").css("top", top);
+                $(".tooltipcustom").css("display", "block");
+            }
+            function mouseoverEdge(d){
+                console.log(d)
+                var e = d3.event;
+                scope.edgeDetail = d;
+                scope.edgeDetail.caption="Edge Detail"
+                $("#colorID").css("background-color","#0bb7ed");
+                var xPercent = e.clientX / $(window).width() * 100;
+                var left;
+                var top;
+                if (parseInt(xPercent) > 50) {
+                    left = (e.clientX - 400) + "px";
+                    top = e.clientY + "px";
+                }
+                else {
+                    left = (e.clientX + 40) + "px";
+                    top = e.clientY + "px";
+                }
+                $(".tooltipcustom").css("left", left);
+                $(".tooltipcustom").css("top", top);
+                $(".tooltipcustom").css("display", "block");
+            }
+            
         },
-
+        
         templateUrl: 'views/fd-template.html',
     };
 })

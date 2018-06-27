@@ -95,12 +95,12 @@ public class GraphOperator implements IOperator {
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeIdRefHolder, nodeIdRefHolder, 
 												DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 												execParams.getOtherParams(), execParams));
-			sb.append(" AS id, '");
+			sb.append(" AS id, ");
 			AttributeRefHolder nodeNameRefHolder =  graphNode.getNodeName();
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeNameRefHolder, nodeNameRefHolder, 
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 					execParams.getOtherParams(), execParams));
-			sb.append("' AS node_name, '");
+			sb.append(" AS node_name, '");
 			/*sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, nodeNameRefHolder, nodeNameRefHolder, 
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 					execParams.getOtherParams()));

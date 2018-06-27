@@ -1502,18 +1502,34 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		// Get the exec
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		String graphExecKey = exec.createGraphFrame((GraphExec) baseExec, null);
-		DataStore ds = new DataStore();
-		ds.setMetaId(new MetaIdentifierHolder(new MetaIdentifier(baseExec.getDependsOn().getRef().getType(), 
-												baseExec.getDependsOn().getRef().getUuid(), 
-												baseExec.getDependsOn().getRef().getVersion())));
-		ds.setExecId(new MetaIdentifierHolder(new MetaIdentifier(MetaType.graphExec, 
-																	baseExec.getUuid(), 
-																	baseExec.getVersion())));
-		dataStoreServiceImpl.save(ds);
-		return graphExecKey;
+		try {
+			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.InProgress);
+			
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			String graphExecKey = exec.createGraphFrame((GraphExec) baseExec, null);
+			DataStore ds = new DataStore();
+			ds.setMetaId(new MetaIdentifierHolder(new MetaIdentifier(baseExec.getDependsOn().getRef().getType(), 
+													baseExec.getDependsOn().getRef().getUuid(), 
+													baseExec.getDependsOn().getRef().getVersion())));
+			ds.setExecId(new MetaIdentifierHolder(new MetaIdentifier(MetaType.graphExec, 
+																		baseExec.getUuid(), 
+																		baseExec.getVersion())));
+			dataStoreServiceImpl.save(ds);
+			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Completed);
+			return graphExecKey;
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Failed);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Graphpod execution failed.");
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
@@ -1531,7 +1547,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @throws Exception
 	 */
 	public Map<String, List<GraphpodResult>> getGraphResults (String uuid, String version, String degree, String filterId) throws Exception {
-		GraphExec graphExec=(GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphpod.toString());
+		GraphExec graphExec=(GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphExec.toString());
 		Graphpod graphpod=(Graphpod) commonServiceImpl.getOneByUuidAndVersion(graphExec.getDependsOn().getRef().getUuid(), graphExec.getDependsOn().getRef().getVersion(), MetaType.graphpod.toString());
 		String graphExecKey = null;
 		Boolean createGraph = Boolean.FALSE;

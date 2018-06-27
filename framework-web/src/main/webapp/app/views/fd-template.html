@@ -35,12 +35,12 @@
     <div class="clearfix"></div>
     <div class="col-md-12">
         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-        <div class="spinner text-center" ng-if="isGraphInProgess">
+        <div class="spinner centercontent" style="min-height:300px;" ng-show="isGraphInProgess">
             <div class="bounce1"></div>
             <div class="bounce2"></div>
             <div class="bounce3"></div>
         </div>
-        <div id="fDGraph" style="height:500px;" ng-if="isGraphShow"></div>
+        <div id="fDGraph" style="height:500px;" ng-show="isGraphShow"></div>
     </div>        
 </div>
 
@@ -57,16 +57,48 @@
 
         <div class="row" style="margin-top: 5px">
             <span style="margin-left:20px;">Id</span>
-            <span id="task_Id" style="margin-left:58px">{{nodeDetail.metaRef.ref.uuid}}</span>
+            <span id="task_Id" style="margin-left:58px">{{nodeDetail.id}}</span>
         </div>
         <div class="row" style="margin-top: 5px">
             <span style="margin-left:20px;">Type</span>
-            <span id="task_Id" style="margin-left:40px">{{nodeDetail.metaRef.ref.type}}</span>
+            <span id="task_Id" style="margin-left:40px">{{nodeDetail.node_type}}</span>
         </div>
         <div class="row" style="margin-top: 5px">
             <span style="margin-left:20px">Name</span>
-            <span id="task_Name" style="margin-left:33px">{{nodeDetail.name}}</span>
+            <span id="task_Name" style="margin-left:33px">{{nodeDetail.node_name}}</span>
+        </div>
+        <div class="row" style="margin-top: 5px">
+                <span style="margin-left:20px">Properties</span>
+                <span id="task_Name" style="margin-left:3px">{{nodeDetail.node_properties}}</span>
         </div>
     </div>
 </div>
-<br>
+<div class="tooltipcustomEdge" id="divtoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;
+    font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
+    <div style="margin-top: 5px;margin-right: 15px">
+        <div class="row">
+            <div class="col-md-1">
+                <div class="one" id="colorID" style="margin-left:5px;margin-bottom: 10px"></div>
+
+            </div>
+            <div class="col-md-5" id="elementTypeText">{{edgeDetail.caption}}</div>
+        </div>
+
+        <div class="row" style="margin-top: 5px">
+            <span style="margin-left:20px;">Id</span>
+            <span id="task_Id" style="margin-left:58px">{{nodeDetail.id}}</span>
+        </div>
+        <div class="row" style="margin-top: 5px">
+            <span style="margin-left:20px;">Type</span>
+            <span id="task_Id" style="margin-left:40px">{{nodeDetail.node_type}}</span>
+        </div>
+        <div class="row" style="margin-top: 5px">
+            <span style="margin-left:20px">Name</span>
+            <span id="task_Name" style="margin-left:33px">{{nodeDetail.node_name}}</span>
+        </div>
+        <div class="row" style="margin-top: 5px">
+                <span style="margin-left:20px">Properties</span>
+                <span id="task_Name" style="margin-left:3px">{{nodeDetail.node_properties}}</span>
+        </div>
+    </div>
+</div>

@@ -488,4 +488,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 GraphAnalysisModule.controller('GraphpodResultController',function($state,$stateParams,$rootScope,$scope,$filter,$timeout,
 	GraphpodService,CommonService,privilegeSvc,dagMetaDataService,CF_META_TYPES,CF_LOV_TYPES,CF_GRAPHPOD) {
 		$scope.isD3FDGraphShow=true;
+		$scope.graphExecDetail={};
+		$scope.graphExecDetail.uuid=$stateParams.id;
+		$scope.graphExecDetail.version=$stateParams.version;
 	});
