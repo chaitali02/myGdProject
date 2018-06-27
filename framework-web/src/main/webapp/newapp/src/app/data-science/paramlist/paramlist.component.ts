@@ -226,16 +226,25 @@ export class ParamlistComponent implements OnInit {
     this.paramtableArray.splice(this.paramtableArray.length, 0, attrinfo);
   }
 
-  removeAttribute() {
-    var newDataList = [];
-    this.paramtableArray = false
+ 
+
+  removeAttribute(){  
+    var newDataList=[];
+    this.selectAllAttributeRow=false
     this.paramtableArray.forEach(selected => {
-      if (!selected.selected) {
+      if(!selected.selected){
         newDataList.push(selected);
       }
     });
     this.paramtableArray = newDataList;
+    console.log(JSON.stringify(this.paramtableArray))
   }
+
+
+
+
+
+
 
   checkAllAttributeRow() {
     if (!this.selectAllAttributeRow) {
