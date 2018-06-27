@@ -13,6 +13,8 @@ package com.inferyx.framework.controller;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jettison.json.JSONException;
 import org.json.simple.parser.ParseException;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.GraphpodResult;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.service.GraphServiceImpl;
@@ -114,7 +117,7 @@ public class GraphController {
 	}*/
   
   @RequestMapping(value="/getGraphPodResults",method=RequestMethod.GET)
-	public @ResponseBody String  getGraphPodResults(@RequestParam("uuid") String uuid,
+	public @ResponseBody Map<String, List<GraphpodResult>>  getGraphPodResults(@RequestParam("uuid") String uuid,
 			@RequestParam("version") String version,@RequestParam(value = "degree", required = false) String degree,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 

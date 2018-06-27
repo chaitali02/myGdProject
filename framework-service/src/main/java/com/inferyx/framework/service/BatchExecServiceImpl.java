@@ -44,6 +44,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.RunStatusHolder;
 import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.StageExec;
@@ -121,7 +122,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		@Autowired 
 		private ModelExecServiceImpl modelExecServiceImpl;
 		@Resource(name="taskThreadMap")
-		ConcurrentHashMap<String, FutureTask<String>> taskThreadMap;
+		ConcurrentHashMap taskThreadMap;
 		@Autowired
 		ParamSetServiceImpl paramSetServiceImpl;
 		@Autowired
@@ -181,7 +182,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		}
 	
 		public String killStage (String uuid, String version, String stageId) throws JsonProcessingException {
-			FutureTask<String> futureTask = null;
+			FutureTask futureTask = null;
 			String status = null;
 			StageExec stageExec = null;
 			if (!taskThreadMap.containsKey("Stage_" + uuid + "_" + stageId)) {
@@ -239,7 +240,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 
 		public String killTask(String uuid, String version, String stageId, String taskId) throws JsonProcessingException {
 		//	Set<String> strSet = mapTaskThread.keySet();
-			FutureTask<String> futureTask = null;
+			FutureTask futureTask = null;
 			DagExec dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 			String status = null;
 		
@@ -292,9 +293,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			return new ArrayList<String>(strSet);
 		}
 
-		@SuppressWarnings("unchecked")
 		public DagExec createDagExecBatch(Dag dag, DagExec dagExec, RunMode runMode) {
-			@SuppressWarnings("rawtypes")
+			
 			List<FutureTask> taskList = new ArrayList<FutureTask>();
 			List<StageExec> depStageExecs = new ArrayList<>();
 			if (dagExec == null) {
@@ -322,7 +322,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					}
 					StageExec indvStg = stageExec;
 					Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
-					if (indvStg != null && indvStg.getStatusList() != null && indvStg.getStatusList().get(i).getStage().equals(Status.Stage.Inactive)) {
+					if (indvStg != null && indvStg.getStatusList() != null && indvStg.getStatusList().contains(Status.Stage.Inactive)) {
 						continue;	// If inactive stage then move to next stage (don't consider inactive stage)
 					}
 						if (status.equals(new Status(Status.Stage.InProgress, new Date())) 
@@ -360,10 +360,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						try {
 						boolean checkDependencyStatus = false;
 						boolean checkDependencyFailed = false;
-						@SuppressWarnings("unused")
 						boolean checkDependencyKilled = false;
 						String dependencyStatus = null;
-//						OrderKey datapodKey = null;
+						OrderKey datapodKey = null;
 	
 						Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
 						
@@ -441,7 +440,6 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		 * @return
 		 * @throws Exception
 		 */
-		@SuppressWarnings("unchecked")
 		public Boolean waitAndComplete (DagExec dagExec, @SuppressWarnings("rawtypes") List<FutureTask> taskList) throws Exception {
 			logger.info(" Inside waitAndComplete for Dag ");
 			String outputThreadName = null;
@@ -539,7 +537,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 
 	
 	
-		public void setStageAndSubmit(DagExec dagExec, StageExec indvStg, Stage stage, ExecParams execParams, Dag dag, @SuppressWarnings("rawtypes") List<FutureTask> taskList, RunMode runMode) {
+		public void setStageAndSubmit(DagExec dagExec, StageExec indvStg, Stage stage, ExecParams execParams, Dag dag, List<FutureTask> taskList, RunMode runMode) {
 			RunStageServiceImpl indivStageExe = new RunStageServiceImpl();
 			logger.info("Map name of uuid_version:" + dagExec.getUuid() + "_"
 					+ indvStg.getStageId());

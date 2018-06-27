@@ -33,6 +33,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.StructType;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -57,6 +58,7 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.Graphpod;
+import com.inferyx.framework.domain.GraphpodResult;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -1528,11 +1530,14 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @return
 	 * @throws Exception
 	 */
-	public String getGraphResults (String uuid, String version, String degree, String filterId) throws Exception {
+	public Map<String, List<GraphpodResult>> getGraphResults (String uuid, String version, String degree, String filterId) throws Exception {
+		GraphExec graphExec=(GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphpod.toString());
+		Graphpod graphpod=(Graphpod) commonServiceImpl.getOneByUuidAndVersion(graphExec.getDependsOn().getRef().getUuid(), graphExec.getDependsOn().getRef().getVersion(), MetaType.graphpod.toString());
 		String graphExecKey = null;
 		Boolean createGraph = Boolean.FALSE;
 		// Get the datastore. If there is no existing datastore then create graph
-		DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
+		DataStore ds = dataStoreServiceImpl.findLatestByMeta(graphpod.getUuid(), graphpod.getVersion());
+		//DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
 		
 		if (ds != null) {
 			graphExecKey = ds.getMetaId().getRef().getUuid()+"_"+ds.getMetaId().getRef().getVersion()+"_"+ds.getExecId().getRef().getVersion();
@@ -1546,7 +1551,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			// Create graph
 			RunMode runMode = RunMode.ONLINE;
 		  	ExecParams execParams = new ExecParams();
-			BaseExec baseExec = create(uuid,version,execParams, runMode);
+			BaseExec baseExec = create(graphExec.getDependsOn().getRef().getUuid(),graphExec.getDependsOn().getRef().getVersion(),execParams, runMode);
 			baseExec = parse(baseExec, execParams, runMode);
 			graphExecKey = execute(baseExec, execParams, runMode);
 		}
@@ -1558,7 +1563,90 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		logger.info("Showing filtered graph >>>>>>>>>>>>>>>>> ");
 		result_datset.show();
 		// Process and get the desired results
-		return null;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+		
+		List<GraphpodResult> result = new ArrayList<>();
+		Row[] rows = (Row[]) result_datset.head(Integer.parseInt("" + result_datset.count()));
+		String[] resultDatesetColumns = result_datset.columns();
+		String[] resultDatasetValue = new String[resultDatesetColumns.length];
+
+		for (Row row : rows) {
+
+			Map<String, String> source = new HashMap<>();
+			Map<String, String> target = new HashMap<>();
+			int count = 0;
+			for (String edgecloumn : resultDatesetColumns) {
+
+				String value1 = row.getAs(edgecloumn).toString();
+				resultDatasetValue[count] = value1;
+				count++;
+			}
+			/*
+			 * String srcId = row.getAs("src"); String dstId = row.getAs("dst");
+			 */
+			//String relation = row.getAs(resultDatesetColumns[2]);
+
+			String edge_name = row.getAs(resultDatesetColumns[2]);
+			String edge_type = row.getAs(resultDatesetColumns[3]);
+			String edge_properties = row.getAs(resultDatesetColumns[4]);
+			
+			   
+			 
+			String relation = edge_properties.substring(edge_properties.indexOf(':'),
+						edge_properties.indexOf(','));
+
+				
+			Dataset<Row> srcVertexDf = graphFrame.vertices().filter("id = '" + resultDatasetValue[0] + "'");
+			String[] vertexColumns = srcVertexDf.columns();
+			Row[] srcrows = (Row[]) srcVertexDf.head(Integer.parseInt("" + srcVertexDf.count()));
+
+			for (Row srcrow : srcrows) {
+				for (String cloumn : vertexColumns) {
+					if(cloumn.equalsIgnoreCase("node_name")){
+				    String value1 = srcrow.getAs(cloumn).toString();
+				    source.put("label", value1);
+					}
+					
+					String value1 = srcrow.getAs(cloumn).toString();
+					source.put(cloumn, value1);
+
+				}
+			}
+
+			Dataset<Row> dstVertexDf = graphFrame.vertices().filter("id = '" + resultDatasetValue[1] + "'");
+
+			Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
+			for (Row dstrow : dstrows) {
+				for (String cloumn : vertexColumns) {
+					if(cloumn.equalsIgnoreCase("node_name")){
+					    String value1 = dstrow.getAs(cloumn).toString();
+					    target.put("label", value1);
+						}
+					String value1 = dstrow.getAs(cloumn).toString();
+					target.put(cloumn, value1);
+
+				}
+			}
+
+			GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
+					edge_properties);
+			result.add(graphpodresult);
+		}
+
+		Map<String, List<GraphpodResult>> edgeMap = new HashMap<>();
+		edgeMap.put("edges", result);
+		// String reslt = mapper.writeValueAsString(result);
+
+		return edgeMap;
 	}
 	/**********************************   GraphFrame - END     **********************************/
 
