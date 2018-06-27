@@ -1531,7 +1531,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @throws Exception
 	 */
 	public Map<String, List<GraphpodResult>> getGraphResults (String uuid, String version, String degree, String filterId) throws Exception {
-		GraphExec graphExec=(GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphpod.toString());
+		GraphExec graphExec=(GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphExec.toString());
 		Graphpod graphpod=(Graphpod) commonServiceImpl.getOneByUuidAndVersion(graphExec.getDependsOn().getRef().getUuid(), graphExec.getDependsOn().getRef().getVersion(), MetaType.graphpod.toString());
 		String graphExecKey = null;
 		Boolean createGraph = Boolean.FALSE;
@@ -1557,8 +1557,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		}
 		// Get the graphFrame and parse
 		GraphFrame graphFrame = (GraphFrame) graphpodMap.get(graphExecKey);
-		Dataset<Row> edge_dataset = graphFrame.edges().filter("src = '"+filterId+"'").select("src", "dst", "edge_name", "edge_type", "edge_properties");
-		Dataset<Row> node_dataset = graphFrame.vertices().filter("id = '"+filterId+"'").select("id", "node_name", "node_type", "node_properties");
+		Dataset<Row> edge_dataset = graphFrame.edges().filter("src = '"+filterId+"'").select("src", "dst", "edgeName", "edgeType", "edgeProperties");
+		Dataset<Row> node_dataset = graphFrame.vertices().filter("id = '"+filterId+"'").select("id", "nodeName", "nodeType", "nodeProperties");
 		Dataset<Row> result_datset = edge_dataset.join(node_dataset, edge_dataset.col("src").equalTo(node_dataset.col("id")));
 		logger.info("Showing filtered graph >>>>>>>>>>>>>>>>> ");
 		result_datset.show();
@@ -1611,7 +1611,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 			for (Row srcrow : srcrows) {
 				for (String cloumn : vertexColumns) {
-					if(cloumn.equalsIgnoreCase("node_name")){
+					if(cloumn.equalsIgnoreCase("nodeName")){
 				    String value1 = srcrow.getAs(cloumn).toString();
 				    source.put("label", value1);
 					}
@@ -1627,7 +1627,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
 			for (Row dstrow : dstrows) {
 				for (String cloumn : vertexColumns) {
-					if(cloumn.equalsIgnoreCase("node_name")){
+					if(cloumn.equalsIgnoreCase("nodeName")){
 					    String value1 = dstrow.getAs(cloumn).toString();
 					    target.put("label", value1);
 						}
