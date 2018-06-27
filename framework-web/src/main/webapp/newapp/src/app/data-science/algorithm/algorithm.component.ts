@@ -16,7 +16,7 @@ export class AlgorithmComponent implements OnInit {
   breadcrumbDataFrom : any;
   showAlgorithm : any;
   algorithm : any;
-  versions: any[];
+  // versions: any[];
   VersionList: SelectItem[] = [];
   selectedVersion: Version;
   tags: any;
@@ -102,7 +102,7 @@ export class AlgorithmComponent implements OnInit {
     this._commonService.getAllVersionByUuid('algorithm',this.id)
     .subscribe(
     response =>{
-      this.OnSuccesgetAllVersionByUuid(response)},
+      this.OnSuccessgetAllVersionByUuid(response)},
     error => console.log("Error :: " + error));
   }
 
@@ -135,17 +135,17 @@ export class AlgorithmComponent implements OnInit {
     
   }
 
-  OnSuccesgetAllVersionByUuid(response) {
-    var temp=[]
+  OnSuccessgetAllVersionByUuid(response) {
+    var temp = []
     for (const i in response) {
-      let ver={};
-      ver["label"]=response[i]['version'];
-      ver["value"]={};
-      ver["value"]["label"]=response[i]['version'];      
-      ver["value"]["uuid"]=response[i]['uuid']; 
-      temp[i]=ver;
+      let ver = {};
+      ver["label"] = response[i]['version'];
+      ver["value"] = {};
+      ver["value"]["label"] = response[i]['version'];
+      ver["value"]["uuid"] = response[i]['uuid'];
+      temp[i] = ver;
     }
-    this.VersionList=temp
+    this.VersionList = temp
   }
 
   onSuccessgetAllLatest(response){
@@ -162,7 +162,7 @@ export class AlgorithmComponent implements OnInit {
   }
 
   onVersionChange(){ 
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'paramset')
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'algorithm')
     .subscribe(
     response =>{//console.log(response)},
       this.onSuccessgetOneByUuidAndVersion(response)},
