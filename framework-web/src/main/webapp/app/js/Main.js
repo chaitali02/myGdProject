@@ -432,7 +432,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "submenu": [
             { "name": "createga", "type": "createga", "uuid": "null", "caption": "Create New" },
             { "name": "listgraphpod", "type": "graphpod", "uuid": "null", "caption": "List" },
-            { "name": "resultgraphpod", "type": "graphexec", "uuid": "null", "caption": "Results" }
+            { "name": "graphpodresultlist", "type": "graphexec", "uuid": "null", "caption": "Results" }
         ]
     };
     $scope.Datascience = {
@@ -2970,7 +2970,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             data: { pageTitle: 'Graph Analysis' },
             params: { type: 'graphpod'}
         })
-        .state('resultgraphpod', {
+        .state('graphpodresultlist', {
             url: "/GraphAnalysis/GraphpodList",
             templateUrl: "views/common-list.html",
             data: { pageTitle: 'Graph Analysis' },
@@ -2980,6 +2980,25 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('creaetgraphpod', {
             url: "/GraphAnalysis/Graphpod?id&mode&returnBack&version",
             templateUrl: "views/graphpod.html",
+            data: { pageTitle: 'Graph Analysis' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/GraphpodController.js',
+                            'js/services/GraphpodService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+           
+        .state('graphpodresult', {
+            url: "/GraphAnalysis/GraphpodResult?id&version&type&name",
+            templateUrl: "views/graphpod-result.html",
             data: { pageTitle: 'Graph Analysi' },
             //controller: "BlankController",
             resolve: {
@@ -2990,6 +3009,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         files: [
                             'js/controllers/GraphpodController.js',
                             'js/services/GraphpodService.js',
+                            'js/directives/FdGraphDirective.js'
                         ]
                     });
                 }]

@@ -1,0 +1,106 @@
+<style>
+  text {
+    fill: white;
+    font-family: 'Open Sans';
+}
+circle {
+  stroke: white;
+  stroke-width: 1.5px;
+}
+path.link, path.textpath {
+    fill: none;
+    stroke: #cccccc;
+    stroke-width: 0.5px;
+}
+path.invis {
+    fill: none;
+    stroke-width: 0;
+}
+</style>
+<div class="row" data-ng-controller="GraphpodResultController">
+  <div class="col-md-12">
+    <div class="page-bar">
+      <ul class="page-breadcrumb">
+        <li>
+          <a ui-sref="home">Home</a>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <a ui-sref="rulerestult">
+          <span>{{$state.current.data.pageTitle}}</span>
+        </a>
+        </a>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <a ui-sref="rulerestult">
+          <span>Graph Result</span>
+          </a>
+        </a>
+        </li>
+      </ul>
+      <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+      </div>
+    </div>
+    
+    <br>
+
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div  options="dirOptions" type="metaType" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="execDetail" comment-panel-directive></div>
+  
+
+    <div class="portlet box green">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-cogs"></i>Graph Result
+        </div>
+        <div class="tools">
+        
+          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RuleEexecGraphShow==false? 'currentpage':'notcurrentpage'"   ng-disabled ="!isD3RuleEexecGraphShow" href="javascript:;"data-ng-click="refreshResultFunction()" style="height:16px;">
+            <span class="glyphicon glyphicon-file" style="color:white;"></span>
+          </a>
+          <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showGraph()" ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'">
+            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+          </a>
+          <a title="Refresh" href="javascscript:;" ng-click="isD3RuleEexecGraphShow ? broadcastRefreshData(): refreshResultFunction()" data-toggle="tooltip" data-placement="top">
+            <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;"></i>
+          </a>
+          <a title="Close"  href="javascript:;" ng-click="" data-toggle="tooltip" data-placement="top" tooltip  style="height:14px;">
+            <i class="fa fa-times" style="display:block;margin:0px 2px 0px 0px;color:white;transform: scale(1,1.2);"></i>
+          </a>
+        
+        </div>
+      </div>
+      <div class="portlet-body" style="min-height:100px;">
+        <div ng-show="isDataError">
+          <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
+        </div>
+        <div class="form-body centercontent" ng-show="showprogress">
+          <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+        </div>
+        <div ng-if="isD3KnowlageGraphShow" class="form-body graph-body">
+          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+          <div class="spinner text-center" id="graphloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div id="graphWrapper" class="form-body show-graph-body" tree-graph-directive uuid="ruleExecUuid" version="ruleExecVersion">
+          </div>
+        </div>
+        <div ng-if="isD3FDGraphShow" class="form-body" style="background-color:#384d54">
+          <div id="fDGraph-directive" class="form-body  graph-body" style="justify-content: flex-start;" fd-graph-directive uuid="ruleExecUuid" version="ruleExecVersion">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -495,11 +495,11 @@ public class MetadataServiceImpl {
 				operatorExec = (OperatorExec) metaObject;
 				execStatus = (List<Status>) operatorExec.getStatusList();	
 			}
-			/*else if(type.equalsIgnoreCase(MetaType.graphExec.toString())){
+			else if(type.equalsIgnoreCase(MetaType.graphExec.toString())){
 				GraphExec graphExec = new GraphExec();
 				graphExec = (GraphExec) metaObject;
 				execStatus = (List<Status>) graphExec.getStatusList();	
-			}*/
+			}
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
 			BaseEntity baseEntityTmp = (BaseEntity) metaObject;			

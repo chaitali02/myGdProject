@@ -1,0 +1,72 @@
+<div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
+    <div class="col-md-1" style="height:100px">
+        <a ng-click="changeSliderForward()">
+            <i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i>
+        </a>
+        <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:1,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
+        <a ng-click="changeSliderBack()">
+            <i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i>
+        </a>
+    </div>
+</div>
+ 
+<div class="row">
+    <div class="col-md-12" style="margin-top:1%;">
+        <form class="form-inline">
+            <div class="form-group">
+                <label class="col-md-4 control-label" style="color:white">Node Type</label>
+                <div class="col-md-5" style="padding-right:0px">
+                    <input type="text" class="form-control"  ng-model="nodeType">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" style="color:white">Node Id</label>
+                <div class="col-md-5" style="padding-right:0px;padding-left: 0px;">
+                    <input type="text" class="form-control"  ng-model="nodeId">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-5 col-sm-5 col-xs-12 col-md-offset-3">
+                    <button type="submit" ng-click="search()" class="btn btn-success">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-12">
+        <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+        <div class="spinner text-center" ng-if="isGraphInProgess">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+        <div id="fDGraph" style="height:500px;" ng-if="isGraphShow"></div>
+    </div>        
+</div>
+
+<div class="tooltipcustom" id="divtoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;
+    font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
+    <div style="margin-top: 5px;margin-right: 15px">
+        <div class="row">
+            <div class="col-md-1">
+                <div class="one" id="colorID" style="margin-left:5px;margin-bottom: 10px"></div>
+
+            </div>
+            <div class="col-md-5" id="elementTypeText">{{nodeDetail.caption}}</div>
+        </div>
+
+        <div class="row" style="margin-top: 5px">
+            <span style="margin-left:20px;">Id</span>
+            <span id="task_Id" style="margin-left:58px">{{nodeDetail.metaRef.ref.uuid}}</span>
+        </div>
+        <div class="row" style="margin-top: 5px">
+            <span style="margin-left:20px;">Type</span>
+            <span id="task_Id" style="margin-left:40px">{{nodeDetail.metaRef.ref.type}}</span>
+        </div>
+        <div class="row" style="margin-top: 5px">
+            <span style="margin-left:20px">Name</span>
+            <span id="task_Name" style="margin-left:33px">{{nodeDetail.name}}</span>
+        </div>
+    </div>
+</div>
+<br>

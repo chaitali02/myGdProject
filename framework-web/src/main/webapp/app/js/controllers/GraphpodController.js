@@ -483,3 +483,9 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		setTimeout(function () {$scope.close()}, 2000);
 	}
 });
+
+
+GraphAnalysisModule.controller('GraphpodResultController',function($state,$stateParams,$rootScope,$scope,$filter,$timeout,
+	GraphpodService,CommonService,privilegeSvc,dagMetaDataService,CF_META_TYPES,CF_LOV_TYPES,CF_GRAPHPOD) {
+		$scope.isD3FDGraphShow=true;
+	});

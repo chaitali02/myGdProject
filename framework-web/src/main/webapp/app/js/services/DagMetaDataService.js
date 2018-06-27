@@ -1703,7 +1703,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       allowInMenu : false,
       listState : '',
       detailState :'',
-      resultState:'',
+      resultState:'graphpodresult',
       childMenu:[],
       allowInChildMenu : false,
     },
