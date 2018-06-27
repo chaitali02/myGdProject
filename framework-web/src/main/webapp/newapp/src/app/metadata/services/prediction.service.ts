@@ -22,6 +22,20 @@ export class PredictionService{
   })
    .catch(this.handleError);
   }
+
+
+
+  getTrainByModel(uuid:number,version:any,type:String): Observable<any[]> {
+    let url ="model/getTrainByModel?action=view&uuid=" + uuid +"&version="+version+"&type=" + type;
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
+
+
+
 private handleError(error: Response) {
     return Observable.throw(error.statusText);
   }
