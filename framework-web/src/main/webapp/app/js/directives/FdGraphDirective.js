@@ -22,7 +22,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
             function myGraph() {
                 this.addNode = function (n) {
                     if (!findNode(n.id)) {
-                        nodes.push({ "id": n.id, "label": n.label,"node_name":n.node_name,"node_type":n.node_type,"node_properties":n.node_properties});
+                        nodes.push({ "id": n.id, "label": n.label,"nodeName":n.nodeName,"nodeType":n.nodeType,"nodeProperties":n.nodeProperties});
                         update();
                     }
                 };
@@ -117,7 +117,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                         .attr('marker-end', 'url(#arrowhead)')
                         .on("mouseover", mouseoverEdge)
                         .on("mouseout", function (d) {
-                            scope.nodeDetail = null;
+                            scope.edgeDetail = null;
                             $(".tooltipcustom").css("display", "none");
     
                         });;
@@ -201,7 +201,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                             var arcScale = d3.scale.ordinal()
                                 .domain(siblings)
                                 .rangePoints([-1, siblingCount]);
-                            drx = drx / (1 + (2 / siblingCount) * (arcScale(d.value) - 1));
+                            drx = drx / (1 + (1 / siblingCount) * (arcScale(d.value) - 1));
                             dry = dry / (1 + (1 / siblingCount) * (arcScale(d.value) - 1));
                         }
 

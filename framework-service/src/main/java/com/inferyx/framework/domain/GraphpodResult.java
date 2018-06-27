@@ -25,7 +25,7 @@ public class GraphpodResult {
 	String value;	
 	String edgeName;	
 	String edgeType;
-	String edgePropertes;	
+	String edgeProperties;	
 	
 	
 	public GraphpodResult() {
@@ -34,14 +34,14 @@ public class GraphpodResult {
 	
 	
 	public GraphpodResult(Map<String, String> source, Map<String, String> target, String value, String edgeName,
-			String edgeType, String edgePropertes) {
+			String edgeType, String edgeProperties) {
 		super();
 		this.source = source;
 		this.target = target;
 		this.value = value;
 		this.edgeName = edgeName;
 		this.edgeType = edgeType;
-		this.edgePropertes = edgePropertes;
+		this.edgeProperties = edgeProperties;
 	}
 
 
@@ -65,13 +65,13 @@ public class GraphpodResult {
 	}
 
 
-	public String getEdgeProopertes() {
-		return this.edgePropertes;
+	public String getEdgeProperties() {
+		return this.edgeProperties;
 	}
 
 
-	public void setEdgeProopertes(String edgePropertes) {
-		this.edgePropertes = edgePropertes;
+	public void setEdgeProopertes(String edgeProperties) {
+		this.edgeProperties = edgeProperties;
 	}
 
 
