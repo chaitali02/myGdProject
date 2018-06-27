@@ -100,13 +100,13 @@ public class GraphOperator implements IOperator {
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeNameRefHolder, nodeNameRefHolder, 
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 					execParams.getOtherParams(), execParams));
-			sb.append(" AS node_name, '");
+			sb.append(" AS nodeName, '");
 			/*sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, nodeNameRefHolder, nodeNameRefHolder, 
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 					execParams.getOtherParams()));
 			sb.append(", ");*/
 			sb.append(graphNode.getNodeType());
-			sb.append("' AS node_type, ");
+			sb.append("' AS nodeType, ");
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
 				sb.append("'''");
@@ -125,7 +125,7 @@ public class GraphOperator implements IOperator {
 			}
 			sb.delete(sb.length() - 5, sb.length());
 			sb.append("'}')");
-			sb.append(" AS node_properties ");
+			sb.append(" AS nodeProperties ");
 			sb.append(ConstantsUtil.FROM);
 			Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
 			sb.append(" ").append(getTableName(source, execParams.getOtherParams(), baseExec, runMode)).append(" ").append(source.getName()).append(" ");
@@ -190,9 +190,9 @@ public class GraphOperator implements IOperator {
 					execParams.getOtherParams(), execParams));
 			sb.append(" AS dst, '");
 			sb.append(graphEdge.getEdgeName());
-			sb.append("' AS edge_name, '");
+			sb.append("' AS edgeName, '");
 			sb.append(graphEdge.getEdgeType());
-			sb.append("' AS edge_type, ");
+			sb.append("' AS edgeType, ");
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphEdge.getEdgeProperties()) {
 				sb.append("'''");
@@ -210,7 +210,7 @@ public class GraphOperator implements IOperator {
 			}
 			sb.delete(sb.length() - 5, sb.length());
 			sb.append("'}')");
-			sb.append(" AS edge_properties ");
+			sb.append(" AS edgeProperties ");
 			sb.append(ConstantsUtil.FROM);
 			Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
 			sb.append(" ").append(getTableName(source, execParams.getOtherParams(), baseExec, runMode)).append(" ").append(source.getName()).append(" ");
