@@ -146,7 +146,8 @@
                   placeholder= "select"
                   [style]="{'width':'100%','padding':'3px'}"
                   [filter]="true"
-                  (onChange)="onParamlistChange()">
+                  (onChange)="onParamlistChange()"
+                  [disabled]="mode == 'true'">
                   </p-dropdown>
                 </div>
               </div>
