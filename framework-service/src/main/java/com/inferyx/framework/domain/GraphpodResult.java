@@ -23,17 +23,58 @@ public class GraphpodResult {
 	java.util.Map<String, String> source;
 	java.util.Map<String, String> target;
 	String value;	
+	String edgeName;	
+	String edgeType;
+	String edgeProopertes;	
+	
 	
 	public GraphpodResult() {
 		// TODO Auto-generated constructor stub
 	}
-	public GraphpodResult(Map<String, String> source, Map<String, String> target, String value) {
+	
+	
+	public GraphpodResult(Map<String, String> source, Map<String, String> target, String value, String edgeName,
+			String edgeType, String edgeProopertes) {
 		super();
 		this.source = source;
 		this.target = target;
 		this.value = value;
+		this.edgeName = edgeName;
+		this.edgeType = edgeType;
+		this.edgeProopertes = edgeProopertes;
 	}
-	
+
+
+	public String getEdgeName() {
+		return this.edgeName;
+	}
+
+
+	public void setEdgeName(String edgeName) {
+		this.edgeName = edgeName;
+	}
+
+
+	public String getEdgeType() {
+		return this.edgeType;
+	}
+
+
+	public void setEdgeType(String edgeType) {
+		this.edgeType = edgeType;
+	}
+
+
+	public String getEdgeProopertes() {
+		return this.edgeProopertes;
+	}
+
+
+	public void setEdgeProopertes(String edgeProopertes) {
+		this.edgeProopertes = edgeProopertes;
+	}
+
+
 	public java.util.Map<String, String> getSource() {
 		return this.source;
 	}

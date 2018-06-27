@@ -114,12 +114,16 @@ public class GraphOperator implements IOperator {
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams()));
 				sb.append("'':', ");
+				
 				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams(), execParams));
 //				sb.append(" AS ");
+				
 				sb.append(", ");
+				sb.append("',' ");
 			}
+			sb.delete(sb.length() - 5, sb.length());
 			sb.append("'}')");
 			sb.append(" AS node_properties ");
 			sb.append(ConstantsUtil.FROM);
@@ -200,8 +204,11 @@ public class GraphOperator implements IOperator {
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams(), execParams));
 //				sb.append(" AS ");
+				
 				sb.append(", ");
+				sb.append("',' ");
 			}
+			sb.delete(sb.length() - 5, sb.length());
 			sb.append("'}')");
 			sb.append(" AS edge_properties ");
 			sb.append(ConstantsUtil.FROM);
