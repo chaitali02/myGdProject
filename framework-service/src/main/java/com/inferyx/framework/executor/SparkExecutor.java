@@ -39,12 +39,21 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
+import org.apache.spark.ml.clustering.KMeans;
+import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
+import org.apache.spark.ml.evaluation.Evaluator;
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
+import org.apache.spark.ml.evaluation.RegressionEvaluator;
+import org.apache.spark.ml.feature.HashingTF;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.ml.tuning.CrossValidator;
+import org.apache.spark.ml.tuning.CrossValidatorModel;
+import org.apache.spark.ml.tuning.ParamGridBuilder;
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
@@ -1677,8 +1686,8 @@ public class SparkExecutor implements IExecutor {
 				| NoSuchMethodException
 				| InvocationTargetException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		} 
-		return trngModel; 
 	}
 
 	@Override
@@ -1687,7 +1696,12 @@ public class SparkExecutor implements IExecutor {
 		String sql = "SELECT * FROM " + trainedDSName;
 		Dataset<Row> trainedDataSet = executeSql(sql, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
-		PMML pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)trngModel);
+		PMML pmml = null;
+		if(trngModel instanceof CrossValidatorModel)
+			pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)((CrossValidatorModel)trngModel).bestModel());
+		else if(trngModel instanceof PipelineModel)
+			pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)trngModel);
+		
 		MetroJAXBUtil.marshalPMML(pmml, new FileOutputStream(new File(pmmlLocation), true));					
 		return true;
 	}
@@ -1784,11 +1798,15 @@ public class SparkExecutor implements IExecutor {
 	@Override
 	public List<String> getCustomDirsFromTrainedModel(Object trngModel){
 		List<String> customDirectories = new ArrayList<>();
+		PipelineModel pipelineModel = null;
 		if(trngModel instanceof PipelineModel) {
-			Transformer[] transformers = ((PipelineModel)trngModel).stages();
-			for (int i = 0; i < transformers.length; i++) {
-				customDirectories.add(i + "_" + transformers[i].uid());
-			}
+			pipelineModel = (PipelineModel)trngModel;
+		} else if(trngModel instanceof CrossValidatorModel) {
+			pipelineModel = (PipelineModel)((CrossValidatorModel)trngModel).bestModel();
+		}
+		Transformer[] transformers = pipelineModel.stages();
+		for (int i = 0; i < transformers.length; i++) {
+			customDirectories.add(i + "_" + transformers[i].uid());
 		}
 		return customDirectories;
 	}
@@ -1945,5 +1963,79 @@ public class SparkExecutor implements IExecutor {
 	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	//@Override
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
+		String assembledDFSQL = "SELECT * FROM " + tableName;
+		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		df.printSchema();
+		try {
+			Dataset<Row>[] splits = df
+					.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
+			Dataset<Row> trngDf = splits[0];
+			Dataset<Row> valDf = splits[1];
+			Dataset<Row> trainingDf = null;
+			Dataset<Row> validateDf = null;
+			
+			VectorAssembler vectorAssembler = new VectorAssembler();
+			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
+			if (trainName.contains("LinearRegression")
+					|| trainName.contains("LogisticRegression")) {
+				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+			} else {
+				trainingDf = trngDf;
+				validateDf = valDf;
+			}
+
+			Dataset<Row> trainedDataSet = null;
+			
+			Class<?> dynamicClass = Class.forName(trainName);
+			Object obj = dynamicClass.newInstance();
+			Method method = null;
+			if (trainName.contains("LinearRegression")
+					|| trainName.contains("LogisticRegression")) {
+				method = dynamicClass.getMethod("setLabelCol", String.class);
+				method.invoke(obj, "label");
+			}
+
+			method = dynamicClass.getMethod("setFeaturesCol", String.class);
+			method.invoke(obj, "features");
+			Pipeline pipeline = new Pipeline()
+					.setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
+		
+			CrossValidator cv = new CrossValidator()
+					.setEstimator(pipeline)
+					.setEvaluator(getEvaluatorByTrainClass(trainName))
+					.setEstimatorParamMaps(new ParamMap[] {vectorAssembler.extractParamMap()})
+					.setNumFolds(3);
+			
+			CrossValidatorModel cvModel = cv.fit(trainingDf);
+			trainedDataSet = cvModel.transform(validateDf);			
+			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
+			trainedDataSet.show(false);
+			return cvModel;
+		} catch (ClassNotFoundException
+				| IllegalAccessException 
+				| IllegalArgumentException 
+				| InstantiationException 
+				| SecurityException
+				| NoSuchMethodException
+				| InvocationTargetException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} 
+	}
+	
+	public Evaluator getEvaluatorByTrainClass(String trainName) {
+		if(trainName.contains("Regression") || trainName.contains("Regressor")) {
+			return new RegressionEvaluator();
+		} else if(trainName.contains("Classification") || trainName.contains("Classifier")) {
+			return new BinaryClassificationEvaluator() ;
+		} else if(trainName.contains("")) {
+			return new  MulticlassClassificationEvaluator();
+		}
+		return null;		
 	}
 }
