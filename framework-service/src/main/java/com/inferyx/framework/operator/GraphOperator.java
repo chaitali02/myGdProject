@@ -106,7 +106,9 @@ public class GraphOperator implements IOperator {
 					execParams.getOtherParams()));
 			sb.append(", ");*/
 			sb.append(graphNode.getNodeType());
-			sb.append("' AS nodeType, ");
+			sb.append("' AS nodeType, '");
+			sb.append(graphNode.getNodeIcon());
+			sb.append("' AS nodeIcon, ");
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
 				sb.append("'''");

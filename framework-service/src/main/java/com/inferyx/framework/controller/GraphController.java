@@ -121,8 +121,9 @@ public class GraphController {
 			@RequestParam("version") String version,@RequestParam(value = "degree", required = false) String degree,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value = "filterId", required = false) String filterId) throws Exception{
-		return graphServiceImpl.getGraphResults(uuid,version,degree, filterId);
+			@RequestParam(value = "filterId", required = false) String filterId,
+			@RequestParam(value = "nodeType", required = false) String nodeType) throws Exception{
+		return graphServiceImpl.getGraphResults(uuid,version,degree, filterId,nodeType);
 		
 	}
   

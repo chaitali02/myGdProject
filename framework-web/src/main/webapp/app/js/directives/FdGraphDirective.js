@@ -1,5 +1,5 @@
 var InferyxApp = angular.module("InferyxApp");
-InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,GraphpodService,dagMetaDataService) {
+InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,GraphpodService,dagMetaDataService,CF_META_TYPES) {
     return {
         scope: {
             uuid: "=",
@@ -7,15 +7,39 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
         },
         link: function (scope, element, attrs) {
             var data;
+            scope.noRecordFound=false;
+            scope.isGraphInProgess=false;
+            scope.getGraphpodObj=function(){
+                CommonService.getOneByUuidAndVersion(scope.uuid,scope.version,CF_META_TYPES.graphexec).then(function(response){onSuccessGetByOneUuidAndVersion(response.data)});
+                function onSuccessGetByOneUuidAndVersion(response){
+                    CommonService.getOneByUuidAndVersion(response.dependsOn.ref.uuid,response.dependsOn.ref.version,CF_META_TYPES.graphpod).then(function(response){onSuccessGetByOneUuidAndVersion(response.data)});
+                    function onSuccessGetByOneUuidAndVersion(response){
+                        scope.graphpodData=response;
+                    }
+                }
+            }
+            scope.getGraphpodObj();
             scope.search=function(){
                 scope.isGraphShow=false;
                 scope.isGraphInProgess=true;
-                GraphpodService.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,"2","graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)});
+                scope.noRecordFound=false;
+                scope.isError=false;
+                GraphpodService.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"2","graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
-                    scope.isGraphShow=true;
-                    scope.isGraphInProgess=false;    
-                    data=response;
+                    scope.isGraphInProgess=false;
+                    if(response.edges.length >0){    
+                        data=response;
+                        scope.isGraphShow=true;
+                    }
+                    else{
+                        scope.noRecordFound=true;
+                    }
                     drawGraph();
+                }
+                var onError=function(response){
+                    scope.isGraphInProgess=false;
+                    scope.isError=true;
+
                 }
             }
 
@@ -28,7 +52,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                 };
 
                 this.addLink = function (d) {
-                    links.push({ "source": findNode(d.source.id), "target": findNode(d.target.id), "value": d.value,"edgeName":d.edgeName,"edgeType":d.edgeType,"nodeProperties":d.nodeProperties});
+                    links.push({ "source": findNode(d.source.id), "target": findNode(d.target.id), "value": d.value,"edgeName":d.edgeName,"edgeType":d.edgeType,"edgeProperties":d.edgeProperties});
                     update();
                 };
 
@@ -67,9 +91,9 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                 };
 
                 var w = window.innerWidth - 20,
-                    h =800,
+                    h =600,
                     middle = w / 2;
-                var linkDistance = 450;
+                var linkDistance = 300;
 
                 var colors = d3.scale.category20();
                 d3.select("#fDGraph").select("svg").remove();
@@ -97,7 +121,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                     })
                     .append('svg:path')
                     .attr('d', 'M0,-5L10,0L0,5')
-                    .attr('fill', '#ccc');
+                    .attr('fill', '#ccc')
+                    .attr("marker-end", "url(#end)");
 
                 var force = d3.layout.force();
 
@@ -115,7 +140,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                         })
                         .attr("class", "link")
                         .attr('marker-end', 'url(#arrowhead)')
-                        .on("mouseover", mouseoverEdge)
+                        .on("click", onClickEdge)
+                        // .on("mouseover", onClickEdge)
                         .on("mouseout", function (d) {
                             scope.edgeDetail = null;
                             $(".tooltipcustom").css("display", "none");
@@ -145,7 +171,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                         .attr("xlink:href", function (d) { return "#invis_" + d.source.id + "-" + d.value + "-" + d.target.id; })
                         .style("fill", "#cccccc")
                         .style("font-size", 10)
-                        .text(function (d) { return d.value; });
+                        .text(function (d) { return d.value; })  
+                         .on("click", onClickEdge);
 
                     var node = svg.selectAll("g.node1")
                         .data(force.nodes());
@@ -153,7 +180,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                     var nodeEnter = node.enter().append("g")
                         .attr("class", "node1")
                         .call(force.drag)
-                        .on("mouseover", mouseoverNode)
+                        .on("click", onClickNode)
+                        // .on("mouseover", mouseoverNode)
                         .on("mouseout", function (d) {
                             scope.nodeDetail = null;
                             $(".tooltipcustom").css("display", "none");
@@ -194,7 +222,9 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                             largeArc = 0;
 
                         if (siblingCount > 1) {
-                           
+                             if(siblingCount >4){
+                                largeArc=1;
+                             }
                            
                             var siblings = getSiblingLinks(d.source, d.target);
                            // console.log(siblings);
@@ -283,7 +313,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                 var e = d3.event;
                 scope.nodeDetail = d;
                 scope.nodeDetail.caption="Node Detail"
-                $("#colorID").css("background-color","#0bb7ed");
+             //   $("#colorID").css("background-color","#0bb7ed");
                 var xPercent = e.clientX / $(window).width() * 100;
                 var left;
                 var top;
@@ -299,28 +329,80 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                 $(".tooltipcustom").css("top", top);
                 $(".tooltipcustom").css("display", "block");
             }
+            function onClickNode(d){
+                console.log(d);
+                scope.nodeDetailModel=null;
+                var nodeProperties=[];
+                scope.nodeDetailModel=d;
+                var temp=d;
+                if( typeof temp.nodeProperties=== 'string' ) {
+                    temp=temp.nodeProperties.replace('{', ' ');
+                    temp=temp.replace('}', ' ');
+                    var tempNPS=temp.split(",");
+                    for(var i=0;i<tempNPS.length;i++){
+                        var temp=tempNPS[i].split(":");
+                        var npObj={}
+                        npObj.name=temp[0];
+                        npObj.value=temp[1];
+                        nodeProperties[i]=npObj;
+                    }
+                    scope.nodeDetailModel.nodeProperties=nodeProperties;
+                }
+                
+                $('#nodeDetail').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });	
+
+            }
+
             function mouseoverEdge(d){
-                console.log(d)
-                var e = d3.event;
-                scope.edgeDetail = d;
-                scope.edgeDetail.caption="Edge Detail"
-                $("#colorID").css("background-color","#0bb7ed");
-                var xPercent = e.clientX / $(window).width() * 100;
-                var left;
-                var top;
-                if (parseInt(xPercent) > 50) {
-                    left = (e.clientX - 400) + "px";
-                    top = e.clientY + "px";
-                }
-                else {
-                    left = (e.clientX + 40) + "px";
-                    top = e.clientY + "px";
-                }
-                $(".tooltipcustom").css("left", left);
-                $(".tooltipcustom").css("top", top);
-                $(".tooltipcustom").css("display", "block");
+             // console.log(d)
+            //     var e = d3.event;
+            //     scope.edgeDetail = d;
+            //     scope.edgeDetail.caption="Edge Detail"
+            //    // $("#colorID").css("background-color","#0bb7ed");
+            //     var xPercent = e.clientX / $(window).width() * 100;
+            //     var left;
+            //     var top;
+            //     if (parseInt(xPercent) > 50) {
+            //         left = (e.clientX - 400) + "px";
+            //         top = e.clientY + "px";
+            //     }
+            //     else {
+            //         left = (e.clientX + 40) + "px";
+            //         top = e.clientY + "px";
+            //     }
+            //     $(".tooltipcustom").css("left", left);
+            //     $(".tooltipcustom").css("top", top);
+            //     $(".tooltipcustom").css("display", "block");
             }
-            
+            function onClickEdge(d){
+                console.log(d);
+                scope.edgeDetailModel=null;
+                var edgeProperties=[];
+                scope.edgeDetailModel=d;
+                var temp=d;
+                if( typeof temp.edgeProperties=== 'string' ) {
+                    temp=temp.edgeProperties.replace('{', ' ');
+                    temp=temp.replace('}', ' ');
+                    var tempEP=temp.split(",");
+                    for(var i=0;i<tempEP.length;i++){
+                        var temp=tempEP[i].split(":");
+                        var epObj={}
+                        epObj.name=temp[0];
+                        epObj.value=temp[1];
+                        edgeProperties[i]=epObj;
+                    }
+                    scope.edgeDetailModel.edgeProperties=edgeProperties;
+                }
+                
+                $('#edgeDetail').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });	
+
+            }
         },
         
         templateUrl: 'views/fd-template.html',

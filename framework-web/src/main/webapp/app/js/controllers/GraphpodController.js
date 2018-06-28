@@ -491,4 +491,6 @@ GraphAnalysisModule.controller('GraphpodResultController',function($state,$state
 		$scope.graphExecDetail={};
 		$scope.graphExecDetail.uuid=$stateParams.id;
 		$scope.graphExecDetail.version=$stateParams.version;
+	
+
 	});

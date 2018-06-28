@@ -1546,7 +1546,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, List<GraphpodResult>> getGraphResults (String uuid, String version, String degree, String filterId) throws Exception {
+	public Map<String, List<GraphpodResult>> getGraphResults (String uuid, String version, String degree, String filterId,String nodeType) throws Exception {
 		GraphExec graphExec=(GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphExec.toString());
 		Graphpod graphpod=(Graphpod) commonServiceImpl.getOneByUuidAndVersion(graphExec.getDependsOn().getRef().getUuid(), graphExec.getDependsOn().getRef().getVersion(), MetaType.graphpod.toString());
 		String graphExecKey = null;
@@ -1573,35 +1573,28 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		}
 		// Get the graphFrame and parse
 		GraphFrame graphFrame = (GraphFrame) graphpodMap.get(graphExecKey);
+		graphFrame.edges().show(false);
+		graphFrame.vertices().show(false);
 		Dataset<Row> edge_dataset = graphFrame.edges().filter("src = '"+filterId+"'").select("src", "dst", "edgeName", "edgeType", "edgeProperties");
-		Dataset<Row> node_dataset = graphFrame.vertices().filter("id = '"+filterId+"'").select("id", "nodeName", "nodeType", "nodeProperties");
+		edge_dataset.show(false);
+		Dataset<Row> node_dataset = graphFrame.vertices().filter("id = '"+filterId+"'").filter("nodeType = '"+nodeType+"'").select("id", "nodeName", "nodeType", "nodeIcon", "nodeProperties");
+		node_dataset.show(false);
 		Dataset<Row> result_datset = edge_dataset.join(node_dataset, edge_dataset.col("src").equalTo(node_dataset.col("id")));
+		result_datset.show(false);
 		logger.info("Showing filtered graph >>>>>>>>>>>>>>>>> ");
 		result_datset.show();
+		
 		// Process and get the desired results
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-		
 		List<GraphpodResult> result = new ArrayList<>();
 		Row[] rows = (Row[]) result_datset.head(Integer.parseInt("" + result_datset.count()));
 		String[] resultDatesetColumns = result_datset.columns();
 		String[] resultDatasetValue = new String[resultDatesetColumns.length];
 
 		for (Row row : rows) {
-
 			Map<String, String> source = new HashMap<>();
 			Map<String, String> target = new HashMap<>();
 			int count = 0;
 			for (String edgecloumn : resultDatesetColumns) {
-
 				String value1 = row.getAs(edgecloumn).toString();
 				resultDatasetValue[count] = value1;
 				count++;
@@ -1616,9 +1609,11 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			String edge_properties = row.getAs(resultDatesetColumns[4]);
 			
 			   
-			 
-			String relation = edge_properties.substring(edge_properties.indexOf(':'),
-						edge_properties.indexOf(','));
+			String relation = null;
+			if(edge_properties.contains(","))
+				relation = edge_properties.substring(edge_properties.indexOf(':'), edge_properties.indexOf(','));
+				else
+					relation = edge_properties;
 
 				
 			Dataset<Row> srcVertexDf = graphFrame.vertices().filter("id = '" + resultDatasetValue[0] + "'");
@@ -1630,11 +1625,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 					if(cloumn.equalsIgnoreCase("nodeName")){
 				    String value1 = srcrow.getAs(cloumn).toString();
 				    source.put("label", value1);
-					}
-					
+					}					
 					String value1 = srcrow.getAs(cloumn).toString();
 					source.put(cloumn, value1);
-
 				}
 			}
 

@@ -1701,7 +1701,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       color : '#EB54C3',
       parentIconCaption:'',
       allowInMenu : false,
-      listState : '',
+      listState : 'graphpodresultlist',
       detailState :'',
       resultState:'graphpodresult',
       childMenu:[],

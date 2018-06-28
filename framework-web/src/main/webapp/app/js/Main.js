@@ -2971,7 +2971,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             params: { type: 'graphpod'}
         })
         .state('graphpodresultlist', {
-            url: "/GraphAnalysis/GraphpodList",
+            url: "/GraphAnalysis/GraphpodResultList",
             templateUrl: "views/common-list.html",
             data: { pageTitle: 'Graph Analysis' },
             params: { type: 'graphexec', isExec: true }
@@ -2980,7 +2980,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('creaetgraphpod', {
             url: "/GraphAnalysis/Graphpod?id&mode&returnBack&version",
             templateUrl: "views/graphpod.html",
-            data: { pageTitle: 'Graph Analysis' },
+            data: { pageTitle: 'Graph Analysis9-' },
             //controller: "BlankController",
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {

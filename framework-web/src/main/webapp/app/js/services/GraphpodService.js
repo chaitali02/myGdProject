@@ -62,10 +62,10 @@ GraphAnalysisModule.factory('GraphpodFactory', function ($http, $location) {
       method: "GET"
     }).then(function (response) { return response })
   }
-  factory.findGraphPodResults = function (uuid,version,filterId,degree,type) {
+  factory.findGraphPodResults = function (uuid,version,filterId,nodeType,degree,type) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "graph/getGraphPodResults?action=view&uuid="+uuid+"&version="+version+"&filterId="+filterId+"&degree="+degree+"&type="+type,
+      url: url + "graph/getGraphPodResults?action=view&uuid="+uuid+"&version="+version+"&filterId="+filterId+"&nodeType="+nodeType+"&degree="+degree+"&type="+type,
       method: "GET"
     }).then(function (response) { return response })
   }
@@ -74,13 +74,18 @@ GraphAnalysisModule.factory('GraphpodFactory', function ($http, $location) {
 })
 
 GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,$q,CF_GRAPHPOD) {
-  this.getGraphPodResults = function (uuid,version,filterId,degree,type) {
+  this.getGraphPodResults = function (uuid,version,filterId,nodeType,degree,type) {
     var deferred = $q.defer();
-    GraphpodFactory.findGraphPodResults(uuid,version,filterId,degree,type).then(function (response) { onSuccess(response.data) });
+    GraphpodFactory.findGraphPodResults(uuid,version,filterId,nodeType,degree,type).then(function (response) { onSuccess(response.data)},function(response){onError(response)});
     var onSuccess = function (response) {
       deferred.resolve({
         data: response
       });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

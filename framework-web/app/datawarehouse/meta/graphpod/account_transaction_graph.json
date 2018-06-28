@@ -1,60 +1,89 @@
 {
-    "_id" : ObjectId("5b30179d2942fc270d5c6887"),
-    "uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
-    "name" : "account_transaction_graph",
-    "version" : "1465454441",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-    "createdOn" : ISODate("2017-11-07T10:24:13.443Z"),
+    
     "nodeInfo" : [ 
-        {   "nodeIcon" : "bank",
-      	    "nodeType" : "Account",
+        {
             "nodeId" : {
-                "attrId" : 12,
-                "attrName" : "account_number",
+                "attrId" : "12",
                 "ref" : {
-                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-                    "version" : "1488620292",
-                    "type" : "datapod"
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                 }
             },
+            "nodeType" : "account",
+            "nodeIcon" : "bank",
             "nodeName" : {
-                "attrId" : 12,
-                "attrName" : "account_number",
+                "attrId" : "12",
                 "ref" : {
-                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-                    "version" : "1488620292",
-                    "type" : "datapod"
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                 }
             },
             "nodeSource" : {
                 "ref" : {
-                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-                    "version" : "1488620292",
-                    "type" : "datapod"
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                 }
             },
             "nodeProperties" : [ 
                 {
-                    "attrId" : 13,
-                    "attrName" : "opening_balance",
+                    "attrId" : "13",
                     "ref" : {
-                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-                        "version" : "1488620292",
-                        "type" : "datapod"
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                     }
                 }, 
                 {
-                    "attrId" : 14,
-                    "attrName" : "closing_balance",
+                    "attrId" : "14",
                     "ref" : {
-                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-                        "version" : "1488620292",
-                        "type" : "datapod"
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }
+            ]
+        }, 
+        {
+            "nodeId" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeType" : "customer",
+            "nodeIcon" : "male",
+            "nodeName" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
                     }
                 }
             ]
@@ -62,71 +91,122 @@
     ],
     "edgeInfo" : [ 
         {
-        
-            "edgeName" : "transactionId",
+            "edgeId" : "0",
             "edgeType" : "tran",
-            "sourceNodeId" : {
-                "attrId" : 4,
-                "attrName" : "from_account",
-                "ref" : {
-                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
-                    "version" : "1489302788",
-                    "type" : "datapod"
-                }
-            },
-            "targetNodeId" : {
-                "attrId" : 5,
-                "attrName" : "to_account",
-                "ref" : {
-                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
-                    "version" : "1489302788",
-                    "type" : "datapod"
-                }
-            },
+            "edgeName" : "transactionId",
             "edgeSource" : {
                 "ref" : {
-                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
-                    "version" : "1489302788",
-                    "type" : "datapod"
+                    "type" : "datapod",
+                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
                 }
             },
             "edgeProperties" : [ 
                 {
-                    "attrId" : 0,
-                    "attrName" : "transaction_id",
+                    "attrId" : "0",
                     "ref" : {
-                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
-                        "version" : "1489302788",
-                        "type" : "datapod"
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
                     }
                 }, 
                 {
-                    "attrId" : 2,
-                    "attrName" : "account_id",
+                    "attrId" : "2",
                     "ref" : {
-                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
-                        "version" : "1489302788",
-                        "type" : "datapod"
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
                     }
                 }
-            ]
+            ],
+            "sourceNodeId" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                }
+            },
+            "sourceNodeType" : "account",
+            "targetNodeId" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                }
+            },
+            "targetNodeType" : "account"
+        }, 
+        {
+            "edgeId" : "1",
+            "edgeType" : "account",
+            "edgeName" : "account",
+            "edgeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "edgeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "14",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }
+            ],
+            "sourceNodeId" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "sourceNodeType" : "customer",
+            "targetNodeId" : {
+                "attrId" : "12",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "targetNodeType" : "account"
         }
     ],
+    "uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
+    "version" : "1530195018",
+    "name" : "account_transaction_graph",
+    "desc" : "account_transaction_graph",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196"
+          
+        }
+    },
+    "createdOn" : ISODate("2018-06-28T14:10:18.000Z"),
+    "tags" : [],
     "active" : "Y",
+    "published" : "N",
     "appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
             }
         }
-    ],
-    "desc" : "account_transaction_graph",
-    "menu" : ""
+    ]
 }
