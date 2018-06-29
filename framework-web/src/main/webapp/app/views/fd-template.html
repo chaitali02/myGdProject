@@ -3,6 +3,7 @@
         display: block;
     }
 </style>
+ <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
 <div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
     <div class="col-md-1" style="height:100px">
         <a ng-click="changeSliderForward()">
@@ -43,14 +44,14 @@
     </div>
     <div class="clearfix"></div>
     <div class="col-md-12">
-        <div class="form-body centercontent" ng-if="isError" style="color:red;">Some Error Accrued</div>
+        <div class="form-body centercontent" ng-if="isError" style="color:red;">Some Error Occurred</div>
         <div class="form-body centercontent" ng-if="noRecordFound" style="color:white;">No Record Found</div>
         <div class="spinner centercontent" style="min-height:300px;" ng-show="isGraphInProgess">
             <div class="bounce1"></div>
             <div class="bounce2"></div>
             <div class="bounce3"></div>
         </div>
-        <div id="fDGraph" style="height:500px;" ng-show="isGraphShow"></div>
+        <div id="fDGraph" style="height:500px;" ng-show="isGraphShow" style="resize:both;overflow:auto;"></div>
     </div>
 </div>
 

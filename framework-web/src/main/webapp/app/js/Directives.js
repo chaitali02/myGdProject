@@ -1174,13 +1174,16 @@ InferyxApp.directive('searchCriteria', function (cacheService, CommonService, $f
           });
         }
       }//End If 
-      else {
-        if ($scope.moduleType != 'vizexec' && $scope.moduleType != 'downloadexec' && $scope.moduleType != 'uploadexec') {
+      else{
+        if ($scope.moduleType != 'vizexec' && $scope.moduleType != 'downloadexec' && $scope.moduleType != 'uploadexec' && $scope.moduleType != 'graphexec' ) {
           $scope.temp = $scope.moduleType.split('exec')[0];
           $scope.searchForm.newType = $scope.temp;
         }
         else if ($scope.moduleType == 'downloadexec' || $scope.moduleType == 'uploadexec') {
           $scope.searchForm.newType = $scope.moduleType;
+        }
+        else if($scope.moduleType == 'graphexec'){
+          $scope.searchForm.newType='graphpod'
         }
         else {
           $scope.searchForm.newType = "vizpod"
