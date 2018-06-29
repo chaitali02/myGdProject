@@ -50,7 +50,7 @@
                 }
             },
             "nodeType" : "customer",
-            "nodeIcon" : "male",
+            "nodeIcon" : "user",
             "nodeName" : {
                 "attrId" : "4",
                 "ref" : {
