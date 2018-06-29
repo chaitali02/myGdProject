@@ -1634,7 +1634,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			Dataset<Row> dstVertexDf = graphFrame.vertices().filter("id = '" + resultDatasetValue[1] + "'");
 
 			Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
-			if(dstrows.toString().isEmpty()) {
+			if(!dstrows.toString().isEmpty()) {
 			for (Row dstrow : dstrows) {
 				for (String cloumn : vertexColumns) {
 					if(cloumn.equalsIgnoreCase("nodeName")){
