@@ -328,3 +328,138 @@
     </div>
   </div>
 </div>
+
+
+<div class="col-md-6 col-sm-6 col-xs-12">
+  <p-dialog header="Execution" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="900" [minWidth]="600"
+    [resizable]="true" [baseZIndex]="1000">
+
+    <div class="caption">
+      <span class="caption-subject sbold ">Run Params</span>
+    </div>
+    <div class="form-body" style="padding-top:10px;">
+      <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="executeWithExecParamList()" #myNewForm="ngForm">
+
+        <table class=" row-border hover table  table-striped table-bordered">
+          <!-- <table class=" row-border table table-striped table-bordered" style="height:200px;" cellspacing="20" cellpadding="20"> -->
+          <thead>
+            <tr>
+              <th style="width:7%;">ID</th>
+              <th style="width:15%;">Param Name</th>
+              <th style="width:15%;">Param Type</th>
+              <th style="width:15%;">Type</th>
+              <th style="width:23%;">Param Value</th>
+              <th style="width:25%;">Param Attributes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of paramListHolder;let i=index">
+              <td>
+                <span class="form-group">
+                  <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">
+                </span>
+              </td>
+              <td>
+                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                  <input type="text" class="form-control" [(ngModel)]="data.paramName" name="paramName+{{i}}" title="{{data.paramName}}" [disabled]="true">
+                </span>
+              </td>
+              <td>
+                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                  <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}" [disabled]="true">
+                </span>
+              </td>
+              <td>
+                <div *ngIf="['simple','distribution','list'].indexOf(data.selectedParamValueType)  !=-1">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}" [disabled]="true">
+                  </span>
+                </div>
+                <div *ngIf="['attribute','attributes','datapod','rule','dataset'].indexOf(data.selectedParamValueType) !=-1">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <p-dropdown [options]="attributeTypes" [(ngModel)]="data.selectedParamValueType" name="selectedParamValueType+{{i}}" [style]="{'width':'150px','padding':'3px'}"
+                      [filter]="true" placeholder="Select">
+                    </p-dropdown>
+                  </span>
+                </div>
+              </td>
+
+              <td>
+                <div *ngIf="data.selectedParamValueType =='simple'">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <input type="text" class="form-control" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" title="{{data.paramValue}}"
+                      [disabled]="mode == 'true'">
+                  </span>
+                </div>
+                <div *ngIf="data.selectedParamValueType =='list'">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <p-dropdown [options]="data.allListInfo" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
+                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select">
+                    </p-dropdown>
+                  </span>
+                </div>
+                <div *ngIf="data.selectedParamValueType =='datapod'">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <p-dropdown [options]="data.allDatapod" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
+                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select" (click)="getAllLatestSimulation('datapod',i)">
+                    </p-dropdown>
+                  </span>
+                </div>
+                <div *ngIf="data.selectedParamValueType =='dataset'">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <p-dropdown [options]="data.allDataset" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
+                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select" (click)="getAllLatestSimulation('dataset',i)">
+                    </p-dropdown>
+                  </span>
+                </div>
+                <div *ngIf="data.selectedParamValueType =='rule'">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <p-dropdown [options]="data.allRule" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}"
+                      [filter]="true" placeholder="Select" (click)="getAllLatestSimulation('rule',i)">
+                    </p-dropdown>
+                  </span>
+                </div>
+                <div *ngIf="data.selectedParamValueType =='distribution'">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <p-dropdown [options]="data.allDistribution" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
+                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select" (click)="getAllLatestSimulation('distribution',i)">
+                    </p-dropdown>
+                  </span>
+                </div>
+                <div *ngIf="['datapod','rule','dataset','distribution','simple','list'].indexOf(data.selectedParamValueType) ==-1">{{"NA"}}
+                </div>
+              </td>
+
+              <td>
+                <div *ngIf="data.paramType=='attribute'">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <p-dropdown [options]="data.allAttributeinto" [(ngModel)]="data.attributeInfo" name="attributeInfo+{{i}}" [disabled]="mode == 'true'"
+                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select" (click)="getAllAttribute(i)">
+                    </p-dropdown>
+                  </span>
+                </div>
+                <div *ngIf="data.paramType=='attributes'">
+                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                    <p-multiSelect [options]="data.allattributeInfoTag" [(ngModel)]="data.attributeInfoTag" name="attributeInfoTag+{{i}}" [style]="{'width':'150px'}"
+                      (click)="onChangeAtrributes(i)">
+                    </p-multiSelect>
+                  </span>
+                </div>
+                <div *ngIf="['attribute','attributes'].indexOf(data.paramType) == -1">{{"NA"}}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p-footer>
+          <div class="form-group" style="padding-top: 10px;">
+            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+              <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
+              <input type="submit" class="btn btn-success" value="Submit" name="submit">
+            </div>
+          </div>
+        </p-footer>
+      </form>
+    </div>
+  </p-dialog>
+</div>

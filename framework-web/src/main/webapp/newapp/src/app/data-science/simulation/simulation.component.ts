@@ -7,6 +7,7 @@ import { AppConfig } from '../../app.config';
 
 import { CommonService } from '../../metadata/services/common.service';
 import { SimulationService } from '../../metadata/services/simulation.service';
+import { CommonListService } from '../../common-list/common-list.service';
 
 import { Version } from '../../metadata/domain/version';
 import { DependsOn } from '../dependsOn';
@@ -22,6 +23,13 @@ import { sourceUrl } from '@angular/compiler';
   templateUrl: './simulation.template.html',
 })
 export class SimulationComponent implements OnInit {
+
+  attributeInfoTag: any[];
+  allAttributeinto: any;
+  allDistribution: any[];
+  allRule: any[];
+  allDataset: any[];
+  allDatapod: any;
   msgs: any[];
   checkboxModelexecution: boolean;
   isTargetNameDisabled: boolean;
@@ -63,8 +71,12 @@ export class SimulationComponent implements OnInit {
   distribution: any;
   selectDistributionList: DependsOn;
   numIterations: any;
+  displayDialogBox: boolean = false;
+  paramListHolder: any;
+  attributeTypes: any;
+  paramListHolderArray: any[];
 
-  constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _simulateService: SimulationService) {
+  constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _simulateService: SimulationService, private _commonListService: CommonListService) {
     this.simulation = {};
     this.simulation["active"] = true;
     this.featureMapTableArray = [];
@@ -77,7 +89,12 @@ export class SimulationComponent implements OnInit {
     // this.sourceTypes = ["datapod", "dataset", "rule"]
     //this.selectSourceType = this.sourceTypes[0];
     this.targetTypes = ["datapod", "file"];
+    this.attributeTypes = [{ 'label': 'datapod', 'value': 'datapod' },
+    { 'label': 'dataset', 'value': 'dataset' },
+    { 'label': 'rule', 'value': 'rule' }];
+
     this.selectTargetType = this.targetTypes[0];
+    this.checkboxModelexecution = false;
     this.breadcrumbDataFrom = [{
       "caption": "Data Science",
       "routeurl": "/app/list/simulate"
@@ -95,7 +112,6 @@ export class SimulationComponent implements OnInit {
     this.simulationtypesOption = [
       { "value": "DEFAULT", "label": "DEFAULT" },
       { "value": "MONTECARLO", "label": "MONTECARLO" }
-
     ]
   }
 
@@ -111,11 +127,8 @@ export class SimulationComponent implements OnInit {
         this.getAllLatestParamlist();
         this.getAllLatestDistribution();
         //this.onChangeModel()
-
-
       }
       else {
-
         this.getAllLatestModel()
         this.getAllLatestParamlist()
         this.getAllLatestDistribution()
@@ -124,8 +137,120 @@ export class SimulationComponent implements OnInit {
         //this.getAttribute()
         //  this.onChangeModel()
       }
-
+      //this.getAllLatest();
     })
+  }
+
+  onChangeAtrributes(index) {
+    this._commonService.getAllAttributeBySource(this.paramListHolder[index].paramValue.uuid, "datapod").subscribe(
+      response => { this.onSuccessgetAttributesByDatapod(response, index) },
+      error => console.log("Error :: " + error));
+  }
+
+  onSuccessgetAttributesByDatapod(response, index) {
+    let allAttributeinto = [];
+    for (const i in response) {
+      let attributeInfoTagObj = {};
+      attributeInfoTagObj["label"] = response[i].name;
+      attributeInfoTagObj["value"] = {};
+      attributeInfoTagObj["value"]["label"] = response[i].name;
+      attributeInfoTagObj["value"]["uuid"] = response[i].uuid;
+      attributeInfoTagObj["value"]["datapodname"] = response[i].datapodname;
+      attributeInfoTagObj["value"]["attributeId"] = response[i].attributeId;
+      allAttributeinto[i] = attributeInfoTagObj;
+      //make same arrays of attribute n attributes or make array name differnet
+    }
+    this.paramListHolder[index]["allattributeInfoTag"] = allAttributeinto;
+    console.log(JSON.stringify(this.paramListHolder[index]["allattributeInfoTag"]));
+
+  }
+
+  getAllAttribute(index) {
+    if (this.paramListHolder[index].paramValue !== null || this.paramListHolder[index].paramType == "attribute") {
+
+      this._commonService.getAllAttributeBySource(this.paramListHolder[index].paramValue.uuid, "datapod").subscribe(
+        response => { this.onSuccessgetAllAttributeBySource(response, index) },
+        error => console.log("Error :: " + error));
+    }
+  }
+
+  onSuccessgetAllAttributeBySource(response, index) {
+    let allAttributeinto1 = [];
+    for (const i in response) {
+      let allAttributeintoObj = {};
+      allAttributeintoObj["label"] = response[i].dname;
+      allAttributeintoObj["value"] = {};
+      allAttributeintoObj["value"]["label"] = response[i].dname;
+      allAttributeintoObj["value"]["uuid"] = response[i].uuid;
+      allAttributeintoObj["value"]["name"] = response[i].name;
+      allAttributeintoObj["value"]["attributeId"] = response[i].attributeId;
+      allAttributeintoObj["value"]["datapodname"] = response[i].datapodname;
+      // allAttributeintoObj["value"]["attributeId"] = response[i].attributeId;
+
+
+      allAttributeinto1[i] = allAttributeintoObj;
+    }
+    this.paramListHolder[index]["allAttributeinto"] = allAttributeinto1;
+  }
+
+  getAllLatest(type, index) {
+    this._commonService.getAllLatest(type || "dataset").subscribe(
+      response => { this.onSucceessgetAllLatest(response, type, index) },
+      error => console.log("Error :: " + error));
+  }
+
+  onSucceessgetAllLatest(response, type, index) {
+    // let temp1 = [];
+    // let temp2=[];
+    if (type == "datapod") {
+      this.allDatapod = [];
+      for (const i in response) {
+        let allDatapodObj = {};
+        allDatapodObj["label"] = response[i].name;
+        allDatapodObj["value"] = {};
+        allDatapodObj["value"]["label"] = response[i].name;
+        allDatapodObj["value"]["uuid"] = response[i].uuid;
+        this.allDatapod[i] = allDatapodObj;
+      }
+      //this.getAllAttribute(type,index);
+    }
+    //this.allDatapod=temp1;
+
+    if (type == "dataset") {
+      this.allDataset = [];
+      for (const i in response) {
+        let allDatasetObj = {};
+        allDatasetObj["label"] = response[i].name;
+        allDatasetObj["value"] = {};
+        allDatasetObj["value"]["label"] = response[i].name;
+        allDatasetObj["value"]["uuid"] = response[i].uuid;
+        this.allDataset[i] = allDatasetObj;
+      }
+    }
+    //this.allDataset=temp2;
+
+    if (type == "rule") {
+      this.allRule = [];
+      for (const i in response) {
+        let allRuleObj = {};
+        allRuleObj["label"] = response[i].name;
+        allRuleObj["value"] = {};
+        allRuleObj["value"]["label"] = response[i].name;
+        allRuleObj["value"]["uuid"] = response[i].uuid;
+        this.allRule[i] = allRuleObj;
+      }
+    }
+    if (type == "distribution") {
+      this.allDistribution = [];
+      for (const i in response) {
+        let allDistributionObj = {};
+        allDistributionObj["label"] = response[i].name;
+        allDistributionObj["value"] = {};
+        allDistributionObj["value"]["label"] = response[i].name;
+        allDistributionObj["value"]["uuid"] = response[i].uuid;
+        this.allDistribution[i] = allDistributionObj;
+      }
+    }
   }
 
   getOneByUuidAndVersion() {
@@ -137,6 +262,7 @@ export class SimulationComponent implements OnInit {
       error => console.log("Error :: " + error));
 
   }
+
   getAllLatestModel() {
     this._simulateService.getAllModelByType("N", "model")
       .subscribe(
@@ -160,7 +286,6 @@ export class SimulationComponent implements OnInit {
       temp[i] = ver;
     }
     this.allModel = temp
-
   }
 
   getAllLatestDistribution() {
@@ -177,14 +302,12 @@ export class SimulationComponent implements OnInit {
     for (const i in response) {
       let refParam = {}
       refParam["label"] = response[i]['name'];
-      refParam["value"] = {}      
+      refParam["value"] = {}
       refParam["value"]['label'] = response[i]['name'];
       refParam["value"]["uuid"] = response[i]['uuid']
       this.arrayDistribution[i] = refParam;
-
     }
   }
-
 
   getAllLatestParamlist() {
     this._commonService.getAllLatest('paramList')
@@ -205,19 +328,9 @@ export class SimulationComponent implements OnInit {
       // refParam["value"]['name'] = response[i]['name'];
       refParam["value"]['label'] = response[i]['name'];
       this.arrayParamList[i] = refParam;
-
     }
   }
 
-
-  // getAllLatestSource(source) {
-  //   this._commonService.getAllLatest(source)
-  //     .subscribe(
-  //     response => {
-  //       this.onSuccessgetAllLatestSource(response)
-  //     },
-  //     error => console.log("Error :: " + error));
-  // }
   getAllLatestTarget(target) {
     this._commonService.getAllLatest(target)
       .subscribe(
@@ -240,11 +353,9 @@ export class SimulationComponent implements OnInit {
     //this.selectTarget=this.allTarget[0]
   }
 
-
   public get value(): string {
     return
   }
-
 
   getAllVersionByUuid() {
     {
@@ -256,20 +367,17 @@ export class SimulationComponent implements OnInit {
         error => console.log("Error ::" + error)
         )
     }
-
   }
 
   countContinue() {
     this.continueCount = this.continueCount + 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
-
   }
 
   countBack = function () {
     this.continueCount = this.continueCount - 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
   }
-
 
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'paramset')
@@ -279,6 +387,7 @@ export class SimulationComponent implements OnInit {
       },
       error => console.log("Error :: " + error));
   }
+
   onChangeActive(event) {
     if (event === true) {
       this.simulation.active = 'Y';
@@ -287,6 +396,7 @@ export class SimulationComponent implements OnInit {
       this.simulation.active = 'N';
     }
   }
+
   onChangePublish(event) {
     if (event === true) {
       this.simulation.published = 'Y';
@@ -334,50 +444,9 @@ export class SimulationComponent implements OnInit {
     targetTemp.label = response["target"]["ref"]["name"];
     targetTemp.uuid = response["target"]["ref"]["uuid"];
     this.selectTarget = targetTemp
-    this.getAllLatestModel()
     this.getAllLatestTarget(this.selectTargetType)
-
-    var features = [];
-    for (var i = 0; i < response.featureInfo.length; i++) {
-      var featureMap = {};
-      var sourceFeature = {};
-      var targetFeature = {};
-      sourceFeature["featureId"] = i;
-      //sourceFeature["featureName"] = response.featureInfo[i].featureName;
-      // sourceFeature["uuid"] = response.featureInfo[i].ref.uuid;
-      //  sourceFeature["type"] = "model";
-      //   sourceFeature["type"////ourceFeature["datapodename"]=response.featureInfo[i].features.datapodename;
-      //sourceFeature["desc"]=response.featureInfo[i].features.desc;
-      //sourceFeature["maxVal"]=response.featureInfo[i].features.maxVal;
-      //  sourceFeature["minVal"]=response.featureInfo[i].features.minVal;
-
-      featureMap["sourceFeature"] = sourceFeature;
-
-      //  featureMap["targetFeature"]=targetFeature;
-
-      featureMap["sourceFeature"] = sourceFeature;
-      features[i] = featureMap;
-    }
-    this.featureMapTableArray = features;
-
     this.onChangeModel();
-
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   OnSuccesgetAllLatest(response) {
     let temp = []
@@ -392,8 +461,8 @@ export class SimulationComponent implements OnInit {
       temp[n] = allname;
     }
     this.allTargetAttribute = temp
-
   }
+
   onSuccessgetAllVersionByUuid(response) {
     var temp = []
     for (const i in response) {
@@ -406,9 +475,8 @@ export class SimulationComponent implements OnInit {
     }
     this.VersionList = temp
   }
+
   onChangeModel() {
-    
-    // simulateService.getOneByUuidandVersion(this.selectModel.uuid,this.selectModel.version,"model").then(function(response) { onSuccessGetLatestByUuid(response.data)});
     this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version || " ", 'model')
       .subscribe(
       response => {
@@ -416,14 +484,13 @@ export class SimulationComponent implements OnInit {
       },
       error => console.log("Error :: " + error));
   }
+
   onSuccessonChangeModel(response) {
-
-
     var featureMapTableArray = [];
     for (var i = 0; i < response.features.length; i++) {
       var featureMap = {};
       var sourceFeature = {};
-     // var targetFeature = {};
+      // var targetFeature = {};
       sourceFeature["featureId"] = response.features[i].featureId;
       sourceFeature["type"] = response.features[i].type;
       sourceFeature["datapodname"] = response.features[i].name;
@@ -435,14 +502,7 @@ export class SimulationComponent implements OnInit {
       featureMapTableArray[i] = featureMap;
     }
     this.featureMapTableArray = featureMapTableArray;
-
-
-
-
   }
-
-
-
 
   onChangeTargeType() {
     if (this.selectTargetType == 'datapod') {
@@ -454,10 +514,10 @@ export class SimulationComponent implements OnInit {
       this.allTarget = [];
     }
   }
+
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/simulate']);
-
   }
 
   generateRadomValue() {
@@ -471,8 +531,97 @@ export class SimulationComponent implements OnInit {
   showview(uuid, version) {
     this.router.navigate(['app/dataScience/simulation', uuid, version, 'true']);
   }
+
+
+  onChangeRunImmediately() {
+    this._simulateService.getParamListByDistribution(this.selectDistributionList.uuid).subscribe(
+      response => { this.onSuccessgetParamListByDistribution(response) },
+      error => console.log('Error :: ' + error)
+    )
+  }
+
+  onSuccessgetParamListByDistribution(response) {
+    this.displayDialogBox = true;
+    this.paramListHolder = response;
+    this.getParamByParamList();
+  }
+
+  getParamByParamList() {
+    this._simulateService.getParamByParamList(this.selectParamlist.uuid).subscribe(
+      response => { this.onSuccessgetParamByParamList(response) },
+      error => console.log('Error :: ' + error)
+    )
+  }
+
+  onSuccessgetParamByParamList(response) {
+    let paramList = this.paramListHolder.concat(response);
+    this.paramListHolder = paramList;
+    console.log("paramListHolder is" + JSON.stringify(this.paramListHolder));
+
+    let paramListHolder1 = [];
+    let type = ["ONEDARRAY", "TWODARRAY"];
+    var type1 = ['distribution', 'attribute', 'attributes', 'datapod', 'list'];
+    if (this.paramListHolder.length > 0) {
+      for (var i = 0; i < this.paramListHolder.length; i++) {
+        let paramList = {};
+        paramList["uuid"] = this.paramListHolder[i].ref.uuid;
+        paramList["type"] = this.paramListHolder[i].ref.type;
+        paramList["paramId"] = this.paramListHolder[i].paramId;
+        paramList["paramType"] = this.paramListHolder[i].paramType.toLowerCase();
+        paramList["paramName"] = this.paramListHolder[i].paramName;
+        paramList["ref"] = this.paramListHolder[i].ref;
+        paramList["attributeInfo"];
+        paramList["allAttributeinto"] = [];
+        paramList["attributeInfoTag"] = [];
+        if (type1.indexOf(this.paramListHolder[i].paramType) == -1) {
+          paramList["isParamType"] = "simple";
+          paramList["paramValue"] = this.paramListHolder[i].paramValue.value;
+          paramList["selectedParamValueType"] = 'simple'
+        } else if (type1.indexOf(this.paramListHolder[i].paramType) != -1) {
+          paramList["isParamType"] = this.paramListHolder[i].paramType;
+          paramList["selectedParamValueType"] = this.paramListHolder[i].paramType == "distribution" ? this.paramListHolder[i].paramType : "datapod";
+          paramList["paramValue"] = this.paramListHolder[i].paramValue;
+          if (this.paramListHolder[i].paramValue != null && this.paramListHolder[i].paramValue !== 'list') {
+            var selectedParamValue = {};
+            selectedParamValue["uuid"] = this.paramListHolder[i].paramValue.ref.uuid;
+            selectedParamValue["type"] = this.paramListHolder[i].paramValue.ref.type;
+            paramList["selectedParamValue"] = selectedParamValue;
+          }
+          if (this.paramListHolder[i].paramValue && this.paramListHolder[i].paramType == 'list') {
+            paramList["selectedParamValueType"] = "list";
+            var listvalues = this.paramListHolder[i].paramValue.value.split(',');
+            var selectedParamValue = {};
+            selectedParamValue["type"] = this.paramListHolder[i].paramValue.ref.type;
+            selectedParamValue["value"] = listvalues[0];
+            paramList["paramValue"] = selectedParamValue;
+            paramList["selectedParamValue"] = selectedParamValue;
+            for (const i in listvalues) {
+              var listvalues1 = {};
+              listvalues1["label"] = listvalues[i];
+              listvalues1["value"] = listvalues[i];
+              listvalues[i] = listvalues1;
+            }
+            paramList["allListInfo"] = listvalues;
+          }
+        } else {
+          paramList["isParamType"] = "datapod";
+          paramList["selectedParamValueType"] = 'datapod'
+          paramList["paramValue"] = this.paramListHolder[i].paramValue;
+        }
+
+        paramListHolder1[i] = paramList;
+
+      }
+      this.paramListHolder = [];
+      this.paramListHolder = paramListHolder1;
+    }
+  }
+
+  executeWithExecParamList() {
+    this.displayDialogBox = false;
+  }
+
   submit() {
-    
     var simulateJson = {}
     simulateJson["uuid"] = this.simulation.uuid
     simulateJson["name"] = this.simulation.name
@@ -501,8 +650,6 @@ export class SimulationComponent implements OnInit {
     dependsOn["ref"] = ref;
     simulateJson["dependsOn"] = dependsOn;
 
-
-
     let distribution = {};
     let refdistribution = {};
     if (this.selectDistributionList != null) {
@@ -523,23 +670,21 @@ export class SimulationComponent implements OnInit {
     var target = {};
     var targetref = {};
     targetref["type"] = this.selectTargetType;
+    targetref["uuid"] = this.selectTarget.uuid;
     if (this.selectTargetType == "datapod")
-      targetref["uuid"] = this.selectTarget.uuid;
-    target["ref"] = targetref;
+      // targetref["uuid"] = this.selectTarget.uuid;
+      target["ref"] = targetref;
     simulateJson["target"] = target;
     var featureMap = [];
     if (this.featureMapTableArray.length > 0) {
       for (var i = 0; i < this.featureMapTableArray.length; i++) {
         var featureInfoObj = {};
         var featureInfoRef = {}
+
         featureInfoObj["featureId"] = this.featureMapTableArray[i].sourceFeature.featureId;
         featureInfoObj["featureName"] = this.featureMapTableArray[i].sourceFeature.featureName;
-        // featureInfoObj ["featureType"] = this.featureMapTableArray[i].sourceFeature.type;
-        // featureInfoObj["featureDesc"] = this.featureMapTableArray[i].sourceFeature.desc;
-        // featureInfoObj["featureminVal"] = this.featureMapTableArray[i].sourceFeature.minVal;
-        // featureInfoObj["featuremaxVal"] =this.featureMapTableArray[i].sourceFeature.maxVal
-        featureInfoRef["uuid"] = this.selectModel.uuid;
         featureInfoRef["type"] = 'model';
+        featureInfoRef["uuid"] = this.selectModel.uuid;
         featureInfoObj["ref"] = featureInfoRef;
         featureMap[i] = featureInfoObj;
       }
@@ -554,7 +699,7 @@ export class SimulationComponent implements OnInit {
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
       this._commonService.getOneById("simulate", response).subscribe(
-        response => { this.OnSucessGetOneById(response); },
+        response => { this.onSuccessGetOneById(response) },
         error => console.log('Error :: ' + error)
       )
     } //End if
@@ -568,23 +713,102 @@ export class SimulationComponent implements OnInit {
       }, 1000);
     }
   }
-  OnSucessGetOneById(response) {
-    this._commonService.execute(response.uuid, response.version, "simulate", "execute").subscribe(
-      response => {
-        this.showMassage('simulate Save and Submit Successfully', 'success', 'Success Message')
-        setTimeout(() => {
-          this.goBack()
-        }, 1000);
-      },
-      error => console.log('Error :: ' + error)
+  onSuccessGetOneById(response) {
+    let execParams = {};
+    let paramListInfo = [];
+    if (this.paramListHolder.length > 0) {
+      for (let i = 0; i < this.paramListHolder.length; i++) {
+        let paramList = {};
+        paramList["paramId"] = this.paramListHolder[i].paramId;
+        paramList["paramName"] = this.paramListHolder[i].paramName;
+        paramList["paramType"] = this.paramListHolder[i].paramType;
+        paramList["ref"] = this.paramListHolder[i].ref;
+        if (this.paramListHolder[i].paramType == 'attribute') {
+          let attributeInfoArray = [];
+          let attributeInfo = {};
+          let attributeInfoRef = {}
+          attributeInfoRef["type"] = this.paramListHolder[i].selectedParamValueType;
+          attributeInfoRef["uuid"] = this.paramListHolder[i].attributeInfo.uuid;
+          attributeInfoRef["name"] = this.paramListHolder[i].attributeInfo.name
+          attributeInfo["ref"] = attributeInfoRef;
+          attributeInfo["attrId"] = this.paramListHolder[i].attributeInfo.attributeId;
+          attributeInfoArray[0] = attributeInfo
+          paramList["attributeInfo"] = attributeInfoArray;
+        }
+        if (this.paramListHolder[i].paramType == 'attributes') {
+          let attributeInfoArray = [];
+          for (let j = 0; j < this.paramListHolder[i].attributeInfoTag.length; j++) {
+            let attributeInfo = {};
+            let attributeInfoRef = {}
+            attributeInfoRef["type"] = this.paramListHolder[i].selectedParamValueType;
+            attributeInfoRef["uuid"] = this.paramListHolder[i].attributeInfoTag[j].uuid;
+            attributeInfoRef["name"] = this.paramListHolder[i].attributeInfoTag[j].datapodname;
+            attributeInfo["ref"] = attributeInfoRef;
+            attributeInfo["attrId"] = this.paramListHolder[i].attributeInfoTag[j].attributeId;
+            attributeInfo["attrName"] = this.paramListHolder[i].attributeInfoTag[j].label;
+            attributeInfoArray[j] = attributeInfo
+          }
+          paramList["attributeInfo"] = attributeInfoArray;
+        }
+        else if (this.paramListHolder[i].paramType == 'distribution' || this.paramListHolder[i].paramType == 'datapod') {
+          let ref = {};
+          let paramValue = {};
+          ref["type"] = this.paramListHolder[i].selectedParamValueType;
+          // if(this.paramListHolder[i].selectedParamValue !== null){
+          // ref["uuid"] = this.paramListHolder[i].selectedParamValue.uuid;
+          // }
+          paramValue["ref"] = ref;
+          paramList["paramValue"] = paramValue;
+        }
+        else if (this.paramListHolder[i].selectedParamValueType == "simple") {
+          let ref = {};
+          let paramValue = {};
+          ref["type"] = this.paramListHolder[i].selectedParamValueType;
+          paramValue["ref"] = ref;
+          paramValue["value"] = this.paramListHolder[i].paramValue
+          paramList["paramValue"] = paramValue;
+        }
+        else if (this.paramListHolder[i].selectedParamValueType == "list") {
+          let ref = {};
+          let paramValue = {};
+          ref["type"] = 'simple';
+          paramValue["ref"] = ref;
+          paramValue["value"] = this.paramListHolder[i].paramValue
+          paramList["paramValue"] = paramValue;
+        }
+        paramListInfo[i] = paramList;
+      }
+      execParams["paramListInfo"] = paramListInfo;
+    }
+    else {
+      execParams = null;
+    }
+    console.log(JSON.stringify(execParams));
+
+    this._commonListService.executeWithParams(response.uuid, response.version, "simulate", "view", execParams).subscribe(
+      response => { this.onSuccessExecute(response) },
+      error => { this.onError(error) }
     )
   }
-  showMassage(msg, msgtype, msgsumary) {
+
+  onSuccessExecute(response) {
+    console.log(JSON.stringify(response));
     this.isSubmit = "false";
     this.msgs = [];
-    this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
+    this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'simulate Save Successfully' });
+    setTimeout(() => {
+      this.goBack();
+    }, 1000);
+  }
+
+  onError(error) {
+    console.log('Error :: ' + error);
+    this.isSubmit = "false";
+    this.msgs = [];
+    this.msgs.push({ severity: 'Failed', summary: 'Error Message', detail: 'simulate execution failed' });
+    setTimeout(() => {
+      this.goBack();
+    }, 1000);
   }
 }
-
-
 

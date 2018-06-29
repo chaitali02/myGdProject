@@ -242,24 +242,54 @@ export class CommonListService {
     // .catch(this.handleError);
   }
 
-  executeWithParams(uuid, version, type, action, execParams) {
-    this.headers = null;
-    this.headers = new Headers({ 'sessionId': this.sessionId });
-    if (type == "rule") {
-      this.url = this.baseUrl + 'rule/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+  executeWithParams(uuid,version,type,action,execParams){
+    this.headers=null;
+    this.headers=new Headers({'sessionId': this.sessionId});
+    if(type=="rule"){
+      this.url = this.baseUrl+ 'rule/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    } 
+    else if(type=="simulate"){
+      this.url = this.baseUrl+ 'model/simulate/execute?action='+ action +'&uuid=' + uuid + '&version=' + version;
+    } 
+    else if(type=="train"){
+          this.url = this.baseUrl + 'model/train/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+        }
+    else{
+      this.url = this.baseUrl+ 'model/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
-    else {
-      this.url = this.baseUrl + 'model/train/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    let body
+    if(type== "simulate"){
+      body= execParams
     }
-    let body = JSON.stringify({ execParams });
-    this.headers.append('Accept', '*/*')
-    this.headers.append('content-Type', "application/json");
-    return this.http
-      .post(this.url, body, { headers: this.headers })
-      .map((response: Response) => {
-        return <any>response.json();
-      })
-  }
+    else{
+      body= JSON.stringify({execParams});
+    }
+    this.headers.append('Accept','*/*')
+    this.headers.append('content-Type',"application/json");
+    return this.http                 
+    .post( this.url,body, {headers: this.headers})
+    .map((response: Response) => {
+    return <any>response.json();
+  })
+}
+  // executeWithParams(uuid, version, type, action, execParams) {
+  //   this.headers = null;
+  //   this.headers = new Headers({ 'sessionId': this.sessionId });
+  //   if (type == "rule") {
+  //     this.url = this.baseUrl + 'rule/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+  //   }
+  //   else {
+  //     this.url = this.baseUrl + 'model/train/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+  //   }
+  //   let body = JSON.stringify({ execParams });
+  //   this.headers.append('Accept', '*/*')
+  //   this.headers.append('content-Type', "application/json");
+  //   return this.http
+  //     .post(this.url, body, { headers: this.headers })
+  //     .map((response: Response) => {
+  //       return <any>response.json();
+  //     })
+  // }
   uploadFile(fd, filename, type) {
     var url = this.baseUrl + 'metadata/file?action=edit&fileName=' + filename + '&type=' + type;
     let body = fd;
@@ -269,4 +299,18 @@ export class CommonListService {
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
   }
+
+  getParamListByType(executeId,executeVersion,type,action): Observable<any> {
+    if(type=="simulate"){
+      this.url = this.baseUrl+ 'metadata/getParamListBySimulate?action='+action + '&uuid=' + executeId + '&type=' + type;
+    }
+    
+    return this.http         
+    .get( this.url, {headers: this.headers})
+    .map((response: Response) => {
+      return <any>response.json();
+  })
+  // .catch(this.handleError);
+  }
+  
 }

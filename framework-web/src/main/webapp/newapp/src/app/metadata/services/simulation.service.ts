@@ -23,6 +23,24 @@ export class SimulationService {
    .catch(this.handleError);
   }
   
+  getParamListByDistribution(uuid : any){
+    let url ="metadata/getParamListByDistribution?action=view&uuid="+uuid+"&type=paramlist";
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
+
+  getParamByParamList(uuid : any){
+    let url ="metadata/getParamByParamList?action=view&uuid=" + uuid;
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
+
 private handleError(error: Response) {
     return Observable.throw(error.statusText);
   }
