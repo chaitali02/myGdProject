@@ -1,5 +1,5 @@
 var InferyxApp = angular.module("InferyxApp");
-InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,GraphpodService,dagMetaDataService,CF_META_TYPES) {
+InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonService,GraphpodService,dagMetaDataService,CF_META_TYPES,CF_GRAPHPOD) {
     return {
         scope: {
             uuid: "=",
@@ -42,11 +42,14 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
 
                 }
             }
-
+            
+            $rootScope.refreshFDGraph=function(){
+                scope.search(); 
+            }
             function myGraph() {
                 this.addNode = function (n) {
                     if (!findNode(n.id)) {
-                        nodes.push({ "id": n.id, "label": n.label,"nodeName":n.nodeName,"nodeType":n.nodeType,"nodeProperties":n.nodeProperties});
+                        nodes.push({ "id": n.id, "label": n.label,"nodeName":n.nodeName,"nodeType":n.nodeType,"nodeProperties":n.nodeProperties,"nodeIcon":n.nodeIcon});
                         update();
                     }
                 };
@@ -91,7 +94,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                 };
 
                 var w = window.innerWidth - 20,
-                    h =600,
+                    h =800,
                     middle = w / 2;
                 var linkDistance = 300;
 
@@ -187,15 +190,22 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                             $(".tooltipcustom").css("display", "none");
     
                         });
-
+                        
+                  
                     nodeEnter.append("svg:circle")
-                        .attr("r", 10)
+                        .attr("r", 15)
                         .attr("id", function (d) {
                             return "Node;" + d.id;
                         })
                         .attr("class", "nodeStrokeClass")
                         .attr("fill", "#0db7ed")
-
+                    nodeEnter.append('text')
+                        .attr('font-family', 'FontAwesome')
+                        .attr("class", "iconNode")
+                        .attr('text-anchor', 'middle')
+                        .attr('dominant-baseline', 'central')
+                        .attr('font-size', function(d) { return 15+'px'} )
+                        .text(function(d) {  try{return CF_GRAPHPOD.nodeIconMap[d.nodeIcon].code}catch(e){ return""}}); 
                     nodeEnter.append("svg:text")
                         .attr("class", "textClass")
                         .attr("x", 20)
@@ -203,7 +213,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout, CommonService,Graph
                         .text(function (d) {
                             return d.label;
                         });
-
+                    
                     node.exit().remove();
 
                     function arcPath(leftHand, d) {

@@ -488,9 +488,39 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 GraphAnalysisModule.controller('GraphpodResultController',function($state,$stateParams,$rootScope,$scope,$filter,$timeout,
 	GraphpodService,CommonService,privilegeSvc,dagMetaDataService,CF_META_TYPES,CF_LOV_TYPES,CF_GRAPHPOD) {
 		$scope.isD3FDGraphShow=true;
+		$scope.isD3KnowlageGraphShow=false;
 		$scope.graphExecDetail={};
 		$scope.graphExecDetail.uuid=$stateParams.id;
 		$scope.graphExecDetail.version=$stateParams.version;
-	
 
-	});
+		var privileges = privilegeSvc.privileges[CF_META_TYPES.comment] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+		  var privileges = privilegeSvc.privileges[CF_META_TYPES.comment] || [];
+		  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		  
+		});
+		
+		$scope.metaType=CF_META_TYPES.graphexec;
+		$scope.userDetail={}
+		$scope.userDetail.uuid= $rootScope.setUseruuid;
+		$scope.userDetail.name= $rootScope.setUserName; 
+		
+		
+		CommonService.getOneByUuidAndVersion($scope.graphExecDetail.uuid,$scope.graphExecDetail.version,CF_META_TYPES.graphexec).then(function(response){onSuccessGetByOneUuidAndVersion(response.data)});
+		function onSuccessGetByOneUuidAndVersion(response){
+			$scope.execDetali=response;
+		}
+		
+		$scope.showFDGraph=function(){
+			$scope.isD3FDGraphShow=true;
+			$scope.isD3KnowlageGraphShow=false;
+		}
+ 
+		$scope.showKGraph=function(){
+			$scope.isD3FDGraphShow=false;
+			$scope.isD3KnowlageGraphShow=true;
+		}
+});
