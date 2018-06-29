@@ -1682,7 +1682,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     },
     'graphpod':{
       name : 'graphpod',
-      caption :'Graphpod',
+      caption :'Graph',
       execType:'graphExec',
       metaType:'graphpod',
       color : '#00E5FF',
