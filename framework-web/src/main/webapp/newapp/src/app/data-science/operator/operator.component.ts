@@ -65,7 +65,8 @@ export class OperatorComponent implements OnInit {
 
     this.operatortypesOption = [
       { "value": "GenerateData", "label": "GenerateData" },
-      { "value": "Transpose", "label": "Transpose" }
+      { "value": "Transpose", "label": "Transpose" },
+      { "value": "CloneData", "label": "CloneData" }
 
     ]
 

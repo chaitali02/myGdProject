@@ -14,26 +14,27 @@
                 </div>
 
                 <div class="actions">
-                    <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless"
-                        href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                        ng-hide="isAdd" data-(click)="enableEdit(train.uuid,train.version)" *ngIf="mode">
-                        <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white;"></i>
+                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+                        tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-(click)="enableEdit(train.uuid,train.version)"
+                        *ngIf="mode">
+                        <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                     </a>
-                    <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless"
-                        href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-                        ng-hide="isAdd" data-(click)="showview(train.uuid,train.version)" *ngIf="mode">
-                        <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white;"></i>
+                    <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
+                        tooltip [ngClass]="(showdag==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
+                        data-(click)="showview(train.uuid,train.version)" *ngIf="mode">
+                        <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                     </a>
-                    <!--  <a class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip  ng-show="isDependencyShow" [ngClass] ="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(train.uuid,train .version)"  style="border:0px solid transparent !important;">
-                           <i class="fa fa-sitemap" style="margin:2px auto;color:white;"></i>
-                       </a>-->
-                    <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white borderless"
-                        (click)="broadcastRefreshData()" data-original-title="" title="" style="border:0px solid transparent !important;">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
+                        tooltip ng-show="isDependencyShow" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(train.uuid,train .version)"
+                        *ngIf="mode">
+                        <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
                     </a>
-                    <a class="btn btn-circle btn-icon-only btn-default bg-red bg-hover-grey-salsa font-white borderless" style="border:0px solid transparent !important;"
-                        (click)="goBack()">
-                        <i class="fa fa-times" style="margin: 2px auto;color:white;"></i>
+                    <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" data-(click)="broadcastRefreshData()" data-original-title=""  disabled="" 
+                        title="refresh">
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+                    </a>
+                    <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" title="Close" (click)="goBack()">
+                        <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
                     </a>
                 </div>
             </div>
@@ -183,6 +184,15 @@
 
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Label</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                                <p-dropdown [options]="allsourceLabel" [(ngModel)]="selectLabel" name="selectLabel" dataKey="label" [style]="{'width':'100%','padding':'3px'}"
+                                                    [filter]="true" [disabled]="mode == 'true'">
+                                                </p-dropdown>
+
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="portlet light bordered">
                                                 <div class="portlet-title">
@@ -261,8 +271,10 @@
                                                 <input type="number" limit-to="2" class="form-control" name="trainPercent" min="1" max="99" style="width:64px;" [(ngModel)]="train.trainPercent"
                                                     (click)="onChangeTrainPercent()">
                                             </div>
-                                            <label class="control-label col-md-4 col-sm-4 col-xs-12" style="width:11%;float:left;margin-left:-1%;">Val Percent</label>
-                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Validation Percent</label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
                                                 <input type="number" limit-to="2" class="form-control" name="valPercent" min="1" max="99" maxlength="2" style="width:64px;"
                                                     [(ngModel)]="train.valPercent" (click)="onChangeValPercent()">
                                             </div>
@@ -270,21 +282,57 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"></p-checkbox>
+                                                <p-checkbox [(ngModel)]="checkboxModelexecution" (click)="onChangeRunImmediately()" [disabled]="mode == 'true' " name="checkboxModelexecution"
+                                                    binary="true"></p-checkbox>
                                             </div>
                                         </div>
-                                        <!-- <div class="form-group">
-                                                <label class="col-md-3 control-label">Run Immediately ?
-                                                </label>
-                                                <div class="col-md-9">
-                                                    <div class="mt-checkbox-list" style="margin-top:-7px">
-                                                    <label class="mt-checkbox mt-checkbox-outline">
-                                                        <input [disabled]="{{mode}} || isSubmitEnable" type="checkbox"  [(ngModel)]="checkboxPredictexecution" ng-true-value="'YES'" ng-false-value="'NO'" ng-change="changeCheckboxExecution()">
-                                                        <span  [disabled]="{{mode}}"></span>
-                                                    </label>
-                                                    </div>
+                                        <div *ngIf="isShowExecutionparam ? true : false">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set</label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" [(ngModel)]="paramsetdata" name="paramsetdata" (change)="onSelectparamSet()" [disabled]="mode == 'true'">
+                                                        <option value="" style="color:rgb(24, 18, 18);">USE DEFAULT VALUE</option>
+                                                        <option *ngFor="let app of allparamset" [ngValue]="app">{{app.name}}</option>
+                                                    </select>
                                                 </div>
-                                                </div> -->
+                                            </div>
+                                            <br>
+                                            <div *ngIf="isTabelShow" style="overflow-x: auto;">
+                                                <table class=" row-border hover table  table-striped table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align:center;Vertical-align: middle;width:5%;">
+                                                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                                    <input style="width:16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="selectAllParam" name="selectAllParam"
+                                                                        (click)="selectAllRow()" />
+                                                                </span>
+                                                            </th>
+                                                            <th style="width:6%;text-align:center">ID</th>
+                                                            <th class="text-center" *ngFor=" let tablecol of paramtablecol">{{tablecol.paramName}}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor=" let tabledata of paramtable; let i=index">
+                                                            <td style="text-align:center;Vertical-align:middle;width:5%;">
+                                                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                                    <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}" [disabled]="mode == 'true'"
+                                                                    />
+                                                                </span>
+                                                            </td>
+                                                            <td style="width:6%;">
+                                                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                                    <input type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}" [disabled]="true" class="form-control">
+                                                                </span>
+                                                            </td>
+
+                                                            <td style="width:20%;" *ngFor=" let tablecol of tabledata.paramSetVal;let j=index">
+                                                                <input type="text" class="form-control" [(ngModel)]="tablecol.value" name="value+{{tablecol.value}}" [disabled]="true">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4" style="padding-top: 2%;">
@@ -317,3 +365,12 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+<!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+    tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-(click)="enableEdit(trainData.uuid,trainData.version)">
+    <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+</a> -->

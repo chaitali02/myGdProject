@@ -94,7 +94,8 @@ export class DatapodComponent {
     this.cache = true;
     this.selectallattribute=false
     this.attrtypes = ["string", "float","bigint",'double','timestamp','integer'];
-    this.datasourceType = [{'value': 'FILE', name: 'file'},{'value': 'HIVE', name: 'hive'}];
+    this.datasourceType = [{'value': 'FILE', name: 'file'},{'value': 'HIVE', name: 'hive'},
+    {'value': 'IMPALA', name: 'impala'},{'value': 'MYSQL', name: 'mysql'},{'value': 'POSTGRES', name: 'postgres'}];
     this.selectdatasourceType= this.datasourceType[0].value
     this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params['id'];

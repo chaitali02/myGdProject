@@ -157,7 +157,7 @@ export class ModelComponent implements OnInit {
     });
   }
 
-  changeName(index) {debugger
+  changeName(index) {
     this.featuresArray[index].name = this.featuresArray[index].newCol.label;
     console.log(this.featuresArray[index].newCol);
   }
@@ -236,7 +236,7 @@ export class ModelComponent implements OnInit {
     if (this.customFlag == true) {
       this.getModelScript();
     }
-    else {debugger
+    else {
       if (response.dependsOn != null) {
         let dependOnTemp: DependsOn = new DependsOn();
         dependOnTemp.label = response.dependsOn.ref.name;
@@ -364,7 +364,7 @@ export class ModelComponent implements OnInit {
       this.getParamArray[i] = getParamObj;
     }
     console.log(JSON.stringify(this.getParamArray));
-    // debugger
+    
     // let value1Temp: DependsOn = new DependsOn();
     // value1Temp.label = this.featuresArray[0].paramListInfo.paramName;
     // value1Temp.uuid = this.featuresArray[0].paramListInfo.paramId;
@@ -460,7 +460,7 @@ export class ModelComponent implements OnInit {
         featureObj["desc"] = this.featuresArray[i].desc;
         featureObj["minVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].minVal;
         featureObj["maxVal"] = this.featuresArray[i].type == "string" ? "null" : this.featuresArray[i].maxVal;
-        debugger
+
         if (this.dependsType == "formula") {
           // if(this.featuresArray[i].param == !null){
           let paramListInfo = {};

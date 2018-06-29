@@ -24,6 +24,7 @@ import { SessionComponent } from './session/session.component';
 import { UserComponent } from './user/user.component';
 import { RegisterSourceComponent } from './registerSource/registerSource.component';
 import { DatapodService } from '../metadata/services/datapod.service';
+import { ApplicationService } from '../metadata/services/application.service';
 import { SettingsComponent } from './settings/settings.component';
 import { SettingsService } from '../metadata/services/settings.service';
 import { RegisterSourceService } from '../metadata/services/registerSource.service';
@@ -82,7 +83,8 @@ import { MigrationAssistService } from '../metadata/services/migration-assist.se
         SettingsService,
         RegisterSourceService,
         CommonListService,
-        MigrationAssistService
+        MigrationAssistService,
+        ApplicationService
     ]
 })
  

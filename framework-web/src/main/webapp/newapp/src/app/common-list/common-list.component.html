@@ -236,39 +236,45 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set
                       </label>
                       <div class="col-md-6">
-                        <p-dropdown [options]="allparamset" [(ngModel)]="paramsetdata" name="paramsetdata" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" (onChange)="onSelectparamSet()">
-                        </p-dropdown>
-                        <!-- <select class="form-control" [(ngModel)]="paramsetdata" name="paramsetdata" (ngModelChange)="onSelectparamSet()">
-                              <option *ngFor="let app of allparamset;" [ngValue]="app">{{app.name}}</option>
-                            </select> -->
+                        <select class="form-control" [(ngModel)]="paramsetdata" name="paramsetdata" (change)="onSelectparamSet()" [style]="{'width':'100%','padding':'3px'}"
+                          [disabled]="mode == 'true'">
+                          <option value="" style="color:rgb(24, 18, 18)">USE DEFAULT VALUE</option>
+                          <option *ngFor="let app of allparamset" [ngValue]="app">{{app.name}}</option>
+                        </select>
                       </div>
                     </div>
                   </form>
                   <br>
-                  <div *ngIf="isTabelShow ==true" style="overflow-x: auto;">
+                  <div *ngIf="isTabelShow" style="overflow-x: auto;">
                     <table class=" row-border hover table  table-striped table-bordered">
                       <thead>
                         <tr>
                           <th style="text-align:center;Vertical-align: middle;width:5%;">
-                            <input style="width:16px;height:16px;" type="checkbox" [disabled]="false" [(ngModel)]="selectallattribute" (ngModelChange)="selectAllRow()"
-                            />
-                            <!--onChange="selectAllRow()"-->
+                            <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                              <input style="width:16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="selectAllParam" name="selectAllParam"
+                                (click)="selectAllRow()" />
+                            </span>
                           </th>
                           <th style="width:6%;text-align:center">ID</th>
-                          <th class="text-center" *ngFor="let tablecol of paramtablecol">{{tablecol.paramName}}</th>
+                          <th class="text-center" *ngFor=" let tablecol of paramtablecol">{{tablecol.paramName}}</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let tabledata of paramtable">
+                        <tr *ngFor=" let tabledata of paramtable; let i=index">
                           <td style="text-align:center;Vertical-align:middle;width:5%;">
-                            <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="tabledata.selected" />
+                            <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}" [disabled]="mode == 'true'"
+                              />
+                            </span>
                           </td>
                           <td style="width:6%;">
-                            <input type="text" [(ngModel)]="tabledata.paramSetId" name="tabledata.paramSetId" [disabled]="true" class="form-control">
+                            <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                              <input type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}" [disabled]="true" class="form-control">
+                            </span>
                           </td>
-                          <td style="width:20%;" *ngFor="let tablecol of tabledata.paramSetVal">
-                            <input type="text" [(ngModel)]="tablecol.value" name="tablecol.value" [disabled]="true" class="form-control">
+
+                          <td style="width:20%;" *ngFor=" let tablecol of tabledata.paramSetVal;let j=index">
+                            <input type="text" class="form-control" [(ngModel)]="tablecol.value" name="value+{{tablecol.value}}" [disabled]="true">
                           </td>
                         </tr>
                       </tbody>

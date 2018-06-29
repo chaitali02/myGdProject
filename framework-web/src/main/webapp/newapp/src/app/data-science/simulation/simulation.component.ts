@@ -425,7 +425,6 @@ export class SimulationComponent implements OnInit {
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
     dependOnTemp.version = response["dependsOn"]["ref"]["version"];
     this.selectModel = dependOnTemp
-
     let dependOnParamlist: DependsOn = new DependsOn();
     dependOnParamlist.label = response["distributionTypeInfo"]["ref"]["name"];
     dependOnParamlist.uuid = response["distributionTypeInfo"]["ref"]["uuid"];
