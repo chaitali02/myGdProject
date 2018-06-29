@@ -39,18 +39,24 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
+import org.apache.spark.ml.classification.LinearSVC;
+import org.apache.spark.ml.classification.LogisticRegression;
+import org.apache.spark.ml.classification.NaiveBayes;
+import org.apache.spark.ml.classification.RandomForestClassifier;
 import org.apache.spark.ml.clustering.KMeans;
+import org.apache.spark.ml.clustering.LDA;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
 import org.apache.spark.ml.evaluation.RegressionEvaluator;
-import org.apache.spark.ml.feature.HashingTF;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.ml.regression.AFTSurvivalRegression;
+import org.apache.spark.ml.regression.LinearRegression;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.ml.tuning.ParamGridBuilder;
@@ -116,7 +122,7 @@ import scala.collection.JavaConverters;
 import scala.collection.Seq;
 
 @Component
-public class SparkExecutor implements IExecutor {
+public class SparkExecutor<T> implements IExecutor {
 
 	@Autowired
 	ConnectionFactory connectionFactory;
@@ -2008,7 +2014,7 @@ public class SparkExecutor implements IExecutor {
 			CrossValidator cv = new CrossValidator()
 					.setEstimator(pipeline)
 					.setEvaluator(getEvaluatorByTrainClass(trainName))
-					.setEstimatorParamMaps(new ParamMap[] {vectorAssembler.extractParamMap()})
+					.setEstimatorParamMaps(getHyperParamsByAlgo(trainName, obj))
 					.setNumFolds(3);
 			
 			CrossValidatorModel cvModel = cv.fit(trainingDf);
@@ -2037,5 +2043,86 @@ public class SparkExecutor implements IExecutor {
 			return new  MulticlassClassificationEvaluator();
 		}
 		return null;		
+	}
+	
+	public ParamMap[] getHyperParamsByAlgo(String algoName, Object trainClassObject) {
+		if(algoName.contains("LinearRegression")) {
+			LinearRegression linearRegression = (LinearRegression) trainClassObject;
+			ParamMap[] paramMap = new ParamGridBuilder()
+										.addGrid(linearRegression.regParam(), new double[] {0.3, 0.1, 0.05, 0.01, 0.005})
+										.addGrid(linearRegression.elasticNetParam(), new double[] {0.1, 0.05, 0.01, 0.005, 0.001})
+										.build();
+			return paramMap;
+		} else if(algoName.contains("LogisticRegression")) {
+			LogisticRegression logisticRegression = (LogisticRegression) trainClassObject;
+			ParamMap[] paramMap = new ParamGridBuilder()
+										.addGrid(logisticRegression.regParam(), new double[] {0.3, 0.1, 0.05, 0.01, 0.005})
+										.addGrid(logisticRegression.elasticNetParam(), new double[] {0.1, 0.05, 0.01, 0.005, 0.001})
+										.build();
+			return paramMap;
+		} else if(algoName.contains("NaiveBayes")) {
+			NaiveBayes naiveBayes = (NaiveBayes) trainClassObject;
+			List<String> moadelTypesnew = new ArrayList<>();
+			moadelTypesnew.add("Bernoulli");
+			moadelTypesnew.add("Multinomial");
+			Seq<T> seq = (Seq<T>) JavaConverters.asScalaIteratorConverter(moadelTypesnew.iterator()).asScala().toSeq();
+ 			ParamMap[] paramMap = new ParamGridBuilder()
+										.addGrid(naiveBayes.smoothing(), new double[] {0.3, 1.0, 2.5})
+										.addGrid((org.apache.spark.ml.param.Param<T>) naiveBayes.modelType(), seq)
+										.build();
+			return paramMap;
+		} else if(algoName.contains("LinearSVC") || algoName.contains("LinearSVM")) {
+			LinearSVC linearSVC = (LinearSVC) trainClassObject;
+ 			ParamMap[] paramMap = new ParamGridBuilder()
+										.addGrid(linearSVC.regParam(), new double[] {0.3, 0.1, 0.05, 0.01, 0.005})
+										.addGrid(linearSVC.aggregationDepth(), new int[] {2, 3, 4})
+										.addGrid(linearSVC.threshold(), new double[] {0.5, 0.02, 1.0})
+										.build();
+			return paramMap;
+		} else if(algoName.contains("RandomForest")) {
+			RandomForestClassifier randomForest = (RandomForestClassifier) trainClassObject;
+ 			ParamMap[] paramMap = new ParamGridBuilder()
+										.addGrid(randomForest.numTrees(), new int[] {15, 20, 30})
+										.addGrid(randomForest.maxDepth(), new int[] {5, 8, 10})
+										.addGrid(randomForest.minInstancesPerNode(), new int[] {1, 2, 3})
+										.addGrid(randomForest.maxBins(), new int[] {32, 35, 38})
+										.addGrid(randomForest.seed(), new long[] {159147643, 1000, 100000})
+										.build();
+			return paramMap;
+		} else if(algoName.contains("AFTSurvivalRegression")) {
+			AFTSurvivalRegression aftSurvivalRegression = (AFTSurvivalRegression) trainClassObject;
+ 			ParamMap[] paramMap = new ParamGridBuilder()
+										.addGrid(aftSurvivalRegression.aggregationDepth(), new int[] {2, 4, 6})
+										.build();
+			return paramMap;
+		} else if(algoName.contains("DecisionTreeClassifier")) {
+			DecisionTreeClassifier decisionTreeClassifier = (DecisionTreeClassifier) trainClassObject;
+ 			ParamMap[] paramMap = new ParamGridBuilder()
+					 					.addGrid(decisionTreeClassifier.minInfoGain(), new double[] {0.0, 0.5, 1.0})
+										.addGrid(decisionTreeClassifier.maxDepth(), new int[] {5, 8, 10})
+										.addGrid(decisionTreeClassifier.minInstancesPerNode(), new int[] {1, 2, 3})
+										.addGrid(decisionTreeClassifier.maxBins(), new int[] {32, 35, 38})
+										.addGrid(decisionTreeClassifier.seed(), new long[] {159147643, 1000, 100000})
+										.build();
+			return paramMap;
+		} else if(algoName.contains("KMeans")) {
+			KMeans kMeans = (KMeans) trainClassObject;
+ 			ParamMap[] paramMap = new ParamGridBuilder()
+					 					.addGrid(kMeans.k(), new int[] {2, 5, 10})
+										.addGrid(kMeans.initSteps(), new int[] {5, 8, 10})
+										.addGrid(kMeans.seed(), new long[] {-1689246527, -1000, 100000})
+										.build();
+			return paramMap;
+		} else if(algoName.contains("LDA")) {
+			LDA lda = (LDA) trainClassObject;
+ 			ParamMap[] paramMap = new ParamGridBuilder()
+					 					.addGrid(lda.k(), new int[] {10, 15, 20})
+										.addGrid(lda.learningDecay(), new double[] {0.5, 0.8, 1.0})
+										.addGrid(lda.learningOffset(), new double[] {1024.0, 1500.0, 950.0})
+										.addGrid(lda.seed(), new long[] {1435876747, 1000, 100000})
+										.build();
+			return paramMap;
+		}
+		return new ParamMap[] {};
 	}
 }
