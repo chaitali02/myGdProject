@@ -394,8 +394,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                         scope.graphData=response;
                         graph.initialize(response);
                     }else{
-                        notify.type = 'success',
-			            notify.title = 'Success',
+                        notify.type = 'info',
+			            notify.title = 'Info',
 			            notify.content = 'No Record Found'
 			            scope.$emit('notify', notify);
                     }
