@@ -1632,9 +1632,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			}
 
 			Dataset<Row> dstVertexDf = graphFrame.vertices().filter("id = '" + resultDatasetValue[1] + "'");
-
+			System.out.println("********************************************"+dstVertexDf.count());
 			Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
-			if(!dstrows.toString().isEmpty()) {
+			if(dstVertexDf.count()>0 ) {
 			for (Row dstrow : dstrows) {
 				for (String cloumn : vertexColumns) {
 					if(cloumn.equalsIgnoreCase("nodeName")){
@@ -1646,18 +1646,17 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 				}
 			}
-			}
-			else {
-				target=null;
-				edge_name=null;
-				edge_type=null;
-				edge_properties=null;
-				relation=null;
-			}
-
 			GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
 					edge_properties);
 			result.add(graphpodresult);
+			}
+			else {
+				GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null,
+						null);
+				result.add(graphpodresult);
+			}
+
+			
 		}
         
 		Map<String, List<GraphpodResult>> edgeMap = new HashMap<>();
