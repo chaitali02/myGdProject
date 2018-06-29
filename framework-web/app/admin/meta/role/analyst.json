@@ -3440,25 +3440,7 @@
 		            "name" : "GraphExecDelete"
 				},
 				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
-		 			"uuid" : "bf9edbf6-75ec-11e8-adc0-fa7ae01bbebc",
-		 			"version" : null,
-		            "name" : "GraphExecEdit"
-				},
-				"value" : null
-		},
-		{
-			"ref" : {
-					"type" : "privilege",
-		 			"uuid" : "bf9edd68-75ec-11e8-adc0-fa7ae01bbebc",
-		 			"version" : null,
-		            "name" : "GraphExecExecute"
-				},
-				"value" : null
-		},
+		},		
 		{
 			"ref" : {
 					"type" : "privilege",

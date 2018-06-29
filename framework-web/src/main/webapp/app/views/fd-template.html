@@ -3,6 +3,7 @@
         display: block;
     }
 </style>
+
 <div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
     <div class="col-md-1" style="height:100px">
         <a ng-click="changeSliderForward()">
@@ -16,7 +17,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12" style="margin-top:1%;">
+    <div class="col-md-12" style="margin-top:2%;">
         <form class="form-inline" novalidate="novalidate" name="myform" ng-submit="search()">
             <div class="form-group" style="width:32%;">
                 <label class="col-md-4 control-label" style="color:white;margin-top:2%">Node Type</label>
@@ -43,14 +44,14 @@
     </div>
     <div class="clearfix"></div>
     <div class="col-md-12">
-        <div class="form-body centercontent" ng-if="isError" style="color:red;">Some Error Accrued</div>
+        <div class="form-body centercontent" ng-if="isError" style="color:red;">Some Error Occurred</div>
         <div class="form-body centercontent" ng-if="noRecordFound" style="color:white;">No Record Found</div>
         <div class="spinner centercontent" style="min-height:300px;" ng-show="isGraphInProgess">
             <div class="bounce1"></div>
             <div class="bounce2"></div>
             <div class="bounce3"></div>
         </div>
-        <div id="fDGraph" style="height:500px;" ng-show="isGraphShow"></div>
+        <div id="fDGraph" style="height:500px;" ng-show="isGraphShow" style="resize:both;overflow:auto;"></div>
     </div>
 </div>
 
