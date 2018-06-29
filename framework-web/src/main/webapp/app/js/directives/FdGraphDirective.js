@@ -6,7 +6,14 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
             version: "="
         },
         link: function (scope, element, attrs) {
-            var data;
+            var graph;
+            var menus = ["Show Details"];
+            var notify = {
+                type: 'success',
+                title: 'Success',
+                content: '',
+                timeout: 5000 //time in ms
+            };
             scope.noRecordFound=false;
             scope.isGraphInProgess=false;
             scope.getGraphpodObj=function(){
@@ -24,11 +31,16 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 scope.isGraphInProgess=true;
                 scope.noRecordFound=false;
                 scope.isError=false;
-                GraphpodService.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"2","graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
+                scope.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"2","graphpod");
+              
+            }
+
+            scope.getGraphPodResults=function(uuid,version,nodeId,nodeType,degree,type){
+                GraphpodService.getGraphPodResults(uuid,version,nodeId,nodeType,degree,type).then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
                     scope.isGraphInProgess=false;
                     if(response.edges.length >0){    
-                        data=response;
+                        scope.graphData=response;
                         scope.isGraphShow=true;
                     }
                     else{
@@ -59,7 +71,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     update();
                 };
 
-                this.initialize = function () {
+                this.initialize = function (data) {
                     data.edges.forEach(function (d) {
                         graph.addNode(d.source);
                         graph.addNode(d.target);
@@ -183,7 +195,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     var nodeEnter = node.enter().append("g")
                         .attr("class", "node1")
                         .call(force.drag)
-                        .on("click", onClickNode)
+                        .on("dblclick", onClickNode)
+                        .on('contextmenu', rightClickNode)
                         // .on("mouseover", mouseoverNode)
                         .on("mouseout", function (d) {
                             scope.nodeDetail = null;
@@ -213,7 +226,15 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                         .text(function (d) {
                             return d.label;
                         });
-                    
+                    nodeEnter.append("svg:foreignObject")
+                        .attr("width", 20)
+                        .attr("height", 20)
+                        .attr("y", "10")
+                        .attr("x","5")
+                        .append("xhtml:img")
+                            .attr("class","node-refresh")
+                            .style("display","none")
+                            .attr("src","lib/images/loadingimg.gif")
                     node.exit().remove();
 
                     function arcPath(leftHand, d) {
@@ -308,7 +329,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
 
             function drawGraph() {
                 graph = new myGraph();
-                graph.initialize();
+                graph.initialize(scope.graphData);
             }
 
 
@@ -340,7 +361,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 $(".tooltipcustom").css("display", "block");
             }
             function onClickNode(d){
-                console.log(d);
+                //console.log(d);
                 scope.nodeDetailModel=null;
                 var nodeProperties=[];
                 scope.nodeDetailModel=d;
@@ -358,14 +379,74 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     }
                     scope.nodeDetailModel.nodeProperties=nodeProperties;
                 }
-                
                 $('#nodeDetail').modal({
                     backdrop: 'static',
                     keyboard: false
                 });	
-
             }
 
+            function onDbClickNode(d,this_node){
+                console.log(d);
+                GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'2',"graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
+                var onSuccessGetGraphPodResults=function(response){
+                    $(this_node).find(".node-refresh").css("display","none");
+                    if(response.edges.length >0){    
+                        scope.graphData=response;
+                        graph.initialize(response);
+                    }else{
+                        notify.type = 'success',
+			            notify.title = 'Success',
+			            notify.content = 'No Record Found'
+			            scope.$emit('notify', notify);
+                    }
+                }
+                var onError=function(response){ 
+                    $(this_node).find(".node-refresh").css("display","none");
+                    notify.type = 'error',
+			        notify.title = 'Error',
+			        notify.content = "Some Error Occurred"
+			        scope.$emit('notify', notify);  
+                }
+            }
+            function rightClickNode(d, i) {
+                d3.event.preventDefault();
+                var this_node=this ;
+                var Nodedata = d;
+                d3.selectAll('.context-menu').data([1])
+                    .enter()
+                    .append('div')
+                    .attr('class', 'context-menu');
+
+                // close menu
+                d3.select('body').on('click.context-menu', function () {
+                    d3.select('.context-menu').style('display', 'none');
+                });
+                
+                // this gets executed when a contextmenu event occurs
+                d3.selectAll('.context-menu')
+                    .html('')
+                    .append('ul')
+                    .selectAll('li')
+                    .data(menus).enter()
+                    .append('li')
+                    .on('click', function (d) {
+                        $(this_node).find(".node-refresh").css("display","block");
+                        onDbClickNode(Nodedata,this_node);
+                        d3.select('.context-menu').style('display', 'none');
+                    })
+                    .text(function (d) {
+                        return d;
+                    });
+
+                d3.select('.context-menu').style('display', 'none');
+
+                // show the context menu
+                d3.select('.context-menu')
+                    .style('left', (d3.event.pageX - 2) + 'px')
+                    .style('top', (d3.event.pageY - 2) + 'px')
+                    .style('display', 'block');
+                d3.event.preventDefault();
+            }
             function mouseoverEdge(d){
              // console.log(d)
             //     var e = d3.event;
