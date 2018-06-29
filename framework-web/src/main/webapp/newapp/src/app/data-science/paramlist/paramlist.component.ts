@@ -63,7 +63,7 @@ export class ParamlistComponent implements OnInit {
     { 'value': 'list', 'label': 'list' },
     { 'value': 'distribution', 'label': 'distribution' },
     { 'value': 'attribute', 'label': 'attribute' },
-    { 'value': 'attribute[s]', 'label': 'attribute[s]' },
+    { 'value': 'attributes', 'label': 'attribute[s]' },
     { 'value': 'datapod', 'label': 'datapod' }]
 
     this.typeSimple = ["string", "double", "date", "integer", "list"];
