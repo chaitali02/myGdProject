@@ -38,6 +38,9 @@ import { PredictionComponent } from './prediction/prediction.component';
 import { PredictionService } from '../metadata/services/prediction.service';
 import {SimulationComponent } from './simulation/simulation.component';
 import {SimulationService } from '../metadata/services/simulation.service';
+//import {PopupModule} from 'ng2-opd-popup';
+import { DialogModule } from 'primeng/components/dialog/dialog'
+import { CommonListService } from '../common-list/common-list.service';
 
 @NgModule({
     imports:[
@@ -55,8 +58,9 @@ import {SimulationService } from '../metadata/services/simulation.service';
         DropdownModule,
         GrowlModule,
         CheckboxModule,
-        DataTableModule
-        
+        DataTableModule,
+        DialogModule,
+       // PopupModule.forRoot()
 
     ],
     declarations :[
@@ -82,7 +86,8 @@ import {SimulationService } from '../metadata/services/simulation.service';
         PredictionService, 
         SimulationService,
         OperatorService,
-        OperatorComponent
+        OperatorComponent,
+        CommonListService
     ]
 })
  
