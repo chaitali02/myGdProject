@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.spark.ml.param.ParamMap;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -452,4 +453,15 @@ public class ModelController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		modelExecServiceImpl.restartSimulate(type, trainExecUuid, trainExecVersion, execParams, runMode);
 	}
+	
+	@RequestMapping(value = "/upload", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
+	public @ResponseBody String upload(@RequestParam("file") MultipartFile file,
+									   @RequestParam(value = "extension") String extension,
+									   @RequestParam(value = "fileType") String fileType,
+									   @RequestParam(value = "type", required = false) String type,
+									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, ParseException, JSONException {
+	 return modelServiceImpl.upload(file, extension, fileType, fileName, type);
+	}
+	
+
 }

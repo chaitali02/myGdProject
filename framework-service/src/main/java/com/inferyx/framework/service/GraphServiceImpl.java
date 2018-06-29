@@ -200,6 +200,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		keywordList.add("nodeInfo");
 		keywordList.add("edgeInfo");
 		keywordList.add("nodeProperties");
+		keywordList.add("edgeProperties");
 		
 		}
 
@@ -992,7 +993,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 								|| key.equalsIgnoreCase("tasks") || key.equalsIgnoreCase("operators")
 								|| key.equalsIgnoreCase("featureAttrMap") || key.equalsIgnoreCase("configInfo")
 								|| key.equalsIgnoreCase("featureInfo")|| key.equalsIgnoreCase("nodeInfo")||key.equalsIgnoreCase("edgeInfo")
-								|| key.equalsIgnoreCase("nodeProperties")) {
+								) {
 							String attr = "";
 							Map<String, String> map = new HashMap<String, String>();
 							map.put("attributes", "name");
@@ -1008,7 +1009,6 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 							map.put("edgeInfo", "edgeName");
 							map.put("nodeInfo", "nodeIcon");
 							
-
 							if (map.containsKey(key))
 								attr = childObj.optString(map.get(key));
 							else {
@@ -1018,7 +1018,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 								map.put("features", name + "_" + i);
 								map.put("operators", name + "_" + i);
 								map.put("featureAttrMap", name + "_" + i);
-								map.put("nodeProperties", "nodeProperties");
+								
+
 								if (map.containsKey(key))
 									attr = map.get(key);
 							}
@@ -1089,7 +1090,58 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
 									refName, name, null);
 						}
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+						else if (key.equalsIgnoreCase("nodeProperties") || key.equalsIgnoreCase("edgeProperties") )/* for nodeProperties */ {
+							String attr = childObj.optString("attrId");
+							if (childObj != null && value.startsWith("{", 0)) {
+								String refN = childObj.optString("ref");
+								if (childObj != null && refN.startsWith("{", 0)) {
+									JSONObject jsonObjType = new JSONObject(refN);
+								
+								childUuid = jsonObjType.optString("uuid");
+								childType = jsonObjType.optString("type");
+
+								if (!childType.equals(MetaType.simple.toString())) {
+									
+									baseEntityList = commonServiceImpl.getResolveNameByUuidandType(childUuid,
+											childType);
+									refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+											: baseEntityList.get(0).getName();
+								}
+							}
+							}
+							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
+									refName+"_"+attr, name, null);
+						}
 						
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 					/*	else if (key.equalsIgnoreCase("edgeInfo")) for graphpod  {
 							String attr4 = childObj.optString("edgeSource");
 							

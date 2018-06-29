@@ -78,6 +78,7 @@ import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureRefHolder;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -94,6 +95,7 @@ import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SimulationType;
@@ -761,6 +763,37 @@ public class ModelServiceImpl {
 			e.printStackTrace();
 		}
 		return scriptPath;
+	}
+	
+	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType) throws FileNotFoundException, IOException, JSONException, ParseException {
+		String uploadFileName = file.getOriginalFilename();
+		FileType type = Helper.getFileType(fileType);
+		String fileLocation = null;
+		String directoryLocation = Helper.getFileDirectoryByFileType(type);
+		String metaUuid = null;
+		String metaVersion = null;
+		if(fileName == null) {
+			fileName = Helper.getFileCustomNameByFileType(type, extension);
+			String splits[] = fileName.split("_");
+			metaUuid = splits[0];
+			metaVersion = splits[1].substring(0, splits[1].lastIndexOf("."));
+		} 
+		
+		fileLocation = directoryLocation+"/" + fileName;
+		
+		File scriptFile = new File(fileLocation);
+		file.transferTo(scriptFile);
+		if(metaType==null)
+		{
+			metaType="model";
+		}
+		UploadExec uploadExec=new UploadExec();
+		uploadExec.setFileName(uploadFileName);
+		uploadExec.setBaseEntity();
+		uploadExec.setLocation(fileLocation);
+		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(metaType), metaUuid, metaVersion)));
+		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+		return fileName;
 	}
 
 	public boolean executeScript(String type, String scriptName, String modelExecUuid, String modelExecVersion, String object) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -2299,6 +2332,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.");
 			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
 		}
+		
+		
 
 		return isSuccess;
 	}
