@@ -1,25 +1,36 @@
 <style>
   .fdGraph .textClass {
     fill: white;
-   
-}
-.iconNode{
-  font-family:FontAwesome;
-  fill:ghostwhite;
-}
-.fdGraph circle {
-  stroke: white;
-  stroke-width: 1.5px;
-}
-.fdGraph path.link, path.textpath {
+
+  }
+
+  .iconNode {
+    font-family: FontAwesome;
+    fill: ghostwhite;
+  }
+
+  .fdGraph circle {
+    stroke: white;
+    stroke-width: 1.5px;
+  }
+
+  .fdGraph path.link,
+  path.textpath {
     fill: none;
     stroke: #cccccc;
     stroke-width: 0.5px;
-}
-.fdGraph path.invis {
+  }
+
+  .fdGraph path.invis {
     fill: none;
     stroke-width: 0;
-}
+  }
+  /* .portlet > .portlet-body.green, .portlet.green{
+    background: white;
+  } */
+  /* .select2-container--open {
+      z-index: 10060;
+    } */
 </style>
 <div class="row" data-ng-controller="GraphpodResultController">
   <div class="col-md-12">
@@ -31,18 +42,17 @@
         </li>
         <li>
           <a ui-sref="rulerestult">
-          <span>{{$state.current.data.pageTitle}}</span>
-        </a>
-        </a>
+            <span>{{$state.current.data.pageTitle}}</span>
+          </a>
           <i class="fa fa-circle"></i>
         </li>
         <li>
           <a ui-sref="rulerestult">
-          <span>Graph Result</span>
+            <span>Graph Result</span>
           </a>
-        </a>
         </li>
       </ul>
+
       <div class="page-toolbar">
         <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
           <i class="icon-calendar"></i>&nbsp;
@@ -50,12 +60,13 @@
         </div>
       </div>
     </div>
-    
+
     <br>
 
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-    <div  options="dirOptions" type="metaType" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="execDetali" comment-panel-directive></div>
-  
+    <div options="dirOptions" type="metaType" on-close="onPanelClose" mode="mode" current-user="userDetail"
+     comment-data="execDetali" comment-panel-directive></div>
+
 
     <div class="portlet box green">
       <div class="portlet-title">
@@ -63,23 +74,26 @@
           <i class="fa fa-cogs"></i>Graph Result
         </div>
         <div class="tools">
-          <a class="fullscreen" tooltip-placement="top" uib-tooltip="{{showtooltiptitle}}"></a>
-          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3FDGraphShow==true? 'currentpage':'notcurrentpage'"   ng-disabled ="isD3FDGraphShow" href="javascript:;"data-ng-click="showFDGraph()" style="height:16px;">
+          <!-- <a class="fullscreen" tooltip-placement="top" uib-tooltip="{{showtooltiptitle}}"></a> -->
+          <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3FDGraphShow==true? 'currentpage':'notcurrentpage'"
+            ng-disabled="isD3FDGraphShow" href="javascript:;" data-ng-click="showFDGraph()" style="height:16px;">
             <span class="glyphicon glyphicon-file" style="color:white;"></span>
           </a>
           <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showKGraph()" ng-class="isD3KnowlageGraphShow==true? 'currentpage':'notcurrentpage'">
             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
           </a>
-          <a title="Refresh" href="javascscript:;" ng-click="isD3KnowlageGraphShow ? broadcastRefreshData(): refreshFDGraph()" data-toggle="tooltip" data-placement="top">
+          <a title="Refresh" href="javascscript:;" ng-click="isD3KnowlageGraphShow ? broadcastRefreshData(): refreshFDGraph()" data-toggle="tooltip"
+            data-placement="top">
             <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;"></i>
           </a>
-          <a title="Close"  href="javascript:;"  ng-click="genericClose($event,'graphexec')" data-toggle="tooltip" data-placement="top" tooltip  style="height:14px;">
+          <a title="Close" href="javascript:;" ng-click="genericClose($event,'graphexec')" data-toggle="tooltip" data-placement="top"
+            tooltip style="height:14px;">
             <i class="fa fa-times" style="display:block;margin:0px 2px 0px 0px;color:white;transform: scale(1,1.2);"></i>
           </a>
-        
+
         </div>
       </div>
-      <div class="portlet-body" style="min-height:100px;">
+      <div class="portlet-body">
         <div ng-show="isDataError">
           <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
         </div>
@@ -101,7 +115,8 @@
           </div>
         </div>
         <div ng-if="isD3FDGraphShow" class="form-body fdGraph" style="background-color:#384d54">
-          <div id="fDGraph-directive" class="form-body  graph-body" style="justify-content: flex-start;display: block;" fd-graph-directive uuid="graphExecDetail.uuid" version="graphExecDetail.version">
+          <div id="fDGraph-directive" class="form-body  graph-body" style="justify-content: flex-start;display: block;min-height:500px;" fd-graph-directive
+            uuid="graphExecDetail.uuid" version="graphExecDetail.version">
           </div>
         </div>
       </div>

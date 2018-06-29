@@ -253,7 +253,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             largeArc = 0;
 
                         if (siblingCount > 1) {
-                             if(siblingCount >4){
+                             if(siblingCount >5){
                                 largeArc=1;
                              }
                            

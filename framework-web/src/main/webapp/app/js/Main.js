@@ -2980,7 +2980,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('creaetgraphpod', {
             url: "/GraphAnalysis/Graphpod?id&mode&returnBack&version",
             templateUrl: "views/graphpod.html",
-            data: { pageTitle: 'Graph Analysis9-' },
+            data: { pageTitle: 'Graph Analysis' },
             //controller: "BlankController",
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
