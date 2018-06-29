@@ -19,6 +19,7 @@ import { saveAs } from 'file-saver/FileSaver';
 import { CommonList } from './common-list';
 import {AppMetadata} from '../app.metadata';
 import {AppHepler} from '../app.helper';
+import { CommonService } from "../metadata/services/common.service";
 
 declare var jQuery: any;
 interface FileReaderEventTarget extends EventTarget {
@@ -31,7 +32,10 @@ interface FileReaderEventTarget extends EventTarget {
     providers: [DatePipe]
 })
 
-export class CommonListComponent {
+export class CommonListComponent { 
+    attributeTypes : any[];
+    paramListHolder : any[];
+    displayDialogBox : boolean= false;
     imagePath: string;
     fileData: any;
     file: File;
@@ -164,7 +168,7 @@ export class CommonListComponent {
     ];
 
     types: { "value": string; "caption": string; }[];
-    constructor(private sanitizer: DomSanitizer,private http: Http, private _commonListService: CommonListService, private activatedRoute: ActivatedRoute, public router: Router,private fb: FormBuilder,public metaconfig: AppMetadata, public apphelper : AppHepler,private datePipe: DatePipe,private activeroute:ActivatedRoute) {
+    constructor(private sanitizer: DomSanitizer,private http: Http, private _commonListService: CommonListService, private activatedRoute: ActivatedRoute, public router: Router,private fb: FormBuilder,public metaconfig: AppMetadata, public apphelper : AppHepler,private datePipe: DatePipe,private activeroute:ActivatedRoute,private _commonService : CommonService) {
         let temp;
         this.active=" ";
         this.status=" ";
@@ -204,7 +208,11 @@ export class CommonListComponent {
             temp=this.type.split("exec")[0];
             this.selectedType=temp;
         }
-
+        this.attributeTypes=[ 
+            {"label": "datapod","value":"datapod"},
+            {"label": "dataset","value":"dataset"},
+            {"label": "rule","value":"rule"},
+            ];
         this.types = [
             {
             "value": temp,
@@ -511,6 +519,9 @@ export class CommonListComponent {
         if(this.type=="rule"||this.type=="model"){
             this.getParams()
         }
+        else if(this.type=="simulate"){
+            this.getExecParamList();
+        }
         else{
             this.okExecute();
         }
@@ -522,6 +533,298 @@ export class CommonListComponent {
         this.okRestart();
        }
     }
+
+
+  onChangeAtrributes(index) {
+    this._commonService.getAllAttributeBySource(this.paramListHolder[index].paramValue.uuid,"datapod").subscribe(
+      response => {this.onSuccessgetAttributesByDatapod(response,index)},
+      error => console.log("Error :: " + error));
+  }
+
+  onSuccessgetAttributesByDatapod(response,index) {
+    let allAttributeinto = [];
+    for (const i in response) {
+      let attributeInfoTagObj = {};
+      attributeInfoTagObj["label"] = response[i].name;
+      attributeInfoTagObj["value"] = {};
+      attributeInfoTagObj["value"]["label"] = response[i].name;
+      attributeInfoTagObj["value"]["uuid"] = response[i].uuid;
+      attributeInfoTagObj["value"]["datapodname"] = response[i].datapodname;
+      attributeInfoTagObj["value"]["attributeId"] = response[i].attributeId;
+      allAttributeinto[i] = attributeInfoTagObj;
+      //make same arrays of attribute n attributes or make array name differnet
+    }
+    this.paramListHolder[index]["allattributeInfoTag"] = allAttributeinto;
+    console.log(JSON.stringify(this.paramListHolder[index]["allattributeInfoTag"]));
+    
+  }
+
+  getAllAttribute(index) { 
+    if (this.paramListHolder[index].paramValue !== null || this.paramListHolder[index].paramType == "attribute") {
+     
+      this._commonService.getAllAttributeBySource(this.paramListHolder[index].paramValue.uuid, "datapod").subscribe(
+        response => { this.onSuccessgetAllAttributeBySource(response,index)},
+        error => console.log("Error :: " + error));
+    }
+  }
+
+  onSuccessgetAllAttributeBySource(response,index) {
+    let allAttributeinto1 = [];
+    for (const i in response) {
+      let allAttributeintoObj = {};
+      allAttributeintoObj["label"] = response[i].dname;
+      allAttributeintoObj["value"] = {};
+      allAttributeintoObj["value"]["label"] = response[i].dname;
+      allAttributeintoObj["value"]["uuid"] = response[i].uuid;
+      allAttributeintoObj["value"]["name"] = response[i].name;
+      allAttributeintoObj["value"]["attributeId"] = response[i].attributeId;
+      allAttributeintoObj["value"]["datapodname"] = response[i].datapodname;
+      // allAttributeintoObj["value"]["attributeId"] = response[i].attributeId;
+
+
+      allAttributeinto1[i] = allAttributeintoObj;
+    }
+    this.paramListHolder[index]["allAttributeinto"] = allAttributeinto1;
+  }
+
+  getAllLatestSimulation(type, index) {
+    this._commonListService.getAllLatest(type || "dataset").subscribe(
+      response => { this.onSucceessgetAllLatest(response, type, index) },
+      error => console.log("Error :: " + error));
+  }
+
+  onSucceessgetAllLatest(response, type, index) {
+    if (type == "datapod") {
+      let allDatapod = [];
+      for (const i in response) {
+        let allDatapodObj = {};
+        allDatapodObj["label"] = response[i].name;
+        allDatapodObj["value"] = {};
+        allDatapodObj["value"]["label"] = response[i].name;
+        allDatapodObj["value"]["uuid"] = response[i].uuid;
+        allDatapod[i] = allDatapodObj;
+      }
+      //this.getAllAttribute(type,index);
+      this.paramListHolder[index]["allDatapod"] = allDatapod;
+    }
+
+    //this.allDatapod=temp1;
+
+    if (type == "dataset") {
+      let allDataset = [];
+      for (const i in response) {
+        let allDatasetObj = {};
+        allDatasetObj["label"] = response[i].name;
+        allDatasetObj["value"] = {};
+        allDatasetObj["value"]["label"] = response[i].name;
+        allDatasetObj["value"]["uuid"] = response[i].uuid;
+        allDataset[i] = allDatasetObj;
+      }
+      this.paramListHolder[index]["allDataset"] = allDataset;
+    }
+    //this.allDataset=temp2;
+
+    if (type == "rule") {
+      let allRule = [];
+      for (const i in response) {
+        let allRuleObj = {};
+        allRuleObj["label"] = response[i].name;
+        allRuleObj["value"] = {};
+        allRuleObj["value"]["label"] = response[i].name;
+        allRuleObj["value"]["uuid"] = response[i].uuid;
+        allRule[i] = allRuleObj;
+      }
+      this.paramListHolder[index]["allRule"] = allRule;
+    }
+    if (type == "distribution") {
+      let allDistribution = [];
+      for (const i in response) {
+        let allDistributionObj = {};
+        allDistributionObj["label"] = response[i].name;
+        allDistributionObj["value"] = {};
+        allDistributionObj["value"]["label"] = response[i].name;
+        allDistributionObj["value"]["uuid"] = response[i].uuid;
+        allDistribution[i] = allDistributionObj;
+      }
+      this.paramListHolder[index]["allDistribution"] = allDistribution;
+    }
+  }
+    getExecParamList(){
+        this._commonListService.getParamListByType(this.executeId,this.executeVersion,this.type,"view")
+        .subscribe(
+            response =>{this.onSuccessgetParamListByType(response)
+            },
+            error => console.log("Error :: " + error)
+        )
+    }
+    onSuccessgetParamListByType(response){
+        this.paramListHolder = response;
+        let paramListHolder1 = [];
+        let type = ["ONEDARRAY", "TWODARRAY"];
+        var type1 = ['distribution', 'attribute', 'attributes', 'datapod', 'list'];
+        if (this.paramListHolder.length > 0) {
+          for (var i = 0; i < this.paramListHolder.length; i++) {
+            let paramList = {};
+            paramList["uuid"] = this.paramListHolder[i].ref.uuid;
+            paramList["type"] = this.paramListHolder[i].ref.type;
+            paramList["paramId"] = this.paramListHolder[i].paramId;
+            paramList["paramType"] = this.paramListHolder[i].paramType.toLowerCase();
+            paramList["paramName"] = this.paramListHolder[i].paramName;
+            paramList["ref"] = this.paramListHolder[i].ref;
+            paramList["attributeInfo"];
+            paramList["allAttributeinto"] = [];
+            paramList["attributeInfoTag"] = [];
+            if (type1.indexOf(this.paramListHolder[i].paramType) == -1) {
+              paramList["isParamType"] = "simple";
+              paramList["paramValue"] = this.paramListHolder[i].paramValue.value;
+              paramList["selectedParamValueType"] = 'simple'
+            } else if (type1.indexOf(this.paramListHolder[i].paramType) != -1) {
+              paramList["isParamType"] = this.paramListHolder[i].paramType;
+              paramList["selectedParamValueType"] = this.paramListHolder[i].paramType == "distribution" ? this.paramListHolder[i].paramType : "datapod";
+              paramList["paramValue"] = this.paramListHolder[i].paramValue;
+              if (this.paramListHolder[i].paramValue != null && this.paramListHolder[i].paramValue !== 'list') {
+                debugger
+                var selectedParamValue = {};
+                selectedParamValue["uuid"] = this.paramListHolder[i].paramValue.ref.uuid;
+                selectedParamValue["type"] = this.paramListHolder[i].paramValue.ref.type;
+                paramList["selectedParamValue"] = selectedParamValue;
+              }
+              if (this.paramListHolder[i].paramValue && this.paramListHolder[i].paramType == 'list') {
+                debugger
+                paramList["selectedParamValueType"] = "list";
+                var listvalues = this.paramListHolder[i].paramValue.value.split(',');
+                var selectedParamValue = {};
+                selectedParamValue["type"] = this.paramListHolder[i].paramValue.ref.type;
+                selectedParamValue["value"] = listvalues[0];
+                paramList["paramValue"] = selectedParamValue;
+                paramList["selectedParamValue"] = selectedParamValue;
+                for (const i in listvalues) {
+                  var listvalues1 = {};
+                  listvalues1["label"] = listvalues[i];
+                  listvalues1["value"] = listvalues[i];
+                  listvalues[i] = listvalues1;
+                }
+                paramList["allListInfo"] = listvalues;
+              }
+            } else {
+              paramList["isParamType"] = "datapod";
+              paramList["selectedParamValueType"] = 'datapod'
+              paramList["paramValue"] = this.paramListHolder[i].paramValue;
+            }
+    
+            paramListHolder1[i] = paramList;
+           
+          }
+          this.paramListHolder = [];
+          this.paramListHolder = paramListHolder1;
+          this.displayDialogBox =true;
+          console.log(JSON.stringify(this.paramListHolder))
+        }
+    }
+    cancelDialogBox(){
+        this.displayDialogBox =false;
+    }
+    executeWithExecParamList(){
+        this.displayDialogBox =false;
+        debugger
+        let execParams = {};
+        let paramListInfo = [];
+        if (this.paramListHolder.length > 0) {debugger
+          for (let i = 0; i < this.paramListHolder.length; i++) {
+            let paramList = {};
+            paramList["paramId"] = this.paramListHolder[i].paramId;
+            paramList["paramName"] = this.paramListHolder[i].paramName;
+            paramList["paramType"] = this.paramListHolder[i].paramType;
+            paramList["ref"] = this.paramListHolder[i].ref;
+            if (this.paramListHolder[i].paramType == 'attribute') {
+              let attributeInfoArray = [];
+              let attributeInfo = {};
+              let attributeInfoRef = {}
+              attributeInfoRef["type"] = this.paramListHolder[i].selectedParamValueType;
+              attributeInfoRef["uuid"] = this.paramListHolder[i].attributeInfo.uuid;
+              attributeInfoRef["name"] = this.paramListHolder[i].attributeInfo.name
+              attributeInfo["ref"] = attributeInfoRef;
+              attributeInfo["attrId"] = this.paramListHolder[i].attributeInfo.attributeId;
+              attributeInfoArray[0] = attributeInfo
+              paramList["attributeInfo"] = attributeInfoArray;
+    
+            }
+            if (this.paramListHolder[i].paramType == 'attributes') {
+              let attributeInfoArray = [];
+              for (let j = 0; j < this.paramListHolder[i].attributeInfoTag.length; j++) {
+                debugger
+                let attributeInfo = {};
+                let attributeInfoRef = {}
+                attributeInfoRef["type"] = this.paramListHolder[i].selectedParamValueType;
+                attributeInfoRef["uuid"] = this.paramListHolder[i].attributeInfoTag[j].uuid;
+                attributeInfoRef["name"] = this.paramListHolder[i].attributeInfoTag[j].datapodname;
+                attributeInfo["ref"] = attributeInfoRef;
+                attributeInfo["attrId"] = this.paramListHolder[i].attributeInfoTag[j].attributeId;
+                attributeInfo["attrName"] = this.paramListHolder[i].attributeInfoTag[j].label;
+                attributeInfoArray[j] = attributeInfo
+              }
+              paramList["attributeInfo"] = attributeInfoArray;
+            }
+            else if (this.paramListHolder[i].paramType == 'distribution' || this.paramListHolder[i].paramType == 'datapod') {
+              debugger
+              let ref = {};
+              let paramValue = {};
+              ref["type"] = this.paramListHolder[i].selectedParamValueType;
+              // if(this.paramListHolder[i].selectedParamValue !== null){
+              // ref["uuid"] = this.paramListHolder[i].selectedParamValue.uuid;
+              // }
+              paramValue["ref"] = ref;
+              paramList["paramValue"] = paramValue;
+            }
+            else if (this.paramListHolder[i].selectedParamValueType == "simple") {
+              let ref = {};
+              let paramValue = {};
+              ref["type"] = this.paramListHolder[i].selectedParamValueType;
+              paramValue["ref"] = ref;
+              paramValue["value"] = this.paramListHolder[i].paramValue
+              paramList["paramValue"] = paramValue;
+            }
+            else if (this.paramListHolder[i].selectedParamValueType == "list") {
+              let ref = {};
+              let paramValue = {};
+              ref["type"] = 'simple';
+              paramValue["ref"] = ref;
+              paramValue["value"] = this.paramListHolder[i].paramValue
+              paramList["paramValue"] = paramValue;
+            }
+            paramListInfo[i] = paramList;
+          }
+          execParams["paramListInfo"] = paramListInfo;
+        }
+        else {
+          execParams = null;
+        }
+        console.log(JSON.stringify(execParams));
+        debugger
+        this._commonListService.executeWithParams(this.executeId,this.executeVersion, "simulate", "view", execParams).subscribe(
+          response => { this.onSuccessExecute(response)},
+          error => {this.onError(error)}
+        )
+    }
+    onSuccessExecute(response){
+        debugger
+        console.log(JSON.stringify(response));
+        this.msgs = [];
+        this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'simulate Save Successfully' });
+        // setTimeout(() => {
+        //   this.goBack();
+        // }, 1000);
+      }
+    
+      onError(error){
+        console.log('Error :: ' + error);
+        this.msgs = [];
+        this.msgs.push({ severity: 'Failed', summary: 'Error Message', detail: 'simulate execution failed' });
+        // setTimeout(() => {
+        //   this.goBack();
+        // }, 1000);
+      }
+
     getParams(){
         this.isParamModel="true"
         this.paramtablecol = null
