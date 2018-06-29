@@ -142,7 +142,7 @@ export class PredictionComponent implements OnInit {
     this._commonService.getAllLatest(source)
       .subscribe(
       response => {
-        this.onSuccessgetAllLatestSource(response,true)
+        this.onSuccessgetAllLatestSource(response)
       },
       error => console.log("Error :: " + error));
   }
@@ -171,14 +171,8 @@ export class PredictionComponent implements OnInit {
   onChangeSourceType() {
     this.getAllLatestSource(this.selectSourceType)
   }
-  onSuccessgetAllLatestSource(response,Default) {
+  onSuccessgetAllLatestSource(response) {
     let temp = []
-    if (Default == true) {
-      let dependOnTemp: DependsOn = new DependsOn();
-      dependOnTemp.label = response[0]["name"];
-      dependOnTemp.uuid = response[0]["uuid"];
-      this.selectSource = dependOnTemp;
-    }
     for (const i in response) {
       let ver = {};
       ver["label"] = response[i]['name'];
@@ -188,7 +182,7 @@ export class PredictionComponent implements OnInit {
       temp[i] = ver;
     }
     this.allSource = temp
-    this.getAttribute()
+  //  this.getAttribute()
   }
   public get value(): string {
     return
@@ -323,7 +317,7 @@ export class PredictionComponent implements OnInit {
   }
   getTrainByModel(defaultValue) {
     {
-      this._predictService.getTrainByModel(this.selectModel.uuid, this.selectModel.version, 'train')
+      this._predictService.getTrainByModel(this.selectModel.uuid, this.selectModel.version , 'train')
         .subscribe(
         response => {
           this.onSuccessTrainByModel(response)

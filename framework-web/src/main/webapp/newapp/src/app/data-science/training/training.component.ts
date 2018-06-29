@@ -11,6 +11,7 @@ import { AttributeHolder } from '../../metadata/domain/domain.attributeHolder'
 import { ResponseOptions } from '@angular/http/src/base_response_options';
 import { DependOnExp } from '../../metadata/domain/domain.dependOnExp';
 import { Param } from '../../metadata/domain/domain.param';
+import { retryWhen } from 'rxjs/operators/retryWhen';
 
 @Component({
   selector: 'app-training  ',
@@ -70,9 +71,9 @@ export class TrainingComponent implements OnInit {
     this.train = {};
     this.train["active"] = true;
     this.train.trainPercent = 70;
-    this.train.valPercent =30;
+    this.train.valPercent = 30;
     this.continueCount = 1;
-    this.modeldata = []
+    this.modeldata = {}
     this.progressbarWidth = 25 * this.continueCount + "%";
     this.sourceTypes = ["datapod", "dataset", "rule"]
     this.selectSourceType = this.sourceTypes[0];
@@ -147,7 +148,7 @@ export class TrainingComponent implements OnInit {
     this._commonService.getAllLatest(source)
       .subscribe(
       response => {
-        this.onSuccessgetAllLatestSource(response, true)
+        this.onSuccessgetAllLatestSource(response)
 
       },
       error => console.log("Error :: " + error));
@@ -179,14 +180,8 @@ export class TrainingComponent implements OnInit {
     this.getAllLatestSource(this.selectSourceType)
   }
 
-  onSuccessgetAllLatestSource(response, Default) {
+  onSuccessgetAllLatestSource(response) {
     let temp = []
-    if (Default == true) {
-      let dependOnTemp: DependsOn = new DependsOn();
-      dependOnTemp.label = response[0]["name"];
-      dependOnTemp.uuid = response[0]["uuid"];
-      this.selectSource = dependOnTemp;
-    }
     for (const i in response) {
       let ver = {};
       ver["label"] = response[i]['name'];
@@ -196,7 +191,7 @@ export class TrainingComponent implements OnInit {
       temp[i] = ver;
     }
     this.allSource = temp
-    this.getAttribute()
+    //this.getAttribute()
   }
   public get value(): string {
     return
@@ -267,7 +262,7 @@ export class TrainingComponent implements OnInit {
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = response["dependsOn"]["ref"]["name"];
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
-    dependOnTemp.version = response["dependsOn"]["ref"]["version"];
+    dependOnTemp.version = "";
     this.selectModel = dependOnTemp
     this.selectSourceType = response["source"]["ref"]["type"];
     let sourceTemp: DependsOn = new DependsOn();
@@ -304,12 +299,16 @@ export class TrainingComponent implements OnInit {
       featureMapTableArray[i] = featureMap;
     }
     this.featureMapTableArray = featureMapTableArray;
+    if (this.selectModel) {
+      this.onChangeModel(false)
+    }
+
   }
 
   onChangeSource() {
     this.getAttribute();
 
-  }
+  } Password
   getAttribute() {
 
     this._commonService.getAllAttributeBySource(this.selectSource.uuid, this.selectSourceType).subscribe(
@@ -352,32 +351,45 @@ export class TrainingComponent implements OnInit {
     this.VersionList = temp
   }
 
-  onChangeModel() {
-    this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version, 'model')
-      .subscribe(
-      response => {
-        this.onSuccessonChangeModel(response)
-      },
-      error => console.log("Error :: " + error));
+  onChangeModel(Default) {
+    {
+
+      this._commonService.getOneByUuidAndVersion(this.selectModel.uuid, this.selectModel.version, 'model')
+        .subscribe(
+        response => {
+          this.onSuccessonChangeModel(response, Default)
+
+        },
+
+        error => console.log("Error :: " + error));
+    }
+    if (this.selectModel) {
+      return false
+    }
+
   }
 
-  onSuccessonChangeModel(response) {
-    var featureMapTableArray = [];
+  onSuccessonChangeModel(response, Default) {
     this.modeldata = response;
-    for (var i = 0; i < response.features.length; i++) {
-      var featureMap = {};
-      var sourceFeature = {};
-      var targetFeature = {};
-      featureMap["featureMapId"] = i;
-      sourceFeature["uuid"] = response.uuid;
-      sourceFeature["type"] = "model";
-      sourceFeature["label"] = response.label
-      sourceFeature["featureId"] = response.features[i].featureId;
-      sourceFeature["featureName"] = response.features[i].name;
-      featureMap["sourceFeature"] = sourceFeature;
-      featureMapTableArray[i] = featureMap;
+    if (Default) {
+      this.checkboxModelexecution = false;
+      this.isShowExecutionparam = false;
+      var featureMapTableArray = [];
+      for (var i = 0; i < response.features.length; i++) {
+        var featureMap = {};
+        var sourceFeature = {};
+        var targetFeature = {};
+        featureMap["featureMapId"] = i;
+        sourceFeature["uuid"] = response.uuid;
+        sourceFeature["type"] = "model";
+        sourceFeature["label"] = response.label
+        sourceFeature["featureId"] = response.features[i].featureId;
+        sourceFeature["featureName"] = response.features[i].name;
+        featureMap["sourceFeature"] = sourceFeature;
+        featureMapTableArray[i] = featureMap;
+      }
+      this.featureMapTableArray = featureMapTableArray;
     }
-    this.featureMapTableArray = featureMapTableArray;
   }
 
   onChangeTargeType() {
@@ -485,22 +497,7 @@ export class TrainingComponent implements OnInit {
         execParams = null
       }
     }
-    console.log(JSON.stringify(execParams));
-    this._commonService.execute(modeldetail["uuid"], modeldetail["version"], 'train', execParams).subscribe(
-      response => { this.onSuccessExecute(response) },
-      error => console.log('Error :: ' + error)
-    )
-  }
-
-  onSuccessExecute(response) {
-    {
-      this.msgs = [];
-      this.isSubmit = "true"
-      this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Model Saved and Submited Successfully' });
-      setTimeout(() => {
-        this.goBack()
-      }, 1000);
-    }
+   
   }
 
   onSelectparamSet() {
