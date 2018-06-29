@@ -187,7 +187,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                         .style("fill", "#cccccc")
                         .style("font-size", 10)
                         .text(function (d) { return d.value; })  
-                         .on("click", onClickEdge);
+                         //.on("click", onClickEdge);
+                         .on("contextmenu", rightClickEdge);
 
                     var node = svg.selectAll("g.node1")
                         .data(force.nodes());
@@ -195,7 +196,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     var nodeEnter = node.enter().append("g")
                         .attr("class", "node1")
                         .call(force.drag)
-                        .on("dblclick", onClickNode)
+                        .on("dblclick", onDbClickNode)
                         .on('contextmenu', rightClickNode)
                         // .on("mouseover", mouseoverNode)
                         .on("mouseout", function (d) {
@@ -211,7 +212,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             return "Node;" + d.id;
                         })
                         .attr("class", "nodeStrokeClass")
-                        .attr("fill", "#0db7ed")
+                        //.attr("fill", "#0db7ed")
+                        .attr("fill", function(d) { try{ return CF_GRAPHPOD.nodeIconMap[d.nodeIcon].color}catch(e){ return"#0db7ed"}})
                     nodeEnter.append('text')
                         .attr('font-family', 'FontAwesome')
                         .attr("class", "iconNode")
@@ -385,8 +387,10 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 });	
             }
 
-            function onDbClickNode(d,this_node){
+            function onDbClickNode(d){
                 console.log(d);
+                var this_node=this;
+                $(this_node).find(".node-refresh").css("display","block");
                 GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'2',"graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
                     $(this_node).find(".node-refresh").css("display","none");
@@ -407,6 +411,48 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
 			        notify.content = "Some Error Occurred"
 			        scope.$emit('notify', notify);  
                 }
+            }
+
+
+            
+            function rightClickEdge(d, i) {
+                d3.event.preventDefault();
+                var this_node=this ;
+                var Nodedata = d;
+                d3.selectAll('.context-menu').data([1])
+                    .enter()
+                    .append('div')
+                    .attr('class', 'context-menu');
+
+                // close menu
+                d3.select('body').on('click.context-menu', function () {
+                    d3.select('.context-menu').style('display', 'none');
+                });
+                
+                // this gets executed when a contextmenu event occurs
+                d3.selectAll('.context-menu')
+                    .html('')
+                    .append('ul')
+                    .selectAll('li')
+                    .data(menus).enter()
+                    .append('li')
+                    .on('click', function (d) {
+                       
+                        onClickEdge(Nodedata,this_node);
+                        d3.select('.context-menu').style('display', 'none');
+                    })
+                    .text(function (d) {
+                        return d;
+                    });
+
+                d3.select('.context-menu').style('display', 'none');
+
+                // show the context menu
+                d3.select('.context-menu')
+                    .style('left', (d3.event.pageX - 2) + 'px')
+                    .style('top', (d3.event.pageY - 2) + 'px')
+                    .style('display', 'block');
+                d3.event.preventDefault();
             }
             function rightClickNode(d, i) {
                 d3.event.preventDefault();
@@ -430,8 +476,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     .data(menus).enter()
                     .append('li')
                     .on('click', function (d) {
-                        $(this_node).find(".node-refresh").css("display","block");
-                        onDbClickNode(Nodedata,this_node);
+                       
+                        onClickNode(Nodedata,this_node);
                         d3.select('.context-menu').style('display', 'none');
                     })
                     .text(function (d) {
