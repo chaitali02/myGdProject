@@ -1589,7 +1589,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		Row[] rows = (Row[]) result_datset.head(Integer.parseInt("" + result_datset.count()));
 		String[] resultDatesetColumns = result_datset.columns();
 		String[] resultDatasetValue = new String[resultDatesetColumns.length];
-
+       
 		for (Row row : rows) {
 			Map<String, String> source = new HashMap<>();
 			Map<String, String> target = new HashMap<>();
@@ -1634,6 +1634,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			Dataset<Row> dstVertexDf = graphFrame.vertices().filter("id = '" + resultDatasetValue[1] + "'");
 
 			Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
+			if(dstrows.toString().isEmpty()) {
 			for (Row dstrow : dstrows) {
 				for (String cloumn : vertexColumns) {
 					if(cloumn.equalsIgnoreCase("nodeName")){
@@ -1645,12 +1646,20 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 				}
 			}
+			}
+			else {
+				target=null;
+				edge_name=null;
+				edge_type=null;
+				edge_properties=null;
+				relation=null;
+			}
 
 			GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
 					edge_properties);
 			result.add(graphpodresult);
 		}
-
+        
 		Map<String, List<GraphpodResult>> edgeMap = new HashMap<>();
 		edgeMap.put("edges", result);
 		// String reslt = mapper.writeValueAsString(result);
