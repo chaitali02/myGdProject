@@ -993,7 +993,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 								|| key.equalsIgnoreCase("tasks") || key.equalsIgnoreCase("operators")
 								|| key.equalsIgnoreCase("featureAttrMap") || key.equalsIgnoreCase("configInfo")
 								|| key.equalsIgnoreCase("featureInfo")|| key.equalsIgnoreCase("nodeInfo")||key.equalsIgnoreCase("edgeInfo")
-								) {
+								)
+						{
 							String attr = "";
 							Map<String, String> map = new HashMap<String, String>();
 							map.put("attributes", "name");
@@ -1548,7 +1549,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 						refName = childType;
 					}
 					if (StringUtils.isNotBlank(jsonObject.optString("attrId"))) {
-						if (StringUtils.isNotBlank(jsonObject.optString("attrName"))) {
+
+						if (StringUtils.isNotBlank(jsonObject.optString("attrName"))&& jsonObject.optString("attrName") != null) {
 							name = refName + "_" + jsonObject.getString("attrName");
 						} else {
 							name = refName + "_" + jsonObject.getString("attrId");
@@ -1742,10 +1744,11 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		GraphFrame graphFrame = (GraphFrame) graphpodMap.get(graphExecKey);
 		graphFrame.edges().show(false);
 		graphFrame.vertices().show(false);
-		Dataset<Row> edge_dataset = graphFrame.edges().filter("src = '"+filterId+"'").select("src", "dst", "edgeName", "edgeType", "edgeProperties");
-		edge_dataset.show(false);
+
+		Dataset<Row> edge_dataset = graphFrame.edges().filter("src = '"+filterId+"' or dst='"+filterId+"'").select("src", "dst", "edgeName", "edgeType", "edgeProperties");
+		edge_dataset.show();
 		Dataset<Row> node_dataset = graphFrame.vertices().filter("id = '"+filterId+"'").filter("nodeType = '"+nodeType+"'").select("id", "nodeName", "nodeType", "nodeIcon", "nodeProperties");
-		node_dataset.show(false);
+		node_dataset.show();
 		Dataset<Row> result_datset = edge_dataset.join(node_dataset, edge_dataset.col("src").equalTo(node_dataset.col("id")));
 		result_datset.show(false);
 		logger.info("Showing filtered graph >>>>>>>>>>>>>>>>> ");
