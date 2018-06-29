@@ -341,7 +341,7 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-2">
-                                                <input type="number" limit-to="4" class="form-control" [(ngModel)]="simulation.numIterations" name="numIterations" max="1000"
+                                                <input type="number" limit-to="4" class="form-control" [(ngModel)]="simulation.numIterations" [disabled]="mode =='true'" name="numIterations" max="1000"
                                                     required>
                                             </div>
                                         </div>

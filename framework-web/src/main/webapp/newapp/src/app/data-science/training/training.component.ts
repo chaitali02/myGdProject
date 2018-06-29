@@ -372,8 +372,8 @@ export class TrainingComponent implements OnInit {
   onSuccessonChangeModel(response, Default) {
     this.modeldata = response;
     if (Default) {
-      this.checkboxModelexecution = false;
-      this.isShowExecutionparam = false;
+     // this.checkboxModelexecution = false;
+     // this.isShowExecutionparam = false;
       var featureMapTableArray = [];
       for (var i = 0; i < response.features.length; i++) {
         var featureMap = {};
@@ -426,7 +426,7 @@ export class TrainingComponent implements OnInit {
   }
 
   onChangeRunImmediately() {
-    if (this.checkboxModelexecution = "true" && this.modeldata.dependsOn.ref.type == "algorithm") {
+    if (this.checkboxModelexecution = true && this.modeldata.dependsOn.ref.type == "algorithm") {
       this._trainingService.getParamSetByAlgorithm(this.modeldata.dependsOn.ref.uuid, this.modeldata.dependsOn.ref.version)
         .subscribe(
         response => {
@@ -440,6 +440,9 @@ export class TrainingComponent implements OnInit {
     }
   }
 
+
+
+  
   onSuccessGetParamSetByAlgorithm(response) {
     this.allparamset = response
     this.isShowExecutionparam = true;
@@ -458,12 +461,12 @@ export class TrainingComponent implements OnInit {
     });
   }
 
-  changeParamertLsitType() {
-    if (this.modeldata == null) {
-      this.isShowExecutionparam = false;
-      //this.allParameterList = null;
-    }
-  }
+  // changeParamertLsitType() {
+  //   if (this.modeldata == null) {
+  //     this.isShowExecutionparam = false;
+  //     //this.allParameterList = null;
+  //   }
+  // }
 
   trainExecute(modeldetail) {
     let newDataList = [];

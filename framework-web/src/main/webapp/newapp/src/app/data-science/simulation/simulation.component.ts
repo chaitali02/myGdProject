@@ -380,7 +380,7 @@ export class SimulationComponent implements OnInit {
   }
 
   onVersionChange() {
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'paramset')
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'simulate')
       .subscribe(
       response => {//console.log(response)},
         this.onSuccessgetOneByUuidAndVersion(response)
