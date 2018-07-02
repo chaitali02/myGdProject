@@ -1653,8 +1653,12 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		} else if (degree.equalsIgnoreCase("-2")) {
 			motifs = graph.find("(Child)-[relationwithChild]->(SubChild);(SubChild)-[relationwithSubChild]->(Object)");
 		}
-		motifs = motifs
+		graph.vertices().show(false);
+		graph.edges().show(false);
+		motifs.show(false);
+				motifs = motifs
 				.filter("relationwithChild.src = '" + filterId + "' or relationwithChild.dst = '" + filterId + "'");
+		motifs.show(false);
 		String[] columns = motifs.columns();
 		for (Row row : motifs.collectAsList()) {
 			java.util.Map<String, Object> object = new HashMap<String, Object>();
@@ -1711,18 +1715,37 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		for (String value : edgeSet) {
 			logger.info("value : " + value.toString());
 		}
+		
+		
 
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
 
-		Dataset<Row> edge_dataset = motifs.select("relationwithChild");
+		
+	/*	Dataset<Row> edge_dataset = graphFrame.edges().filter("src = '"+filterId+"' or dst='"+filterId+"'").select("src", "dst", "edgeName", "edgeType", "edgeProperties");
 		edge_dataset.show();
-		Dataset<Row> node_dataset = motifs.select("Object").union(motifs.select("Child"));
+		Dataset<Row> node_dataset = graphFrame.vertices().filter("id = '"+filterId+"'").filter("nodeType = '"+nodeType+"'").select("id", "nodeName", "nodeType", "nodeIcon", "nodeProperties");
 		node_dataset.show();
+		Dataset<Row> result_datset = edge_dataset.join(node_dataset, edge_dataset.col("src").equalTo(node_dataset.col("id")));
+		result_datset.show(false);
+		logger.info("Showing filtered graph >>>>>>>>>>>>>>>>> ");
+		result_datset.show();*/
+		
+		
+		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst", "relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties").distinct();
+
+		edge_dataset.show(false);
+		
+		Dataset<Row> node_dataset = motifs
+				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties")
+				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
+						"Child.nodeProperties")).distinct();
+System.out.println(node_dataset.count());
+		node_dataset.show(false);
 		Dataset<Row> result_datset = edge_dataset.join(node_dataset,
 				edge_dataset.col("src").equalTo(node_dataset.col("id")));
+		
 		result_datset.show(false);
-		result_datset.show();
 
 		// Process and get the desired results
 		List<GraphpodResult> result = new ArrayList<>();

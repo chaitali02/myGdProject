@@ -31,7 +31,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 scope.isGraphInProgess=true;
                 scope.noRecordFound=false;
                 scope.isError=false;
-                scope.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"2","graphpod");
+                scope.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"1","graphpod");
               
             }
 
@@ -391,7 +391,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 console.log(d);
                 var this_node=this;
                 $(this_node).find(".node-refresh").css("display","block");
-                GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'2',"graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
+                GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'1',"graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
                     $(this_node).find(".node-refresh").css("display","none");
                     if(response.edges.length >0){    
