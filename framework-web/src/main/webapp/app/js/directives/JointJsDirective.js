@@ -1116,7 +1116,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      isTemplate:'=',
     },
     link: function ($scope, element, attrs) {
-    
+     var taskDetail=null;
      $rootScope.showGrid=false;
      $rootScope.showGroupDowne=false;
      $scope.elementDefs = dagMetaDataService.elementDefs;
@@ -1220,7 +1220,16 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            }
            else {
              var taskId = params.taskId;
-           }  
+           }
+           taskDetail={}; 
+           taskDetail.taskOnOperation=true;
+           taskDetail.taskId=taskId;
+           var type=$(".body[element-id=" + taskId + "]").attr("element-type");
+           $(".body[element-id=" + taskId + "]").attr("xlink:href","assets/layouts/layout/img/"+type+"inactive.svg");
+           setTimeout(function(){ 
+              $(".body[element-id=" + taskId + "]").attr("xlink:href","assets/layouts/layout/img/"+type+".svg");  
+              taskDetail=null;
+           }, 3000);
            $http.put(url+'dag/setStatus?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&taskId='+taskId+'&status='+status).then(function (response) {
              console.log(response);
            });
@@ -1580,7 +1589,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $('#paper svg').addClass('view-mode');
          d3.selectAll('.joint-element .body')
          .on('contextmenu', function(){
-         
+          
            d3.event.preventDefault();
            d3.event.stopPropagation();
            var vm = this;
@@ -1624,6 +1633,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            console.log(cell);
            var parentStage = cell.attributes.parentStage;
            var taskId = cell.attributes.id;
+           if( taskDetail &&  taskDetail.taskId == taskId){
+             return false;
+           } 
            var ref = cell.attributes['model-data'].operators[0].operatorInfo.ref;
            var type = ref.type;
            if(type.slice(-4) == 'Exec'){
