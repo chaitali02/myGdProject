@@ -24,13 +24,13 @@
                         data-(click)="showview(train.uuid,train.version)" *ngIf="mode">
                         <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                     </a>
-                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
-                        tooltip ng-show="isDependencyShow" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(train.uuid,train .version)"
-                        *ngIf="mode">
+                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" disabled="true" title="Knowledge Graph" data-toggle="tooltip"
+                        data-placement="top" tooltip ng-show="isDependencyShow" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'"
+                        data- (click)="showDagGraph(train.uuid,train .version)" *ngIf="mode">
                         <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
                     </a>
                     <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" data-(click)="broadcastRefreshData()" data-original-title=""
-                        disabled="" title="refresh">
+                        disabled="true" title="refresh">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                     </a>
                     <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" title="Close" (click)="goBack()">
@@ -283,7 +283,8 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
 
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"  (onChange)="onChangeRunImmediately()"></p-checkbox>
+                                                <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"
+                                                    (onChange)="onChangeRunImmediately()"></p-checkbox>
                                             </div>
 
                                         </div>
