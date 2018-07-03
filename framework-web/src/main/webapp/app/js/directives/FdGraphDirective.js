@@ -61,7 +61,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
             function myGraph() {
                 this.addNode = function (n) {
                     if (!findNode(n.id)) {
-                        nodes.push({ "id": n.id, "label": n.label,"nodeName":n.nodeName,"nodeType":n.nodeType,"nodeProperties":n.nodeProperties,"nodeIcon":n.nodeIcon});
+                        nodes.push({ "id": n.id, "label": n.label,"nodeName":n.nodeName,"nodeType":n.nodeType,"nodeProperties":n.nodeProperties,"nodeIcon":n.nodeIcon,"propertyId":n.propertyId,"propertyInfo":n.propertyInfo,"type":n.type});
                         update();
                     }
                 };
@@ -210,6 +210,28 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                         .attr("r", 15)
                         .attr("id", function (d) {
                             return "Node;" + d.id;
+                        })
+                        .attr("stroke",function(d){
+                            var temp=d;
+                            var result=null;
+                            if(temp.propertyInfo !=null &&  typeof temp.propertyInfo=== 'string' ) {
+                                temp=temp.propertyInfo.replace('{', ' ');
+                                temp=temp.replace('}', ' ');
+                                var tempPInfo=temp.split(",");
+                                for(var i=0;i<tempPInfo.length;i++){
+                                    var temp=tempPInfo[i].split(":");
+                                    if(d.propertyId ==temp[0].trim()){
+                                        result =temp[1];
+                                        break;
+                                    }                                
+                                }
+                                if(result !=null){
+                                    return result;
+                                }else{
+                                    return 'white';
+                                }
+                                
+                            }
                         })
                         .attr("class", "nodeStrokeClass")
                         //.attr("fill", "#0db7ed")
