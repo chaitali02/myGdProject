@@ -750,33 +750,6 @@ public class DagServiceImpl {
 		return stageExecs;
 	}
 
-	/**
-	 * Utility to populate refkeys given the data structure and a ref object
-	 * 
-	 * @param refKeyMap
-	 * @param ref
-	 */
-	public static MetaIdentifier populateRefKeys(java.util.Map<String, MetaIdentifier> refKeyMap, MetaIdentifier ref,
-			java.util.Map<String, MetaIdentifier> inputRefKeyMap) {
-		if (ref == null) {
-			return null;
-		}
-		if (refKeyMap == null) {
-			refKeyMap = new HashMap<>();
-		}
-		if (inputRefKeyMap != null && inputRefKeyMap.containsKey(ref.getUuid())
-				&& inputRefKeyMap.get(ref.getUuid()).getVersion() != null) {
-			refKeyMap.put(ref.getType() + "_" + ref.getUuid(), inputRefKeyMap.get(ref.getUuid()));
-			return inputRefKeyMap.get(ref.getUuid());
-		} else if (refKeyMap.containsKey(ref.getType() + "_" + ref.getUuid())
-				&& refKeyMap.get(ref.getType() + "_" + ref.getUuid()).getVersion() != null) {
-			return refKeyMap.get(ref.getType() + "_" + ref.getUuid());
-		} // else
-		refKeyMap.put(ref.getType() + "_" + ref.getUuid(), ref);
-		return ref;
-
-	}
-
 	@SuppressWarnings("unused")
 	private List<TaskExec> createDagExecTasks(List<Task> dagTasks, List<String> dependsOn, Stage indvStg,
 			MetaIdentifier dagRef, ExecParams execParams) throws JsonProcessingException {
@@ -822,19 +795,19 @@ public class DagServiceImpl {
 						.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.mapiter)) {
 
 					mapRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
-					Map map = (Map) daoRegister.getRefObject(populateRefKeys(refKeys, mapRef, inputRefKeys));
+					Map map = (Map) daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, mapRef, inputRefKeys));
 
 					// Setting the Version for Map Object
 					sourceRef = map.getSource().getRef();
 					targetRef = map.getTarget().getRef();
-					daoRegister.getRefObject(populateRefKeys(refKeys, sourceRef, inputRefKeys));
-					daoRegister.getRefObject(populateRefKeys(refKeys, targetRef, inputRefKeys));
+					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceRef, inputRefKeys));
+					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetRef, inputRefKeys));
 
 					for (AttributeMap attrMap : map.getAttributeMap()) {
 						targetAttrRef = attrMap.getTargetAttr().getRef();
-						daoRegister.getRefObject(populateRefKeys(refKeys, targetAttrRef, inputRefKeys));
+						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetAttrRef, inputRefKeys));
 						sourceAttrRef = attrMap.getSourceAttr().getRef();
-						daoRegister.getRefObject(populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
+						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
 					}
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.load)) {// MetaType
 																														// load
@@ -843,7 +816,7 @@ public class DagServiceImpl {
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.dag)) {// MetaType
 																														// dag
 					secondaryDagRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
-					populateRefKeys(refKeys, secondaryDagRef, inputRefKeys); // PopuPopulatelate
+					commonServiceImpl.populateRefKeys(refKeys, secondaryDagRef, inputRefKeys); // PopuPopulatelate
 																				// refKeys
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.dq)) {// MetaType
 

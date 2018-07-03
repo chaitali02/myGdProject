@@ -802,7 +802,8 @@ public class RunStageServiceImpl implements Callable<String> {
 					} else {
 						checkDependencyStatus = true;
 					}
-					
+					logger.info(" checkDependencyStatus : checkDependencyKilled : checkDependencyFailed : checkDependencyOnHold : checkDependencyResume : " 
+								+ checkDependencyStatus + ":" + checkDependencyKilled + ":" + checkDependencyFailed + ":" + checkDependencyOnHold + ":" + checkDependencyResume);
 					if (checkDependencyKilled) {
 						synchronized (dagExecUUID) {
 							try {

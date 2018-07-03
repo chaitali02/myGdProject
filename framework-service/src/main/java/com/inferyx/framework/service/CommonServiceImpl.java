@@ -52,7 +52,6 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -62,6 +61,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.CustomLogger;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -166,6 +166,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -184,6 +185,8 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -429,6 +432,12 @@ public class CommonServiceImpl <T> {
 	IGraphpodDao iGraphpodDao;
 	@Autowired
 	IGraphpodExecDao iGraphpodExecDao;	
+	@Autowired
+	DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	DatasetOperator datasetOperator;
+	@Autowired
+	RuleOperator ruleOperator;
 	
 	public IGraphpodDao getiGraphpodDao() {
 		return this.iGraphpodDao;
@@ -1859,6 +1868,7 @@ public class CommonServiceImpl <T> {
 	@SuppressWarnings("unchecked")
 	public List<BaseEntity> getAllLatest(String type, String active)  throws JsonProcessingException, ParseException {
 		MetaType metaType = Helper.getMetaType(type);
+		logger.info("Inside commonserviceImpl.getAllLatest : type : " + type + ":" + metaType);
 		List<BaseEntity> objectList = new ArrayList<>();
 		try {			
 			Aggregation aggr = null;
@@ -3708,5 +3718,81 @@ public class CommonServiceImpl <T> {
 
 		}
 
-	}	
+	}
+	
+	/**
+	 * Utility to populate refkeys given the data structure and a ref object
+	 * 
+	 * @param refKeyMap
+	 * @param ref
+	 */
+	public MetaIdentifier populateRefKeys(java.util.Map<String, MetaIdentifier> refKeyMap, MetaIdentifier ref,
+			java.util.Map<String, MetaIdentifier> inputRefKeyMap) {
+		if (ref == null) {
+			return null;
+		}
+		if (refKeyMap == null) {
+			refKeyMap = new HashMap<>();
+		}
+		if (inputRefKeyMap != null && inputRefKeyMap.containsKey(ref.getUuid())
+				&& inputRefKeyMap.get(ref.getUuid()).getVersion() != null) {
+			refKeyMap.put(ref.getType() + "_" + ref.getUuid(), inputRefKeyMap.get(ref.getUuid()));
+			return inputRefKeyMap.get(ref.getUuid());
+		} else if (refKeyMap.containsKey(ref.getType() + "_" + ref.getUuid())
+				&& refKeyMap.get(ref.getType() + "_" + ref.getUuid()).getVersion() != null) {
+			return refKeyMap.get(ref.getType() + "_" + ref.getUuid());
+		} // else
+		refKeyMap.put(ref.getType() + "_" + ref.getUuid(), ref);
+		return ref;
+
+	}
+	
+	/**
+	 * 
+	 * @param datapod
+	 * @param indvTask
+	 * @param datapodList
+	 * @param dagExec
+	 * @param otherParams
+	 * @return
+	 * @throws Exception
+	 */
+	protected String getTableName(Datapod datapod, 
+			HashMap<String, String> otherParams, BaseExec baseExec, RunMode runMode) throws Exception {
+		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+		} else {
+			try {
+				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} catch(Exception e) {
+				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), baseExec.getVersion());
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @param baseExec
+	 * @param execParams
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	public String getSource(Object object, BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		if (object == null) {
+			throw new Exception ("No source chosen");
+		} else if (object instanceof Datapod) {
+			return getTableName(((Datapod)object), execParams.getOtherParams(), baseExec, runMode);
+		} else if (object instanceof DataSet) {
+			return "(" + datasetOperator.generateSql(((DataSet)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+											execParams.getOtherParams(), null, execParams, runMode) + ")";
+		} else if (object instanceof Rule) {
+			return "(" + ruleOperator.generateSql(((Rule)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+					execParams.getOtherParams(), null, execParams, runMode) + ")";
+		} else {
+			throw new Exception ("Wrong choice of source");
+		}
+		
+	}
 }

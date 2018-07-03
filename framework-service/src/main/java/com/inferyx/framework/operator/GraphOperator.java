@@ -130,7 +130,7 @@ public class GraphOperator implements IOperator {
 			sb.append(" AS nodeProperties ");
 			sb.append(ConstantsUtil.FROM);
 			Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
-			sb.append(" ").append(getTableName(source, execParams.getOtherParams(), baseExec, runMode)).append(" ").append(source.getName()).append(" ");
+			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(source.getName()).append(" ");
 			count++;
 		}
 		nodeSql = sb.toString().replaceAll(",  FROM", " FROM");
@@ -215,7 +215,7 @@ public class GraphOperator implements IOperator {
 			sb.append(" AS edgeProperties ");
 			sb.append(ConstantsUtil.FROM);
 			Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
-			sb.append(" ").append(getTableName(source, execParams.getOtherParams(), baseExec, runMode)).append(" ").append(source.getName()).append(" ");
+			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(source.getName()).append(" ");
 			count++;
 		}
 		edgeSql = sb.toString().replaceAll(",  FROM", " FROM");
