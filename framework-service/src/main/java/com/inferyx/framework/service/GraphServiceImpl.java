@@ -1632,7 +1632,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		graph.vertices().show(false);
 
 		Dataset<Row> motifs = null;
-		List<Map<String, Object>> vertexData = new ArrayList<>(); 
+		List<Map<String, Object>> vertexData = new ArrayList<>();
 		List<Map<String, Object>> edgesData = new ArrayList<>();
 		List<Map<String, Object>> data = new ArrayList<>();
 		if (degree.equalsIgnoreCase("1")) {
@@ -1653,10 +1653,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		} else if (degree.equalsIgnoreCase("-2")) {
 			motifs = graph.find("(Child)-[relationwithChild]->(SubChild);(SubChild)-[relationwithSubChild]->(Object)");
 		}
-		graph.vertices().show(false);
-		graph.edges().show(false);
-		motifs.show(false);
-				motifs = motifs
+
+		motifs = motifs
 				.filter("relationwithChild.src = '" + filterId + "' or relationwithChild.dst = '" + filterId + "'");
 		motifs.show(false);
 		String[] columns = motifs.columns();
@@ -1705,18 +1703,16 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				edgeSet.add(value.toString());
 			}
 		}
-		
+
 		logger.info("Printing vertex >>>> ");
 		for (String value : vertexSet) {
 			logger.info("value : " + value.toString());
 		}
-		
+
 		logger.info("Printing edge >>>> ");
 		for (String value : edgeSet) {
 			logger.info("value : " + value.toString());
 		}
-		
-		
 
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
@@ -1754,11 +1750,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				resultDatasetValue[count] = value1;
 				count++;
 			}
-			/*
-			 * String srcId = row.getAs("src"); String dstId = row.getAs("dst");
-			 */
-			// String relation = row.getAs(resultDatesetColumns[2]);
-
+			
 			String edge_name = row.getAs(resultDatesetColumns[2]);
 			String edge_type = row.getAs(resultDatesetColumns[3]);
 			String edge_properties = row.getAs(resultDatesetColumns[4]);
