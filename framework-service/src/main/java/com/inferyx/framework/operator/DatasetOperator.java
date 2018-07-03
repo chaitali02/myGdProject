@@ -32,6 +32,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
@@ -98,8 +99,10 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		public String generateFrom(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 			StringBuilder builder = new StringBuilder();
 			Relation relation = null;
-			usedRefKeySet.add(dataset.getDependsOn().getRef());
+	
+			
 			if (dataset.getDependsOn().getRef().getType() == MetaType.relation) {
+				usedRefKeySet.add(dataset.getDependsOn().getRef());
 				relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
 				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {

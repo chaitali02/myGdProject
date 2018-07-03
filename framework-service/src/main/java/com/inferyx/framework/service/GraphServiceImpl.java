@@ -1399,9 +1399,17 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 									refName, name, null);
 						}
 				}
-			} else if (childObj != null && value.startsWith("{", 0)) {
-
+			} 
+			else if (childObj != null && value.startsWith("{", 0)) {
+				if (parentName != null) {
+					if (parentName.equalsIgnoreCase("nodeProperties")
+							|| parentName.equalsIgnoreCase("edgeProperties")) {
+						continue;
+					}
+				}
 				if (key.equalsIgnoreCase("ref")) {
+					
+					
 					childUuid = childObj.optString("uuid");
 					childType = childObj.optString("type");
 
@@ -1724,9 +1732,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		edge_dataset.show(false);
 
 		Dataset<Row> node_dataset = motifs
-				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties")
+				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",  "Object.propertyId",  "Object.propertyInfo",  "Object.type")
 				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
-						"Child.nodeProperties"))
+						"Child.nodeProperties", "Child.propertyId", "Child.propertyInfo", "Child.type"))
 				.distinct();
 
 		node_dataset.show(false);

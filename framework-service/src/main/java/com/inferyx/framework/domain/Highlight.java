@@ -19,7 +19,7 @@ public class Highlight
 
 	String type;
 	AttributeRefHolder propertyId;
-	List<java.util.Map<String, String>> propertyGrid;
+	List<Property> propertyInfo;
 	/**
 	 * @return the type
 	 */
@@ -48,20 +48,7 @@ public class Highlight
 		this.propertyId = propertyId;
 	}
 
-	/**
-	 * @return the propertyGrid
-	 */
-	public List<java.util.Map<String, String>> getPropertyGrid() {
-		return this.propertyGrid;
-	}
-
-	/**
-	 * @param propertyGrid the propertyGrid to set
-	 */
-	public void setPropertyGrid(List<java.util.Map<String, String>> propertyGrid) {
-		this.propertyGrid = propertyGrid;
-	}
-
+	
 	/**
 	 * 
 	 */
@@ -70,28 +57,26 @@ public class Highlight
 		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "Highlight [type=" + this.type + ", propertyId=" + this.propertyId + ", propertyGrid="
-				+ this.propertyGrid + "]";
+		return "Highlight [type=" + type + ", propertyId=" + propertyId + ", propertyInfo=" + propertyInfo + "]";
 	}
 
 	/**
-	 * @param type
-	 * @param propertyId
-	 * @param propertyGrid
+	 * @return the propertyInfo
 	 */
-	public Highlight(String type, AttributeRefHolder propertyId, List<Map<String, String>> propertyGrid) {
-		super();
-		this.type = type;
-		this.propertyId = propertyId;
-		this.propertyGrid = propertyGrid;
+	public List<Property> getPropertyInfo() {
+		return propertyInfo;
 	}
 
+	/**
+	 * @param propertyInfo the propertyInfo to set
+	 */
+	public void setPropertyInfo(List<Property> propertyInfo) {
+		this.propertyInfo = propertyInfo;
+	}
 
+	
 
 
 }
