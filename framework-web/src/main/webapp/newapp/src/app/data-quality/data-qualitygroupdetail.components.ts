@@ -190,7 +190,8 @@ import{ Version } from './../metadata/domain/version'
     OnSuccessubmit(response){
       if (this.checkboxModelexecution == true) {
         this._commonService.getOneById("dqgroup",response).subscribe(
-            response => {this.OnSucessGetOneById(response); },
+            response => {this.OnSucessGetOneById(response);
+              this.goBack() },
             error => console.log('Error :: ' + error)
         )
       } //End if
