@@ -1,5 +1,4 @@
 {
-    
     "nodeInfo" : [ 
         {
             "nodeId" : {
@@ -39,7 +38,35 @@
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                     }
                 }
-            ]
+            ],
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "6",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "American",
+                        "propertyValue" : "#c9f2f2"
+                    }, 
+                    {
+                        "propertyName" : "Canadian",
+                        "propertyValue" : "#6aadac"
+                    }, 
+                    {
+                        "propertyName" : "British",
+                        "propertyValue" : "#f2162a"
+                    }, 
+                    {
+                        "propertyName" : "German",
+                        "propertyValue" : "#7c787b"
+                    }
+                ]
+            }
         }, 
         {
             "nodeId" : {
@@ -86,7 +113,31 @@
                         "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
                     }
                 }
-            ]
+            ],
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "3",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "Mr",
+                        "propertyValue" : "#51b3ff"
+                    }, 
+                    {
+                        "propertyName" : "Ms",
+                        "propertyValue" : "#da00ff"
+                    }, 
+                    {
+                        "propertyName" : "Mrs",
+                        "propertyValue" : "#814c83"
+                    }
+                ]
+            }
         }
     ],
     "edgeInfo" : [ 
@@ -185,7 +236,7 @@
         }
     ],
     "uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
-    "version" : "1530195018",
+    "version" : "1530621986",
     "name" : "account_transaction_graph",
     "desc" : "account_transaction_graph",
     "createdBy" : {
@@ -193,10 +244,10 @@
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
             "version" : "1464977196"
-          
+           
         }
     },
-    "createdOn" : ISODate("2018-06-28T14:10:18.000Z"),
+    "createdOn" : ISODate("2018-07-03T12:46:26.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
