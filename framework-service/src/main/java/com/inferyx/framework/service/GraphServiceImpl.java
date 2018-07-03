@@ -911,9 +911,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Loop each property
 		while (iter.hasNext()) {
 			String key = iter.next();
-			if (key.equalsIgnoreCase("nodeProperties")) {
+		/*	if (key.equalsIgnoreCase("nodeProperties")) {
 				System.out.println("assssssd");
-			}
+			}*/
 			jsonArray = jsonObject.optJSONArray(key);
 			JSONObject childObj = jsonObject.optJSONObject(key);
 			value = jsonObject.optString(key);
@@ -1401,12 +1401,12 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				}
 			} 
 			else if (childObj != null && value.startsWith("{", 0)) {
-				if (parentName != null) {
+				/*if (parentName != null) {
 					if (parentName.equalsIgnoreCase("nodeProperties")
 							|| parentName.equalsIgnoreCase("edgeProperties")) {
 						continue;
 					}
-				}
+				}*/
 				if (key.equalsIgnoreCase("ref")) {
 					
 					
