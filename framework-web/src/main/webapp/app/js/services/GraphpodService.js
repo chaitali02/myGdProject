@@ -160,6 +160,25 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
               nodePropertiesArr[j]=nodeProperties;
             }
           }
+          var highlightInfo={};
+          var propertyId={};
+          if(response.nodeInfo[i].highlightInfo){
+            highlightInfo.selectType=response.nodeInfo[i].highlightInfo.type;
+            propertyId.uuid=response.nodeInfo[i].highlightInfo.propertyId.ref.uuid;
+            propertyId.type=response.nodeInfo[i].highlightInfo.propertyId.ref.type;
+            propertyId.datapodname=response.nodeInfo[i].highlightInfo.propertyId.ref.name;
+            propertyId.name=response.nodeInfo[i].highlightInfo.propertyId.attrName;
+            propertyId.dname=response.nodeInfo[i].highlightInfo.propertyId.ref.name+"."+response.nodeInfo[i].highlightInfo.propertyId.attrName;
+            propertyId.attributeId=response.nodeInfo[i].highlightInfo.propertyId.attrId;
+            propertyId.id =response.nodeInfo[i].highlightInfo.propertyId.ref.uuid+"_"+response.nodeInfo[i].highlightInfo.propertyId.attrId;
+            highlightInfo.propertyId=propertyId;
+            highlightInfo.value=response.nodeInfo[i].highlightInfo.type+","+response.nodeInfo[i].highlightInfo.propertyId.attrName;
+            highlightInfo.propertyInfoTableArray=response.nodeInfo[i].highlightInfo.propertyInfo;
+            nodeJson.highlightInfo=highlightInfo;
+          }
+          else{
+            nodeJson.highlightInfo=null;
+          }
           nodeJson.nodeProperties=nodePropertiesArr;
           nodeInfo[i]=nodeJson;
         }
