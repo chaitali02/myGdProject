@@ -419,6 +419,13 @@ export class ModelComponent implements OnInit {
     console.log(JSON.stringify(this.scriptCode));
   }
 
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/dataScience/model', uuid, version, 'false']);
+  }
+
+  showview(uuid, version) {
+    this.router.navigate(['app/dataScience/model', uuid, version, 'true']);
+  }
   submit() {
     this.isSubmit = "true"
     this.modelJson = {};
