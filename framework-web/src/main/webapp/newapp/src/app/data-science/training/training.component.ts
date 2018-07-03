@@ -426,7 +426,7 @@ export class TrainingComponent implements OnInit {
   }
 
   onChangeRunImmediately() {
-    if (this.checkboxModelexecution = true && this.modeldata.dependsOn.ref.type == "algorithm") {
+    if (this.checkboxModelexecution == true && this.modeldata.dependsOn.ref.type == "algorithm") {
       this._trainingService.getParamSetByAlgorithm(this.modeldata.dependsOn.ref.uuid, this.modeldata.dependsOn.ref.version)
         .subscribe(
         response => {
