@@ -1,61 +1,83 @@
 {
-	"params": [
-		{
-			"paramId": 0,
-			"paramName": "labelCol",
-			"paramType": "string",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "label"
-			    }
-		},
-		{
-			"paramId": 1,
-			"paramName": "maxIter",
-			"paramType": "integer",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "10"
-			    }
-		},
-		{
-			"paramId": 2,
-			"paramName": "predictionCol",
-			"paramType": "string",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "Col1"
-			    }
-		},
-		{
-			"paramId": 3,
-			"paramName": "featuresCol",
-			"paramType": "string",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "Col2"
-			    }
-		},
-		{
-			"paramId": 4,
-			"paramName": "tol",
-			"paramType": "double",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "10"
-			    }
-		}
-	],
+	"params": [ 
+        {
+            "paramId" : "0",
+            "paramName" : "labelCol",
+            "paramType" : "string",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "label"
+            }
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "maxIter",
+            "paramType" : "integer",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "10"
+            }
+        }, 
+        {
+            "paramId" : "2",
+            "paramName" : "predictionCol",
+            "paramType" : "string",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "Col1"
+            }
+        }, 
+        {
+            "paramId" : "3",
+            "paramName" : "featuresCol",
+            "paramType" : "string",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "Col2"
+            }
+        }, 
+        {
+            "paramId" : "4",
+            "paramName" : "tol",
+            "paramType" : "double",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "10"
+            }
+        }, 
+        {
+            "paramId" : "5",
+            "paramName" : "regParam",
+            "paramType" : "list",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "0.3, 0.1, 0.05, 0.01, 0.005"
+            }
+        }, 
+        {
+            "paramId" : "6",
+            "paramName" : "elasticNetParam",
+            "paramType" : "list",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "0.1, 0.05, 0.01, 0.005, 0.001"
+            }
+        }
+    ],
 	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82",
 	"version": "1495146809",
 	"name": "paramlist_linearregression",
