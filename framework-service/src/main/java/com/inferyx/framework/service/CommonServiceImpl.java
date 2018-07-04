@@ -3786,7 +3786,7 @@ public class CommonServiceImpl <T> {
 			return getTableName(((Datapod)object), execParams.getOtherParams(), baseExec, runMode);
 		} else if (object instanceof DataSet) {
 			return "(" + datasetOperator.generateSql(((DataSet)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-											execParams.getOtherParams(), null, execParams, runMode) + ")";
+											execParams.getOtherParams(), new HashSet<>(), execParams, runMode) + ")";
 		} else if (object instanceof Rule) {
 			return "(" + ruleOperator.generateSql(((Rule)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 					execParams.getOtherParams(), null, execParams, runMode) + ")";

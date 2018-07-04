@@ -117,7 +117,7 @@ public class GraphController {
 	  return true;
 	}*/
   
-  @RequestMapping(value="/getGraphPodResults",method=RequestMethod.POST)
+  @RequestMapping(value="/getGraphPodResults",method=RequestMethod.GET)
 	public @ResponseBody Map<String, List<GraphpodResult>>  getGraphPodResults(@RequestParam("uuid") String uuid,
 			@RequestParam("version") String version,@RequestParam(value = "degree", required = false) String degree,
 			@RequestParam(value = "type", required = false) String type,
