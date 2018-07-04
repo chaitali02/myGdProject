@@ -22,6 +22,25 @@ public class Train extends BaseEntity {
 	private double trainPercent;
 	private double valPercent;
 	private AttributeRefHolder labelInfo;
+	private int numFolds;
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the numFolds
+	 */
+	public int getNumFolds() {
+		return numFolds;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param numFolds the numFolds to set
+	 */
+	public void setNumFolds(int numFolds) {
+		this.numFolds = numFolds;
+	}
 
 	/**
 	 * @Ganesh
