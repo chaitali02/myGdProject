@@ -34,7 +34,12 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-5 col-sm-5 col-xs-12 col-md-offset-3">
+                <div class="col-md-1 col-sm-1 col-xs-1 col-md-offset-4" uib-tooltip="Aplly Filter" tooltip-placement="left" ng-click="applyFilter()">
+                    <span class="fa fa-filter" style="color:white;"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-5 col-sm-5 col-xs-12">
                     <button type="submit" class="btn btn-success">Search</button>
                 </div>
             </div>
@@ -142,21 +147,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                    <label class="col-md-3 control-label" style="padding-top: 0px;">Properties</label>
-                                   
-                                </div>
+                                <label class="col-md-3 control-label" style="padding-top: 0px;">Properties</label>
+
+                            </div>
                             <!-- <div class="x_title">
                                 <h4>
                                     <strong>Properties</strong>
                                 </h4> -->
-                                <table class="table table-bordered">
-                                    <tr ng-repeat="tabledata in nodeDetailModel.nodeProperties">
-                                        <td>
-                                            <b>{{tabledata.name}}</b>
-                                        </td>
-                                        <td>{{tabledata.value}}</td>
-                                    </tr>
-                                </table>
+                            <table class="table table-bordered">
+                                <tr ng-repeat="tabledata in nodeDetailModel.nodeProperties">
+                                    <td>
+                                        <b>{{tabledata.name}}</b>
+                                    </td>
+                                    <td>{{tabledata.value}}</td>
+                                </tr>
+                            </table>
                             <!-- </div>
                             <br/> -->
 
@@ -195,23 +200,23 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                    <label class="col-md-3 control-label" style="padding-top: 0px;">Properties</label>
-                                    <!-- <div class="col-md-8">
+                                <label class="col-md-3 control-label" style="padding-top: 0px;">Properties</label>
+                                <!-- <div class="col-md-8">
                                         <span class="control-label">{{edgeDetailModel.edgeName}}</span>
                                     </div> -->
-                                </div>
+                            </div>
                             <!-- <div class="x_title">
                                 <h4>
                                     <strong>Properties</strong>
                                 </h4> -->
-                                <table class="table table-bordered">
-                                    <tr ng-repeat="tabledata in edgeDetailModel.edgeProperties">
-                                        <td>
-                                            <b>{{tabledata.name}}</b>
-                                        </td>
-                                        <td>{{tabledata.value}}</td>
-                                    </tr>
-                                </table>
+                            <table class="table table-bordered">
+                                <tr ng-repeat="tabledata in edgeDetailModel.edgeProperties">
+                                    <td>
+                                        <b>{{tabledata.name}}</b>
+                                    </td>
+                                    <td>{{tabledata.value}}</td>
+                                </tr>
+                            </table>
                             <!-- </div>
                             <br/> -->
 
@@ -222,6 +227,214 @@
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="applyFilter" class="modal fade bs-modal-lg in" aria-hidden="true" style="display:none;">
+    <div class="modal-dialog" style="width:74%;">
+        <div class="modal-content" style="max-height:600px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Filter</h4>
+            </div>
+            <form class="form-horizontal" novalidate="novalidate" name="myformFilter" ng-submit="submitFilter()">
+                <div class="modal-body">
+                    <div class="slimScrollDiv" style="padding-top:10px;">
+                        <div class="scroller" style="max-height:400px;min-height:100px; overflow-y: auto !important; width: auto;" data-always-visible="1"
+                            data-rail-visible1="1" data-initialized="1">
+
+                            <div class="x_title">
+                                <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeNodeRow()" ng-disabled="{{mode}}"></button>
+                                <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addNodeRow()" ng-disabled="{{mode}}"></button>
+                                <h4>
+                                    <strong>Node Filter</strong>
+                                </h4>
+                                <hr>
+                            </div>
+                            <br/>
+                            <table class="table table-bordered" style="table-layout:fixed;">
+                                <thead>
+                                    <tr>
+                                        <th style="width:5%;text-align: center; Vertical-align: middle;">
+                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllNodeRow" ng-click="allNodeRow()"
+                                                />
+                                            </span>
+                                        </th>
+                                        <th style="width:20%;text-align:center;">Logical Operator</th>
+                                        <th style="width:20%;text-align:center;">Source</th>
+                                        <th style="width:20%;text-align:center;">Attribute</th>
+                                        <th style="width:15%;text-align:center;">Operator</th>
+                                        <th style="width:20%;text-align:center;">Value</th>
+                                    </tr>
+                                </thead>
+                                <tr ng-repeat="tabledata in nodeTableArray">
+                                    <td style="text-align:center;Vertical-align:middle;">
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                            <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                            <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first" class="form-control"></select>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                            <select select2 ng-model="tabledata.selectSource" ng-change="getAttributesByNodeSource(tabledata.selectSource.index,$index)"
+                                                ng-options="x  as x.name  for x in tabledata.source  track by x.uuid" class="form-control" required disable-validation-message=""></select>
+                                        </span>
+                                    </td>
+                                    <td>  
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                            <select select2 ng-model="tabledata.selectAttribute" 
+                                                ng-options="x  as x.attributeName  for x in tabledata.allAttributeInto  track by x.uuid+x.attributeId"
+                                                class="form-control"  required disable-validation-message=""></select>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                            <select  ng-model="tabledata.operator" ng-options="x.value as x.caption for x in operator track by x.value+x.caption" ng-disabled="{{mode}}"
+                                                class="form-control"  required disable-validation-message=""></select>
+                                        </span>
+                                    </td>
+                                    <td style="width:200px;">
+                                        <div>
+                                            <span ng-if="tabledata.operator =='BETWEEN'">
+                                                <div class="col-md-5 col-sm-5 col-xs-12" style="padding:0px">
+                                                    <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                        <input ng-model="tabledata.rhsvalue1" name="rhsvalue1_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
+                                                            required ng-pattern="/^[0-9]{1,20}$/" disable-validation-message=""
+                                                            uib-tooltip="{{myformFilter['rhsvalue1_'+$index].$valid ? '' : 'enter only integer'}}"
+                                                            tooltip-placement="left">
+                                                    </span>
+                                                </div>
+
+                                                <div class="col-md-1 col-sm-1 " style="width:1%;padding: 0px 15px 0px 11px">
+                                                    <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-3px;"></i>
+                                                </div>
+                                                <div class="col-md-5 col-sm-5 col-xs-12" style="padding:0px">
+                                                    <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                        <input ng-model="tabledata.rhsvalue2" name="rhsvalue2_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
+                                                            ng-pattern="/^[0-9]{1,20}$/" required disable-validation-message=""
+                                                            uib-tooltip="{{myform['rhsvalue2_'+$index].$valid ? '' : 'enter only integer'}}"
+                                                            tooltip-placement="left">
+                                                    </span>
+                                                </div>
+                                            </span>
+                                            <span ng-if="tabledata.operator !='BETWEEN'">
+                                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                    <input class="form-control" type="text" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
+                                                        required disable-validation-message="" uib-tooltip="{{myformFilter['rhsvalue_'+$index].$valid ? '' : 'enter value into single quotes'}}"
+                                                        ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/" tooltip-placement="left">
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="x_title">
+                                <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeEdgeRow()" ng-disabled="{{mode}}"></button>
+                                <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addEdgeRow()" ng-disabled="{{mode}}"></button>
+                                <h4>
+                                    <strong>Edge Filter</strong>
+                                </h4>
+                                <hr>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:5%;text-align: center; Vertical-align: middle;">
+                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllEdgeRow" ng-click="allEdgeRow()"
+                                                    />
+                                                </span>
+                                            </th>
+                                            <th style="width:20%;text-align:center;">Logical Operator</th>
+                                            <th style="width:20%;text-align:center;">Source</th>
+                                            <th style="width:20%;text-align:center;">Attribute</th>
+                                            <th style="width:20%;text-align:center;">Operator</th>
+                                            <th style="width:15%;text-align:center;">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tr ng-repeat="tabledata in edgeTableArray">
+                                        <td style="text-align:center;Vertical-align:middle;">
+                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" 
+                                                ng-disabled=" $first" class="form-control"></select>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                <select select2 ng-model="tabledata.selectSource" 
+                                                    ng-change="getAttributesByEdgeSource(tabledata.selectSource.index,$index)"
+                                                    ng-options="x  as x.name  for x in tabledata.source track by x.uuid" class="form-control"  required disable-validation-message=""></select>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                <select select2 ng-model="tabledata.selectAttribute" 
+                                                    ng-options="x  as x.attributeName  for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
+                                                    class="form-control"  required disable-validation-message=""></select>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                <select ng-init="tabledata.operator" ng-model="tabledata.operator"
+                                                    ng-options="x.value as x.caption for x in operator  track by x.value+x.caption" ng-disabled="{{mode}}"
+                                                    class="form-control"  required disable-validation-message=""></select>
+                                            </span>
+                                        </td>
+                                        <td style="width:200px;">
+                                            <div>
+                                                <span ng-if="tabledata.operator =='BETWEEN'">
+                                                    <div class="col-md-5 col-sm-5 col-xs-12" style="padding:0px">
+                                                        <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                            <input ng-model="tabledata.rhsvalue1" name="rhsvalue1_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
+                                                                required ng-pattern="/^[0-9]{1,20}$/" disable-validation-message=""
+                                                                uib-tooltip="{{myformFilter['rhsvalue1_'+$index].$valid ? '' : 'enter only integer'}}"
+                                                                tooltip-placement="left">
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-md-1 col-sm-1 " style="width:1%;padding: 0px 15px 0px 11px">
+                                                        <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-3px;"></i>
+                                                    </div>
+                                                    <div class="col-md-5 col-sm-5 col-xs-12" style="padding:0px">
+                                                        <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                            <input ng-model="tabledata.rhsvalue2" name="rhsvalue2_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
+                                                                ng-pattern="/^[0-9]{1,20}$/" required disable-validation-message=""
+                                                                uib-tooltip="{{myformFilter['rhsvalue2_'+$index].$valid ? '' : 'enter only integer'}}"
+                                                                tooltip-placement="left">
+                                                        </span>
+                                                    </div>
+                                                </span>
+                                                <span ng-if="tabledata.operator !='BETWEEN'">
+                                                    <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                        <input class="form-control" type="text" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
+                                                            required disable-validation-message="" uib-tooltip="{{myformFilter['rhsvalue_'+$index].$valid ? '' : 'enter value into single quotes'}}"
+                                                            ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/" tooltip-placement="left">
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    <input type="submit" class="btn btn-success" value="submit">
+                </div>
+            </form>
         </div>
     </div>
 </div>
