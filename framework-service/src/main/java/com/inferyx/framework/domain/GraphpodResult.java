@@ -14,6 +14,10 @@ import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * @author vaibhav
+ *
+ */
 @Document(collection = "graphpodresult")
 public class GraphpodResult {
 	/*GraphpodMetaIdentifierHolder src;
@@ -100,57 +104,6 @@ public class GraphpodResult {
 	}
 	
 	
-//	
-//	String src;
-//	String dst;
-//	
-//	String transaction_id;
-//	String account_id;
-//	
-//
-//	
-//	public String getSrc() {
-//		return this.src;
-//	}
-//	public void setSrc(String src) {
-//		this.src = src;
-//	}
-//	public String getDst() {
-//		return this.dst;
-//	}
-//	public void setDst(String dst) {
-//		this.dst = dst;
-//	}
-//	public String getTransaction_id() {
-//		return this.transaction_id;
-//	}
-//	public void setTransaction_id(String transaction_id) {
-//		this.transaction_id = transaction_id;
-//	}
-//	public String getAccount_id() {
-//		return this.account_id;
-//	}
-//	public void setAccount_id(String account_id) {
-//		this.account_id = account_id;
-//	}
-//	public GraphpodResult(String src, String dst, String transaction_id,
-//			String account_id) {
-//		super();
-//		this.src = src;
-//		this.dst = dst;
-//		this.transaction_id = transaction_id;
-//		this.account_id = account_id;
-//	}
-//	public GraphpodResult() {
-//		super();
-//	}
-//	@Override
-//	public String toString() {
-//		return "GraphpodResult [src=" + this.src + ", dst=" + this.dst + ", transaction_id=" + this.transaction_id
-//				+ ", account_id=" + this.account_id + "]";
-//	}
-//	
-//	
-//	
+
 	
 }

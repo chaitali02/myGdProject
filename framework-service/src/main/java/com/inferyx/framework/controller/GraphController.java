@@ -123,11 +123,12 @@ public class GraphController {
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value = "filterId", required = false) String filterId,
 			@RequestParam(value = "nodeType", required = false) String nodeType) throws Exception{
-		return graphServiceImpl.getGraphResults(uuid,version,degree, filterId,nodeType);
+		ExecParams execParams = new ExecParams();
+		return graphServiceImpl.getGraphResults(uuid,version,degree, filterId,nodeType,execParams);
 		
 	}
   
-  @RequestMapping(value="/resgisterGraph",method=RequestMethod.POST)
+  @RequestMapping(value="/resgister",method=RequestMethod.POST)
   public @ResponseBody String  registerGraph(@RequestParam("uuid") String uuid,
 			@RequestParam("version") String version,
 			@RequestParam(value = "type", required = false) String type,

@@ -166,23 +166,7 @@ public class GraphOperator implements IOperator {
 			sb.append(" AS propertyInfo ");
 
 			sb.append(ConstantsUtil.FROM);
-          //Check for dataset or datapod  review
-/*<<<<<<< HEAD
-			if (graphNode.getNodeSource().getRef().getType().toString().equalsIgnoreCase(MetaType.datapod.toString())) {
-				Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(),
-						graphNode.getNodeSource().getRef().getType().toString());
-				sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ")
-						.append(source.getName()).append(" ");
-			} else if (graphNode.getNodeSource().getRef().getType().toString()
-					.equalsIgnoreCase(MetaType.dataset.toString())) {
-				DataSet source = (DataSet) commonServiceImpl.getOneByUuidAndVersion(
-						graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(),
-						graphNode.getNodeSource().getRef().getType().toString());
-				sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ")
-						.append(source.getName()).append(" ");
-			}
-=======*/
+
 			Object source = commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
 			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(((BaseEntity) source).getName()).append(" ");
 
@@ -270,8 +254,8 @@ public class GraphOperator implements IOperator {
 			sb.append("'}')");
 			sb.append(" AS edgeProperties ");
 			sb.append(ConstantsUtil.FROM);
-			Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
-			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(source.getName()).append(" ");
+			Object source = commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
+			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(((BaseEntity) source).getName()).append(" ");
 			count++;
 		}
 		edgeSql = sb.toString().replaceAll(",  FROM", " FROM");

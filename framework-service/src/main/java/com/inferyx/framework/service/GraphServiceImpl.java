@@ -55,6 +55,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.GraphFilter;
 import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.Graphpod;
@@ -1604,7 +1605,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @throws Exception
 	 */
 	public Map<String, List<GraphpodResult>> getGraphResults(String uuid, String version, String degree,
-			String filterId, String nodeType) throws Exception {
+			String filterId, String nodeType,ExecParams execParams) throws Exception {
 		GraphExec graphExec = (GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
 				MetaType.graphExec.toString());
 		Graphpod graphpod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(
@@ -1615,7 +1616,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Get the datastore. If there is no existing datastore then create graph
 		DataStore ds = dataStoreServiceImpl.findLatestByMeta(graphpod.getUuid(), graphpod.getVersion());
 		// DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
-
+		
+	
 		if (ds != null) {
 			graphExecKey = ds.getMetaId().getRef().getUuid() + "_" + ds.getMetaId().getRef().getVersion() + "_"
 					+ ds.getExecId().getRef().getVersion();
@@ -1628,9 +1630,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		if (createGraph) {
 			// Create graph
 			RunMode runMode = RunMode.ONLINE;
-			ExecParams execParams = new ExecParams();
+			ExecParams execParamss = new ExecParams();
 			BaseExec baseExec = create(graphExec.getDependsOn().getRef().getUuid(),
-					graphExec.getDependsOn().getRef().getVersion(), execParams, runMode);
+					graphExec.getDependsOn().getRef().getVersion(), execParamss, runMode);
 			baseExec = parse(baseExec, execParams, runMode);
 			graphExecKey = execute(baseExec, execParams, runMode);
 		}
@@ -1638,7 +1640,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		GraphFrame graph = (GraphFrame) graphpodMap.get(graphExecKey);
 		graph.edges().show(false);
 		graph.vertices().show(false);
-
+	
 		Dataset<Row> motifs = null;
 		List<Map<String, Object>> vertexData = new ArrayList<>();
 		List<Map<String, Object>> edgesData = new ArrayList<>();
@@ -1661,9 +1663,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		} else if (degree.equalsIgnoreCase("-2")) {
 			motifs = graph.find("(Child)-[relationwithChild]->(SubChild);(SubChild)-[relationwithSubChild]->(Object)");
 		}
-
+		motifs.show(false);
 		motifs = motifs
 				.filter("relationwithChild.src = '" + filterId + "' or relationwithChild.dst = '" + filterId + "'");
+			//motifs.f
 		motifs.show(false);
 		String[] columns = motifs.columns();
 		for (Row row : motifs.collectAsList()) {
