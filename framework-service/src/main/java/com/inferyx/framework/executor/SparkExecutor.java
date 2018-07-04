@@ -54,6 +54,12 @@ import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
+import org.apache.spark.ml.param.BooleanParam;
+import org.apache.spark.ml.param.DoubleParam;
+import org.apache.spark.ml.param.FloatParam;
+import org.apache.spark.ml.param.IntParam;
+import org.apache.spark.ml.param.LongParam;
+import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.regression.AFTSurvivalRegression;
 import org.apache.spark.ml.regression.LinearRegression;
@@ -1972,7 +1978,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	//@Override
-	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, int numFolds, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
@@ -2014,8 +2020,9 @@ public class SparkExecutor<T> implements IExecutor {
 			CrossValidator cv = new CrossValidator()
 					.setEstimator(pipeline)
 					.setEvaluator(getEvaluatorByTrainClass(trainName))
-					.setEstimatorParamMaps(getHyperParamsByAlgo(trainName, obj))
-					.setNumFolds(3);
+//					.setEstimatorParamMaps(getHyperParamsByAlgo(trainName, obj))
+					.setEstimatorParamMaps(getHyperParams(hyperParamList, obj))
+					.setNumFolds(numFolds);
 			
 			CrossValidatorModel cvModel = cv.fit(trainingDf);
 			trainedDataSet = cvModel.transform(validateDf);			
@@ -2035,16 +2042,19 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public Evaluator getEvaluatorByTrainClass(String trainName) {
-		if(trainName.contains("Regression") || trainName.contains("Regressor")) {
+		if(trainName.contains("regression") || trainName.contains("Regressor")) {
 			return new RegressionEvaluator();
-		} else if(trainName.contains("Classification") || trainName.contains("Classifier")) {
+		} else if(trainName.contains("classification") || trainName.contains("Classifier")) {
 			return new BinaryClassificationEvaluator() ;
-		} else if(trainName.contains("")) {
+		} else if(trainName.contains("XXXXXXX")) {
 			return new  MulticlassClassificationEvaluator();
+		}  else {
+			return new RegressionEvaluator() ;
 		}
-		return null;		
+		//return null;		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public ParamMap[] getHyperParamsByAlgo(String algoName, Object trainClassObject) {
 		if(algoName.contains("LinearRegression")) {
 			LinearRegression linearRegression = (LinearRegression) trainClassObject;
@@ -2063,8 +2073,8 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(algoName.contains("NaiveBayes")) {
 			NaiveBayes naiveBayes = (NaiveBayes) trainClassObject;
 			List<String> moadelTypesnew = new ArrayList<>();
-			moadelTypesnew.add("Bernoulli");
-			moadelTypesnew.add("Multinomial");
+			moadelTypesnew.add("bernoulli");
+			moadelTypesnew.add("multinomial");
 			Seq<T> seq = (Seq<T>) JavaConverters.asScalaIteratorConverter(moadelTypesnew.iterator()).asScala().toSeq();
  			ParamMap[] paramMap = new ParamGridBuilder()
 										.addGrid(naiveBayes.smoothing(), new double[] {0.3, 1.0, 2.5})
@@ -2124,5 +2134,89 @@ public class SparkExecutor<T> implements IExecutor {
 			return paramMap;
 		}
 		return new ParamMap[] {};
+	}
+	
+	public ParamMap[] getHyperParams(List<com.inferyx.framework.domain.Param> hyperParamList, Object trainClassObject) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
+		Param<?>[] params = (Param<?>[]) trainClassObject.getClass().getMethod("params").invoke(trainClassObject);
+		ParamGridBuilder paramGridBuilder = new ParamGridBuilder();
+		for(com.inferyx.framework.domain.Param param : hyperParamList) {
+			if(param.getParamType().equalsIgnoreCase("list")) {
+				for(Param<?> hyperParam : params) {
+					if(hyperParam.name().equalsIgnoreCase(param.getParamName())) {					
+						String paramValue = param.getParamValue().getValue();
+						String[] splits = paramValue.split(",");
+						String paramClassName = trainClassObject.getClass().getMethod(hyperParam.name()).invoke(trainClassObject).getClass().getSimpleName();
+//						List<?> paramValues = resoveParamValue(trainClassObject, paramGridBuilder, paramClassName, splits, hyperParam.name());
+//						Seq<T> seq = (Seq<T>) JavaConverters.asScalaIteratorConverter(paramValues.iterator()).asScala().toSeq();
+//						paramGridBuilder.addGrid((Param<T>)trainClassObject.getClass().getMethod(hyperParam.name()).invoke(trainClassObject), seq);
+						paramGridBuilder = resoveParamValue(trainClassObject, paramGridBuilder, paramClassName, splits, hyperParam.name());
+					}
+				}
+			}
+		} 
+		return paramGridBuilder.build();
+	}
+
+	private ParamGridBuilder resoveParamValue(Object trainClassObject, ParamGridBuilder paramGridBuilder, String paramDataType, String[] splits, String paramName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		switch(paramDataType) {
+			case "DoubleParam" : 
+				double[] doubleParam = new double[splits.length];
+				int i = 0; 
+				for(String split : splits) {
+					doubleParam[i] = Double.parseDouble(split);
+					i++;
+				}
+				paramGridBuilder.addGrid((DoubleParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), doubleParam);
+//				for(String split : splits) {
+//					paramValues.add(Double.parseDouble(split));
+//				}
+				return paramGridBuilder;
+				
+			case "IntParam" : 
+				int[] intParam = new int[splits.length];
+				int j = 0; 
+				for(String split : splits) {
+					intParam[j] = Integer.parseInt(split);
+					j++;
+				}
+				paramGridBuilder.addGrid((IntParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), intParam);
+				return paramGridBuilder;
+				
+			case "FloatParam" :
+				float[] floatParam = new float[splits.length];
+				int k = 0; 
+				for(String split : splits) {
+					floatParam[k] = Float.parseFloat(split);
+					k++;
+				}
+				paramGridBuilder.addGrid((FloatParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), floatParam);
+				return paramGridBuilder;
+				
+			case "LongParam" :
+				long[] longParam = new long[splits.length];
+				int l = 0; 
+				for(String split : splits) {
+					longParam[l] = Long.parseLong(split);
+					l++;
+				}
+				paramGridBuilder.addGrid((LongParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), longParam);
+				return paramGridBuilder;
+				
+			case "BooleanParam" :
+				paramGridBuilder.addGrid((BooleanParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject));
+				return paramGridBuilder;
+				
+//			case "Param[T]" :
+//
+//				double[] doubleParam = new double[splits.length];
+//				int i = 0; 
+//				for(String split : splits) {
+//					doubleParam[i] = Double.parseDouble(split);
+//					i++;
+//				}
+//				paramGridBuilder.addGrid((DoubleParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), doubleParam);
+//				return paramGridBuilder;
+		}
+		return paramGridBuilder;
 	}
 }

@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
@@ -76,14 +77,14 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private Train train;
 	private String name;
 	private MetaType execType;
-	private SparkExecutor sparkExecutor;
+	private SparkExecutor<?> sparkExecutor;
 	
 	/**
 	 * @Ganesh
 	 *
 	 * @return the sparkExecutor
 	 */
-	public SparkExecutor getSparkExecutor() {
+	public SparkExecutor<?> getSparkExecutor() {
 		return sparkExecutor;
 	}
 
@@ -92,7 +93,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	 *
 	 * @param sparkExecutor the sparkExecutor to set
 	 */
-	public void setSparkExecutor(SparkExecutor sparkExecutor) {
+	public void setSparkExecutor(SparkExecutor<?> sparkExecutor) {
 		this.sparkExecutor = sparkExecutor;
 	}
 
@@ -682,7 +683,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
 				Object trngModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
-//				Object trngModel = sparkExecutor.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				
+//				MetaIdentifier hyperParamMI = algorithm.getParamList().getRef();
+//				ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
+//				Object trngModel = sparkExecutor.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), train.getNumFolds(), hyperParamList.getParams(), appUuid);
 				result = trngModel;
 				
 				List<String> customDirectories = exec.getCustomDirsFromTrainedModel(trngModel);
