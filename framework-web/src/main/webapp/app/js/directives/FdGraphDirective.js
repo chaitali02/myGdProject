@@ -8,6 +8,18 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
         link: function (scope, element, attrs) {
             var graph;
             var menus = ["Show Details"];
+            scope.selectedAllEdgeRow=false;
+            scope.selectedAllNodeRow=false;
+            scope.filter=null;
+            scope.operator=[
+                {"caption":"EQUAL TO (=)","value":"="},
+                {"caption":"LESS THAN","value":"<"},
+                {"caption":"GREATER THAN","value":">"},
+                {"caption":"LESS OR EQUAL","value":"<="},
+                {"caption":"GREATER OR EQUAL (>=)  ","value":">="},
+                {"caption":"BETWEEN","value":"BETWEEN"},
+            ];
+            scope.logicalOperator = ["OR", "AND"];
             var notify = {
                 type: 'success',
                 title: 'Success',
@@ -31,6 +43,47 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 scope.isGraphInProgess=true;
                 scope.noRecordFound=false;
                 scope.isError=false;
+                var graphFiler=null;
+                if(scope.filter !=null){
+                    graphFiler={};
+                    var edgeFilter=[];
+                    var nodeFilter=[];
+                    if(scope.filter.nodeTableArray && scope.filter.nodeTableArray.length >0){
+                        for(var i=0;i<scope.filter.nodeTableArray.length;i++){
+                            var nodeFilterObj={};
+                            var operand={};
+                            nodeFilterObj.logicalOperator=scope.filter.nodeTableArray[i].logicalOperator;
+                            nodeFilterObj.operator=scope.filter.nodeTableArray[i].operator.value;
+                            operand.propertyName=scope.filter.nodeTableArray[i].selectAttribute.attributeName;
+                            if(scope.filter.nodeTableArray[i].operator.value =="BETWEEN"){
+                                operand.propertyValue=scope.filter.nodeTableArray[i].rhsvalue1+" and "+scope.filter.nodeTableArray[i].rhsvalue2;
+                            }else{
+                                operand.propertyValue=scope.filter.nodeTableArray[i].rhsvalue;
+                            }
+                            nodeFilterObj.operand=operand;
+                            nodeFilter[i]=nodeFilterObj
+                        }
+                    }
+                    if(scope.filter.edgeTableArray && scope.filter.edgeTableArray.length >0){
+                        for(var i=0;i<scope.filter.edgeTableArray.length;i++){
+                            var edgeFilterObj={};
+                            var operand={};
+                            edgeFilterObj.logicalOperator=scope.filter.edgeTableArray[i].logicalOperator;
+                            edgeFilterObj.operator=scope.filter.edgeTableArray[i].operator.value;
+                            operand.propertyName=scope.filter.edgeTableArray[i].selectAttribute.attributeName;
+                            if(scope.filter.edgeTableArray[i].operator.value =="BETWEEN"){
+                                operand.propertyValue=scope.filter.edgeTableArray[i].rhsvalue1+" and "+scope.filter.edgeTableArray[i].rhsvalue2;
+                            }else{
+                                operand.propertyValue=scope.filter.edgeTableArray[i].rhsvalue;
+                            }
+                            edgeFilterObj.operand=operand;
+                            edgeFilter[i]=edgeFilterObj
+                        }
+                    }
+                    graphFiler.nodeFilter=nodeFilter;
+                    graphFiler.edgeFilter=edgeFilter;
+                }
+                console.log(JSON.stringify(graphFiler));
                 scope.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"1","graphpod");
               
             }
@@ -126,7 +179,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     .attr({
                         'id': "arrowhead",
                         'viewBox': '0 -5 10 10',
-                        'refX': 22,
+                        'refX': 22,//22
                         'refY': 0,
                         'orient': 'auto',
                         'markerWidth': 20,
@@ -156,12 +209,14 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                         .attr("class", "link")
                         .attr('marker-end', 'url(#arrowhead)')
                         .on("click", onClickEdge)
-                        // .on("mouseover", onClickEdge)
-                        .on("mouseout", function (d) {
-                            scope.edgeDetail = null;
-                            $(".tooltipcustom").css("display", "none");
-    
-                        });;
+                        // .on("mouseover",function(d){
+                        //     d3.select(this).attr({
+                                
+                        //     })
+                        // })
+                        // .on("mouseout", function (d) {
+                    
+                        // });;
                     path.exit().remove();
 
                     var pathInvis = svg.selectAll("path.invis")
@@ -561,6 +616,133 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     keyboard: false
                 });	
 
+            }
+            scope.getAttributesByNodeSource=function(nodeIndex,index){
+                allAttributeInto=[];
+                for(var j=0;j<scope.graphpodData.nodeInfo[nodeIndex].nodeProperties.length;j++){
+                    var nodePropertiesObj={};
+                    nodePropertiesObj.uuid=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].ref.uuid;
+                    nodePropertiesObj.type=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].ref.type;
+                    nodePropertiesObj.name=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].ref.name;
+                    nodePropertiesObj.attributeId=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].attrId;
+                    nodePropertiesObj.attributeName=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].attrName;
+                    allAttributeInto[j]=nodePropertiesObj;
+                }
+                scope.nodeTableArray[index].allAttributeInto=allAttributeInto;
+            }
+
+            scope.allNodeRow = function () {
+                angular.forEach(scope.nodeTableArray, function (filter) {
+                    filter.selected = scope.selectedAllNodeRow;
+                });
+            }
+            
+            scope.addNodeRow = function () {
+                if (scope.nodeTableArray == null) {
+                    scope.nodeTableArray = [];
+                }
+                
+                var source=[];
+                for(var i=0;i<scope.graphpodData.nodeInfo.length;i++){
+                    var sourceObj={};
+                    sourceObj.index=i;
+                    sourceObj.uuid=scope.graphpodData.nodeInfo[i].nodeSource.ref.uuid;
+                    sourceObj.type=scope.graphpodData.nodeInfo[i].nodeSource.ref.type;
+                    sourceObj.name=scope.graphpodData.nodeInfo[i].nodeSource.ref.name
+                    source[i]=sourceObj;
+                }
+                
+                var nodeTable = {};
+                nodeTable.id=scope.nodeTableArray.length;
+                nodeTable.nodeId;
+                nodeTable.logicalOperator=scope.nodeTableArray.length >0 ?scope.logicalOperator[0]:"";
+                nodeTable.operator=scope.operator[0];
+                nodeTable.source=source;
+                nodeTable.allAttributeInto=[]
+                scope.nodeTableArray.splice(scope.nodeTableArray.length, 0, nodeTable);
+            }
+            
+            scope.removeNodeRow=function(){
+                var newDataList = [];
+                scope.selectedAllNodeRow = false;
+                angular.forEach(scope.nodeTableArray, function (selected) {
+                    if (!selected.selected) {
+                        newDataList.push(selected);
+                    }
+                });
+                if (newDataList.length > 0) {
+                    newDataList[0].logicalOperator = "";
+                }
+                scope.nodeTableArray = newDataList;
+            }
+            
+            scope.allEdgeRow = function () {
+                angular.forEach(scope.edgeTableArray, function (filter) {
+                    filter.selected = scope.selectedAllEdgeRow;
+                });
+            } 
+            scope.getAttributesByEdgeSource=function(edgeIndex,index){
+                allAttributeInto=[];
+                for(var j=0;j<scope.graphpodData.edgeInfo[edgeIndex].edgeProperties.length;j++){
+                    var edgePropertiesObj={};
+                    edgePropertiesObj.uuid=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].ref.uuid;
+                    edgePropertiesObj.type=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].ref.type;
+                    edgePropertiesObj.name=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].ref.name;
+                    edgePropertiesObj.attributeId=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].attrId;
+                    edgePropertiesObj.attributeName=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].attrName;
+                    allAttributeInto[j]=edgePropertiesObj;
+                }
+                scope.edgeTableArray[index].allAttributeInto=allAttributeInto;
+            }
+            
+            scope.addEdgeRow=function(){		
+                if (scope.edgeTableArray == null) {
+                    scope.edgeTableArray = [];
+                }
+                var source=[];
+                for(var i=0;i<scope.graphpodData.edgeInfo.length;i++){
+                    var sourceObj={};
+                    sourceObj.index=i;
+                    sourceObj.uuid=scope.graphpodData.edgeInfo[i].edgeSource.ref.uuid;
+                    sourceObj.type=scope.graphpodData.edgeInfo[i].edgeSource.ref.type;
+                    sourceObj.name=scope.graphpodData.edgeInfo[i].edgeSource.ref.name
+                    source[i]=sourceObj;
+                }
+                var edgeTable = {};
+                edgeTable.id=scope.edgeTableArray.length;
+                edgeTable.nodeId;
+                edgeTable.logicalOperator=scope.edgeTableArray.length >0 ?scope.logicalOperator[0]:"";
+                edgeTable.operator=scope.operator[0];
+                edgeTable.source=source;
+                edgeTable.allAttributeInto=[];
+                scope.edgeTableArray.splice(scope.edgeTableArray.length, 0, edgeTable);
+            }
+                       
+            scope.removeEdgeRow=function(){
+                var newDataList = [];
+                scope.selectedAllEdgeRow = false;
+                angular.forEach(scope.edgeTableArray, function (selected) {
+                    if (!selected.selected) {
+                        newDataList.push(selected);
+                    }
+                });
+                if (newDataList.length > 0) {
+                    newDataList[0].logicalOperator = "";
+                }
+                scope.edgeTableArray = newDataList;
+            }
+        
+            scope.applyFilter=function(){
+                $('#applyFilter').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });	
+            }
+            scope.submitFilter=function(){
+                scope.filter={};
+                scope.filter.nodeTableArray=scope.nodeTableArray;
+                scope.filter.edgeTableArray=scope.edgeTableArray;
+                $('#applyFilter').modal('hide');
             }
         },
         

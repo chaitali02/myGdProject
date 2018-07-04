@@ -8,9 +8,8 @@
     font-family: FontAwesome;
     fill: ghostwhite;
   }
-
+  
   .fdGraph circle {
-   
     stroke-width: 3px;
   }
 
@@ -18,9 +17,14 @@
   path.textpath {
     fill: none;
     stroke: #cccccc;
-    stroke-width: 0.5px;
+    stroke-width: .5px;
   }
-
+  .fdGraph path.link:hover,
+  path.pathLabel:hover{
+    stroke: #32c5d2;
+    opacity: "0.5";
+    cursor: "move";
+  }
   .fdGraph path.invis {
     fill: none;
     stroke-width: 0;
