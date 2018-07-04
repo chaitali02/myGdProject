@@ -18,8 +18,11 @@ import java.util.List;
  */
 public class GraphFilter {
 
-	List<NodeFilter> nodeFilter;
-	List<EdgeFilter> edgeFilter;
+	
+
+
+	 List<NodeFilter> nodeFilter;
+	 List<EdgeFilter> edgeFilter;
 	/**
 	 * @return
 	 */
@@ -48,8 +51,16 @@ public class GraphFilter {
 		this.edgeFilter = edgeFilter;
 	}
 
-	
-	public class NodeFilter {
+	public GraphFilter(List<NodeFilter> nodeFilter, List<EdgeFilter> edgeFilter) {
+		super();
+		this.nodeFilter = nodeFilter;
+		this.edgeFilter = edgeFilter;
+	}
+
+	public GraphFilter() {
+		super();
+	}
+	public static class NodeFilter {
 		
 		private String logicalOperator;
 		private String operator;
@@ -78,11 +89,25 @@ public class GraphFilter {
 		public void setOperator(String operator) {
 			this.operator = operator;
 		}
+		
+		public NodeFilter() {
+			super();
+		}
+		
+		public NodeFilter(String logicalOperator, String operator, Property operand) {
+			super();
+			this.logicalOperator = logicalOperator;
+			this.operator = operator;
+			this.operand = operand;
+		}
+
 	}
 
 
-	public class EdgeFilter {
+	public static class EdgeFilter {
 		
+		
+
 		private String logicalOperator;
 		private String operator;
 		private Property operand;
@@ -109,6 +134,17 @@ public class GraphFilter {
 
 		public void setOperator(String operator) {
 			this.operator = operator;
+		}
+		
+		public EdgeFilter() {
+			super();
+		}
+
+		public EdgeFilter(String logicalOperator, String operator, Property operand) {
+			super();
+			this.logicalOperator = logicalOperator;
+			this.operator = operator;
+			this.operand = operand;
 		}
 	}
 	

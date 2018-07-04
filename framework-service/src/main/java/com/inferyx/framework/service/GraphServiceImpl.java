@@ -64,6 +64,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.NodeDetails;
+import com.inferyx.framework.domain.Property;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SourceAttr;
@@ -1638,6 +1639,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		}
 		// Get the graphFrame and parse
 		GraphFrame graph = (GraphFrame) graphpodMap.get(graphExecKey);
+		
 		graph.edges().show(false);
 		graph.vertices().show(false);
 	
@@ -1666,8 +1668,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		motifs.show(false);
 		motifs = motifs
 				.filter("relationwithChild.src = '" + filterId + "' or relationwithChild.dst = '" + filterId + "'");
-			//motifs.f
-		motifs.show(false);
+	
 		String[] columns = motifs.columns();
 		for (Row row : motifs.collectAsList()) {
 			java.util.Map<String, Object> object = new HashMap<String, Object>();
@@ -1727,25 +1728,41 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
-
+		
+		GraphFilter graphFilter = execParams.getGraphFilter();
+		StringBuilder sb = new StringBuilder();
+		for (GraphFilter.NodeFilter nodeFilter : graphFilter.getNodeFilter()) {
+			
+			String logicalOperator = nodeFilter.getLogicalOperator();
+			if (logicalOperator == null) {
+				String operator = nodeFilter.getOperator();
+				Property operand = nodeFilter.getOperand();
+				sb.append(operand.getPropertyName() + operator + operand.getPropertyValue());
+			} else {
+				String operator = nodeFilter.getOperator();
+				Property operand = nodeFilter.getOperand();
+				sb.append(logicalOperator + operand.getPropertyName() + operator + operand.getPropertyValue());
+			}
+		}
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties")
 				.distinct();
-
+		
 		edge_dataset.show(false);
 
+		
 		Dataset<Row> node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",  "Object.propertyId",  "Object.propertyInfo",  "Object.type")
 				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
 						"Child.nodeProperties", "Child.propertyId", "Child.propertyInfo", "Child.type"))
 				.distinct();
-
+	//	node_dataset.filter(condition)
 		node_dataset.show(false);
 		Dataset<Row> result_datset = edge_dataset.join(node_dataset,
 				edge_dataset.col("src").equalTo(node_dataset.col("id")));
 
 		result_datset.show(false);
-
+		
 		// Process and get the desired results
 		List<GraphpodResult> result = new ArrayList<>();
 		Row[] rows = (Row[]) result_datset.head(Integer.parseInt("" + result_datset.count()));
