@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.neo4j.test.GraphDescription.PropType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +15,7 @@ import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
@@ -23,11 +23,9 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.GraphEdge;
 import com.inferyx.framework.domain.GraphNode;
 import com.inferyx.framework.domain.Graphpod;
-import com.inferyx.framework.domain.Highlight;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Property;
-import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -169,6 +167,7 @@ public class GraphOperator implements IOperator {
 
 			sb.append(ConstantsUtil.FROM);
           //Check for dataset or datapod  review
+/*<<<<<<< HEAD
 			if (graphNode.getNodeSource().getRef().getType().toString().equalsIgnoreCase(MetaType.datapod.toString())) {
 				Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
 						graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(),
@@ -183,6 +182,10 @@ public class GraphOperator implements IOperator {
 				sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ")
 						.append(source.getName()).append(" ");
 			}
+=======*/
+			Object source = commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
+			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(((BaseEntity) source).getName()).append(" ");
+
 				
 			count++;
 		}
