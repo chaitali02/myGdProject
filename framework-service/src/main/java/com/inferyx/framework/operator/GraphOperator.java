@@ -169,13 +169,19 @@ public class GraphOperator implements IOperator {
 
 			sb.append(ConstantsUtil.FROM);
           //Check for dataset or datapod  review
-			if(graphNode.getNodeSource().getRef().getType().toString().equalsIgnoreCase(MetaType.datapod.toString()))
-			{
-				Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
-				sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(source.getName()).append(" ");
-			}else if(graphNode.getNodeSource().getRef().getType().toString().equalsIgnoreCase(MetaType.dataset.toString())) {
-				DataSet source = (DataSet) commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
-				sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(source.getName()).append(" ");
+			if (graphNode.getNodeSource().getRef().getType().toString().equalsIgnoreCase(MetaType.datapod.toString())) {
+				Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+						graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(),
+						graphNode.getNodeSource().getRef().getType().toString());
+				sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ")
+						.append(source.getName()).append(" ");
+			} else if (graphNode.getNodeSource().getRef().getType().toString()
+					.equalsIgnoreCase(MetaType.dataset.toString())) {
+				DataSet source = (DataSet) commonServiceImpl.getOneByUuidAndVersion(
+						graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(),
+						graphNode.getNodeSource().getRef().getType().toString());
+				sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ")
+						.append(source.getName()).append(" ");
 			}
 				
 			count++;
