@@ -26,12 +26,12 @@ export class ResultsComponent {
     
     this.breadcrumbDataFrom=[{
       "caption":"Data Science ",
-      "routeurl":"/app/list/modelexec"
+      "routeurl":"/app/list/trainexec"
     },
-    {
-      "caption":"Results",
-      "routeurl":"/app/list/modelexec"
-    },
+    // {
+    //   "caption":"Results",
+    //   "routeurl":"/app/list/modelexec"
+    // },
     {
       "caption":"Model Results",
       "routeurl":null 

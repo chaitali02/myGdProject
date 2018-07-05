@@ -169,7 +169,7 @@ export class SidebarComponent {
       },
       {
         name: "Results",
-        type: "modelexec"
+        type: "trainexec"
       },
       
 

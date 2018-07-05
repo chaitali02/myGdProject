@@ -106,8 +106,8 @@ export class CommonListComponent {
     gridTitle: any
     msgs: Message[] = [];
     items: any
-    nonExecTypes: any = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'distribution', 'paramlist', 'paramset', 'training', 'prediction', 'operator', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod', 'dashboard', 'profileexec', 'profilegroupexec', 'ruleexec', 'rulegroupexec', 'dqexec', 'dqgroupexec', 'dagexec', 'mapexec', 'loadexec', 'vizexec', 'modelexec'];
-    // nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','paramlist','paramset','training','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','modelexec'];
+    nonExecTypes: any = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'distribution', 'paramlist', 'paramset', 'training', 'prediction', 'operator', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod', 'dashboard', 'profileexec', 'profilegroupexec', 'ruleexec', 'rulegroupexec', 'dqexec', 'dqgroupexec', 'dagexec', 'mapexec', 'loadexec', 'vizexec', 'trainexec'];
+    // nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','paramlist','paramset','training','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','trainexec'];
     allStatus = [
         {
             "caption": "All",
@@ -344,7 +344,7 @@ export class CommonListComponent {
             this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['graphState']
             this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
         }
-        else if (this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "modelexec") {
+        else if (this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "trainexec") {
 
             let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
             this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['resultState']

@@ -93,7 +93,7 @@ export class ModelService{
   }
 
   getModelResults(uuid:any,version:any): Observable<any[]> {
-    let url ='/model/getResults?action=view&uuid='+uuid+'&version='+version;
+    let url ="model/train/getResults?action=view&uuid=" + uuid + "&version=" + version;
     return this._sharedService.getCall(url)
     .map((response: Response) => {
       return <any[]>response.json();
