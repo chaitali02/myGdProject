@@ -1785,7 +1785,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 			String relation = null;
 			if (edge_properties.contains(","))
-				relation = edge_properties.substring(edge_properties.indexOf(':'), edge_properties.indexOf(','));
+				relation = edge_properties.substring(edge_properties.indexOf(':')+1, edge_properties.indexOf(','));
 			else
 				relation = edge_properties;
 
