@@ -163,7 +163,8 @@ public class SparkExecutor<T> implements IExecutor {
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
 	@Resource
-	private ConcurrentHashMap graphpodMap;
+	private ConcurrentHashMap<String, GraphFrame> graphpodMap;
+	
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
 	/**
@@ -2023,8 +2024,16 @@ public class SparkExecutor<T> implements IExecutor {
 //					.setEstimatorParamMaps(getHyperParamsByAlgo(trainName, obj))
 					.setEstimatorParamMaps(getHyperParams(hyperParamList, obj))
 					.setNumFolds(numFolds);
-			
-			CrossValidatorModel cvModel = cv.fit(trainingDf);
+			CrossValidatorModel cvModel = null;
+			try {
+				cvModel = cv.fit(trainingDf);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			} catch (Error e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 			trainedDataSet = cvModel.transform(validateDf);			
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 			trainedDataSet.show(false);
@@ -2038,7 +2047,13 @@ public class SparkExecutor<T> implements IExecutor {
 				| InvocationTargetException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
-		} 
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (Error e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public Evaluator getEvaluatorByTrainClass(String trainName) {
@@ -2146,10 +2161,7 @@ public class SparkExecutor<T> implements IExecutor {
 						String paramValue = param.getParamValue().getValue();
 						String[] splits = paramValue.split(",");
 						String paramClassName = trainClassObject.getClass().getMethod(hyperParam.name()).invoke(trainClassObject).getClass().getSimpleName();
-//						List<?> paramValues = resoveParamValue(trainClassObject, paramGridBuilder, paramClassName, splits, hyperParam.name());
-//						Seq<T> seq = (Seq<T>) JavaConverters.asScalaIteratorConverter(paramValues.iterator()).asScala().toSeq();
-//						paramGridBuilder.addGrid((Param<T>)trainClassObject.getClass().getMethod(hyperParam.name()).invoke(trainClassObject), seq);
-						paramGridBuilder = resoveParamValue(trainClassObject, paramGridBuilder, paramClassName, splits, hyperParam.name());
+						paramGridBuilder = resolveHyperParam(trainClassObject, paramGridBuilder, paramClassName, splits, hyperParam.name());
 					}
 				}
 			}
@@ -2157,7 +2169,8 @@ public class SparkExecutor<T> implements IExecutor {
 		return paramGridBuilder.build();
 	}
 
-	private ParamGridBuilder resoveParamValue(Object trainClassObject, ParamGridBuilder paramGridBuilder, String paramDataType, String[] splits, String paramName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	@SuppressWarnings("unchecked")
+	private ParamGridBuilder resolveHyperParam(Object trainClassObject, ParamGridBuilder paramGridBuilder, String paramDataType, String[] splits, String paramName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		switch(paramDataType) {
 			case "DoubleParam" : 
 				double[] doubleParam = new double[splits.length];
@@ -2167,9 +2180,6 @@ public class SparkExecutor<T> implements IExecutor {
 					i++;
 				}
 				paramGridBuilder.addGrid((DoubleParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), doubleParam);
-//				for(String split : splits) {
-//					paramValues.add(Double.parseDouble(split));
-//				}
 				return paramGridBuilder;
 				
 			case "IntParam" : 
@@ -2206,16 +2216,14 @@ public class SparkExecutor<T> implements IExecutor {
 				paramGridBuilder.addGrid((BooleanParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject));
 				return paramGridBuilder;
 				
-//			case "Param[T]" :
-//
-//				double[] doubleParam = new double[splits.length];
-//				int i = 0; 
-//				for(String split : splits) {
-//					doubleParam[i] = Double.parseDouble(split);
-//					i++;
-//				}
-//				paramGridBuilder.addGrid((DoubleParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), doubleParam);
-//				return paramGridBuilder;
+			case "Param[T]" :
+				List<String> paramValues = new ArrayList<>(splits.length);
+				for(String split : splits) {
+					paramValues.add(split);
+				}
+				Seq<T> seq = (Seq<T>) JavaConverters.asScalaIteratorConverter(paramValues.iterator()).asScala().toSeq();
+				paramGridBuilder.addGrid((Param<T>)trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), seq);
+				return paramGridBuilder;
 		}
 		return paramGridBuilder;
 	}
