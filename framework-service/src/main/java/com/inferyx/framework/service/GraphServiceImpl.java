@@ -1729,7 +1729,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
 		
-		GraphFilter graphFilter = execParams.getGraphFilter();
+		/*GraphFilter graphFilter = execParams.getGraphFilter();
 		StringBuilder sb = new StringBuilder();
 		for (GraphFilter.NodeFilter nodeFilter : graphFilter.getNodeFilter()) {
 			
@@ -1743,7 +1743,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				Property operand = nodeFilter.getOperand();
 				sb.append(logicalOperator + operand.getPropertyName() + operator + operand.getPropertyValue());
 			}
-		}
+		}*/
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties")
 				.distinct();
@@ -1785,7 +1785,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 			String relation = null;
 			if (edge_properties.contains(","))
-				relation = edge_properties.substring(edge_properties.indexOf(':'), edge_properties.indexOf(','));
+				relation = edge_properties.substring(edge_properties.indexOf(':')+1, edge_properties.indexOf(','));
 			else
 				relation = edge_properties;
 
