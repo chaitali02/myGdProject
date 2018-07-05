@@ -80,6 +80,7 @@
     "uuid" : "adba4446-ff6b-4b81-b83c-acc0beb4f6ce",
     "version" : "1521706735",
     "name" : "train_linear_regression",
+    "useHyperParams": "Y",
     "createdBy" : {
         "ref" : {
             "type" : "user",
