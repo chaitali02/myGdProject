@@ -24,7 +24,9 @@ public class ExecParams {
 	private java.util.Map<String, String> internalVarMap;
 	private HashMap<String, String> otherParams;
 	private ExecutionContext executionContext;
+	private GraphFilter graphFilter;
 	
+
 	/**
 	 * @return the executionContext
 	 */
@@ -111,6 +113,14 @@ public class ExecParams {
 
 	public void setOtherParams(HashMap<String, String> otherParams) {
 		this.otherParams = otherParams;
+	}
+	
+	public GraphFilter getGraphFilter() {
+		return this.graphFilter;
+	}
+
+	public void setGraphFilter(GraphFilter graphFilter) {
+		this.graphFilter = graphFilter;
 	}
 
 }

@@ -2401,8 +2401,12 @@ public class CommonServiceImpl <T> {
 			logger.info("Latest Status is not in InProgress. Exiting...");
 			return statusList;
 		}*/
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))) {
-			logger.info("Latest Status is not in Completed. Exiting...");
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) || 
+				Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
+			logger.info("Latest Status is in Completed or killed. Exiting...");
+			return statusList;
+		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))) {
+			statusList.add(new Status(Status.Stage.Killed, new Date()));
 			return statusList;
 		}
 		Status failedStatus = new Status(Status.Stage.Failed, new Date());
@@ -3786,7 +3790,7 @@ public class CommonServiceImpl <T> {
 			return getTableName(((Datapod)object), execParams.getOtherParams(), baseExec, runMode);
 		} else if (object instanceof DataSet) {
 			return "(" + datasetOperator.generateSql(((DataSet)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-											execParams.getOtherParams(), null, execParams, runMode) + ")";
+											execParams.getOtherParams(), new HashSet<>(), execParams, runMode) + ")";
 		} else if (object instanceof Rule) {
 			return "(" + ruleOperator.generateSql(((Rule)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 					execParams.getOtherParams(), null, execParams, runMode) + ")";

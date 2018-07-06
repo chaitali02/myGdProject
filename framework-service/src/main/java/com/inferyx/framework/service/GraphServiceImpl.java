@@ -55,6 +55,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.GraphFilter;
 import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.Graphpod;
@@ -63,6 +64,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.NodeDetails;
+import com.inferyx.framework.domain.Property;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SourceAttr;
@@ -911,9 +913,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Loop each property
 		while (iter.hasNext()) {
 			String key = iter.next();
-			if (key.equalsIgnoreCase("nodeProperties")) {
+		/*	if (key.equalsIgnoreCase("nodeProperties")) {
 				System.out.println("assssssd");
-			}
+			}*/
 			jsonArray = jsonObject.optJSONArray(key);
 			JSONObject childObj = jsonObject.optJSONObject(key);
 			value = jsonObject.optString(key);
@@ -1401,12 +1403,12 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				}
 			} 
 			else if (childObj != null && value.startsWith("{", 0)) {
-				if (parentName != null) {
+				/*if (parentName != null) {
 					if (parentName.equalsIgnoreCase("nodeProperties")
 							|| parentName.equalsIgnoreCase("edgeProperties")) {
 						continue;
 					}
-				}
+				}*/
 				if (key.equalsIgnoreCase("ref")) {
 					
 					
@@ -1604,7 +1606,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @throws Exception
 	 */
 	public Map<String, List<GraphpodResult>> getGraphResults(String uuid, String version, String degree,
-			String filterId, String nodeType) throws Exception {
+			String filterId, String nodeType,ExecParams execParams) throws Exception {
 		GraphExec graphExec = (GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
 				MetaType.graphExec.toString());
 		Graphpod graphpod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(
@@ -1615,7 +1617,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Get the datastore. If there is no existing datastore then create graph
 		DataStore ds = dataStoreServiceImpl.findLatestByMeta(graphpod.getUuid(), graphpod.getVersion());
 		// DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
-
+		
+	
 		if (ds != null) {
 			graphExecKey = ds.getMetaId().getRef().getUuid() + "_" + ds.getMetaId().getRef().getVersion() + "_"
 					+ ds.getExecId().getRef().getVersion();
@@ -1628,17 +1631,18 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		if (createGraph) {
 			// Create graph
 			RunMode runMode = RunMode.ONLINE;
-			ExecParams execParams = new ExecParams();
+			ExecParams execParamss = new ExecParams();
 			BaseExec baseExec = create(graphExec.getDependsOn().getRef().getUuid(),
-					graphExec.getDependsOn().getRef().getVersion(), execParams, runMode);
+					graphExec.getDependsOn().getRef().getVersion(), execParamss, runMode);
 			baseExec = parse(baseExec, execParams, runMode);
 			graphExecKey = execute(baseExec, execParams, runMode);
 		}
 		// Get the graphFrame and parse
 		GraphFrame graph = (GraphFrame) graphpodMap.get(graphExecKey);
+		
 		graph.edges().show(false);
 		graph.vertices().show(false);
-
+	
 		Dataset<Row> motifs = null;
 		List<Map<String, Object>> vertexData = new ArrayList<>();
 		List<Map<String, Object>> edgesData = new ArrayList<>();
@@ -1661,10 +1665,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		} else if (degree.equalsIgnoreCase("-2")) {
 			motifs = graph.find("(Child)-[relationwithChild]->(SubChild);(SubChild)-[relationwithSubChild]->(Object)");
 		}
-
+		motifs.show(false);
 		motifs = motifs
 				.filter("relationwithChild.src = '" + filterId + "' or relationwithChild.dst = '" + filterId + "'");
-		motifs.show(false);
+	
 		String[] columns = motifs.columns();
 		for (Row row : motifs.collectAsList()) {
 			java.util.Map<String, Object> object = new HashMap<String, Object>();
@@ -1724,25 +1728,41 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
-
+		
+		/*GraphFilter graphFilter = execParams.getGraphFilter();
+		StringBuilder sb = new StringBuilder();
+		for (GraphFilter.NodeFilter nodeFilter : graphFilter.getNodeFilter()) {
+			
+			String logicalOperator = nodeFilter.getLogicalOperator();
+			if (logicalOperator == null) {
+				String operator = nodeFilter.getOperator();
+				Property operand = nodeFilter.getOperand();
+				sb.append(operand.getPropertyName() + operator + operand.getPropertyValue());
+			} else {
+				String operator = nodeFilter.getOperator();
+				Property operand = nodeFilter.getOperand();
+				sb.append(logicalOperator + operand.getPropertyName() + operator + operand.getPropertyValue());
+			}
+		}*/
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties")
 				.distinct();
-
+		
 		edge_dataset.show(false);
 
+		
 		Dataset<Row> node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",  "Object.propertyId",  "Object.propertyInfo",  "Object.type")
 				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
 						"Child.nodeProperties", "Child.propertyId", "Child.propertyInfo", "Child.type"))
 				.distinct();
-
+	//	node_dataset.filter(condition)
 		node_dataset.show(false);
 		Dataset<Row> result_datset = edge_dataset.join(node_dataset,
 				edge_dataset.col("src").equalTo(node_dataset.col("id")));
 
 		result_datset.show(false);
-
+		
 		// Process and get the desired results
 		List<GraphpodResult> result = new ArrayList<>();
 		Row[] rows = (Row[]) result_datset.head(Integer.parseInt("" + result_datset.count()));
@@ -1765,7 +1785,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 			String relation = null;
 			if (edge_properties.contains(","))
-				relation = edge_properties.substring(edge_properties.indexOf(':'), edge_properties.indexOf(','));
+				relation = edge_properties.substring(edge_properties.indexOf(':')+1, edge_properties.indexOf(','));
 			else
 				relation = edge_properties;
 

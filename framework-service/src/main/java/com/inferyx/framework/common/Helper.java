@@ -926,6 +926,22 @@ public class Helper {
 		default : return null;
 		}
 	}
+
+	public static String genUrlByDatasource(Datasource datasource) {
+		switch(datasource.getType().toLowerCase()) {
+			case "hive":  return "jdbc:hive2://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			  
+			case "impala": return "jdbc:impala://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			   
+			case "mysql": return "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			  
+			case "oracle": return "jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":" + datasource.getSid();
+			
+			case "postgres": return "jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			   
+			default: return null;
+		}		
+	}
 	
 	
 }

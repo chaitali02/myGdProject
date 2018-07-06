@@ -58,7 +58,7 @@
 	],
 	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80",
 	"version": "1495146809",
-	"name": "paramlist_logisticregression",
+	"name": "paramlist_logistic_regression",
 	"desc": "LogisticRegression Param List",
 	"createdBy": {
 		"ref": {

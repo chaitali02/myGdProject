@@ -54,6 +54,12 @@ import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
+import org.apache.spark.ml.param.BooleanParam;
+import org.apache.spark.ml.param.DoubleParam;
+import org.apache.spark.ml.param.FloatParam;
+import org.apache.spark.ml.param.IntParam;
+import org.apache.spark.ml.param.LongParam;
+import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.regression.AFTSurvivalRegression;
 import org.apache.spark.ml.regression.LinearRegression;
@@ -157,7 +163,8 @@ public class SparkExecutor<T> implements IExecutor {
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
 	@Resource
-	private ConcurrentHashMap graphpodMap;
+	private ConcurrentHashMap<String, GraphFrame> graphpodMap;
+	
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
 	/**
@@ -254,21 +261,21 @@ public class SparkExecutor<T> implements IExecutor {
 						.option("spark.driver.extraClassPath", datasource.getDriver())
 						.option("spark.executor.extraClassPath", datasource.getDriver())
 						.option("driver", datasource.getDriver())
-						.option("url", genUrlByDatasource(datasource))
+						.option("url", Helper.genUrlByDatasource(datasource))
 						.option("user", datasource.getUsername())
 						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ") as mysql_table").load();
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("driver", datasource.getDriver())
-						.option("url", genUrlByDatasource(datasource))
+						.option("url", Helper.genUrlByDatasource(datasource))
 						.option("user", datasource.getUsername())
 						.option("password", datasource.getPassword())
 						.option("dbtable", "(" + sql + ")  oracle_table").load();
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {				
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("driver", datasource.getDriver())
-						.option("url", genUrlByDatasource(datasource))
+						.option("url", Helper.genUrlByDatasource(datasource))
 						.option("lazyInit", "true")
 						.option("user", datasource.getUsername())
 						.option("password", datasource.getPassword())
@@ -1616,7 +1623,7 @@ public class SparkExecutor<T> implements IExecutor {
 		//Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		Dataset<Row> df = rsHolder.getDataFrame();
 		df.show(false);
-		String url = genUrlByDatasource(datasource);
+		String url = Helper.genUrlByDatasource(datasource);
 		Properties connectionProperties = new Properties();
 		connectionProperties.put("driver", datasource.getDriver());
 		connectionProperties.put("user", datasource.getUsername());
@@ -1674,10 +1681,18 @@ public class SparkExecutor<T> implements IExecutor {
 			method.invoke(obj, "features");
 			Pipeline pipeline = new Pipeline()
 					.setStages(new PipelineStage[] { /* labelIndexer, */vectorAssembler, (PipelineStage) obj });
-			if (null != paramMap) {
-				trngModel = pipeline.fit(trainingDf, paramMap);
-			} else {
-				trngModel = pipeline.fit(trainingDf);
+			try {
+				if (null != paramMap) {
+					trngModel = pipeline.fit(trainingDf, paramMap);
+				} else {
+					trngModel = pipeline.fit(trainingDf);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			} catch (Error e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 			
 			trainedDataSet = trngModel.transform(validateDf);
@@ -1693,7 +1708,13 @@ public class SparkExecutor<T> implements IExecutor {
 				| InvocationTargetException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
-		} 
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (Error e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -1880,22 +1901,6 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public String genUrlByDatasource(Datasource datasource) {
-		switch(datasource.getType().toLowerCase()) {
-			case "hive":  return "jdbc:hive2://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
-			  			  
-			case "impala": return "jdbc:impala://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
-			  			   
-			case "mysql": return "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
-			  			  
-			case "oracle": return "jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":" + datasource.getSid();
-			
-			case "postgres": return "jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
-			  			   
-			default: return null;
-		}		
-	}
-	
 	public ResultSetHolder uploadCsvToDatabase(Load load, Datasource datasource, String targetTableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		Dataset<Row> df = sparkSession.read()
@@ -1972,7 +1977,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	//@Override
-	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
@@ -2010,14 +2015,29 @@ public class SparkExecutor<T> implements IExecutor {
 			method.invoke(obj, "features");
 			Pipeline pipeline = new Pipeline()
 					.setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
-		
+			int numFolds = 3;
+			for(com.inferyx.framework.domain.Param param : hyperParamList) {
+				if(param.getParamName().equalsIgnoreCase("numFolds")) {
+					numFolds = Integer.parseInt(param.getParamValue().getValue());
+					break;
+				}
+			}
 			CrossValidator cv = new CrossValidator()
 					.setEstimator(pipeline)
 					.setEvaluator(getEvaluatorByTrainClass(trainName))
-					.setEstimatorParamMaps(getHyperParamsByAlgo(trainName, obj))
-					.setNumFolds(3);
-			
-			CrossValidatorModel cvModel = cv.fit(trainingDf);
+//					.setEstimatorParamMaps(getHyperParamsByAlgo(trainName, obj))
+					.setEstimatorParamMaps(getHyperParams(hyperParamList, obj))
+					.setNumFolds(numFolds);
+			CrossValidatorModel cvModel = null;
+			try {
+				cvModel = cv.fit(trainingDf);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			} catch (Error e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 			trainedDataSet = cvModel.transform(validateDf);			
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 			trainedDataSet.show(false);
@@ -2031,20 +2051,29 @@ public class SparkExecutor<T> implements IExecutor {
 				| InvocationTargetException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
-		} 
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (Error e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public Evaluator getEvaluatorByTrainClass(String trainName) {
-		if(trainName.contains("Regression") || trainName.contains("Regressor")) {
+		if(trainName.contains("regression") || trainName.contains("Regressor")) {
 			return new RegressionEvaluator();
-		} else if(trainName.contains("Classification") || trainName.contains("Classifier")) {
+		} else if(trainName.contains("classification") || trainName.contains("Classifier")) {
 			return new BinaryClassificationEvaluator() ;
-		} else if(trainName.contains("")) {
+		} else if(trainName.contains("XXXXXXX")) {
 			return new  MulticlassClassificationEvaluator();
+		}  else {
+			return new RegressionEvaluator() ;
 		}
-		return null;		
+		//return null;		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public ParamMap[] getHyperParamsByAlgo(String algoName, Object trainClassObject) {
 		if(algoName.contains("LinearRegression")) {
 			LinearRegression linearRegression = (LinearRegression) trainClassObject;
@@ -2063,8 +2092,8 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(algoName.contains("NaiveBayes")) {
 			NaiveBayes naiveBayes = (NaiveBayes) trainClassObject;
 			List<String> moadelTypesnew = new ArrayList<>();
-			moadelTypesnew.add("Bernoulli");
-			moadelTypesnew.add("Multinomial");
+			moadelTypesnew.add("bernoulli");
+			moadelTypesnew.add("multinomial");
 			Seq<T> seq = (Seq<T>) JavaConverters.asScalaIteratorConverter(moadelTypesnew.iterator()).asScala().toSeq();
  			ParamMap[] paramMap = new ParamGridBuilder()
 										.addGrid(naiveBayes.smoothing(), new double[] {0.3, 1.0, 2.5})
@@ -2124,5 +2153,83 @@ public class SparkExecutor<T> implements IExecutor {
 			return paramMap;
 		}
 		return new ParamMap[] {};
+	}
+	
+	public ParamMap[] getHyperParams(List<com.inferyx.framework.domain.Param> hyperParamList, Object trainClassObject) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException {
+		Param<?>[] params = (Param<?>[]) trainClassObject.getClass().getMethod("params").invoke(trainClassObject);
+		ParamGridBuilder paramGridBuilder = new ParamGridBuilder();
+		for(com.inferyx.framework.domain.Param param : hyperParamList) {
+			//if(param.getParamType().equalsIgnoreCase("list")) {
+				for(Param<?> hyperParam : params) {
+					if(hyperParam.name().equalsIgnoreCase(param.getParamName())) {
+						String paramValue = param.getParamValue().getValue();
+						String[] splits = paramValue.split(",");
+						String paramClassName = trainClassObject.getClass().getMethod(hyperParam.name()).invoke(trainClassObject).getClass().getSimpleName();
+						paramGridBuilder = resolveHyperParam(trainClassObject, paramGridBuilder, paramClassName, splits, hyperParam.name());
+						break;
+					}
+				}
+			//}
+		} 
+		return paramGridBuilder.build();
+	}
+
+	@SuppressWarnings("unchecked")
+	private ParamGridBuilder resolveHyperParam(Object trainClassObject, ParamGridBuilder paramGridBuilder, String paramDataType, String[] splits, String paramName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		switch(paramDataType) {
+			case "DoubleParam" : 
+				double[] doubleParam = new double[splits.length];
+				int i = 0; 
+				for(String split : splits) {
+					doubleParam[i] = Double.parseDouble(split);
+					i++;
+				}
+				paramGridBuilder.addGrid((DoubleParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), doubleParam);
+				return paramGridBuilder;
+				
+			case "IntParam" : 
+				int[] intParam = new int[splits.length];
+				int j = 0; 
+				for(String split : splits) {
+					intParam[j] = Integer.parseInt(split);
+					j++;
+				}
+				paramGridBuilder.addGrid((IntParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), intParam);
+				return paramGridBuilder;
+				
+			case "FloatParam" :
+				float[] floatParam = new float[splits.length];
+				int k = 0; 
+				for(String split : splits) {
+					floatParam[k] = Float.parseFloat(split);
+					k++;
+				}
+				paramGridBuilder.addGrid((FloatParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), floatParam);
+				return paramGridBuilder;
+				
+			case "LongParam" :
+				long[] longParam = new long[splits.length];
+				int l = 0; 
+				for(String split : splits) {
+					longParam[l] = Long.parseLong(split);
+					l++;
+				}
+				paramGridBuilder.addGrid((LongParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), longParam);
+				return paramGridBuilder;
+				
+			case "BooleanParam" :
+				paramGridBuilder.addGrid((BooleanParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject));
+				return paramGridBuilder;
+				
+			case "Param" :
+				List<String> paramValues = new ArrayList<>(splits.length);
+				for(String split : splits) {
+					paramValues.add(split);
+				}
+				Seq<T> seq = (Seq<T>) JavaConverters.asScalaIteratorConverter(paramValues.iterator()).asScala().toSeq();
+				paramGridBuilder.addGrid((Param<T>)trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), seq);
+				return paramGridBuilder;
+		}
+		return paramGridBuilder;
 	}
 }

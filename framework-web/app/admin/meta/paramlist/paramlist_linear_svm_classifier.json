@@ -1,7 +1,7 @@
 {
   "uuid": "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
   "version": "1520009572",
-  "name": "paramlist_linearsvm_classifier",
+  "name": "paramlist_linear_svm_classifier",
   "desc": "LinearSupportVectorMachine Param List",
   "createdBy": {
     "ref": {

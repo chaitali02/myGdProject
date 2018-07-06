@@ -22,6 +22,25 @@ public class Train extends BaseEntity {
 	private double trainPercent;
 	private double valPercent;
 	private AttributeRefHolder labelInfo;
+	private String useHyperParams;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the useHyperParams
+	 */
+	public String getUseHyperParams() {
+		return useHyperParams;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param useHyperParams the useHyperParams to set
+	 */
+	public void setUseHyperParams(String useHyperParams) {
+		this.useHyperParams = useHyperParams;
+	}
 
 	/**
 	 * @Ganesh
