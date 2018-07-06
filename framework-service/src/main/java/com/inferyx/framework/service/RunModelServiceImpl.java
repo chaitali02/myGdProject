@@ -77,25 +77,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private Train train;
 	private String name;
 	private MetaType execType;
-	private SparkExecutor<?> sparkExecutor;
-	
-	/**
-	 * @Ganesh
-	 *
-	 * @return the sparkExecutor
-	 */
-	public SparkExecutor<?> getSparkExecutor() {
-		return sparkExecutor;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param sparkExecutor the sparkExecutor to set
-	 */
-	public void setSparkExecutor(SparkExecutor<?> sparkExecutor) {
-		this.sparkExecutor = sparkExecutor;
-	}
 
 	/**
 	 * @return the name
@@ -692,7 +673,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					//With hypertuning
 					MetaIdentifier hyperParamMI = algorithm.getParamList().getRef();
 					ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-					trngModel = sparkExecutor.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+					trngModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
 				}
 				
 				result = trngModel;				
