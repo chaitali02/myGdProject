@@ -1767,138 +1767,139 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
-		
-		GraphFilter graphFilter = execParams.getGraphFilter();
 		StringBuilder sb = new StringBuilder();
-		for (GraphFilter.NodeFilter nodeFilter : graphFilter.getNodeFilter()) {
-			
-			String logicalOperator = nodeFilter.getLogicalOperator();
-			if (logicalOperator == null) {
-				String operator = nodeFilter.getOperator();
-				Property operand = nodeFilter.getOperand();
-				sb.append("get_json_object(nodeProperties,'$."+"  "+operand.getPropertyName()+"')  "+ operator +"  "+ operand.getPropertyValue());
-			} else {
-				String operator = nodeFilter.getOperator();
-				Property operand = nodeFilter.getOperand();
-				sb.append("  "+logicalOperator+"  "+ "get_json_object(nodeProperties,'$."+operand.getPropertyName() +"')  "+ operator+"  "+ operand.getPropertyValue());
+		if (execParams != null) {
+			GraphFilter graphFilter = execParams.getGraphFilter();
+			if (graphFilter.getNodeFilter().size() > 0) {
+				for (GraphFilter.NodeFilter nodeFilter : graphFilter.getNodeFilter()) {
+
+					String logicalOperator = nodeFilter.getLogicalOperator();
+					if (logicalOperator == null) {
+						String operator = nodeFilter.getOperator();
+						Property operand = nodeFilter.getOperand();
+						sb.append("get_json_object(nodeProperties,'$." + "  " + operand.getPropertyName() + "')  "
+								+ operator + "  " + operand.getPropertyValue());
+					} else {
+						String operator = nodeFilter.getOperator();
+						Property operand = nodeFilter.getOperand();
+						sb.append("  " + logicalOperator + "  " + "get_json_object(nodeProperties,'$."
+								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
+					}
+				}
+			}
+
+			if (graphFilter.getEdgeFilter().size() > 0) {
+				for (GraphFilter.EdgeFilter edgeFilter : graphFilter.getEdgeFilter()) {
+
+					String logicalOperator = edgeFilter.getLogicalOperator();
+					if (logicalOperator == "" && graphFilter.getNodeFilter().size() > 0) {
+						String operator = edgeFilter.getOperator();
+						Property operand = edgeFilter.getOperand();
+						sb.append("  and get_json_object(edgeProperties,'$." + operand.getPropertyName() + "')  "
+								+ operator + "  " + operand.getPropertyValue());
+
+					} else {
+						String operator = edgeFilter.getOperator();
+						Property operand = edgeFilter.getOperand();
+						sb.append("  " + logicalOperator + "  " + "get_json_object(edgeProperties,'$."
+								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
+					}
+				}
 			}
 		}
-		
-		
-		
-		
-		
-		for (GraphFilter.EdgeFilter edgeFilter : graphFilter.getEdgeFilter()) {
-			
-			String logicalOperator = edgeFilter.getLogicalOperator();
-			if (logicalOperator=="") {
-				String operator = edgeFilter.getOperator();
-				Property operand = edgeFilter.getOperand();
-				sb.append("  or get_json_object(edgeProperties,'$."+operand.getPropertyName() +"')  "+ operator+"  "+ operand.getPropertyValue());
-				
-			} else {
-				String operator = edgeFilter.getOperator();
-				Property operand = edgeFilter.getOperand();
-				sb.append("  "+logicalOperator+"  "+ "get_json_object(edgeProperties,'$."+operand.getPropertyName() +"')  "+ operator+"  "+ operand.getPropertyValue());
-			}
-		}
-		String propertyValue = "current_balance";
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties")
 				.distinct();
-		
-		
-		
-		
+
 		edge_dataset.show(false);
 
-		
 		Dataset<Row> node_dataset = motifs
-				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",  "Object.propertyId",  "Object.propertyInfo",  "Object.type")
+				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
+						"Object.propertyId", "Object.propertyInfo", "Object.type")
 				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
 						"Child.nodeProperties", "Child.propertyId", "Child.propertyInfo", "Child.type"))
 				.distinct();
-		
-		//motifs.select("Object.nodeProperties").toJSON().show(false);
+
+		// motifs.select("Object.nodeProperties").toJSON().show(false);
 		node_dataset.show(false);
-	
-		System.out.println("############     Filter  String   #####"+sb.toString());
 
+		System.out.println("############     Filter  String   #####" + sb.toString());
 
-		
 		Dataset<Row> result_datset = edge_dataset.join(node_dataset,
 				edge_dataset.col("src").equalTo(node_dataset.col("id")));
-		
+
 		result_datset.show(false);
-		result_datset=result_datset.filter(sb.toString());
+		if (execParams != null)
+			result_datset = result_datset.filter(sb.toString());
 		result_datset.show(false);
 		// Process and get the desired results
 		List<GraphpodResult> result = new ArrayList<>();
-		
-		if(!result_datset.collectAsList().isEmpty()) {
-		Row[] rows = (Row[]) result_datset.head(Integer.parseInt("" + result_datset.collectAsList().size()));
-		String[] resultDatesetColumns = result_datset.columns();
-		String[] resultDatasetValue = new String[resultDatesetColumns.length];
 
-		for (Row row : rows) {
-			Map<String, String> source = new HashMap<>();
-			Map<String, String> target = new HashMap<>();
-			int count = 0;
-			for (String edgecloumn : resultDatesetColumns) {
-				String value1 = row.getAs(edgecloumn).toString();
-				resultDatasetValue[count] = value1;
-				count++;
-			}
-			
-			String edge_name = row.getAs(resultDatesetColumns[2]);
-			String edge_type = row.getAs(resultDatesetColumns[3]);
-			String edge_properties = row.getAs(resultDatesetColumns[4]);
+		if (!result_datset.collectAsList().isEmpty()) {
+			Row[] rows = (Row[]) result_datset.head(Integer.parseInt("" + result_datset.collectAsList().size()));
+			String[] resultDatesetColumns = result_datset.columns();
+			String[] resultDatasetValue = new String[resultDatesetColumns.length];
 
-			String relation = null;
-			if (edge_properties.contains(","))
-				relation = edge_properties.substring(edge_properties.indexOf(':')+1, edge_properties.indexOf(','));
-			else
-				relation = edge_properties;
-
-			Dataset<Row> srcVertexDf = graph.vertices().filter("id = '" + resultDatasetValue[0] + "'");
-			String[] vertexColumns = srcVertexDf.columns();
-			Row[] srcrows = (Row[]) srcVertexDf.head(Integer.parseInt("" + srcVertexDf.count()));
-
-			for (Row srcrow : srcrows) {
-				for (String cloumn : vertexColumns) {
-					if (cloumn.equalsIgnoreCase("nodeName")) {
-						String value1 = srcrow.getAs(cloumn).toString();
-						source.put("label", value1);
-					}
-					String value1 = srcrow.getAs(cloumn).toString();
-					source.put(cloumn, value1);
+			for (Row row : rows) {
+				Map<String, String> source = new HashMap<>();
+				Map<String, String> target = new HashMap<>();
+				int count = 0;
+				for (String edgecloumn : resultDatesetColumns) {
+					String value1 = row.getAs(edgecloumn).toString();
+					resultDatasetValue[count] = value1;
+					count++;
 				}
-			}
 
-			Dataset<Row> dstVertexDf = graph.vertices().filter("id = '" + resultDatasetValue[1] + "'");
+				String edge_name = row.getAs(resultDatesetColumns[2]);
+				String edge_type = row.getAs(resultDatesetColumns[3]);
+				String edge_properties = row.getAs(resultDatesetColumns[4]);
 
-			Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
-			if (dstVertexDf.count() > 0) {
-				for (Row dstrow : dstrows) {
+				String relation = null;
+				if (edge_properties.contains(","))
+					relation = edge_properties.substring(edge_properties.indexOf(':') + 1,
+							edge_properties.indexOf(','));
+				else
+					relation = edge_properties;
+
+				Dataset<Row> srcVertexDf = graph.vertices().filter("id = '" + resultDatasetValue[0] + "'");
+				String[] vertexColumns = srcVertexDf.columns();
+				Row[] srcrows = (Row[]) srcVertexDf.head(Integer.parseInt("" + srcVertexDf.count()));
+
+				for (Row srcrow : srcrows) {
 					for (String cloumn : vertexColumns) {
 						if (cloumn.equalsIgnoreCase("nodeName")) {
-							String value1 = dstrow.getAs(cloumn).toString();
-							target.put("label", value1);
+							String value1 = srcrow.getAs(cloumn).toString();
+							source.put("label", value1);
 						}
-						String value1 = dstrow.getAs(cloumn).toString();
-						target.put(cloumn, value1);
-
+						String value1 = srcrow.getAs(cloumn).toString();
+						source.put(cloumn, value1);
 					}
 				}
-				GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
-						edge_properties);
-				result.add(graphpodresult);
-			} else {
-				GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null);
-				result.add(graphpodresult);
-			}
 
-		}
+				Dataset<Row> dstVertexDf = graph.vertices().filter("id = '" + resultDatasetValue[1] + "'");
+
+				Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
+				if (dstVertexDf.count() > 0) {
+					for (Row dstrow : dstrows) {
+						for (String cloumn : vertexColumns) {
+							if (cloumn.equalsIgnoreCase("nodeName")) {
+								String value1 = dstrow.getAs(cloumn).toString();
+								target.put("label", value1);
+							}
+							String value1 = dstrow.getAs(cloumn).toString();
+							target.put(cloumn, value1);
+
+						}
+					}
+					GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
+							edge_properties);
+					result.add(graphpodresult);
+				} else {
+					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null);
+					result.add(graphpodresult);
+				}
+
+			}
 		}
 		Map<String, List<GraphpodResult>> edgeMap = new HashMap<>();
 		edgeMap.put("edges", result);
