@@ -80,7 +80,7 @@
     ],
 	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82",
 	"version": "1495146809",
-	"name": "paramlist_linearregression",
+	"name": "paramlist_linear_regression",
 	"desc": "LinearRegression Param List",
 	"createdBy": {
 		"ref": {

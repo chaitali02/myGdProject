@@ -941,6 +941,12 @@ path.link {
   font: 10px sans-serif;
   /* fill: #CC0000; */
 }
+path.link:hover{
+  stroke: #32c5d2;
+  opacity: 0.5;
+  cursor: move;
+  stroke-width: 2px;
+}
 
 .hyper {
 color: red;

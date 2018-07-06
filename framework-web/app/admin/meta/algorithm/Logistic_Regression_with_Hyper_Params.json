@@ -1,0 +1,38 @@
+{
+  "id": "5b3e29cf275052634b289546",
+  "uuid": "8f22430d-ed6a-4bb0-b266-757bd0f32668",
+  "version": "1530800591",
+  "name": "Logistic Regression with Hyper Params",
+  "desc": "Logistic Regression classification  with Hyper Params",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+  "createdOn": "Thu Jul 05 19:53:11 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+      }
+    }
+  ],
+  "type": "CLASSIFICATION",
+  "library": "SPARKML",
+  "trainName": "org.apache.spark.ml.classification.LogisticRegression",
+  "modelName": "org.apache.spark.ml.classification.LogisticRegressionModel",
+  "labelRequired": "Y",
+  "returnType": null,
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "ffc49c07-e7cb-40ee-8050-fc69121a189b"
+    }
+  },
+  "savePmml": "Y"
+}

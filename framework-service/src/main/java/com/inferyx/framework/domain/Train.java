@@ -22,24 +22,24 @@ public class Train extends BaseEntity {
 	private double trainPercent;
 	private double valPercent;
 	private AttributeRefHolder labelInfo;
-	private int numFolds;
-	
+	private String useHyperParams;
+
 	/**
 	 * @Ganesh
 	 *
-	 * @return the numFolds
+	 * @return the useHyperParams
 	 */
-	public int getNumFolds() {
-		return numFolds;
+	public String getUseHyperParams() {
+		return useHyperParams;
 	}
 
 	/**
 	 * @Ganesh
 	 *
-	 * @param numFolds the numFolds to set
+	 * @param useHyperParams the useHyperParams to set
 	 */
-	public void setNumFolds(int numFolds) {
-		this.numFolds = numFolds;
+	public void setUseHyperParams(String useHyperParams) {
+		this.useHyperParams = useHyperParams;
 	}
 
 	/**

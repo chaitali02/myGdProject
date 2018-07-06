@@ -77,25 +77,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private Train train;
 	private String name;
 	private MetaType execType;
-	private SparkExecutor<?> sparkExecutor;
-	
-	/**
-	 * @Ganesh
-	 *
-	 * @return the sparkExecutor
-	 */
-	public SparkExecutor<?> getSparkExecutor() {
-		return sparkExecutor;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param sparkExecutor the sparkExecutor to set
-	 */
-	public void setSparkExecutor(SparkExecutor<?> sparkExecutor) {
-		this.sparkExecutor = sparkExecutor;
-	}
 
 	/**
 	 * @return the name
@@ -683,15 +664,19 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
 				
-		//Without hypertuning	
-				Object trngModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
-		
-		//With hypertuning
-//				MetaIdentifier hyperParamMI = algorithm.getParamList().getRef();
-//				ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-//				Object trngModel = sparkExecutor.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), train.getNumFolds(), hyperParamList.getParams(), appUuid);
-				result = trngModel;
+				Object trngModel = null;
+			
+				if(train.getUseHyperParams().equalsIgnoreCase("N")) {
+					//Without hypertuning
+					trngModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				} else {		
+					//With hypertuning
+					MetaIdentifier hyperParamMI = algorithm.getParamList().getRef();
+					ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
+					trngModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+				}
 				
+				result = trngModel;				
 				List<String> customDirectories = exec.getCustomDirsFromTrainedModel(trngModel);
 
 				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, filePathUrl);
