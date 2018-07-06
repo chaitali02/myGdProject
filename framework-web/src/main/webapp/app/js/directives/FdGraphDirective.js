@@ -38,14 +38,11 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 }
             }
             scope.getGraphpodObj();
-            scope.search=function(){
-                scope.isGraphShow=false;
-                scope.isGraphInProgess=true;
-                scope.noRecordFound=false;
-                scope.isError=false;
-                var graphFiler=null;
+            scope.getFilterData=function(){
+                var graphFilerBody=null;
                 if(scope.filter !=null){
-                    graphFiler={};
+                    graphFilerBody={};
+                    var graphFilter={};
                     var edgeFilter=[];
                     var nodeFilter=[];
                     if(scope.filter.nodeTableArray && scope.filter.nodeTableArray.length >0){
@@ -81,16 +78,27 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             edgeFilter[i]=edgeFilterObj
                         }
                     }
-                    graphFiler.nodeFilter=nodeFilter;
-                    graphFiler.edgeFilter=edgeFilter;
+                    graphFilter.nodeFilter=nodeFilter;
+                    graphFilter.edgeFilter=edgeFilter;
+                    graphFilerBody.graphFilter=graphFilter;
                 }
-                console.log(JSON.stringify(graphFiler));
-                scope.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"1","graphpod");
+                return graphFilerBody;
+            }
+
+            scope.search=function(){
+                scope.isGraphShow=false;
+                scope.isGraphInProgess=true;
+                scope.noRecordFound=false;
+                scope.isError=false;
+                var graphFilerBody= scope.getFilterData();
+               
+                console.log(JSON.stringify(graphFilerBody));
+                scope.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"1","graphpod",graphFilerBody);
               
             }
 
-            scope.getGraphPodResults=function(uuid,version,nodeId,nodeType,degree,type){
-                GraphpodService.getGraphPodResults(uuid,version,nodeId,nodeType,degree,type).then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
+            scope.getGraphPodResults=function(uuid,version,nodeId,nodeType,degree,type,data){
+                GraphpodService.getGraphPodResults(uuid,version,nodeId,nodeType,degree,type,data).then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
                     scope.isGraphInProgess=false;
                     if(response.edges.length >0){    
@@ -488,7 +496,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 console.log(d);
                 var this_node=this;
                 $(this_node).find(".node-refresh").css("display","block");
-                GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'1',"graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
+                GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'1',"graphpod",null).then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
                     $(this_node).find(".node-refresh").css("display","none");
                     if(response.edges.length >0){    
