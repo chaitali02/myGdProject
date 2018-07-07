@@ -21,7 +21,7 @@ import {jobMonitoringDetailsComponent} from './jobMonitoringDetails.component'
 import {LoadExecComponent} from './loadExec/loadExec.component';
 import {MapExecComponent} from './mapExec/mapExec.component';
 import {VizExecComponent} from './vizExec/vizExec.component';
-import { ModelExecComponent } from './modelExec/modelExec.component';
+import { TrainExecComponent } from './trainExec/trainExec.component';
 import { ProfileExecComponent } from './profileExec/profileExec.component';
 import { ProfileGroupExecComponent } from './profileGroupExec/profileGroupExec.component';
 import { DqExecComponent } from './dqExec/dqExec.component';
@@ -52,7 +52,7 @@ import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
         LoadExecComponent,
         MapExecComponent,
         VizExecComponent,
-        ModelExecComponent,
+        TrainExecComponent,
         ProfileExecComponent,
         ProfileGroupExecComponent,
         DqExecComponent,

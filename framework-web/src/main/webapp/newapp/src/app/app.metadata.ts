@@ -1468,21 +1468,21 @@ export class AppMetadata {
         allowInChildMenu: false,
       },
 
+
       'trainExec': {
-        name: 'trainexec',
-        caption: 'ModelResult',
-        execType: 'trainexec',
-        metaType: 'trainexec',
+        name: 'train',
+        caption: 'Train Exec',
+        execType: 'trainExec',
+        metaType: 'trainExec',
         color: '#EB54C3',
         iconCaption: '',
         allowInMenu: false,
         listState: 'jobmonitoringlist',
-        detailState: 'ModelResult',
-        moduleState: 'dataScience',
-        resultState: 'trainexec',
-        moduleCaption: 'JobMonitoring',
-        childMenu: [],
-        allowInChildMenu: false,
+        detailState: 'trainExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'trainExec',
+        moduleCaption: 'Job Monitoring',
+      
       },
       'featureattrmap': {
         name: 'featureattrmap',
