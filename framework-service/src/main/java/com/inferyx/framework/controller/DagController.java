@@ -181,7 +181,7 @@ public class DagController {
 	public String setTaskOnHold(@RequestParam("uuid") String uuid, 
 			@RequestParam("version") String version,
 			@RequestParam("stageId") String stageId,
-			@RequestParam("taskId")String taskId) throws JsonProcessingException, JSONException, ParseException{
+			@RequestParam("taskId")String taskId) throws Exception{
 		String ret;
 		synchronized (uuid) {
 			ret = objectWriter.writeValueAsString(dagExecServiceImpl.setTaskOnHold(uuid, version, stageId, taskId));

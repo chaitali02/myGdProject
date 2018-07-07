@@ -38,11 +38,14 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.FunctionCategory;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -144,19 +147,19 @@ public class ReconOperator {
 			String targetVal = generateVal(targetFun, targetAttrName);
 			
 			sql = SELECT 
-			      + "sourcedatapodid" + " AS sourceDatapodId" + COMMA 
+			      + "sourcedatapoduuid" + " AS sourceDatapodUuid" + COMMA 
 			      + "sourcedatapodversion" + " AS sourceDatapodVersion" + COMMA
 			      + "sourcedatapodname" + " AS sourceDatapodName" + COMMA 
-			      + "sourceattrid" + " AS sourceAttrId" + COMMA
-			      + "sourceattrname" + " AS sourceAttrName" + COMMA
-			      + "sourceval" + " AS sourceVal" + COMMA
+			      + "sourceattributeid" + " AS sourceAttributeId" + COMMA
+			      + "sourceattributename" + " AS sourceAttributeName" + COMMA
+			      + "sourcevalue" + " AS sourceValue" + COMMA
 			      
-			      + "targetdatapodid" + " AS targetDatapodId" + COMMA 
+			      + "targetdatapoduuid" + " AS targetDatapodUuid" + COMMA 
 			      + "targetdatapodversion" + " AS targetDatapodVersion" + COMMA
 			      + "targetdatapodname" + " AS targetDatapodName" + COMMA 
-			      + "targetattrid" + " AS targetAttrId" + COMMA
-			      + "targetattrname" + " AS targetAttrName" + COMMA		      
-			      + "targetval" + " AS targetVal" + COMMA
+			      + "targetattributeid" + " AS targetAttributeId" + COMMA
+			      + "targetattributename" + " AS targetAttributeName" + COMMA		      
+			      + "targetvalue" + " AS targetValue" + COMMA
 			      
 			      + caseWrapper(generateCheck(sourceVal, targetVal), " status") + COMMA
 			      + SINGLE_QUOTE + reconExec.getVersion() + SINGLE_QUOTE + " AS version"
@@ -166,94 +169,75 @@ public class ReconOperator {
 			      
 			      + BRACKET_OPEN
 			      + SELECT
-			      + SINGLE_QUOTE + sourceDp.getUuid()  + SINGLE_QUOTE + " AS sourceDatapodId" + COMMA 
+			      + SINGLE_QUOTE + sourceDp.getUuid()  + SINGLE_QUOTE + " AS sourceDatapodUuid" + COMMA 
 			      + SINGLE_QUOTE + sourceDp.getVersion()  + SINGLE_QUOTE + " AS sourceDatapodVersion" + COMMA
 			      + SINGLE_QUOTE + sourceDp.getName() + SINGLE_QUOTE + " AS sourceDatapodName" + COMMA 
-			      + SINGLE_QUOTE + recon.getSourceAttr().getAttrId() + SINGLE_QUOTE + " AS sourceAttrId" + COMMA
-			      + SINGLE_QUOTE + sourceAttrName + SINGLE_QUOTE + " AS sourceAttrName" + COMMA
-			      + sourceVal + " AS sourceVal"
+			      + SINGLE_QUOTE + recon.getSourceAttr().getAttrId() + SINGLE_QUOTE + " AS sourceAttributeId" + COMMA
+			      + SINGLE_QUOTE + sourceAttrName + SINGLE_QUOTE + " AS sourceAttributeName" + COMMA
+			      + sourceVal + " AS sourceValue"
 			      + FROM
-			      + getTableName(sourceDp, datapodList, dagExec, runMode) 
+			      + getTableName(sourceDp, datapodList, dagExec, otherParams, runMode) 
 			      + BLANK
 			      + " source "
 			      + WHERE_1_1 
 			      + generateFilter("source", sourceDp, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
 			      + GROUP_BY
-			      + "sourceDatapodId" + COMMA
+			      + "sourceDatapodUuid" + COMMA
 			      + "sourceDatapodVersion" + COMMA
 			      + "sourceDatapodName" + COMMA
-			      + "sourceAttrId" + COMMA
-			      + "sourceAttrName"		      
+			      + "sourceAttributeId" + COMMA
+			      + "sourceAttributeName"		      
 			      + BRACKET_CLOSE
+			      + "source2"
 
 			      + CROSS_JOIN 
 			      
 			      + BRACKET_OPEN
 			      + SELECT
-			      + SINGLE_QUOTE + targetDp.getUuid()  + SINGLE_QUOTE + " AS targetDatapodId" + COMMA 
-			      + SINGLE_QUOTE + sourceDp.getVersion()  + SINGLE_QUOTE + " AS targetDatapodVersion" + COMMA
+			      + SINGLE_QUOTE + targetDp.getUuid()  + SINGLE_QUOTE + " AS targetDatapodUuid" + COMMA 
+			      + SINGLE_QUOTE + targetDp.getVersion()  + SINGLE_QUOTE + " AS targetDatapodVersion" + COMMA
 			      + SINGLE_QUOTE + targetDp.getName() + SINGLE_QUOTE + " AS targetDatapodName" + COMMA 
-			      + SINGLE_QUOTE + recon.getTargetAttr().getAttrId() + SINGLE_QUOTE + " AS targetAttrId" + COMMA
-			      + SINGLE_QUOTE + targetAttrName + SINGLE_QUOTE + " AS targetAttrName" + COMMA		      
-			      + targetVal + " AS targetVal" 
+			      + SINGLE_QUOTE + recon.getTargetAttr().getAttrId() + SINGLE_QUOTE + " AS targetAttributeId" + COMMA
+			      + SINGLE_QUOTE + targetAttrName + SINGLE_QUOTE + " AS targetAttributeName" + COMMA		      
+			      + targetVal + " AS targetValue" 
 			      + FROM
-			      + getTableName(targetDp, datapodList, dagExec, runMode)
+			      + getTableName(targetDp, datapodList, dagExec, otherParams, runMode)
 			      + BLANK
 			      + " target "
 			      + WHERE_1_1 
 			      + generateFilter("target", targetDp, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams())
 			      + GROUP_BY
-			      + "targetDatapodId" + COMMA
+			      + "targetDatapodUuid" + COMMA
 			      + "targetDatapodVersion" + COMMA
 			      + "targetDatapodName" + COMMA
-			      + "targetAttrId" + COMMA
-			      + "targetAttrName"
+			      + "targetAttributeId" + COMMA
+			      + "targetAttributeName"
 			      + BRACKET_CLOSE
+			      + " target2"
 			      
-			      + BRACKET_CLOSE
-			      + " reconTab ";
+			      + BRACKET_CLOSE;
 		} catch (NullPointerException e) {
-			e.printStackTrace();			e.getMessage();
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-					.getRequestAttributes();
-			if (requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if (response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), e.getMessage());
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(404);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				} else
-					LOGGER.info("HttpServletResponse response is \"" + null + "\"");
-			} else
-				LOGGER.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+			e.printStackTrace();
+			LOGGER.error(e);
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.");
 			throw new NullPointerException(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-					.getRequestAttributes();
-			if (requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if (response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), e.getMessage());
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(404);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				} else
-					LOGGER.info("HttpServletResponse response is \"" + null + "\"");
-			} else
-				LOGGER.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
-			throw new Exception(e.getMessage());
+			LOGGER.error(e);
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.");
+			throw new RuntimeException((message != null) ? message : "Can not generate query.");
 		}
 		
 		LOGGER.info("Recon sql: "+sql);
@@ -302,7 +286,7 @@ public class ReconOperator {
 	}
 	
 	public String generateCheck(String sourceVal, String targetVal) {
-		return "sourceVal" + "==" + "targetVal";
+		return "sourceValue" + "=" + "targetValue";
 	}
 	
 	public String generateVal(Function function, String attrName) throws Exception {
@@ -318,11 +302,13 @@ public class ReconOperator {
 		return val.toString();
 	}
 	
-	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, RunMode runMode)
+	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode)
 			throws Exception {
-		if (datapodList != null && datapodList.contains(datapod.getUuid())) {
+		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
 					dagExec.getVersion());
+		} else if (otherParams!= null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		}
 		datastoreServiceImpl.setRunMode(runMode);
 		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),

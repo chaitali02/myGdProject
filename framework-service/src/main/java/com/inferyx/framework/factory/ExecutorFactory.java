@@ -21,6 +21,7 @@ import com.inferyx.framework.executor.ImpalaExecutor;
 import com.inferyx.framework.executor.LivyExecutor;
 import com.inferyx.framework.executor.MySqlExecutor;
 import com.inferyx.framework.executor.OracleExecutor;
+import com.inferyx.framework.executor.PostGresExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -46,23 +47,24 @@ public class ExecutorFactory {
 	RExecutor rExecutor;
 	@Autowired
 	PythonExecutor pythonExecutor;
+	@Autowired
+	PostGresExecutor postGresExecutor;
 	
 	public IExecutor getExecutor(String context) {
 		String executionEngine = engine.getExecEngine();
 		if(executionEngine != null && !StringUtils.isBlank(executionEngine) && executionEngine.equalsIgnoreCase("livy-spark"))
 			executionEngine = "livy_spark";
-		switch(context.toLowerCase())
-		{
-		case "spark":	return sparkExec;
-		case "livy_spark":	return livyExecutor;
-		case "hive": return hiveExec;
-		case "impala": return impalaExec;
-		case "oracle": return oracleExecutor;
-		case "mysql": return mySqlExecutor;
-		case "file":	return (executionEngine != null && executionEngine == "livy_spark") ? livyExecutor : sparkExec;
-		case "r" : return rExecutor;
-		case "python" : return pythonExecutor;
-		default:				
+		switch(context.toLowerCase()) {
+			case "spark":	return sparkExec;
+			case "livy_spark":	return livyExecutor;
+			case "hive": return hiveExec;
+			case "impala": return impalaExec;
+			case "oracle": return oracleExecutor;
+			case "mysql": return mySqlExecutor;
+			case "file":	return (executionEngine != null && executionEngine == "livy_spark") ? livyExecutor : sparkExec;
+			case "r" : return rExecutor;
+			case "python" : return pythonExecutor;
+			case "postgres" : return postGresExecutor;
 		}
 		return null;
 	}

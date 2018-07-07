@@ -28,6 +28,7 @@
                 </div>
             </div> <!-- END PAGE HEADER-->
             <br>
+            <div  options="dirOptions" type="'dag'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dagdata" comment-panel-directive></div>
 
             <div class="portlet light bordered" id="form_wizard_1">
                 <div class="portlet-title" style="margin-bottom:0px;">
@@ -47,7 +48,7 @@
                             ng-hide="isAdd" data-ng-click="showview(dagdata.uuid,dagdata.version)">
                             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                         </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip  ng-show="isDependencyShow" ng-class="showdag==false? 'currentpage':'notcurrentpage'" data-ng-click="showDagGraph(dagdata.uuid,dagdata.version)"  ><!-- showRuleGraph(dataqualitydata.uuid,dataqualitydata.version) -->
+                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip  ng-show="isDependencyShow" ng-class="showdag==false? 'currentpage':'notcurrentpage'" data-ng-click="showDagGraph(dagdata.uuid,dagdata.version)"  ><!-- showRuleGraph(dataqualitydata.uuid,dataqualitydata.version) -->
                             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
                         </a>
                         <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " ng-click="broadcastRefreshData()" data-original-title="" title="" ng-class="showgraphdiv ==false? 'currentpage':'notcurrentpage'"   >
@@ -58,7 +59,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="portlet-body">
                     <div class="form-body graph-body" ng-if="showgraphdiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
@@ -66,7 +67,7 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="uuid" version="version"></div>
+                        <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="uuid" version="version"></div>
                     </div>
                     <div ng-hide="showgraphdiv">
                         <div class="form-wizard">
@@ -107,7 +108,7 @@
                                         <button class="close" data-dismiss="alert"></button> Your form validation is successful!
                                     </div>
                                     <div class="tab-pane" id="tab1" ng-class="{'active' : continueCount == 1}">
-                                        <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate">
+                                        <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate" prevent-enter-submit>
                                             <div class="form-group" ng-show="dagdata.uuid">
                                                 <label class="control-label col-md-3">UUID</label>
                                                 <div class="col-md-5">
@@ -145,7 +146,12 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Tag</label>
                                                 <div class="col-md-5">
-                                                    <tags-input ng-model="tags"  min-length="0"  ng-disabled="{{mode}}"></tags-input>
+                                                    <!-- <tags-input ng-model="tags"  min-length="0"  ng-disabled="{{mode}}"></tags-input> -->
+                                                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                                                            max-results-to-show="10">
+                                                        </auto-complete>
+                                                    </tags-input>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -228,7 +234,7 @@
                                                     <a href="javascript:;" class="btn default button-previous" ng-click="countBack()">
                                                         <i class="fa fa-angle-left"></i> Back 
                                                     </a>
-                                                    <button type="submit" class="btn btn-outline green button-next"> Continue
+                                                    <button type="submit" class="btn btn-outline green button-next "> Continue
                                                         <i class="fa fa-angle-right"></i>
                                                     </button>
                                                 </div>

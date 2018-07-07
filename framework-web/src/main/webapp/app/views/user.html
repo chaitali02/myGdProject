@@ -29,6 +29,8 @@
     <br>
     <!-- END PAGE HEADER-->
     <div notifybar style="position:fixed;top:40px;right:0; z-index:1000"></div>
+    <div  options="dirOptions" type="'user'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="userdata" comment-panel-directive></div>
+
     <!-- BEGIN MAIN CONTENT -->
     <div class="row">
         <div class="col-md-12">
@@ -49,7 +51,7 @@
                             ng-click="showView(userdata.uuid,userdata.version)" ng-hide="isAdd" style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a>
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(userdata.uuid,userdata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
@@ -64,7 +66,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="portlet-body">
                     <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
@@ -72,13 +74,13 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="userdata.uuid" version="user.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="userdata.uuid" version="user.defaultVersion.version">
                         </div>
                     </div>
 
 
                     <div class="form-body" style="padding-top:50px;" ng-show="showForm">
-                        <form class="form-horizontal" novalidate="novalidate" ng-submit="submitUser()" name="myform" form-on-change="userFormChange()">
+                        <form class="form-horizontal" novalidate="novalidate" ng-submit="submitUser()" name="myform" form-on-change="userFormChange()" prevent-enter-submit>
 
                             <div class="form-group" ng-show="userdata.uuid">
                                 <label class="col-md-3 control-label">UUID</label>
@@ -127,7 +129,12 @@
                             <div class="form-group taginput">
                                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                                    <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
+                                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                                            max-results-to-show="10">
+                                        </auto-complete>
+                                    </tags-input>
                                 </div>
                             </div>
 

@@ -29,7 +29,8 @@
             </div><!-- END PAGE HEADER-->
             <br>
             <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-            
+            <div  options="dirOptions" type="'predict'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="predictData" comment-panel-directive></div>
+
             <div class="portlet light bordered" id="form_wizard_1">
                 <div class="portlet-title" style="margin-bottom:0px;">
                     <div class="caption">
@@ -47,7 +48,7 @@
                     <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip   ng-hide="isAdd" ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'" data-ng-click="showview(predictData.uuid,predictData.version)">
                         <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                     </a>
-                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(predictData.uuid,predictData.version)">
+                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" tooltip data-placement="top" ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(predictData.uuid,predictData.version)">
                       <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
                     </a>
                     <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " ng-click="broadcastRefreshData()" data-original-title="" title="">
@@ -59,7 +60,7 @@
                   </div>
                 </div>
                 
-                <div class="portlet-body form">
+                <div class="portlet-body">
                     <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
@@ -67,7 +68,7 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="predictData.uuid" version="predict.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="predictData.uuid" version="predict.defaultVersion.version">
                     </div>
                   </div>
     
@@ -148,7 +149,12 @@
                                     <div class="form-group taginput">
                                         <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input>
+                                            <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input> -->
+                                            <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                                <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                                                    max-results-to-show="10">
+                                                </auto-complete>
+                                            </tags-input>
                                         </div>
                                     </div>
                                     
@@ -192,12 +198,23 @@
     
                           <!--Start Tab2-->
                             <div  class="tab-pane" id="tab2" ng-class="{'active' : continueCount == 2}">
-                                <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()" novalidate="novalidate">  
+                                <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()" novalidate="novalidate" prevent-enter-submit>  
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                            <select select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid" ng-change="onChangeModel()">
+                                            <select name="modelName" select2 class="form-control" ng-disabled="{{mode}}" required data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid" ng-change="onChangeModel()">
                                             </select>
+                                            <input name="modelName" type="hidden"  ng-model="selectModel.uuid" required />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Train Info</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                            <select name="trainName" select2 class="form-control"  ng-disabled="{{mode}}"  data-ng-model="selectTrain" ng-options="r as r.name for r in allTrain track by r.uuid" ng-change="onChangeTrain()">
+                                                <option value="">-Select-</option>    
+                                            </select>
+                                            <!-- <input name="trainNameNull" type="hidden"   ng-model="selectTrain.uuid" required />    -->
+                                            
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -213,7 +230,16 @@
                                             </select>
                                         </div>
                                     </div>
-                                    
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Label
+                                        </label>
+                                        <div class="col-md-6">
+                                        
+                                            <select class="form-control" select2 name="version" ng-disabled="{{mode}} || isLabelDisable" data-ng-model="selectLabel"
+                                                ng-options="r as r.dname for r in allsourceLabel track by r.uuid + r.attributeId">
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="portlet light bordered">
                                             <div class="portlet-title">
@@ -221,6 +247,9 @@
                                                     <span class="caption-subject  sbold ">Features</span>
                                                 </div>
                                                 <div class="actions">
+                                                    <a class="btn btn-circle btn-icon-only btn-default"  ng-click="autoMapFeature()" tooltip-placement="top" uib-tooltip="Auto Map" >
+                                                        <span class="fa fa-map-signs" aria-hidden="true" style="color:#a0a0a0;"></span>
+                                                    </a>
                                                     <div class="btn-group btn-group-devided" data-toggle="buttons">
                                                         <!-- <div class="x_title" style="padding:10px;">
                                                             <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="true"></button>
@@ -230,27 +259,65 @@
                                                 </div>
                                             </div>
                                             <div class="portlet-body">
-                                                <div class="">
-                                                    <table class=" row-border hover table  table-striped table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                              <th style="width:2%; text-align:center">ID</th>
-                                                              <th style="width:18%;">Features</th>
-                                                              <th style="width:20%;">Attributes</th>
-                                                             
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr ng-repeat="data in featureMapTableArray">
-                                                              <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.id" ng-value="$index+1" ng-disabled="true"></span></td>
-                                                              <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.sourceFeature.featureName" title="{{data.sourceFeature.dname}}" ng-disabled="true"></td></span>
-                                                              <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                  <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}" class="form-control"></select></td>
-                                                              </span>  
-                                                                </tr>
-                                                        </tbody>
-                                                    </table>
+                                                <!-- <div class="row">
+                                                    <div class="col-md-6 col-sm-6" style="padding-left:0px;">
+                                                        <label class="col-md-2 col-sm-2" style="margin-top:10px;" >Show</label>
+                                                        <div class=" form-group col-md-4 col-sm-4">
+                                                            <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+                                                            </select>
+                                                        </div>
+                                                    </div> -->
+                                                    <!-- <div class="col-md-6 col-sm-6">
+                                                        <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                                        <label>Search:</label>
+                                                        <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext" aria-controls="datastoredatatable">
+                                                        </div>
+                                                    </div> -->
+                                                <!-- </div> -->
+                                                <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
+                                                    <div class="col-md-12">
+                                                        <div class="">
+                                                            <table class=" row-border hover table  table-striped table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                    <th style="width:2%; text-align:center">ID</th>
+                                                                    <th style="width:18%;">Features</th>
+                                                                    <th style="width:20%;">Attributes</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody ng-repeat="data in featureMapTableArray">
+                                                                    <tr 
+                                                                    data-drop="true" data-drag={{isDragable}}
+                                                                    ng-model="featureMapTableArray"
+                                                                    jqyoui-droppable="{index: {{$index}}}" 
+                                                                    jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
+                                                                    data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
+                                                                    data-direction="{{data.sourceFeature.featureName.jqyouiDirection}}" >
+                                                                        <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.id" ng-value="$index+1" ng-disabled="true"></span></td>
+                                                                        <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.sourceFeature.featureName" title="{{data.sourceFeature.dname}}" ng-disabled="true"></span></td>
+                                                                        <td>
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)" ng-disabled="{{mode}}" class="form-control"></select>
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                <!-- <div class="row">
+                                                    <div class="col-md-6" style="margin-top:17px">
+                                                        Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
+                                                        ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;"
+                                                        max-size="pagination.maxSize" class="pagination-md" boundary-links="true"
+                                                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+                                                        </ul>
+                                                    </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>

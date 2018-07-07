@@ -76,7 +76,7 @@ public class ProfileController {
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		ProfileExec profileExec = profileServiceImpl.create(profileUUID, profileVersion,null,null, null, null);
-		profileExec = (ProfileExec) profileServiceImpl.parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null, runMode);
+		profileExec = (ProfileExec) profileServiceImpl.parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null, null, runMode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		profileExec = profileServiceImpl.execute(profileUUID, profileVersion, profileExec,metaExecutor,null, taskList, null, runMode);
 		commonServiceImpl.completeTaskThread(taskList);

@@ -29,6 +29,7 @@
             <!-- END PAGE HEADER-->
             <br>
             <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+            <div  options="dirOptions" type="'simulate'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="simulateData" comment-panel-directive></div>
 
             <div class="portlet light bordered" id="form_wizard_1">
                 <div class="portlet-title" style="margin-bottom:0px;">
@@ -49,7 +50,7 @@
                             tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" data-ng-click="showview(simulateData.uuid,simulateData.version)">
                             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip"
+                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
                             data-placement="top" ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(simulateData.uuid,simulateData.version)">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
@@ -65,7 +66,7 @@
                     </div>
                 </div>
 
-                <div class="portlet-body form">
+                <div class="portlet-body">
                     <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
@@ -73,7 +74,7 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="simulateData.uuid" version="Simulate.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="simulateData.uuid" version="Simulate.defaultVersion.version">
                         </div>
                     </div>
 
@@ -112,7 +113,7 @@
 
                                 <!--Start Tab1-->
                                 <div class="tab-pane" id="tab1" ng-class="{'active' : continueCount == 1}">
-                                    <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate">
+                                    <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate" prevent-enter-submit>
                                         <div class="form-group" ng-show="simulateData.uuid">
                                             <label class="col-md-3 control-label">UUID</label>
                                             <div class="col-md-6">
@@ -155,7 +156,12 @@
                                         <div class="form-group taginput">
                                             <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input>
+                                                <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input> -->
+                                                <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                                                        max-results-to-show="10">
+                                                    </auto-complete>
+                                                </tags-input>
                                             </div>
                                         </div>
 
@@ -522,7 +528,7 @@
                                                                     </span>
                                                                 </td>
                                                                 <td width="15%">
-                                                                    <div ng-if="['simple','distribution'].indexOf(listHolder.selectedParamValueType) !=-1">
+                                                                    <div ng-if="['simple','distribution','list'].indexOf(listHolder.selectedParamValueType) !=-1">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <input type="text" ng-model="listHolder.paramType" ng-disabled="true" class="form-control">
                                                                         </span>
@@ -546,6 +552,13 @@
                                                                                     s>
                                                                             </span>
                                                                         </div>
+                                                                        <div ng-if="listHolder.selectedParamValueType =='list'">
+                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                              <select select2 class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" data-ng-model="listHolder.paramValue" 
+                                                                                ng-options="r for r in listHolder.allListInfo" required disable-validation-message="">
+                                                                              </select>
+                                                                              <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.paramValue" required disable-validation-message=""/> </span>
+                                                                         </div>
                                                                         <div ng-if="listHolder.selectedParamValueType =='datapod'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                 <select select2 class="form-control" name="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValue" ng-change="onChangeForAttributeInfo(listHolder.selectedParamValue,listHolder.selectedParamValueType,$index)"
@@ -591,7 +604,7 @@
                                                                                 />
                                                                             </span>
                                                                         </div>
-                                                                        <div style="text-align:center;" ng-if="['datapod','rule','dataset','distribution','simple'].indexOf(listHolder.selectedParamValueType) ==-1">
+                                                                        <div style="text-align:center;" ng-if="['datapod','rule','dataset','distribution','simple','list'].indexOf(listHolder.selectedParamValueType) ==-1">
                                                                             NA
                                                                         </div>
                                                                     </div>

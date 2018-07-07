@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +41,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.MapIterOperator;
 import com.inferyx.framework.operator.MapOperator;
+import com.inferyx.framework.service.DagServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 
 @Component
@@ -57,6 +59,7 @@ public class MapTaskParser extends TaskParser {
 	private final String WHERE_1_1 = " WHERE (1=1) ";//" WHERE \\(1=1\\) ";
 	
 	private final String $DAGEXEC_VERSION = "$DAGEXEC_VERSION";
+	static final Logger logger = Logger.getLogger(MapTaskParser.class);
 
 	@Override
 	public StringBuilder parseTask(DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList,
@@ -184,7 +187,7 @@ public class MapTaskParser extends TaskParser {
 		
 		String table = getTableFromDatapod(datapod, indvTask, datapodList, dagExec, otherParams);
 		otherParams.put("datapod_".concat(datapod.getUuid()), table);
-		
+		logger.info("adding target datapod in parseDatapodNames : " + datapodStr);
 		datapodList.add(datapodStr);// Add target datapod in datapodlist
 	}
 
@@ -214,6 +217,7 @@ public class MapTaskParser extends TaskParser {
 			String rightTable = getTableFromDatapod(datapod, indvTask, datapodList, dagExec, otherParams);
 			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid())), rightTable);
 		}// End for
+		logger.info("adding target datapod in parseRelDatapodNames : " + datapodStr);
 		datapodList.add(datapodStr);// Add target datapod in datapodlist
 	}
 	
@@ -228,7 +232,7 @@ public class MapTaskParser extends TaskParser {
 		List<MetaIdentifier> datapodList = null;
 		
 		if (dimensionList == null || dimensionList.size() <= 0) {
-			System.out.println("No dimensions. Aborting getDimensionDefinedTables");
+			//System.out.println("No dimensions. Aborting getDimensionDefinedTables");
 			return null;
 		}
 		

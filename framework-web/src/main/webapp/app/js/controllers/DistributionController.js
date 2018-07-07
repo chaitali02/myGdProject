@@ -1,22 +1,43 @@
 /**
  **/
 DatascienceModule = angular.module('DatascienceModule');
-DatascienceModule.controller('DistributionDetailController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, DistributionService, privilegeSvc) {
+DatascienceModule.controller('DistributionDetailController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, DistributionService, privilegeSvc,$timeout,$filter) {
 	
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
-	
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.mode = false;
 	$scope.isSubmitInProgress = false;
 	$scope.isSubmitEnable = false;
@@ -25,7 +46,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 	$scope.showGraphDiv = false
 	$scope.distribution = {};
 	$scope.distribution.versions = [];
-	$scope.libraryTypes = ["SPARKML", "R", "JAVA"];
+	$scope.libraryTypes = ["SPARKML", "R", "JAVA","MATH3"];
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['distribution'] || [];
@@ -35,7 +56,19 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		$scope.privileges = privilegeSvc.privileges['distribution'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-	
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showForm = true
 		$scope.showGraphDiv = false
@@ -111,7 +144,16 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 					paramlist.name = ""
 					$scope.selectedParamlist = paramlist;
 				}
-		    }
+			}
+			var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
 		}
 	}//End If
 	else {
@@ -152,23 +194,28 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 	}
 
 	$scope.submit = function () {
-	
+	    var upd_tag="N"
 		$scope.isSubmitInProgress = true;
 		$scope.isSubmitEnable = false;
 		$scope.myform.$dirty = false;
 
 		var distributionJson = {}
-		distributionJson.uuid = $scope.distributionData.uuid
-		distributionJson.name = $scope.distributionData.name
-		distributionJson.desc = $scope.distributionData.desc
+		distributionJson.uuid = $scope.distributionData.uuid;
+		distributionJson.name = $scope.distributionData.name;
+		distributionJson.desc = $scope.distributionData.desc;
 		distributionJson.active = $scope.distributionData.active;
 		distributionJson.published = $scope.distributionData.published;
 		distributionJson.library = $scope.selectedLibrary;
 		distributionJson.className = $scope.distributionData.className;
+		distributionJson.methodName = $scope.distributionData.methodName;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var countTag = 0; countTag < $scope.tags.length; countTag++) {
 				tagArray[countTag] = $scope.tags[countTag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		distributionJson.tags = tagArray;
@@ -185,7 +232,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		}
 		distributionJson.paramList = paramlist
 		console.log(JSON.stringify(distributionJson));
-		DistributionService.submit(distributionJson, 'distribution').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		DistributionService.submit(distributionJson, 'distribution',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.isSubmitInProgress = false;
 			$scope.isSubmitEnable = true;

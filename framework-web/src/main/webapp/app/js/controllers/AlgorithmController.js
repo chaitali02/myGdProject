@@ -1,22 +1,43 @@
 /**
  **/
 DatascienceModule = angular.module('DatascienceModule');
-DatascienceModule.controller('CreateAlgorithmController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, AlgorithmService, privilegeSvc) {
+DatascienceModule.controller('CreateAlgorithmController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, AlgorithmService, privilegeSvc,$timeout,$filter) {
 	
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
-
+    $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.mode = " ";
 	$scope.dataLoading = false;
 	$scope.isSubmitEnable = true;
@@ -53,6 +74,20 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$sessionStorage.fromParams = fromParams
 
 	});
+
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 
 	$scope.showGraph = function (uuid, version) {
 		$scope.showForm = false;
@@ -118,6 +153,15 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 				$scope.selectparamlist = paramlist;
 
 			}
+			var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
 		}
 	}//End If
 	else {
@@ -158,6 +202,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	}
 
 	$scope.submitAlgorithm = function () {
+		var upd_tag="N"
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
 		$scope.myform.$dirty = false;
@@ -178,6 +223,10 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
 		}
 		algorithmJson.tags = tagArray;
 		var paramlist = {};
@@ -187,7 +236,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		paramlist.ref = ref;
 		algorithmJson.paramList = paramlist
 		console.log(JSON.stringify(algorithmJson));
-		AlgorithmService.submit(algorithmJson, 'algorithm').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		AlgorithmService.submit(algorithmJson, 'algorithm',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

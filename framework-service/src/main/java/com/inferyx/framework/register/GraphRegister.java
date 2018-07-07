@@ -13,6 +13,7 @@ package com.inferyx.framework.register;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
+import com.inferyx.framework.dao.ICommentDao;
 import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.dao.IDagExecDao;
@@ -58,11 +60,14 @@ import com.inferyx.framework.dao.IExpressionDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.dao.IFormulaDao;
 import com.inferyx.framework.dao.IFunctionDao;
+import com.inferyx.framework.dao.IGraphpodDao;
+import com.inferyx.framework.dao.IGraphpodExecDao;
 import com.inferyx.framework.dao.IGroupDao;
 import com.inferyx.framework.dao.IImportDao;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.dao.ILoadExecDao;
 import com.inferyx.framework.dao.ILogDao;
+import com.inferyx.framework.dao.ILovDao;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.dao.IMeasureDao;
@@ -93,6 +98,7 @@ import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.ISimulateDao;
 import com.inferyx.framework.dao.ISimulateExecDao;
+import com.inferyx.framework.dao.ITagDao;
 import com.inferyx.framework.dao.ITrainDao;
 import com.inferyx.framework.dao.ITrainExecDao;
 import com.inferyx.framework.dao.IUploadDao;
@@ -101,6 +107,7 @@ import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.dao.IVizpodExecDao;
 import com.inferyx.framework.domain.Edge;
+import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Vertex;
@@ -375,7 +382,58 @@ public class GraphRegister<T> {
 	IOperatorExecDao iOperatorExecDao;
 	@Autowired
 	IOperatorDao iOperatorDao;
+	@Autowired
+	ICommentDao iCommentDao;
+	@Autowired
+	ITagDao iTagDao;
+	@Autowired
+	ILovDao iLovDao;
+	@Autowired
+	IGraphpodDao iGraphpodDao;
+	@Autowired
+	IGraphpodExecDao iGraphpodExecDao;
 	
+	
+	
+	public IGraphpodDao getiGraphpodDao() {
+		return this.iGraphpodDao;
+	}
+
+	public void setiGraphpodDao(IGraphpodDao iGraphpodDao) {
+		this.iGraphpodDao = iGraphpodDao;
+	}
+
+	public IGraphpodExecDao getiGraphpodExecDao() {
+		return this.iGraphpodExecDao;
+	}
+
+	public void setiGraphpodExecDao(IGraphpodExecDao iGraphpodExecDao) {
+		this.iGraphpodExecDao = iGraphpodExecDao;
+	}
+	
+	public ILovDao getiLovDao() {
+		return iLovDao;
+	}
+
+	public void setiLovDao(ILovDao iLovDao) {
+		this.iLovDao = iLovDao;
+	}
+
+	
+	public ITagDao getiTagDao() {
+		return iTagDao;
+	}
+
+	public void setiTagDao(ITagDao iTagDao) {
+		this.iTagDao = iTagDao;
+	}
+	public ICommentDao getiCommentDao() {
+		return iCommentDao;
+	}
+
+	public void setiCommentDao(ICommentDao iCommentDao) {
+		this.iCommentDao = iCommentDao;
+	}
 	/**
 	 * @Ganesh
 	 *
@@ -1160,24 +1218,26 @@ public class GraphRegister<T> {
 		//ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		
-		System.out.println("Graph flag is set to " + graphFlag.isMode());
+		logger.info("Graph flag is set to " + graphFlag.isMode());
 		if (!graphFlag.isMode()) {
 			logger.info("Skipping building of graph.");
 		}
 		String result =null;
-		List<MetaType> metaTypes = MetaType.getMetaList();
-		
+		List<MetaType> metaTypes =  MetaType.getMetaList();
 		for(MetaType mType : metaTypes){
 			try {
 				//Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
+				
 				@SuppressWarnings("unchecked")
-				List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
-				if (objectList == null) {
+				//change method findAllLatestWithoutAppUuid to findAll due to version concept...
+				//List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
+				List<T> objectList = (List<T>) commonServiceImpl.findAll(mType);
+				if (objectList == null ) {
 					continue;
 				}
 				for (Object obj : objectList) {
 					result = writer.writeValueAsString(obj);
-					graphServiceImpl.createVnE(result, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, mType.toString());
+					graphServiceImpl.createVnE(result, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, mType.toString(), null);
 				}
 				logger.info(" Total vertex size after "+mType + " : " + totalVertexList.size());
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
@@ -1193,11 +1253,11 @@ public class GraphRegister<T> {
 		this.vertexRowMap = verticesRowMap;
 		this.edgeRowMap = edgeRowMap;
 		
-		graphServiceImpl.deleteAllVertices();
+	    graphServiceImpl.deleteAllVertices();
 		totalVertexList = createTotVertexList(verticesRowMap);
 		graphServiceImpl.saveVertices(totalVertexList, null);
 		graphServiceImpl.deleteAllEdges();
-		totalEdgeList = createTotEdgeList(edgeRowMap);
+		//totalEdgeList = createTotEdgeList(edgeRowMap);
 		graphServiceImpl.saveEdges(totalEdgeList, null);
 	}
 	
@@ -1246,7 +1306,7 @@ public class GraphRegister<T> {
 	*/
 	public void updateGraph(Object metaObj, MetaType type) throws JSONException, java.text.ParseException, JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		String jsonString = writer.writeValueAsString(metaObj);
-		graphServiceImpl.createVnE(jsonString, totalVertexList, totalEdgeList, vertexRowMap, edgeRowMap, type.toString());
+		graphServiceImpl.createVnE(jsonString, totalVertexList, totalEdgeList, vertexRowMap, edgeRowMap, type.toString(), null);
 		//graphServiceImpl.createGraph(totalVertexList, totalEdgeList);
 	}
 	

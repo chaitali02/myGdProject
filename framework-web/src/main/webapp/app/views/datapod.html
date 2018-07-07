@@ -12,6 +12,8 @@
   div.ui-grid-cell input {
     padding: 9px;
   }
+
+ 
 </style>
 
 <div data-ng-controller="MetadataDatapodController">
@@ -31,20 +33,30 @@
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span>{{datapoddata.name }}</span>
+        <span>{{datapoddata.name }}</span></li>
         <!-- | strReplace:'_':' '|capitalize -->
     </ul>
     <div class="page-toolbar">
-      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
-        <i class="icon-calendar"></i>&nbsp;
-        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+      <div class="col-md-12">
+        <div id="dashboard-report-range" class="tooltips btn btn-sm col-md-10" style="width:89%;"data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+        <!-- <div class="col-md-1" style="margin-top:2%;">
+          <div class="sidebar-toggler"  ng-click="isPanelOpen == false ? panelOpen():closePanelNav();">
+            <i ng-class="isPanelOpen == true?'icon-login':'icon-logout'" style="color:#99a8b5;font-size: 17px;"></i>  
+          </div>
+        </div> -->
       </div>
     </div>
   </div>
   <!-- END PAGE HEADER-->
   <br>
+  
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <!-- BEGIN MAIN CONTENT -->
+  <!-- BEGIN MAIN CONTENT --> 
+ 
+  <div  options="dirOptions" type="'datapod'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="datapoddata" comment-panel-directive></div>
   <div class="row">
     <div class="col-md-12">
       <!-- BEGIN: ACCORDION DEMO -->
@@ -71,7 +83,7 @@
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>
 
-            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showFrom==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showFrom==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(datapoddata.uuid,datapoddata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
@@ -85,7 +97,7 @@
             </a>
           </div>
         </div>
-        <div class="portlet-body form">
+        <div class="portlet-body">
           <div class="form-body {{tableclass}}" ng-show="isShowSimpleData">
             <div class="spinner" ng-show="spinner">
               <div class="bounce1"></div>
@@ -140,11 +152,12 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="datapoddata.uuid" version="datapod.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper"  tree-graph-directive uuid="datapoddata.uuid" version="datapod.defaultVersion.version">
             </div>
           </div>
+          <!-- prevent-enter-submit -->
           <div class="form-body" data-ng-show="showFrom" style="padding-top:50px;">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitDatapod()" form-on-change="datapodFormChange()">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitDatapod()" form-on-change="datapodFormChange()" prevent-enter-submit>
 
               <div class="form-group" ng-show="datapoddata.uuid">
                 <label class="col-md-3 control-label">UUID</label>
@@ -190,7 +203,12 @@
               <div class="form-group taginput">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                  <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
+                  <tags-input ng-model="tags" ng-disabled="{{mode}}"  min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                       max-results-to-show="10">
+                    </auto-complete>
+                  </tags-input>
                 </div>
               </div>
               <div class="form-group">

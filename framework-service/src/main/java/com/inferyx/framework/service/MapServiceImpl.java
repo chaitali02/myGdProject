@@ -15,7 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,8 +24,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
+import org.apache.log4j.Logger;
 import org.apache.spark.sql.SQLContext;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
@@ -43,11 +40,11 @@ import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
@@ -58,22 +55,20 @@ import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.RelationInfo;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
-import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.FilterOperator;
+import com.inferyx.framework.operator.IExecutable;
+import com.inferyx.framework.operator.IParsable;
 import com.inferyx.framework.operator.MapIterOperator;
 import com.inferyx.framework.operator.MapOperator;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-public class MapServiceImpl {
+public class MapServiceImpl implements IParsable, IExecutable {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
@@ -138,10 +133,11 @@ public class MapServiceImpl {
 	Helper helper;
 	@Autowired
 	SessionHelper sessionHelper;
+	static final Logger logger = Logger.getLogger(MapServiceImpl.class);
 	
-	private final String WHERE_1_1 = " WHERE (1=1) ";// " WHERE \\(1=1\\) ";
+//	private final String WHERE_1_1 = " WHERE (1=1) ";// " WHERE \\(1=1\\) ";
 
-	private final String $DAGEXEC_VERSION = "$DAGEXEC_VERSION";
+//	private final String $DAGEXEC_VERSION = "$DAGEXEC_VERSION";
 	
 	java.util.Map<String, String> requestMap = new HashMap<String, String>();
 
@@ -486,109 +482,109 @@ public class MapServiceImpl {
 		return refMeta;
 	}*/
 
-	protected String getTableName(Datapod datapod, Task indvTask, List<String> datapodList, DagExec dagExec,
-			HashMap<String, String> otherParams) throws Exception {
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-			if (indvTask.getDependsOn().size() > 0 && datapodList.contains(datapod.getUuid())) {
-				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
-						dagExec.getVersion());
-			} else if (otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-				String datapodVersion = otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName").split("_")[1];
-				String dagExecVersion = otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName").split("_")[3];
-				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapodVersion, dagExecVersion);
-			}else
+	/**
+	 * 
+	 * @param datapod
+	 * @param indvTask
+	 * @param datapodList
+	 * @param dagExec
+	 * @param otherParams
+	 * @return
+	 * @throws Exception
+	 */
+	protected String getTableName(Datapod datapod, 
+			HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
+		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+		} else {
+			try {
 				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-		} else{
-			if(datasource.getType().equalsIgnoreCase(Datasource.DataSourceType.SPARK.toString())
-					|| datasource.getType().equalsIgnoreCase(Datasource.DataSourceType.FILE.toString())) {
-				if (indvTask.getDependsOn().size() > 0 && datapodList.contains(datapod.getUuid())) {
-					return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
-							dagExec.getVersion());
-				} else if (otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-					String datapodVersion = otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName").split("_")[1];
-					String dagExecVersion = otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName").split("_")[3];
-					return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapodVersion, dagExecVersion);
-				}else
-					return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			}else
-				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-		}			
+			} catch(Exception e) {
+				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), mapExec.getVersion());
+			}
+		}
 	}
 
 	// If Map is dependent on datapod
-	public void parseDatapodNames(DagExec dagExec, Task indvTask, Datapod datapod, List<String> datapodList,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
-		String table = getTableName(datapod, indvTask, datapodList, dagExec, otherParams);
-		otherParams.put("datapod_".concat(datapod.getUuid()), table);
+	public void parseDatapodNames(Datapod datapod, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
+		String table = getTableName(datapod, otherParams, mapExec);
+		otherParams.put("datapodUuid_" + datapod.getUuid() + "_tableName", table);
 	}
 
 	// If Map is dependent on relation
-	public void parseRelDatapodNames(DagExec dagExec, Task indvTask, Relation relation, List<String> datapodList,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
+	public void parseRelDatapodNames(Relation relation, 
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 		// Get all relation tables
 		// Start with main table
+//		if (otherParams == null) {
+//			otherParams = new HashMap<>();
+//		}
 		Datapod fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
 
 		// Derive table name on the basis of depends on value.
-		String table = getTableName(fromDatapod, indvTask, datapodList, dagExec, otherParams);
-		otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), table);
+		String table = getTableName(fromDatapod, otherParams, mapExec);
+		
+			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), table);
+		
 		// Do the same for other relation tables
 
 		List<RelationInfo> relInfoList = relation.getRelationInfo();
 		for (int i = 0; i < relInfoList.size(); i++) {
 			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
-			String rightTable = getTableName(datapod, indvTask, datapodList, dagExec, otherParams);
+			String rightTable = getTableName(datapod, otherParams, mapExec);
 			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid())),
 					rightTable);
 		} // End for
 	}
 
 	
-	public void parseDPNames(DagExec dagExec, Task indvTask, Map map, List<String> datapodList,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
+	public void parseDPNames(Map map, List<String> datapodList,
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 		String datapodStr = map.getTarget().getRef().getUuid();
 		if (map.getSource().getRef().getType() == MetaType.datapod) {
 			Datapod datapod = mapOperator.getDatapodFromMap(map);
-			parseDatapodNames(dagExec, indvTask, datapod, datapodList, refKeyMap, otherParams);
+			parseDatapodNames(datapod, otherParams, mapExec);
 		} else if (map.getSource().getRef().getType() == MetaType.relation) {
 			Relation relation = mapOperator.getRelationFromMap(map);
-			parseRelDatapodNames(dagExec, indvTask, relation, datapodList, refKeyMap, otherParams);
+			parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec);
 		} else if (map.getSource().getRef().getType() == MetaType.dataset) {
 			DataSet dataset = mapOperator.getDatasetFromMap(map);
-			parseDSDatapodNames(dagExec, indvTask, dataset, datapodList, refKeyMap, otherParams);
+			parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec);
 		} else if (map.getSource().getRef().getType() == MetaType.rule) {
 			Rule rule =  mapOperator.getRuleFromMap(map);
-			parseRuleDatapodNames(dagExec, indvTask, rule, datapodList, refKeyMap, otherParams);
+			parseRuleDatapodNames(rule, datapodList, refKeyMap, otherParams, mapExec);
 		}
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+		logger.info("adding target datapod in parseDPNames : " + datapodStr);
+		otherParams.put("datapodUuid_" + datapodStr + "_tableName", getTableName(datapod, otherParams, mapExec));
 		datapodList.add(datapodStr);// Add target datapod in datapodlist
 	}
 	
 		// If Map is dependent on rule
-		public void parseRuleDatapodNames(DagExec dagExec, Task indvTask, Rule rule, List<String> datapodList,
-				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
+		public void parseRuleDatapodNames(Rule rule, List<String> datapodList,
+				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 			if (rule.getSource().getRef().getType() == MetaType.relation) {
 				Relation relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef());
-				parseRelDatapodNames(dagExec, indvTask, relation, datapodList, refKeyMap, otherParams);
+				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec);
 			} else if (rule.getSource().getRef().getType() == MetaType.datapod) {
 				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
-				parseDatapodNames(dagExec, indvTask, datapod, datapodList, refKeyMap, otherParams);
+				parseDatapodNames(datapod, otherParams, mapExec);
 			} else if (rule.getSource().getRef().getType() == MetaType.dataset) {
 				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
-				parseDSDatapodNames(dagExec, indvTask, dataset, datapodList, refKeyMap, otherParams);
+				parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec);
 			}
 		}
 
 		// If Map is dependent on rule
-		public void parseDSDatapodNames(DagExec dagExec, Task indvTask, DataSet dataset, List<String> datapodList,
-				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
+		public void parseDSDatapodNames(DataSet dataset, 
+				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
 			if (dataset.getDependsOn().getRef().getType() == MetaType.relation) {
 				Relation relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef());
-				parseRelDatapodNames(dagExec, indvTask, relation, datapodList, refKeyMap, otherParams);
+				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec);
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {
 				Datapod datapod = (Datapod) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
-				parseDatapodNames(dagExec, indvTask, datapod, datapodList, refKeyMap, otherParams);
+				parseDatapodNames(datapod, otherParams, mapExec);
 			}
 		}
 	
@@ -659,10 +655,16 @@ public class MapServiceImpl {
 	 */
 	@SuppressWarnings("unused")
 	public MapExec generateSql(String uuid, String version, MapExec mapExec, 
-			DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList, 
+			DagExec dagExec, List<String> datapodList, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			ExecParams execParams, RunMode runMode) throws Exception {
 		try {
+			if (otherParams == null) {
+				otherParams = new HashMap<>();
+			}
+			if (datapodList == null) {
+				datapodList = new ArrayList<>();
+			}
 			Map map = null;
 			MetaIdentifierHolder mapRef = new MetaIdentifierHolder();
 			Task indvTask = null;
@@ -686,10 +688,9 @@ public class MapServiceImpl {
 			mapExec.setName(map.getName());
 			mapExec.setAppInfo(map.getAppInfo());
 			
-			if (stage != null && indvExecTask != null && dagExec != null) {
-				indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-				parseDPNames(dagExec, indvTask, map, datapodList, refKeyMap, otherParams);
-			}
+			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - START ******/
+			parseDPNames(map, datapodList, refKeyMap, otherParams, mapExec);
+			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - END ******/
 			
 			Status status = new Status(Status.Stage.NotStarted, new Date());
 			List<Status> statusList = new ArrayList<>();		
@@ -780,15 +781,11 @@ public class MapServiceImpl {
 		return builder;
 	}// End method
 */	
-	public MapExec executeSql(MapExec mapExec, String dagExecVer, OrderKey datapodKey, DataStore dataStore, RunMode runMode) throws Exception {
+	public MapExec executeSql(MapExec mapExec, OrderKey datapodKey, RunMode runMode) throws Exception {
 		//String sql = null;
 		if(mapExec == null)	{
 			mapExec = new MapExec();
 			mapExec.setBaseEntity();
-		}
-		if (dataStore == null) {
-			dataStore = new DataStore();
-			dataStore.setBaseEntity();
 		}
 		Map map = (Map) daoRegister.getRefObject(mapExec.getDependsOn().getRef());
 		MetaIdentifierHolder dependsOnHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.map, map.getUuid(), map.getVersion()));
@@ -818,8 +815,6 @@ public class MapServiceImpl {
 		runMapServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
 		runMapServiceImpl.setHdfsInfo(hdfsInfo);
 		runMapServiceImpl.setMap(map);
-		runMapServiceImpl.setDagExecVersion(dagExecVer);
-		runMapServiceImpl.setDataStore(dataStore);
 		runMapServiceImpl.setExecFactory(execFactory);
 		runMapServiceImpl.setDatapodKey(datapodKey);
 		runMapServiceImpl.setCommonServiceImpl(commonServiceImpl);
@@ -854,91 +849,12 @@ public class MapServiceImpl {
 	
 	public List<java.util.Map<String, Object>> getMapResults(String mapExecUUID, String mapExecVersion, int offset, int limit,
 			String sortBy, String order, String requestId, RunMode runMode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
-		String appUuid = commonServiceImpl.getApp().getUuid();
+		//String appUuid = commonServiceImpl.getApp().getUuid();
 		List<java.util.Map<String, Object>> data = new ArrayList<>();
 		limit = offset + limit;
 		offset = offset + 1;
-
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(mapExecUUID, mapExecVersion);
-		
 		data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
-		
-		/*boolean requestIdExistFlag = false;
-		StringBuilder orderBy = new StringBuilder();
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(mapExecUUID, mapExecVersion);
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-
-		if(requestId == null || requestId.equals("null") || requestId.isEmpty()) {
-			if(datasource.getType().toUpperCase().equalsIgnoreCase(ExecContext.spark.toString())
-					|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-				data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM " + tableName + ") AS tab WHERE rownum >= " +offset+ " AND rownum <= " + limit, appUuid);
-			}else {
-				if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-					data = exec.executeAndFetch("SELECT * FROM  " + tableName + " WHERE rownum< " + limit, appUuid);
-				else
-					data = exec.executeAndFetch("SELECT * FROM  " + tableName + " LIMIT " + limit, appUuid);
-			}
-		}else {
-			 List<String> orderList = Arrays.asList(order.split("\\s*,\\s*"));
-			 List<String> sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
-
-			if (StringUtils.isNotBlank(sortBy) || StringUtils.isNotBlank(order) ) {
-				for (int i = 0; i < sortList.size(); i++) {
-					orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));
-				}
-				if (requestId != null) {
-				String tabName = null;
-				for (java.util.Map.Entry<String, String> entry : requestMap.entrySet()) {
-					String id = entry.getKey();
-					if (id.equals(requestId)) {
-						requestIdExistFlag = true;
-					}
-				}
-				if (requestIdExistFlag) {	
-					tabName = requestMap.get(requestId);
-					if(datasource.getType().toUpperCase().equalsIgnoreCase(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-						data = exec.executeAndFetch("SELECT * FROM "+tabName+" WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-					}else {
-						if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " WHERE rownum< " + limit, appUuid);
-						else
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " LIMIT " + limit, appUuid);
-					}
-				} else {
-					if(datasource.getType().toUpperCase().equalsIgnoreCase(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-						data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
-								+tableName+" ORDER BY "+ orderBy.toString() +") AS tab) AS tab1", appUuid);	
-						tabName = requestId.replace("-", "_");
-						requestMap.put(requestId, tabName);	
-					}
-					else {
-						if(datasource.getType().toLowerCase().toLowerCase().contains(ExecContext.ORACLE.toString()))
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " WHERE rownum< " + limit, appUuid);
-						else
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " LIMIT " + limit, appUuid);
-						
-						tabName = requestId.replace("-", "_");
-						requestMap.put(requestId, tabName);
-					}
-					
-					if(datasource.getType().toUpperCase().equalsIgnoreCase(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-						data = exec.executeAndFetch("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-					}else {
-						if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " WHERE rownum< " + limit, appUuid);
-						else
-							data = exec.executeAndFetch("SELECT * FROM  " + tableName + " LIMIT " + limit, appUuid);
-					}
-				}
-			}
-		}
-	}*/
 		return data;
 	}
 	
@@ -959,6 +875,36 @@ public class MapServiceImpl {
 
 		return response;
 
+	}
+
+
+	@Override
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		// Validate input
+		if (baseExec == null) {
+			throw new Exception("No executable, cannot execute. ");
+		}
+		// Fetch Map
+		Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), baseExec.getDependsOn().getRef().getType().toString());
+		// Fetch target datapod
+		OrderKey datapodKey = map.getTarget().getRef().getKey();
+		if (DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
+			datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
+		} else {
+			Datapod targetDatapod = (Datapod) commonServiceImpl
+					.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+			datapodKey.setVersion(targetDatapod.getVersion());
+		}
+		executeSql((MapExec) baseExec, datapodKey, runMode);
+		return null;
+	}
+
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		generateSql(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), (MapExec) baseExec, null, 
+				null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), execParams, runMode);
+		return null;
 	}
 
 }

@@ -9,15 +9,37 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.mode = " ";
 	$scope.profilegroup = {};
 	$scope.profilegroup.versions = []
@@ -34,6 +56,23 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		$scope.privileges = privilegeSvc.privileges['profile'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+	
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+
+    $scope.getLovByType();
+
 	$scope.close = function () {
 		if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
 			//revertback
@@ -43,6 +82,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 			$state.go('viewprofile');
 		}
 	}
+
 	$scope.$watch("isshowmodel", function (newvalue, oldvalue) {
 		$scope.isshowmodel = newvalue
 		sessionStorage.isshowmodel = newvalue
@@ -215,6 +255,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	}
 
 	$scope.sbumitProfileGroup = function () {
+		var upd_tag="N"
 		var profileJson = {}
 		$scope.dataLoading = true;
 		$scope.isshowmodel = true;
@@ -230,6 +271,10 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		profileJson.tags = tagArray;
@@ -252,7 +297,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		}
 		profileJson.attributeInfo = ruleInfoArray;
 		console.log(JSON.stringify(profileJson))
-		ProfileService.submit(profileJson, "profile").then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		ProfileService.submit(profileJson,"profile",upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.changemodelvalue();
 			if (options.execution == "YES") {
@@ -300,15 +345,37 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.mode = " ";
 	$scope.profilegroup = {};
 	$scope.profilegroup.versions = []
@@ -323,7 +390,22 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		$scope.privileges = privilegeSvc.privileges['profilegroup'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+   
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+	$scope.getLovByType();
+	
 	$scope.showProfileGroupePage = function () {
 		$scope.showProfileGroup = true;
 		$scope.showgraphdiv = false;
@@ -475,6 +557,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 
 	}
 	$scope.sbumitProfileGroup = function () {
+		var upd_tag="N"
 		var profileGroupJson = {}
 		$scope.dataLoading = true;
 		$scope.isshowmodel = true;
@@ -491,6 +574,11 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
+			
 		}
 		profileGroupJson.tags = tagArray;
 		var ruleInfoArray = [];
@@ -506,7 +594,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		profileGroupJson.ruleInfo = ruleInfoArray;
 		profileGroupJson.inParallel = $scope.checkboxModelparallel
 		console.log(JSON.stringify(profileGroupJson))
-		ProfileService.submit(profileGroupJson, "profilegroup").then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		ProfileService.submit(profileGroupJson, "profilegroup",upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			if (options.execution == "YES") {
 				ProfileService.getOneById(response.data, 'profilegroup').then(function (response) { onSuccessGetOneById(response.data) });
@@ -543,7 +631,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 
 });
 
-ProfileModule.controller('ResultProfileController', function ($http, dagMetaDataService, $timeout, $filter, $state, $stateParams, $location, $rootScope, $scope, ProfileService, CommonService) {
+ProfileModule.controller('ResultProfileController', function ($http, dagMetaDataService, $timeout, $filter, $state, $stateParams, $location, $rootScope, $scope, ProfileService, CommonService,privilegeSvc) {
 	$scope.select = $stateParams.type;
 	$scope.type = { text: $scope.select == 'profilegroupexec' ? 'profilegroup' : 'profile' };
 	$scope.showprogress = false;
@@ -570,7 +658,19 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		}
 		return style;
 	}
-
+	var privileges = privilegeSvc.privileges['comment'] || [];
+	$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+	$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+	$scope.$on('privilegesUpdated', function (e, data) {
+	  var privileges = privilegeSvc.privileges['comment'] || [];
+	  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+	  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+	  
+	});
+	$scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName; 
 	$scope.filteredRows = [];
 	$scope.gridOptions.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
@@ -621,11 +721,15 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		$scope.isRuleExec = true;
 		$scope.isRuleResult = false;
 		$scope.isD3RuleEexecGraphShow=false;
+		$scope.execDetail=$scope.profileGroupLastParams
+		$scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType; 
 		$scope.$emit('resultExecChanged', false);//Update Breadcrum
 	}
 
 
 	$scope.getProfileExec = function (data) {
+		$scope.execDetail=data;
+		$scope.metaType=dagMetaDataService.elementDefs["profile"].execType; 
 		var uuid = data.uuid;
 		var version = data.version;
 		var name = data.name;
@@ -666,6 +770,10 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 			$scope.isRuleExec = false;
 			$scope.isDataInpogress = true;
 			$scope.spinner = true;
+			$scope.execDetail=params;
+			$scope.execDetail.uuid=params.id;
+			$scope.metaType=dagMetaDataService.elementDefs["profile"].execType; 
+		
 			setTimeout(function () {
 				$scope.$apply();
 				$scope.ruleExecUuid = params.id;
@@ -697,6 +805,8 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 			$scope.getProfileExec(data);
 			return
 		}
+		$scope.execDetail=data;
+		$scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType; 
 		$scope.profileGroupLastParams = data;
 		$scope.zoomSize = 7;
 		var uuid = data.uuid;

@@ -27,6 +27,7 @@
   </div><!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <div  options="dirOptions" type="'distribution'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="distributionData" comment-panel-directive></div>
 
   <div class="row">
     <div class="col-md-12">
@@ -45,7 +46,7 @@
               ng-click="showView(distributionData.uuid,distributionData.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(distributionData.uuid,distributionData.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
@@ -57,7 +58,7 @@
             </a>
           </div>
         </div>
-        <div class="portlet-body form">
+        <div class="portlet-body">
           <div class="form-body graph-body" ng-if="showGraphDiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
@@ -65,12 +66,12 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="distributionData.uuid" version="distribution.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="distributionData.uuid" version="distribution.defaultVersion.version">
             </div>
           </div>
 
           <div class="form-body" data-ng-show="showForm" style="padding-top:50px;">
-            <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submit()">
+            <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submit()" prevent-enter-submit>
 
               <div class="form-group" ng-show="distributionData.uuid">
                 <label class="col-md-3 control-label">UUID</label>
@@ -114,7 +115,12 @@
               <div class="form-group taginput">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input>
+                  <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input> -->
+                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                        max-results-to-show="10">
+                    </auto-complete>
+                </tags-input>
                 </div>
               </div>
 
@@ -164,6 +170,14 @@
                 </label>
                 <div class="col-md-6">
                   <input type="text" class="form-control" required ng-disabled="{{mode}}" ng-model="distributionData.className">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Method Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" required ng-disabled="{{mode}}" ng-model="distributionData.methodName">
                 </div>
               </div>
               

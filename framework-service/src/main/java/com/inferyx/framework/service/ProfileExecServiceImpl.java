@@ -447,7 +447,6 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		profileList = (List<Profile>) mongoTemplate.find(query, Profile.class);
 		
 		for (Profile profile : profileList) {
-			System.out.println("UUID : "+profile.getUuid());
 			profileExecObjList = findProfileExecByProfile(profile.getUuid(), startDate, endDate, null, null);
 			if(!profileExecObjList.isEmpty()) {
 				execObjList.addAll(profileExecObjList);

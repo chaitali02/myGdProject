@@ -25,17 +25,17 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.lucene.analysis.util.CharArrayMap.EntrySet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.datascience.Operator;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.Condition;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
@@ -44,9 +44,9 @@ import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroup;
 import com.inferyx.framework.domain.DataQualGroupExec;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Dimension;
 import com.inferyx.framework.domain.Distribution;
@@ -57,12 +57,15 @@ import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Import;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Log;
+import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.Measure;
@@ -72,8 +75,8 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
@@ -99,12 +102,14 @@ import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.Tag;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -162,6 +167,15 @@ public class Helper {
 		String datapod = datapodUUID.replace("-", "_");
 		tableName = datapod+"_"+datapodVersion;
 		logger.info("Hive Table name is :: "+tableName);
+		return tableName;
+	}
+	
+	public static String genTableName(String datapodUUID, String datapodVersion, String execVersion) 
+	{
+		String tableName = null;
+		String datapod = datapodUUID.replace("-", "_");
+		tableName = datapod+"_"+datapodVersion+"_"+execVersion;
+		logger.info("Table name is :: "+tableName);
 		return tableName;
 	}
 	
@@ -254,10 +268,14 @@ public class Helper {
 				case recongroupExec : return "iReconGroupExecDao";
 				case distribution : return "iDistributionDao";
 				case appConfig : return "iAppConfigDao";
-				case operatortype : return "iOperatorTypeDao";
+//				case operatortype : return "iOperatorTypeDao";
 				case operatorExec : return "iOperatorExecDao";
 				case operator : return "iOperatorDao";
-				
+				case comment : return "iCommentDao";
+				case tag : return "iTagDao";
+				case lov : return "iLovDao";
+				case graphpod : return "iGraphpodDao";
+				case graphExec : return "iGraphpodExecDao";
 				default:
 					return null;
 			}
@@ -284,7 +302,8 @@ public class Helper {
 		case recon : return "ReconServiceImpl";	
 		case reconExec : return "ReconExecServiceImpl";	
 		case recongroup : return "ReconGroupServiceImpl";	
-		case recongroupExec : return "ReconGroupExecServiceImpl";	
+		case recongroupExec : return "ReconGroupExecServiceImpl";		
+		case load : return "LoadExecServiceImpl";	
 		default:
 			return null;
 		}
@@ -360,9 +379,15 @@ public class Helper {
 		case recongroupExec : return ReconGroupExec.class;
 		case distribution : return Distribution.class;
 		case appConfig : return AppConfig.class;
-		case operatortype : return OperatorType.class;
+//		case operatortype : return Operator.class;
 		case operatorExec : return OperatorExec.class;
 		case operator : return Operator.class;
+		case comment : return Comment.class;
+		case tag : return Tag.class;
+		case lov : return Lov.class;
+		case graphpod : return Graphpod.class;
+		case graphExec : return GraphExec.class;
+
 
 		default:
 			return null;
@@ -437,10 +462,32 @@ public class Helper {
 				case "recongroupexec" : return MetaType.recongroupExec;
 				case "distribution" : return MetaType.distribution;
 				case "appconfig" : return MetaType.appConfig;
-				case "operatortype" : return MetaType.operatortype;
+//				case "operatortype" : return MetaType.operatortype;
 				case "operatorexec" : return MetaType.operatorExec;
 				case "operator" : return MetaType.operator;
+				case "comment" : return MetaType.comment;
+				case "tag" : return MetaType.tag;
+				case "lov" : return MetaType.lov;
+//				case "generatedata" : return MetaType.GenerateData;
+//				case "transpose" : return MetaType.Transpose;
+//				case "clonedata" : return MetaType.CloneData;
+//				case "gendataattr" : return MetaType.GenDataAttr;
+//				case "gendatavallist" : return MetaType.GenDataValList;
+				case "graphpod" : return MetaType.graphpod;
+				case "graphexec" : return MetaType.graphExec;
+				default : return null;
+			}
+		}
 
+	public static OperatorType getOperatorType(String type) throws NullPointerException {
+		if(type == null)
+			return null;
+			switch(type.toLowerCase()){
+				case "generatedata" : return OperatorType.generateData;
+				case "transpose" : return OperatorType.transpose;
+				case "clonedata" : return OperatorType.cloneData;
+				case "gendataattr" : return OperatorType.genDataAttr;
+				case "gendatavallist" : return OperatorType.genDataValList;
 				default : return null;
 			}
 		}
@@ -476,34 +523,6 @@ public class Helper {
 		//logger.info(property.getProperty(key));
 		return  property.entrySet();
 	}
-	
-	/*public HttpServletResponse setResponse(String code, String status, String msg) throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		if(requestAttributes != null) {
-			HttpServletResponse response = requestAttributes.getResponse();
-			if(response != null) {
-					Message message = new Message(code, status, msg);
-					Message savedMessage = messageServiceImpl.save(message);
-					
-					//PrintWriter out = response.getWriter();
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					//response.setCharacterEncoding("UTF-8");
-					response.setStatus(404);
-					//out.print(messageJson);
-					///out.flush();
-					response.getOutputStream().write(messageJson.getBytes());
-					//response.getOutputStream().flush();
-					response.getOutputStream().close();
-					System.out.println("\n\n");
-					return response;					
-			}else
-				logger.info("HttpServletResponse response is \""+null+"\"");
-		}else
-			logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
-		return null;
-	}*/
 	
 	public static void updateRunStatus (Status.Stage latestStatus, RunStatusHolder statusHolder) {
 		if (statusHolder == null) {
@@ -569,6 +588,7 @@ public class Helper {
 				case "file": return (executionEngine != null && executionEngine == "livy_spark") ? ExecContext.livy_spark : ExecContext.FILE;
 				case "r" : return ExecContext.R;
 				case "python" : return ExecContext.PYTHON;
+				case "postgres" : return ExecContext.POSTGRES;
 				default : return null;
 			}
 		else
@@ -598,7 +618,8 @@ public class Helper {
 		if(partitionColls.lastIndexOf(",")>partitionColls.length()) {
 			partitionColls.deleteCharAt(partitionColls.lastIndexOf(","));
 		}
-		partitionColls.deleteCharAt(partitionColls.length()-1);
+		if(partitionColls.length() > 0)
+			partitionColls.deleteCharAt(partitionColls.length()-1);
 		logger.info("Partition collumns: "+partitionColls);
 		return partitionColls.toString();
 	}
@@ -614,7 +635,8 @@ public class Helper {
 	public String buildInsertQuery(String executionContext, String tableName, Datapod datapod, String sql) {
 		if(executionContext.equalsIgnoreCase(ExecContext.HIVE.toString())
 				|| executionContext.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			sql = "INSERT OVERWRITE table " + tableName + " PARTITION ( " + Helper.getPartitionColumns(datapod) +" ) " + " " + sql;
+			String partitionClos = getPartitionColumns(datapod);
+			sql = "INSERT OVERWRITE table " + tableName + (partitionClos.length() > 0 ? " PARTITION ( " + partitionClos +" ) " : " ") + " " + sql;
 		} else {	
 				sql = "INSERT INTO " + tableName + " " + sql;
 		}
@@ -659,9 +681,14 @@ public class Helper {
 				case CSV : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case LOG : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 				case ZIP : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;		
-				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;		
+				case XLS : return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;	
+				
+				
 			}
 		return null;
+	}
+	public static String getFileCustomNameByFileType(FileType fileType, String extension,String type) {
+		return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 	}
 	public static FileType getFileType(String fileType) {
 		if(fileType != null)
@@ -674,6 +701,7 @@ public class Helper {
 			}
 		return null;
 	}
+	
 	public static String getFileDirectoryByFileType(FileType fileType) throws FileNotFoundException, IOException {
 		if(fileType != null)
 			switch (fileType) {
@@ -682,10 +710,50 @@ public class Helper {
 				case LOG : return getPropertyValue("framework.model.log.path");
 				case ZIP : return getPropertyValue("framework.file.zip.location");		
 				case XLS : return getPropertyValue("framework.file.download.path");		
+			//	case COMMENT :return getPropertyValue("framework.file.comment.upload.path");	
 			}
 		return null;
 	}
-	
+	public static String getFileDirectoryByFileType(String fileType,String type) throws FileNotFoundException, IOException {
+		if(fileType != null || type!=null )
+			if(type!=null&&type.equalsIgnoreCase(MetaType.comment.toString()) )	
+			{
+				return getPropertyValue("framework.file.comment.upload.path");
+			}else if(fileType.equalsIgnoreCase("script")){
+				return getPropertyValue("framework.model.script.path");
+			}else if(fileType.equalsIgnoreCase("csv")){
+				return getPropertyValue("framework.file.upload.path");
+			}else if(fileType.equalsIgnoreCase("zip")){
+				return getPropertyValue("framework.file.zip.location");
+			}else if(fileType.equalsIgnoreCase("log")){
+				return getPropertyValue("framework.model.log.path");
+			}else if(fileType.equalsIgnoreCase("xsl")){
+				return getPropertyValue("framework.file.download.path");
+			}
+		return null;
+	}
+	/*public static String getFileDirectoryByFileType1(FileType fileType,String exension) throws FileNotFoundException, IOException {
+		if(fileType != null)
+			if(fileType.toString().equalsIgnoreCase("MODEL")) {
+				if(exension.equalsIgnoreCase("SCRIPT")) {
+					return getPropertyValue("framework.model.script.path");	
+				}
+				if(exension.equalsIgnoreCase("LOG")) {
+					return getPropertyValue("framework.model.log.path");	
+				}
+			}
+			else if(fileType.toString().equalsIgnoreCase("CSV")) {
+				return getPropertyValue("framework.file.upload.path");
+			}
+			else if(fileType.toString().equalsIgnoreCase("XLS")) {
+				return getPropertyValue("framework.file.upload.path");
+			}else {
+				return null;
+
+			}
+		
+		return null;
+	}*/
 	public static ParamDataType resolveParamDataType(String paramDataType) {
 		if(paramDataType != null && !StringUtils.isBlank(paramDataType))
 			switch(paramDataType.toLowerCase()) {
@@ -705,7 +773,7 @@ public class Helper {
 		return null;
 	}
 	
-	public java.util.Map mergeMap (java.util.Map sourceMap, java.util.Map destMap) {
+	public static java.util.Map mergeMap (java.util.Map sourceMap, java.util.Map destMap) {
 		if (sourceMap == null || sourceMap.isEmpty()) {
 			if (destMap == null || destMap.isEmpty()) {
 				return new HashMap<>();
@@ -720,5 +788,144 @@ public class Helper {
 		}
 		return destMap;
 	}
+
+	/********************** UNUSED **********************/
+//	public Object getDataType(String dataType) throws NullPointerException {
+//		if(dataType == null)
+//			return null;
+//
+//		if(dataType.contains("(")) {
+//			dataType = dataType.substring(0, dataType.indexOf("("));
+//		}
+//		
+//		switch (dataType.toLowerCase()) {
+//			case "integer": return DataTypes.IntegerType;
+//			case "double": return DataTypes.DoubleType;
+//			case "date": return DataTypes.DateType;
+//			case "string": return DataTypes.StringType;
+//			case "timestamp": return DataTypes.TimestampType;
+//			case "decimal" : return DataTypes.createDecimalType();
+//			case "vector" : return new VectorUDT();
+//			
+//            default: return null;
+//		}
+//	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case map : return MetaType.mapExec;
+		case load : return MetaType.loadExec;
+		case rule : return MetaType.ruleExec;
+		case rulegroup : return MetaType.rulegroupExec;
+		case dq : return MetaType.dqExec;
+		case dqgroup : return MetaType.dqgroupExec;
+		case profile : return MetaType.profileExec;
+		case profilegroup : return MetaType.profilegroupExec;
+		case recon : return MetaType.reconExec;
+		case recongroup : return MetaType.recongroupExec;
+		case train : return MetaType.trainExec;
+		case simulate : return MetaType.simulateExec;
+		case predict : return MetaType.predictExec;
+		case operator : return MetaType.operatorExec;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getMetaTypeByExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case mapExec : return MetaType.map;
+		case loadExec : return MetaType.load;
+		case ruleExec : return MetaType.rule;
+		case rulegroupExec : return MetaType.rulegroup;
+		case dqExec : return MetaType.dq;
+		case dqgroupExec : return MetaType.dqgroup;
+		case profileExec : return MetaType.profile;
+		case profilegroupExec : return MetaType.profilegroup;
+		case reconExec : return MetaType.recon;
+		case recongroupExec : return MetaType.recongroup;
+		case trainExec : return MetaType.train;
+		case simulateExec : return MetaType.simulate;
+		case predictExec : return MetaType.predict;
+		case operatorExec : return MetaType.operator;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getGroupExecTypeByRuleExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case rulegroupExec : return MetaType.ruleExec;
+		case dqgroupExec : return MetaType.dqExec;
+		case profilegroupExec : return MetaType.profileExec;
+		case recongroupExec : return MetaType.reconExec;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return MetaType
+	 */
+	public MetaType getRuleExecTypeByGroupExecType (MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case ruleExec : return MetaType.rulegroupExec;
+		case dqExec : return MetaType.dqgroupExec;
+		case profileExec : return MetaType.profilegroupExec;
+		case reconExec : return MetaType.recongroupExec;
+		default : return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public BaseExec createExec(MetaType type) {
+		if(type == null)
+			return null;
+		switch(type) {
+		case mapExec : return new MapExec();
+		case loadExec : return new LoadExec();
+		case ruleExec : return new RuleExec();
+		case rulegroupExec : return new RuleGroupExec();
+		case dqExec : return new DataQualExec();
+		case dqgroupExec : return new DataQualGroupExec();
+		case profileExec : return new ProfileExec();
+		case profilegroupExec : return new ProfileGroupExec();
+		case reconExec : return new ReconExec();
+		case recongroupExec : return new ReconGroupExec();
+		case trainExec : return new TrainExec();
+		case simulateExec : return new SimulateExec();
+		case predictExec : return new PredictExec();
+		case operatorExec : return new OperatorExec();
+		case graphExec : return new GraphExec();
+		default : return null;
+		}
+	}
+	
 	
 }

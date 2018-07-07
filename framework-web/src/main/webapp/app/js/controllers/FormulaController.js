@@ -1,20 +1,42 @@
 
 MetadataModule = angular.module('MetadataModule');
-MetadataModule.controller('MetadataFormulaController', function ($state, $scope, $stateParams, $rootScope, CommonService, MetadataSerivce, MetadataFormulaSerivce, $sessionStorage, privilegeSvc) {
+MetadataModule.controller('MetadataFormulaController', function ($state,$timeout,$filter,$scope,$stateParams, $rootScope, CommonService, MetadataSerivce, MetadataFormulaSerivce, $sessionStorage, privilegeSvc) {
 	$scope.isDependonDisabled = false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.formulaTypes=['simple','aggr','custom']
 	$scope.mode = "false"
 	$scope.formuladata;
@@ -24,7 +46,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 	$scope.isSourceAtributeDatapod = true;
 	$scope.formula = {};
 	$scope.formula.versions = [];
-	$scope.depandsOnTypes = ["datapod", "relation", 'dataset', 'paramlist'];
+	$scope.depandsOnTypes = ["datapod", "relation", 'dataset','rule', 'paramlist'];
 	$scope.isDependencyShow = false;
 
 	$scope.privileges = [];
@@ -34,7 +56,20 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		$scope.privileges = privilegeSvc.privileges['formula'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+	
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
@@ -119,6 +154,43 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		}
 
 	});
+	
+	$scope.onMouseEnterTitle=function(type,index){
+		if(['function','simple'].indexOf(type) == -1)
+        $scope.formulainfoarray[index].title="dbclick to edit"
+	}
+	$scope.onDbclcikEdit=function(type,index){
+		if(!$scope.isEdit && !$scope.isAdd ){
+			return false;
+		}
+		 console.log($scope.formulainfoarray[index]);
+	 	if(["datapod",'dataset','rule','paramlist'].indexOf(type) != -1){
+			$scope.attributeinfo={};
+			var type={};
+	 	    type.text="datapod";
+		    $scope.attributeType= type;
+			var attributeInfo={}
+		 	attributeInfo.uuid=$scope.formulainfoarray[index].uuid
+			attributeInfo.attributeId=$scope.formulainfoarray[index].attrId;
+			attributeInfo.dname= $scope.formulainfoarray[index].value;
+			setTimeout(function(){ $scope.attributeinfo=attributeInfo; },10);
+			$scope.DblClcikEditDetail={};
+			$scope.DblClcikEditDetail.isEdit=true;
+			$scope.DblClcikEditDetail.index=index; 
+		}
+		else if (type == "string"){
+			var type={};
+	 	    type.text=$scope.formulainfoarray[index].type;
+		    $scope.attributeType= type;
+			$scope.sourcesimple=$scope.formulainfoarray[index].value;
+			$scope.DblClcikEditDetail={};
+			$scope.DblClcikEditDetail.isEdit=true;
+			$scope.DblClcikEditDetail.index=index; 
+		}
+		$scope.onChangeAttribute(type.text);
+		
+		 
+	};
 
 	$scope.onChangeName = function (data) {
 		$scope.statename
@@ -265,6 +337,9 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 
 	$scope.addAttribute = function () {
 		var len = $scope.formulainfoarray.length;
+		if($scope.DblClcikEditDetail !=null){
+			len =$scope.DblClcikEditDetail.index;
+		}
 		var data = {};
 		if ($scope.attributeType.text == "datapod") {
 			if ($scope.attributeinfo != null) {
@@ -312,9 +387,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			data.attrId = $scope.sourceparamlist.attributeId;
 			$scope.sourceparamlist = null;
 		}
-
 		$scope.formulainfoarray[len] = data;
-
+		$scope.DblClcikEditDetail=null;
 	}
 
 	$scope.onChangeAttribute = function (type) {
@@ -343,7 +417,14 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 			$scope.isSourceAtributeParamlist = false;
 			MetadataFormulaSerivce.getFormulaByType($scope.allformuladepands.defaultoption.uuid, $scope.selectedDependsOnType).then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
-				$scope.formulaLodeFormula = response.data
+				var temp;
+				temp=response.data
+				if($scope.formuladata){
+					temp = response.data.filter(function(el) {
+						return el.uuid !== $scope.formuladata.uuid;
+					});
+			    }
+				$scope.formulaLodeFormula = temp
 			}
 		}
 		else if (type == "expression") {
@@ -436,6 +517,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 
 	$scope.submitFormula = function () {
 		var aggrfun = ["sum", "min", "max", "count", "avg"]
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -449,6 +531,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		formulaJson.tags = tagArray
@@ -479,9 +565,13 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 					formulainfo.ref = ref;
 					formulainfo.value = $scope.formulainfoarray[i].value;
 				}
-				else if ($scope.formulainfoarray[i].type == "datapod" || $scope.formulainfoarray[i].type == "dataset") {
+			
+				else if ($scope.formulainfoarray[i].type == "datapod" || $scope.formulainfoarray[i].type == "dataset" || $scope.formulainfoarray[i].type == "rule") {
 					if ($scope.selectedDependsOnType == "dataset") {
 						ref.type = "dataset";
+					}
+					else if($scope.selectedDependsOnType == "rule"){
+						ref.type = "rule";
 					}
 					else {
 						ref.type = $scope.formulainfoarray[i].type;
@@ -519,7 +609,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state, $scope,
 
 
 		console.log(JSON.stringify(formulaJson))
-		MetadataFormulaSerivce.submit(formulaJson, 'formula').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataFormulaSerivce.submit(formulaJson,'formula',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			var dependon = {}
 			dependon.type = "formula";

@@ -5,15 +5,37 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.user = {};
 	$scope.user.versions = [];
 	$scope.showForm = true;
@@ -29,6 +51,20 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['user'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
+
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['user'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -280,6 +316,7 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 
 	/*Start submituser*/
 	$scope.submitUser = function () {
+		var upd_tag="N"
 		var userJson = {};
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -301,6 +338,10 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		if ($scope.tags != null) {
 			for (var c = 0; c < $scope.tags.length; c++) {
 				tagArray[c] = $scope.tags[c].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		userJson.tags = tagArray
@@ -332,7 +373,7 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		}
 		userJson.groupInfo = groupInfoArray
 		console.log(JSON.stringify(groupInfoArray))
-		AdminUserService.submit(userJson, 'user').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		AdminUserService.submit(userJson, 'user',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

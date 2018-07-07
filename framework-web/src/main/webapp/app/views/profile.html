@@ -25,6 +25,8 @@
         </div> <!-- END PAGE HEADER-->
         <br>
         <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+        <div  options="dirOptions" type="'profile'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="profileDetail" comment-panel-directive></div>
+
         <div class="portlet light bordered" id="form_wizard_1">
 
             <div class="portlet-title">
@@ -62,7 +64,7 @@
                         data-ng-click="showview(profileDetail.uuid,profileDetail.version)">
                         <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                     </a>
-                    <a class="borderless btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-toggle="tooltip"
+                    <a class="borderless btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
                         data-placement="top" ng-show="isDependencyShow" tooltip ng-class="showProfileGroup==false? 'currentpage':'notcurrentpage'"
                         data-ng-click="showProfileGroupGraph(profileDetail.uuid,profileDetail.version)">
                         <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0;"></i>
@@ -79,7 +81,7 @@
                 </div>
             </div>
 
-            <div class="portlet-body form">
+            <div class="portlet-body">
 
                 <div class="form-body graph-body" ng-if="showgraphdiv">
                     <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
@@ -89,10 +91,10 @@
                         <div class="bounce3"></div>
                     </div>
                     
-                    <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="profileDetail.uuid" version="profilegroup.defaultVersion.version"></div>
+                    <div class="form-body show-graph-body tree-graph" id="graphWrapper"  tree-graph-directive uuid="profileDetail.uuid" version="profilegroup.defaultVersion.version"></div>
                 </div>
 
-                <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()"
+                <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitProfileGroup()"prevent-enter-submit
                     ng-show="showProfileGroup">
                     <div class="form-wizard">
                         <div class="form-body">
@@ -141,7 +143,12 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3">Tag</label>
                                 <div class="col-md-6">
-                                    <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input>
+                                    <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
+                                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                                            max-results-to-show="10">
+                                        </auto-complete>
+                                    </tags-input>
                                 </div>
                             </div>
 

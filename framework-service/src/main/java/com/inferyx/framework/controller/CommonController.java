@@ -11,13 +11,11 @@
 package com.inferyx.framework.controller;
 
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,9 +36,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Message;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ImportServiceImpl;
 import com.inferyx.framework.service.MessageServiceImpl;
@@ -163,15 +161,28 @@ public class CommonController<T> {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public String save(@RequestBody Object metaObject, @RequestParam("type") String type,
+			@RequestParam(value = "upd_tag", required = false, defaultValue = "N") String upd_tag,
 			@RequestParam(value = "action", required = false) String action, HttpServletRequest request)
-	throws Exception {
-		if(type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString()) || type.equalsIgnoreCase(MetaType.ruleview.toString()) || type.equalsIgnoreCase(MetaType.dashboardview.toString()) || type.equalsIgnoreCase(MetaType.reconview.toString())   ){
+			throws Exception {
+		if (type.equalsIgnoreCase(MetaType.datasetview.toString()) || type.equalsIgnoreCase(MetaType.dqview.toString())
+				|| type.equalsIgnoreCase(MetaType.ruleview.toString())
+				|| type.equalsIgnoreCase(MetaType.dashboardview.toString())
+				|| type.equalsIgnoreCase(MetaType.reconview.toString())) {
 			ObjectMapper mapper = new ObjectMapper();
 			java.util.Map<String, Object> operator = mapper.convertValue(metaObject, java.util.Map.class);
-			return registerService.save(operator, type);
-		}else{
-			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(type, metaObject );
-			return baseEntity.getId().toString()/*objectWriter.writeValueAsString(object)*/;
+			 
+			BaseEntity baseEntity=  registerService.save(operator, type);
+			if (upd_tag.equalsIgnoreCase("Y")) {
+				commonServiceImpl.updateLovForTag(baseEntity);
+			}
+			return baseEntity.getId().toString();
+					 
+		} else {
+			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.save(type, metaObject);
+			if (upd_tag.equalsIgnoreCase("Y")) {
+				commonServiceImpl.updateLovForTag(baseEntity);
+			}
+			return baseEntity.getId().toString()/* objectWriter.writeValueAsString(object) */;
 		}
 	}
 		
@@ -252,15 +263,16 @@ public class CommonController<T> {
     public @ResponseBody String invalidateSession(){
 		return commonServiceImpl.invalidateSession();
     }*/
-	
+	/*//Converted to genric
 	@RequestMapping(value = "/upload", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
 	public @ResponseBody String upload(@RequestParam("file") MultipartFile file,
 									   @RequestParam(value = "extension") String extension,
 									   @RequestParam(value = "fileType") String fileType,
 									   @RequestParam(value = "type", required = false) String type,
 									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, JSONException, ParseException {
-					return commonServiceImpl.upload(file, extension, fileType, fileName, type);
+		return commonServiceImpl.upload(file, extension, fileType, fileName, type);
 	}
+	*/
 	
 	@RequestMapping("/download")
     public HttpServletResponse download(@RequestParam(value = "fileType") String fileType,
@@ -277,6 +289,7 @@ public class CommonController<T> {
 		return null;
     }
 	
+	
 	@RequestMapping(value = "/getAllLatestCompleteObjects", method = RequestMethod.GET)
 	public @ResponseBody String getAllLatestCompleteObjects(@RequestParam("type") String type,
 			@RequestParam(value="active", required=false) String active,
@@ -285,4 +298,54 @@ public class CommonController<T> {
 		List<?> baseEntityList = commonServiceImpl.getAllLatestCompleteObjects(type,active);
 		return objectWriter.writeValueAsString(baseEntityList);
 	}
+	
+	
+	
+	/*Converted to genric
+	 * @RequestMapping(value = "/uploadCommentFile", method = RequestMethod.POST)
+	public @ResponseBody boolean uploadCommentFile(HttpServletRequest request,
+											   @RequestParam("file") List<MultipartFile> multiPartFile, 
+											   @RequestParam("fileName") String filename,
+											   @RequestParam("uuid") String uuid,
+											   @RequestParam(value = "type", required = false) String type,
+											   @RequestParam(value = "action", required = false) String action)
+											throws IOException, JSONException, ParseException {
+		boolean result = commonServiceImpl.uploadCommentFile(multiPartFile, filename, type,uuid);
+		
+		return result;
+	}*/
+	
+
+	//uploadGenric
+	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers = ("content-type=multipart/form-data; boundary=abcd"))
+	public @ResponseBody List<MetaIdentifierHolder> uploadGenric(HttpServletRequest request,
+											   @RequestParam("file") List<MultipartFile> multiPartFile, 
+											   @RequestParam(value = "extension",required = false) String extension,
+											   @RequestParam(value = "fileType", required = false) String fileType,
+											   @RequestParam(value = "type", required = false) String type,
+											   @RequestParam(value = "uuid", required = false) String uuid,
+											   @RequestParam(value = "version", required = false) String version,
+											   @RequestParam(value = "action", required = false) String action)
+											throws IOException, JSONException, ParseException {
+		List<MetaIdentifierHolder> result = commonServiceImpl.uploadGenric(multiPartFile,extension ,fileType, type,uuid,version,action);
+		
+		return result;
+	}
+	//genricDownload
+	@RequestMapping(value="/download",method = RequestMethod.GET,params = {"uuid"})
+    public HttpServletResponse download(@RequestParam(value = "fileType",required = false) String fileType,
+    						@RequestParam(value = "fileName",required = false) String fileName,
+    						HttpServletResponse response,
+    						@RequestParam(value = "uuid" ) String uuid){
+		try {
+			response = commonServiceImpl.genricDownload(fileType, fileName, response,uuid);
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+    }
+	
+	
 }

@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.dao.IDatasourceDao;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Export;
 import com.inferyx.framework.domain.FileType;
@@ -109,21 +110,31 @@ public class AdminController {
 	
 	@RequestMapping(value="import/submit", method = RequestMethod.POST)
 	public @ResponseBody String importSubmit(@RequestBody Object metaObject,
+	 		@RequestParam(value = "upd_tag", required = false, defaultValue = "N") String upd_tag,
 			@RequestParam(value = "type", required=false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "fileName", required = false) String fileName) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		Import imprt = mapper.convertValue(metaObject, Import.class);
+		BaseEntity baseEntity=imprt;
+		if (upd_tag.equalsIgnoreCase("Y")) {
+			commonServiceImpl.updateLovForTag(baseEntity);
+		}
 		return  mapper.writeValueAsString(importServiceImpl.save(imprt, fileName));
 	}
 	
 	@RequestMapping(value="export/submit", method = RequestMethod.POST)
 	public @ResponseBody String exportSubmit(@RequestBody Object metaObject,
+	 		@RequestParam(value = "upd_tag", required = false, defaultValue = "N") String upd_tag,
 			@RequestParam(value = "type", required=false) String type,
 			@RequestParam(value = "action", required = false) String action
 			) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		Export export = mapper.convertValue(metaObject, Export.class);
+		BaseEntity baseEntity=export;
+		if (upd_tag.equalsIgnoreCase("Y")) {
+			commonServiceImpl.updateLovForTag(baseEntity);
+		}
 		return  mapper.writeValueAsString(exportServiceImpl.save(export));
 	}	
 	

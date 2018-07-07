@@ -1,10 +1,11 @@
 CommonModule = angular.module('CommonModule');
 
-CommonModule.controller('CommonListController', function ($location, $http, cacheService, dagMetaDataService, uiGridConstants, $state, $stateParams, $rootScope, $scope, $sessionStorage, CommonService, FileSaver, Blob, $filter, cacheService, privilegeSvc, $timeout) {
+CommonModule.controller('CommonListController', function ($location, $http, cacheService, dagMetaDataService, uiGridConstants, $state, $stateParams, $rootScope, $scope, $sessionStorage, CommonService, FileSaver, Blob, $filter, cacheService, privilegeSvc, $timeout,$q) {
   $scope.isExec = false;
   $scope.isJobExec = false;
   $scope.select = $stateParams.type.toLowerCase();
   $scope.newType = $stateParams.type.toLowerCase();
+  $scope.parantType=$stateParams.parantType 
   $scope.autorefreshcounter = 05
   $scope.isFileNameValid=true;
   $scope.isFileSubmitDisable=true;
@@ -15,20 +16,16 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     content: 'Dashboard deleted Successfully',
     timeout: 3000 //time in ms
   };
-
+  $rootScope.isCommentDisabled=true;
   var cached = cacheService.getCache('searchCriteria', $scope.select);
   $scope.isJobExec = $stateParams.isJobExec;
   $scope.isExec = $stateParams.isExec;
   $scope.handleGroup = -1;
   $scope.privileges = [];
   $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
-  //console.log($scope.privileges)
- // console.log(privilegeSvc.privileges)
- 
+  
   $scope.$on('privilegesUpdated', function (e, data) {
   $scope.privileges = privilegeSvc.privileges[$scope.select] || [];
-   // console.log($scope.privileges)
-  //  console.log(privilegeSvc.privileges)
     
   });
 
@@ -39,7 +36,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       }
     });
   }
-
+  if($scope.select !="paramlist")
   $scope.updateStats();
   
   var groups = ['profileexec', 'profilegroupexec', 'dqexec', 'dqgroupexec', 'ruleexec', 'rulegroupexec','reconexec','recongroupexec'];
@@ -58,16 +55,30 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   
   $scope.addMode = function () {
     cacheService.searchCriteria = {};
-    $state.go($scope.detailState);
+    var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
+    if($scope.parantType){ //for Paramlist
+      stateName=stateName+$scope.parantType
+    }
+    $state.go(stateName);
   }
   
   $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
     //console.log(fromParams)
     $sessionStorage.fromStateName = fromState.name
     $sessionStorage.fromParams = fromParams
+    $http.pendingRequests.forEach(function(request) { 
+      if (request.cancel) {
+      request.cancel.resolve();
+    }  
+    });
   });
 
-  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype'];
+  $scope.$on('$destroy',function(){
+    // allSitesPromise.abort();
+  //  $scope.deferred = $q.defer();
+  //  $scope.deferred.reject();
+  });
+  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype','operator'];
   $scope.isExecutable = $scope.nonExecTypes.indexOf($scope.select);
   $scope.isUpload = ($scope.select == 'datapod' ? 0 : -1)
   
@@ -94,13 +105,18 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   };
 
   $scope.gridOptions.data = [];
+  
   $scope.action = function (data, mode, privilege) {
     $scope.setActivity(data.uuid, data.version, $scope.select, mode);
     var stateName = dagMetaDataService.elementDefs[$scope.select].detailState;
-    if (mode != 'view') {
+    if($scope.parantType){ //for Paramlist
+      stateName=stateName+$scope.parantType
+    }
+   // if (mode != 'view') {
       //clearing cache if edit is called
       cacheService.saveCache('searchCriteria', $scope.select, null);
-    }
+   // }
+    
     if (stateName)
       $state.go(stateName, {
         id: data.uuid,
@@ -108,6 +124,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         mode: mode == 'view' ? true : false
       });
   }
+
   $scope.getExec = function (data) {
     var stateName = dagMetaDataService.elementDefs[$scope.select].resultState;
     if (stateName) {
@@ -157,8 +174,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
     notify.type = 'success',
     notify.title = 'Success',
-      // notify.content=dagMetaDataService.elementDefs[$scope.select].caption +' Killed Successfully'
-      //alert($scope.select + "---->" +$scope.select.indexOf("group"))
     notify.content = $scope.newType == "dagexec" ? "Pipeline Killed Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Killed Successfully" : "Rule Killed Successfully"
     $scope.$emit('notify', notify);
 
@@ -167,6 +182,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       console.log(response);
     });
   }
+
   $scope.restartExec = function (row, status) {
     var api = false;
     switch ($scope.newType) {
@@ -203,16 +219,16 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
     notify.type = 'success',
     notify.title = 'Success',
-    //notify.content=dagMetaDataService.elementDefs[$scope.select].caption +' Restarted Successfully'
     notify.content = $scope.newType == "dagexec" ? "Pipeline Restarted Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Restarted Successfully" : "Rule Restarted Successfully"
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];
     $http.post(url + '' + api + '/restart?uuid=' + row.uuid + '&version=' + row.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
-      console.log(response);
+      //console.log(response);
     });
   }
 
+  
   $scope.selectData = function (data) {
     $scope.caption = dagMetaDataService.elementDefs[data.type.toLowerCase()].caption;
     $scope.originalData = []
@@ -246,6 +262,13 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     // }
     $scope.gridOptions.data = [];
     $scope.gridOptions.data = data.data;
+    
+    if($scope.select =="paramlist") {
+      var countObj={};
+      countObj.type=$scope.select;
+      countObj.count=data.data.length;      
+      $rootScope.metaStats[$scope.select+$scope.parantType]=countObj;
+    }
     // if($scope.originalData.length >0){
     //   $scope.getResults($scope.originalData);
     // }
@@ -290,8 +313,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       CommonService[restore ? 'restore' : 'delete']($scope.selectuuid, $scope.select).then(function (response) {
         $scope.onSuccessDelete(response.data);
         notify.type = 'success',
-          notify.title = 'Success',
-          notify.content = $scope.message//"Dashboard Deleted Successfully"
+        notify.title = 'Success',
+        notify.content = $scope.message
         $scope.$emit('notify', notify);
       });
     }
@@ -314,7 +337,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       //$scope.originalData.splice($scope.originalData.indexOf(data),1);
       data.published = unpublish ? 'N' : 'Y';
       $scope.publishmessage = $scope.caption + (unpublish ? " Unpublished" : " Published") + " Successfully";
-      //  $('#showMsgModel').modal('show');
     }
 
   $scope.okpublished = function () {
@@ -392,13 +414,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
   }
   
-  // $scope.getAllLatest=function(){
-  //   CommonService.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
-	// 	var onSuccessGetAllLatest = function (response) {
-  //     $scope.allDatapod=response;
-  //     $scope.selectedParamValue=response[0];
-  //   }
-  // }
   
   $scope.getAllLatest=function(type,index,defaultValue){  
     CommonService.getAllLatest(type || "datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
@@ -526,9 +541,15 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
           paramValue.ref=ref;
           paramValue.value=$scope.paramListHolder[i].paramValue
           paramList.paramValue=paramValue;
-          
         }
-       
+        else if($scope.paramListHolder[i].selectedParamValueType =="list"){
+          var ref={};
+          var paramValue={};  
+          ref.type='simple';
+          paramValue.ref=ref;
+          paramValue.value=$scope.paramListHolder[i].paramValue
+          paramList.paramValue=paramValue;
+        }
         paramListInfo[i]=paramList;
       }
       execParams.paramListInfo=paramListInfo;
@@ -536,9 +557,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     else{
       execParams=null;
     }
-    console.log(JSON.stringify(execParams))
-  $scope.executeWithParams(execParams);
+    $scope.executeWithParams(execParams);
   }
+  
   $scope.executeWithParams=function(data){
     $scope.executionmsg = $scope.caption + " Submited Successfully"
     notify.type = 'success',
@@ -673,11 +694,17 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
   };
 
-  $scope.getDetailForUpload = function (data) {
+  $scope.getDetailForUpload = function (data,index) {
+    console.log(data.index)
     $scope.setActivity(data.uuid, data.version, $scope.select, "uplode");
     var uuid = data.uuid
     $scope.uploaaduuid = data.uuid
     var version = data.version
+    $scope.uploadDetail={
+      uuid:data.uuid,
+      index:data.index
+    }
+  
     $(":file").jfilestyle('clear')
     $("#csv_file").val("");
     $('#fileupload').modal({
@@ -694,6 +721,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
   $scope.uploadFile = function () {
     //var file = $scope.myFile;
+    
     if($scope.isFileSubmitDisable){
       $scope.msg = "Special character or space not allowed in file name."
       notify.type = 'info',
@@ -707,18 +735,22 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var fd = new FormData();
     fd.append('csvFileName', file);
     $('#fileupload').modal('hide')
+    $scope.gridOptions.data[$scope.uploadDetail.index].isupload=true;
     CommonService.uploadFile($scope.uploaaduuid, fd, "datapod").then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      //$('#fileupload').modal('hide')
+      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      $scope,uploadDetail=null;
       $scope.executionmsg = "Data Uploaded Successfully"
       notify.type = 'success',
-        notify.title = 'Success',
-        notify.content = $scope.executionmsg//"Dashboard Deleted Successfully"
+      notify.title = 'Success',
+      notify.content = $scope.executionmsg
       $scope.$emit('notify', notify);
 
     }
     var onError = function (response) {
-    	$('#fileupload').modal('hide')
+      $('#fileupload').modal('hide');
+      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
+      $scope,uploadDetail=null;
     }
     // CommonService.SaveFile(file.name,fd,"datapod").then(function(response){onSuccess(response.data)});
     // var onSuccess=function(response){

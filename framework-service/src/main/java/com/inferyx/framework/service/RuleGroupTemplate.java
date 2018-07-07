@@ -37,17 +37,18 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.factory.RuleExecFactory;
 import com.inferyx.framework.factory.RuleServiceFactory;
 import com.inferyx.framework.factory.RunRuleFactory;
+import com.inferyx.framework.operator.IExecutable;
+import com.inferyx.framework.operator.IParsable;
 
 /**
  * @author joy
  *
  */
-public abstract class RuleGroupTemplate {
+public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 	
 	@Autowired
 	protected CommonServiceImpl commonServiceImpl;
@@ -370,9 +371,12 @@ public abstract class RuleGroupTemplate {
 		if (ruleExecList == null || ruleExecList.isEmpty()) {
 			return null;
 		}
+		HashMap<String, String> otherParams = null;
+		if(dagExec != null)
+			otherParams = dagExec.getExecParams().getOtherParams();
 		for (MetaIdentifierHolder ruleExecMeta : ruleExecList) {
 			ruleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecMeta.getRef().getUuid(), ruleExecMeta.getRef().getVersion(), ruleExecType.toString());
-			ruleExec = baseRuleService.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+			ruleExec = baseRuleService.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 		}
 		return baseGroupExec;
 	}

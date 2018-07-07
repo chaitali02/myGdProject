@@ -59,6 +59,11 @@
             "type" : "oracle",
             "name" : "max",
             "paramInfoHolder" : []
+        },
+        {
+            "type" : "postgres",
+            "name" : "max",
+            "paramInfoHolder" : []
         }
     ]
 }

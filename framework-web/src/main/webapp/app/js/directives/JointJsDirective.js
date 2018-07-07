@@ -586,7 +586,6 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
              $("#"+divid).hide();
              $('.connection').removeClass('active');
            });
-           
            var jointElement = $(this).closest(".joint-element");
            var s = jointElement.attr("model-id");
            $('.connection[source-id='+s+']').addClass('active');
@@ -1520,7 +1519,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          },
          
          validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
-           
+          
            if(!$scope.editMode || $scope.isTemplate){
              return false;
            }
@@ -1773,33 +1772,60 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        if(thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid){
          $scope.popupModel.selectedType = thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo.ref.name;
        }
-           
-       MetadataDagSerivce.getAllLatest(elementType).then(function(response){
-         if(!response || !response.data){
-           $scope.operatorinfoMapInfo = [];
-           return
-         }
-         GetAllLatesMap(response.data);
-         },function (error) {
-           $scope.operatorinfoMapInfo = [];
-         });
-         
-         var GetAllLatesMap=function(response){
-           $scope.operatorinfoMapInfo = response;
-           $scope.popupModel.type=elementType
-           if(elementType =="operatortype" && newCell){
-            for(var i=0;i< response.length;i++){
-               if(response[i].name == elemt.title){
-                $scope.popupModel.selectedType=response[i].uuid +"|"+ response[i].name;
-                $scope.onChangeOperatorInfo();
-               
-                break;
-               }
+       if(elementType =="operator" &&  !newCell){
+        var uuid=$scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid;
+        CommonService.getOneByUuidAndVersion(uuid,"","operator").then(function(response){ 
+          if(!response || !response.data){
+            $scope.operatorinfoMapInfo = [];
+            return
+          }
+          CommonService.getOperatorByOperatorType(response.data.operatorType).then(function(response){
+            if(!response || !response.data){
+              $scope.operatorinfoMapInfo = [];
+              return
             }
-           }
-           
+            GetAllLatesMap(response.data);
+            },function (error) {
+              $scope.operatorinfoMapInfo = [];
+            });
+        });
+      }
+      else if(elementType =="operator" && newCell){
+        var type =elemt.title
+        CommonService.getOperatorByOperatorType(type.replace(/ /g,'')).then(function(response){
+          if(!response || !response.data){
+            $scope.operatorinfoMapInfo = [];
+            return
+          }
+          GetAllLatesMap(response.data);
+          },function (error) {
+            $scope.operatorinfoMapInfo = [];
+          });
+      }
+      else{ 
+        MetadataDagSerivce.getAllLatest(elementType).then(function(response){
+          if(!response || !response.data){
+            $scope.operatorinfoMapInfo = [];
+            return
+          }
+          GetAllLatesMap(response.data);
+          },function (error) {
+            $scope.operatorinfoMapInfo = [];
+          }); 
          }
-           
+         var GetAllLatesMap=function(response){
+          $scope.operatorinfoMapInfo = response;
+          $scope.popupModel.type=elementType
+          if(elementType =="operator" && newCell){
+            for(var i=0;i< response.length;i++){
+              if(response[i].name == elemt.title){
+                $scope.popupModel.selectedType=response[i].uuid +"|"+ response[i].name;
+                $scope.onChangeOperatorInfo(false);
+                break;
+              }
+            }
+          }   
+        }  
          var xPercent = e.clientX / $( window ).width() * 100;
          var yPercent = e.clientY / $( window ).height() * 100;
          if(xPercent > 50){
@@ -1828,7 +1854,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
        
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
-        var typeParamListArray=["simulate","operatortype"];
+        var typeParamListArray=["simulate","operator"];
         var typeParamSetArray=["train"];
         if(typeParamSetArray.indexOf(type) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=true;
@@ -2054,6 +2080,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        });
             
        $( "#paper" ).on("mouseover",".joint-element .body",function(e){
+      
          if($scope.isTemplate){
            var divid = 'divtoshow';
            $("#"+divid).hide();
@@ -2070,11 +2097,15 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $('.connection[source-id='+s+']').addClass('active');
          var cell = $scope.graph.getCell(s);
          var elementModel = cell.attributes['model-data'];
+      
          try {
            var elementType = elementModel.operators[0].operatorInfo.ref.type;
            if(elementType.slice(-4) == 'Exec'){
              elementType = elementType.slice(0,-4);
            }
+           if(['dag','stage'].indexOf(elementType) ==-1){
+            elementModel.version=cell.attributes['dagversion'];
+          }
          }catch(e){
            if(s.substr(0,3)=='dag'){
              var cell = $(this);
@@ -2086,8 +2117,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var elementModel = {name : cell.attributes['model-data'].name, type : elementType, uuid:cell.attributes['model-data'].stageId};
            }else{
              var elementType = undefined;
+             elementModel.version=cell.attributes['dagversion'];
            }
          }
+       
          
          var allowedHover = angular.copy(dagMetaDataService.validTaskTypes);
          allowedHover.push('dag');
@@ -2123,9 +2156,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          }
          else {
            var directRef = ['dag','stage'];
-           var txt1 = directRef.indexOf(elementType) > -1 ? elementModel.uuid : elementModel.operators[0].operatorInfo.ref.uuid || '';
+           var txt1 = directRef.indexOf(elementType) > -1 ? elementModel.uuid : elementModel.taskId ||'' //operators[0].operatorInfo.ref.uuid || '';
            var txt2 = directRef.indexOf(elementType) > -1 ? elementModel.name : elementModel.name || '';
-           var txt3 = directRef.indexOf(elementType) > -1 ? elementModel.version : elementModel.operators[0].operatorInfo.ref.version || '';
+           var txt3 = directRef.indexOf(elementType) > -1 ? elementModel.version : elementModel.version || ''//elementModel.operators[0].operatorInfo.ref.version || '';
          }
 
          $("#elementTypeText").html(dagtypetext);
@@ -2170,6 +2203,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          // id: "dag_0",
          elementType: operator,
          parentStage: '',
+         dagversion:'N/a',
          "model-data": {
            name : 'New '+operator,
            operators : [ {
@@ -2191,7 +2225,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                attrs: {
                  '.port-body': {
                    fill: '#fff',
-                   r:5,
+                   r:7,
                    cx:-5
                  }
                }
@@ -2200,7 +2234,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                attrs: {
                  '.port-body': {
                    fill: '#fff',
-                     r: 5,
+                     r: 7,
                      cx: 5
                  }
                }
@@ -2508,8 +2542,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       var iconMenu = iconContextMenu().items(iconMenuItems);
       
 
-      $scope.onChangeOperatorInfo=function(){
+      $scope.onChangeOperatorInfo=function(defaultValue){
        // $scope.popupModel.modelData.operators[0].operatorParams=null;
+       $scope.paramListHolder=null;
         var temp = $scope.popupModel.selectedType.split('|');
         $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
         $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
@@ -2519,13 +2554,16 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
         objDetail.type=type;
         var typeParamSetArray=["train"];
-        var typeParamListArray=["simulate","operatortype"];
+        var typeParamListArray=["simulate","operator"];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;
         }
       
         if(typeParamListArray.indexOf(type) != -1){
+          if(defaultValue){
+            $scope.popupModel.modelData.operators[0].operatorParams=null;
+          }
           $scope.getExecParamList(objDetail,$scope.popupModel);
           $scope.isExecParamList=true
         }
@@ -2688,14 +2726,27 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 paramList.paramValue=paramValue;
                 paramList.selectedParamValue=selectedParamValue;
                 paramList.selectedParamValueType=paramListInfo[i].paramValue.ref.type
-                paramListHolder[i]=paramList
-               }else if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type== "simple"){
+                paramListHolder[i]=paramList;
+               
+               }else if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type== "simple" && paramListInfo[i].paramType !='list'){
                 var paramValue={}
                 paramValue.paramValue=paramListInfo[i].paramValue.value
                 paramValue.selectedParamValueType=paramListInfo[i].paramValue.ref.type;
                 paramValue.selectedParamValue=selectedParamValue
                 paramList.selectedParamValueType=paramListInfo[i].paramValue.ref.type
                 paramList.paramValue=paramListInfo[i].paramValue.value;
+                paramListHolder[i]=paramList
+               }
+               else if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type== "simple" && paramListInfo[i].paramType =='list'){
+                var paramValue={}
+                paramValue.paramValue=paramListInfo[i].paramValue.value
+                paramValue.selectedParamValueType=paramListInfo[i].paramValue.ref.type;
+                paramValue.selectedParamValue=selectedParamValue
+                paramList.selectedParamValueType=paramListInfo[i].paramType;
+                paramList.paramValue=paramListInfo[i].paramValue.value;
+                if($scope.opringinalparamListHolder.length <= paramListInfo.length){
+                  paramList.allListInfo=$scope.opringinalparamListHolder[i].allListInfo;
+                }
                 paramListHolder[i]=paramList
                }
                else if(paramListInfo[i].paramType == "attribute"){
@@ -2738,9 +2789,17 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               }
               console.log(paramListHolder )
               $scope.paramListHolder = paramListHolder;
-              $scope.opringinalparamListHolder=$scope.paramListHolder
+           //   $scope.opringinalparamListHolder=$scope.paramListHolder
             }else{
               $scope.paramListHolder = response;
+              for(var i=0;i<$scope.paramListHolder.length;i++){
+                if(['list','simple'].indexOf($scope.paramListHolder[i].isParamType) ==-1){
+                  if( $scope.paramListHolder[i].paramValue && $scope.paramListHolder[i].paramValue.ref.type =='distribution'){
+                    $scope.onChangeDistribution($scope.paramListHolder[i].selectedParamValue,i);
+                    break;
+                  }
+                }
+              }
               $scope.opringinalparamListHolder=$scope.paramListHolder
             }
           }
@@ -2793,7 +2852,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         }
       }
       $scope.onChangeDistribution=function(data,index){
-        CommonService.getParamListByType('distribution',data.uuid,data.version).then(function (response){ onSuccessGetParamListByType(response.data)});
+        debugger 
+        CommonService.getParamListByType('distribution',data.uuid,data.version | "").then(function (response){ onSuccessGetParamListByType(response.data)});
         var onSuccessGetParamListByType = function (response) {
           if($scope.paramListHolder.length == $scope.opringinalparamListHolder.length){
             $scope.opringinalparamListHolder=$scope.paramListHolder;
@@ -2804,6 +2864,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           var paramList
           paramList = $scope.paramListHolder.concat(response);
           $scope.paramListHolder=paramList;
+       //   $scope.opringinalparamListHolder=$scope.paramListHolder;
+
         }
       }
       $scope.loadAttributes = function(query,index) {
@@ -2869,8 +2931,15 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               ref.type=$scope.paramListHolder[i].selectedParamValueType;
               paramValue.ref=ref;
               paramValue.value=$scope.paramListHolder[i].paramValue
+              paramList.paramValue=paramValue; 
+            }
+            else if($scope.paramListHolder[i].selectedParamValueType =="list"){
+              var ref={};
+              var paramValue={};  
+              ref.type='simple';
+              paramValue.ref=ref;
+              paramValue.value=$scope.paramListHolder[i].paramValue
               paramList.paramValue=paramValue;
-              
             }
            
             paramListInfo[i]=paramList;

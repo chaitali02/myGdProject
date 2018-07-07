@@ -1,36 +1,68 @@
 /****/
 DataQualityModule = angular.module('DataQualityModule');
 
-DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc) {
+DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc,CommonService,$timeout,$filter,CF_FILTER) {
   $scope.dataqualitydata = {};
   $scope.mode = "false";
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
     $scope.isversionEnable = false;
     $scope.isAdd = false;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if ($stateParams.mode == 'false') {
     $scope.isEdit = true;
     $scope.isversionEnable = true;
     $scope.isAdd = false;
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else {
     $scope.isAdd = true;
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.dq = {};
   $scope.dq.versions = []
   $scope.dataqualitycompare = null;
   $scope.datatype = ["", "String", "Int", "Float", "Double", "Date"];
   $scope.selectDataType = $scope.datatype[0];
-  //$scope.sourceType=["datapod","dataset","relation"]
   $scope.sourceType = ["datapod"]
   $scope.dataqualitysourceType = $scope.sourceType[0];
-  $scope.logicalOperator = [" ", "OR", "AND"];
-  $scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN"];
+  $scope.logicalOperator = ["OR", "AND"];
+  $scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
+  $scope.operator =CF_FILTER.operator; 
+  $scope.lhsType = [
+		{ "text": "string", "caption": "string" },
+		{ "text": "string", "caption": "integer"},
+		{ "text": "datapod", "caption": "attribute"},
+		{ "text": "formula", "caption": "formula"}];
+	$scope.rhsType = [
+		{ "text": "string", "caption": "string","disabled":false },
+		{ "text": "string", "caption": "integer" ,"disabled":false },
+		{ "text": "datapod", "caption": "attribute","disabled":false },
+		{ "text": "formula", "caption": "formula","disabled":false },
+    { "text": "dataset", "caption": "dataset" ,"disabled":false }];
+    
   $scope.selectType = true;
   $scope.isDependencyShow = false;
-  /* $scope.datefromate=["dd/mm/yy","dd/mm/yyyy","d/m/yy","d/m/yyyy","ddmmyy","ddmmyyy","ddmmmyy","ddmmmyyyy","dd-mmm-yy","dd-mmm-yyyy","dmmmyy","dmmmyyyy","d-mmm-yy","d-mmm-yyyy","d-mmmm-yy","d-mmmm-yyyy","yymmdd","yyyymmdd","yy/mm/dd","yyyy/mm/dd","mmddyy","mmddyyyy","mm/dd/yy","mm/dd/yyyy","mmm-dd-yy","mmm-dd-yyyy","yyyy-mm-dd","dth mmmm yyyy","mmm-yy","yy","yyyy"];
-   */
   $scope.isSelectSoureceAttr = false;
   $scope.datefromate = ["dd/mm/yy", "dd/mm/yyyy", "d/m/yyyy", "dd-mmm-yy", "dd-mmm-yyyy", "d-mmm-yy", "d-mmm-yyyy", "d-mmmm-yy", "d-mmmm-yyyy", "yy/mm/dd", "yyyy/mm/dd", "mm/dd/yy", "mm/dd/yyyy", "mmm-dd-yy", "mmm-dd-yyyy", "yyyy-mm-dd", "mmm-yy", "yyyy"];
   $scope.showRule = true;
@@ -45,6 +77,20 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.privileges = privilegeSvc.privileges['dq'] || [];
     $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
   });
+  
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+  $scope.getLovByType();
 
   $scope.showRulePage = function () {
     $scope.showgraph = false;
@@ -131,7 +177,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     //$scope.allDependsOn=response
     $scope.refIntegrityCheck = response
     $scope.allDependsOn = response
-    $scope.selectDependsOn = $scope.allDependsOn[0]
+    if (typeof $stateParams.id == "undefined") {
+      $scope.selectDependsOn = $scope.allDependsOn[0]
+    }
     $scope.dependsOnDataQuality();
   }
 
@@ -209,6 +257,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       var onSuccessgetAllLatest = function (response) {
 
         $scope.allDependsOn = response
+       
         DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
           onSuccess(response.data)
         });
@@ -233,7 +282,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
   $scope.selectVersion = function () {
     $scope.isSelectSoureceAttr = false
-    $scope.myform.$dirty = false;
+    $scope.myform1.$dirty = false;
     DataqulityService.getOneByUuidAndVersionDQView($scope.dq.defaultVersion.uuid, $scope.dq.defaultVersion.version, "dqview").then(function (response) {
       onGetSuccess(response.data)
     });
@@ -317,7 +366,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       }
     }
   }
-
+  
   /*$scope.OnSourceTypeChange=function(){
 	    	$scope.dataqualityoptions=[];
 	    	DataqulityService.getAllLatestActive($scope.dataqualitysourceType).then(function(response){onSuccess(response.data)});
@@ -338,6 +387,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 	    }*/
   $scope.dependsOnDataQuality = function () {
     $scope.dataqualityoptions;
+    if(!$scope.selectDependsOn){
+      return false;
+    }
     DataqulityService.getAllAttributeBySource($scope.selectDependsOn.uuid, $scope.dataqualitysourceType).then(function (response) {
       onSuccess(response.data)
     });
@@ -376,24 +428,102 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     }
 
   }
+  $scope.SearchAttribute=function(index){
+		$scope.selectDatasetAttr=$scope.filterTableArray[index].rhsdataset
+		CommonService.getAllLatest("dataset").then(function (response) { onSuccessRelation(response.data) });
+		$scope.searchAttrIndex=index;
+		var onSuccessRelation = function (response) {
+      $scope.allDataset={}
+      $scope.allDataset.options = response;
+      $scope.allDataset.defaultoption=response[0];
+			$('#searchAttr').modal({
+				backdrop: 'static',
+				keyboard: false
+			  });
+			  DataqulityService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
+			  var onSuccessAttributeBySource = function (response) {
+				$scope.allDatasetAttr = response;
+				if (typeof $stateParams.id != "undefined" && $scope.selectDatasetAtt) {
+					var defaultoption={};
+					defaultoption.uuid=$scope.selectDatasetAttr.uuid;
+					defaultoption.name="";
+					$scope.allDataset.defaultoption=defaultoption;
+				}else{
+					$scope.selectDatasetAtt=$scope.allDatasetAttr[0]
+				}
+
+			}
+		}
+		
+	}
+    $scope.onChangeDataset=function(){
+      DataqulityService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
+		  var onSuccessAttributeBySource = function (response) {
+			$scope.allDatasetAttr = response;
+		}
+	}
+
+	$scope.SubmitSearchAttr=function(){
+    if ($scope.dataqualitycompare != null) {
+			$scope.dataqualitycompare.filterChg = "y"
+		}
+		console.log($scope.selectDatasetAttr);
+		$scope.filterTableArray[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr;
+		$('#searchAttr').modal('hide')
+	}
+  $scope.onChangeOperator=function(index){
+		if ($scope.dataqualitycompare != null) {
+			$scope.dataqualitycompare.filterChg = "y"
+		}
+		if($scope.filterTableArray[index].operator =='BETWEEN'){
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
+		//	$scope.disableRhsType(['string','attribute','formula','dataset'])
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+			// if(['IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+			// 	$scope.disableRhsType([]);
+			// }else{
+			// 	$scope.disableRhsType(['string','integer','attribute','formula']);
+	 	    // }
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
+           // $scope.disableRhsType(['string','dataset']);
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		}
+		else{
+			//$scope.disableRhsType(['attribute','formula','dataset']);
+			$scope.filterTableArray[index].rhstype=$scope.rhsType[0];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+		}
+	}
 
   $scope.checkAllFilterRow = function () {
     angular.forEach($scope.filterTableArray, function (filter) {
       filter.selected = $scope.checkAll;
     });
-
   }
+
   $scope.addRowFilter = function () {
-    var filterinfo = {};
-
     if ($scope.filterTableArray == null) {
-      $scope.filterTableArray = [];
-    }
-    filterinfo.logicalOperator = $scope.logicalOperator[0];
-    filterinfo.operator = $scope.operator[0];
-
-    filterinfo.lhsFilter = $scope.lhsdatapodattributefilter[0]
-    $scope.filterTableArray.splice($scope.filterTableArray.length, 0, filterinfo);
+			$scope.filterTableArray = [];
+		}
+		var filertable = {};
+		filertable.islhsDatapod = false;
+		filertable.islhsFormula = false;
+		filertable.islhsSimple = true;
+		filertable.isrhsDatapod = false;
+		filertable.isrhsFormula = false;
+    filertable.isrhsSimple = true;
+    filertable.logicalOperator= $scope.filterTableArray.length !=0 ? $scope.logicalOperator[0] :"";
+		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0]
+		filertable.operator = $scope.operator[0].value
+		filertable.lhstype = $scope.lhsType[0]
+    filertable.rhstype =$scope.rhsType[0]
+    filertable.rhsvalue;
+		filertable.lhsvalue;
+		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
 
 
   }
@@ -407,11 +537,93 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     });
     newDataList[0].logicalOperator = "";
     $scope.filterTableArray = newDataList;
-
-
   }
-  $scope.onRefIntegrityCheck = function () {
+  $scope.selectlhsType = function (type, index) {
+		if (type == "string") {
+			$scope.filterTableArray[index].islhsSimple = true;
+			$scope.filterTableArray[index].islhsDatapod = false;
+			$scope.filterTableArray[index].lhsvalue;
+			$scope.filterTableArray[index].islhsFormula = false;
+		}
+		else if (type == "datapod") {
 
+			$scope.filterTableArray[index].islhsSimple = false;
+			$scope.filterTableArray[index].islhsDatapod = true;
+			$scope.filterTableArray[index].islhsFormula = false;
+		}
+		else if (type == "formula") {
+
+			$scope.filterTableArray[index].islhsFormula = true;
+			$scope.filterTableArray[index].islhsSimple = false;
+			$scope.filterTableArray[index].islhsDatapod = false;
+			DataqulityService.getFormulaByType($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.ruleLodeFormula = response.data;
+			}
+		}
+
+
+	}
+	$scope.selectrhsType = function (type, index) {
+
+		if (type == "string") {
+			$scope.filterTableArray[index].isrhsSimple = true;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsFormula = false;
+      $scope.filterTableArray[index].rhsvalue;
+      $scope.filterTableArray[index].isrhsDataset = false;
+		}
+		else if (type == "datapod") {
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = true;
+      $scope.filterTableArray[index].isrhsFormula = false;
+      $scope.filterTableArray[index].isrhsDataset = false;
+		}
+		else if (type == "formula") {
+			$scope.filterTableArray[index].isrhsFormula = true;
+			$scope.filterTableArray[index].isrhsSimple = false;
+      $scope.filterTableArray[index].isrhsDatapod = false;
+      $scope.filterTableArray[index].isrhsDataset = false;
+			DataqulityService.getFormulaByType($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				$scope.ruleLodeFormula = response.data;
+			}
+    }
+    else if (type == "dataset") {
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = true;
+			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
+			var onSuccressGetAllLatestDataset = function (response) {
+				$scope.allDataset = response;
+			}
+		}
+  }
+  $scope.onChangeSimple = function () {
+		if ($scope.dataqualitycompare != null) {
+			$scope.dataqualitycompare.filterChg = "y"
+		}
+	}
+	
+	// $scope.onChangeOperator=function(){
+	// 	if ($scope.dataqualitycompare != null) {
+	// 		$scope.dataqualitycompare.filterChg = "y"
+	// 	}
+	// }
+  $scope.onChangeAttribute=function(){
+		if ($scope.dataqualitycompare != null) {
+			$scope.dataqualitycompare.filterChg = "y"
+		}
+	}
+
+	$scope.onChangeFromula=function(){
+		if ($scope.dataqualitycompare != null) {
+			$scope.dataqualitycompare.filterChg = "y"
+		}
+	}
+
+  $scope.onRefIntegrityCheck = function () {
     DataqulityService.getAttributeByDatapod($scope.selectrefIntegrityCheck.uuid).then(function (response) {
       onSuccess(response.data)
     });
@@ -434,6 +646,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   }
 
   $scope.sbumitDataqulity = function () {
+    var upd_tag="N"
     var options = {}
     $scope.dataLoading = true;
     $scope.isshowmodel = true;
@@ -450,8 +663,11 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
-
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     dataqualityjosn.tags = tagArray;
     dataqualityjosn.active = $scope.dataqualitydata.active
@@ -502,7 +718,6 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     var refIntegrityCheck = {};
     var ref = {};
 
-
     if (typeof $scope.refIntegrityCheckoption != "undefined" && $scope.refIntegrityCheckoption != null && $scope.refIntegrityCheckoption != "") {
       ref.type = "datapod";
       ref.uuid = $scope.selectrefIntegrityCheck.uuid;
@@ -521,7 +736,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       if ($scope.dataqualitycompare.filter != null) {
         filter.uuid = $scope.dataqualitycompare.filter.uuid;
         filter.name = $scope.dataqualitycompare.filter.name;
-        //filter.version=$scope.rulecompare.filter.version;
+        //filter.version=$scope.dataqualitycompare.filter.version;
         filter.createdBy = $scope.dataqualitycompare.filter.createdBy;
         filter.createdOn = $scope.dataqualitycompare.filter.createdOn;
         filter.active = $scope.dataqualitycompare.filter.active;
@@ -533,69 +748,95 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     if ($scope.filterTableArray != null) {
       if ($scope.filterTableArray.length > 0) {
         for (var i = 0; i < $scope.filterTableArray.length; i++) {
-
           if ($scope.dataqualitycompare != null && $scope.dataqualitycompare.filter != null && $scope.dataqualitycompare.filter.filterInfo.length == $scope.filterTableArray.length) {
-            if ($scope.dataqualitycompare.filter.filterInfo[i].operand[0].attributeId != $scope.filterTableArray[i].lhsFilter.attributeId ||
-              $scope.filterTableArray[i].logicalOperator != $scope.dataqualitycompare.filter.filterInfo[i].logicalOperator ||
-              $scope.filterTableArray[i].filtervalue != $scope.dataqualitycompare.filter.filterInfo[i].operand[1].value ||
-              $scope.filterTableArray[i].operator != $scope.dataqualitycompare.filter.filterInfo[i].operator) {
-
-              dataqualityjosn.filterChg = "y";
-
-            } else {
-
+            if ($scope.dataqualitycompare.filterChg == "y") {
+						  dataqualityjosn.filterChg = "y";
+					  }
+            else {
               dataqualityjosn.filterChg = "n";
             }
-
-          } else {
-
+          } 
+          else {
             dataqualityjosn.filterChg = "y";
           }
-          var filterInfo = {};
-          var operand = [];
-          var operandfirst = {};
-          var reffirst = {};
-          var operandsecond = {};
-          var refsecond = {};
-          reffirst.type = "datapod"
-
-          reffirst.uuid = $scope.filterTableArray[i].lhsFilter.uuid
-          operandfirst.ref = reffirst;
-          operandfirst.attributeId = $scope.filterTableArray[i].lhsFilter.attributeId
-          operand[0] = operandfirst;
-          refsecond.type = "simple";
-          operandsecond.ref = refsecond;
-          if (typeof $scope.filterTableArray[i].filtervalue == "undefined") {
-            operandsecond.value = "";
-          } else {
-
-            operandsecond.value = $scope.filterTableArray[i].filtervalue
-          }
-
-          operand[1] = operandsecond;
+          var  filterInfo  = {};
+          var operand = []
+          var lhsoperand = {}
+          var lhsref = {}
+          var rhsoperand = {}
+          var rhsref = {};
           if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
-            filterInfo.logicalOperator = ""
-          } else {
-            filterInfo.logicalOperator = $scope.filterTableArray[i].logicalOperator
+            filterInfo.logicalOperator=""
           }
-          filterInfo.operator = $scope.filterTableArray[i].operator
-          filterInfo.operand = operand;
+          else{
+            filterInfo.logicalOperator=$scope.filterTableArray[i].logicalOperator
+          }
+				  filterInfo .operator = $scope.filterTableArray[i].operator;
+          if($scope.filterTableArray[i].lhstype.text == "string") {
+            lhsref.type = "simple";
+            lhsoperand.ref = lhsref;
+            lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
+          }
+          else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
+            if ($scope.rulsourcetype == "dataset") {
+              lhsref.type = "dataset";
+            }
+            else {
+              lhsref.type = "datapod";
+            }
+            lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
+            lhsoperand.ref = lhsref;
+            lhsoperand.attributeId = $scope.filterTableArray[i].lhsdatapodAttribute.attributeId;
+          }
+          else if ($scope.filterTableArray[i].lhstype.text == "formula") {
+            lhsref.type = "formula";
+            lhsref.uuid = $scope.filterTableArray[i].lhsformula.uuid;
+            lhsoperand.ref = lhsref;
+          }
+				  operand[0] = lhsoperand;
+          if ($scope.filterTableArray[i].rhstype.text == "string") {
+            rhsref.type = "simple";
+            rhsoperand.ref = rhsref;
+            rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+          }
+          else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
+            if ($scope.rulsourcetype == "dataset") {
+              rhsref.type = "dataset";
+            }
+            else {
+              rhsref.type = "datapod";
+            }
+            rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.filterTableArray[i].rhsdatapodAttribute.attributeId;
+          }
+          else if ($scope.filterTableArray[i].rhstype.text == "formula") {
+            rhsref.type = "formula";
+            rhsref.uuid = $scope.filterTableArray[i].rhsformula.uuid;
+            rhsoperand.ref = rhsref;
+          }
+          else if ($scope.filterTableArray[i].rhstype.text == "dataset") {
+            rhsref.type = "dataset";
+            rhsref.uuid = $scope.filterTableArray[i].rhsdataset.uuid;
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.filterTableArray[i].rhsdataset.attributeId;
+          }
+				  operand[1] = rhsoperand;
+			  	filterInfo .operand = operand;
           filterInfoArray[i] = filterInfo;
         }
         filter.filterInfo = filterInfoArray;
         dataqualityjosn.filter = filter;
       } else {
-
         dataqualityjosn.filter = null;
-        dataqualityjosn.filterChg = "n";
+        dataqualityjosn.filterChg = "y";
       }
     } else {
       dataqualityjosn.filter = null;
-      dataqualityjosn.filterChg = "n";
-
+      dataqualityjosn.filterChg = "y";
     }
     console.log(JSON.stringify(dataqualityjosn))
-    DataqulityService.submit(dataqualityjosn, "dqview").then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    DataqulityService.submit(dataqualityjosn, "dqview",upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       $scope.dataLoading = false;
       $scope.changemodelvalue()
@@ -639,21 +880,43 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 });
 
 
-DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService) {
+DataQualityModule.controller('DetailDataqualityGroupController', function ($state, $timeout, $filter, privilegeSvc, $stateParams, $location, $rootScope, $scope, DataqulityService,CommonService) {
   $scope.select = 'Rule Group';
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
     $scope.isversionEnable = false;
     $scope.isAdd = false;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if ($stateParams.mode == 'false') {
     $scope.isEdit = true;
     $scope.isversionEnable = true;
     $scope.isAdd = false;
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else {
     $scope.isAdd = true;
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.showgraphdiv = false;
   $scope.mode = " ";
   $scope.dqgroup = {};
@@ -669,12 +932,28 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     $scope.privileges = privilegeSvc.privileges['dqgroup'] || [];
     $scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
   });
+  
   var notify = {
     type: 'success',
     title: 'Success',
     content: '',
     timeout: 3000 //time in ms
   };
+
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+  }
+  
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+  $scope.getLovByType();
 
   $scope.showRulGroupePage = function () {
     $scope.showRuleGroup = true;
@@ -786,7 +1065,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   }
 
   $scope.selectVersion = function () {
-    $scope.myform.$dirty = false;
+    $scope.myform1.$dirty = false;
     DataqulityService.getOneByUuidAndVersion($scope.dqgroup.defaultVersion.uuid, $scope.dqgroup.defaultVersion.version, 'dqgroup').then(function (response) {
       onsuccess(response.data)
     });
@@ -834,7 +1113,8 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
 
   }
   $scope.sbumitRuleGroup = function () {
-    var dqruleGroupJson = {}
+    var dqruleGroupJson = {};
+    var upd_tag="N"
     $scope.dataLoading = true;
     $scope.isshowmodel = true;
     $scope.myform.$dirty = false;
@@ -850,7 +1130,12 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
+
     dqruleGroupJson.tags = tagArray;
     var ruleInfoArray = [];
     for (var i = 0; i < $scope.ruleTags.length; i++) {
@@ -865,7 +1150,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     dqruleGroupJson.ruleInfo = ruleInfoArray;
     dqruleGroupJson.inParallel = $scope.checkboxModelparallel
     console.log(JSON.stringify(dqruleGroupJson))
-    DataqulityService.submit(dqruleGroupJson, "dqgroup").then(function (response) {
+    DataqulityService.submit(dqruleGroupJson, "dqgroup",upd_tag).then(function (response) {
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
@@ -926,7 +1211,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
 });
 
 
-DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService) {
+DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService,privilegeSvc) {
 
   $scope.select = $stateParams.type;
   $scope.type = {
@@ -944,7 +1229,7 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
   $scope.currentPage = 1;
   $scope.pageSize = 10;
   $scope.paginationPageSizes = [10, 25, 50, 75, 100],
-    $scope.maxSize = 5;
+  $scope.maxSize = 5;
   $scope.bigTotalItems = 175;
   $scope.bigCurrentPage = 1;
   $scope.testgrid = false;
@@ -955,6 +1240,19 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     content: 'Dashboard deleted Successfully',
     timeout: 3000 //time in ms
   };
+  var privileges = privilegeSvc.privileges['comment'] || [];
+  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+    
+  });
+  $scope.metaType=dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName; 
   $scope.gridOptions = {
     rowHeight: 40,
     useExternalPagination: true,
@@ -1044,6 +1342,9 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     $scope.isD3RuleEexecGraphShow = false;
     if ($scope.type.text == "dqgroup") {
       $scope.isGraphRuleExec = false;
+      $scope.execDetail= $scope.rulegroupdatail;
+      $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
+  
     } else {
       $scope.isRuleTitle = false;
       $scope.isRuleSelect = true;
@@ -1174,6 +1475,8 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
   }
 
   $scope.getDqExec = function (data) {
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs["dq"].execType;
     $scope.ruleexecdetail = data
     $scope.isRuleResult = true;
     $scope.isRuleExec = false;
@@ -1215,6 +1518,8 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
       $scope.getDqExec(data);
       return;
     }
+    $scope.execDetail=data;
+    $scope.metaType=dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
     $scope.rulegroupdatail = data
     $scope.rGExecUuid = data.uuid;
     $scope.rGExecVersion = data.version;

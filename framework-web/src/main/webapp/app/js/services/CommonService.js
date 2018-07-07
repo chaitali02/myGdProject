@@ -13,6 +13,28 @@
       return $http({
         method: 'GET',
         url:fullUrl,
+       
+      }).then(function(response, status, headers) {
+        return response;
+      })
+    }
+    factory.httpGetWithCancelable = function(url,httpRequestCanceller) {
+      var fullUrl = baseUrl + url
+      return $http({
+        method: 'GET',
+        url:fullUrl,
+        timeout: httpRequestCanceller.promise
+       
+      }).then(function(response, status, headers) {
+        return response;
+      })
+    }
+    factory.httpGet1 = function(url) {
+      var fullUrl = baseUrl + url
+      return $http({
+        method: 'GET',
+        url:fullUrl,
+        responseType : 'arraybuffer'
       }).then(function(response, status, headers) {
         return response;
       })
@@ -235,7 +257,8 @@
       }
       return deferred.promise;
     }
-
+   
+    //use import
     this.SaveFile=function(filename,data,type){
       var url="admin/upload?action=edit&fileName="+filename+"&type="+type+"&fileType=zip"
   		var deferred = $q.defer();
@@ -246,15 +269,34 @@
              });
           }
          return deferred.promise;
-  	}
-    this.uploadFile=function(dataUuid,data,type){
-      var url="datapod/upload?action=edit&datapodUuid="+dataUuid+"&type="+type
+    }
+
+    //Genric for comment,filemanger,import,model
+    this.upload=function(filename,data,uuid,version,type,fileType){
+      var url="common/upload?action=edit&fileName="+filename+"&type="+type+"&uuid="+uuid+"&version="+version+"&fileType="+fileType
   		var deferred = $q.defer();
-  	    CommonFactory.uploadFile(url,data).then(function(response){onSuccess(response.data)});
+  	    CommonFactory.SaveFile(url,data).then(function(response){onSuccess(response.data)});
     	    var onSuccess=function(response){
       	    deferred.resolve({
                 data:response
              });
+          }
+         return deferred.promise;
+    }
+    //for dataod 
+    this.uploadFile=function(dataUuid,data,type){
+      var url="datapod/upload?action=edit&datapodUuid="+dataUuid+"&type="+type
+  		var deferred = $q.defer();
+  	    CommonFactory.uploadFile(url,data).then(function(response){onSuccess(response.data)},function(response){onError(response)});
+    	    var onSuccess=function(response){
+      	    deferred.resolve({
+                data:response
+             });
+          }
+          var onError = function (response) {
+            deferred.reject({
+              data: response
+            })
           }
          return deferred.promise;
   	}
@@ -301,6 +343,27 @@
     this.getBaseEntityByCriteria = function(type, name, userName, startDate, endDate, tags, active, published) {
       var deferred = $q.defer();
       var url = "metadata/getBaseEntityByCriteria?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;
+      CommonFactory.httpGetWithCancelable(url,deferred).then(function(response) {
+        OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        var result=response;
+        if(result){
+          for (var i = 0; i < result.length; i++) {
+            result[i].isupload=false;
+            result[i].index=i;
+          }
+        }
+        deferred.resolve({
+          data: result
+        });
+      }
+      return deferred.promise;
+    } /*End getBaseEntityByCriteria*/
+    
+    this.getParamListByRule = function(type, name, userName, startDate, endDate, tags, active, published) {
+      var deferred = $q.defer();
+      var url = "metadata/getParamListByRule?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;
       CommonFactory.httpGet(url).then(function(response) {
         OnSuccess(response.data)
       });
@@ -310,7 +373,21 @@
         });
       }
       return deferred.promise;
-    } /*End getBaseEntityByCriteria*/
+    } /*End getParamListByRule*/
+
+    this.getParamListByModel = function(type, name, userName, startDate, endDate, tags, active, published) {
+      var deferred = $q.defer();
+      var url = "metadata/getParamListByModel?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;
+      CommonFactory.httpGet(url).then(function(response) {
+        OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End getParamListByModel*/
 
     /*Start getAll*/
     this.getAll = function(type) {
@@ -342,6 +419,36 @@
       return deferred.promise;
     } /*End getGraphResults*/
 
+     /*Start getTreeGraphResults*/
+     this.getTreeGraphResults = function(uuid, version, degree) {
+      var deferred = $q.defer();
+      var url = "graph/getTreeGraphResults?action=view&uuid=" + uuid + "&version=" + version + "&degree=" + degree;
+      CommonFactory.httpGet(url).then(function(response) {
+        onSuccess(response.data)
+      });
+      var onSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End getTreeGraphResults*/
+
+       /*Start getTreeGraphResults*/
+       this.getOperatorByOperatorType = function(operatorType) {
+        var deferred = $q.defer();
+        var url = "operator/getOperatorByOperatorType?action=view&operatorType="+operatorType;
+        CommonFactory.httpGet(url).then(function(response) {
+          onSuccess(response.data)
+        });
+        var onSuccess = function(response) {
+          deferred.resolve({
+            data: response
+          });
+        }
+        return deferred.promise;
+      } /*End getTreeGraphResults*/
+
     this.execute = function(type, uuid, version, data) {
       var url;
       if (type.substr(-5) == 'group') {
@@ -354,6 +461,10 @@
         url = url + 'Group?uuid=' + uuid + "&version=" + version;
       } else {
         url = url + "?uuid=" + uuid + "&version=" + version;
+      }
+      if(type =="graphpod"){
+        url="";
+        url="graph/resgisterGraph?uuid="+uuid+"&version="+version+"&type="+type
       }
       url += '&action=execute'
       var deferred = $q.defer();
@@ -443,6 +554,7 @@
       else if(type == "operatortype"){
         url = "metadata/getParamListByOperatorType?uuid=" + uuid+"&type="+type;
       }
+    
       else if(type =='distribution'){
         url="metadata/getParamListByDistribution?uuid=" + uuid+"&type="+type;
       }
@@ -453,7 +565,7 @@
       var onSuccess = function(response) {
         var paramListHolder=[];
         var type=["ONEDARRAY","TWODARRAY"];
-        var type1=['distribution','attribute','attributes','datapod'];
+        var type1=['distribution','attribute','attributes','datapod','list'];
         if(response.length >0){
           for(var i=0;i<response.length;i++){
             var paramList={};
@@ -474,11 +586,21 @@
               paramList.isParamType=response[i].paramType;
               paramList.selectedParamValueType=response[i].paramType=="distribution" ?response[i].paramType:"datapod";
               paramList.paramValue=response[i].paramValue;
-              if(response[i].paramValue !=null){
+              if(response[i].paramValue !=null && response[i].paramValue !='list'){
               var selectedParamValue={};
               selectedParamValue.uuid=response[i].paramValue.ref.uuid;
               selectedParamValue.type=response[i].paramValue.ref.type;
               paramList.selectedParamValue=selectedParamValue;
+              }
+              if( response[i].paramValue && response[i].paramType =='list'){
+                paramList.selectedParamValueType="list";
+                var listvalues=response[i].paramValue.value.split(',');
+                var selectedParamValue={};
+                selectedParamValue.type=response[i].paramValue.ref.type;
+                selectedParamValue.value=listvalues[0];
+                paramList.paramValue=selectedParamValue;
+                paramList.selectedParamValue=selectedParamValue;
+                paramList.allListInfo=listvalues;
               }
             }else{
               paramList.isParamType="datapod";
@@ -593,6 +715,7 @@
               var attributedetail = {};
               attributedetail.uuid = response[j].uuid;
               attributedetail.datapodname = response[j].name;
+              attributedetail.type = type;
               attributedetail.name = response[j].attributes[i].name;
               attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
               attributedetail.attributeId = response[j].attributes[i].attributeId;
@@ -614,6 +737,7 @@
           for (var j = 0; j < response.length; j++) {
             var attributedetail = {};
             attributedetail.uuid = response[j].ref.uuid;
+            attributedetail.type = response[j].ref.type;
             attributedetail.datapodname = response[j].ref.name;
             attributedetail.name = response[j].attrName;
             attributedetail.attributeId = response[j].attrId;
@@ -636,6 +760,7 @@
           for (var j = 0; j < response.length; j++) {
             var attributedetail = {};
             attributedetail.uuid = response[j].ref.uuid;
+            attributedetail.type = response[j].ref.type;
             attributedetail.datapodname = response[j].ref.name;
             attributedetail.name = response[j].attrName;
             attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
@@ -674,6 +799,63 @@
   
       return deferred.promise;
     }
-  });
+    this.submit = function(data,type){
+      var deferred = $q.defer();
+      var url="common/submit?action=edit&type="+type
+      CommonFactory.httpPost(url,data).then(function (response) { onSuccess(response.data) });
+      var onSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    }
 
+    this.getCommentByType = function(uuid,type) {
+      var deferred = $q.defer();
+      var url;
+        url = "metadata/getCommentByType?uuid=" + uuid+"&type="+type;
+    
+      url += '&action=view'
+      CommonFactory.httpGet(url).then(function(response) {
+        onSuccess(response.data)
+      });
+      var onSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    }
+    
+    this.download=function(fileName,uuid,fileType){
+      var url="common/download?action=view&type=downloadexec&fileType="+fileType+"&fileName="+fileName+"&uuid="+uuid;
+      var deferred = $q.defer();
+      CommonFactory.httpGet1(url).then(function(response){onSuccess(response)});
+      var onSuccess=function(response){
+          deferred.resolve({
+              data:response
+          });
+      }
+      return deferred.promise;
+  }
+
+  this.getLovByType = function(type) {
+    var deferred = $q.defer();
+    var url;
+    url = "metadata/getLovByType?type="+type+'&action=view';
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
+    
+  });
+  
+  
 })();

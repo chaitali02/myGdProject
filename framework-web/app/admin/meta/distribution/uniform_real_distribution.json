@@ -2,7 +2,7 @@
   "id": "5ad9e701b1dfe3183aa2ace9",
   "uuid": "c5bfcdab-6435-4848-9214-6a878a865319",
   "version": "1524229889",
-  "name": "uniform_real_distribution",
+  "name": "Uniform Real Dist",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -43,8 +43,9 @@
             }
         }
   ],
-  "library": "SPARKML",
+  "library": "MATH3",
   "className": "org.apache.commons.math3.distribution.UniformRealDistribution",
+  "methodName" : "sample",
   "paramList": {
     "ref": {
       "type": "paramlist",

@@ -53,7 +53,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected HDFSInfo hdfsInfo;
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	protected BaseRule baseRule;
-	protected BaseRuleGroupExec baseGroupExec;
 	protected ExecutorFactory execFactory;
 	protected Authentication authentication;
 	protected CommonServiceImpl<?> commonServiceImpl;
@@ -185,26 +184,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	public void setBaseRule(BaseRule baseRule) {
 		this.baseRule = baseRule;
 	}
-
-
-
-	/**
-	 * @return the baseGroupExec
-	 */
-	public BaseRuleGroupExec getBaseGroupExec() {
-		return baseGroupExec;
-	}
-
-
-
-	/**
-	 * @param baseGroupExec the baseGroupExec to set
-	 */
-	public void setBaseGroupExec(BaseRuleGroupExec baseGroupExec) {
-		this.baseGroupExec = baseGroupExec;
-	}
-
-
 
 	/**
 	 * @return the execFactory
@@ -420,10 +399,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @param datapodKey
 	 * @return
 	 */
-	protected String getFileName(BaseRuleGroupExec baseGroupExec, BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey) {
-		return String.format("/%s/%s/%s", baseRule.getUuid(), baseRule.getVersion(),
-				(baseGroupExec != null && StringUtils.isNotBlank(baseGroupExec.getVersion()))
-				? baseGroupExec.getVersion() : baseRuleExec.getVersion());
+	protected String getFileName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey) {
+		return String.format("/%s/%s/%s", baseRule.getUuid(), baseRule.getVersion(), baseRuleExec.getVersion());
 	}
 	
 	/**
@@ -434,12 +411,10 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @param datapodKey
 	 * @return
 	 */
-	protected String getTableName(BaseRuleGroupExec baseGroupExec, BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext) {
+	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext) {
 		if (execContext == null || execContext.equals(ExecContext.spark) || execContext.equals(ExecContext.FILE) 
 				|| execContext.equals(ExecContext.livy_spark)) {
-			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
-					(baseGroupExec != null && StringUtils.isNotBlank(baseGroupExec.getVersion()))
-							? baseGroupExec.getVersion() : baseRuleExec.getVersion());
+			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
 		}
 		Datapod dp = null;
 		try {
@@ -499,7 +474,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		
 		try {
 			// Form file and table name
-			String filePath = getFileName(baseGroupExec, baseRule, baseRuleExec, datapodKey);
+			String filePath = getFileName(baseRule, baseRuleExec, datapodKey);
 			String tableName = null;
             
 			if (StringUtils.isBlank(baseRuleExec.getExec())) {
@@ -519,7 +494,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			}
 			exec = execFactory.getExecutor(execContext.toString());
 			
-			tableName = getTableName(baseGroupExec, baseRule, baseRuleExec, datapodKey, execContext);
+			tableName = getTableName(baseRule, baseRuleExec, datapodKey, execContext);
 			Datapod datapod = null;
 			ResultSetHolder rsHolder = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
@@ -531,7 +506,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, datapod, "overwrite", appUuid);
 				else {
 					String sql = helper.buildInsertQuery(execContext.toString(), tableName, datapod, baseRuleExec.getExec());
-					exec.executeSql(sql, null);
+					exec.executeSql(sql, appUuid);
 				}
 			} else {
 				rsHolder = exec.executeAndRegister(baseRuleExec.getExec(), tableName, appUuid);
@@ -567,7 +542,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}			
-			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();

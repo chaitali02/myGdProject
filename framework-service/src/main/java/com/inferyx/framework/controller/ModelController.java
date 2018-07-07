@@ -21,8 +21,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.spark.ml.param.ParamMap;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jettison.json.JSONObject;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,13 +35,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
-import com.inferyx.framework.datascience.Operator;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.Simulate;
@@ -221,15 +216,16 @@ public class ModelController {
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
 		try {
-			
+
+			RunMode runMode = Helper.getExecutionMode(mode);
 			Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictUUID, predictVersion,
 					MetaType.predict.toString());
 
 			PredictExec predictExec = null;
 			predictExec = modelServiceImpl.create(predict, execParams, null, predictExec);
-			modelServiceImpl.predict(predict, execParams, predictExec);
+			modelServiceImpl.predict(predict, execParams, predictExec, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -254,7 +250,7 @@ public class ModelController {
 			return modelServiceImpl.simulate(simulate, execParams, simulateExec, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e);
 			
 		}
 	}
@@ -275,7 +271,7 @@ public class ModelController {
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
-			modelServiceImpl.setRunMode(runMode);
+
 			TrainExec trainExec = null;
 			List<ParamMap> paramMapList = new ArrayList<>();
 
@@ -288,16 +284,15 @@ public class ModelController {
 				paramMapList = paramSetServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion());
 			}
 			if (paramMapList.size() > 0) {
-
 				for (ParamMap paramMap : paramMapList) {
 					trainExec = modelServiceImpl.create(train, model, execParams, paramMap, trainExec);
 					Thread.sleep(1000); // Should be parameterized in a class
-					modelServiceImpl.train(train, model, trainExec, execParams, paramMap);
+					modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
 					trainExec = null;
 				}
 			} else {
 				trainExec = modelServiceImpl.create(train, model, execParams, null, trainExec);
-				modelServiceImpl.train(train, model, trainExec, execParams, null);
+				modelServiceImpl.train(train, model, trainExec, execParams, null, runMode);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -394,5 +389,79 @@ public class ModelController {
 		response = modelServiceImpl.downloadLog(trainExecUUID, trainExecVersion, response, runMode);
 	}
 
+	@RequestMapping(value = "/getTrainByModel", method = RequestMethod.GET)
+	public List<Train> getTrainByModel(@RequestParam(value = "uuid") String modelUuid,
+									   @RequestParam(value = "version", required = false) String modelVersion,
+									   @RequestParam(value = "type", required = false) String type,
+									   @RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		return modelServiceImpl.getTrainByModel(modelUuid, modelVersion);
+	}	
 	
+	@RequestMapping(value = "/train/kill",  method = RequestMethod.GET)
+	public void killTrain(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action) {
+		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.trainExec);
+	}
+	
+	@RequestMapping(value = "/train/restart",  method = RequestMethod.GET)
+	public void restartTrain(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+							@RequestBody(required = false) ExecParams execParams,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action,
+							@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		modelExecServiceImpl.restartTrain(type, trainExecUuid, trainExecVersion, execParams, runMode);
+	}
+	
+	@RequestMapping(value = "/predict/kill",  method = RequestMethod.GET)
+	public void killPredict(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action) {
+		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.predictExec);
+	}
+	
+	@RequestMapping(value = "/simulate/kill",  method = RequestMethod.GET)
+	public void killSimulate(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action) {
+		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.simulateExec);
+	}
+	
+	@RequestMapping(value = "/predict/restart",  method = RequestMethod.GET)
+	public void restartPredict(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+							@RequestBody(required = false) ExecParams execParams,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action,
+							@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		modelExecServiceImpl.restartPredict(type, trainExecUuid, trainExecVersion, execParams, runMode);
+	}
+	
+	@RequestMapping(value = "/simulate/restart",  method = RequestMethod.GET)
+	public void restartSimulate(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+							@RequestBody(required = false) ExecParams execParams,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action,
+							@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		modelExecServiceImpl.restartSimulate(type, trainExecUuid, trainExecVersion, execParams, runMode);
+	}
+	
+	@RequestMapping(value = "/upload", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
+	public @ResponseBody String upload(@RequestParam("file") MultipartFile file,
+									   @RequestParam(value = "extension") String extension,
+									   @RequestParam(value = "fileType") String fileType,
+									   @RequestParam(value = "type", required = false) String type,
+									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, ParseException, JSONException {
+	 return modelServiceImpl.upload(file, extension, fileType, fileName, type);
+	}
+	
+
 }

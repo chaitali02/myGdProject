@@ -1,7 +1,7 @@
 
 AdminModule = angular.module('AdminModule');
 
-AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, CommonService, $state, $scope, $stateParams, $sessionStorage, $timeout, MetadataDatasourceSerivce) {
+AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, CommonService, $state,$rootScope,$scope, $stateParams, $sessionStorage, $timeout, MetadataDatasourceSerivce,$filter ) {
 
 	$scope.isHiveFieldDisabled = true;
 	$scope.isFileFieldDisabled = true;
@@ -9,15 +9,38 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
+
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.mode = " ";
 	$scope.datasourcedata;
 	$scope.showFrom = true;
@@ -34,6 +57,19 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['datasource'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['datasource'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -194,6 +230,7 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 
 	/*Start Submit*/
 	$scope.submitDatasource = function () {
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -221,13 +258,17 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
 		}
 		datasourceJson.tags = tagArray
-		MetadataDatasourceSerivce.submit(datasourceJson, 'datasource').then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
+		MetadataDatasourceSerivce.submit(datasourceJson, 'datasource',upd_tag).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
-			$scope.changemodelvalue();
+			// $scope.changemodelvalue();
 			
 			notify.type = 'success',
 			notify.title = 'Success',

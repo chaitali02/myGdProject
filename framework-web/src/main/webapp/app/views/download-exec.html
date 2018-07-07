@@ -26,6 +26,7 @@
         </div>
     </div><!-- END PAGE HEADER-->
     <br>
+    <div  options="dirOptions" type="'downloadExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="downloadexecdata" comment-panel-directive></div>
 
     <!-- BEGIN MAIN CONTENT -->
     <div class="row" >
@@ -41,7 +42,7 @@
     		         	<a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showdownloadexec==true? 'currentpage':'notcurrentpage'" data-ng-click="showdownloadexecPage()"style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a>
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showdownloadexec==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(downloadexecdata.uuid,downloadexecdata.version)" style="height:14px;">
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showdownloadexec==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(downloadexecdata.uuid,downloadexecdata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
                         <a  title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
@@ -54,7 +55,7 @@
            			</div>
     	   		</div>
 
-                <div class="portlet-body form" >
+                <div class="portlet-body">
                    <!-- BEGIN FORM-->
                     <div class="form-body graph-body" ng-if="showgraphdiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
@@ -63,7 +64,7 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body " id="graphWrapper" graph-directive uuid="downloadexecdata.uuid" version="downloadexecdata.version">
+                        <div class="form-body show-graph-body " id="graphWrapper" tree-graph-directive uuid="downloadexecdata.uuid" version="downloadexecdata.version">
                         </div>
                     </div>
 

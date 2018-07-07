@@ -1,0 +1,73 @@
+CREATE DATABASE  IF NOT EXISTS `framework`;
+USE `framework`;
+DROP TABLE IF EXISTS `dim_date`;
+CREATE TABLE `dim_date` (
+  `date_id` int(11) NOT NULL DEFAULT '0',
+  `date_type` varchar(45) DEFAULT NULL,
+  `date_val` varchar(45) DEFAULT NULL,
+  `day_num_of_week` int(11) DEFAULT NULL,
+  `day_num_of_month` int(11) DEFAULT NULL,
+  `day_num_of_quarter` int(11) DEFAULT NULL,
+  `day_num_of_year` int(11) DEFAULT NULL,
+  `day_num_absolute` int(11) DEFAULT NULL,
+  `day_of_week_name` varchar(45) DEFAULT NULL,
+  `day_of_week_abbreviation` varchar(45) DEFAULT NULL,
+  `julian_day_num_of_year` int(11) DEFAULT NULL,
+  `julian_day_num_absolute` int(11) DEFAULT NULL,
+  `is_weekday` varchar(45) DEFAULT NULL,
+  `is_usa_civil_holiday` varchar(45) DEFAULT NULL,
+  `is_last_day_of_week` varchar(45) DEFAULT NULL,
+  `is_last_day_of_month` varchar(45) DEFAULT NULL,
+  `is_last_day_of_quarter` varchar(45) DEFAULT NULL,
+  `is_last_day_of_year` varchar(45) DEFAULT NULL,
+  `is_last_day_of_fiscal_month` varchar(45) DEFAULT NULL,
+  `is_last_day_of_fiscal_quarter` varchar(45) DEFAULT NULL,
+  `is_last_day_of_fiscal_year` varchar(45) DEFAULT NULL,
+  `week_of_year_begin_date` varchar(45) DEFAULT NULL,
+  `week_of_year_begin_date_key` int(11) DEFAULT NULL,
+  `week_of_year_end_date` varchar(45) DEFAULT NULL,
+  `week_of_year_end_date_key` int(11) DEFAULT NULL,
+  `week_of_month_begin_date` varchar(45) DEFAULT NULL,
+  `week_of_month_begin_date_key` int(11) DEFAULT NULL,
+  `week_of_month_end_date` varchar(45) DEFAULT NULL,
+  `week_of_month_end_date_key` int(11) DEFAULT NULL,
+  `week_of_quarter_begin_date` varchar(45) DEFAULT NULL,
+  `week_of_quarter_begin_date_key` int(11) DEFAULT NULL,
+  `week_of_quarter_end_date` varchar(45) DEFAULT NULL,
+  `week_of_quarter_end_date_key` int(11) DEFAULT NULL,
+  `week_num_of_month` int(11) DEFAULT NULL,
+  `week_num_of_quarter` int(11) DEFAULT NULL,
+  `week_num_of_year` int(11) DEFAULT NULL,
+  `month_num_of_year` int(11) DEFAULT NULL,
+  `month_num_overall` varchar(45) DEFAULT NULL,
+  `month_name` varchar(45) DEFAULT NULL,
+  `month_name_abbreviation` varchar(45) DEFAULT NULL,
+  `month_begin_date` varchar(45) DEFAULT NULL,
+  `month_begin_date_key` int(11) DEFAULT NULL,
+  `month_end_date` varchar(45) DEFAULT NULL,
+  `month_end_date_key` int(11) DEFAULT NULL,
+  `quarter_num_of_year` int(11) DEFAULT NULL,
+  `quarter_num_overall` int(11) DEFAULT NULL,
+  `quarter_begin_date` varchar(45) DEFAULT NULL,
+  `quarter_begin_date_key` int(11) DEFAULT NULL,
+  `quarter_end_date` varchar(45) DEFAULT NULL,
+  `quarter_end_date_key` int(11) DEFAULT NULL,
+  `year_num` int(11) DEFAULT NULL,
+  `year_begin_date` varchar(45) DEFAULT NULL,
+  `year_begin_date_key` int(11) DEFAULT NULL,
+  `year_end_date` varchar(45) DEFAULT NULL,
+  `year_end_date_key` int(11) DEFAULT NULL,
+  `yyyy_mm` varchar(45) DEFAULT NULL,
+  `yyyy_mm_dd` varchar(45) DEFAULT NULL,
+  `dd_mon_yyyy` varchar(45) DEFAULT NULL,
+  `load_date` varchar(45) NOT NULL DEFAULT '',
+  PRIMARY KEY (`date_id`,`load_date`),
+  UNIQUE KEY `date_val` (`date_val`,`load_date`)
+);
+
+ALTER TABLE `dim_date` PARTITION BY KEY(load_date) PARTITIONS 1;
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/dim_date.csv' IGNORE INTO TABLE dim_date FIELDS TERMINATED BY ','  LINES TERMINATED BY '\r' IGNORE 1 LINES;
+
+
+
+

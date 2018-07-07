@@ -6,8 +6,7 @@
     "createdBy" : {
         "ref" : {
             "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196"
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
         },
         "value" : null
     },
@@ -15,6 +14,7 @@
     "tags" : [],
     "active" : "Y",
     "published" : "N",
+    "paramListType" : "model",
     "appInfo" : [ 
      		{
             "ref" : {

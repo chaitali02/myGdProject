@@ -102,8 +102,8 @@ public class RuleController {
 		
 		try {
 			ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion, MetaType.ruleExec.toString());
-			ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
-			ruleExec = ruleServiceImpl.execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(), metaExecutor, ruleExec, null, taskList, execParams, runMode);
+			ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
+			ruleExec = ruleServiceImpl.execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 		} catch (Exception e) {
 			try {
 				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
@@ -138,13 +138,13 @@ public class RuleController {
 					paramSetHolder.setRef(ref);
 					execParams.setParamSetHolder(paramSetHolder);
 					ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
-					ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
-					ruleExec = ruleServiceImpl.execute(ruleUUID, ruleVersion, metaExecutor, ruleExec, null, taskList, execParams, runMode);
+					ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
+					ruleExec = ruleServiceImpl.execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 				}
 			} else {
 				ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
-				ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
-				ruleExec = ruleServiceImpl.execute(ruleUUID, ruleVersion, metaExecutor, ruleExec, null, taskList, execParams, runMode);
+				ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
+				ruleExec = ruleServiceImpl.execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 			}
 		} catch (Exception e) {
 			try {

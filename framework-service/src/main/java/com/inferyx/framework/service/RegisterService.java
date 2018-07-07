@@ -15,23 +15,20 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.hive.conf.HiveConf;
-import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
-import org.apache.hadoop.hive.metastore.api.MetaException;
-import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -45,7 +42,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.connector.ConnectionHolder;
+import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
@@ -53,6 +51,7 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DagStatusHolder;
@@ -110,9 +109,9 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.CSVRegister;
 import com.inferyx.framework.register.HiveRegister;
-import com.inferyx.framework.register.ImpalaRegister;
 import com.inferyx.framework.register.MySqlRegister;
 import com.inferyx.framework.register.OracleRegister;
+import com.inferyx.framework.register.PostGresRegister;
 import com.inferyx.framework.view.metadata.DQView;
 import com.inferyx.framework.view.metadata.DashboardView;
 import com.inferyx.framework.view.metadata.DatasetView;
@@ -124,15 +123,9 @@ public class RegisterService {
 
 	static final Logger logger = Logger.getLogger(RegisterService.class);
 	@Autowired
-	private AlgorithmServiceImpl algorithmServiceImpl;
-	@Autowired
-	private ModelServiceImpl modelServiceImpl;
-	@Autowired
 	private ModelExecServiceImpl modelExecServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	private FilterServiceImpl filterServiceImpl;
 	@Autowired
 	private RelationServiceImpl relationServiceImpl;
 	@Autowired
@@ -140,15 +133,9 @@ public class RegisterService {
 	@Autowired
 	private DagServiceImpl dagServiceImpl;
 	@Autowired
-	private MapServiceImpl mapServiceImpl;
-	@Autowired
 	private ExpressionServiceImpl expressionServiceImpl;
 	@Autowired
-	private MetadataServiceImpl metadataServiceImpl;
-	@Autowired
 	private DagExecServiceImpl dagExecServiceImpl;
-	@Autowired
-	private ConditionServiceImpl conditionServiceImpl;
 	@Autowired
 	private VizpodServiceImpl vizpodServiceImpl;
 	@Autowired
@@ -157,45 +144,19 @@ public class RegisterService {
 	 * @Autowired private GroupServiceImpl groupServiceImpl;
 	 */
 	@Autowired
-	private LoadServiceImpl loadServiceImpl;
-	@Autowired
 	private UserServiceImpl userServiceImpl;
 	@Autowired
 	private SessionServiceImpl sessionServiceImpl;
 	@Autowired
 	private ActivityServiceImpl activityServiceImpl;
 	@Autowired
-	private RoleServiceImpl roleServiceImpl;
-	@Autowired
-	private GroupServiceImpl groupServiceImpl;
-	@Autowired
-	private PrivilegeServiceImpl privilegeServiceImpl;
-	@Autowired
-	private GraphServiceImpl graphServiceImpl;
-	@Autowired
-	private DimensionServiceImpl dimensionServiceImpl;
-	@Autowired
-	private MeasureServiceImpl measureServiceImpl;
-	@Autowired
-	private VizExecServiceImpl vizExecServiceImpl;
-	@Autowired
-	private RuleGroupServiceImpl ruleGroupServiceImpl;
-	@Autowired
 	private DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	private ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	private DatasourceServiceImpl datasourceServiceImpl;
-	@Autowired
-	private DashboardServiceImpl dashboardServiceImpl;
 	@Autowired
 	private DatasetViewServiceImpl datasetViewServiceImpl;
 	@Autowired
 	private DashboardViewServiceImpl dashboardViewServiceImpl;
 	@Autowired
 	private DataQualServiceImpl dataQualServiceImpl;
-	@Autowired
-	private DataQualGroupServiceImpl dataQualGroupServiceImpl;
 	@Autowired
 	private DataQualExecServiceImpl dataQualExecServiceImpl;
 	@Autowired
@@ -217,11 +178,11 @@ public class RegisterService {
 	@Autowired
 	private HiveRegister hiveRegister;
 	@Autowired
-	private ImpalaRegister impalaRegister;
-	@Autowired
 	private MySqlRegister mysqlRegister;
 	@Autowired
 	private OracleRegister oracleRegister;
+	@Autowired
+	private PostGresRegister postGresRegister;
 	@Autowired
 	private LoadExecServiceImpl loadExecServiceImpl;
 	@Autowired
@@ -231,23 +192,15 @@ public class RegisterService {
 	@Autowired
 	private MapExecServiceImpl mapExecServiceImpl;
 	@Autowired
-	private ProfileServiceImpl profileServiceImpl;
-	@Autowired
 	private ProfileExecServiceImpl profileExecServiceImpl;
 	@Autowired
-	private ProfileGroupServiceImpl profileGroupServiceImpl;
-	@Autowired
 	private ProfileGroupExecServiceImpl profileGroupExecServiceImpl;
-	@Autowired
-	private ParamListServiceImpl paramListServiceImpl;
 	@Autowired
 	private ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ConnectionFactory connectionFactory;
 	@Autowired
 	protected ExecutorFactory execFactory;
-    @Autowired
-    private MetadataUtil daoRegister;
     @Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
     @Autowired
@@ -808,11 +761,12 @@ public class RegisterService {
 		return result;
 	}
 
-	public String save(Map<String, Object> operator, String type) throws Exception {
+	public BaseEntity save(Map<String, Object> operator, String type) throws Exception {
 		// Session session=sessionServiceImpl.findOneById(sessionId);
 		// String uuid=session.getUserInfo().getRef().getUuid();
 
-		String Id = "";
+//		String Id = "";
+		BaseEntity baseEntity=null;
 		if (type != null && !type.isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
 			type = type.toLowerCase();
@@ -928,7 +882,7 @@ public class RegisterService {
 				break;*/
 			case "datasetview":
 				DatasetView datasetViewOptr = mapper.convertValue(operator, DatasetView.class);
-				Id = datasetServiceImpl.save(datasetViewOptr).getId();
+				baseEntity = datasetServiceImpl.save(datasetViewOptr);
 				break;
 			/*case "rulegroup":
 				RuleGroup ruleGroupOptr = mapper.convertValue(operator, RuleGroup.class);
@@ -960,11 +914,11 @@ public class RegisterService {
 				break;*/
 			case "dqview":
 				DQView dqViewOptr = mapper.convertValue(operator, DQView.class);
-				Id = dataQualServiceImpl.save(dqViewOptr).getId();
+				baseEntity = dataQualServiceImpl.save(dqViewOptr);
 				break;
 			case "ruleview":
 				RuleView ruleViewOptr = mapper.convertValue(operator, RuleView.class);
-				Id = ruleServiceImpl.save(ruleViewOptr).getId();
+				baseEntity =  ruleServiceImpl.save(ruleViewOptr);
 				break;
 			/*case "rule":
 				Rule ruleOptr = mapper.convertValue(operator, Rule.class);
@@ -1008,7 +962,7 @@ public class RegisterService {
 				break;*/
 			case "dashboardview":
 				DashboardView dashboardView = mapper.convertValue(operator, DashboardView.class);
-				Id = dashboardViewServiceImpl.save(dashboardView).getId();
+				baseEntity =  dashboardViewServiceImpl.save(dashboardView);
 				break;
 			/*case "algorithm":
 				Algorithm algorithm = mapper.convertValue(operator, Algorithm.class);
@@ -1032,11 +986,12 @@ public class RegisterService {
 				break;*/
 			case "reconview":
 				ReconView reconViewOptr = mapper.convertValue(operator, ReconView.class);
-				Id = reconViewServiceImpl.save(reconViewOptr).getId();
+				baseEntity = reconViewServiceImpl.save(reconViewOptr);
+				
 				break;
 			}
 		}
-		return Id;
+		return baseEntity;
 	}
 
 	/********************** UNUSED **********************/
@@ -2551,6 +2506,11 @@ public class RegisterService {
 		return mongoGraphServiceImpl.getGraphJson(uuid,version,degree);
 
 	}
+	public String getTreeGraphResults(String uuid,String version, String degree) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		//return graphServiceImpl.getGraphJson(uuid,version,degree);
+		return mongoGraphServiceImpl.getTreeGraphJson(uuid,version,degree);
+
+	}
 	
 	/* public String getGraphJson() { 
 		 return mongoGraphServiceImpl.getGraphJson();
@@ -3282,7 +3242,7 @@ public class RegisterService {
 		return result;
 	}
 
-	public List<Registry> getRegistryByDatasource(String datasourceUuid,String status) throws JsonProcessingException {
+	public List<Registry> getRegistryByDatasource(String datasourceUuid,String status) throws IOException, SQLException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
@@ -3292,261 +3252,121 @@ public class RegisterService {
 		List<Registry> registerList = new ArrayList<Registry>();
 		List<Registry> unRegisterList = new ArrayList<Registry>();
 
-		if (datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) | datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			String hiveDBName = datasource.getDbname();
-			String hiveHost = datasource.getHost();
-			HiveConf conf = new HiveConf(SessionState.class);
-			conf.set("fs.default.name", "hdfs://" + hiveHost + ":8020");
-			conf.set("hive.metastore.warehouse.dir", "/user/hive/warehouse");
-			conf.set("yarn.nodemanager.hostname", hiveHost);
-			conf.set("yarn.resourcemanager.hostname", hiveHost);
-			List<String> tables;
-			try {
-				HiveMetaStoreClient metastore = new HiveMetaStoreClient(conf);
-				SessionState.start(new SessionState(conf));
-
-				tables = metastore.getAllTables(hiveDBName);
-				logger.info("Tables are :: " + tables);
-				
-				List<Datapod> datapodList = null;
-				int i = 1;
-				for (String table : tables) {
-					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);					
-					if (datapodList.size() > 0) {
-						for (Datapod datapod : datapodList) {
-							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setDesc(datapod.getDesc());
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setStatus("Registered");
-									registryList.add(registry);
-									break;
-								} else {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(null);
-									registry.setDesc(null);
-									registry.setRegisteredOn(null);
-									registry.setStatus("UnRegistered");
-									registryList.add(registry);
-								}
-							}
-						}
-					} else {
-						Registry registry = new Registry();
-						registry.setId(Integer.toString(i));
-						registry.setName(table);
-						registry.setRegisteredOn(null);
-						registry.setDesc(null);
-						registry.setRegisteredOn(null);
-						registry.setStatus("UnRegistered");
-						registryList.add(registry);
-
-					}
-					i++;
+		if (datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) 
+				|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+//			List<String> tables = new ArrayList<>();
+			Map<String, String> tablesWithPath = new Hashtable<>();
+			try {				
+				IConnector connector = connectionFactory.getConnector(datasource.getType());
+				ConnectionHolder connectionHolder = connector.getConnection();
+				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+				DatabaseMetaData dbMetaData = con.getMetaData();
+				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
+				while(rs.next()) {
+					tablesWithPath.put(rs.getString(3), (datasource.getDbname()+"."+rs.getString(3)));
+//					tables.add(rs.getString(3));
 				}
+				logger.info("Tables are :: " + tablesWithPath);				
+				List<Registry> datapodList = createDatapodList(tablesWithPath, datasourceUuid, appUuid);
+				registryList.addAll(datapodList);
 
-			} catch (MetaException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		//For Mysql
-		else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-			List<String> tables = new ArrayList<String>();
-			try {
-				Class.forName(datasource.getDriver());
-				Connection con = DriverManager.getConnection("jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort()
-						+ "/" + datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
-				DatabaseMetaData md = con.getMetaData();
-				ResultSet rs = md.getTables(null, null, "%", null);
-				
-				while (rs.next()) 
-					tables.add(rs.getString(3));
-				logger.info("Mysql Tables :  " + tables);
-				rs.close();				
-
-				List<Datapod> datapodList = null;
-				int i = 1;
-				for (String table : tables) {
-					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
-					if (datapodList.size() > 0){
-						for (Datapod datapod : datapodList) {
-							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setDesc(datapod.getDesc());
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setStatus("Registered");
-									registryList.add(registry);
-									break;
-								} else {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(null);
-									registry.setDesc(null);
-									registry.setRegisteredOn(null);
-									registry.setStatus("UnRegistered");
-									registryList.add(registry);
-
-								}
-							}
-						}
-					} else {
-						Registry registry = new Registry();
-						registry.setId(Integer.toString(i));
-						registry.setName(table);
-						registry.setRegisteredOn(null);
-						registry.setDesc(null);
-						registry.setRegisteredOn(null);
-						registry.setStatus("UnRegistered");
-						registryList.add(registry);
-
-					}
-					i++;
-				}
-			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException
-					| ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-		}
-		// For Oracle
-		else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-			List<String> tables = new ArrayList<String>();
-
-			try {			
-				Class.forName(datasource.getDriver());
-				Connection con = DriverManager.getConnection("jdbc:oracle:thin:@" + datasource.getHost() + ":"
-							+ datasource.getPort() + "/" + datasource.getSid(), datasource.getUsername(),
-							datasource.getPassword());
-				Statement stmt = con.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT table_name FROM dba_tables WHERE owner='"+datasource.getDbname().toUpperCase()+"'");
-
-				while (rs.next()) 
-					tables.add(rs.getString(1));				
-				logger.info("Oracle Tables :  " + tables);
-				rs.close();
-
-				List<Datapod> datapodList = null;
-				int i = 1;
-				for (String table : tables) {
-					datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
-					if (datapodList.size() > 0){
-						for (Datapod datapod : datapodList) {
-							for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-								if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setDesc(datapod.getDesc());
-									registry.setRegisteredOn(datapod.getCreatedOn());
-									registry.setStatus("Registered");
-									registryList.add(registry);
-									break;
-								} else {
-									Registry registry = new Registry();
-									registry.setId(Integer.toString(i));
-									registry.setName(table);
-									registry.setRegisteredOn(null);
-									registry.setDesc(null);
-									registry.setRegisteredOn(null);
-									registry.setStatus("UnRegistered");
-									registryList.add(registry);
-
-								}
-							}
-						}
-					} else {
-						Registry registry = new Registry();
-						registry.setId(Integer.toString(i));
-						registry.setName(table);
-						registry.setRegisteredOn(null);
-						registry.setDesc(null);
-						registry.setRegisteredOn(null);
-						registry.setStatus("UnRegistered");
-						registryList.add(registry);
-
-					}
-					i++;
-				}
-			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException | ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-		} else if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+		//For FILE
+		else if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			File folder = new File(datasource.getPath());
 			File[] listOfFiles = folder.listFiles();
-			List<String> fileList = new ArrayList<String>();
+//			List<String> fileList = new ArrayList<String>();
+			Map<String, String> tablesWithPath = new Hashtable<>();
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
 					logger.info("File " + listOfFiles[i].getName());
 					String fileName = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf("."));
 					logger.info(fileName);
-					fileList.add(fileName);
+//					fileList.add(fileName);
+					String path = datasource.getPath() + listOfFiles[i].getName();
+					tablesWithPath.put(fileName, path);
 				} else if (listOfFiles[i].isDirectory()) {
 					logger.info("Directory " + listOfFiles[i].getName());
 				}
 			}
-			List<Datapod> datapodList = null;
-			int i = 1;
-			for (String table : fileList) {
-				datapodList = datapodServiceImpl.SearchDatapodByName(table, datasourceUuid);
-				if (datapodList.size() > 0) {
-					for (Datapod datapod : datapodList) {
-						for (int j = 0; j < datapod.getAppInfo().size(); j++) {
-							if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
-								Registry registry = new Registry();
-								registry.setId(Integer.toString(i));
-								registry.setName(table);
-								registry.setRegisteredOn(datapod.getCreatedOn());
-								registry.setDesc(datapod.getDesc());
-								registry.setRegisteredOn(datapod.getCreatedOn());
-								registry.setRegisteredBy(datapod.getCreatedBy().getRef().getName());
-								registry.setStatus("Registered");
-								registryList.add(registry);
-								break;
-							} else {
-								Registry registry = new Registry();
-								registry.setId(Integer.toString(i));
-								registry.setName(table);
-								registry.setRegisteredOn(null);
-								registry.setDesc(null);
-								registry.setRegisteredOn(null);
-								registry.setStatus("UnRegistered");
-								registryList.add(registry);
-
-							}
-						}
-					}
-				} else {
-					Registry registry = new Registry();
-					registry.setId(Integer.toString(i));
-					registry.setName(table);
-					registry.setRegisteredOn(null);
-					registry.setDesc(null);
-					registry.setRegisteredOn(null);
-					registry.setStatus("UnRegistered");
-					registryList.add(registry);
-
-				}
-				i++;
-			}
+			List<Registry> datapodList = createDatapodList(tablesWithPath, datasourceUuid, appUuid);
+			registryList.addAll(datapodList);
 		}
-		
+//		//For Mysql
+//		else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+//			List<String> tables = new ArrayList<String>();
+//			try {
+//				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
+//				ConnectionHolder connectionHolder = connector.getConnection();
+//				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+//				DatabaseMetaData dbMetaData = con.getMetaData();
+//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
+//				
+//				while (rs.next()) 
+//					tables.add(rs.getString(3));
+//				logger.info("Mysql Tables :  " + tables);
+//				rs.close();				
+//
+//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+//				registryList.addAll(datapodList);
+//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
+//		// For Oracle
+//		else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//			List<String> tables = new ArrayList<String>();
+//			try {			
+//				IConnector connector = connectionFactory.getConnector(ExecContext.ORACLE.toString());
+//				ConnectionHolder connectionHolder = connector.getConnection();
+//				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+//				DatabaseMetaData dbMetaData = con.getMetaData();
+//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
+//
+//				while (rs.next()) 
+//					tables.add(rs.getString(3));				
+//				logger.info("Oracle Tables :  " + tables);
+//				rs.close();
+//
+//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+//				registryList.addAll(datapodList);
+//				
+//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
+//				e1.printStackTrace();
+//			}
+//		} 
+//		//for Postgres
+//		else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+//			List<String> tables = new ArrayList<String>();
+//			try {
+//				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
+//				ConnectionHolder connectionHolder = connector.getConnection();
+//				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+//				DatabaseMetaData dbMetaData = con.getMetaData();
+//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
+//				
+//				while (rs.next()) 
+//					tables.add(rs.getString(3));
+//				logger.info("PostGres Tables :  " + tables);				
+//				rs.close();		
+//				
+//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
+//				registryList.addAll(datapodList);
+//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
+//		
 		if (status.equalsIgnoreCase("UnRegistered")) {
 			int count = 1;
-			for (Registry unRegiser : registryList) {
-				
-				if (unRegiser.getStatus().equalsIgnoreCase("UnRegistered")) {
-					
+			for (Registry unRegiser : registryList) {				
+				if (unRegiser.getStatus().equalsIgnoreCase("UnRegistered")) {		
 					unRegiser.setId(Integer.toString(count));
 					unRegisterList.add(unRegiser);
 					count++;
@@ -3555,10 +3375,8 @@ public class RegisterService {
 			return unRegisterList;
 		} else if (status.equals("Registered")) {
 			int count = 1;
-			for (Registry register : registryList) {
-				
-				if (register.getStatus().equals("Registered")) {
-					
+			for (Registry register : registryList) {				
+				if (register.getStatus().equals("Registered")) {					
 					register.setId(Integer.toString(count));
 					registerList.add(register);
 					count++;
@@ -3571,18 +3389,69 @@ public class RegisterService {
 
 	}
 
+	private List<Registry> createDatapodList(Map<String, String> tablesWithPath, String datasourceUuid, String appUuid) throws JsonProcessingException {
+		List<Registry> registryList = new ArrayList<Registry>();
+		List<Datapod> datapodList = null;
+		int i = 1;
+		for (Entry<String, String> tableWithPath : tablesWithPath.entrySet()) {
+			datapodList = datapodServiceImpl.searchDatapodByName(tableWithPath.getKey(), datasourceUuid);
+			if (datapodList.size() > 0){
+				for (Datapod datapod : datapodList) {
+					for (int j = 0; j < datapod.getAppInfo().size(); j++) {
+						if (datapod.getAppInfo().get(j).getRef().getUuid().equals(appUuid)) {
+							Registry registry = new Registry();
+							registry.setId(Integer.toString(i));
+							registry.setName(tableWithPath.getKey());
+							registry.setPath(tableWithPath.getValue());
+							registry.setRegisteredOn(datapod.getCreatedOn());
+							registry.setDesc(datapod.getDesc());
+							registry.setRegisteredOn(datapod.getCreatedOn());
+							registry.setStatus("Registered");
+							registryList.add(registry);
+							break;
+						} else {
+							Registry registry = new Registry();
+							registry.setId(Integer.toString(i));
+							registry.setName(tableWithPath.getKey());
+							registry.setPath(tableWithPath.getValue());
+							registry.setRegisteredOn(null);
+							registry.setDesc(null);
+							registry.setRegisteredOn(null);
+							registry.setStatus("UnRegistered");
+							registryList.add(registry);
+						}
+					}
+				}
+			} else {
+				Registry registry = new Registry();
+				registry.setId(Integer.toString(i));
+				registry.setName(tableWithPath.getKey());
+				registry.setPath(tableWithPath.getValue());
+				registry.setRegisteredOn(null);
+				registry.setDesc(null);
+				registry.setRegisteredOn(null);
+				registry.setStatus("UnRegistered");
+				registryList.add(registry);
+			}
+			i++;
+		}
+		return registryList;
+	}
+
 	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode)
 			throws Exception {
 		if (type.equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return csvRegister.register(uuid, version, registryList, runMode);
 		} else if (type.equalsIgnoreCase(ExecContext.HIVE.toString()) | type.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			return hiveRegister.registerDB(uuid, version, registryList);
+			return hiveRegister.registerDB(uuid, version, registryList, runMode);
 		} /*else if (type.equalsIgnoreCase("impala")) {
 			return impalaRegister.registerDB(uuid, version, registryList);
 		} */else if (type.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-			return mysqlRegister.registerDB(uuid, version, registryList);
+			return mysqlRegister.registerDB(uuid, version, registryList, runMode);
 		} else if (type.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-			return oracleRegister.registerDB(uuid, version, registryList);
+			return oracleRegister.registerDB(uuid, version, registryList, runMode);
+		} else if (type.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				return postGresRegister.registerDB(uuid, version, registryList, runMode);
 		} else {
 			return null;
 		}
@@ -4324,13 +4193,15 @@ public class RegisterService {
 				break;
 			case "reconexec":
 				result = ow.writeValueAsString(reconExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
-				break;
-			
+				break;			
 			case "mapexec":
 				result = ow.writeValueAsString(mapExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
 				break;
 			case "operatorexec":
 				result = ow.writeValueAsString(modelExecServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
+			case "loadexec":
+				result = ow.writeValueAsString(loadExecServiceImpl.getNumRowsbyExec(execUuid, execVersion));
 				break;
 			}
 		}
@@ -4365,9 +4236,7 @@ public class RegisterService {
 						.lte(simpleDateFormat.parse(endDate)));
 			
 			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
-			System.out.println(query);
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(ruleUuid));
-			System.out.println(query);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

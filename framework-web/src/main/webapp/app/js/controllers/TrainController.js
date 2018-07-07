@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, TrainService, $http, $location, CommonService) {
+DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, TrainService, $http, $location, CommonService,privilegeSvc) {
 
   $scope.isTargetNameDisabled = false;
   $scope.dataLoading = false;
@@ -11,18 +11,46 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.isEdit=false;
     $scope.isversionEnable=false;
     $scope.isAdd=false;
+    $scope.isDragable="false";
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
+    $scope.isDragable="true";
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else{
     $scope.isAdd=true;
+    $scope.isDragable="true";
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.mode = "false"
   $scope.isSubmitEnable = false;
   $scope.trainData;
+  $scope.trainData={};
+  $scope.trainData.trainPercent=70;
+  $scope.trainData.valPercent=30; 
   $scope.showForm = true;
   $scope.data = null;
   $scope.showGraphDiv = false
@@ -43,13 +71,40 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     content: '',
     timeout: 30000 //time in ms
   };
-
+  $scope.pagination={
+    currentPage:1,
+    pageSize:10,
+    usePageSize:10,
+    paginationPageSizes:["All",5,10,25,50],
+    maxSize:5,
+  }  
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
     } else {
       $state.go('train');
+    }
+  }
+
+  $scope.autoMapFeature=function(){
+    if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
+      for(var i=0;i<$scope.featureMapTableArray.length;i++){
+        $scope.featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
+      }
     }
   }
 
@@ -126,6 +181,17 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       }
     }
   }
+  
+  // $scope.getAllAttributeBySource=function(){
+  //   TrainService.getAllAttributeBySource($scope.selectSource.uuid,$scope.selectSourceType).then(function(response) {
+  //     onSuccessGetAllAttributeBySource(response.data)
+  //   });
+  //   var onSuccessGetAllAttributeBySource = function(response) {
+  //     $scope.allsourceLabel = response
+  //   }
+    
+  // }
+
   // $scope.getAllLetestTarget=function(defaultValue){
   //   TrainService.getAllLatest($scope.selectTargetType).then(function(response) { onGetAllLatest(response.data)});
   //   var onGetAllLatest = function(response) {
@@ -139,16 +205,23 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainService.getAllAttributeBySource($scope.selectSource.uuid, $scope.selectSourceType).then(function (response) { onGetAllAttributeBySource(response.data) });
     var onGetAllAttributeBySource = function (response) {
       //console.log(response)
+      $scope.allsourceLabel=[];
       $scope.allTargetAttribute = response;
-
-
+      $scope.allsourceLabel = response
+      if (typeof $stateParams.id == "undefined"){
+        $scope.selectLabel=response[0];
+      }
     }
   }
+
   $scope.getAllLetestModel();
   $scope.getAllLetestSource();
   // $scope.getAllLetestTarget();
 
   $scope.onChangeModel = function (defaultValue) {
+    if(!$scope.selectModel){
+      return false;
+    }
     TrainService.getOneByUuidandVersion($scope.selectModel.uuid, $scope.selectModel.version, "model").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
       $scope.modelData = response;
@@ -167,7 +240,8 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           sourceFeature.featureName = response.features[i].name;
           featureMap.sourceFeature = sourceFeature;
           featureMapTableArray[i] = featureMap;
-          $scope.featureMapTableArray = featureMapTableArray;
+          $scope.originalFeatureMapTableArray=featureMapTableArray;
+          $scope.featureMapTableArray = featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);//featureMapTableArray;
         }
       }
     }
@@ -207,10 +281,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   $scope.onChangeSource = function () {
     if ($scope.allSource != null && $scope.selectSource != null) {
       $scope.getAllAttribute();
+     //$scope.getAllAttributeBySource();
     }
   }
 
   $scope.getOneByUuidandVersion = function (uuid, version) {
+    
     TrainService.getOneByUuidandVersion(uuid, version, "train").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
       $scope.trainData = response;
@@ -219,17 +295,24 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.Train.defaultVersion = defaultversion;
-
       selectModel.uuid = response.dependsOn.ref.uuid;
       selectModel.name = response.dependsOn.ref.name;
       selectModel.version = " ";
       $scope.selectModel = selectModel;
-
+      $scope.selectSourceType=response.source.ref.type;
       var selectSource = {};
       $scope.selectSource = null;
       selectSource.uuid = response.source.ref.uuid;
       selectSource.name = response.source.ref.name;
       $scope.selectSource = selectSource;
+    //  $scope.onChangeSourceType();
+    $scope.getAllLetestSource();
+    $scope.getAllAttribute();
+      var selectLabel = {};
+      $scope.selectLabel=null
+      selectLabel.uuid = response.labelInfo.ref.uuid;
+      selectLabel.attributeId = response.labelInfo.attrId;
+      $scope.selectLabel = selectLabel;
       // var selectTarget={};
       // $scope.selectTarget=null;
       // selectTarget.uuid=response.target.ref.uuid;
@@ -247,7 +330,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           $scope.tags = tags;
         }
       }
-      $scope.getAllAttribute();
+     
       for (var i = 0; i < response.featureAttrMap.length; i++) {
         var featureAttrMap = {};
         var sourceFeature = {};
@@ -268,7 +351,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         featureAttrMap.targetFeature = targetFeature;
         featureMapTableArray[i] = featureAttrMap;
       }
-      $scope.featureMapTableArray = featureMapTableArray;
+      $scope.originalFeatureMapTableArray=featureMapTableArray;
+      $scope.featureMapTableArray =featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);
+      if($scope.selectModel)
       $scope.onChangeModel(false);
     }
   }
@@ -282,16 +367,22 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   }
 
   $scope.selectVersion = function (uuid, version) {
+
     $scope.allSource = [];
-    $scope.allTarget = [];
+  //  $scope.allTarget = [];
     $scope.allModel = [];
-    $scope.getAllLetestModel();
-    $scope.getAllLetestSource();
-    $scope.getAllLetestTarget();
-    $scope.getOneByUuidandVersion(uuid, version);
+    $scope.allsourceLabel=null;
+    $scope.selectLabel=null;
+    setTimeout(function () {
+      $scope.getAllLetestModel();
+      $scope.getAllLetestSource();
+      // $scope.getAllLetestTarget();
+      $scope.getOneByUuidandVersion(uuid, version);
+    },100)
   }
 
   $scope.submitModel = function () {
+    var upd_tag="N"
     $scope.isshowTrain = true;
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
@@ -308,6 +399,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     TrainJson.tags = tagArray;
     var dependsOn = {};
@@ -322,6 +417,13 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     sourceref.uuid = $scope.selectSource.uuid;
     source.ref = sourceref;
     TrainJson.source = source;
+    var labelInfo = {};
+    var ref = {};
+    ref.type = $scope.selectSourceType
+    ref.uuid = $scope.selectLabel.uuid
+    labelInfo.ref = ref;
+    labelInfo.attrId = $scope.selectLabel.attributeId
+    TrainJson.labelInfo = labelInfo;
     // var target={};
     // var targetref={};
     // targetref.type=$scope.selectTargetType;
@@ -342,7 +444,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         sourceFeatureRef.type = $scope.featureMapTableArray[i].sourceFeature.type;
         sourceFeature.ref = sourceFeatureRef;
         sourceFeature.featureId = $scope.featureMapTableArray[i].sourceFeature.featureId;
-        sourceFeature.featureName = $scope.featureMapTableArray[i].sourceFeature.featureName;
+        //sourceFeature.featureName = $scope.featureMapTableArray[i].sourceFeature.featureName;
         featureMapObj.feature = sourceFeature;
         targetFeatureRef.uuid = $scope.featureMapTableArray[i].targetFeature.uuid;
         targetFeatureRef.type = $scope.selectSourceType;
@@ -355,7 +457,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     }
     TrainJson.featureAttrMap = featureMap;
     console.log(JSON.stringify(TrainJson))
-    TrainService.submit(TrainJson, 'train').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    TrainService.submit(TrainJson, 'train',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       $scope.iSSubmitEnable = true
       $scope.changemodelvalue();
@@ -498,5 +600,36 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       stage.selected = $scope.selectAllParam;
     });
   }
+  
+  // $scope.getResults = function(pagination,params) {
+  //   pagination.totalItems=params.length;
+  //   if(pagination.totalItems >0){
+  //     pagination.to = (((pagination.currentPage - 1) * (pagination.usePageSize))+1);
+  //   }
+  //   else{
+  //     pagination.to=0;
+  //   }
+  //   if(pagination.totalItems < (pagination.usePageSize*pagination.currentPage)) {
+  //       pagination.from = pagination.totalItems;
+  //   } else {
+  //     pagination.from = ((pagination.currentPage) * pagination.usePageSize);
+  //   }
+  //   var limit = (pagination.usePageSize* pagination.currentPage);
+  //   var offset = ((pagination.currentPage - 1) * pagination.usePageSize)
+  //   return params.slice(offset,limit);
+  // }
+
+  // $scope.onPageChanged = function(){
+  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  // };
+  // $scope.onPerPageChange=function(){
+  //   if($scope.pagination.pageSize == 'All'){
+  //     $scope.pagination.usePageSize=$scope.originalFeatureMapTableArray.length;
+  //   }else{
+  //     $scope.pagination.usePageSize=$scope.pagination.pageSize;
+  //   }
+  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  // }  
+
 
 }); //End CreateModelController

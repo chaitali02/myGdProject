@@ -57,6 +57,11 @@
             "type" : "oracle",
             "name" : "unix_timestamp",
             "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "postgres",
+            "name" : "unix_timestamp",
+            "paramInfoHolder" : []
         }
     ],
     "funcType" : "hive",

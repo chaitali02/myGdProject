@@ -10,13 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,51 +22,39 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
-import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
-import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
-import com.inferyx.framework.domain.Profile;
-import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.RuleOperator;
@@ -377,9 +361,9 @@ public class RuleServiceImpl extends RuleTemplate {
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
 				MetaType.ruleExec.toString());
 		try {
-			ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, runMode);
-			execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(),
-					metaExecutor, ruleExec, null, taskList, execParams, runMode);
+			HashMap<String, String> otherParams = execParams.getOtherParams();
+			ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, otherParams, null, null, runMode);
+			execute(metaExecutor, ruleExec, null, taskList, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -449,12 +433,12 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * @return
 	 * @throws Exception
 	 */
-	public RuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor, RuleExec ruleExec,
-			RuleGroupExec ruleGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
+	public RuleExec execute(ThreadPoolTaskExecutor metaExecutor, RuleExec ruleExec,
+							List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside ruleServiceImpl.execute");
 		try {
-			ruleExec = (RuleExec) super.execute(uuid, version, MetaType.rule, MetaType.ruleExec, metaExecutor, ruleExec,
-					ruleGroupExec, ruleExec.getDependsOn().getRef(), taskList, execParams, runMode);
+			ruleExec = (RuleExec) super.execute(MetaType.rule, MetaType.ruleExec, metaExecutor, ruleExec,
+						ruleExec.getDependsOn().getRef(), taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (ruleExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
@@ -736,7 +720,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * This is an override of BaseRuleService.parse for rule
 	 */
 	@Override
-	public RuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+	public RuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		logger.info("Inside ruleServiceImpl.parse");
 		Rule rule = null;
@@ -748,7 +732,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule = (Rule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule.toString());
-		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, null, usedRefKeySet, ruleExec.getExecParams(), runMode));
+		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, ruleExec.getExecParams(), runMode));
 		if(rule.getParamList() != null) {
 			MetaIdentifier mi = rule.getParamList().getRef();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString());
@@ -769,10 +753,10 @@ public class RuleServiceImpl extends RuleTemplate {
 	}
 
 	@Override
-	public BaseRuleExec execute(String uuid, String version, ThreadPoolTaskExecutor metaExecutor,
-			BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey,
+	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor,
+			BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
-		return execute(uuid, version, metaExecutor, (RuleExec) baseRuleExec, (RuleGroupExec) baseGroupExec, taskList, execParams, 
+		return execute(metaExecutor, (RuleExec) baseRuleExec, taskList, execParams, 
 				runMode);
 	}
 	
@@ -836,5 +820,18 @@ public class RuleServiceImpl extends RuleTemplate {
 		}
 
 		return result;
+	}
+
+	@Override
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("EXECUTOR")) ? (ThreadPoolTaskExecutor)(execParams.getExecutionContext().get("EXECUTOR")) : null;
+		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("TASKLIST")) ? (List<FutureTask<TaskHolder>>)(execParams.getExecutionContext().get("TASKLIST")) : null;
+		execute(metaExecutor, (RuleExec)baseExec, taskList, execParams, runMode);
+		return null;
+	}
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
 	}
 }

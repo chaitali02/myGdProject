@@ -10,8 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import javax.xml.bind.JAXBException;
@@ -19,10 +20,9 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
 import org.apache.spark.ml.PipelineModel;
-import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
 
 import com.inferyx.framework.common.CustomLogger;
@@ -30,6 +30,7 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -42,6 +43,7 @@ import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 
 public class RunModelServiceImpl implements Callable<TaskHolder> {
@@ -54,7 +56,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private AlgorithmServiceImpl algorithmServiceImpl;
 	/*private ModelExec modelExec;*/
 	private DataStoreServiceImpl dataStoreServiceImpl;
-	private SparkContext sparkContext;
 	private Model model;
 	private ModelExecServiceImpl modelExecServiceImpl;
 	private ParamSetServiceImpl paramSetServiceImpl;
@@ -75,6 +76,25 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private Train train;
 	private String name;
 	private MetaType execType;
+	private SparkExecutor sparkExecutor;
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the sparkExecutor
+	 */
+	public SparkExecutor getSparkExecutor() {
+		return sparkExecutor;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param sparkExecutor the sparkExecutor to set
+	 */
+	public void setSparkExecutor(SparkExecutor sparkExecutor) {
+		this.sparkExecutor = sparkExecutor;
+	}
 
 	/**
 	 * @return the name
@@ -375,14 +395,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		this.model = model;
 	}
 
-	public SparkContext getSparkContext() {
-		return sparkContext;
-	}
-
-	public void setSparkContext(SparkContext sparkContext) {
-		this.sparkContext = sparkContext;
-	}
-
 	public DataStoreServiceImpl getDataStoreServiceImpl() {
 		return dataStoreServiceImpl;
 	}
@@ -662,17 +674,20 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 				
 				//Object va = exec.assembleDF(fieldArray, (tableName+"_train_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
-				
-				PipelineModel trngModel = exec.trainModel(paramMap, fieldArray, model.getLabel(), algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
-				result = trngModel;
-				
-				List<String> customDirectories = new ArrayList<>();
-				Transformer[] transformers = trngModel.stages();
-				for (int i = 0; i < transformers.length; i++) {
-					customDirectories.add(i + "_" + transformers[i].uid());
+				Map<String, String> mappingList = new LinkedHashMap<>();
+				for(FeatureAttrMap featureAttrMap : train.getFeatureAttrMap()) {
+					mappingList.put(featureAttrMap.getAttribute().getAttrName(), featureAttrMap.getFeature().getFeatureName());
 				}
 
-				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, sparkContext, filePathUrl);
+				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
+				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
+				Object trngModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+//				Object trngModel = sparkExecutor.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				result = trngModel;
+				
+				List<String> customDirectories = exec.getCustomDirsFromTrainedModel(trngModel);
+
+				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, filePathUrl);
 				if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
 					try {
 						String filePathUrl_2 = null;
@@ -691,10 +706,16 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						e.printStackTrace();
 					}
 				}
-				if (isModelSved)
-					filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
-				else
+				if (isModelSved) {					
+					if(trngModel instanceof CrossValidatorModel)
+						filePathUrl = filePathUrl + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
+					else if(trngModel instanceof PipelineModel)
+						filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
+					else
+						filePathUrl = null;
+				} else {
 					filePathUrl = null;
+				}
 				
 				//result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath, paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
 				dataStoreServiceImpl.setRunMode(RunMode.BATCH);

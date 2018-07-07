@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateSimulateController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, SimulateService, CommonService, $http, $location) {
+DatascienceModule.controller('CreateSimulateController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, SimulateService, CommonService, $http, $location,privilegeSvc) {
   $scope.attributeTypes=['datapod','dataset','rule'];
   $scope.mode = "false";
   $scope.isTargetNameDisabled = false;
@@ -12,15 +12,37 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     $scope.isEdit = false;
     $scope.isversionEnable = false;
     $scope.isAdd = false;
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if ($stateParams.mode == 'false') {
     $scope.isEdit = true;
     $scope.isversionEnable = true;
     $scope.isAdd = false;
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else {
     $scope.isAdd = true;
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.isSubmitEnable = false;
   $scope.simulateData;
   $scope.showForm = true;
@@ -48,7 +70,19 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     content: 'Dashboard deleted Successfully',
     timeout: 30000 //time in ms
   };
-
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
@@ -416,6 +450,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   };
 
   $scope.submitModel = function () {
+    var upd_tag="N"
     $scope.isshowSimulate = true;
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
@@ -432,6 +467,10 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     SimulateJson.tags = tagArray;
     var dependsOn = {};
@@ -492,7 +531,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     }
     SimulateJson.featureInfo = featureInfo;
     console.log(JSON.stringify(SimulateJson))
-    SimulateService.submit(SimulateJson, 'simulate').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    SimulateService.submit(SimulateJson, 'simulate',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       $scope.dataLoading = false;
       $scope.iSSubmitEnable = true;
@@ -590,6 +629,14 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
           paramValue.value=$scope.paramListHolder[i].paramValue
           paramList.paramValue=paramValue;
           
+        }
+        else if($scope.paramListHolder[i].selectedParamValueType =="list"){
+          var ref={};
+          var paramValue={};  
+          ref.type='simple';
+          paramValue.ref=ref;
+          paramValue.value=$scope.paramListHolder[i].paramValue
+          paramList.paramValue=paramValue;
         }
        
         paramListInfo[i]=paramList;

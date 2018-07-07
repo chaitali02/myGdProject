@@ -29,6 +29,7 @@
     <br>
     <!-- END PAGE HEADER-->
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div  options="dirOptions" type="'expression'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="expressiondata" comment-panel-directive></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet box green">
@@ -47,7 +48,7 @@
                             ng-click="showView(expressiondata.uuid,expressiondata.version)" ng-hide="isAdd" style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a>
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false)? 'currentpage':'notcurrentpage'"
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false)? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(expressiondata.uuid,expressiondata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
@@ -60,7 +61,7 @@
                     </div>
                 </div>
 
-                <div class="portlet-body form">
+                <div class="portlet-body">
                     <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
@@ -68,12 +69,12 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="expressiondata.uuid" version="expression.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="expressiondata.uuid" version="expression.defaultVersion.version">
                         </div>
                     </div>
 
                     <div class="form-body" data-ng-show="showForm" style="padding-top:50px;">
-                        <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitexpression()" form-on-change="expressionFormChange()">
+                        <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitexpression()" form-on-change="expressionFormChange()" prevent-enter-submit>
 
                             <div class="form-group" ng-show="expressiondata.uuid">
                                 <label class="col-md-3 control-label">UUID</label>
@@ -119,7 +120,12 @@
                             <div class="form-group">
                                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                                 <div class="col-md-6">
-                                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input>
+                                    <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"></tags-input> -->
+                                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                        <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                                            max-results-to-show="10">
+                                        </auto-complete>
+                                    </tags-input>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -200,8 +206,7 @@
                                         <tr>
                                             <th style="text-align: center; Vertical-align: middle;width:5%;">
                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                    <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallrow" ng-change="selectAllRow()"
-                                                    />
+                                                    <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallrow" ng-change="selectAllRow()"/>
                                                 </span>
                                             </th>
                                             <th style="width:11%;text-align:center;">Logical Operator</th>

@@ -51,10 +51,10 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
     }).then(function (response) { return response })
   }
 
-  factory.submit = function (data, type) {
+  factory.submit = function (data,type,upd_tag) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "common/submit?action=edit&type=" + type,
+      url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
       headers: {
         'Accept': '*/*',
         'content-Type': "application/json",
@@ -144,6 +144,17 @@ DatascienceModule.factory('PredictFactory', function ($http, $location) {
         return response;
       })
   }
+  factory.findTrainByModel = function (uuid,version,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      method: 'GET',
+      url: url + "model/getTrainByModel?action=view&uuid=" + uuid +"&version="+version+"&type=" + type,
+
+    }).
+      then(function (response, status, headers) {
+        return response;
+      })
+  }
   return factory;
 })
 
@@ -156,6 +167,21 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
       deferred.resolve({
         data: response
       });
+    }
+    return deferred.promise;
+  }
+  this.getTrainByModel = function (uuid,version,type) {
+    var deferred = $q.defer();
+    PredictFactory.findTrainByModel(uuid,version,type).then(function (response) { onSuccess(response.data) },function(response){onError(response.data)});
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }
@@ -351,9 +377,9 @@ DatascienceModule.service("PredictService", function ($http, PredictFactory, $q,
   }
 
 
-  this.submit = function (data, type) {
+  this.submit = function (data,type,upd_tag) {
     var deferred = $q.defer();
-    PredictFactory.submit(data, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    PredictFactory.submit(data,type,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response

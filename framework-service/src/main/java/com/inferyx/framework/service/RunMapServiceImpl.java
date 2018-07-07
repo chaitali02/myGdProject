@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -27,7 +26,6 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMapExecDao;
-import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
@@ -59,8 +57,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	private HDFSInfo hdfsInfo;
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	protected Map map;
-	protected String dagExecVersion;
-	protected DataStore dataStore;
 	protected Dataset<Row> df;
 	private ExecutorFactory execFactory;
 	private OrderKey datapodKey;
@@ -303,22 +299,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 //			e.printStackTrace();
 //		}
 //	}
-	
-	public String getDagExecVersion() {
-		return dagExecVersion;
-	}
-
-	public void setDagExecVersion(String dagExecVersion) {
-		this.dagExecVersion = dagExecVersion;
-	}
-
-	public DataStore getDataStore() {
-		return dataStore;
-	}
-
-	public void setDataStore(DataStore dataStore) {
-		this.dataStore = dataStore;
-	}
 
 	public CommonServiceImpl<?> getCommonServiceImpl() {
 		return commonServiceImpl;
@@ -357,9 +337,9 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			String filePath = String.format("/%s/%s/%s", 
 					datapodKey.getUUID(), 
 					datapodKey.getVersion(), 
-					StringUtils.isNotBlank(dagExecVersion)?dagExecVersion:mapExec.getVersion());
+					mapExec.getVersion());
 			String mapTableName  = null;
-			mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), StringUtils.isNotBlank(dagExecVersion)?dagExecVersion:mapExec.getVersion());
+			mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersionWithoutAppUuid(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			/*String executionEngine = engine.getExecEngine();
@@ -384,7 +364,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 						|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString()))
 					sql = "INSERT OVERWRITE TABLE " + mapTableName +" "+ partitionClause + " " + sql;
 				else if(datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-						|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))	
+						|| datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+						|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString()))	
 						sql = "INSERT INTO " + mapTableName + " " + sql;
 			}
 
@@ -412,10 +393,11 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			dataStoreServiceImpl.setRunMode(runMode);
 			Datapod targetDatapod = (Datapod) commonServiceImpl.getLatestByUuid(map.getTarget().getRef().getUuid(), MetaType.datapod.toString());
 			map.getTarget().getRef().setVersion(targetDatapod.getVersion());
+			countRows = rsHolder.getCountRows();
 			dataStoreServiceImpl.create(filePath, mapTableName
 					, new MetaIdentifier(MetaType.datapod, map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion())
 					, new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion())
-					, map.getAppInfo(), map.getCreatedBy(), SaveMode.Append.toString(), resultRef, rsHolder.getCountRows()
+					, map.getAppInfo(), map.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows
 					, Helper.getPersistModeFromRunMode(runMode.toString()));
 			logger.info("After map persist ");
 			mapExec.setResult(resultRef);

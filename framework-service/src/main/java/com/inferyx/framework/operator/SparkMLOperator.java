@@ -20,13 +20,11 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkContext;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.clustering.KMeans;
-import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.param.ParamMap;
@@ -78,8 +76,6 @@ public class SparkMLOperator implements IModelOperator {
 
 	@Autowired
 	private ParamSetServiceImpl paramSetServiceImpl;
-	@Autowired
-	private SparkContext sparkContext;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -170,6 +166,8 @@ public class SparkMLOperator implements IModelOperator {
 	public Object trainAndValidate(Train train, Model model, Algorithm algorithm,String modelClassName, String modelName, Dataset<Row> df, VectorAssembler va,
 			ParamMap paramMap, String filePathUrl,String filePath) throws Exception {
 		PipelineModel trngModel = null;
+		Dataset<Row> trainedDataSet = null;
+		
 		List<String> customDirectories = new ArrayList<>();
 		try {
 			Dataset<Row>[] splits = df
@@ -178,26 +176,19 @@ public class SparkMLOperator implements IModelOperator {
 			Dataset<Row> valDf = splits[1];
 			Dataset<Row> trainingDf = null;
 			Dataset<Row> validateDf = null;
+			
+			String label = commonServiceImpl.resolveLabel(train.getLabelInfo());			
 			if (algorithm.getTrainName().contains("LinearRegression")
 					|| algorithm.getTrainName().contains("LogisticRegression")) {
-				trainingDf = trngDf.withColumn("label", trngDf.col(model.getLabel()).cast("Double")).select("label",
+				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label",
 						va.getInputCols());
-				validateDf = valDf.withColumn("label", valDf.col(model.getLabel()).cast("Double")).select("label",
+				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label",
 						va.getInputCols());
 			} else {
 				trainingDf = trngDf;
 				validateDf = valDf;
 			}
 
-			Dataset<Row> trainedDataSet = null;
-			@SuppressWarnings("unused")
-			StringIndexer labelIndexer = null;
-			@SuppressWarnings("unused")
-			String labelColName = (modelClassName.contains("classification")) ? "indexedLabel" : "label";
-			/*
-			 * labelIndexer = new StringIndexer() .setInputCol("label")
-			 * .setOutputCol(labelColName);
-			 */
 
 			Class<?> dynamicClass = Class.forName(modelClassName);
 			Object obj = dynamicClass.newInstance();
@@ -234,7 +225,7 @@ public class SparkMLOperator implements IModelOperator {
 			 */
 
 			// Vector features = new DenseVector(values)
-			boolean result = modelServiceImpl.save(modelName, trngModel, sparkContext, filePathUrl);
+			boolean result = modelServiceImpl.save(modelName, trngModel, filePathUrl);
 			if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
 				try {
 					LOGGER.info("trainedDataSet schema : " + trainedDataSet.schema());
@@ -362,10 +353,10 @@ public class SparkMLOperator implements IModelOperator {
 
 				dfTask.printSchema();
 				IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
-				datapodWriter.write(dfTask, filePathUrl, targetDp, SaveMode.Append.toString());
+				datapodWriter.write(rsHolder, filePathUrl, targetDp, SaveMode.Append.toString());
 				return filePathUrl;
 			} else {
-				if (modelServiceImpl.save(modelName, trainedModel, sparkContext, filePathUrl))
+				if (modelServiceImpl.save(modelName, trainedModel, filePathUrl))
 					return filePathUrl + "/data";
 				else
 					return null;

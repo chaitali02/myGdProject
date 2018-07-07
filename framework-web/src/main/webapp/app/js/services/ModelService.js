@@ -65,10 +65,10 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
     }).then(function (response) { return response })
   }
 
-  factory.submit = function (data, type) {
+  factory.submit = function (data,type,upd_tag){
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "common/submit?action=edit&type=" + type,
+      url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
       headers: {
         'Accept': '*/*',
         'content-Type': "application/json",
@@ -543,9 +543,9 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
     return deferred.promise;
   }
 
-  this.submit = function (data, type) {
+  this.submit = function (data,type,upd_tag) {
     var deferred = $q.defer();
-    ModelFactory.submit(data, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    ModelFactory.submit(data,type,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response
@@ -559,7 +559,7 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
     return deferred.promise;
   }
   this.uploadFile = function (extension, data, fileType) {
-    var url = "common/upload?action=edit&extension=" + extension + "&fileType=" + fileType
+    var url = "model/upload?action=edit&extension=" + extension + "&fileType=" + fileType
     var deferred = $q.defer();
     ModelFactory.uploadFile(url, data).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {

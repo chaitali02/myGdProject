@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AggregateFunc;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FormulaType;
@@ -31,11 +31,13 @@ import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.ParamListServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
+import com.inferyx.framework.service.RuleServiceImpl;
 
 @Component
 public class FormulaOperator {
@@ -45,7 +47,7 @@ public class FormulaOperator {
 	@Autowired protected FunctionOperator functionOperator;
 	@Autowired protected ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired protected ParamListServiceImpl paramListServiceImpl;
-	@Autowired protected 
+	@Autowired protected RuleServiceImpl ruleServiceImpl;
 	
 	static final Logger LOGGER = Logger.getLogger(FormulaOperator.class);
 
@@ -55,6 +57,7 @@ public class FormulaOperator {
 		boolean pctFormula = false;
 		StringBuilder builder = new StringBuilder();
 		for (SourceAttr sourceAttr : formula.getFormulaInfo()) {
+			builder.append(" ");
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
 				builder.append(sourceAttr.getValue());
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && execParams.getParamSetHolder() != null) {
@@ -75,7 +78,7 @@ public class FormulaOperator {
 			if (sourceAttr.getRef().getType() == MetaType.formula) {
 				Formula innerFormula = (Formula) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-				builder.append("(" + generateSql(innerFormula, refKeyMap, otherParams, execParams) + ")");
+				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams) + ") ");
 			}
 
 			if (sourceAttr.getRef().getType() == MetaType.datapod) {
@@ -85,9 +88,9 @@ public class FormulaOperator {
 				if (formula.getFormulaType() != null && formula.getFormulaType().equals(FormulaType.percentage)) {
 
 					if (!pctFormula) {
-						builder.append("SUM(" + datapod.sql(sourceAttr.getAttributeId()) + ")");
+						builder.append(" SUM(" + datapod.sql(sourceAttr.getAttributeId()) + ") ");
 						builder.append(datapod.sql(sourceAttr.getAttributeId()));
-						builder.append(" OVER (PARTITION BY " + otherParams.get("partitionBy") + ")");
+						builder.append(" OVER (PARTITION BY " + otherParams.get("partitionBy") + ") ");
 					} else
 						builder.append(datapod.sql(sourceAttr.getAttributeId()));
 					pctFormula = true;
@@ -102,9 +105,15 @@ public class FormulaOperator {
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttributeId()+"")).append(" ").toString();
 			}
+			
+			if (sourceAttr.getRef().getType() == MetaType.rule) {
+				Rule rule = (Rule) daoRegister
+						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				builder.append(ruleServiceImpl.getAttributeSql(daoRegister, rule, sourceAttr.getAttributeId()+"")).append(" ").toString();
+			}
 		}
 		if (formula.getFormulaType() != null && formula.getFormulaType().equals(FormulaType.sum_aggr)) {
-			builder.insert(0, "SUM(");
+			builder.insert(0, " SUM(");
 			builder.append(") ");
 
 		} 
@@ -112,7 +121,7 @@ public class FormulaOperator {
 		if (pctFormula)
 			builder.append(" OVER () ");
 		else if (!pctFormula && otherParams != null && otherParams.get("pctFormula") != null && otherParams.get("pctFormula").equals("true")) {
-			builder.append(" OVER (PARTITION BY " + otherParams.get("partitionBy") + ")");
+			builder.append(" OVER (PARTITION BY " + otherParams.get("partitionBy") + ") ");
 		}
 
 		LOGGER.info(String.format("Generalize formula %s", builder.toString()));
@@ -189,13 +198,13 @@ public class FormulaOperator {
 			if (sourceAttr.getRef().getType() == MetaType.datapod && !isInAggr) {
 				Datapod datapod = (Datapod) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-				builder.append(datapod.sql(sourceAttr.getAttributeId())).append(",");
+				builder.append(datapod.sql(sourceAttr.getAttributeId())).append(", ");
 			}
 			
 			if (sourceAttr.getRef().getType() == MetaType.dataset && !isInAggr) {
 				DataSet dataset = (DataSet) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-				builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttributeId()+"")).append(",");
+				builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttributeId()+"")).append(", ");
 			}
 
 		}// End for formula

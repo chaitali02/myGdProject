@@ -1,7 +1,7 @@
 
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataLoadController', function ($rootScope, $state, $scope, $stateParams, MetadataLoadSerivce, privilegeSvc) {
+MetadataModule.controller('MetadataLoadController', function ($rootScope, $state, $scope, $stateParams, MetadataLoadSerivce, privilegeSvc,CommonService,$timeout,$filter) {
 
 	$scope.mode = "";
 	$scope.dataLoading = false;
@@ -9,15 +9,37 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.loadHasChanged = true;
 	$scope.isSubmitEnable = true;
 	$scope.datastoredata;
@@ -39,6 +61,20 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		$scope.privileges = privilegeSvc.privileges['load'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
@@ -91,7 +127,13 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
 	}
-
+	
+	$scope.onChangeSource=function(){
+		MetadataLoadSerivce.getRegistryByDatasource($scope.allDataSource.defaultoption.uuid,"").then(function (response) {onSuccessGetRegistryByDatasource(response.data)}, function (response) {onError(response.data)});
+			var onSuccessGetRegistryByDatasource = function (response) {
+				$scope.allRegistryDatasource=response;
+			}
+	}
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
 		var resultjoint = [];
@@ -131,6 +173,15 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 				defaultoption.version = $scope.loaddata.target.ref.version;
 				$scope.allload.defaultoption = defaultoption;
 			}
+			MetadataLoadSerivce.getAllLatest("datasource").then(function (response) { onSuccessDataSource(response.data) });
+			var onSuccessDataSource = function (response) {
+				$scope.allDataSource = response
+				var defaultoption = {};
+				defaultoption.uuid = $scope.loaddata.source.ref.uuid;
+				defaultoption.name = $scope.loaddata.source.ref.name;
+				defaultoption.version = $scope.loaddata.source.ref.version;
+				$scope.allDataSource.defaultoption = defaultoption;
+			}
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -146,6 +197,14 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		MetadataLoadSerivce.getAllLatest("datapod").then(function (response) { onSuccessLoad(response.data) });
 		var onSuccessLoad = function (response) {
 			$scope.allload = response
+		}
+		MetadataLoadSerivce.getAllLatest("datasource").then(function (response) { onSuccessDataSource(response.data) });
+		var onSuccessDataSource = function (response) {
+			$scope.allDataSource= response;
+			MetadataLoadSerivce.getRegistryByDatasource($scope.allDataSource.defaultoption.uuid,"").then(function (response) {onSuccessGetRegistryByDatasource(response.data)}, function (response) {onError(response.data)});
+			var onSuccessGetRegistryByDatasource = function (response) {
+				$scope.allRegistryDatasource=response;
+			}
 		}
 	}//End Else
 
@@ -185,6 +244,7 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 
 
 	$scope.submitLoad = function () {
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -203,6 +263,10 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
+			var result=(tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
 		}
 		loadJson.tags = tagArray;
 		var target = {};
@@ -215,12 +279,13 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		target.ref = targetref;
 		loadJson.target = target;
 
-		sourceref.type = $scope.lodesourcetype;
+		sourceref.type ="datasource";
+		sourceref.uuid=$scope.allDataSource.defaultoption.uuid;
 		source.ref = sourceref;
-		source.value = $scope.loaddata.source.value;
+		source.value = $scope.SelectRegistryDatasource.path;
 		loadJson.source = source;
 		console.log(JSON.stringify(loadJson));
-		MetadataLoadSerivce.submit(loadJson, 'load').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataLoadSerivce.submit(loadJson, 'load',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

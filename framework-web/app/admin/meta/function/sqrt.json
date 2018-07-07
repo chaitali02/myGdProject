@@ -67,6 +67,11 @@
             "type" : "mysql",
             "name" : "sqrt",
             "paramInfoHolder" : []
+        },
+        {
+            "type" : "postgres",
+            "name" : "sqrt",
+            "paramInfoHolder" : []
         }
     ]
 }

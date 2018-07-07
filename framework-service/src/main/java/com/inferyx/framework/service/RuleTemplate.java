@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,19 +38,22 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.factory.RuleExecFactory;
 import com.inferyx.framework.factory.RunRuleFactory;
+import com.inferyx.framework.operator.IExecutable;
+import com.inferyx.framework.operator.IParsable;
 import com.inferyx.framework.register.DatapodRegister;
 
 /**
  * @author joy
  *
  */
-public abstract class RuleTemplate {
+public abstract class RuleTemplate implements IExecutable, IParsable {
 	
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
@@ -135,8 +139,6 @@ public abstract class RuleTemplate {
 				commonServiceImpl.save(execType.toString(), inputBaseRuleExec);
 			}
 		}
-		MetaIdentifier baseruleExecInfo = new MetaIdentifier(execType, inputBaseRuleExec.getUuid(), inputBaseRuleExec.getVersion());
-		
 		statusList = inputBaseRuleExec.getStatusList();
 		if (Helper.getLatestStatus(statusList) != null 
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
@@ -153,7 +155,7 @@ public abstract class RuleTemplate {
 		return inputBaseRuleExec;
 	}
 	
-	public abstract BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception;
+	public abstract BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception;
 	
 	/**
 	 * Defines sample execute. Should be overridden if required.
@@ -168,8 +170,7 @@ public abstract class RuleTemplate {
 	 * @return BaseRuleExec
 	 * @throws Exception
 	 */
-	public abstract BaseRuleExec execute(String uuid, String version, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception;
+	public abstract BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception;
 	
 	/**
 	 * Defines sample execute. Should be overridden if required.
@@ -185,12 +186,12 @@ public abstract class RuleTemplate {
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "unchecked", "static-access" })
-	public BaseRuleExec execute(String uuid, String version, MetaType type, MetaType execType, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, BaseRuleGroupExec baseGroupExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
+	public BaseRuleExec execute(MetaType type, MetaType execType, 
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside BaseRuleExec.execute ");
 		BaseRule baseRule = null;
 		
-		if (StringUtils.isBlank(uuid) || baseRuleExec == null) {
+		if (baseRuleExec == null) {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
 			return null;
 		}
@@ -220,7 +221,6 @@ public abstract class RuleTemplate {
 		runBaseRuleService.setDataStoreServiceImpl(dataStoreServiceImpl);
 		runBaseRuleService.setHdfsInfo(hdfsInfo);
 		runBaseRuleService.setBaseRule(baseRule);
-		runBaseRuleService.setBaseGroupExec(baseGroupExec);
 		runBaseRuleService.setExecFactory(execFactory);
 		runBaseRuleService.setAuthentication(authentication);
 		runBaseRuleService.setBaseRuleExec(baseRuleExec);

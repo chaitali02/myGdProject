@@ -28,6 +28,7 @@
 
     <br>
     <!-- END PAGE HEADER-->
+    <div  options="dirOptions" type="'session'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="sessiondata" comment-panel-directive></div>
 
     <!-- BEGIN MAIN CONTENT -->
     <div class="row">
@@ -49,7 +50,7 @@
                             ng-click="showView(sessiondata.uuid,sessiondata.version)" ng-hide="isAdd" style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a>
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(sessiondata.uuid,sessiondata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
@@ -63,7 +64,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="portlet-body">
                     <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
@@ -71,7 +72,7 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="sessiondata.uuid" version="session.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="sessiondata.uuid" version="session.defaultVersion.version">
                         </div>
                     </div>
 

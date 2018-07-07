@@ -1,5 +1,5 @@
 var QuickNav = function () {
-
+   
     return {
         init: function () {
            	if( $('.quick-nav').length > 0 ) {
@@ -12,11 +12,24 @@ var QuickNav = function () {
 						event.preventDefault();
 						stretchyNav.toggleClass('nav-is-visible');
 					});
+					stretchyNavTrigger.on('keydown', function(event){
+						if(event.which ==27){
+						event.preventDefault();
+						stretchyNav.toggleClass('nav-is-visible');
+					}
+					});
 				});
 
 				$(document).on('click', function(event){
+					
 					( !$(event.target).is('.quick-nav-trigger') && !$(event.target).is('.quick-nav-trigger span') ) && stretchyNavs.removeClass('nav-is-visible');
 				});
+				// $(document).on('keydown', function(event){
+				// 	debugger
+				// 	if (event.which == 27) {
+				// 		( !$(event.target).is('.quick-nav-trigger') && !$(event.target).is('.quick-nav-trigger span') ) && stretchyNavs.removeClass('nav-is-visible');
+				// 	}
+				// });
 			}
         }
     };

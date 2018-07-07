@@ -4,18 +4,32 @@
 </style>
 <div class="page-header-inner">
     <!-- BEGIN LOGO -->
-
-    <div class="page-logo" >
-
-        <a ui-sref="dashboard" style="">
-          <!-- <img src="{{settings.layoutPath}}/img/logo.png" alt="logo" class="logo-default" /> --><div class="text-center logo-default
-          " style="margin-top: 11px;font-size: 20px;color: white;font-family:timeburnernormal;">INFER<span style="color:#007DC9;font-family:timeburnerbold;">YX</span></div></a>
-        <div class="menu-toggler sidebar-toggler">
-            <span></span>
-
-            <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
-
-        </div>
+    <div class="page-logo">
+      <a ui-sref="dashboard">
+           
+            <!-- <div class="text-center logo-default" style="margin-top: 11px;font-size: 20px;color: white;font-family:timeburnernormal;">
+                    <img src="assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" style="height:30px;"/>INFER<span style="color:#007DC9;font-family:timeburnerbold;">YX</span></div></a>
+            <div class="menu-toggler sidebar-toggler">
+                <span></span>
+            </div> -->
+            <div class="text-center logo-default" style="margin-top:10px;font-size: 20px;color: white;font-family:timeburnernormal;">
+                <img src="assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" style="height:30px;margin-top:1px"/>
+                &nbsp;<div style="vertical-align: MIDDLE;display: inline-block;padding-top:3px;">INFERYX</div>
+<!--                 <div style="display: inline-block;padding-top: 3px;vertical-align: MIDDLE;color:#32c5d2 ;font-family:timeburnerbold;">YX</div>
+ -->            </div>
+        </a>
+            <div class="menu-toggler sidebar-toggler">
+                <span></span>
+            </div>
+            <!-- <div class=" text-center logo-default" style="margin-top: 11px;font-size: 20px;color: white;font-family:timeburnernormal;vertical-align: middle;">
+                <img src="assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" style="height:30px;margin:1px;">
+                <span>INFER</span>
+                <span style="color: #32c5d2;font-family:timeburnerbold;">YX</span>
+            </div>
+            <div class="menu-toggler sidebar-toggler">
+                <span></span>
+            </div> -->
+        </a>
     </div>
     <!-- END LOGO -->
     <!-- BEGIN HEADER SEARCH BOX -->
@@ -407,10 +421,16 @@
                         <a href="#">
                             <i class="icon-lock"></i> Lock Screen </a>
                     </li>
+                    <li ng-click="OepnWelcomeWindow()">
+                        <a href="#">
+                            <i class="fa fa-exchange"></i> Switch Application
+                        </a>
+                    </li>
                     <li data-ng-controller="LogoutController" data-ng-click="logout()">
                         <a href="#">
                             <i class="icon-key"></i> Log Out </a>
                     </li>
+                   
                 </ul>
             </li>
             <!-- END USER LOGIN DROPDOWN -->
@@ -428,17 +448,15 @@
      <div class="top-menu" ng-controller="HeaderController" ng-init="getAppName()" style="float:left">
         <ul class="nav navbar-nav pull-right">
 
-             <li class=" sidebar-toggler" ng-show="setAppStatus" style="
+             <li ng-show="setAppStatus" style="
 			    color:white;
 			    padding: 15px 7px 0px 10px;
-			    width: auto;
-			    height: 30px;
-			    display: table;
-			    text-align: center;
-			    cursor: pointer;">
-			    <!-- <span style="display: table-cell;vertical-align: middle;">Application : </span> -->
-    			<span style="display: table-cell;vertical-align: middle;padding-left:5px;"> {{selectApp}}  |  {{role}}</span></li>
-
+			    text-align: center;">
+                <span style="display: table-cell;padding-left:5px;"> {{selectApp}}  |  {{role}}</span>
+            </li>
+            <li  tooltip-placement="right" uib-tooltip="Switch Application" style="color:white;padding: 18px 0px 0px 0px;cursor: pointer;" ng-click="OepnWelcomeWindow()">
+                <span style="display: table-cell;" class="fa fa-exchange"></span> 
+            </li>
         </ul>
     </div>
 </div>

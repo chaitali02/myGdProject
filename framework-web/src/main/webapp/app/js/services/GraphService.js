@@ -24,7 +24,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
         })
       ));
 
-      var stageYPos = 50;
+      var stageYPos = 250;
       var taskXPos = 300;
       var taskYPos = -50;
       
@@ -49,7 +49,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
               }],
               isTemplate:true
             },
-            position: { x: 200 , y: stageYPos },
+            position: { x: 350 , y: stageYPos },
             attrs: {
               "model-data": {
                 uuid: "stage_0",
@@ -152,12 +152,14 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
                   elementType : type,
                   "model-data": task,
                   parentStage : stage.stageId,
+                  dagversion:dag.version,
                   position: { x: task.xPos || taskXPos, y: task.yPos || taskYPos },
                   attrs: {
                       '.body': {
                           'element-id' : task.taskId,
                           "model-data": JSON.stringify(task),
-                          "active":!isTemplate
+                          "active":!isTemplate,
+                         
                       },
                       '.status': {
                           'element-id' : task.taskId,

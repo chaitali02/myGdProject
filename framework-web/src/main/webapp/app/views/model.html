@@ -29,6 +29,8 @@
       <br>
 
       <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+      <div  options="dirOptions" type="'model'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="modeldata" comment-panel-directive></div>
+
       <div class="portlet light bordered" id="form_wizard_1">
         <div class="portlet-title" style="margin-bottom:0px;">
           <div class="caption">
@@ -47,7 +49,7 @@
               tooltip  data-ng-click="showview(modeldata.uuid,modeldata.version)">
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip"
+            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " title="Knowledge Graph" data-toggle="tooltip"
               data-placement="top" ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(modeldata.uuid,modeldata.version)">
               <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
             </a>
@@ -63,7 +65,7 @@
 
         </div>
 
-        <div class="portlet-body form">
+        <div class="portlet-body">
           <div class="form-body graph-body" ng-if="showGraphDiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
@@ -71,7 +73,7 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="modeldata.uuid" version="model.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="modeldata.uuid" version="model.defaultVersion.version">
             </div>
           </div>
 
@@ -110,7 +112,7 @@
         
                 <!--Start Tab1-->
                 <div class="tab-pane" id="tab1" ng-class="{'active' : continueCount == 1}">
-                  <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate">
+                  <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate" prevent-enter-submit>
 
                     <div class="form-group" ng-show="modeldata.uuid">
                       <label class="col-md-3 control-label">UUID</label>
@@ -154,7 +156,12 @@
                     <div class="form-group taginput">
                       <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input>
+                        <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input> -->
+                        <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                          <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                              max-results-to-show="10">
+                          </auto-complete>
+                      </tags-input>
                       </div>
                     </div>
 
@@ -305,41 +312,51 @@
                             </div>
                           </div>
                           <div class="portlet-body">
-                            <table class=" row-border hover table table-striped table-bordered">
-                              <thead>
-                                <tr>
-                                  <th style="text-align: center; Vertical-align:middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="{{mode}}" /></th>
-                                  <th style="width:8%; text-align:center">ID</th>
-                                  <th style="width:18%; text-align:center">Name</th>
-                                  <th style="width:15%; text-align:center">Type</th>
-                                  <th style="width:20%; text-align:center">Desc</th>
-                                  <th style="width:10%; text-align:center">Min Value</th>
-                                  <th style="width:10%; text-align:center">Max Value</th>
-                                  <th style="width:20%; text-align:center" ng-show="isParamListShow">Params</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr ng-repeat="data in featureTableArray">
-                                  <td style="text-align: center; Vertical-align: middle;width:5%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control"  ng-value="$index+1" ng-disabled="true"></span></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.name" title="{{data.sourceFeature.name}}" ng-disabled="{{mode}}"></span></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r for r in featuureType"
-                                        ng-change="onChangeFeatureType($index)">
+                            <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
+                              <div class="col-md-12">
+                              <table class=" row-border hover table table-striped table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th style="text-align: center; Vertical-align:middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="{{mode}}" /></th>
+                                    <th style="width:8%; text-align:center">ID</th>
+                                    <th style="width:18%; text-align:center">Name</th>
+                                    <th style="width:15%; text-align:center">Type</th>
+                                    <th style="width:20%; text-align:center">Desc</th>
+                                    <th style="width:10%; text-align:center">Min Value</th>
+                                    <th style="width:10%; text-align:center">Max Value</th>
+                                    <th style="width:20%; text-align:center" ng-show="isParamListShow">Params</th>
+                                  </tr>
+                                </thead>
+                                <tbody ng-repeat="data in featureTableArray">
+                                  <tr  id="{{$index}}"
+                                    data-drop="true" data-drag={{isDragable}}
+                                    ng-model="featureTableArray"
+                                    jqyoui-droppable="{index: {{$index}}}" 
+                                    jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
+                                    data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}"
+                                    data-direction="{{data.name.jqyouiDirection}}" >
+                                    <td style="text-align: center; Vertical-align: middle;width:5%;"><input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control"  ng-value="$index+1" ng-disabled="true"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.name" title="{{data.sourceFeature.name}}" ng-disabled="{{mode}}" focus-me="true"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r for r in featuureType"
+                                          ng-change="onChangeFeatureType($index)">
+                                        </select>
+                                      </span>
+                                    </td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.desc" title="{{data.sourceFeature.desc}}"ng-disabled="{{mode}}"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.minVal" title="{{data.sourceFeature.minVal}}"ng-disabled="{{mode}}|| data.isMinMaxDiabled"></span></td>
+                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.maxVal" title="{{data.sourceFeature.maxVal}}" ng-disabled="{{mode}} || data.isMinMaxDiabled"></span> </td>
+                                    <td ng-show="isParamListShow"><span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      
+                                      <select  select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.paramListInfo" ng-options="r as r.dname for r in allParamlist track by r.uuid+r.paramId" ng-change="onChangeParamInfo($index)">
                                       </select>
-                                    </span>
-                                   </td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.desc" title="{{data.sourceFeature.desc}}"ng-disabled="{{mode}}"></span></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.minVal" title="{{data.sourceFeature.minVal}}"ng-disabled="{{mode}}|| data.isMinMaxDiabled"></span></td>
-                                  <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.maxVal" title="{{data.sourceFeature.maxVal}}" ng-disabled="{{mode}} || data.isMinMaxDiabled"></span> </td>
-                                  <td ng-show="isParamListShow"><span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                     
-                                    <select  select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.paramListInfo" ng-options="r as r.dname for r in allParamlist track by r.uuid+r.paramId" ng-change="onChangeParamInfo($index)">
-                                    </select>
-                                   </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>

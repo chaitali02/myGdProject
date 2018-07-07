@@ -65,8 +65,13 @@
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Tags</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-              <tags-input data-ng-model="searchForm.tags"
-                  min-length="0"></tags-input>
+              <!-- <tags-input data-ng-model="searchForm.tags"
+                  min-length="0"></tags-input> -->
+                  <tags-input class="tag-scroll-height" ng-model="searchForm.tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="true" add-on-enter="true" add-on-space="true">
+                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                        max-results-to-show="10">
+                    </auto-complete>
+                </tags-input>
               </div>
             </div>
           </div>

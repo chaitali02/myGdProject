@@ -12,6 +12,7 @@ package com.inferyx.framework.operator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.hadoop.hive.metastore.api.FunctionType;
@@ -63,19 +64,19 @@ public class ProfileOperator {
 	}
 
 	public String generateSql(Profile profile, ProfileExec profileExec, String attrId, List<String> datapodList,
-			DagExec dagExec, RunMode runMode) throws NumberFormatException, Exception {
+			DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode) throws NumberFormatException, Exception {
 		if (profile == null) {
 			return null;
 		}
 		dp = (Datapod) daoRegister.getRefObject(profile.getDependsOn().getRef());
 		if (profile.getAttributeInfo() != null) {
-			String tableName = getTableName(dp, profileExec, datapodList, dagExec, runMode);
+			String tableName = getTableName(dp, profileExec, datapodList, dagExec, otherParams, runMode);
 			logger.info("getProfileTableName(DP) : " + tableName);
 			return generateSql(profile, profileExec, tableName, attrId, 
 					dp.getAttribute(Integer.parseInt(attrId)).getName(), runMode);
 		} else {
-			return generateSql(profile, profileExec, getTableName(dp, profileExec, datapodList, dagExec, runMode), null,
-					dagExec, runMode);
+			return generateSql(profile, profileExec, getTableName(dp, profileExec, datapodList, dagExec, otherParams, runMode), null,
+					dagExec, otherParams, runMode);
 		}
 	}
 
@@ -163,10 +164,14 @@ public class ProfileOperator {
 	}
 
 	private String getTableName(Datapod dp, ProfileExec profileExec, List<String> datapodList, DagExec dagExec,
-			RunMode runMode) throws Exception {
-		if (datapodList != null && datapodList.contains(dp.getUuid())) {
+			HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+		logger.info("otherParams in profile getTablename : " + otherParams);
+		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(dp.getUuid())) {
 			return String.format("%s_%s_%s", dp.getUuid().replaceAll("-", "_"), dp.getVersion(), dagExec.getVersion());
+		} else if (otherParams!= null && otherParams.containsKey("datapodUuid_" + dp.getUuid() + "_tableName")) {
+			return otherParams.get("datapodUuid_" + dp.getUuid() + "_tableName");
 		}
+		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + dp.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(dp.getUuid()));
 		datastoreServiceImpl.setRunMode(runMode);
 		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(dp.getUuid(), dp.getVersion()), runMode);
 	}

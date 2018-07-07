@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, PredictService,$http,$location) {
+DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, PredictService,$http,$location,privilegeSvc,CommonService) {
 
   $scope.isTargetNameDisabled=false;
   $scope.dataLoading = false;
@@ -11,17 +11,41 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.isEdit=false;
     $scope.isversionEnable=false;
     $scope.isAdd=false;
+    $scope.isDragable="false";
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
+    $scope.isDragable="true";
+    $scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
   }
   else{
     $scope.isAdd=true;
+    $scope.isDragable="true";
   }
   $scope.mode="false"
-  
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.isSubmitEnable = false;
   $scope.predictData;
   $scope.showFrom = true;
@@ -44,6 +68,27 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     content: 'Dashboard deleted Successfully',
     timeout: 30000 //time in ms
   };
+  $scope.pagination={
+    currentPage:1,
+    pageSize:10,
+    usePageSize:10,
+    paginationPageSizes:["All",5,10,25,50],
+    maxSize:5,
+  }  
+  
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   
   $scope.close = function() {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
@@ -108,7 +153,13 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       });
     }     
   }
-
+  $scope.autoMapFeature=function(){
+    if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
+      for(var i=0;i<$scope.featureMapTableArray.length;i++){
+        $scope.featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
+      }
+    }
+  }
   $scope.getAllLetestModel=function(defaultValue){
     PredictService.getAllModelByType("N","model").then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {
@@ -140,16 +191,23 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     PredictService.getAllAttributeBySource($scope.selectSource.uuid,$scope.selectSourceType).then(function(response) { onGetAllAttributeBySource(response.data)});
     var onGetAllAttributeBySource = function(response) {
       //console.log(response)
+      $scope.allsourceLabel=[];
       $scope.allTargetAttribute = response;
-      
-      
+      $scope.allsourceLabel = response
+      if (typeof $stateParams.id == "undefined"){
+        $scope.selectLabel=response[0];
+      }
     }
   }
+
   $scope.getAllLetestModel();
   $scope.getAllLetestSource();
   $scope.getAllLetestTarget();
   
   $scope.onChangeModel=function(){
+    if(!$scope.selectModel){
+      return false;
+    }
     PredictService.getOneByUuidandVersion($scope.selectModel.uuid,$scope.selectModel.version,"model").then(function(response) { onSuccessGetLatestByUuid(response.data)});
     var onSuccessGetLatestByUuid = function(response) {
       var featureMapTableArray=[];
@@ -158,13 +216,6 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         var sourceFeature={};
         var targetFeature={};
         featureMap.featureMapId=i;
-        // sourceFeature.uuid = response.features[i].ref.uuid;
-        // sourceFeature.type = response.features[i].ref.type;
-        // sourceFeature.datapodname = response.features[i].ref.name;
-        // sourceFeature.name = response.features[i].attrName;
-        // sourceFeature.attributeId = response.features[i].attrId;
-        // sourceFeature.id = response.features[i].ref.uuid + "_" + response.features[i].attrId;
-        // sourceFeature.dname = response.features[i].ref.name + "." + response.features[i].attrName;
         sourceFeature.uuid = response.uuid;
         sourceFeature.type = "model";
         sourceFeature.featureId = response.features[i].featureId;
@@ -172,9 +223,32 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         featureMap.sourceFeature=sourceFeature;
         featureMapTableArray[i]=featureMap;
       }
-      $scope.featureMapTableArray=featureMapTableArray;
+      $scope.originalFeatureMapTableArray=featureMapTableArray;
+      $scope.featureMapTableArray =featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);
+      $scope.getTrainByModel(true);
+    }
   }
-}
+
+  $scope.getTrainByModel=function(defaultValue){
+    PredictService.getTrainByModel($scope.selectModel.uuid,$scope.selectModel.version,"train").then(function(response) { onSuccessGetTrainByModel(response.data)},function(response){onError(response.data)});
+    var onSuccessGetTrainByModel = function(response) {
+      $scope.allTrain=response;
+      if(response && response.length ==0){
+        $scope.selectTrain=null;
+      }
+      if(defaultValue){
+       // $scope.selectTrain=response[0];
+      }
+    }
+    var onError=function(response){
+      $scope.selectTrain=null;
+    }
+  }
+  
+  $scope.onChangeTrain=function(){
+    $scope.getTrainByModel(true);
+  }
+
   $scope.onChangeTargeType=function(){
     if($scope.selectTargetType =='datapod'){
       $scope.isTargetNameDisabled=false;
@@ -224,11 +298,32 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       selectModel.uuid=response.dependsOn.ref.uuid;
       selectModel.name=response.dependsOn.ref.name;
       $scope.selectModel=selectModel;
+      $scope.getTrainByModel(false);
+      $scope.selectTrain=null;
+      var selectTrain=null;
+      if(response.trainInfo !=null){
+        selectTrain={};
+        selectTrain.uuid=response.trainInfo.ref.uuid;
+        selectTrain.name=response.trainInfo.ref.name;
+      }
+      $scope.selectTrain=selectTrain;
+      $scope.selectSourceType=response.source.ref.type;
       var selectSource={};
       $scope.selectSource=null;
       selectSource.uuid=response.source.ref.uuid;
       selectSource.name=response.source.ref.name;
       $scope.selectSource=selectSource;
+
+      $scope.getAllLetestSource();
+      $scope.getAllAttribute();
+      var selectLabel = {};
+      $scope.selectLabel=null
+      if(response.labelInfo !=null){
+        selectLabel.uuid = response.labelInfo.ref.uuid;
+        selectLabel.attributeId = response.labelInfo.attrId;
+        $scope.selectLabel = selectLabel;
+      }
+
       var selectTarget={};
       $scope.selectTarget=null;
       selectTarget.uuid=response.target.ref.uuid;
@@ -246,17 +341,12 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
 			  	$scope.tags=tags;
 			  }
 			}
-      $scope.getAllAttribute();
+     // $scope.getAllAttribute();
       for(var i=0;i<response.featureAttrMap.length;i++){
         var featureMap={};
         var sourceFeature={};
         var targetFeature={};
         featureMap.featureMapId=response.featureAttrMap[i].featureMapId;
-        // sourceFeature.datapodname = response.featureMap[i].sourceFeature.ref.name;
-        // sourceFeature.name = response.featureMap[i].sourceFeature.attrName;
-        // sourceFeature.attributeId = response.featureMap[i].sourceFeature.attrId;
-        // sourceFeature.id = response.featureMap[i].sourceFeature.ref.uuid + "_" + response.featureMap[i].sourceFeature.attrId;
-        // sourceFeature.dname = response.featureMap[i].sourceFeature.ref.name + "." + response.featureMap[i].sourceFeature.attrName;
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
         sourceFeature.type = response.featureAttrMap[i].feature.ref.type;
         sourceFeature.featureId = response.featureAttrMap[i].feature.featureId;
@@ -272,7 +362,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         featureMap.targetFeature=targetFeature;
         featureMapTableArray[i]=featureMap;
       }
-      $scope.featureMapTableArray=featureMapTableArray;
+      $scope.originalFeatureMapTableArray=featureMapTableArray;
+      $scope.featureMapTableArray =featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);
     }
   }
   if(typeof $stateParams.id != "undefined") {
@@ -288,12 +379,19 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.allSource=[];
     $scope.allTarget=[];
     $scope.allModel =[];
-    $scope.getAllLetestModel();
-    $scope.getAllLetestSource();
-    $scope.getAllLetestTarget();
-    $scope.getOneByUuidandVersion(uuid,version);
+    $scope.allsourceLabel=null;
+    $scope.selectLabel=null;
+    setTimeout(function () {
+      $scope.getAllLetestModel();
+      $scope.getAllLetestSource();
+      $scope.getAllLetestTarget();
+      $scope.getOneByUuidandVersion(uuid,version);
+    },100)
   }
+
+
   $scope.submitModel = function() {
+    var upd_tag="N"
     $scope.isshowPredict = true;
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
@@ -308,6 +406,10 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     predictJson.tags = tagArray;
     var dependsOn={};
@@ -316,12 +418,32 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     ref.uuid=$scope.selectModel.uuid;
     dependsOn.ref=ref;
     predictJson.dependsOn=dependsOn;
+    if($scope.selectTrain){
+      var trainInfo={};
+      var ref={};
+      ref.type="train";
+      ref.uuid=$scope.selectTrain.uuid;
+      trainInfo.ref=ref;
+      predictJson.trainInfo=trainInfo;
+    }else{
+      predictJson.trainInfo=trainInfo;
+    }
+
     var source={};
     var sourceref={};
     sourceref.type=$scope.selectSourceType;
     sourceref.uuid=$scope.selectSource.uuid;
     source.ref=sourceref;
     predictJson.source=source;
+
+    var labelInfo = {};
+    var ref = {};
+    ref.type = $scope.selectSourceType
+    ref.uuid = $scope.selectLabel.uuid
+    labelInfo.ref = ref;
+    labelInfo.attrId = $scope.selectLabel.attributeId
+    predictJson.labelInfo = labelInfo;
+
     var target={};
     var targetref={};
     targetref.type=$scope.selectTargetType;
@@ -356,7 +478,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     }
     predictJson.featureAttrMap=featureMap;
     //console.log(JSON.stringify(predictJson))
-    PredictService.submit(predictJson, 'predict').then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
+    PredictService.submit(predictJson, 'predict',upd_tag).then(function(response) {onSuccess(response.data)},function(response){onError(response.data)});
     var onSuccess = function(response) {
       $scope.dataLoading = false;
       $scope.iSSubmitEnable = true;
@@ -408,5 +530,37 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       }
     }
   }
+
+  // $scope.getResults = function(pagination,params) {
+  //   pagination.totalItems=params.length;
+  //   if(pagination.totalItems >0){
+  //     pagination.to = (((pagination.currentPage - 1) * (pagination.usePageSize))+1);
+  //   }
+  //   else{
+  //     pagination.to=0;
+  //   }
+  //   if(pagination.totalItems < (pagination.usePageSize*pagination.currentPage)) {
+  //       pagination.from = pagination.totalItems;
+  //   } else {
+  //     pagination.from = ((pagination.currentPage) * pagination.usePageSize);
+  //   }
+  //   var limit = (pagination.usePageSize* pagination.currentPage);
+  //   var offset = ((pagination.currentPage - 1) * pagination.usePageSize)
+  //   return params.slice(offset,limit);
+  // }
+
+  // $scope.onPageChanged = function(){
+  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  // };
+  // $scope.onPerPageChange=function(){
+  //   if($scope.pagination.pageSize == 'All'){
+  //     $scope.pagination.usePageSize=$scope.originalFeatureMapTableArray.length;
+  //   }else{
+  //     $scope.pagination.usePageSize=$scope.pagination.pageSize;
+  //   }
+  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
+  // }  
+
 }); //End CreateModelController
+
 

@@ -10,36 +10,42 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.domain.DataStore;
-import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Map;
+import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.MessageStatus;
 
 @Component
-public class MapOperator implements Operator {
+public class MapOperator implements IParsable {
 
 	@Autowired
 	protected MetadataUtil daoRegister;
@@ -159,28 +165,36 @@ public class MapOperator implements Operator {
 	}
 
 	@Override
-	public String execute(OperatorType operatorType, ExecParams execParams,
-			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public java.util.Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
-			MetaIdentifier execIdentifier, java.util.Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
-			RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.map.toString());
+		baseExec.setName(map.getName());
+		baseExec.setAppInfo(map.getAppInfo());
+		try {
+			Status status = new Status(Status.Stage.NotStarted, new Date());
+			List<Status> statusList = new ArrayList<>();		
+			statusList.add(status);
+			baseExec.setStatusList(statusList);		
+			try {
+				baseExec.setExec(generateSql(map, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), execParams, usedRefKeySet, runMode));
+			} catch (Exception e) {
+				Status failedStatus = new Status(Status.Stage.Failed, new Date());
+				statusList.remove(failedStatus);
+				statusList.add(failedStatus);
+			}
+			baseExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.");
+			throw new Exception((message != null) ? message : "Can not generate query.");
+		}
+		return baseExec;
 	}
 
 }

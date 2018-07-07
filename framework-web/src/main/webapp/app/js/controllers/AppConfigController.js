@@ -1,24 +1,46 @@
 /**
  **/
 AdminModule = angular.module('AdminModule');
-AdminModule.controller('AppConfigDetailController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, AppConfigService, privilegeSvc) {
+AdminModule.controller('AppConfigDetailController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, AppConfigService, privilegeSvc,$filter,$timeout) {
 
 	$scope.mode = " ";
-	
+	$rootScope.isCommentVeiwPrivlage=true;
 	$scope.isSubmitProgess = false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.isSubmitEnable = true;
 	$scope.appConfigData;
 	$scope.showForm = true;
@@ -52,6 +74,20 @@ AdminModule.controller('AppConfigDetailController', function (CommonService, $st
 		$scope.privileges = privilegeSvc.privileges['appconfig'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+	
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 
 	$scope.showPage = function () {
 		$scope.showForm = true;
@@ -144,6 +180,15 @@ AdminModule.controller('AppConfigDetailController', function (CommonService, $st
 			defaultversion.uuid = response.uuid;
 			$scope.appConfig.defaultVersion = defaultversion;
 			$scope.configTable = response.configInfo;
+			var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
 		}
 	}//End If
 
@@ -163,6 +208,7 @@ AdminModule.controller('AppConfigDetailController', function (CommonService, $st
 	}
 
 	$scope.submit = function () {
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.isSubmitProgess = true;
 		$scope.iSSubmitEnable = false;
@@ -178,9 +224,12 @@ AdminModule.controller('AppConfigDetailController', function (CommonService, $st
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
 		}
 		appConfigJson.tags = tagArray;
-
 		var configInfoArray = [];
 		if ($scope.configTable.length > 0) {
 			for (var i = 0; i < $scope.configTable.length; i++) {
@@ -194,7 +243,7 @@ AdminModule.controller('AppConfigDetailController', function (CommonService, $st
 		}
 		appConfigJson.configInfo = configInfoArray;
 		console.log(JSON.stringify(appConfigJson));
-		AppConfigService.submit(appConfigJson, 'appConfig').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		AppConfigService.submit(appConfigJson, 'appConfig',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.isSubmitProgess = false;
 			$scope.iSSubmitEnable = false;

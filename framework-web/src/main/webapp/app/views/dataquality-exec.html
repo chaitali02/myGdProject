@@ -26,6 +26,8 @@
         </div>
     </div><!-- END PAGE HEADER-->
     <br>
+    <div  options="dirOptions" type="'dqExec'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dqexecdata" comment-panel-directive></div>
+
     <!-- BEGIN MAIN CONTENT -->
     <div class="row" >
         <div class="col-md-12">
@@ -40,7 +42,7 @@
     		         	<a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showdqexec==true? 'currentpage':'notcurrentpage'" data-ng-click="showDqExecPage()"style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a>
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showdqexec==false? 'currentpage':'notcurrentpage'" data-ng-click="showLoadGraph(dqexecdata.uuid,dqexecdata.version)" style="height:14px;">
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showdqexec==false? 'currentpage':'notcurrentpage'" data-ng-click="showLoadGraph(dqexecdata.uuid,dqexecdata.version)" style="height:14px;">
                             <!-- <img src="lib/images/check.png" style="margin:2px auto;display:block;"></img> -->
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
@@ -52,18 +54,18 @@
                       </a>
     	   		    </div>
                 </div>
-                <div class="portlet-body form" >
+                <div class="portlet-body">
                    <!-- BEGIN FORM-->
                     <div class="form-body graph-body" ng-if="showgraphdiv">
                         <!-- <i class="fa fa-spinner fa-spin fa-3x fa-fw graph-loding" id="graphloader">
                         </i> -->
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-<div class="spinner" id="graphloader">
-                            <div class="bounce1"></div>
-                            <div class="bounce2"></div>
-                            <div class="bounce3"></div>
-                        </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="dqexecdata.uuid" version="dqexecdata.version">
+                            <div class="spinner" id="graphloader">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="dqexecdata.uuid" version="dqexecdata.version">
                         </div>
                     </div>
 

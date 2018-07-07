@@ -42,10 +42,10 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
     }).then(function (response) { return response })
   }
 
-  factory.submit = function (data, type) {
+  factory.submit = function (data,type,upd_tag) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "common/submit?action=edit&type=" + type,
+      url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
       headers: {
         'Accept': '*/*',
         'content-Type': "application/json",
@@ -85,6 +85,14 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
       url: url + "metadata/getAttributesByDataset?action=view&uuid=" + uuid + "&type=dataset",
     }).then(function (response, status, headers) { return response; })
   }
+  factory.getAttributesByRule = function (uuid, type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      method: 'GET',
+      url: url + "metadata/getAttributesByRule?action=view&uuid=" + uuid + "&type=rule",
+    }).then(function (response, status, headers) { return response; })
+  }
+  
   factory.findDatapodByRelation = function (uuid, type) {
     var url = $location.absUrl().split("app")[0]
     return $http({
@@ -212,6 +220,26 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
       }
 
     }
+    if (type == "rule") {
+      TrainFactory.getAttributesByRule(uuid,type).then(function (response) { onSuccess(response.data) });
+      var onSuccess = function (response) {
+        var attributes = [];
+        for (var j = 0; j < response.length; j++) {
+          var attributedetail = {};
+          attributedetail.uuid = response[j].ref.uuid;
+          attributedetail.datapodname = response[j].ref.name;
+          attributedetail.name = response[j].attrName;
+          attributedetail.attributeId = response[j].attrId;
+          attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
+          attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+          attributes.push(attributedetail)
+        }
+        deferred.resolve({
+          data: attributes
+        })
+      }
+
+    }
 
     return deferred.promise;
   }
@@ -286,9 +314,9 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
   }
 
 
-  this.submit = function (data, type) {
+  this.submit = function (data,type,upd_tag) {
     var deferred = $q.defer();
-    TrainFactory.submit(data, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+    TrainFactory.submit(data,type,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response

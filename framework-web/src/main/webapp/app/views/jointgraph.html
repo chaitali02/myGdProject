@@ -160,7 +160,7 @@
 
 <div id="responsive" class="modal  right fade bs-modal-lg in" style="display: none;">
   <div class="modal-dialog" style="width:70%">
-    <div class="modal-content" style="resize: both;overflow: auto;">
+    <div class="modal-content" style="resize: both;overflow: auto;max-height:600px;">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="savePop(popupModel)"></button>
         <div class="form-group row">
@@ -179,7 +179,7 @@
         novalidate="novalidate">
         <div class="modal-body">
           <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-            <div class="scroller" style="max-height:300px;min-height:100px; overflow-y: auto !important; width: auto;" data-always-visible="1"
+            <div class="scroller" style="max-height:400px;min-height:100px; overflow-y: auto !important; width: auto;" data-always-visible="1"
               data-rail-visible1="1" data-initialized="1">
               <div class="row">
                 <div class="col-md-12">
@@ -193,7 +193,8 @@
                   <div class="form-group row">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" id="typeOprator1" style="padding-left: 22px; padding-top: 7px;">{{popupModel.operatorTypeText =='Operator'?'Type': popupModel.operatorTypeText || 'Type'}}</label>
                     <div class="col-md-6">
-                      <select select2 class="form-control" ng-disabled="popupModel.type == 'operatortype' || isModelDisable" typeid="droppop" ng-change="onChangeOperatorInfo()"
+                        <!-- popupModel.type == 'operator' || -->
+                      <select select2 class="form-control" ng-disabled="isModelDisable" typeid="droppop" ng-change="onChangeOperatorInfo(true)"
                         ng-model="popupModel.selectedType" ng-options="option.uuid+'|'+option.name as option.name for option in operatorinfoMapInfo">
                       </select>
                     </div>
@@ -287,7 +288,7 @@
                               </span>
                             </td>
                             <td width="15%">
-                              <div ng-if="['simple','distribution'].indexOf(listHolder.selectedParamValueType) !=-1">
+                              <div ng-if="['simple','distribution','list'].indexOf(listHolder.selectedParamValueType) !=-1">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                   <input type="text" ng-model="listHolder.paramType" ng-disabled="true" class="form-control">
                                 </span>
@@ -306,9 +307,15 @@
                                 <div ng-if="listHolder.selectedParamValueType =='simple'">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <input ng-if="listHolder.paramType !='integer'" ng-disabled="isModelDisable" type="text" ng-model="listHolder.paramValue" class="form-control" disable-validation-message="">
-                                    <input ng-if="listHolder.paramType =='integer'" ng-disabled="isModelDisable" type="text " ng-model="listHolder.paramValue" class="form-control" disable-validation-message=""
-                                      s>
+                                    <input ng-if="listHolder.paramType =='integer'" ng-disabled="isModelDisable" type="text " ng-model="listHolder.paramValue" class="form-control" disable-validation-message="">
                                   </span>
+                                </div>
+                                <div ng-if="listHolder.selectedParamValueType =='list'">
+                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <select select2 class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" data-ng-model="listHolder.paramValue" 
+                                      ng-options="r for r in listHolder.allListInfo" required disable-validation-message="">
+                                    </select>
+                                    <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.paramValue" required disable-validation-message=""/> </span>
                                 </div>
                                 <div ng-if="listHolder.selectedParamValueType =='datapod'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -337,7 +344,7 @@
                                       />
                                     </span>
                                     </div>
-                                 <div ng-if="listHolder.selectedParamValueType =='distribution'" ng-init="getAllLatest('distribution',$index,false);onChangeDistribution(listHolder.selectedParamValue,$index)">
+                                 <div ng-if="listHolder.selectedParamValueType =='distribution'" ng-init="getAllLatest('distribution',$index,false);">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <select select2 class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" ng-change="onChangeDistribution(listHolder.selectedParamValue,$index)"
                                       data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDistribution track by r.uuid"
@@ -346,7 +353,7 @@
                                     <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required disable-validation-message=""/>
                                   </span>
                                 </div>
-                                <div style="text-align:center;" ng-if="['datapod','rule','dataset','distribution','simple'].indexOf(listHolder.selectedParamValueType) ==-1">
+                                <div style="text-align:center;" ng-if="['datapod','rule','dataset','distribution','simple','list'].indexOf(listHolder.selectedParamValueType) ==-1">
                                   NA
                                 </div>
                               </div>

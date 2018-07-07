@@ -27,6 +27,7 @@ import com.inferyx.framework.operator.ProfileHiveOperator;
 import com.inferyx.framework.operator.ProfileImpalaOperator;
 import com.inferyx.framework.operator.ProfileOperator;
 import com.inferyx.framework.operator.ProfileOracleOperator;
+import com.inferyx.framework.operator.ProfilePostGresOperator;
 import com.inferyx.framework.operator.ProfileMySQLOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -36,7 +37,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
  *
  */
 @Component
-public class ProfileOperatorFactory /*extends OperatorFactory*/ {
+public class ProfileOperatorFactory /*extends CustomOperatorFactory*/ {
 	
 	@Autowired
 	MetadataUtil daoRegister;
@@ -52,6 +53,8 @@ public class ProfileOperatorFactory /*extends OperatorFactory*/ {
 	private ProfileHiveOperator profileHiveOperator;
 	@Autowired
 	private ProfileOracleOperator profileOracleOperator;
+	@Autowired
+	private ProfilePostGresOperator profilePostGresOperator;
 	
 	static final Logger logger = Logger.getLogger(ProfileOperatorFactory.class);
 	Datapod dp;
@@ -74,17 +77,14 @@ public class ProfileOperatorFactory /*extends OperatorFactory*/ {
 			e.printStackTrace();
 		}
 		String datasourceName = datasource.getType();
-		String sql = "";
 		if (runMode.equals(RunMode.ONLINE)) {
 			if(datasourceName.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 				datasourceName = ExecContext.MYSQL.toString();
-			}
-			
-			else if(datasourceName.equalsIgnoreCase(ExecContext.ORACLE.toString()))
-			{
+			} else if(datasourceName.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 				datasourceName=ExecContext.ORACLE.toString();
-			}
-			else {
+			} else if(datasourceName.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+				datasourceName=ExecContext.POSTGRES.toString();
+			} else if(datasourceName.equalsIgnoreCase(ExecContext.spark.toString())) {
 				datasourceName = ExecContext.spark.toString();
 			}
 		}
@@ -95,9 +95,12 @@ public class ProfileOperatorFactory /*extends OperatorFactory*/ {
 			return profileHiveOperator;
 		} else if (datasourceName.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 			return profileMySQLOperator;
-		} else {
+		} else if (datasourceName.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			return profileOracleOperator;
-		}
+		} else if (datasourceName.equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+			return profilePostGresOperator;
+		} else  
+			return null;
 		
 	}
 

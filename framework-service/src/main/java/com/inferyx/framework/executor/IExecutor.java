@@ -32,12 +32,15 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 
@@ -231,9 +234,10 @@ public interface IExecutor {
 	 * @param datastore
 	 * @param datapod
 	 * @param rowLimit 
+	 * @param targetTable TODO
 	 * @param clientContext
 	 */
-	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception;
+	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String targetTable, String clientContext) throws Exception;
 
 	/**
 	 * 
@@ -284,17 +288,6 @@ public interface IExecutor {
 	
 	/**
 	 * 
-	 * @param object
-	 * @param features
-	 * @param numIterations
-	 * @param tableName
-	 * @return
-	 * @throws Exception TODO
-	 */
-	public ResultSetHolder generateData(Object distributionObject, List<Attribute> attributes, int numIterations, String execVersion) throws Exception;
-	
-	/**
-	 * 
 	 * @param clientContext
 	 * @param datapod
 	 * @param datastore
@@ -337,7 +330,7 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @return
 	 */
-	public String executePredict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException ;
+	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException ;
 	
 	/**
 	 * 
@@ -351,7 +344,7 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @return 
 	 */
-	public PipelineModel trainModel(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException;
 	
 	/**
 	 * 
@@ -373,4 +366,161 @@ public interface IExecutor {
 	 */
 	public Object getDataType(String dataType) throws NullPointerException;
 
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param joinTabName_1
+	 * @param joinTabName_2
+	 * @param i
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	String joinDf(String joinTabName_1, String joinTabName_2, int i, String clientContext) throws IOException;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param tableName
+	 * @param targetColIndex
+	 * @param targetColName
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
+			throws IOException;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param tableName
+	 * @param mappingList
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+			throws IOException;
+
+	/**
+	 * 
+	 * @param data
+	 * @param className
+	 * @param tableName
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder createAndRegister(List<?> data, Class<?> className, String tableName, String clientContext)
+			throws IOException;
+	
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param rowObjList
+	 * @param attributes
+	 * @param tableName
+	 * @param filePath
+	 * @param datapod
+	 * @param saveMode
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 */
+	ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
+			String filePath, Datapod datapod, String saveMode, String clientContext) throws IOException;
+
+	/**
+	 * 
+	 * @param distribution
+	 * @param distributionObject
+	 * @param methodName
+	 * @param args
+	 * @param paramtypes
+	 * @param attributes
+	 * @param numIterations
+	 * @param execVersion
+	 * @param tableName
+	 * @return
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args,
+			Class<?>[] paramtypes, List<Attribute> attributes, int numIterations, String execVersion, String tableName)
+			throws IOException, ClassNotFoundException;
+	
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param trngModel
+	 * @return
+	 */
+	List<String> getCustomDirsFromTrainedModel(Object trngModel);
+	
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param modelClass
+	 * @param location
+	 * @return Object
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 * @throws IOException
+	 */
+	Object loadTrainedModel(Class<?> modelClass, String location)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException;
+
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param trainedModel
+	 * @param targetDp
+	 * @param filePathUrl
+	 * @param tableName
+	 * @param fieldArray
+	 * @param trainName
+	 * @param label
+	 * @param datasource
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 * @throws IOException
+	 */
+	ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException;
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param load
+	 * @param targetTableName
+	 * @param datasource 
+	 * @param datapod
+	 * @param clientContext
+	 * @return long
+	 * @throws IOException
+	 */
+	long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException;
+
+	String createGraphFrame(GraphExec graphExec, DataStore dataStore) throws IOException;
 }

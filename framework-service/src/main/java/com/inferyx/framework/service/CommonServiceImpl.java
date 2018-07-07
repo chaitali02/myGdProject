@@ -23,15 +23,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +51,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -63,6 +70,7 @@ import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
+import com.inferyx.framework.dao.ICommentDao;
 import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.dao.IDagExecDao;
@@ -84,11 +92,14 @@ import com.inferyx.framework.dao.IExpressionDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.dao.IFormulaDao;
 import com.inferyx.framework.dao.IFunctionDao;
+import com.inferyx.framework.dao.IGraphpodDao;
+import com.inferyx.framework.dao.IGraphpodExecDao;
 import com.inferyx.framework.dao.IGroupDao;
 import com.inferyx.framework.dao.IImportDao;
 import com.inferyx.framework.dao.ILoadDao;
 import com.inferyx.framework.dao.ILoadExecDao;
 import com.inferyx.framework.dao.ILogDao;
+import com.inferyx.framework.dao.ILovDao;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.dao.IMeasureDao;
@@ -121,6 +132,7 @@ import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.ISimulateDao;
 import com.inferyx.framework.dao.ISimulateExecDao;
+import com.inferyx.framework.dao.ITagDao;
 import com.inferyx.framework.dao.ITrainDao;
 import com.inferyx.framework.dao.ITrainExecDao;
 import com.inferyx.framework.dao.IUploadDao;
@@ -133,6 +145,7 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
@@ -141,14 +154,18 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.FeatureAttrMap;
+import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Log;
+import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -159,6 +176,8 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TaskExec;
+import com.inferyx.framework.domain.TaskOperator;
+import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
@@ -189,6 +208,8 @@ public class CommonServiceImpl <T> {
 	IModelDao iModelDao;
 	@Autowired
 	UserServiceImpl userServiceImpl;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
 	
 	@Autowired
 	IDatapodDao iDatapodDao;
@@ -202,8 +223,6 @@ public class CommonServiceImpl <T> {
 	ILoadDao iLoadDao;
 	@Autowired
 	IFunctionDao iFunctionDao;
-	@Autowired 
-	MetadataServiceImpl metadataServiceImpl;
 	@Autowired 
 	IMapDao iMapDao;
 	
@@ -398,7 +417,59 @@ public class CommonServiceImpl <T> {
 	IOperatorExecDao iOperatorExecDao;
 	@Autowired
 	IOperatorDao iOperatorDao;
+	@Autowired
+	ICommentDao iCommentDao;
+	@Autowired
+	ITagDao iTagDao;
+	@Autowired
+	Helper helper;
+	@Autowired
+	ILovDao iLovDao;
+	@Autowired
+	IGraphpodDao iGraphpodDao;
+	@Autowired
+	IGraphpodExecDao iGraphpodExecDao;	
 	
+	public IGraphpodDao getiGraphpodDao() {
+		return this.iGraphpodDao;
+	}
+
+	public void setiGraphpodDao(IGraphpodDao iGraphpodDao) {
+		this.iGraphpodDao = iGraphpodDao;
+	}
+
+	public IGraphpodExecDao getiGraphpodExecDao() {
+		return this.iGraphpodExecDao;
+	}
+
+	public void setiGraphpodExecDao(IGraphpodExecDao iGraphpodExecDao) {
+		this.iGraphpodExecDao = iGraphpodExecDao;
+	}
+
+	public ILovDao getiLovDao() {
+		return iLovDao;
+	}
+
+	public void setiLovDao(ILovDao iLovDao) {
+		this.iLovDao = iLovDao;
+	}
+
+	public ITagDao getiTagDao() {
+		return iTagDao;
+	}
+
+	public void setiTagDao(ITagDao iTagDao) {
+		this.iTagDao = iTagDao;
+	}
+
+	public ICommentDao getiCommentDao() {
+		return iCommentDao;
+	}
+
+	public void setiCommentDao(ICommentDao iCommentDao) {
+		this.iCommentDao = iCommentDao;
+	}
+
 	/**
 	 * @Ganesh
 	 *
@@ -1486,11 +1557,12 @@ public class CommonServiceImpl <T> {
 							attrId = attributeId.toString();
 						/*else
 							logger.info("resolveName method: attributeId is null for the Object " + type);*/
-						for (Method innerMethod : methodList) {
-							if (innerMethod.getName().startsWith(SET + "Attr") /*|| innerMethod.getName().startsWith(SET + "Attribute")*/ && innerMethod.getName().contains("Name")) {
-								innerMethod.invoke(object, resolveAttributeName(attrId, object));
-							}
-						}	
+						if(attributeId != null)
+							for (Method innerMethod : methodList) {
+								if (innerMethod.getName().startsWith(SET + "Attr") /*|| innerMethod.getName().startsWith(SET + "Attribute")*/ && innerMethod.getName().contains("Name")) {
+									innerMethod.invoke(object, resolveAttributeName(attrId, object));
+								}
+							}	
 					}					
 					
 					if(object instanceof ParamSet) {
@@ -1515,11 +1587,43 @@ public class CommonServiceImpl <T> {
 						paramSet.setParamInfo(paramInfos);
 						object = paramSet;
 					}
+					/*if (method.getName().contains("ParamListInfo") && method.getName().startsWith(GET) && (object instanceof ExecParams))  {
+						System.out.println();
+						List<ParamListHolder> paramListInfo = (List<ParamListHolder>) method.invoke(object);
+						System.out.println();
+					}*/
+					if ((method.getName().contains("OperatorParams") || (object instanceof ExecParams)) && method.getName().startsWith(GET))  {
+						if(method.getName().contains("OperatorParams")){
+							@SuppressWarnings("unchecked")
+							HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
+							if(operatorParams != null) {
+								if(operatorParams.containsKey("EXEC_PARAMS")) {
+									ObjectMapper mapper = new ObjectMapper();
+									ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+									execParams = resolveExecParams(execParams);
+									operatorParams.put("EXEC_PARAMS", execParams);
+								}
+							}
+						} else if((object instanceof ExecParams)) {
+							object = resolveExecParams((ExecParams)object);
+						}
+						
+					}
 					
-					if (method.getName().contains("OperatorParams") && method.getName().startsWith(GET))  {
-						HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
-						if(operatorParams != null)
-							object = resolveOperatorParams(operatorParams, object);
+					if ((method.getName().contains("FeatureAttrMap")) && object instanceof Train && method.getName().startsWith(GET))  {
+						@SuppressWarnings("unchecked")
+						List<FeatureAttrMap> featureAttrMap = (List<FeatureAttrMap>) method.invoke(object);
+						object = resolveFeatureAttrMap(featureAttrMap, object);
+					}
+					 
+					if ((method.getName().contains("ParamListInfo")) && method.getReturnType().equals(ParamListHolder.class) && method.getName().startsWith(GET)){
+						ParamListHolder paramListHolder = (ParamListHolder) method.invoke(object);
+						ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString());
+						for(Param param : paramList.getParams()) {							
+							if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
+								paramListHolder.setParamName(param.getParamName());
+						}
+						object = object.getClass().getMethod(SET+"ParamListInfo", List.class).invoke(object, paramListHolder);
 					}
 					
 					Object invokedObj = method.invoke(object);
@@ -1549,6 +1653,7 @@ public class CommonServiceImpl <T> {
 					if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 						continue;
 					}
+					
 					resolveName(invokedObj, type);
 				}
 			}catch (NullPointerException | NoSuchMethodException e) {
@@ -1566,10 +1671,7 @@ public class CommonServiceImpl <T> {
 	 * @return
 	 * @throws JsonProcessingException 
 	 */
-	private Object resolveOperatorParams(HashMap<String, Object> operatorParams, Object object) throws JsonProcessingException {
-			if(operatorParams.containsKey("EXEC_PARAMS")) {
-				ObjectMapper mapper = new ObjectMapper();
-				ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+	private ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
 				List<ParamListHolder> paramListInfo= execParams.getParamListInfo();
 				
 				if(paramListInfo != null)
@@ -1621,10 +1723,8 @@ public class CommonServiceImpl <T> {
 								}
 							}
 						}
-					}
-				operatorParams.put("EXEC_PARAMS", execParams);
-			}
-		return object;
+					}				
+		return execParams;
 	}
 
 	public T resolveName(String uuid, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
@@ -2171,9 +2271,7 @@ public class CommonServiceImpl <T> {
 		return resolveBaseEntityList(baseEntityList);
 	}
 	
-	@SuppressWarnings("unused")
 	public List<MetaStatsHolder> getMetaStats(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, JsonProcessingException {
-		logger.info("Inside getMetaStats - type : " + type);
 		String appUuid = null;
 //		if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 //			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
@@ -2184,17 +2282,21 @@ public class CommonServiceImpl <T> {
 		List<MetaStatsHolder> countHolder = new ArrayList<>();
 		List<MetaType> metaTypes = MetaType.getMetaList();
 		if(type == null){
-			for(MetaType mType : metaTypes){//logger.info("MetaType: "+mType+"\n");
+			for(MetaType mType : metaTypes){
+				//logger.info("MetaType: "+mType+"\n");
 				long count = 0;
 				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase()))).invoke(this);
 				if (appUuid == null) {
 					//count = (long) iDao.getClass().getMethod("count").invoke(iDao);
 					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
-
-				}else{
+           
+				}
+				
+				else{
 					/*Query query = new Query();
 					query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));    
 					count = mongoTemplate.count(query, Helper.getDomainClass(Helper.getMetaType(mType.toString().toLowerCase())));*/
+				
 					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
 					//count = getAllLatest(mType.toString(), "Y").size();
 				}
@@ -2206,6 +2308,13 @@ public class CommonServiceImpl <T> {
 					String nameLastUpdatedBy = (String) ref.getClass().getMethod("getName").invoke(ref);
 					String lastUpdatedOn = (String) metaobjNew.getClass().getMethod("getCreatedOn").invoke(metaobjNew);
 					countHolder.add(new MetaStatsHolder(mType.toString().toLowerCase(), Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+					if(mType.toString().equalsIgnoreCase(MetaType.paramlist.toString())){
+						count= metadataServiceImpl.getParamList(MetaType.rule.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistrule", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+						count= metadataServiceImpl.getParamList(MetaType.model.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistmodel", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+			
+					}	
 				}				
 			}
 		}else{
@@ -2762,8 +2871,8 @@ public class CommonServiceImpl <T> {
 			defaultStatus.setStage(Status.Stage.Completed);
 		}
 
-		System.out.println("mapStatus"+stausMap.toString());
-		System.out.println("FinalStatus"+defaultStatus.getStage().toString());
+		logger.info("mapStatus: "+stausMap.toString());
+		logger.info("FinalStatus: "+defaultStatus.getStage().toString());
 		return defaultStatus;
  
       }
@@ -2932,7 +3041,6 @@ public class CommonServiceImpl <T> {
             String directoryLocation = Helper.getFileDirectoryByFileType(type);
             String filePath = directoryLocation+"/" + fileName;
             File file = new File(filePath);
-            
             if (file.exists()) {
             	logger.info("File found.");
                 String mimeType = null;//context.getMimeType(file.getPath());
@@ -3163,7 +3271,7 @@ public class CommonServiceImpl <T> {
 		 * @param operator
 		 * @return
 		 */
-		public ExecParams getExecParams (Operator operator) {
+		public ExecParams getExecParams (TaskOperator operator) {
 			if (operator == null 
 					|| operator.getOperatorParams() == null 
 					|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)
@@ -3177,4 +3285,428 @@ public class CommonServiceImpl <T> {
 			return execParams;
 		}
 		
+		private Object resolveFeatureAttrMap(List<FeatureAttrMap> featureAttrMapList, Object object) throws JsonProcessingException {
+			try {
+				for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+					FeatureRefHolder featureHolder = featureAttrMap.getFeature(); 
+					AttributeRefHolder attributeHolder = featureAttrMap.getAttribute();
+					
+					MetaIdentifier featureIdentifier = featureHolder.getRef();
+					MetaIdentifier attributeIdentifier = attributeHolder.getRef();
+					Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString());
+					Object source = getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString());
+					
+					for(Feature feature : model.getFeatures()) {
+						if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
+							featureHolder.setFeatureName(feature.getName());
+							featureAttrMap.setFeature(featureHolder);
+						}
+					}
+					if(source instanceof Datapod)
+						for(Attribute attribute : ((Datapod)source).getAttributes()) {
+							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
+								attributeHolder.setAttrName(attribute.getName());
+								featureAttrMap.setAttribute(attributeHolder);
+							}
+						}
+					else if(source instanceof DataSet)
+						for(AttributeSource attributeSource : ((DataSet)source).getAttributeInfo()) {
+							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+								featureAttrMap.setAttribute(attributeHolder);
+							}
+						}
+					else if(source instanceof Rule)
+						for(AttributeSource attributeSource : ((Rule)source).getAttributeInfo()) {
+							if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+								featureAttrMap.setAttribute(attributeHolder);
+							}
+						}
+				}
+				Train train = (Train) object;
+				train.setFeatureAttrMap(featureAttrMapList);
+				object = train;
+				return object;				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return object;
+		}
+		
+
+		
+		public String resolveLabel(AttributeRefHolder labelInfo) throws JsonProcessingException {
+			String attributeName = null;
+			Object source = getOneByUuidAndVersion(labelInfo.getRef().getUuid(), labelInfo.getRef().getVersion(), labelInfo.getRef().getType().toString());
+			if(source instanceof Datapod) {
+				Datapod datapod = (Datapod) source;
+				attributeName = datapod.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			} else if(source instanceof DataSet) {
+				DataSet dataset = (DataSet) source;
+				attributeName = dataset.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			} else if(source instanceof Rule) {
+				Rule rule = (Rule) source;
+				attributeName = rule.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+			}		
+			return attributeName;
+		}
+		@SuppressWarnings("unchecked")
+		public List<BaseEntity> getResolveNameByUuidandType(String uuid,String type)  {
+			Query query = new Query();
+			query.fields().include("uuid");
+			query.fields().include("name");
+			query.fields().include("version");
+			query.fields().include("type");
+			
+			query.addCriteria(Criteria.where("uuid").is(uuid));
+			List<BaseEntity> obj=new ArrayList<>();
+			if (Helper.getDomainClass(Helper.getMetaType(type)) != null) {
+				obj = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(Helper.getMetaType(type)));
+			}
+			//String name=obj.getName();
+			
+			return obj;
+			
+		}
+		
+	public boolean uploadCommentFile(List<MultipartFile> multiPartFile, String filename, String fileType,String uuid)
+			throws FileNotFoundException, IOException, JSONException, ParseException {
+
+		String directoryPath = Helper.getPropertyValue("framework.file.comment.upload.path");
+		if (null != multiPartFile && multiPartFile.size() > 0) {
+			for (MultipartFile multipartFile : multiPartFile) {
+				
+				UploadExec uploadExec = new UploadExec();
+				
+				uploadExec.setBaseEntity();
+				
+				String fileName = multipartFile.getOriginalFilename();
+				String fileExtention = fileName.substring(fileName.lastIndexOf("."));
+				String filename1 = fileName.substring(0, fileName.lastIndexOf("."));
+				String location = directoryPath + "/" + uploadExec.getUuid() + fileExtention;
+				File dest = new File(location);
+				multipartFile.transferTo(dest);
+//				String contenetType = multipartFile.getContentType();
+				
+				uploadExec.setName(filename1);
+				uploadExec.setLocation(location);
+				uploadExec.setFileName(fileName);
+				MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
+				MetaIdentifier identifier = new MetaIdentifier();
+				identifier.setUuid(uuid);
+				identifier.setName(filename1);
+				identifier.setType(MetaType.comment);
+				metaIdentifierHolder.setRef(identifier);
+				uploadExec.setDependsOn(metaIdentifierHolder);
+				save(MetaType.uploadExec.toString(), uploadExec);
+			}
+		}
+		return true;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response,String uuid) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+		try {
+			List<UploadExec> uploadExec = new ArrayList<UploadExec>();
+			Query query = new Query();
+			query.fields().include("uuid");
+			query.fields().include("name");
+			query.fields().include("location");
+			query.fields().include("fileName");
+			query.addCriteria(Criteria.where("uuid").is(uuid));
+	
+			uploadExec = (List<UploadExec>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
+			
+		//fileName=uploadExec.get(0).getFileName();
+            String filePath = uploadExec.get(0).getLocation();
+            String FileName =uploadExec.get(0).getFileName();
+			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
+			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
+            File file = new File(filePath);
+            
+            if (file.exists()) {
+            	logger.info("File found.");
+                 String mimeType = null;//context.getMimeType(file.getPath());
+                 mimeType= new MimetypesFileTypeMap().getContentType(file);
+                if (mimeType == null) {
+                    mimeType = "application/octet-stream";
+                }
+ 
+                response.setContentType(mimeType);
+                response.setContentLength((int) file.length());
+             //   response.setContentType("application/xml charset=utf-16");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename",fileName+fileExtention);
+                ServletOutputStream os = response.getOutputStream();
+                FileInputStream fis = new FileInputStream(file);
+                Long fileSize = file.length();
+                byte[] buffer = new byte[fileSize.intValue()];
+                int b = -1;
+ 
+                while ((b = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, b);
+                }
+ 
+                fis.close();
+                os.close();
+            } else {
+            	logger.info("Requested " + fileName + " file not found!!");
+            	response.setStatus(300);
+            	throw new FileNotFoundException("Requested " + fileName + " file not found!!");
+            }
+        } catch (IOException e) {
+        	logger.error(e.getMessage());
+        	e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
+        }
+	return response;
+	}
+
+
+	/**
+	 * 
+	 * @param metaType
+	 * @param ref
+	 * @return
+	 */
+	public T createExec(MetaType metaType, MetaIdentifier ref) {
+		logger.info("Metatype string : " + metaType.toString());
+		BaseExec baseExec = helper.createExec(metaType);
+		logger.info(baseExec);
+		T object = (T) Helper.getDomainClass(metaType).cast(baseExec);
+		baseExec.setDependsOn(new MetaIdentifierHolder(ref));
+		baseExec.setBaseEntity();
+		baseExec.setName(ref.getName());
+		return object;
+	}
+	
+	/**
+	 * 
+	 * @param metaType
+	 * @param ref
+	 * @param taskExec
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
+	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		T execObject = (T)createExec(metaType, ref);
+		MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType, String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
+				String.class.cast(execObject.getClass().getMethod("getVersion", null).invoke(execObject, null)));
+		taskExec.getOperators().get(0).getOperatorInfo().setRef(metaExecIdentifier);
+		return execObject;
+	}
+
+	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
+			String type, String uuid,String version, String action)
+			throws FileNotFoundException, IOException, JSONException, ParseException {
+
+		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
+		if (null != multiPartFile && multiPartFile.size() > 0) {
+			for (MultipartFile multipartFile : multiPartFile) {
+
+				FileType type1 = Helper.getFileType(fileType);
+
+				String directoryPath = Helper.getFileDirectoryByFileType(fileType, type);
+				UploadExec uploadExec = new UploadExec();
+				uploadExec.setBaseEntity();
+				String originalFileName = multipartFile.getOriginalFilename();
+				String fileExtention = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+				String filename1 = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+
+				String fileName_Uuid = Helper.getFileCustomNameByFileType(type1, fileExtention, type);
+				String splits[] = fileName_Uuid.split("_");
+				String metaUuid = splits[0];
+				String metaVersion = splits[1].substring(0, splits[1].lastIndexOf("."));
+				String location;
+				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
+						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
+					ObjectMapper mapper = new ObjectMapper();/*
+																 * uploadExec.setDependsOn(new MetaIdentifierHolder(new
+																 * MetaIdentifier(
+																 * Helper.getMetaType(MetaType.Import.toString()),
+																 * metaUuid, metaVersion, originalFileName)));
+																 */
+					mapper.writeValueAsString(importServiceImpl.uploadFile(multipartFile, originalFileName));
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.Import.toString()),
+							metaUuid, metaVersion, originalFileName));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+					continue;
+				}
+				// if req comming form admin then file name should be original
+				if (fileType != null && fileType.equalsIgnoreCase("csv") && uuid == null) {
+					location = directoryPath + "/" + originalFileName;
+				} else {
+					location = directoryPath + "/" + fileName_Uuid;
+				}
+				File dest = new File(location);
+				multipartFile.transferTo(dest);
+
+				uploadExec.setName(filename1);
+				uploadExec.setLocation(location);
+				uploadExec.setFileName(originalFileName);
+				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
+						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
+//					ObjectMapper mapper = new ObjectMapper();
+																/*
+																 * uploadExec.setDependsOn(new MetaIdentifierHolder(new
+																 * MetaIdentifier(
+																 * Helper.getMetaType(MetaType.Import.toString()),
+																 * metaUuid, metaVersion, originalFileName)));
+																 * mapper.writeValueAsString(importServiceImpl.
+																 * uploadFile(multipartFile, originalFileName));
+																 */
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+				}
+				if (type != null && type.equalsIgnoreCase("comment")) {
+					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
+							Helper.getMetaType(MetaType.comment.toString()), uuid, version, null)));
+					save(MetaType.uploadExec.toString(), uploadExec);
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+				} else if (fileType != null && fileType.equalsIgnoreCase("script")) {
+					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
+							Helper.getMetaType(MetaType.model.toString()), uuid, version, null)));
+					save(MetaType.uploadExec.toString(), uploadExec);
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+/*					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.model.toString()),
+							metaUuid, metaVersion, filename1));*/
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+				} else {
+					save(MetaType.uploadExec.toString(), uploadExec);
+					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
+					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
+							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
+					metaIdentifierHolderList.add(metaIdentifierHolder2);
+				}
+
+			}
+
+		}
+		return (List<MetaIdentifierHolder>) metaIdentifierHolderList;
+
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public HttpServletResponse genricDownload(String fileType, String fileName, HttpServletResponse response,String uuid) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+		try {
+			List<UploadExec> uploadExec = new ArrayList<UploadExec>();
+			Query query = new Query();
+			query.fields().include("uuid");
+			query.fields().include("name");
+			query.fields().include("location");
+			query.fields().include("fileName");
+			query.addCriteria(Criteria.where("uuid").is(uuid));
+	
+			uploadExec = (List<UploadExec>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
+			
+		//fileName=uploadExec.get(0).getFileName();
+            String filePath = uploadExec.get(0).getLocation();
+//            String FileName =uploadExec.get(0).getFileName();
+//			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
+			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
+            File file = new File(filePath);
+            
+            if (file.exists()) {
+            	logger.info("File found.");
+                 String mimeType = null;//context.getMimeType(file.getPath());
+                 mimeType= new MimetypesFileTypeMap().getContentType(file);
+                if (mimeType == null) {
+                    mimeType = "application/octet-stream";
+                }
+ 
+                response.setContentType(mimeType);
+                response.setContentLength((int) file.length());
+             //   response.setContentType("application/xml charset=utf-16");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename",fileName);
+                ServletOutputStream os = response.getOutputStream();
+                FileInputStream fis = new FileInputStream(file);
+                Long fileSize = file.length();
+                byte[] buffer = new byte[fileSize.intValue()];
+                int b = -1;
+ 
+                while ((b = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, b);
+                }
+ 
+                fis.close();
+                os.close();
+            } else {
+            	logger.info("Requested " + fileName + " file not found!!");
+            	response.setStatus(300);
+            	throw new FileNotFoundException("Requested " + fileName + " file not found!!");
+            }
+        } catch (IOException e) {
+        	logger.error(e.getMessage());
+        	e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!");
+			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
+        }
+	return response;
+	}
+	
+	public void updateLovForTag(BaseEntity baseEntity) {
+		List<Lov> lovs = metadataServiceImpl.getLovByType("TAG");
+		List<String> arrayOne = new ArrayList<>(Arrays.asList(baseEntity.getTags()));
+	//	Set<String> arrayOne1 = (Set<String>) new ArrayList(Arrays.asList(baseEntity.getTags()));
+		
+		
+		Set<String> hs = new HashSet<>();
+		
+		List<String> arrayTwo = new ArrayList<String>();
+		for (Lov lov : lovs) {
+			arrayTwo.addAll(lov.getValue());
+			if (!arrayOne.equals(lov.getValue())) {
+				boolean boolAddAll = arrayOne.addAll(arrayTwo);
+				System.out.println(boolAddAll);
+				hs.addAll(arrayOne);
+				arrayOne.clear();
+				arrayOne.addAll(hs);
+				Collections.sort(arrayOne);
+				lov.setValue(arrayOne);
+				try {
+					save(MetaType.lov.toString(), lov);
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+	}	
 }

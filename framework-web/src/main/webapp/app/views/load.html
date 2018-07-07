@@ -28,7 +28,7 @@
     <!-- END PAGE HEADER-->
     <br>
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-
+    <div  options="dirOptions" type="'load'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="loaddata" comment-panel-directive></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet box green">
@@ -47,7 +47,7 @@
                             ng-click="showView(loaddata.uuid,loaddata.version)" ng-hide="isAdd" style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a>
-                        <a title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(loaddata.uuid,loaddata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="portlet-body form">
+                <div class="portlet-body">
                     <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
@@ -68,12 +68,12 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="loaddata.uuid" version="load.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="loaddata.uuid" version="load.defaultVersion.version">
                         </div>
                     </div>
 
                     <div class="form-body" data-ng-show="showFrom" style="padding-top:50px;">
-                        <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitLoad()" form-on-change="loadFormChange()">
+                        <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitLoad()" form-on-change="loadFormChange()" prevent-enter-submit>
                             <div class="form-group" ng-show="loaddata.uuid">
                                 <label class="col-md-3 control-label">UUID</label>
                                 <div class="col-md-6">
@@ -117,7 +117,12 @@
                             <div class="form-group taginput">
                                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <tags-input ng-model="tags" ng-disabled="{{mode}}"></tags-input>
+                                    <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}"></tags-input> -->
+                                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+										<auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+											max-results-to-show="10">
+										</auto-complete>
+									</tags-input>
                                 </div>
                             </div>
 
@@ -135,11 +140,19 @@
                                     <span class="required" aria-required="true"> * </span>
                                 </label>
                                 <div class="col-md-2 col-sm-2 col-xs-12">
-                                    <select title="Type" class="form-control" ng-disabled="{{mode}}" ng-model="lodesourcetype" ng-options="x for x in lodeSourceTypes">
+                                    <!-- <select title="Type" class="form-control" ng-disabled="{{mode}}" ng-model="lodesourcetype" ng-options="x for x in lodeSourceTypes">
+                                    </select> -->
+                                    <select class="form-control" ng-change="onChangeSource()" select2 data-ng-model="allDataSource.defaultoption" ng-options="r as r.name for r in allDataSource.options track by r.uuid"
+                                    ng-disabled="{{mode}}">
                                     </select>
                                 </div>
                                 <div class="col-md-4 col-sm-4 col-xs-12">
-                                    <input type="text" ng-model="loaddata.source.value" ng-disabled="{{mode}}" class="form-control" required="">
+                                    <input type="text" ng-if="!isAdd" title="{{loaddata.source.value}}" ng-model="loaddata.source.value" ng-disabled="{{mode}}" class="form-control" required="">
+                                    <div ng-show="isAdd">
+                                        <select  class="form-control" select2 data-ng-model="SelectRegistryDatasource" ng-options="r as r.name for r in allRegistryDatasource">
+                                        </select>
+                                    </div>
+                                    
                                 </div>
                             </div>
                             <div class="form-group">

@@ -450,12 +450,13 @@ public class ParamSetServiceImpl {
 								break;
 							}
 						}
-						Class<?> dynamicClass = Class.forName(className);
 						
+						Class<?> dynamicClass = Class.forName(className);						
 						Method method = dynamicClass.getMethod(plh.getParamName() );
 						Object obj = method.invoke(dynamicClass.newInstance());
+						
 						if(plh.getParamType().equalsIgnoreCase("integer")){
-							Class[] param = new Class[1];
+							Class<?>[] param = new Class[1];
 							param[0] = int.class;
 							Method method1 = obj.getClass().getMethod("w", param);
 							objList.add((ParamPair<Object>)method1.invoke((IntParam)obj,Integer.parseInt(plh.getValue())));
@@ -463,7 +464,7 @@ public class ParamSetServiceImpl {
 							//paramMap.put((IntParam)obj,Integer.parseInt(plh.getValue()));
 						} 
 						else if(plh.getParamType().equalsIgnoreCase("String")) {
-							Class[] param = new Class[1];
+							Class<?>[] param = new Class[1];
 							param[0] = String.class;
 							obj = (Param<String>)obj;
 							Method method1 = obj.getClass().getMethod("w", param);
@@ -472,7 +473,7 @@ public class ParamSetServiceImpl {
 							//paramMap.put((Param<String>)obj,plh.getValue());
 						} 
 						else if(plh.getParamType().equalsIgnoreCase("long")) {
-							Class[] param = new Class[1];
+							Class<?>[] param = new Class[1];
 							param[0] = long.class;
 							Method method1 = obj.getClass().getMethod("w", param);
 							objList.add((ParamPair<Object>)method1.invoke((LongParam)obj,Long.parseLong(plh.getValue())));
@@ -480,7 +481,7 @@ public class ParamSetServiceImpl {
 							//paramMap.put((LongParam)obj,plh.getValue());
 						}
 						else if(plh.getParamType().equalsIgnoreCase("double")) {
-							Class[] param = new Class[1];
+							Class<?>[] param = new Class[1];
 							param[0] = double.class;
 							Method method1 = obj.getClass().getMethod("w", param);
 							objList.add((ParamPair<Object>)method1.invoke((DoubleParam)obj,Double.parseDouble(plh.getValue())));
@@ -489,14 +490,8 @@ public class ParamSetServiceImpl {
 						}
 					}
 					
-					if(objList.size()==1){
-						paramMap.put(objList.get(0));
-					} else if (objList.size()==2){
-						paramMap.put(objList.get(0),objList.get(1));
-					} else if (objList.size()==3){
-						paramMap.put(objList.get(0),objList.get(1),objList.get(2));
-					} else if (objList.size()==4){
-						paramMap.put(objList.get(0),objList.get(1),objList.get(2),objList.get(3));
+					for(ParamPair<Object> paramPair : objList) {
+						paramMap.put(paramPair);
 					}
 					paramMapList.add(paramMap);
 				}
@@ -581,7 +576,7 @@ public class ParamSetServiceImpl {
 			return null;
 		}
 		for (ParamListHolder param : execParams.getParamListInfo()) {
-			if (param.getParamName().equals(paramName)) {
+			if (param.getParamName().equalsIgnoreCase(paramName)) {
 				return param;
 			}
 		}

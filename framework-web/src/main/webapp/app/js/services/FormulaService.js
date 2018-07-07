@@ -26,10 +26,10 @@ MetadataModule.factory('MetadataFormulaFactory', function ($http, $location) {
 
 		}).then(function (response) { return response })
 	}
-	factory.submit = function (data, type) {
+	factory.submit = function (data,type,upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type=" + type,
+			url: url + "common/submit?action=edit&type=" + type+"&upd_tag="+upd_tag,
 			headers: {
 				'Accept': '*/*',
 				'content-Type': "application/json",
@@ -145,6 +145,17 @@ MetadataModule.factory('MetadataFormulaFactory', function ($http, $location) {
 		return $http({
 			method: 'GET',
 			url: url + "metadata/getFunctionByFunctionInfo?type=function&action=view&functionInfo=" + functioninfo
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
+	factory.findDatapodByRule = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getAttributesByRule?action=view&uuid=" + uuid + "&type=" + type,
+
 		}).
 			then(function (response, status, headers) {
 				return response;
@@ -284,6 +295,27 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 				deferred.resolve({
 					data: attributes
 				})
+			}
+
+		}
+		if (type == "rule") {
+
+			MetadataFormulaFactory.findDatapodByRule(uuid, type).then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.datapodname = response[j].ref.name;
+					attributedetail.name = response[j].attrName;
+					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributes.push(attributedetail)
+				}
+				deferred.resolve({
+					data: attributes
+				})
+				//console.log(JSON.stringify(response))
 			}
 
 		}
@@ -470,7 +502,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 					formulainfo.value = response.formulaInfo[i].value;
 
 				}
-				else if (response.formulaInfo[i].ref.type == "datapod" || response.formulaInfo[i].ref.type == "dataset") {
+				else if (response.formulaInfo[i].ref.type == "datapod" || response.formulaInfo[i].ref.type == "dataset" ||  response.formulaInfo[i].ref.type == "rule") {
 
 					formulainfo.type = response.formulaInfo[i].ref.type;
 					formulainfo.uuid = response.formulaInfo[i].ref.uuid;
@@ -500,9 +532,9 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 		}
 		return deferred.promise;
 	}
-	this.submit = function (data, type) {
+	this.submit = function (data,type,upd_tag) {
 		var deferred = $q.defer();
-		MetadataFormulaFactory.submit(data, type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataFormulaFactory.submit(data,type,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response

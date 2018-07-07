@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateModelController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location) {
+DatascienceModule.controller('CreateModelController', function($state,$stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location,$anchorScroll,privilegeSvc,CommonService) {
   $scope.featuureType=["integer","string","double"];
   $scope.mode = "false";
 
@@ -11,15 +11,40 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     $scope.isEdit=false;
     $scope.isversionEnable=false;
     $scope.isAdd=false;
+    $scope.isDragable="false";
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
   }
   else if($stateParams.mode =='false'){
     $scope.isEdit=true;
     $scope.isversionEnable=true;
     $scope.isAdd=false;
+    $scope.isDragable="true";
+    var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
+    
   }
   else{
     $scope.isAdd=true;
+    $scope.isDragable="true";
   }
+  $scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
   $scope.isSubmitEnable = true;
   $scope.modeldata;
   $scope.showForm = true;
@@ -47,7 +72,19 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     content: 'Dashboard deleted Successfully',
     timeout: 30000 //time in ms
   };
-  
+  $scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
   $scope.close = function() {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
@@ -78,6 +115,14 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   $scope.countBack = function() {
     $scope.continueCount = $scope.continueCount - 1;
     $scope.isSubmitShow = false;
+  }
+
+  $scope.focusRow = function(rowId){
+    
+    $timeout(function() {
+      $location.hash(rowId);
+      $anchorScroll();
+    });
   }
 
   $scope.showGraph = function(uuid, version) {
@@ -149,6 +194,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     feature.maxVal=""
     feature.paramListInfo={};
     $scope.featureTableArray.splice($scope.featureTableArray.length, 0, feature);
+    $scope.focusRow(len-1)
   }
 
   $scope.removeRow = function() {
@@ -338,6 +384,16 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.model.defaultVersion = defaultversion;
+      var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
+
       if($scope.modeldata.type=='SPARK'){
        // $scope.selectSourceType = response.source.ref.type
        // $scope.paramTable = response.execParams;
@@ -382,7 +438,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           featureObj.desc=$scope.modeldata.features[i].desc
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
-          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type [i].type =="string"?true:false;
+          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type=="string"?true:false;
           if($scope.selectedDependsOnType== "formula" && $scope.modeldata.features[i].paramListInfo !=null){
             var paramListInfo={};
             paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;
@@ -479,6 +535,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   }
 }
   $scope.submitModel = function() {
+    var upd_tag="N"
     $scope.isshowmodel = true;
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
@@ -496,6 +553,10 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
         tagArray[counttag] = $scope.tags[counttag].text;
       }
+      var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
+			}
     }
     modelJson.tags = tagArray;
     if(!$scope.checkboxCustom){
@@ -564,10 +625,10 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
 
       }
       modelJson.features=featureArray;
-      ModelService.submit(modelJson, 'model').then(function(response) { onSuccess(response.data)},function(response){onError(response.data)});
+      ModelService.submit(modelJson, 'model',upd_tag).then(function(response) { onSuccess(response.data)},function(response){onError(response.data)});
     }
     else{
-      modelJson.customeFlag="Y"
+      modelJson.customFlag="Y"
       var blob = new Blob([$scope.scriptCode], { type: "text/xml"});
       var fd = new FormData();
       fd.append('file', blob)

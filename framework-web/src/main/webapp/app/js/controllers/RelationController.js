@@ -1,6 +1,6 @@
 
 MetadataModule = angular.module('MetadataModule');
-MetadataModule.controller('MetadataRelationController', function ($state, $scope, $stateParams, $cookieStore, MetadataRelationSerivce, privilegeSvc) {
+MetadataModule.controller('MetadataRelationController', function ($state,$rootScope,$scope, $stateParams, $cookieStore, MetadataRelationSerivce, privilegeSvc,CommonService,$timeout,$filter) {
 	$scope.mode = "false";
 	$scope.relationdata;
 	$scope.showFrom = true;
@@ -24,15 +24,37 @@ MetadataModule.controller('MetadataRelationController', function ($state, $scope
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});  
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
+		$scope.isPanelActiveOpen=true;
+		var privileges = privilegeSvc.privileges['comment'] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges['comment'] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+			
+		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
+	$scope.userDetail={}
+	$scope.userDetail.uuid= $rootScope.setUseruuid;
+	$scope.userDetail.name= $rootScope.setUserName;
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['relation'] || [];
@@ -41,6 +63,20 @@ MetadataModule.controller('MetadataRelationController', function ($state, $scope
 		$scope.privileges = privilegeSvc.privileges['relation'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
+	$scope.getLovByType = function() {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag=response[0].value
+		}
+	}
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+    $scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
@@ -387,6 +423,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $scope
 	}
 
 	$scope.submitRelation = function () {
+		var upd_tag="N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -402,7 +439,10 @@ MetadataModule.controller('MetadataRelationController', function ($state, $scope
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
-
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if(result ==false){
+				upd_tag="Y"	
 			}
 		}
 		relationjson.tags = tagArray;
@@ -488,7 +528,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $scope
 		}
 		relationjson.relationInfo = relationInfoArray
 		console.log(JSON.stringify(relationjson))
-		MetadataRelationSerivce.submit(relationjson, 'relation').then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataRelationSerivce.submit(relationjson,'relation',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;

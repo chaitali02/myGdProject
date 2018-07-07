@@ -59,6 +59,11 @@
             "type" : "oracle",
             "name" : "min",
             "paramInfoHolder" : []
+        },
+        {
+            "type" : "postgres",
+            "name" : "min",
+            "paramInfoHolder" : []
         }
     ]
 }

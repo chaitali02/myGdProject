@@ -46,7 +46,7 @@ import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.Recon;
@@ -67,7 +67,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	private CommonServiceImpl<?> commonServiceImpl;
 	private LoadServiceImpl loadServiceImpl;
 	private DatapodServiceImpl datapodServiceImpl;
-	private OperatorServiceImpl operatorServiceImpl;
+	private CustomOperatorServiceImpl operatorServiceImpl;
 	private DagServiceImpl dagServiceImpl;
 	private HDFSInfo hdfsInfo;
 	private MapServiceImpl mapServiceImpl;
@@ -107,6 +107,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	private ModelExecServiceImpl modelExecServiceImpl;
 	private String name;
 	private StageExec stageExec;
+	@SuppressWarnings("rawtypes")
 	ConcurrentHashMap taskThreadMap;
 	DQInfo dqInfo;
 	MetadataUtil daoRegister;
@@ -238,11 +239,11 @@ public class RunStageServiceImpl implements Callable<String> {
 		this.datapodServiceImpl = datapodServiceImpl;
 	}
 
-	public OperatorServiceImpl getOperatorServiceImpl() {
+	public CustomOperatorServiceImpl getOperatorServiceImpl() {
 		return operatorServiceImpl;
 	}
 
-	public void setOperatorServiceImpl(OperatorServiceImpl operatorServiceImpl) {
+	public void setOperatorServiceImpl(CustomOperatorServiceImpl operatorServiceImpl) {
 		this.operatorServiceImpl = operatorServiceImpl;
 	}
 
@@ -542,11 +543,11 @@ public class RunStageServiceImpl implements Callable<String> {
 		this.stageExec = stageExec;
 	}
 
-	public ConcurrentHashMap getTaskThreadMap() {
+	public ConcurrentHashMap<?, ?> getTaskThreadMap() {
 		return taskThreadMap;
 	}
 
-	public void setTaskThreadMap(ConcurrentHashMap taskThreadMap) {
+	public void setTaskThreadMap(ConcurrentHashMap<?, ?> taskThreadMap) {
 		this.taskThreadMap = taskThreadMap;
 	}
 
@@ -600,6 +601,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	
 	@Override
 	public String call() throws Exception {
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " status RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		checkDependencyStatus();
 		
@@ -609,16 +611,17 @@ public class RunStageServiceImpl implements Callable<String> {
 	public void checkDependencyStatus() throws JsonProcessingException {
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		boolean checkDependencyStatus = false;
-		boolean checkDependencyFailed = false;
+//		boolean checkDependencyFailed = false;
+		@SuppressWarnings("unused")
 		boolean checkDependencyKilled = false;
 		String dependencyStatus = null;
 		
 		while(!checkDependencyStatus){
 			dependencyStatus = dagExecServiceImpl.checkStageDepStatus(dag,dagExecUUID,dagExecVer,stageId);
 			logger.info("Stage dependencyStatus : " + stageId + " : " + dependencyStatus);
-			if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase("NotCompleted")) {
+			if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.NotStarted.toString())) {
 				checkDependencyStatus = false;
-			} else if (dependencyStatus.equalsIgnoreCase("Killed")) {
+			} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Killed.toString())) {
 				checkDependencyKilled = true;
 				break;
 			} else {
@@ -638,13 +641,15 @@ public class RunStageServiceImpl implements Callable<String> {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public String execute() throws Exception {
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " start execute in RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
-		List<Status> stageStatusList = stageExec.getStatusList();
+//		List<Status> stageStatusList = stageExec.getStatusList();
 		
 		List<TaskExec> dagTaskExecs = DagExecUtil.castToTaskExecList(stageExec.getTasks());
 		List<FutureTask> taskList = new ArrayList<FutureTask>();
-		Status.Stage stageStatus = Helper.getLatestStatus(stageStatusList).getStage();
+//		Status.Stage stageStatus = Helper.getLatestStatus(stageStatusList).getStage();
 		List<TaskExec> depTaskExecs = new ArrayList<>();
 		
 		try {
@@ -660,11 +665,9 @@ public class RunStageServiceImpl implements Callable<String> {
 		do {
 			//Start the tasks which has on dependency
 			for (TaskExec indvTaskExec : dagTaskExecs) {
-	
 				OrderKey datapodKey = null;
 				
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvTaskExec.getTaskId());
-				
 	//			Status taskStatus = Helper.getLatestStatus(indvTaskExec.getStatus());
 	//			if (taskStatus.equals(new Status(Status.Stage.InProgress, new Date())) 
 	//					|| taskStatus.equals(new Status(Status.Stage.Completed, new Date()))
@@ -679,10 +682,17 @@ public class RunStageServiceImpl implements Callable<String> {
 						|| taskStatus.equals(Status.Stage.OnHold)) {
 					continue;
 				}*/
+				
 				if (!taskStatus.equals(Status.Stage.NotStarted)
-						&& !taskStatus.equals(Status.Stage.InProgress)) {
+						&& !taskStatus.equals(Status.Stage.InProgress)
+						&& !taskStatus.equals(Status.Stage.Resume)) {
 					continue;
 				}
+				
+				if (taskStatus.equals(Status.Stage.Resume)) {
+					indvTaskExec.setDependsOn(new ArrayList<>());
+				}
+				
 				// Check if task has any dependents
 				if (indvTaskExec.getDependsOn() != null 
 						&& !indvTaskExec.getDependsOn().isEmpty()) {
@@ -699,14 +709,15 @@ public class RunStageServiceImpl implements Callable<String> {
 						&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.rule) 
+							|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.simulate) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
 							|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
-							|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype))) {
+							/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
+							|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
 					continue;
 					}
 				}
@@ -741,6 +752,8 @@ public class RunStageServiceImpl implements Callable<String> {
 					boolean checkDependencyStatus = false;
 					boolean checkDependencyFailed = false;
 					boolean checkDependencyKilled = false;
+					boolean checkDependencyResume = false;
+					boolean checkDependencyOnHold = false;
 					String dependencyStatus = null;
 					OrderKey datapodKey = null;
 					
@@ -768,14 +781,22 @@ public class RunStageServiceImpl implements Callable<String> {
 					// If not checkdependency status then continue after setting allDependenciesAddressed to false
 					dependencyStatus = dagExecServiceImpl.checkTaskDepStatus(dag,dagExecUUID,dagExecVer,stageId,indvTaskExec.getTaskId());
 					logger.info("Task dependencyStatus : " + indvTaskExec.getTaskId() + " : " + dependencyStatus);
-					if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase("NotCompleted")) {
+					if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.NotStarted.toString())) {
 						checkDependencyStatus = false;
-					} else if (dependencyStatus.equalsIgnoreCase("Killed")) {
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Killed.toString())) {
 						checkDependencyKilled = true;
 						checkDependencyStatus = true;
 						break;
-					} else if (dependencyStatus.equalsIgnoreCase("Failed")) {
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Failed.toString())) {
 						checkDependencyFailed = true;
+						checkDependencyStatus = true;
+						break;
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.OnHold.toString())) {
+						checkDependencyOnHold = true;
+						checkDependencyStatus = true;
+						break;
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Resume.toString())) {
+						checkDependencyResume = true;
 						checkDependencyStatus = true;
 						break;
 					} else {
@@ -807,6 +828,32 @@ public class RunStageServiceImpl implements Callable<String> {
 							}
 						}
 					}
+					
+					if (checkDependencyOnHold) {
+						synchronized (dagExecUUID) {
+							try {
+								logger.info("Setting status to OnHold for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.Resume, stageId, indvTaskExec.getTaskId());
+								continue;
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+					
+					if (checkDependencyResume) {
+						synchronized (dagExecUUID) {
+							try {
+								logger.info("Setting status to Resume for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.Resume, stageId, indvTaskExec.getTaskId());
+								continue;
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
 					if (!checkDependencyStatus) {
 						allDependenciesAddressed = false;
 						logger.info("Task waiting for dependents : " + indvTaskExec.getTaskId());
@@ -823,13 +870,15 @@ public class RunStageServiceImpl implements Callable<String> {
 							&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.rule)
 								|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup)
 								|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.simulate)
 								|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
 								|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype))) {
+								/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
+								|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
 						continue;
 						}
 					}
@@ -895,10 +944,12 @@ public class RunStageServiceImpl implements Callable<String> {
 			}
 		}
 	*/	
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		return name;
 	}
 	
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Boolean waitAndComplete (List<FutureTask> taskList) throws Exception {
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		logger.info(" Inside waitAndComplete for RunStageServiceImpl ");
@@ -923,7 +974,7 @@ public class RunStageServiceImpl implements Callable<String> {
 					
 				//}
 				//dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExecUUID, dagExecVer);
-					dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString());
+				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString());
 				stageExec = DagExecUtil.getStageExecFromDagExec(dagExec, stageId);
 				Status.Stage latestStatus = Helper.getLatestStatus(stageExec.getStatusList()).getStage();
 				RunStatusHolder statusHolder = new RunStatusHolder(Boolean.TRUE, 
@@ -977,6 +1028,11 @@ public class RunStageServiceImpl implements Callable<String> {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Failed, stageId);
 					}
 					return true;
+				} else if (statusHolder.getFailed()) {
+					synchronized (dagExecUUID) {
+						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Failed, stageId);
+					}
+					return true;					
 				} else if (statusHolder.getCompleted()) {
 					synchronized (dagExecUUID) {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Completed, stageId);
@@ -1002,6 +1058,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	 * @return
 	 * @throws JsonProcessingException 
 	 */
+	@SuppressWarnings("unused")
 	public OrderKey fetchDatapodKey(Task indvTask) throws JsonProcessingException {
 		OrderKey datapodKey = null;
 		// Fetch datapod key
@@ -1077,6 +1134,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	 * @param taskList
 	 * @throws JsonProcessingException 
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setTaskAndSubmit(TaskExec indvTaskExec, OrderKey datapodKey, Task indvTask, MetaIdentifierHolder operationInfoHolder, List<FutureTask> taskList, RunMode runMode) throws JsonProcessingException {
 		TaskServiceImpl indivTaskExe = new TaskServiceImpl();
 		if (!dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.OnHold) 
@@ -1132,7 +1190,6 @@ public class RunStageServiceImpl implements Callable<String> {
 		
 		DataStore datastore = new DataStore();
 		datastore.setCreatedBy(dagExec.getCreatedBy());
-		indivTaskExe.setDataStore(datastore);
 		
 		indivTaskExe.setiDataStore(dataStoreServiceImpl);
 		indivTaskExe.setDatapodServiceImpl(datapodServiceImpl);
@@ -1142,7 +1199,7 @@ public class RunStageServiceImpl implements Callable<String> {
 		indivTaskExe.setFilePath(filePath);
 		indivTaskExe.setDagServiceImpl(dagServiceImpl);
 		indivTaskExe.setHdfsInfo(hdfsInfo);
-		Operator operator = indvTask.getOperators().get(0); 
+		TaskOperator operator = indvTask.getOperators().get(0); 
 		indivTaskExe.setOperatorInfo(operator.getOperatorInfo());
 		indivTaskExe.setCommonServiceImpl(commonServiceImpl);
 		indivTaskExe.setOperatorType(operator.getOperatorType());
@@ -1155,6 +1212,7 @@ public class RunStageServiceImpl implements Callable<String> {
 		indivTaskExe.setReconServiceImpl(reconServiceImpl);
 		indivTaskExe.setReconGroupServiceImpl(reconGroupServiceImpl);
 		taskExecutor.execute(futureTask);
+		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " taskExec : " + indvTask.getTaskId() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		taskList.add(futureTask);
 		taskThreadMap.put("Task_" + dagExec.getUuid() + "_" + indvTaskExec.getTaskId(), futureTask);
 	}

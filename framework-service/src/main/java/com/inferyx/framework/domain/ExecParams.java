@@ -17,14 +17,28 @@ public class ExecParams {
 
 	private List<MetaIdentifier> refKeyList;
 	private List<ParamSetHolder> paramInfo;
-	private List<MetaIdentifierHolder> dimInfo;
 	private List<AttributeRefHolder> filterInfo;
 	private List<String> stageInfo;
 	private ParamSetHolder paramSetHolder;
 	private List<ParamListHolder> paramListInfo;
 	private java.util.Map<String, String> internalVarMap;
 	private HashMap<String, String> otherParams;
+	private ExecutionContext executionContext;
 	
+	/**
+	 * @return the executionContext
+	 */
+	public ExecutionContext getExecutionContext() {
+		return executionContext;
+	}
+
+	/**
+	 * @param executionContext the executionContext to set
+	 */
+	public void setExecutionContext(ExecutionContext executionContext) {
+		this.executionContext = executionContext;
+	}
+
 	/**
 	 * @Ganesh
 	 *
@@ -73,14 +87,6 @@ public class ExecParams {
 
 	public void setRefKeyList(List<MetaIdentifier> refKeyList) {
 		this.refKeyList = refKeyList;
-	}
-
-	public List<MetaIdentifierHolder> getDimInfo() {
-		return dimInfo;
-	}
-
-	public void setDimInfo(List<MetaIdentifierHolder> filterList) {
-		this.dimInfo = filterList;
 	}
 
 	public List<String> getStageInfo() {

@@ -41,14 +41,13 @@ import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
+import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Param;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.RolePriv;
@@ -69,7 +68,6 @@ import com.inferyx.framework.service.ImportServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.PrivilegeServiceImpl;
 import com.inferyx.framework.service.RegisterService;
-import com.inferyx.framework.service.SecurityServiceImpl;
 import com.inferyx.framework.service.SystemServiceImpl;
 import com.inferyx.framework.view.parser.RefParser;
 
@@ -97,8 +95,6 @@ public class MetadataController {
 	FormulaParser formulaParser;
 	@Autowired
 	IDatasourceDao iDatasourceDao;
-	@Autowired
-	private SecurityServiceImpl securityServiceImpl;
 	@Autowired
 	protected DashboardServiceImpl dashboardServiceImpl;
 	@Autowired
@@ -672,7 +668,7 @@ public class MetadataController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "action", required = false) String action)
-			throws JsonProcessingException {
+			throws IOException, SQLException {
 		return registerService.getRegistryByDatasource(datasourceUuid,status);
 	}
 
@@ -889,13 +885,51 @@ public class MetadataController {
 	}
 	
 	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET)
-	public @ResponseBody List<ParamList> getParamListByRule(
-			@RequestParam(value = "type", required = false,defaultValue = "rule") String collectionType) throws JsonProcessingException {		
-		return metadataServiceImpl.getParamList(collectionType);
+	public @ResponseBody List<BaseEntity> getParamListByRule(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "tags", required = false) String tags,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "published", required = false) String published,
+			@RequestParam(value = "collectionType", required = false,defaultValue="rule") String collectionType)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
+	}
+	@RequestMapping(value = "/getParamListByModel", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntity> getParamListByModel(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "tags", required = false) String tags,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "published", required = false) String published,
+			@RequestParam(value = "collectionType", required = false,defaultValue="model") String collectionType)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
 	}
 	/*@RequestMapping(value = "/getParamListBySimulate", method = RequestMethod.GET,params = {"simulate"})
 	public @ResponseBody List<ParamList> getParamListBySimulate(	
 			@RequestParam(value = "type", required = false,defaultValue = "simulate") String collectionType) throws JsonProcessingException {		
 		return metadataServiceImpl.getParamList(collectionType);
 	}*/
+	@RequestMapping(value = "/getCommentByType", method = RequestMethod.GET)
+	public @ResponseBody List<CommentView> getCommentByType(
+			@RequestParam(value ="type") String type,
+			@RequestParam(value = "uuid") String uuid) throws Exception {
+		return metadataServiceImpl.getCommentByType(uuid,type);
+	}
+	
+	@RequestMapping(value = "/getLovByType", method = RequestMethod.GET)
+	public @ResponseBody List<Lov> getLovByType(
+			@RequestParam(value ="type") String type) throws Exception {
+		return metadataServiceImpl.getLovByType(type);
+	}
+	
 }

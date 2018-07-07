@@ -33,14 +33,13 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 	@Component
-	public class DatasetOperator implements Operator {
+	public class DatasetOperator {
 		
 		@Autowired
 		AttributeMapOperator attributeMapOperator;
@@ -62,9 +61,10 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 					.concat(generateFrom(dataset, refKeyMap, otherParams, usedRefKeySet, runMode))
 					.concat(generateWhere())
 					.concat(generateFilter(dataset, refKeyMap, otherParams, usedRefKeySet))
-					.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams));
+					.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams))
+					.concat(generateLimit(dataset));
 		}
-		
+
 		public String generateSelect(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams
 									, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			// Create AttributeMap
@@ -133,28 +133,8 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(dataset.getAttributeInfo()), refKeyMap, otherParams, execParams);
 		}
 
-		@Override
-		public String execute(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
-				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Map<String, String> populateParams(OperatorType operatorType, ExecParams execParams,
-				MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap,
-				HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
-				RunMode runMode) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public String parse(OperatorType operatorType, ExecParams execParams, MetaIdentifier execIdentifier,
-				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-				Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
+		private String generateLimit(DataSet dataset) {
+			return (dataset.getLimit() > 0) ? (ConstantsUtil.LIMIT + dataset.getLimit() + " ") : "";
 		}
 
 }

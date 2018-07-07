@@ -16,10 +16,13 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DagExecUtil;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.enums.RunMode;
 
@@ -71,6 +74,23 @@ public class ReconGroupServiceImpl extends RuleGroupTemplate {
 				MetaType.recon, MetaType.reconExec, refKeyMap, datapodList, dagExec, runMode);
 	}
 	
-	
+	/**
+	 * Override Executable.execute()
+	 */
+	@Override
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		execute(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), execParams, (ReconGroupExec) baseExec, runMode);
+		return null;
+	}
+
+	/**
+	 * Override Parsable.parse()
+	 */
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		return parse(baseExec.getUuid(), baseExec.getVersion(), MetaType.recongroup, MetaType.recongroupExec, MetaType.recon, MetaType.reconExec, 
+				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, runMode);
+	}
+
 
 }

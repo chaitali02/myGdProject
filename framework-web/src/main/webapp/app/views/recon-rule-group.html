@@ -24,6 +24,8 @@
     </div>
     <br>
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div  options="dirOptions" type="'recongroup'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="ruleGroupDetail" comment-panel-directive></div>
+
     <div class="portlet light bordered" id="form_wizard_1">
       <div class="portlet-title">
         <div class="caption">
@@ -40,7 +42,7 @@
             tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(ruleGroupDetail.uuid,ruleGroupDetail.version)">
             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Dependencies" data-toggle="tooltip"
+          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
             data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
             data-ng-click="showGraph(ruleGroupDetail.uuid,ruleGroupDetail.version)">
             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
@@ -56,7 +58,7 @@
         </div>
       </div>
 
-      <div class="portlet-body form">
+      <div class="portlet-body">
         <div class="form-body graph-body" ng-if="showGraphDiv">
           <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
           <div class="spinner" id="graphloader">
@@ -64,9 +66,9 @@
             <div class="bounce2"></div>
             <div class="bounce3"></div>
           </div>
-          <div class="form-body show-graph-body" id="graphWrapper" graph-directive uuid="ruleGroupDetail.uuid" version="rulegroup.defaultVersion.version"></div>
+          <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="ruleGroupDetail.uuid" version="rulegroup.defaultVersion.version"></div>
         </div>
-        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submitRuleGroup()" ng-show="showForm">
+        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submitRuleGroup()" ng-show="showForm" prevent-enter-submit>
           <div class="form-wizard">
             
             <div class="form-body">
@@ -114,7 +116,12 @@
               <div class="form-group">
                 <label class="control-label col-md-3">Tag</label>
                 <div class="col-md-6">
-                  <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input>
+                  <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
+                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                        max-results-to-show="10">
+                    </auto-complete>
+                </tags-input>
                 </div>
               </div>
 

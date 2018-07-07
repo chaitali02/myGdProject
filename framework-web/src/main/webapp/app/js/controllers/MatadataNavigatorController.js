@@ -38,6 +38,7 @@
     CommonService.getMetaStats().then(function(response) {onSuccess(response.data)});
     var onSuccess = function(response) {
       var colorclassarray = ["blue-sharp", "green-sharp", "purple-soft", "red-haze"]
+      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov','comment','graphExec'];
       var metaarray = []
       for (var i = 0; i < response.length; i++) {
         var metajson = {};
@@ -50,9 +51,8 @@
         metajson.class = colorclassarray[randomno];
         var patt = new RegExp("exec");
        // alert(patt)
-        
         var res = patt.exec(response[i].type);
-        if (response[i].type.indexOf("exec") == -1 && response[i].type !="message") {
+        if (response[i].type.indexOf("exec") == -1 && noMetaType.indexOf(response[i].type) == -1) {
           switch (response[i].type) {
             case "datapod":
               metajson.caption = "Datapod";
@@ -184,8 +184,18 @@
             case "paramlist":
               metajson.caption = "param List";
               metajson.icon = "fa fa-flask"
-              metajson.state = "paramlist";
+              metajson.state = "paramlistmodel";
               break;
+            case "operator":
+              metajson.caption = "operator";
+              metajson.icon = "fa fa-flask"
+              metajson.state = "operator";
+            break;
+            case "distribution":
+             metajson.caption = "distribution";
+             metajson.icon = "fa fa-flask"
+             metajson.state = "distribution";
+            break;
             case "paramset":
               metajson.caption = "Param Set";
               metajson.icon = "fa fa-flask"
@@ -294,16 +304,25 @@
             case "recon":
               metajson.caption="Reconciliation";
               metajson.icon='fa fa-compress';
-              metajson.state="recon"
+              metajson.state="datareconrule"
               metajson.param={type:'recon'};
               break;
             case "recongroup":
               metajson.caption="Recon Group";
               metajson.icon='fa fa-compress';
-              metajson.state="recongroup"
+              metajson.state="datareconrulegroup"
               metajson.param={type:'recongroup'};
-              break;  
+              break; 
+            case "graphpod":
+              metajson.caption="Graphpod"
+              metajson.icon='fa fa-bar-chart';
+              metajson.state="listgraphpod"
+              break
+            default:
+              console.log(response[i].type)
+                 
           }
+
 
           metaarray[i] = metajson
         }
