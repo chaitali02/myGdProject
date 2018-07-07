@@ -84,8 +84,8 @@
               <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select" >Name</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
                   <p-dropdown [options]="arrayNames"          
-                  [(ngModel)]="name1"
-                  name="name1"
+                  [(ngModel)]="name"
+                  name="name"
                   [style]="{'width':'100%','padding':'3px'}"
                   [filter]="true"
                   [disabled]="mode == 'false'"  placeholder="Select"
@@ -128,10 +128,10 @@
 
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
-              <div class="col-md-9 col-sm-6 col-xs-12">
-                  <p-dropdown [options]="allActive"          
-                  [(ngModel)]="active"
-                  name="active"
+              <div class="col-md-9 col-sm-6 col-xs-12">{{status|json}}
+                  <p-dropdown [options]="allStatus"          
+                  [(ngModel)]="status"
+                  name="status"
                   [style]="{'width':'100%','padding':'3px'}"
                   [filter]="true"
                   [disabled]="mode == 'false'" 
@@ -154,7 +154,7 @@
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                <input type="submit" class="btn btn-success" value="Search" name="submit" (click)="searchCriteria()">
+                <input type="submit" class="btn btn-success" value="Search" name="submit" (click)="onSearchCriteria()">
               </div>
             </div>
           </div>                           
@@ -169,72 +169,56 @@
 <div class="portlet box green">
   <div class="portlet-title">
     <div class="caption">
-      <i class="fa fa-cogs"></i>Search Criteria
+      <i class="fa fa-cogs"></i>
+      <span [innerHTML]="gridTitle"></span>
     </div>
+
     <div class="tools">
-      <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refershGrid()" data-original-title=""  title="">
-        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="refreshSearchResults()">
+        <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
+        </i>
       </a>
-      <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+      <a href="javascript:;" class="collapse aSize" style="height:14px;">
+      </a>
     </div>
+   
   </div>
-
   <div class="portlet-body">
-    <form class="form-horizontal">
-        <div class="row">
-          <div class="col-md-12">
-
-              <!-- <div class="form-body" style="padding-top:50px;">
-                  <p-dataTable [value]="featuresArray"   [rows]="15" [immutable]="false" resizableColumns="true">
-                      <p-column [style]="{'width':'2%'}" selectionMode="multiple" [editable]="false" *ngIf="mode == 'false'">
-                      </p-column>
-                      <p-column [style]="{'width':'2%'}" *ngIf="mode == 'true'">
-                          <ng-template pTemplate="body">
-                              <input type="checkbox" [disabled]="true" />
-                          </ng-template>
-                      </p-column>
-                      <p-column field="featureId" header="FeatureId" [editable]="false" [style]="{'width':'10%','text-align':'center'}"></p-column>
-                      <p-column field="name" header="Name" [editable]="mode == 'false' || !mode" [style]="{'width':'15%','text-align':'center'}">
-                        
-
-                      </p-column>
-                       -->
-
-
-
-                      <!-- <p-column field="type" header="Type" [style]="{'width':'15%','text-align':'center'}">
-                          <ng-template let-col let-row="rowData" let-i="rowIndex" pTemplate type="header">
-                              <p-dropdown [options]="typeOfArray" [(ngModel)]="row[col.field]" (onChange)="disableMinMAxVal(i)" appendTo="body" required="true"
-                                  [autoWidth]="false" [style]="{'width':'100%'}" name="type+{{i}}"
-                                  placeholder="Select">
-                              </p-dropdown>
-                          </ng-template>
-                      </p-column>
-                      <p-column field="desc" header="Desc" [editable]="mode == 'false'|| !mode" [style]="{'width':'10%','text-align':'center'}">
-                      </p-column>
-                      <p-column field="minVal" header="MinVal" [editable]="mode == 'false' || !mode" [style]="{'width':'10%','text-align':'center'}">
-                         
-                      </p-column>
-
-                      <p-column field="maxVal" header="MaxVal" [editable]="mode == 'false' || !mode " [style]="{'width':'10%','text-align':'center','z-index':'100'}"></p-column>
-
-                      <p-column field="newCol" header="Param" *ngIf="isParamColEnable" [style]="{'width':'20%','text-align':'center','height':'40px'}">
-                         
-                          <ng-template let-col let-row="rowData" let-i="rowIndex" pTemplate type="header">
-
-                              <p-dropdown [options]="getParamArray" [(ngModel)]="row[col.field]" appendTo="body" required="true" [autoWidth]="false" name="param+{{i}}"
-                                  [style]="{'width':'100%'}" placeholder="Select" (onChange)="changeName(i)">
-                              </p-dropdown>
-                          </ng-template>
-                      </p-column> -->
-
-
-
-                  <!-- </p-dataTable>-->
-          </div> 
-
-
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="col-md-3 col-md-offset-9" style="padding:4px 10px;border-bottom: 0 none">
+          <i class="fa fa-search" style="margin-left: 12%; margin-top: 2%;"></i>
+          <input #gb type="text" style="float:right;" pInputText placeholder="Search">
         </div>
-    </form>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-12">
+        <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" (onRowSelect)="onRowSelect($event)"
+          selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
+          [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
+          <!-- <p-column field="uuid" header="UUID" [sortable]="true"></p-column> -->
+          <p-column field="name" header="Name" [sortable]="true"></p-column>
+          <p-column field="version" header="Version" [sortable]="true"></p-column>
+          <p-column field="createdBy.ref.name" header="Created By" [sortable]="true"></p-column>
+          <p-column field="createdOn" header="Created On" [sortable]="true"></p-column>          
+          <p-column field="status.stage" header="Status" [sortable]="true" [style]="{'text-align':'center'}">
+            <ng-template let-colstatus let-statused="rowData" pTemplate="body">
+              <div class="label-sm label-success" *ngIf="statused.status!=null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':statused.status.color}">{{statused.status.stage}}</div>
+              <div class="label-sm label-success" *ngIf="statused.status==null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#36c6d3'}">-N-A-</div>
+            </ng-template>
+          </p-column>          
+          <p-column header="Action">
+            <ng-template let-col let-car="rowData" pTemplate="body">
+              <p-menu #menu popup="popup" [model]="items" appendTo="body"></p-menu>
+              <div style="text-align: center;">
+                <button type="button" pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(car);"></button>
+              </div>
+            </ng-template>
+          </p-column>
+        </p-dataTable>
+      </div>
+    </div>
   </div>
 </div>
