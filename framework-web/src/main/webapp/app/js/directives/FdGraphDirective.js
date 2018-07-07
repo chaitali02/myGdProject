@@ -38,24 +38,22 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 }
             }
             scope.getGraphpodObj();
-            scope.search=function(){
-                scope.isGraphShow=false;
-                scope.isGraphInProgess=true;
-                scope.noRecordFound=false;
-                scope.isError=false;
-                var graphFiler=null;
+            scope.getFilterData=function(){
+                var graphFilerBody=null;
                 if(scope.filter !=null){
-                    graphFiler={};
+                    graphFilerBody={};
+                    var graphFilter={};
                     var edgeFilter=[];
                     var nodeFilter=[];
                     if(scope.filter.nodeTableArray && scope.filter.nodeTableArray.length >0){
                         for(var i=0;i<scope.filter.nodeTableArray.length;i++){
                             var nodeFilterObj={};
                             var operand={};
+                            
                             nodeFilterObj.logicalOperator=scope.filter.nodeTableArray[i].logicalOperator;
-                            nodeFilterObj.operator=scope.filter.nodeTableArray[i].operator.value;
+                            nodeFilterObj.operator=scope.filter.nodeTableArray[i].operator;
                             operand.propertyName=scope.filter.nodeTableArray[i].selectAttribute.attributeName;
-                            if(scope.filter.nodeTableArray[i].operator.value =="BETWEEN"){
+                            if(scope.filter.nodeTableArray[i].operator =="BETWEEN"){
                                 operand.propertyValue=scope.filter.nodeTableArray[i].rhsvalue1+" and "+scope.filter.nodeTableArray[i].rhsvalue2;
                             }else{
                                 operand.propertyValue=scope.filter.nodeTableArray[i].rhsvalue;
@@ -69,9 +67,9 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             var edgeFilterObj={};
                             var operand={};
                             edgeFilterObj.logicalOperator=scope.filter.edgeTableArray[i].logicalOperator;
-                            edgeFilterObj.operator=scope.filter.edgeTableArray[i].operator.value;
+                            edgeFilterObj.operator=scope.filter.edgeTableArray[i].operator;
                             operand.propertyName=scope.filter.edgeTableArray[i].selectAttribute.attributeName;
-                            if(scope.filter.edgeTableArray[i].operator.value =="BETWEEN"){
+                            if(scope.filter.edgeTableArray[i].operator =="BETWEEN"){
                                 operand.propertyValue=scope.filter.edgeTableArray[i].rhsvalue1+" and "+scope.filter.edgeTableArray[i].rhsvalue2;
                             }else{
                                 operand.propertyValue=scope.filter.edgeTableArray[i].rhsvalue;
@@ -80,16 +78,27 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             edgeFilter[i]=edgeFilterObj
                         }
                     }
-                    graphFiler.nodeFilter=nodeFilter;
-                    graphFiler.edgeFilter=edgeFilter;
+                    graphFilter.nodeFilter=nodeFilter;
+                    graphFilter.edgeFilter=edgeFilter;
+                    graphFilerBody.graphFilter=graphFilter;
                 }
-                console.log(JSON.stringify(graphFiler));
-                scope.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"1","graphpod");
+                return graphFilerBody;
+            }
+
+            scope.search=function(){
+                scope.isGraphShow=false;
+                scope.isGraphInProgess=true;
+                scope.noRecordFound=false;
+                scope.isError=false;
+                var graphFilerBody= scope.getFilterData();
+               
+                console.log(JSON.stringify(graphFilerBody));
+                scope.getGraphPodResults(scope.uuid,scope.version,scope.nodeId,scope.nodeType,"1","graphpod",graphFilerBody);
               
             }
 
-            scope.getGraphPodResults=function(uuid,version,nodeId,nodeType,degree,type){
-                GraphpodService.getGraphPodResults(uuid,version,nodeId,nodeType,degree,type).then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
+            scope.getGraphPodResults=function(uuid,version,nodeId,nodeType,degree,type,data){
+                GraphpodService.getGraphPodResults(uuid,version,nodeId,nodeType,degree,type,data).then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
                     scope.isGraphInProgess=false;
                     if(response.edges.length >0){    
@@ -173,23 +182,42 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     .attr("id", "svg");
                   
                 svg.append('svg:defs').selectAll('marker')
-                    .data(['end'])
+                    .data([0])
                     .enter()
                     .append('svg:marker')
                     .attr({
                         'id': "arrowhead",
                         'viewBox': '0 -5 10 10',
-                        'refX': 22,//22
+                        'refX': 17,
                         'refY': 0,
                         'orient': 'auto',
-                        'markerWidth': 20,
-                        'markerHeight': 20,
+                        'markerWidth': 10,
+                        'markerHeight': 10,
                         'markerUnits': "strokeWidth",
                         'xoverflow': 'visible'
                     })
                     .append('svg:path')
                     .attr('d', 'M0,-5L10,0L0,5')
                     .attr('fill', '#ccc')
+                    .attr("marker-end", "url(#end)");
+                    svg.append('svg:defs').selectAll('marker')
+                    .data([1])
+                    .enter()
+                    .append('svg:marker')
+                    .attr({
+                        'id': "arrowheadhover",
+                        'viewBox': '0 -5 10 10',
+                        'refX': 15,
+                        'refY': 0,
+                        'orient': 'auto',
+                        'markerWidth': 10,
+                        'markerHeight':10,
+                        'markerUnits': "strokeWidth",
+                        'xoverflow': 'visible'
+                    })
+                    .append('svg:path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#32c5d2')
                     .attr("marker-end", "url(#end)");
 
                 var force = d3.layout.force();
@@ -239,8 +267,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                         .attr("startOffset", "50%")
                         .attr("text-anchor", "middle")
                         .attr("xlink:href", function (d) { return "#invis_" + d.source.id + "-" + d.value + "-" + d.target.id; })
-                        .style("fill", "#cccccc")
-                        .style("font-size", 10)
+                      //  .style("fill", "#cccccc")
+                        .style("font-size", 11)
                         .text(function (d) { return d.value; })  
                          //.on("click", onClickEdge);
                          .on("contextmenu", rightClickEdge);
@@ -468,7 +496,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 console.log(d);
                 var this_node=this;
                 $(this_node).find(".node-refresh").css("display","block");
-                GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'1',"graphpod").then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
+                GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'1',"graphpod",null).then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
                     $(this_node).find(".node-refresh").css("display","none");
                     if(response.edges.length >0){    
@@ -656,7 +684,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 nodeTable.id=scope.nodeTableArray.length;
                 nodeTable.nodeId;
                 nodeTable.logicalOperator=scope.nodeTableArray.length >0 ?scope.logicalOperator[0]:"";
-                nodeTable.operator=scope.operator[0];
+              //  nodeTable.operator=scope.operator[0];
                 nodeTable.source=source;
                 nodeTable.allAttributeInto=[]
                 scope.nodeTableArray.splice(scope.nodeTableArray.length, 0, nodeTable);
@@ -712,7 +740,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 edgeTable.id=scope.edgeTableArray.length;
                 edgeTable.nodeId;
                 edgeTable.logicalOperator=scope.edgeTableArray.length >0 ?scope.logicalOperator[0]:"";
-                edgeTable.operator=scope.operator[0];
+             //   edgeTable.operator=scope.operator[0];
                 edgeTable.source=source;
                 edgeTable.allAttributeInto=[];
                 scope.edgeTableArray.splice(scope.edgeTableArray.length, 0, edgeTable);
