@@ -89,6 +89,7 @@
             "name" : "ypalrecha"
         }
     },
+    "useHyperParams": "N",
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "tags" : [],
     "active" : "Y",
