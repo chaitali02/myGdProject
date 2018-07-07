@@ -1802,7 +1802,6 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
-		
 		/*
 		 * map: key=oldColName, value=newColName
 		 */
@@ -1972,6 +1971,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		df.show(false);
 		df.printSchema();
 		try {
 			Dataset<Row>[] splits = df
@@ -1984,7 +1984,12 @@ public class SparkExecutor<T> implements IExecutor {
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
 			if (trainName.contains("LinearRegression")
-					|| trainName.contains("LogisticRegression")) {
+					|| trainName.contains("LogisticRegression")
+					|| trainName.contains("LinearSVC")
+					|| trainName.contains("RandomForest")
+					|| trainName.contains("AFTSurvivalRegression")
+					|| trainName.contains("DecisionTree")
+					|| trainName.contains("NaiveBayes")) {
 				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
 				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
 			} else {
@@ -1998,7 +2003,12 @@ public class SparkExecutor<T> implements IExecutor {
 			Object obj = dynamicClass.newInstance();
 			Method method = null;
 			if (trainName.contains("LinearRegression")
-					|| trainName.contains("LogisticRegression")) {
+					|| trainName.contains("LogisticRegression")
+					|| trainName.contains("LinearSVC")
+					|| trainName.contains("RandomForest")
+					|| trainName.contains("AFTSurvivalRegression")
+					|| trainName.contains("DecisionTree")
+					|| trainName.contains("NaiveBayes")) {
 				method = dynamicClass.getMethod("setLabelCol", String.class);
 				method.invoke(obj, "label");
 			}
@@ -2053,16 +2063,17 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public Evaluator getEvaluatorByTrainClass(String trainName) {
-		if(trainName.contains("regression") || trainName.contains("Regressor")) {
+		
+		if(trainName.contains("RandomForestClassifier") || trainName.contains("DecisionTreeClassifier")) {
+			return new  MulticlassClassificationEvaluator();
+		} else if(trainName.contains("regression") || trainName.contains("Regressor")) {
 			return new RegressionEvaluator();
 		} else if(trainName.contains("classification") || trainName.contains("Classifier")) {
 			return new BinaryClassificationEvaluator() ;
-		} else if(trainName.contains("XXXXXXX")) {
-			return new  MulticlassClassificationEvaluator();
-		}  else {
-			return new RegressionEvaluator() ;
+		} else if(trainName.contains("clustering")) {
+			return null;//new ClusteringEvaluator();
 		}
-		//return null;		
+		return null;		
 	}
 	
 
@@ -2175,7 +2186,7 @@ public class SparkExecutor<T> implements IExecutor {
 				double[] doubleParam = new double[splits.length];
 				int i = 0; 
 				for(String split : splits) {
-					doubleParam[i] = Double.parseDouble(split);
+					doubleParam[i] = Double.parseDouble(split.trim());
 					i++;
 				}
 				paramGridBuilder.addGrid((DoubleParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), doubleParam);
@@ -2185,7 +2196,7 @@ public class SparkExecutor<T> implements IExecutor {
 				int[] intParam = new int[splits.length];
 				int j = 0; 
 				for(String split : splits) {
-					intParam[j] = Integer.parseInt(split);
+					intParam[j] = Integer.parseInt(split.trim());
 					j++;
 				}
 				paramGridBuilder.addGrid((IntParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), intParam);
@@ -2195,7 +2206,7 @@ public class SparkExecutor<T> implements IExecutor {
 				float[] floatParam = new float[splits.length];
 				int k = 0; 
 				for(String split : splits) {
-					floatParam[k] = Float.parseFloat(split);
+					floatParam[k] = Float.parseFloat(split.trim());
 					k++;
 				}
 				paramGridBuilder.addGrid((FloatParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), floatParam);
@@ -2205,7 +2216,7 @@ public class SparkExecutor<T> implements IExecutor {
 				long[] longParam = new long[splits.length];
 				int l = 0; 
 				for(String split : splits) {
-					longParam[l] = Long.parseLong(split);
+					longParam[l] = Long.parseLong(split.trim());
 					l++;
 				}
 				paramGridBuilder.addGrid((LongParam) trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), longParam);
@@ -2218,7 +2229,7 @@ public class SparkExecutor<T> implements IExecutor {
 			case "Param" :
 				List<String> paramValues = new ArrayList<>(splits.length);
 				for(String split : splits) {
-					paramValues.add(split);
+					paramValues.add(split.trim());
 				}
 				Seq<T> seq = (Seq<T>) JavaConverters.asScalaIteratorConverter(paramValues.iterator()).asScala().toSeq();
 				paramGridBuilder.addGrid((Param<T>)trainClassObject.getClass().getMethod(paramName).invoke(trainClassObject), seq);
