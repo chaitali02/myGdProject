@@ -50,7 +50,7 @@
     <div class="clearfix"></div>
     <div class="col-md-12">
         <div class="form-body centercontent" ng-if="isError" style="color:red;">Some Error Occurred</div>
-        <div class="form-body centercontent" ng-if="noRecordFound" style="color:white;">No Record Found</div>
+        <div class="form-body centercontent" ng-if="noRecordFound" style="color:blue;">No Record Found</div>
         <div class="spinner centercontent" style="min-height:300px;" ng-show="isGraphInProgess">
             <div class="bounce1"></div>
             <div class="bounce2"></div>
@@ -116,7 +116,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">Node Details</h4>
+                <h4 class="modal-title">{{nodeDetailModel.nodeType}}-{{nodeDetailModel.nodeName}}</h4>
                 <!-- <div class="row">
                         <div class="col-md-1">
                             <div class="one" id="colorID" style="margin-left:5px;margin-bottom:10px;background-color:#0bb7ed;"></div>
@@ -128,13 +128,13 @@
                 <div class="slimScrollDiv" style="padding-top:10px;">
                     <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
                         <form class="form-horizontal" novalidate="novalidate" name="myform1">
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label class="col-md-3 control-label" style="padding-top: 0px;">Id</label>
                                 <div class="col-md-8">
                                     <span class="control-label">{{nodeDetailModel.id}}</span>
                                 </div>
-                            </div>
-                            <div class="form-group">
+                            </div> -->
+                            <!-- <div class="form-group">
                                 <label class="col-md-3 control-label" style="padding-top: 0px;">Type</label>
                                 <div class="col-md-8">
                                     <span class="control-label">{{nodeDetailModel.nodeType}}</span>
@@ -145,11 +145,11 @@
                                 <div class="col-md-8">
                                     <span class="control-label">{{nodeDetailModel.nodeName}}</span>
                                 </div>
-                            </div>
-                            <div class="form-group">
+                            </div> -->
+                            <!-- <div class="form-group">
                                 <label class="col-md-3 control-label" style="padding-top: 0px;">Properties</label>
 
-                            </div>
+                            </div> -->
                             <!-- <div class="x_title">
                                 <h4>
                                     <strong>Properties</strong>
@@ -181,30 +181,28 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">Edge Details</h4>
+                <h4 class="modal-title">{{edgeDetailModel.edgeType}}-{{edgeDetailModel.edgeName}}</h4>
             </div>
             <div class="modal-body">
                 <div class="slimScrollDiv" style="padding-top:10px;">
                     <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
                         <form class="form-horizontal" novalidate="novalidate" name="myform1">
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label class="col-md-3 control-label" style="padding-top: 0px;">Type</label>
                                 <div class="col-md-8">
                                     <span class="control-label">{{edgeDetailModel.edgeType}}</span>
                                 </div>
-                            </div>
-                            <div class="form-group">
+                            </div> -->
+                            <!-- <div class="form-group">
                                 <label class="col-md-3 control-label" style="padding-top: 0px;">Name</label>
                                 <div class="col-md-8">
                                     <span class="control-label">{{edgeDetailModel.edgeName}}</span>
                                 </div>
-                            </div>
-                            <div class="form-group">
+                            </div> -->
+                            <!-- <div class="form-group">
                                 <label class="col-md-3 control-label" style="padding-top: 0px;">Properties</label>
-                                <!-- <div class="col-md-8">
-                                        <span class="control-label">{{edgeDetailModel.edgeName}}</span>
-                                    </div> -->
-                            </div>
+                               
+                            </div> -->
                             <!-- <div class="x_title">
                                 <h4>
                                     <strong>Properties</strong>

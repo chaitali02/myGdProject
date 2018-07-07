@@ -55,9 +55,12 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             nodeFilterObj.operator=scope.filter.nodeTableArray[i].operator;
                             operand.propertyName=scope.filter.nodeTableArray[i].selectAttribute.attributeName;
                             if(scope.filter.nodeTableArray[i].operator =="BETWEEN"){
-                                operand.propertyValue=scope.filter.nodeTableArray[i].rhsvalue1+" and "+scope.filter.nodeTableArray[i].rhsvalue2;
+                                var value1="'"+scope.filter.nodeTableArray[i].rhsvalue1+"'";
+                                var value2="'"+scope.filter.nodeTableArray[i].rhsvalue2+"'";
+                                operand.propertyValue=value1+" and "+value2;
                             }else{
-                                operand.propertyValue=scope.filter.nodeTableArray[i].rhsvalue;
+                                var value=scope.filter.nodeTableArray[i].rhsvalue.replace(/["']/g, "");
+                                operand.propertyValue="'"+value+"'"
                             }
                             nodeFilterObj.operand=operand;
                             nodeFilter[i]=nodeFilterObj
@@ -71,9 +74,12 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             edgeFilterObj.operator=scope.filter.edgeTableArray[i].operator;
                             operand.propertyName=scope.filter.edgeTableArray[i].selectAttribute.attributeName;
                             if(scope.filter.edgeTableArray[i].operator =="BETWEEN"){
-                                operand.propertyValue=scope.filter.edgeTableArray[i].rhsvalue1+" and "+scope.filter.edgeTableArray[i].rhsvalue2;
+                                var value1="'"+scope.filter.edgeTableArray[i].rhsvalue1+"'"
+                                var value2="'"+scope.filter.edgeTableArray[i].rhsvalue2+"'"
+                                operand.propertyValue=value1+" and "+value2;
                             }else{
-                                operand.propertyValue=scope.filter.edgeTableArray[i].rhsvalue;
+                                var value=scope.filter.edgeTableArray[i].rhsvalue.replace(/["']/g, "");
+                                operand.propertyValue="'"+value+"'"
                             }
                             edgeFilterObj.operand=operand;
                             edgeFilter[i]=edgeFilterObj
@@ -130,7 +136,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 };
 
                 this.addLink = function (d) {
-                    links.push({ "source": findNode(d.source.id), "target": findNode(d.target.id), "value": d.value,"edgeName":d.edgeName,"edgeType":d.edgeType,"edgeProperties":d.edgeProperties});
+                    links.push({ "source": findNode(d.source.id), "target": findNode(d.target.id), "value": d.value.replace(/["\"]/g, ""),"edgeName":d.edgeName,"edgeType":d.edgeType,"edgeProperties":d.edgeProperties});
                     update();
                 };
 
@@ -361,7 +367,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             largeArc = 0;
 
                         if (siblingCount > 1) {
-                             if(siblingCount >5){
+                             if(siblingCount >10){
                                 largeArc=1;
                              }
                            
@@ -481,8 +487,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     for(var i=0;i<tempNPS.length;i++){
                         var temp=tempNPS[i].split(":");
                         var npObj={}
-                        npObj.name=temp[0];
-                        npObj.value=temp[1];
+                        npObj.name=temp[0].replace(/["\"]/g, "");
+                        npObj.value=temp[1].replace(/["\"]/g, "");
                         nodeProperties[i]=npObj;
                     }
                     scope.nodeDetailModel.nodeProperties=nodeProperties;
@@ -497,7 +503,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 console.log(d);
                 var this_node=this;
                 $(this_node).find(".node-refresh").css("display","block");
-                GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'1',"graphpod",null).then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
+                var graphFilerBody= scope.getFilterData();
+                GraphpodService.getGraphPodResults(scope.uuid,scope.version,d.id,d.nodeType,'1',"graphpod",graphFilerBody).then(function (response) {onSuccessGetGraphPodResults(response.data)},function(response){onError(response.data)});
                 var onSuccessGetGraphPodResults=function(response){
                     $(this_node).find(".node-refresh").css("display","none");
                     if(response.edges.length >0){    
@@ -633,8 +640,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     for(var i=0;i<tempEP.length;i++){
                         var temp=tempEP[i].split(":");
                         var epObj={}
-                        epObj.name=temp[0];
-                        epObj.value=temp[1];
+                        epObj.name=temp[0].replace(/["\"]/g, "");
+                        epObj.value=temp[1].replace(/["\"]/g, "");
                         edgeProperties[i]=epObj;
                     }
                     scope.edgeDetailModel.edgeProperties=edgeProperties;
