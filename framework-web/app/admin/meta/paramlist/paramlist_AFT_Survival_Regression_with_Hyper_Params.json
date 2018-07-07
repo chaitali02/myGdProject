@@ -1,7 +1,7 @@
 {
-  "uuid": "b8d2e676-bff6-4978-94be-1019e376a3c4",
-  "version": "1530800472",
-  "name": "paramlist_linear_regression_with_hyper_params",
+  "uuid": "7b894ae4-e9c4-46f1-ad8e-431beee90032",
+  "version": "1530949002",
+  "name": "paramlist_AFT_Survival_Regression_with_Hyper_Params",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -9,7 +9,7 @@
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Thu Jul 05 19:51:12 IST 2018",
+  "createdOn": "Sat Jul 07 13:06:42 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -24,28 +24,17 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "regParam",
+      "paramName": "aggregationDepth",
       "paramType": "list",
       "paramValue": {
         "ref": {
           "type": "simple"
         },
-        "value": "0.3, 0.1, 0.05, 0.01, 0.005"
+        "value": "2, 4, 6"
       }
     },
     {
       "paramId": "1",
-      "paramName": "elasticNetParam",
-      "paramType": "list",
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "0.1, 0.05, 0.01, 0.005, 0.001"
-      }
-    },
-    {
-      "paramId": "2",
       "paramName": "numFolds",
       "paramType": "integer",
       "paramValue": {
