@@ -324,13 +324,20 @@
                                                     </span>
                                                 </div>
                                             </span>
-                                            <span ng-if="tabledata.operator !='BETWEEN'">
+                                            <span ng-if="spacialOperator.indexOf(tabledata.operator) !=-1">
+                                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                    <input class="form-control" type="text" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
+                                                        required disable-validation-message="">
+                                                </span>
+                                            </span>
+                                            <span ng-if="tabledata.operator =='='">
                                                 <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                                     <input class="form-control" type="text" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                                         required disable-validation-message="" uib-tooltip="{{myformFilter['rhsvalue_'+$index].$valid ? '' : 'enter value into single quotes'}}"
                                                         ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/" tooltip-placement="left">
                                                 </span>
                                             </span>
+                                            
                                         </div>
                                     </td>
                                 </tr>
@@ -354,8 +361,8 @@
                                             <th style="width:20%;text-align:center;">Logical Operator</th>
                                             <th style="width:20%;text-align:center;">Source</th>
                                             <th style="width:20%;text-align:center;">Attribute</th>
-                                            <th style="width:20%;text-align:center;">Operator</th>
-                                            <th style="width:15%;text-align:center;">Value</th>
+                                            <th style="width:15%;text-align:center;">Operator</th>
+                                            <th style="width:20%;text-align:center;">Value</th>
                                         </tr>
                                     </thead>
                                     <tr ng-repeat="tabledata in edgeTableArray">
@@ -415,7 +422,13 @@
                                                         </span>
                                                     </div>
                                                 </span>
-                                                <span ng-if="tabledata.operator !='BETWEEN'">
+                                                <span ng-if="spacialOperator.indexOf(tabledata.operator) !=-1">
+                                                    <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                        <input class="form-control" type="text" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
+                                                            required disable-validation-message="">
+                                                    </span>
+                                                </span>
+                                                <span ng-if="tabledata.operator =='='">
                                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                                         <input class="form-control" type="text" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                                             required disable-validation-message="" uib-tooltip="{{myformFilter['rhsvalue_'+$index].$valid ? '' : 'enter value into single quotes'}}"
