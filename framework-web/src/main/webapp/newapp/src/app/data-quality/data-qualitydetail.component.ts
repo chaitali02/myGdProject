@@ -519,7 +519,8 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
     OnSuccessubmit(response){
       if (this.checkboxModelexecution == true) {
         this._commonService.getOneById("dq",response).subscribe(
-            response => {this.OnSucessGetOneById(response); },
+            response => {this.OnSucessGetOneById(response);
+              this.goBack() },
             error => console.log('Error :: ' + error)
         )
       } //End if

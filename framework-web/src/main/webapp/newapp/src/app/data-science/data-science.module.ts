@@ -8,7 +8,7 @@ import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { MessagesModule, MessageModule } from 'primeng/primeng';
-import { CheckboxModule} from 'primeng/primeng';
+import { CheckboxModule, DataTableModule} from 'primeng/primeng';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
@@ -26,17 +26,22 @@ import { AlgorithmComponent } from './algorithm/algorithm.component';
 import { DataScienceComponent } from './data-science.component';
 
 import { ModelService } from './../metadata/services/model.service';
-import { ResultsComponent } from './results/results.component';
+import { ResultsComponent } from './results/resultsCommon.component';
 import {TrainingComponent } from './training/training.component';
 import { TrainingService } from '../metadata/services/training.service';
 import { DistributionComponent } from './distribution/distribution.component';
 import { DistributionService } from '../metadata/services/distribution.service';
+import { DatasetService } from '../metadata/services/dataset.service';
 import { OperatorComponent } from './operator/operator.component';
 import { OperatorService } from '../metadata/services/operator.service';
 import { PredictionComponent } from './prediction/prediction.component';
 import { PredictionService } from '../metadata/services/prediction.service';
 import {SimulationComponent } from './simulation/simulation.component';
 import {SimulationService } from '../metadata/services/simulation.service';
+//import {PopupModule} from 'ng2-opd-popup';
+import { DialogModule } from 'primeng/components/dialog/dialog'
+import { CommonListService } from '../common-list/common-list.service';
+import { CalendarModule } from 'primeng/components/calendar/calendar';
 
 @NgModule({
     imports:[
@@ -54,7 +59,10 @@ import {SimulationService } from '../metadata/services/simulation.service';
         DropdownModule,
         GrowlModule,
         CheckboxModule,
-        
+        DataTableModule,
+        DialogModule,
+        CalendarModule,
+       // PopupModule.forRoot()
 
     ],
     declarations :[
@@ -76,10 +84,12 @@ import {SimulationService } from '../metadata/services/simulation.service';
         ModelService,
         TrainingService,
         DistributionService,
+        DatasetService,
         PredictionService, 
         SimulationService,
         OperatorService,
-        OperatorComponent
+        OperatorComponent,
+        CommonListService
     ]
 })
  

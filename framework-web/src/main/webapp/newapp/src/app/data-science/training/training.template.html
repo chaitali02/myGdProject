@@ -8,29 +8,33 @@
             <div class="portlet-title" style="margin-bottom:0px;">
                 <div class="caption">
                     <i class=" icon-layers "></i>
-                    <span class="caption-subject  bold ">Train Wizard-
+                    <span class="caption-subject  bold ">Training Wizard-
                         <span class="step-title"> Step 1 of 3 </span>
                     </span>
                 </div>
 
                 <div class="actions">
-                    <!-- <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass] ="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                       ng-hide="isAdd" data- (click)="enableEdit(dqdata.uuid,dqdata.version)">
-                       <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white;"></i>
+                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+                        tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-(click)="enableEdit(train.uuid,train.version)"
+                        *ngIf="mode">
+                        <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                     </a>
-                    <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip [ngClass] ="(showdag==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-                       ng-hide="isAdd" data- (click)="showview(dqdata.uuid,dqdata.version)">
-                       <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white;"></i>
+                    <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
+                        tooltip [ngClass]="(showdag==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
+                        data-(click)="showview(train.uuid,train.version)" *ngIf="mode">
+                        <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                     </a>
-                    <a class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip  ng-show="isDependencyShow" [ngClass] ="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(dqdata.uuid,dqdata.version)"  style="border:0px solid transparent !important;">
-                        <i class="fa fa-sitemap" style="margin:2px auto;color:white;"></i>
+                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" disabled="true" title="Knowledge Graph" data-toggle="tooltip"
+                        data-placement="top" tooltip ng-show="isDependencyShow" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'"
+                        data- (click)="showDagGraph(train.uuid,train .version)" *ngIf="mode">
+                        <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
                     </a>
-                    <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white borderless"  (click)="broadcastRefreshData()" data-original-title="" title=""  style="border:0px solid transparent !important;">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a> -->
-                    <a class="btn btn-circle btn-icon-only btn-default bg-red bg-hover-grey-salsa font-white borderless" style="border:0px solid transparent !important;"
-                        (click)="goBack()">
-                        <i class="fa fa-times" style="margin: 2px auto;color:white;"></i>
+                    <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" data-(click)="broadcastRefreshData()" data-original-title=""
+                        disabled="true" title="refresh">
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+                    </a>
+                    <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" title="Close" (click)="goBack()">
+                        <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
                     </a>
                 </div>
             </div>
@@ -153,59 +157,92 @@
                                 <!--Start Tab2-->
                                 <div class="tab-pane" id="tab2" [ngClass]="{'active' : continueCount == 2}">
                                     <form class="form-horizontal" name="myform2" id="submit_form2" (submit)="countContinue()" novalidate="novalidate">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                                <p-dropdown [options]="allModel" [(ngModel)]="selectModel" name="selectModel" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
+                                                    [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeModel(true)">
+                                                </p-dropdown>
 
-                                        <!-- <div class="portlet light bordered">
-                                        <div class="portlet-title">
-                                          <div class="caption">
-                                            <span class="caption-subject  sbold ">Features</span>
-                                          </div>
-                                          </div>
-                                        <div class="portlet-body">
-                                            <div class="form-body" style="padding-top:5px;padding-bottom:10px">
-                                                <table  class=" row-border hover table  table-striped table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:2%; text-align:center">ID</th>
-                                                            <th style="width:18%;">Features</th>
-                                                            <th style="width:20%;">Attributes</th>
-                                                            
-                                                      </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr *ngFor="let data of filterTableArray;let i=index">
-                                                            
-                                                            <td style="text-align:center;Vertical-align:middle;"><input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedFilter+{{i}}" [disabled]="mode == 'true'"/>
-                                                            </td>
-                                                            <td><select class="form-control" [(ngModel)]="data.logicalOperator" name="logicalOperator{{i}}" [disabled]="i === 0 || mode == 'true'">
-                                                                <option *ngFor="let app of logicalOperators" [ngValue]="app">{{app}}</option>
-                                                            </select>
-                                                            </td>
-                                                            <td>
-                                                                <p-dropdown [options]="lhsdatapodattributefilter"          
-                                                                [(ngModel)]="data.lhsFilter"
-                                                                name="{{data.lhsFilter.attrId}}"
-                                                                dataKey="u_Id"
-                                                                [style]="{'width':'100%','padding':'3px'}"
-                                                                [disabled]="mode == 'true'"
-                                                                [filter]="true">
-                                                                </p-dropdown>
-                                                            
-                                                            </td>
-                                                            <td>  
-                                                                <select class="form-control" [(ngModel)]="data.operator" name="operator{{i}}" [disabled]="mode == 'true'">
-                                                                    <option *ngFor="let app of operators" [ngValue]="app">{{app}}</option>
-                                                                </select>
-                                                            </td>
-                                                            <td><input type="text" class="form-control" [(ngModel)]="data.filtervalue" name="filtervalue{{i}}" [disabled]="mode == 'true'">
-                                                            </td>
-                                                        </tr>
-                                                    </tbody> 
-                                                </table>
-                                           </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                       -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Source</label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
 
+                                                <select class="form-control" [(ngModel)]="selectSourceType" (change)="onChangeSourceType()" name="selectSourceType" [disabled]="mode == 'true'">
+                                                    <option *ngFor="let app of sourceTypes" [ngValue]="app">{{app}}</option>
+                                                </select>
+
+                                            </div>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                                            </label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <p-dropdown [options]="allSource" [(ngModel)]="selectSource" name="selectSource" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
+                                                    [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSource()">
+                                                </p-dropdown>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Label</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                                <p-dropdown [options]="allsourceLabel" [(ngModel)]="selectLabel" name="selectLabel" dataKey="label" [style]="{'width':'100%','padding':'3px'}"
+                                                    [filter]="true" [disabled]="mode == 'true'">
+                                                </p-dropdown>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="portlet light bordered">
+                                                <div class="portlet-title">
+                                                    <div class="caption">
+                                                        <span class="caption-subject  sbold ">Features</span>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <div class="btn-group btn-group-devided" data-toggle="buttons">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="portlet-body">
+                                                    <div class="">
+                                                        <table class=" row-border hover table  table-striped table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width:2%; text-align:center">ID</th>
+                                                                    <th style="width:18%;">Features</th>
+                                                                    <th style="width:20%;">Attributes</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let data of featureMapTableArray;let i=index">
+                                                                    <td>
+                                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                            <input type="text" class="form-control" [(ngModel)]="data.featureMapId" name="id+{{i}}" value="{{i}}" [disabled]="true">
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                            <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureName" name="sourceFeature+{{i}}" title="{{data.sourceFeature.dname}}"
+                                                                                [disabled]="true">
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p-dropdown [options]="allTargetAttribute" [(ngModel)]="featureMapTableArray[i].targetFeature" name="sourceattribute+{{i}}"
+                                                                            dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                                                                            [filter]="true">
+                                                                        </p-dropdown>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4" style="padding-top: 5px;">
@@ -224,29 +261,81 @@
                                 <!-- Start Tab3 -->
                                 <div class="tab-pane" id="tab3" [ngClass]="{'active' : continueCount == 3}">
                                     <form class="form-horizontal" name="myform3" id="submit_form3" novalidate="novalidate">
-                                        <!-- <div class="form-group">
+
+
+
+
+                                        <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Train Percent</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
-                                                <input type="number" limit-to="2"  class="form-control"   name="trainPercent" min="1" max="99" style="width:64px;">
-                                            </div>
-                                            <label class="control-label col-md-4 col-sm-4 col-xs-12" style="width:11%;float:left;margin-left:-1%;">Val Percent</label>
-                                            <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <input type="number" limit-to="2" class="form-control"  name="valPercent" min="1" max="99"   maxlength = "2"  style="width:64px;">     
-                                            </div>
-                                        </div> -->
-                                        <!-- <div class="form-group">
-                                            <label class="col-md-3 control-label">Run Immediately ?
-                                            </label>
-                                            <div class="col-md-9">
-                                                <div class="mt-checkbox-list" style="margin-top:-7px">
-                                                    <label class="mt-checkbox mt-checkbox-outline">
-                                                        <input type="checkbox"  ng-model="selectedRunImmediately" >
-                                                        <span ></span>
-                                                    </label>
-                                                </div>
+                                                <input type="number" limit-to="2" class="form-control" name="trainPercent" min="1" max="99" style="width:64px;" [(ngModel)]="train.trainPercent"
+                                                    (click)="onChangeTrainPercent()">
                                             </div>
                                         </div>
-                                     -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Validation Percent</label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                                <input type="number" limit-to="2" class="form-control" name="valPercent" min="1" max="99" maxlength="2" style="width:64px;"
+                                                    [(ngModel)]="train.valPercent" (click)="onChangeValPercent()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
+
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"
+                                                    (onChange)="onChangeRunImmediately()"></p-checkbox>
+                                            </div>
+
+                                        </div>
+
+                                        <div *ngIf="isShowExecutionparam">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set</label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" [(ngModel)]="paramsetdata" name="paramsetdata" (change)="onSelectparamSet()" [disabled]="mode == 'true'">
+                                                        <option value="" style="color:rgb(24, 18, 18);">USE DEFAULT VALUE</option>
+                                                        <option *ngFor="let app of allparamset" [ngValue]="app">{{app.name}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div *ngIf="isTabelShow" style="overflow-x: auto;">
+                                                <table class=" row-border hover table  table-striped table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align:center;Vertical-align: middle;width:5%;">
+                                                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                                    <input style="width:16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="selectAllParam" name="selectAllParam"
+                                                                        (click)="selectAllRow()" />
+                                                                </span>
+                                                            </th>
+                                                            <th style="width:6%;text-align:center">ID</th>
+                                                            <th class="text-center" *ngFor=" let tablecol of paramtablecol">{{tablecol.paramName}}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor=" let tabledata of paramtable; let i=index">
+                                                            <td style="text-align:center;Vertical-align:middle;width:5%;">
+                                                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                                    <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}" [disabled]="mode == 'true'"
+                                                                    />
+                                                                </span>
+                                                            </td>
+                                                            <td style="width:6%;">
+                                                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                                    <input type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}" [disabled]="true" class="form-control">
+                                                                </span>
+                                                            </td>
+
+                                                            <td style="width:20%;" *ngFor=" let tablecol of tabledata.paramSetVal;let j=index">
+                                                                <input type="text" class="form-control" [(ngModel)]="tablecol.value" name="value+{{tablecol.value}}" [disabled]="true">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4" style="padding-top: 2%;">
@@ -279,3 +368,12 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+<!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+    tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-(click)="enableEdit(trainData.uuid,trainData.version)">
+    <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+</a> -->

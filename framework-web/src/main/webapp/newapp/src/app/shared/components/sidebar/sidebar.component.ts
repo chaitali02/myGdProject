@@ -144,7 +144,7 @@ export class SidebarComponent {
         type: "model"
       },
       {
-        name: "Parammeter List",
+        name: "Parameter List",
         type: "paramlist"
       },
       {
@@ -153,7 +153,7 @@ export class SidebarComponent {
       },
       {
         name:"Operator",
-        type:"operatortype"
+        type:"operator"
       },
       {
         name:"Training",
@@ -166,13 +166,7 @@ export class SidebarComponent {
       {
         name:"Simulation",
         type:"simulate"
-      },
-      {
-        name: "Results",
-        type: "modelexec"
-      },
-      
-
+      }
       ]
     };
     

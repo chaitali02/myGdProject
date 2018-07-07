@@ -10,7 +10,7 @@ import { ModelService } from '../../metadata/services/model.service';
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.css']
 })
-export class ResultsComponent {
+export class ResultsComponent1 {
 
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   type: any;
@@ -26,12 +26,12 @@ export class ResultsComponent {
     
     this.breadcrumbDataFrom=[{
       "caption":"Data Science ",
-      "routeurl":"/app/list/modelexec"
+      "routeurl":"/app/list/trainexec"
     },
-    {
-      "caption":"Results",
-      "routeurl":"/app/list/modelexec"
-    },
+    // {
+    //   "caption":"Results",
+    //   "routeurl":"/app/list/modelexec"
+    // },
     {
       "caption":"Model Results",
       "routeurl":null 

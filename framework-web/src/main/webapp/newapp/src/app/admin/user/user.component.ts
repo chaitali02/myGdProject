@@ -323,7 +323,7 @@ export class UserComponent implements OnInit {
           
         }
          userJson["groupInfo"]=groupInfoArrayNew;
-         userJson["roleInfo"]=roleInfoArrayNew;
+       //  userJson["roleInfo"]=roleInfoArrayNew;
          userJson["active"]=this.user.active == true ?'Y' :"N"
          userJson["published"]=this.user.published == true ?'Y' :"N"  
          userJson["password"]=this.user.password ;

@@ -1117,3 +1117,6 @@ cursor: not-allowed !important;
     cursor: not-allowed !important;
     opacity: 0.4 !important;
   }
+  .ui-multiselect-label-container{
+    height : 30px
+  }

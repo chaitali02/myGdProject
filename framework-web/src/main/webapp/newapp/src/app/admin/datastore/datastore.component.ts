@@ -232,7 +232,7 @@ export class DatastoreComponent implements OnInit {
        //let tagArray=[];
        const tagstemp = [];
        for (const t in this.tags) {
-        tagstemp.push(this.tags[t]["value"]);
+        //tagstemp.push(this.tags[t]["value"]);
        }
       // if(this.tags.length > 0){
       //   for(let counttag=0;counttag < this.tags.length;counttag++){
