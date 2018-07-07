@@ -475,18 +475,18 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "class": "fa fa-list",
         "submenu": []
     },
-        $scope.Vizpoddata = {
-            "caption": "Viz Pod",
-            "name": "vizpod",
-            "class": "fa fa-bar-chart",
-            "submenu": []
-        };
+    $scope.Vizpoddata = {
+        "caption": "Viz Pod",
+        "name": "vizpod",
+        "class": "fa fa-bar-chart",
+        "submenu": []
+    };
 
     $scope.JobExecutor = {
-        "caption": "Job Monitoring",
-        "name": "jobexecutor",
-        "class": "fa fa-tasks",
-        "submenu": []
+            "caption": "Job Monitoring",
+            "name": "jobexecutor",
+            "class": "fa fa-tasks",
+            "submenu": []
     };
     $scope.SystemMonitering = {
         "caption": "System Monitoring",
@@ -2856,7 +2856,26 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+        .state('jobexecutorlistgraphexec', {
+            url: "/JobMonitoringList/GraphEXec?id&mode&returnBack",
+            templateUrl: "views/graph-exec.html",
+            data: { pageTitle: 'Job Monitoring' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
 
+                            'js/controllers/GraphExecController.js',
+                            'js/services/JobMonitoringService.js',
+                        ]
+                    });
+                }]
+            }
+        })
+        
         .state('commonlistpage', {
             url: "/list?type",
             templateUrl: "views/common-list.html",

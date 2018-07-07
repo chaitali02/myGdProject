@@ -26,6 +26,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 content: '',
                 timeout: 5000 //time in ms
             };
+            scope.spacialOperator=['<','>','<=','>='];
             scope.noRecordFound=false;
             scope.isGraphInProgess=false;
             scope.getGraphpodObj=function(){

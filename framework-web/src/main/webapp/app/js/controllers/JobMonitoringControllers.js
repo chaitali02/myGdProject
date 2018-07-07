@@ -146,7 +146,7 @@
             case "graphExec":
         	  metajson.caption = dagMetaDataService.elementDefs[type].caption;
             metajson.icon = "fa fa-bar"
-            metajson.state = dagMetaDataService.elementDefs[type].listState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
+            metajson.state = dagMetaDataService.elementDefs[type].joblistState + "({type:'" + dagMetaDataService.elementDefs[type].execType + "'})"; //"jobexecutorlist({type:'trainExec'})";
             break;
             
         }
