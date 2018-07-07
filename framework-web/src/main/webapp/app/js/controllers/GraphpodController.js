@@ -53,8 +53,10 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	$scope.isDependencyShow = false;
 	$scope.selectedAllNodeRow=false;
 	$scope.selectedAllEdgeRow=false;
+	$scope.selectedAllPropertyRow = false;
 	$scope.allType=CF_GRAPHPOD.allType;
 	$scope.selectType=$scope.allType[0];
+	$scope.allNodeHighlightType=CF_GRAPHPOD.nodeHighlightType
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.graphpod] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -330,6 +332,94 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			
 		}
 	}
+    $scope.onChangePropertyName=function(index,value,type){
+	
+		if(type =='category'){
+			if($scope.propertyInfoTableArray.length >1){
+				for(var i=0;i<$scope.propertyInfoTableArray.length-1;i++){
+					if($scope.propertyInfoTableArray[i].propertyName == value){
+						$scope.myHighlightForm['propertyName'+index].$invalid=true;
+					}else{
+						$scope.myHighlightForm['propertyName'+index].$invalid=false;
+					}
+				}
+			}else{
+				$scope.myHighlightForm['propertyName'+index].$invalid=false;
+			}
+	    }else if(type=='numerical'){
+			if($scope.propertyInfoTableArray.length >1){
+				for(var i=0;i<$scope.propertyInfoTableArray.length-1;i++){
+					if(parseInt($scope.propertyInfoTableArray[i].propertyName) >= parseInt(value)){
+						$scope.myHighlightForm['propertyName'+index].$invalid=true;
+					}else{
+						$scope.myHighlightForm['propertyName'+index].$invalid=false;
+					}
+				}
+			}else{
+				$scope.myHighlightForm['propertyName'+index].$invalid=false;
+			}
+
+		}
+		
+	}
+
+	$scope.addHighlightInfo=function(index){
+		if($scope.nodeTableArray[index].highlightInfo){
+			$scope.highlightInfo=$scope.nodeTableArray[index].highlightInfo;
+			$scope.propertyInfoTableArray=$scope.highlightInfo.propertyInfoTableArray;
+		}else{
+			$scope.highlightInfo={};
+			$scope.highlightInfo.selectType="category";
+			$scope.propertyInfoTableArray=[];
+			$scope.addPropertyInfoRow();
+		}
+		
+        $scope.highlightInfo.index=index
+		$scope.allAttr=$scope.nodeTableArray[index].allAttributeInto;
+		setTimeout(function(){$('#addHiglightInfo').modal({
+			backdrop: 'static',
+			keyboard: false
+		}); }, 100);
+		
+	}
+	
+	$scope.SubmitHighlightInfo=function(){
+		$('#addHiglightInfo').modal('hide');
+		$scope.highlightInfo.value=$scope.highlightInfo.selectType+","+$scope.highlightInfo.propertyId.name;
+		$scope.highlightInfo.propertyInfoTableArray=$scope.propertyInfoTableArray;
+		$scope.nodeTableArray[$scope.highlightInfo.index].highlightInfo=$scope.highlightInfo;
+	
+	}
+	$scope.allPropertyRow = function () {
+		angular.forEach($scope.propertyInfoTableArray, function (filter) {
+			filter.selected = $scope.selectedAllPropertyRow;
+		});
+	}
+	$scope.removePropertyInfoRow=function(){
+		var newDataList = [];
+		$scope.selectedAllPropertyRow = false;
+		angular.forEach($scope.propertyInfoTableArray, function (selected) {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+		});
+		$scope.propertyInfoTableArray = newDataList;
+	}
+
+	$scope.addPropertyInfoRow=function(){
+		if ($scope.propertyInfoTableArray == null) {
+			$scope.propertyInfoTableArray = [];
+		}
+		var propertyTable = {};
+		propertyTable.id=$scope.propertyInfoTableArray.length;
+	
+		propertyTable.name;
+		propertyTable.propertyValue='#61595e';
+		$scope.propertyInfoTableArray.splice($scope.propertyInfoTableArray.length, 0, propertyTable);
+		//setTimeout(function(){$scope.myHighlightForm['propertyName'+propertyTable.id].$invalid=false; }, 1);
+		
+	}
+
     $scope.SubmitSearchAttr=function(){
 		console.log($scope.allDatapod.defaultoption);
 		if($scope.searchAttr && $scope.searchAttr.type=='node'){
@@ -407,7 +497,28 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					nodeProperties.attrId=$scope.nodeTableArray[i].nodeProperties[j].attributeId;
 					nodePropertiesArry[j]=nodeProperties;
 				}
-				nodeJson.nodeProperties=nodePropertiesArry
+				var highlightInfo={};
+				var propertyId={};
+				var propertyIdRef={};
+				highlightInfo.type=$scope.nodeTableArray[i].highlightInfo.selectType;
+				propertyIdRef.type=$scope.nodeTableArray[i].highlightInfo.propertyId.type;
+				propertyIdRef.uuid=$scope.nodeTableArray[i].highlightInfo.propertyId.uuid;
+				propertyId.ref=propertyIdRef;
+				propertyId.attrId=$scope.nodeTableArray[i].highlightInfo.propertyId.attributeId;
+				highlightInfo.propertyId=propertyId;
+				var propertyInfoArray=[];
+				if($scope.nodeTableArray[i].highlightInfo.propertyInfoTableArray.length >0){
+					for (var j=0;j<$scope.nodeTableArray[i].highlightInfo.propertyInfoTableArray.length;j++){
+						var propertyInfo={};
+						propertyInfo.propertyName=$scope.nodeTableArray[i].highlightInfo.propertyInfoTableArray[j].propertyName;
+						propertyInfo.propertyValue=$scope.nodeTableArray[i].highlightInfo.propertyInfoTableArray[j].propertyValue;
+					    propertyInfoArray[j]=propertyInfo;
+					}
+				}
+				highlightInfo.propertyInfo=propertyInfoArray;
+				nodeJson.highlightInfo=highlightInfo
+				nodeJson.nodeProperties=nodePropertiesArry;
+
 				nodeInfo[i]=nodeJson
 			}
 	    }

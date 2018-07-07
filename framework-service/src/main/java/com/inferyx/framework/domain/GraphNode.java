@@ -17,6 +17,8 @@ public class GraphNode {
 	AttributeRefHolder nodeName;
 	MetaIdentifierHolder nodeSource;
 	List<AttributeRefHolder> nodeProperties;
+	Highlight highlightInfo;
+	
 	/**
 	 * @return the nodeId
 	 */
@@ -88,6 +90,19 @@ public class GraphNode {
 	 */
 	public void setNodeProperties(List<AttributeRefHolder> nodeProperties) {
 		this.nodeProperties = nodeProperties;
+	}
+	
+	/**
+	 * @return the highlightInfo
+	 */
+	public Highlight getHighlightInfo() {
+		return this.highlightInfo;
+	}
+	/**
+	 * @param highlightInfo the highlightInfo to set
+	 */
+	public void setHighlightInfo(Highlight highlightInfo) {
+		this.highlightInfo = highlightInfo;
 	}
 
 }

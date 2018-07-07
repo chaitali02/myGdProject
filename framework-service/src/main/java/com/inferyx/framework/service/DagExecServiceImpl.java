@@ -1166,13 +1166,13 @@ public class DagExecServiceImpl {
 //				latestStatus = Helper.getLatestStatus(taskExec.getStatusList()).getStage();
 				if (checkStatusCompleted(taskExec.getStatusList())) {
 					isDependencyCompleted = true;
-				} else if (checkStatusKilled(taskExec.getStatusList())) {
+				} else if (checkStatusKilled(taskExec.getStatusList()) || checkStatusKilled(stageExec.getStatusList()) || checkStatusKilled(dagexec.getStatusList())) {
 					return Status.Stage.Killed.toString();
-				} else if (checkStatusFailed(taskExec.getStatusList())) {
+				} else if (checkStatusFailed(taskExec.getStatusList()) || checkStatusFailed(stageExec.getStatusList()) || checkStatusFailed(dagexec.getStatusList())) {
 					return Status.Stage.Failed.toString();
-				} else if (checkStatusOnHold(taskExec.getStatusList())) {
+				} else if (checkStatusOnHold(taskExec.getStatusList()) || checkStatusOnHold(stageExec.getStatusList()) || checkStatusOnHold(dagexec.getStatusList())) {
 					return Status.Stage.OnHold.toString();
-				}  else if (checkStatusResume(taskExec.getStatusList())) {
+				}  else if (checkStatusResume(taskExec.getStatusList()) || checkStatusResume(stageExec.getStatusList()) || checkStatusResume(dagexec.getStatusList())) {
 					return Status.Stage.Resume.toString();
 				} else {
 					// Task not complete. return false

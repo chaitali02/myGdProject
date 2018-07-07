@@ -62,11 +62,16 @@ GraphAnalysisModule.factory('GraphpodFactory', function ($http, $location) {
       method: "GET"
     }).then(function (response) { return response })
   }
-  factory.findGraphPodResults = function (uuid,version,filterId,nodeType,degree,type) {
+  factory.findGraphPodResults = function (uuid,version,filterId,nodeType,degree,type,data) {
     var url = $location.absUrl().split("app")[0]
     return $http({
       url: url + "graph/getGraphPodResults?action=view&uuid="+uuid+"&version="+version+"&filterId="+filterId+"&nodeType="+nodeType+"&degree="+degree+"&type="+type,
-      method: "GET"
+      headers: {
+        'Accept': '*/*',
+        'content-Type': "application/json",
+      },
+      method: "POST",
+      data: JSON.stringify(data),
     }).then(function (response) { return response })
   }
   
@@ -74,9 +79,9 @@ GraphAnalysisModule.factory('GraphpodFactory', function ($http, $location) {
 })
 
 GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,$q,CF_GRAPHPOD) {
-  this.getGraphPodResults = function (uuid,version,filterId,nodeType,degree,type) {
+  this.getGraphPodResults = function (uuid,version,filterId,nodeType,degree,type,data) {
     var deferred = $q.defer();
-    GraphpodFactory.findGraphPodResults(uuid,version,filterId,nodeType,degree,type).then(function (response) { onSuccess(response.data)},function(response){onError(response)});
+    GraphpodFactory.findGraphPodResults(uuid,version,filterId,nodeType,degree,type,data).then(function (response) { onSuccess(response.data)},function(response){onError(response)});
     var onSuccess = function (response) {
       deferred.resolve({
         data: response
@@ -159,6 +164,25 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
               nodeProperties.id = response.nodeInfo[i].nodeProperties[j].ref.uuid+"_"+response.nodeInfo[i].nodeProperties[j].attrId;
               nodePropertiesArr[j]=nodeProperties;
             }
+          }
+          var highlightInfo={};
+          var propertyId={};
+          if(response.nodeInfo[i].highlightInfo){
+            highlightInfo.selectType=response.nodeInfo[i].highlightInfo.type;
+            propertyId.uuid=response.nodeInfo[i].highlightInfo.propertyId.ref.uuid;
+            propertyId.type=response.nodeInfo[i].highlightInfo.propertyId.ref.type;
+            propertyId.datapodname=response.nodeInfo[i].highlightInfo.propertyId.ref.name;
+            propertyId.name=response.nodeInfo[i].highlightInfo.propertyId.attrName;
+            propertyId.dname=response.nodeInfo[i].highlightInfo.propertyId.ref.name+"."+response.nodeInfo[i].highlightInfo.propertyId.attrName;
+            propertyId.attributeId=response.nodeInfo[i].highlightInfo.propertyId.attrId;
+            propertyId.id =response.nodeInfo[i].highlightInfo.propertyId.ref.uuid+"_"+response.nodeInfo[i].highlightInfo.propertyId.attrId;
+            highlightInfo.propertyId=propertyId;
+            highlightInfo.value=response.nodeInfo[i].highlightInfo.type+","+response.nodeInfo[i].highlightInfo.propertyId.attrName;
+            highlightInfo.propertyInfoTableArray=response.nodeInfo[i].highlightInfo.propertyInfo;
+            nodeJson.highlightInfo=highlightInfo;
+          }
+          else{
+            nodeJson.highlightInfo=null;
           }
           nodeJson.nodeProperties=nodePropertiesArr;
           nodeInfo[i]=nodeJson;

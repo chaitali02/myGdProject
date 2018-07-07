@@ -103,7 +103,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
@@ -182,8 +181,6 @@ public class ModelServiceImpl {
 	Engine engine;
 	@Autowired
 	private Helper helper;
-	@Autowired
-	private SparkExecutor sparkExecutor;
 	
 	//private ParamMap paramMap;
 
@@ -839,9 +836,14 @@ public class ModelServiceImpl {
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(execUuid, execVersion);
 		String location = datastore.getLocation();
 		String title = "";
-		if(location.contains(hdfsInfo.getHdfsURL()))
+		if(location.contains(hdfsInfo.getHdfsURL()) && location.contains("/bestModel/stages"))
+			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/bestModel");
+		else if(location.contains(hdfsInfo.getHdfsURL()) && location.contains("/stages"))
 			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/stages");
-		if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/stages"))
+		
+		if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/bestModel/stages"))
+			location = StringUtils.substringBetween(location, Helper.getPropertyValue("framework.model.train.path"), "/bestModel/stages");
+		else if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/stages"))
 			location = StringUtils.substringBetween(location, Helper.getPropertyValue("framework.model.train.path"), "/stages");
 		else if(location.contains(Helper.getPropertyValue("framework.model.train.path")))
 			location = location.replaceAll(Helper.getPropertyValue("framework.model.train.path"), "");
@@ -882,7 +884,7 @@ public class ModelServiceImpl {
 				in.close();
 				out.flush();
 			} else {
-				logger.info("Requested file " + "/" + location + "/" + fileName + ".pmml" + " not found.");
+				logger.info("PMML file requested " + "/" + location + "/" + fileName + ".pmml" + " not found.");
 				response.setStatus(300);
 				throw new FileNotFoundException();
 			}
@@ -1450,7 +1452,6 @@ public class ModelServiceImpl {
 		runModelServiceImpl.setTrain(train);
 		runModelServiceImpl.setName(MetaType.trainExec+"_"+trainExec.getUuid()+"_"+trainExec.getVersion());
 		runModelServiceImpl.setExecType(MetaType.trainExec);
-		runModelServiceImpl.setSparkExecutor(sparkExecutor);
 		/*FutureTask<TaskHolder> futureTask = new FutureTask<TaskHolder>(runModelServiceImpl);
 		metaExecutor.execute(futureTask);
 		taskList.add(futureTask);

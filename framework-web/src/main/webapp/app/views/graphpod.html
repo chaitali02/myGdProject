@@ -205,6 +205,7 @@
                         <th style="text-align:center;">Node Display</th>
                         <th style="text-align:center;">Node Name</th>
                         <th style="text-align:center;">Node Properties</th>
+                        <th style="text-align:center;">Highlight Info</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -287,6 +288,21 @@
                           <div style="width:200px;text-align:center;" ng-if="tabledata.allAttributeInto.length ==0">
                             NA
                           </div>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;" >
+                            <div style="width:200px;">
+                            <div style="width:200px;">
+                              <div class="col-md-11" style="padding:0px;">
+                                
+                                <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.highlightInfo.value"
+                                  required disable-validation-message="" name="highlightinto{{$index}}" >
+                              </div>
+                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="addHighlightInfo($index)"></span>
+                              </div>
+                            </div>
+                          </span>
                         </td>
                       </tr>
                     </tbody>
@@ -463,13 +479,6 @@
                     </select>
                   </div>
                 </div>
-                <!-- <div class="form-group">
-                  <label class="col-md-3 control-label">Attribute</label>
-                  <div class="col-md-8">
-                    <select select2 class="form-control" data-ng-model="selectAttr" ng-options="r as r.name for r in allAttr track by r.uuid+r.attributeId">
-                    </select>
-                  </div>
-                </div> -->
               </form>
             </div>
           </div>
@@ -478,6 +487,96 @@
           <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
           <button type="button" class="btn green" ng-click="SubmitSearchAttr()">Submit</button>
         </div>
+      </div>
+    </div>
+  </div>
+  <div id="addHiglightInfo" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" style="width:35%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">Add Highlight Info</h4>
+        </div>
+        <form class="form-horizontal" novalidate="novalidate" name="myHighlightForm" ng-submit="SubmitHighlightInfo()">
+          <div class="modal-body">
+            <div class="slimScrollDiv" style="padding-top:10px;">
+              <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1" style="max-height:300px;overflow-y:auto;">
+            
+                  <div class="form-group">
+                    <label class="col-md-3 control-label">Type</label>
+                    <div class="col-md-8">
+                      <select  class="form-control" data-ng-model="highlightInfo.selectType" 
+                        ng-options="r for r in allNodeHighlightType" required disable-validation-message="" ng-disabled="{{mode}}">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-md-3 control-label">Select</label>
+                    <div class="col-md-8">
+                      <select select2 ng-disabled="{{mode}}" ng-model="highlightInfo.propertyId" ng-options="x as x.name for x in allAttr track by x.uuid+x.attributeId"
+                      ng-disabled="{{mode}}" class="form-control" required disable-validation-message=""></select>
+                    </div>
+                  </div>
+                  <div class="x_title">
+                      <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removePropertyInfoRow()" ng-disabled="{{mode}}"></button>
+                      <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addPropertyInfoRow()" ng-disabled="{{mode}}"></button>
+                      <h4>
+                        <strong>Property Info</strong>
+                      </h4>
+                    <hr>
+                  </div>
+                  <div>
+                    <table class=" row-border hover table  table-striped table-bordered">
+                      <thead class="">
+                        <tr>
+                          <th style="text-align: center; Vertical-align: middle;width:5%;">
+                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                              <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectedAllPropertyRow" ng-change="allPropertyRow()"/>
+                            </span>
+                          </th>
+                          <th style="text-align: center;width:50%;">Name</th>
+                          <th style="text-align: center;">Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="tabledata in  propertyInfoTableArray">
+                          <td style="text-align: center; Vertical-align: middle;width:5%;">
+                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                              <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}" />
+                              </span>
+                          </td>
+                          <td>
+                            <span class="form-group" style="margin-left:0px;margin-right:0px;"  ng-class="{ 'has-error' : myHighlightForm['propertyName'+$index].$invalid}">
+                                <!-- {{myHighlightForm['propertyName'+$index].$error.required}} -->
+                              <div ng-if="highlightInfo.selectType=='category'">
+                                <input type="text" class="form-control" 
+                                uib-tooltip="{{myHighlightForm['propertyName'+$index].$invalid ? 'duplicate and empty name not allowed' : ''}}" ng-disabled="{{mode}}"  ng-change="onChangePropertyName($index,tabledata.propertyName,'category')" name="propertyName{{$index}}" ng-model="tabledata.propertyName" required disable-validation-message="">
+                              </div>
+                              <div ng-if="highlightInfo.selectType=='numerical'">
+                                  <input type="text" class="form-control" 
+                                  uib-tooltip="{{myHighlightForm['propertyName'+$index].$invalid ? 'enter grater value above index' : ''}}" ng-disabled="{{mode}}"  ng-change="onChangePropertyName($index,tabledata.propertyName,'numerical')" name="propertyName{{$index}}" ng-model="tabledata.propertyName" required disable-validation-message="">
+                                </div>
+                            </span>
+                          </td>
+                          <td>
+                            <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                              <div>
+                                <input type="color" class="form-control" ng-disabled="{{mode}}" name="propertyValue{{$index}}" ng-model="tabledata.propertyValue" required disable-validation-message="" style="height:36px;padding: 0px;">
+                              </div>
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+            <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="{{mode}}">
+          </div>
+      </form>
       </div>
     </div>
   </div>

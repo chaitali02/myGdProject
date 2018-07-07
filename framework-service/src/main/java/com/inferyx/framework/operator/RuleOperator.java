@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -45,7 +46,7 @@ import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 @Component
-public class RuleOperator implements IParsable {
+public class RuleOperator implements IParsable, IReferenceable {
 	
 	@Autowired
 	AttributeMapOperator attributeMapOperator;
@@ -179,6 +180,13 @@ public class RuleOperator implements IParsable {
 			ruleExec1 = null;
 		}
 		return ruleExec;
+	}
+
+	@Override
+	public MetaIdentifier populateRefKeys(Map<String, MetaIdentifier> refKeyMap, MetaIdentifier ref,
+			Map<String, MetaIdentifier> inputRefKeyMap) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

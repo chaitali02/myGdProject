@@ -20,6 +20,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -116,14 +117,17 @@ public class GraphController {
 	  return true;
 	}*/
   
-  @RequestMapping(value="/getGraphPodResults",method=RequestMethod.GET)
+  @RequestMapping(value="/getGraphPodResults",method=RequestMethod.POST)
 	public @ResponseBody Map<String, List<GraphpodResult>>  getGraphPodResults(@RequestParam("uuid") String uuid,
 			@RequestParam("version") String version,@RequestParam(value = "degree", required = false) String degree,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value = "filterId", required = false) String filterId,
-			@RequestParam(value = "nodeType", required = false) String nodeType) throws Exception{
-		return graphServiceImpl.getGraphResults(uuid,version,degree, filterId,nodeType);
+			@RequestParam(value = "nodeType", required = false) String nodeType,
+			  @RequestBody (required = false) ExecParams execParams
+			) throws Exception{
+	
+		return graphServiceImpl.getGraphResults(uuid,version,degree, filterId,nodeType,execParams);
 		
 	}
   

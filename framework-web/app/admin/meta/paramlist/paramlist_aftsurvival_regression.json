@@ -58,7 +58,7 @@
 	],
 	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a83",
 	"version": "1495146809",
-	"name": "paramlist_aft-survivalregression",
+	"name": "paramlist_aft-survival_regression",
 	"desc": "AFTSurvivalRegression Param List",
 	"createdBy": {
 		"ref": {

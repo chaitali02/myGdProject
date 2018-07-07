@@ -15,7 +15,9 @@ import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.GraphEdge;
@@ -23,6 +25,7 @@ import com.inferyx.framework.domain.GraphNode;
 import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.Property;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -96,26 +99,34 @@ public class GraphOperator implements IOperator {
 												DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 												execParams.getOtherParams(), execParams));
 			sb.append(" AS id, ");
+			
+			
 			AttributeRefHolder nodeNameRefHolder =  graphNode.getNodeName();
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeNameRefHolder, nodeNameRefHolder, 
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 					execParams.getOtherParams(), execParams));
 			sb.append(" AS nodeName, '");
+			
 			/*sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, nodeNameRefHolder, nodeNameRefHolder, 
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 					execParams.getOtherParams()));
 			sb.append(", ");*/
 			sb.append(graphNode.getNodeType());
 			sb.append("' AS nodeType, '");
+
+			
+			
+			
 			sb.append(graphNode.getNodeIcon());
 			sb.append("' AS nodeIcon, ");
+			
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
-				sb.append("'''");
+				sb.append("'''\"");
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams()));
-				sb.append("'':', ");
+				sb.append("\"'':', ");
 				
 				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
@@ -126,11 +137,40 @@ public class GraphOperator implements IOperator {
 				sb.append("',' ");
 			}
 			sb.delete(sb.length() - 5, sb.length());
+			sb.append("'}')");     
+			sb.append(" AS nodeProperties ,");
+			// added propertyId
+			AttributeRefHolder propertyIdRefHolder = graphNode.getHighlightInfo().getPropertyId();
+			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
+			sb.append(" AS propertyId,' ");
+			// added type
+			sb.append(graphNode.getHighlightInfo().getType());
+			sb.append("' AS type, ");
+			// added propertyInfo
+
+			sb.append("concat('{', ");
+			for (Property property : graphNode.getHighlightInfo().getPropertyInfo()) {
+				sb.append("'''");
+				sb.append(property.getPropertyName());
+				sb.append("'':', ");
+				sb.append("'");
+				sb.append(property.getPropertyValue());
+				sb.append("'");
+				sb.append(", ");
+				sb.append("',' ");
+			}
+			sb.delete(sb.length() - 5, sb.length());
 			sb.append("'}')");
-			sb.append(" AS nodeProperties ");
+			sb.append(" AS propertyInfo ");
+
 			sb.append(ConstantsUtil.FROM);
-			Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
-			sb.append(" ").append(getTableName(source, execParams.getOtherParams(), baseExec, runMode)).append(" ").append(source.getName()).append(" ");
+
+			Object source = commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
+			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(((BaseEntity) source).getName()).append(" ");
+
+				
 			count++;
 		}
 		nodeSql = sb.toString().replaceAll(",  FROM", " FROM");
@@ -197,11 +237,11 @@ public class GraphOperator implements IOperator {
 			sb.append("' AS edgeType, ");
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphEdge.getEdgeProperties()) {
-				sb.append("'''");
+				sb.append("'''\"");
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams()));
-				sb.append("'':', ");
+				sb.append("\"'':', ");
 				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams(), execParams));
@@ -214,8 +254,8 @@ public class GraphOperator implements IOperator {
 			sb.append("'}')");
 			sb.append(" AS edgeProperties ");
 			sb.append(ConstantsUtil.FROM);
-			Datapod source = (Datapod) commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
-			sb.append(" ").append(getTableName(source, execParams.getOtherParams(), baseExec, runMode)).append(" ").append(source.getName()).append(" ");
+			Object source = commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
+			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(((BaseEntity) source).getName()).append(" ");
 			count++;
 		}
 		edgeSql = sb.toString().replaceAll(",  FROM", " FROM");

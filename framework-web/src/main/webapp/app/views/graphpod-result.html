@@ -1,26 +1,32 @@
 <style>
-  .fdGraph .textClass {
+  /* .fdGraph .textClass {
     fill: white;
 
-  }
+  } */
 
   .iconNode {
     font-family: FontAwesome;
     fill: ghostwhite;
   }
-
+  
   .fdGraph circle {
-    stroke: white;
-    stroke-width: 1.5px;
+    stroke-width: 3px;
   }
 
   .fdGraph path.link,
   path.textpath {
     fill: none;
     stroke: #cccccc;
-    stroke-width: 0.5px;
+    stroke-width: 1.5px;
   }
-
+  .fdGraph path.link:hover,
+  path.pathLabel:hover{
+    stroke: #32c5d2;
+    opacity: 0.5;
+    cursor: move;
+    stroke-width: 2px;
+    marker-end: url(#arrowheadhover)
+  }
   .fdGraph path.invis {
     fill: none;
     stroke-width: 0;
@@ -114,7 +120,8 @@
           <div id="graphWrapper" class="form-body show-graph-body" tree-graph-directive uuid="graphExecDetail.uuid" version="graphExecDetail.version">
           </div>
         </div>
-        <div ng-if="isD3FDGraphShow" class="form-body fdGraph" style="background-color:#384d54">
+        <!-- style="background-color:#384d54" -->
+        <div ng-if="isD3FDGraphShow" class="form-body fdGraph" >
           <div id="fDGraph-directive" class="form-body  graph-body" style="justify-content: flex-start;display: block;min-height:500px;" fd-graph-directive
             uuid="graphExecDetail.uuid" version="graphExecDetail.version">
           </div>

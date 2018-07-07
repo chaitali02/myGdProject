@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
@@ -55,14 +56,17 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.GraphFilter;
 import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
+import com.inferyx.framework.domain.GraphNode;
 import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.GraphpodResult;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.NodeDetails;
+import com.inferyx.framework.domain.Property;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SourceAttr;
@@ -125,12 +129,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	JavaRDD<Row> edgRow = null;
 	JavaRDD<Row> verRow1 = null;
 	JavaRDD<Row> edgRow1 = null;
-	/*DataFrame verDF;
-	DataFrame edgDF;
-	DataFrame verDF1;
-	DataFrame edgDF1;
-	static DataFrame modifiedVertices = null;
-	static DataFrame modifiedEdges = null;*/
+	/*
+	 * DataFrame verDF; DataFrame edgDF; DataFrame verDF1; DataFrame edgDF1; static
+	 * DataFrame modifiedVertices = null; static DataFrame modifiedEdges = null;
+	 */
 	static GraphFrame graph;
 	List<String> verEdgDet = new ArrayList<String>();
 	Row datapodSourceRow;
@@ -190,7 +192,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		keywordList.add("operatorInfo");
 		keywordList.add("execList");
 		keywordList.add("keys");
-		keywordList.add("groups");	
+		keywordList.add("groups");
 		keywordList.add("values");
 		keywordList.add("groupInfo");
 		keywordList.add("refKeyList");
@@ -201,8 +203,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		keywordList.add("edgeInfo");
 		keywordList.add("nodeProperties");
 		keywordList.add("edgeProperties");
-		
-		}
+
+	}
 
 	/*
 	 * @SuppressWarnings("unused") public String getGraphJson(String uuid,String
@@ -324,186 +326,127 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * .withDefaultPrettyPrinter(); result = writer.writeValueAsString(nodeDetails);
 	 * } catch (IOException e) { e.printStackTrace(); } return result; }
 	 */
-	
-	/*@SuppressWarnings("unused")
-	public String getGraphJson(String uuid,String version, String degree) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String result = null;
-		List<Map<String, Object>> vertexData = new ArrayList<>();
-		List<Map<String, Object>> edgesData = new ArrayList<>();
-		
-		List<Map<String, Object>> data = new ArrayList<>();
-		DataFrame motifs = null;
-	
-		Row[] vertexRow1 = graph.vertices().collect();
-		
-		if(degree.equalsIgnoreCase("2")){
-		    motifs = graph.find("(Object)-[relationwithChild]->(Child);(Child)-[relationwithSubChild]->(SubChild)");
-		}	
-		if(degree.equalsIgnoreCase("abc")){
-		    motifs = graph.find("(Child)-[relationwithSubChild]->(SubChild);(Object)-[relationwithChild]->(Child)");
-		}
-		if(degree.equalsIgnoreCase("3")){
-		    motifs = graph.find("(Object)-[relationwithChild]->(Child);(Child)-[relationwithSubChild]->(SubChild);(SubChild)-[relationwithSubsubChild]->(SubsubChild)");
-		}	
-		if(degree.equalsIgnoreCase("4")){
-		    motifs = graph.find("(Object)-[relationwithChild]->(Child);(Child)-[relationwithSubChild]->(SubChild);"
-		    	+ "(SubChild)-[relationwithSubsubChild]->(SubsubChild);"
-		    	+ "(SubsubChild)-[relationwithSubsubsubChild]->(SubsubsubChild)");
-		}	
-		if(degree.equalsIgnoreCase("1")){
-		    motifs = graph.find("(Object)-[relationwithChild]->(Child)");
-		}	
-		if(degree.equalsIgnoreCase("-1")){
-		    motifs = graph.find("(Child)-[relationwithChild]->(Object)");
-		}	
-		if(degree.equalsIgnoreCase("-2")){
-		    motifs = graph.find("(Child)-[relationwithChild]->(SubChild);(SubChild)-[relationwithSubChild]->(Object)");
-		}
-		if(degree.equalsIgnoreCase("Attribute")){
-		motifs =  graph.find("(Parent)-[relationwithParent]->(Object)");
-		}
-		
-		//String uuidNew=uuid.concat("_").concat(version);
-		List<Row> nodeSelection = motifs.filter("Object.id ='" +uuid+  "'").collectAsList();
-		graph.vertices().filter("id='"+uuid+"'").show();
-		graph.edges().filter("src='"+uuid+"'").show();
-	
-		String[] columns2 = motifs.columns();
-	
-		for (Row row : nodeSelection) {
-		java.util.Map<String, Object> object = new HashMap<String, Object>();
-		for (String column : columns2) {
-		object.put(column, row.getAs(column));
-		}
-		data.add(object);
-		}
-			
-	//	logger.info("PRINT DATA ::: ### " + data );
-		for (Map<String, Object> map : data) {
-		    for (Map.Entry<String, Object> entry : map.entrySet()) {
-		        String key = entry.getKey();
-		        Object value = entry.getValue();
-		        if(key.equalsIgnoreCase("Object") ||key.equalsIgnoreCase("Child") || key.equalsIgnoreCase("SubChild") || key.equalsIgnoreCase("SubsubChild")||key.equalsIgnoreCase("SubsubsubChild")){
-		    	Map<String, Object> vertexData1 = new HashMap<>();
-		    	vertexData1.put(key,value);
-		        	vertexData.add(vertexData1);
-		        }
-		        if(key.equalsIgnoreCase("relationwithChild")||key.equalsIgnoreCase("relationwithSubChild")||key.equalsIgnoreCase("relationwithSubsubChild")||key.equalsIgnoreCase("relationwithSubsubsubChild")){
-		    	Map<String, Object> edgesData1 = new HashMap<>();
-		    	edgesData1.put(key,value);
-		        	edgesData.add(edgesData1);
-		        }
-		    }
-		}
-		
-		List<String> vertexList = new ArrayList<>();
-		List<String> edgeList = new ArrayList<>();
-		
-		for (Map<String, Object> map : vertexData) {
-		    for (Map.Entry<String, Object> entry : map.entrySet()) {
-		    	String key = entry.getKey();
-		        Object value = entry.getValue();
-		        vertexList.add(value.toString());
-		    }
-		}
-		
-		for (Map<String, Object> map : edgesData) {
-		    for (Map.Entry<String, Object> entry : map.entrySet()) {
-		    	String key = entry.getKey();
-		        Object value = entry.getValue();
-		        edgeList.add(value.toString());
-		    }
-		}
-		
-		List<Map<String,Object>> graphVertex = new ArrayList<>();
-		List<Map<String,Object>> graphEdge = new ArrayList<>();
-		
-		Set<String> hs = new HashSet<>();
-		hs.addAll(vertexList);
-		vertexList.clear();
-		vertexList.addAll(hs);
-		List<String> uuids=new ArrayList<String>();
-		List<String> dupEdges=new ArrayList<String>();
-		for(int k=0; k <vertexList.size();k++){	  
-		  String total = vertexList.get(k);
-	//	  logger.info("hashcode :::" + vertexList.get(k).hashCode());
-		   int hashId = vertexList.get(k).hashCode();
-		  String modifiedList = total.substring(1, total.length()-1);
-		  String [] retVal = modifiedList.split(",");
-	
-		  System.out.println("\n\n");
-		  logger.info("total: "+total);
-		  logger.info("modifiedList: "+modifiedList);
-		  System.out.println("\n");
-		  
-		  Map<String, Object> map = new HashMap<>();
-		  map.put("id", retVal[0]);
-		  map.put("version", retVal[1]);
-	///If user's name is "user" then resolve it using method "getLatestByUuidWithoutAppUuid"	  
-		  if(retVal[2].toLowerCase().equalsIgnoreCase("user".toLowerCase())) {
-			  User user = (User) commonServiceImpl.getLatestByUuidWithoutAppUuid(retVal[0], MetaType.user.toString());
-			  if(user != null) {
-				  String name = user.getName();
-				  map.put("name", name);
-			  }else
-				  map.put("name", retVal[2]);
-		  }else
-			  map.put("name", retVal[2]);
-	///		  
-		  map.put("nodeType", retVal[3]);
-		  map.put("dataType", retVal[4]);
-		  map.put("desc", retVal[5]);
-		  map.put("createdOn", retVal[6]);
-		  map.put("active", retVal[7]);
-		  //Set metaRef
-		  MetaIdentifier mi = new MetaIdentifier();
-		  mi.setType(Helper.getMetaType(retVal[3]));	  
-		  String[] tokens = retVal[0].split("_");
-		  mi.setUuid(tokens[0]);
-		  mi.setVersion(retVal[1]);	  
-		  map.put("metaRef",mi);
-		  uuids.add(retVal[0]);
-		  int count=Collections.frequency(uuids, retVal[0]);
-		  if(count==1){
-		  graphVertex.add(map);
-		  }
-		}
-		
-		
-		for(int k=0; k <edgeList.size();k++){
-		  String total = edgeList.get(k);
-		  String modifiedList = total.substring(1, total.length()-1);
-	//	  logger.info(" modifiedList : " + total);
-		  String [] retVal = modifiedList.split(",");
-		 
-		 Map<String, Object> map = new HashMap<>();
-		 map.put("src", retVal[0]);
-		  map.put("dst", retVal[1]);
-		  map.put("src", retVal[1]);
-		  map.put("dst", retVal[0]);
-		  map.put("relationType", retVal[2]);
-		 dupEdges.add(retVal[0].concat("_").concat(retVal[1]).concat(retVal[2]));
-		  int count1=Collections.frequency(dupEdges, retVal[0].concat("_").concat(retVal[1]).concat(retVal[2]));
-		  if(count1==1)
-		  {
-		  graphEdge.add(map);
-		 }
-		  }
-		
-		
-		nodeDetails.setNodes(graphVertex);
-		nodeDetails.setLinks(graphEdge);
-		nodeDetails.setJsonName("graph");
-	
-		try {
-		ObjectWriter writer = new ObjectMapper().writer()
-		.withDefaultPrettyPrinter();
-		result = writer.writeValueAsString(nodeDetails);
-		} catch (IOException e) {
-		e.printStackTrace();
-		}
-		return result;
-	}*/
+
+	/*
+	 * @SuppressWarnings("unused") public String getGraphJson(String uuid,String
+	 * version, String degree) throws JsonProcessingException,
+	 * IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+	 * NoSuchMethodException, SecurityException, NullPointerException,
+	 * ParseException { String result = null; List<Map<String, Object>> vertexData =
+	 * new ArrayList<>(); List<Map<String, Object>> edgesData = new ArrayList<>();
+	 * 
+	 * List<Map<String, Object>> data = new ArrayList<>(); DataFrame motifs = null;
+	 * 
+	 * Row[] vertexRow1 = graph.vertices().collect();
+	 * 
+	 * if(degree.equalsIgnoreCase("2")){ motifs = graph.find(
+	 * "(Object)-[relationwithChild]->(Child);(Child)-[relationwithSubChild]->(SubChild)"
+	 * ); } if(degree.equalsIgnoreCase("abc")){ motifs = graph.find(
+	 * "(Child)-[relationwithSubChild]->(SubChild);(Object)-[relationwithChild]->(Child)"
+	 * ); } if(degree.equalsIgnoreCase("3")){ motifs = graph.find(
+	 * "(Object)-[relationwithChild]->(Child);(Child)-[relationwithSubChild]->(SubChild);(SubChild)-[relationwithSubsubChild]->(SubsubChild)"
+	 * ); } if(degree.equalsIgnoreCase("4")){ motifs = graph.find(
+	 * "(Object)-[relationwithChild]->(Child);(Child)-[relationwithSubChild]->(SubChild);"
+	 * + "(SubChild)-[relationwithSubsubChild]->(SubsubChild);" +
+	 * "(SubsubChild)-[relationwithSubsubsubChild]->(SubsubsubChild)"); }
+	 * if(degree.equalsIgnoreCase("1")){ motifs =
+	 * graph.find("(Object)-[relationwithChild]->(Child)"); }
+	 * if(degree.equalsIgnoreCase("-1")){ motifs =
+	 * graph.find("(Child)-[relationwithChild]->(Object)"); }
+	 * if(degree.equalsIgnoreCase("-2")){ motifs = graph.find(
+	 * "(Child)-[relationwithChild]->(SubChild);(SubChild)-[relationwithSubChild]->(Object)"
+	 * ); } if(degree.equalsIgnoreCase("Attribute")){ motifs =
+	 * graph.find("(Parent)-[relationwithParent]->(Object)"); }
+	 * 
+	 * //String uuidNew=uuid.concat("_").concat(version); List<Row> nodeSelection =
+	 * motifs.filter("Object.id ='" +uuid+ "'").collectAsList();
+	 * graph.vertices().filter("id='"+uuid+"'").show();
+	 * graph.edges().filter("src='"+uuid+"'").show();
+	 * 
+	 * String[] columns2 = motifs.columns();
+	 * 
+	 * for (Row row : nodeSelection) { java.util.Map<String, Object> object = new
+	 * HashMap<String, Object>(); for (String column : columns2) {
+	 * object.put(column, row.getAs(column)); } data.add(object); }
+	 * 
+	 * // logger.info("PRINT DATA ::: ### " + data ); for (Map<String, Object> map :
+	 * data) { for (Map.Entry<String, Object> entry : map.entrySet()) { String key =
+	 * entry.getKey(); Object value = entry.getValue();
+	 * if(key.equalsIgnoreCase("Object") ||key.equalsIgnoreCase("Child") ||
+	 * key.equalsIgnoreCase("SubChild") ||
+	 * key.equalsIgnoreCase("SubsubChild")||key.equalsIgnoreCase("SubsubsubChild")){
+	 * Map<String, Object> vertexData1 = new HashMap<>();
+	 * vertexData1.put(key,value); vertexData.add(vertexData1); }
+	 * if(key.equalsIgnoreCase("relationwithChild")||key.equalsIgnoreCase(
+	 * "relationwithSubChild")||key.equalsIgnoreCase("relationwithSubsubChild")||key
+	 * .equalsIgnoreCase("relationwithSubsubsubChild")){ Map<String, Object>
+	 * edgesData1 = new HashMap<>(); edgesData1.put(key,value);
+	 * edgesData.add(edgesData1); } } }
+	 * 
+	 * List<String> vertexList = new ArrayList<>(); List<String> edgeList = new
+	 * ArrayList<>();
+	 * 
+	 * for (Map<String, Object> map : vertexData) { for (Map.Entry<String, Object>
+	 * entry : map.entrySet()) { String key = entry.getKey(); Object value =
+	 * entry.getValue(); vertexList.add(value.toString()); } }
+	 * 
+	 * for (Map<String, Object> map : edgesData) { for (Map.Entry<String, Object>
+	 * entry : map.entrySet()) { String key = entry.getKey(); Object value =
+	 * entry.getValue(); edgeList.add(value.toString()); } }
+	 * 
+	 * List<Map<String,Object>> graphVertex = new ArrayList<>();
+	 * List<Map<String,Object>> graphEdge = new ArrayList<>();
+	 * 
+	 * Set<String> hs = new HashSet<>(); hs.addAll(vertexList); vertexList.clear();
+	 * vertexList.addAll(hs); List<String> uuids=new ArrayList<String>();
+	 * List<String> dupEdges=new ArrayList<String>(); for(int k=0; k
+	 * <vertexList.size();k++){ String total = vertexList.get(k); //
+	 * logger.info("hashcode :::" + vertexList.get(k).hashCode()); int hashId =
+	 * vertexList.get(k).hashCode(); String modifiedList = total.substring(1,
+	 * total.length()-1); String [] retVal = modifiedList.split(",");
+	 * 
+	 * System.out.println("\n\n"); logger.info("total: "+total);
+	 * logger.info("modifiedList: "+modifiedList); System.out.println("\n");
+	 * 
+	 * Map<String, Object> map = new HashMap<>(); map.put("id", retVal[0]);
+	 * map.put("version", retVal[1]); ///If user's name is "user" then resolve it
+	 * using method "getLatestByUuidWithoutAppUuid"
+	 * if(retVal[2].toLowerCase().equalsIgnoreCase("user".toLowerCase())) { User
+	 * user = (User) commonServiceImpl.getLatestByUuidWithoutAppUuid(retVal[0],
+	 * MetaType.user.toString()); if(user != null) { String name = user.getName();
+	 * map.put("name", name); }else map.put("name", retVal[2]); }else
+	 * map.put("name", retVal[2]); /// map.put("nodeType", retVal[3]);
+	 * map.put("dataType", retVal[4]); map.put("desc", retVal[5]);
+	 * map.put("createdOn", retVal[6]); map.put("active", retVal[7]); //Set metaRef
+	 * MetaIdentifier mi = new MetaIdentifier();
+	 * mi.setType(Helper.getMetaType(retVal[3])); String[] tokens =
+	 * retVal[0].split("_"); mi.setUuid(tokens[0]); mi.setVersion(retVal[1]);
+	 * map.put("metaRef",mi); uuids.add(retVal[0]); int
+	 * count=Collections.frequency(uuids, retVal[0]); if(count==1){
+	 * graphVertex.add(map); } }
+	 * 
+	 * 
+	 * for(int k=0; k <edgeList.size();k++){ String total = edgeList.get(k); String
+	 * modifiedList = total.substring(1, total.length()-1); //
+	 * logger.info(" modifiedList : " + total); String [] retVal =
+	 * modifiedList.split(",");
+	 * 
+	 * Map<String, Object> map = new HashMap<>(); map.put("src", retVal[0]);
+	 * map.put("dst", retVal[1]); map.put("src", retVal[1]); map.put("dst",
+	 * retVal[0]); map.put("relationType", retVal[2]);
+	 * dupEdges.add(retVal[0].concat("_").concat(retVal[1]).concat(retVal[2])); int
+	 * count1=Collections.frequency(dupEdges,
+	 * retVal[0].concat("_").concat(retVal[1]).concat(retVal[2])); if(count1==1) {
+	 * graphEdge.add(map); } }
+	 * 
+	 * 
+	 * nodeDetails.setNodes(graphVertex); nodeDetails.setLinks(graphEdge);
+	 * nodeDetails.setJsonName("graph");
+	 * 
+	 * try { ObjectWriter writer = new ObjectMapper().writer()
+	 * .withDefaultPrettyPrinter(); result = writer.writeValueAsString(nodeDetails);
+	 * } catch (IOException e) { e.printStackTrace(); } return result; }
+	 */
 
 	/*
 	 * @SuppressWarnings("unused") private MetaIdentifierHolder
@@ -587,7 +530,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			GraphMetaIdentifierHolder graphMetaIdentifierHolder = (GraphMetaIdentifierHolder) verticesr.get(i).get(8);
 			vertex = new Vertex(verticesr.get(i).getString(0), verticesr.get(i).getString(1),
 					verticesr.get(i).getString(2), verticesr.get(i).getString(3), verticesr.get(i).getString(4),
-					verticesr.get(i).getString(5), verticesr.get(i).getString(6), verticesr.get(i).getString(7),graphMetaIdentifierHolder);
+					verticesr.get(i).getString(5), verticesr.get(i).getString(6), verticesr.get(i).getString(7),
+					graphMetaIdentifierHolder);
 			vertices.add(vertex);
 			if (i % 10000 == 0) {
 				saveVertices(vertices);
@@ -607,7 +551,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			GraphMetaIdentifierHolder srcMetaIdentifierHolder = (GraphMetaIdentifierHolder) edgesr.get(i).get(3);
 			GraphMetaIdentifierHolder dstMetaIdentifierHolder = (GraphMetaIdentifierHolder) edgesr.get(i).get(4);
 
-			edge = new Edge(edgesr.get(i).getString(0), edgesr.get(i).getString(1), edgesr.get(i).getString(2), srcMetaIdentifierHolder, dstMetaIdentifierHolder);
+			edge = new Edge(edgesr.get(i).getString(0), edgesr.get(i).getString(1), edgesr.get(i).getString(2),
+					srcMetaIdentifierHolder, dstMetaIdentifierHolder);
 			// System.out.println(edge);
 			edges.add(edge);
 			if (i % 10000 == 0) {
@@ -823,9 +768,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		return verticesRowList;
 	}
 
-	public Row createVertex(String uuid, String version, String name, String nodeType, String createdOn,
-			String active,GraphMetaIdentifierHolder graphMetaIdentifierHolder) {
-		return RowFactory.create(uuid, version, name, nodeType, null, null, createdOn, active,graphMetaIdentifierHolder);
+	public Row createVertex(String uuid, String version, String name, String nodeType, String createdOn, String active,
+			GraphMetaIdentifierHolder graphMetaIdentifierHolder) {
+		return RowFactory.create(uuid, version, name, nodeType, null, null, createdOn, active,
+				graphMetaIdentifierHolder);
 	}
 
 	/*
@@ -841,8 +787,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * return edgeRowList; }
 	 */
 
-	public Row createEdge(String srcUuid, String dst, String name, Map<String, Row> edgeRowMap,GraphMetaIdentifierHolder srcMetaRef,GraphMetaIdentifierHolder dstMetaRef) {
-		Row edgeRow = RowFactory.create(srcUuid, dst, name,srcMetaRef,dstMetaRef);
+	public Row createEdge(String srcUuid, String dst, String name, Map<String, Row> edgeRowMap,
+			GraphMetaIdentifierHolder srcMetaRef, GraphMetaIdentifierHolder dstMetaRef) {
+		Row edgeRow = RowFactory.create(srcUuid, dst, name, srcMetaRef, dstMetaRef);
 		edgeRowMap.put(srcUuid + "_" + dst + "_" + name, edgeRow);
 		return edgeRow;
 	}
@@ -968,9 +915,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Loop each property
 		while (iter.hasNext()) {
 			String key = iter.next();
-			if (key.equalsIgnoreCase("nodeProperties")) {
-				 System.out.println("assssssd");
-			}
+		/*	if (key.equalsIgnoreCase("nodeProperties")) {
+				System.out.println("assssssd");
+			}*/
 			jsonArray = jsonObject.optJSONArray(key);
 			JSONObject childObj = jsonObject.optJSONObject(key);
 			value = jsonObject.optString(key);
@@ -992,9 +939,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 								|| key.equalsIgnoreCase("features") || key.equalsIgnoreCase("stages")
 								|| key.equalsIgnoreCase("tasks") || key.equalsIgnoreCase("operators")
 								|| key.equalsIgnoreCase("featureAttrMap") || key.equalsIgnoreCase("configInfo")
-								|| key.equalsIgnoreCase("featureInfo")|| key.equalsIgnoreCase("nodeInfo")||key.equalsIgnoreCase("edgeInfo")
-								)
-						{
+								|| key.equalsIgnoreCase("featureInfo") || key.equalsIgnoreCase("nodeInfo")
+								|| key.equalsIgnoreCase("edgeInfo")) {
 							String attr = "";
 							Map<String, String> map = new HashMap<String, String>();
 							map.put("attributes", "name");
@@ -1009,7 +955,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 							map.put("featureInfo", "featureName");
 							map.put("edgeInfo", "edgeName");
 							map.put("nodeInfo", "nodeIcon");
-							
+
 							if (map.containsKey(key))
 								attr = childObj.optString(map.get(key));
 							else {
@@ -1019,7 +965,6 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 								map.put("features", name + "_" + i);
 								map.put("operators", name + "_" + i);
 								map.put("featureAttrMap", name + "_" + i);
-								
 
 								if (map.containsKey(key))
 									attr = map.get(key);
@@ -1091,163 +1036,97 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
 									refName, name, null);
 						}
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-						else if (key.equalsIgnoreCase("nodeProperties") || key.equalsIgnoreCase("edgeProperties") )/* for nodeProperties */ {
+
+						else if (key.equalsIgnoreCase("nodeProperties")
+								|| key.equalsIgnoreCase("edgeProperties"))/* for nodeProperties */ {
 							String attr = childObj.optString("attrId");
 							if (childObj != null && value.startsWith("{", 0)) {
 								String refN = childObj.optString("ref");
 								if (childObj != null && refN.startsWith("{", 0)) {
 									JSONObject jsonObjType = new JSONObject(refN);
-								
-								childUuid = jsonObjType.optString("uuid");
-								childType = jsonObjType.optString("type");
 
-								if (!childType.equals(MetaType.simple.toString())) {
-									
-									baseEntityList = commonServiceImpl.getResolveNameByUuidandType(childUuid,
-											childType);
-									refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-											: baseEntityList.get(0).getName();
+									childUuid = jsonObjType.optString("uuid");
+									childType = jsonObjType.optString("type");
+
+									if (!childType.equals(MetaType.simple.toString())) {
+
+										baseEntityList = commonServiceImpl.getResolveNameByUuidandType(childUuid,
+												childType);
+										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
+												: baseEntityList.get(0).getName();
+									}
 								}
-							}
 							}
 							createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-									refName+"_"+attr, name, null);
+									refName + "_" + attr, name, null);
 						}
-						
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					/*	else if (key.equalsIgnoreCase("edgeInfo")) for graphpod  {
-							String attr4 = childObj.optString("edgeSource");
-							
-							if(attr4.equalsIgnoreCase("edgeSource")) {
-								JSONObject jsonObj5 = new JSONObject(attr4);
-								String attr3 = jsonObj5.optString("ref");
-								JSONObject jsonObj4 = new JSONObject(attr3);
-								if (jsonObj4 != null && attr3.startsWith("{", 0)) {
-									childUuid = jsonObj4.optString("uuid");
-									childType = jsonObj4.optString("type");
-									if (!childType.equals(MetaType.simple.toString())) {
-										
-										 * baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
-										 * null, null, null, null, null, childUuid, null, null); refName =
-										 * (baseEntityList == null || baseEntityList.isEmpty()) ? "" :
-										 * baseEntityList.get(0).getName();
-										 
 
-										baseEntityList = commonServiceImpl.getResolveNameByUuidandType(childUuid,
-												childType);
-										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-												: baseEntityList.get(0).getName();
-									} else {
-										continue;
-									}
-									if (StringUtils.isBlank(refName)) {
-										refName = childType;
-									}
-								}
-								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-										refName, name, null);
-							}
-							String attr5 = childObj.optString("sourceNodeId");
-							 if(attr5.equalsIgnoreCase("sourceNodeId"))
-							{
-								JSONObject jsonObj5 = new JSONObject(attr4);
-								String refN1 = childObj.optString("attrId");
-								String attr3 = jsonObj5.optString("ref");
-								JSONObject jsonObj4 = new JSONObject(attr3);
-								if (jsonObj4 != null && attr3.startsWith("{", 0)) {
-									childUuid = jsonObj4.optString("uuid");
-									childType = jsonObj4.optString("type");
-									if (!childType.equals(MetaType.simple.toString())) {
-										
-										 * baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
-										 * null, null, null, null, null, childUuid, null, null); refName =
-										 * (baseEntityList == null || baseEntityList.isEmpty()) ? "" :
-										 * baseEntityList.get(0).getName();
-										 
+						/*
+						 * else if (key.equalsIgnoreCase("edgeInfo")) for graphpod { String attr4 =
+						 * childObj.optString("edgeSource");
+						 * 
+						 * if(attr4.equalsIgnoreCase("edgeSource")) { JSONObject jsonObj5 = new
+						 * JSONObject(attr4); String attr3 = jsonObj5.optString("ref"); JSONObject
+						 * jsonObj4 = new JSONObject(attr3); if (jsonObj4 != null &&
+						 * attr3.startsWith("{", 0)) { childUuid = jsonObj4.optString("uuid"); childType
+						 * = jsonObj4.optString("type"); if
+						 * (!childType.equals(MetaType.simple.toString())) {
+						 * 
+						 * baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+						 * null, null, null, null, null, childUuid, null, null); refName =
+						 * (baseEntityList == null || baseEntityList.isEmpty()) ? "" :
+						 * baseEntityList.get(0).getName();
+						 * 
+						 * 
+						 * baseEntityList = commonServiceImpl.getResolveNameByUuidandType(childUuid,
+						 * childType); refName = (baseEntityList == null || baseEntityList.isEmpty()) ?
+						 * "" : baseEntityList.get(0).getName(); } else { continue; } if
+						 * (StringUtils.isBlank(refName)) { refName = childType; } } createVnE(childObj,
+						 * srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
+						 * refName, name, null); } String attr5 = childObj.optString("sourceNodeId");
+						 * if(attr5.equalsIgnoreCase("sourceNodeId")) { JSONObject jsonObj5 = new
+						 * JSONObject(attr4); String refN1 = childObj.optString("attrId"); String attr3
+						 * = jsonObj5.optString("ref"); JSONObject jsonObj4 = new JSONObject(attr3); if
+						 * (jsonObj4 != null && attr3.startsWith("{", 0)) { childUuid =
+						 * jsonObj4.optString("uuid"); childType = jsonObj4.optString("type"); if
+						 * (!childType.equals(MetaType.simple.toString())) {
+						 * 
+						 * baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+						 * null, null, null, null, null, childUuid, null, null); refName =
+						 * (baseEntityList == null || baseEntityList.isEmpty()) ? "" :
+						 * baseEntityList.get(0).getName();
+						 * 
+						 * 
+						 * baseEntityList = commonServiceImpl.getResolveNameByUuidandType(childUuid,
+						 * childType); refName = (baseEntityList == null || baseEntityList.isEmpty()) ?
+						 * "" : baseEntityList.get(0).getName(); } else { continue; } if
+						 * (StringUtils.isBlank(refName)) { refName = childType; } if (refN1 != null &&
+						 * !refN1.equals("null")) { refName = refName + "_" + refN1; } }
+						 * createVnE(childObj, srcVertex, totalVertexList, totalEdgeList,
+						 * verticesRowMap, edgeRowMap, refName, name, null); } String attr6 =
+						 * childObj.optString("targetNodeId");
+						 * if(attr6.equalsIgnoreCase("targetNodeId")) { JSONObject jsonObj5 = new
+						 * JSONObject(attr4); String refN1 = childObj.optString("attrId"); String attr3
+						 * = jsonObj5.optString("ref"); JSONObject jsonObj4 = new JSONObject(attr3); if
+						 * (jsonObj4 != null && attr3.startsWith("{", 0)) { childUuid =
+						 * jsonObj4.optString("uuid"); childType = jsonObj4.optString("type"); if
+						 * (!childType.equals(MetaType.simple.toString())) {
+						 * 
+						 * baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
+						 * null, null, null, null, null, childUuid, null, null); refName =
+						 * (baseEntityList == null || baseEntityList.isEmpty()) ? "" :
+						 * baseEntityList.get(0).getName();
+						 * 
+						 * 
+						 * baseEntityList = commonServiceImpl.getResolveNameByUuidandType(childUuid,
+						 * childType); refName = (baseEntityList == null || baseEntityList.isEmpty()) ?
+						 * "" : baseEntityList.get(0).getName(); } else { continue; } if
+						 * (StringUtils.isBlank(refName)) { refName = childType; } if (refN1 != null &&
+						 * !refN1.equals("null")) { refName = refName + "_" + refN1; } }
+						 * createVnE(childObj, srcVertex, totalVertexList, totalEdgeList,
+						 * verticesRowMap, edgeRowMap, refName, name, null); } }
+						 */
 
-										baseEntityList = commonServiceImpl.getResolveNameByUuidandType(childUuid,
-												childType);
-										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-												: baseEntityList.get(0).getName();
-									} else {
-										continue;
-									}
-									if (StringUtils.isBlank(refName)) {
-										refName = childType;
-									}
-									if (refN1 != null && !refN1.equals("null")) {
-										refName = refName + "_" + refN1;
-									}
-								}
-								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-										refName, name, null);
-							}
-							String attr6 = childObj.optString("targetNodeId");
-							 if(attr6.equalsIgnoreCase("targetNodeId"))
-							{
-								JSONObject jsonObj5 = new JSONObject(attr4);
-								String refN1 = childObj.optString("attrId");
-								String attr3 = jsonObj5.optString("ref");
-								JSONObject jsonObj4 = new JSONObject(attr3);
-								if (jsonObj4 != null && attr3.startsWith("{", 0)) {
-									childUuid = jsonObj4.optString("uuid");
-									childType = jsonObj4.optString("type");
-									if (!childType.equals(MetaType.simple.toString())) {
-										
-										 * baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(childType, null,
-										 * null, null, null, null, null, childUuid, null, null); refName =
-										 * (baseEntityList == null || baseEntityList.isEmpty()) ? "" :
-										 * baseEntityList.get(0).getName();
-										 
-
-										baseEntityList = commonServiceImpl.getResolveNameByUuidandType(childUuid,
-												childType);
-										refName = (baseEntityList == null || baseEntityList.isEmpty()) ? ""
-												: baseEntityList.get(0).getName();
-									} else {
-										continue;
-									}
-									if (StringUtils.isBlank(refName)) {
-										refName = childType;
-									}
-									if (refN1 != null && !refN1.equals("null")) {
-										refName = refName + "_" + refN1;
-									}
-								}
-								createVnE(childObj, srcVertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap,
-										refName, name, null);
-							}
-						}
-						*/
-						
 						else if (key.equalsIgnoreCase("ruleInfo")) {
 							// String attrN = childObj.optString("ref");
 							if (childObj != null && value.startsWith("{", 0)) {
@@ -1524,9 +1403,17 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 									refName, name, null);
 						}
 				}
-			} else if (childObj != null && value.startsWith("{", 0)) {
-
+			} 
+			else if (childObj != null && value.startsWith("{", 0)) {
+				/*if (parentName != null) {
+					if (parentName.equalsIgnoreCase("nodeProperties")
+							|| parentName.equalsIgnoreCase("edgeProperties")) {
+						continue;
+					}
+				}*/
 				if (key.equalsIgnoreCase("ref")) {
+					
+					
 					childUuid = childObj.optString("uuid");
 					childType = childObj.optString("type");
 
@@ -1550,7 +1437,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 					}
 					if (StringUtils.isNotBlank(jsonObject.optString("attrId"))) {
 
-						if (StringUtils.isNotBlank(jsonObject.optString("attrName"))&& jsonObject.optString("attrName") != null) {
+						if (StringUtils.isNotBlank(jsonObject.optString("attrName"))
+								&& jsonObject.optString("attrName") != null) {
 							name = refName + "_" + jsonObject.getString("attrName");
 						} else {
 							name = refName + "_" + jsonObject.getString("attrId");
@@ -1613,9 +1501,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		}
 	}
 
-	
-	/**********************************   GraphFrame - START   **********************************/
-	
+	/**********************************
+	 * GraphFrame - START
+	 **********************************/
+
 	/**
 	 * 
 	 * @param uuid
@@ -1626,12 +1515,14 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @throws Exception
 	 */
 	public BaseExec create(String uuid, String version, ExecParams execParams, RunMode runMode) throws Exception {
-		Graphpod graphPod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphpod.toString());
-		GraphExec graphExec = (GraphExec) commonServiceImpl.createExec(MetaType.graphExec, new MetaIdentifier(MetaType.graphpod, uuid, version));
+		Graphpod graphPod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
+				MetaType.graphpod.toString());
+		GraphExec graphExec = (GraphExec) commonServiceImpl.createExec(MetaType.graphExec,
+				new MetaIdentifier(MetaType.graphpod, uuid, version));
 		commonServiceImpl.save(MetaType.graphExec.toString(), graphExec);
-		return create (graphExec, execParams, runMode);
+		return create(graphExec, execParams, runMode);
 	}
-	
+
 	/**
 	 * 
 	 * @param baseExec
@@ -1640,9 +1531,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @return
 	 * @throws Exception
 	 */
-	public BaseExec create (BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public BaseExec create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside GraphServiceImpl.create ");
-		
+
 		GraphExec graphExec = (GraphExec) baseExec;
 		List<Status> statusList = null;
 		if (graphExec == null) {
@@ -1667,45 +1558,46 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		logger.info(" After Set not started status");
 		return graphExec;
 	}
-	
+
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		// Get the exec
 		try {
-			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.InProgress);
-			
+			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
+					Status.Stage.InProgress);
+
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			String graphExecKey = exec.createGraphFrame((GraphExec) baseExec, null);
 			DataStore ds = new DataStore();
-			ds.setMetaId(new MetaIdentifierHolder(new MetaIdentifier(baseExec.getDependsOn().getRef().getType(), 
-													baseExec.getDependsOn().getRef().getUuid(), 
-													baseExec.getDependsOn().getRef().getVersion())));
-			ds.setExecId(new MetaIdentifierHolder(new MetaIdentifier(MetaType.graphExec, 
-																		baseExec.getUuid(), 
-																		baseExec.getVersion())));
+			ds.setMetaId(new MetaIdentifierHolder(new MetaIdentifier(baseExec.getDependsOn().getRef().getType(),
+					baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion())));
+			ds.setExecId(new MetaIdentifierHolder(
+					new MetaIdentifier(MetaType.graphExec, baseExec.getUuid(), baseExec.getVersion())));
 			dataStoreServiceImpl.save(ds);
-			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Completed);
+			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
+					Status.Stage.Completed);
 			return graphExecKey;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Failed);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Graphpod execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Graphpod execution failed.");
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return graphOperator.parse(baseExec, execParams, runMode);
 	}
-	
+
 	/**
 	 * 
 	 * @param uuid
@@ -1715,17 +1607,25 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, List<GraphpodResult>> getGraphResults (String uuid, String version, String degree, String filterId,String nodeType) throws Exception {
-		GraphExec graphExec=(GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphExec.toString());
-		Graphpod graphpod=(Graphpod) commonServiceImpl.getOneByUuidAndVersion(graphExec.getDependsOn().getRef().getUuid(), graphExec.getDependsOn().getRef().getVersion(), MetaType.graphpod.toString());
+	@SuppressWarnings("unused")
+	public Map<String, List<GraphpodResult>> getGraphResults(String uuid, String version, String degree,
+			String filterId, String nodeType,ExecParams execParams) throws Exception {
+
+		GraphExec graphExec = (GraphExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
+				MetaType.graphExec.toString());
+		Graphpod graphpod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(
+				graphExec.getDependsOn().getRef().getUuid(), graphExec.getDependsOn().getRef().getVersion(),
+				MetaType.graphpod.toString());
 		String graphExecKey = null;
 		Boolean createGraph = Boolean.FALSE;
 		// Get the datastore. If there is no existing datastore then create graph
 		DataStore ds = dataStoreServiceImpl.findLatestByMeta(graphpod.getUuid(), graphpod.getVersion());
-		//DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
+		// DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
 		
+	
 		if (ds != null) {
-			graphExecKey = ds.getMetaId().getRef().getUuid()+"_"+ds.getMetaId().getRef().getVersion()+"_"+ds.getExecId().getRef().getVersion();
+			graphExecKey = ds.getMetaId().getRef().getUuid() + "_" + ds.getMetaId().getRef().getVersion() + "_"
+					+ ds.getExecId().getRef().getVersion();
 			if (!graphpodMap.containsKey(graphExecKey)) {
 				createGraph = Boolean.TRUE;
 			}
@@ -1735,106 +1635,280 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		if (createGraph) {
 			// Create graph
 			RunMode runMode = RunMode.ONLINE;
-		  	ExecParams execParams = new ExecParams();
-			BaseExec baseExec = create(graphExec.getDependsOn().getRef().getUuid(),graphExec.getDependsOn().getRef().getVersion(),execParams, runMode);
+			ExecParams execParamss = new ExecParams();
+			BaseExec baseExec = create(graphExec.getDependsOn().getRef().getUuid(),
+					graphExec.getDependsOn().getRef().getVersion(), execParamss, runMode);
 			baseExec = parse(baseExec, execParams, runMode);
 			graphExecKey = execute(baseExec, execParams, runMode);
 		}
 		// Get the graphFrame and parse
-		GraphFrame graphFrame = (GraphFrame) graphpodMap.get(graphExecKey);
-		graphFrame.edges().show(false);
-		graphFrame.vertices().show(false);
-
-		Dataset<Row> edge_dataset = graphFrame.edges().filter("src = '"+filterId+"' or dst='"+filterId+"'").select("src", "dst", "edgeName", "edgeType", "edgeProperties");
-		edge_dataset.show();
-		Dataset<Row> node_dataset = graphFrame.vertices().filter("id = '"+filterId+"'").filter("nodeType = '"+nodeType+"'").select("id", "nodeName", "nodeType", "nodeIcon", "nodeProperties");
-		node_dataset.show();
-		Dataset<Row> result_datset = edge_dataset.join(node_dataset, edge_dataset.col("src").equalTo(node_dataset.col("id")));
-		result_datset.show(false);
-		logger.info("Showing filtered graph >>>>>>>>>>>>>>>>> ");
-		result_datset.show();
+		GraphFrame graph = (GraphFrame) graphpodMap.get(graphExecKey);
 		
+		graph.edges().show(false);
+		graph.vertices().show(false);
+	
+		
+		
+		
+		
+	/*	Dataset<Row> edgeProperties=graph.edges().toJSON().select("edgeProperties");
+		edgeProperties.createTempView("V1").show();
+		List<Row> al=edgeProperties.collectAsList();
+		int size=al.size();
+		List<java.util.Map<String, String>> nodeproper = new ArrayList<>();
+		java.util.Map<String, String> object1 = new HashMap<String, String>();
+	      for (Row value : al) { 	
+	  	    	  System.out.println( value.toString());
+	    	 
+	           
+	    	  String[] words=value.toString().substring(2, value.toString().lastIndexOf("}")).split(",");
+	    	  System.out.println(words[0]+""+words[1]);
+	    	  for(String val : words) {
+	    		 String key_value[]= val.split(":");
+		           object1.put(key_value[0], key_value[1]);
+		           nodeproper.add(object1);
+		       }	    	 
+	      }
+	      for (java.util.Map<String, String> map : nodeproper) {
+				for (java.util.Map.Entry<String, String> entry : map.entrySet()) {
+					String key = entry.getKey();
+					String value = entry.getValue();
+					System.out.println(key+":"+value);
+					}
+					
+				}
+		*/
+		
+		
+		
+		
+		Dataset<Row> motifs = null;
+		List<Map<String, Object>> vertexData = new ArrayList<>();
+		List<Map<String, Object>> edgesData = new ArrayList<>();
+		List<Map<String, Object>> data = new ArrayList<>();
+		if (degree.equalsIgnoreCase("1")) {
+			motifs = graph.find("(Object)-[relationwithChild]->(Child)");
+		} else if (degree.equalsIgnoreCase("2")) {
+			motifs = graph.find("(Object)-[relationwithChild]->(Child);(Child)-[relationwithSubChild]->(SubChild)");
+		} else if (degree.equalsIgnoreCase("abc")) {
+			motifs = graph.find("(Child)-[relationwithSubChild]->(SubChild);(Object)-[relationwithChild]->(Child)");
+		} else if (degree.equalsIgnoreCase("3")) {
+			motifs = graph.find(
+					"(Object)-[relationwithChild]->(Child);(Child)-[relationwithSubChild]->(SubChild);(SubChild)-[relationwithSubsubChild]->(SubsubChild)");
+		} else if (degree.equalsIgnoreCase("4")) {
+			motifs = graph.find("(Object)-[relationwithChild]->(Child);(Child)-[relationwithSubChild]->(SubChild);"
+					+ "(SubChild)-[relationwithSubsubChild]->(SubsubChild);"
+					+ "(SubsubChild)-[relationwithSubsubsubChild]->(SubsubsubChild)");
+		} else if (degree.equalsIgnoreCase("-1")) {
+			motifs = graph.find("(Child)-[relationwithChild]->(Object)");
+		} else if (degree.equalsIgnoreCase("-2")) {
+			motifs = graph.find("(Child)-[relationwithChild]->(SubChild);(SubChild)-[relationwithSubChild]->(Object)");
+		}
+		motifs.show(false);
+		motifs = motifs
+				.filter("relationwithChild.src = '" + filterId + "' or relationwithChild.dst = '" + filterId + "'");
+		
+		String[] columns = motifs.columns();
+		for (Row row : motifs.collectAsList()) {
+			java.util.Map<String, Object> object = new HashMap<String, Object>();
+			for (String column : columns) {
+				object.put(column, row.getAs(column));
+			}
+			data.add(object);
+		}
+
+		// logger.info("PRINT DATA ::: ### " + data );
+		for (Map<String, Object> map : data) {
+			for (Map.Entry<String, Object> entry : map.entrySet()) {
+				String key = entry.getKey();
+				Object value = entry.getValue();
+				if (key.equalsIgnoreCase("Object") || key.equalsIgnoreCase("Child") || key.equalsIgnoreCase("SubChild")
+						|| key.equalsIgnoreCase("SubsubChild") || key.equalsIgnoreCase("SubsubsubChild")) {
+					Map<String, Object> vertexData1 = new HashMap<>();
+					vertexData1.put(key, value);
+					vertexData.add(vertexData1);
+				}
+				if (key.equalsIgnoreCase("relationwithChild") || key.equalsIgnoreCase("relationwithSubChild")
+						|| key.equalsIgnoreCase("relationwithSubsubChild")
+						|| key.equalsIgnoreCase("relationwithSubsubsubChild")) {
+					Map<String, Object> edgesData1 = new HashMap<>();
+					edgesData1.put(key, value);
+					edgesData.add(edgesData1);
+				}
+			}
+		}
+
+		Set<String> vertexSet = new HashSet<>();
+		Set<String> edgeSet = new HashSet<>();
+
+		for (Map<String, Object> map : vertexData) {
+			for (Map.Entry<String, Object> entry : map.entrySet()) {
+				Object value = entry.getValue();
+				vertexSet.add(value.toString());
+			}
+		}
+
+		for (Map<String, Object> map : edgesData) {
+			for (Map.Entry<String, Object> entry : map.entrySet()) {
+				Object value = entry.getValue();
+				edgeSet.add(value.toString());
+			}
+		}
+
+		logger.info("Printing vertex >>>> ");
+		for (String value : vertexSet) {
+			logger.info("value : " + value.toString());
+		}
+
+		logger.info("Printing edge >>>> ");
+		for (String value : edgeSet) {
+			logger.info("value : " + value.toString());
+		}
+
+		List<Map<String, Object>> graphVertex = new ArrayList<>();
+		List<Map<String, Object>> graphEdge = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
+		if (execParams != null) {
+			GraphFilter graphFilter = execParams.getGraphFilter();
+			if (graphFilter.getNodeFilter().size() > 0) {
+				for (GraphFilter.NodeFilter nodeFilter : graphFilter.getNodeFilter()) {
+
+					String logicalOperator = nodeFilter.getLogicalOperator();
+					if (logicalOperator == null) {
+						String operator = nodeFilter.getOperator();
+						Property operand = nodeFilter.getOperand();
+						sb.append("get_json_object(nodeProperties,'$." + "  " + operand.getPropertyName() + "')  "
+								+ operator + "  " + operand.getPropertyValue());
+					} else {
+						String operator = nodeFilter.getOperator();
+						Property operand = nodeFilter.getOperand();
+						sb.append("  " + logicalOperator + "  " + "get_json_object(nodeProperties,'$."
+								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
+					}
+				}
+			}
+
+			if (graphFilter.getEdgeFilter().size() > 0) {
+				for (GraphFilter.EdgeFilter edgeFilter : graphFilter.getEdgeFilter()) {
+
+					String logicalOperator = edgeFilter.getLogicalOperator();
+					if (logicalOperator == "" && graphFilter.getNodeFilter().size() > 0) {
+						String operator = edgeFilter.getOperator();
+						Property operand = edgeFilter.getOperand();
+						sb.append("  and get_json_object(edgeProperties,'$." + operand.getPropertyName() + "')  "
+								+ operator + "  " + operand.getPropertyValue());
+
+					} else {
+						String operator = edgeFilter.getOperator();
+						Property operand = edgeFilter.getOperand();
+						sb.append("  " + logicalOperator + "  " + "get_json_object(edgeProperties,'$."
+								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
+					}
+				}
+			}
+		}
+		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
+				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties")
+				.distinct();
+
+		edge_dataset.show(false);
+
+		Dataset<Row> node_dataset = motifs
+				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
+						"Object.propertyId", "Object.propertyInfo", "Object.type")
+				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
+						"Child.nodeProperties", "Child.propertyId", "Child.propertyInfo", "Child.type"))
+				.distinct();
+
+		// motifs.select("Object.nodeProperties").toJSON().show(false);
+		node_dataset.show(false);
+
+		System.out.println("############     Filter  String   #####" + sb.toString());
+
+		Dataset<Row> result_datset = edge_dataset.join(node_dataset,
+				edge_dataset.col("src").equalTo(node_dataset.col("id")));
+
+		result_datset.show(false);
+		if (execParams != null)
+			result_datset = result_datset.filter(sb.toString());
+		result_datset.show(false);
 		// Process and get the desired results
 		List<GraphpodResult> result = new ArrayList<>();
-		Row[] rows = (Row[]) result_datset.head(Integer.parseInt("" + result_datset.count()));
-		String[] resultDatesetColumns = result_datset.columns();
-		String[] resultDatasetValue = new String[resultDatesetColumns.length];
-       
-		for (Row row : rows) {
-			Map<String, String> source = new HashMap<>();
-			Map<String, String> target = new HashMap<>();
-			int count = 0;
-			for (String edgecloumn : resultDatesetColumns) {
-				String value1 = row.getAs(edgecloumn).toString();
-				resultDatasetValue[count] = value1;
-				count++;
-			}
-			/*
-			 * String srcId = row.getAs("src"); String dstId = row.getAs("dst");
-			 */
-			//String relation = row.getAs(resultDatesetColumns[2]);
 
-			String edge_name = row.getAs(resultDatesetColumns[2]);
-			String edge_type = row.getAs(resultDatesetColumns[3]);
-			String edge_properties = row.getAs(resultDatesetColumns[4]);
-			
-			   
-			String relation = null;
-			if(edge_properties.contains(","))
-				relation = edge_properties.substring(edge_properties.indexOf(':'), edge_properties.indexOf(','));
+		if (!result_datset.collectAsList().isEmpty()) {
+			Row[] rows = (Row[]) result_datset.head(Integer.parseInt("" + result_datset.collectAsList().size()));
+			String[] resultDatesetColumns = result_datset.columns();
+			String[] resultDatasetValue = new String[resultDatesetColumns.length];
+
+			for (Row row : rows) {
+				Map<String, String> source = new HashMap<>();
+				Map<String, String> target = new HashMap<>();
+				int count = 0;
+				for (String edgecloumn : resultDatesetColumns) {
+					String value1 = row.getAs(edgecloumn).toString();
+					resultDatasetValue[count] = value1;
+					count++;
+				}
+
+				String edge_name = row.getAs(resultDatesetColumns[2]);
+				String edge_type = row.getAs(resultDatesetColumns[3]);
+				String edge_properties = row.getAs(resultDatesetColumns[4]);
+
+				String relation = null;
+				if (edge_properties.contains(","))
+					relation = edge_properties.substring(edge_properties.indexOf(':') + 1,
+							edge_properties.indexOf(','));
 				else
 					relation = edge_properties;
 
-				
-			Dataset<Row> srcVertexDf = graphFrame.vertices().filter("id = '" + resultDatasetValue[0] + "'");
-			String[] vertexColumns = srcVertexDf.columns();
-			Row[] srcrows = (Row[]) srcVertexDf.head(Integer.parseInt("" + srcVertexDf.count()));
+				Dataset<Row> srcVertexDf = graph.vertices().filter("id = '" + resultDatasetValue[0] + "'");
+				String[] vertexColumns = srcVertexDf.columns();
+				Row[] srcrows = (Row[]) srcVertexDf.head(Integer.parseInt("" + srcVertexDf.count()));
 
-			for (Row srcrow : srcrows) {
-				for (String cloumn : vertexColumns) {
-					if(cloumn.equalsIgnoreCase("nodeName")){
-				    String value1 = srcrow.getAs(cloumn).toString();
-				    source.put("label", value1);
-					}					
-					String value1 = srcrow.getAs(cloumn).toString();
-					source.put(cloumn, value1);
-				}
-			}
-
-			Dataset<Row> dstVertexDf = graphFrame.vertices().filter("id = '" + resultDatasetValue[1] + "'");
-			
-			Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
-			if(dstVertexDf.count()>0 ) {
-			for (Row dstrow : dstrows) {
-				for (String cloumn : vertexColumns) {
-					if(cloumn.equalsIgnoreCase("nodeName")){
-					    String value1 = dstrow.getAs(cloumn).toString();
-					    target.put("label", value1);
+				for (Row srcrow : srcrows) {
+					for (String cloumn : vertexColumns) {
+						if (cloumn.equalsIgnoreCase("nodeName")) {
+							String value1 = srcrow.getAs(cloumn).toString();
+							source.put("label", value1);
 						}
-					String value1 = dstrow.getAs(cloumn).toString();
-					target.put(cloumn, value1);
-
+						String value1 = srcrow.getAs(cloumn).toString();
+						source.put(cloumn, value1);
+					}
 				}
-			}
-			GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
-					edge_properties);
-			result.add(graphpodresult);
-			}
-			else {
-				GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null,
-						null);
-				result.add(graphpodresult);
-			}
 
-			
+				Dataset<Row> dstVertexDf = graph.vertices().filter("id = '" + resultDatasetValue[1] + "'");
+
+				Row[] dstrows = (Row[]) dstVertexDf.head(Integer.parseInt("" + dstVertexDf.count()));
+				if (dstVertexDf.count() > 0) {
+					for (Row dstrow : dstrows) {
+						for (String cloumn : vertexColumns) {
+							if (cloumn.equalsIgnoreCase("nodeName")) {
+								String value1 = dstrow.getAs(cloumn).toString();
+								target.put("label", value1);
+							}
+							String value1 = dstrow.getAs(cloumn).toString();
+							target.put(cloumn, value1);
+
+						}
+					}
+					GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
+							edge_properties);
+					result.add(graphpodresult);
+				} else {
+					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null);
+					result.add(graphpodresult);
+				}
+
+			}
 		}
-        
 		Map<String, List<GraphpodResult>> edgeMap = new HashMap<>();
 		edgeMap.put("edges", result);
 		// String reslt = mapper.writeValueAsString(result);
 
 		return edgeMap;
 	}
-	/**********************************   GraphFrame - END     **********************************/
+	/**********************************
+	 * GraphFrame - END
+	 **********************************/
 
 }
