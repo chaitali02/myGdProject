@@ -363,15 +363,42 @@ public class ReconServiceImpl extends RuleTemplate {
 		return data;
 	}
 
-	public void restart(String type, String uuid, String version, ExecParams  execParams, RunMode runMode) throws JsonProcessingException {
+	public void restart(String type, String uuid, String version, ExecParams  execParams, RunMode runMode) throws Exception {
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.reconExec.toString());
 		try {
-			HashMap<String, String> otherParams = execParams.getOtherParams();
+			HashMap<String, String> otherParams = null;
+			if(execParams != null) 
+				otherParams = execParams.getOtherParams();
+			
 			reconExec = (ReconExec) parse(uuid,version, null, otherParams, null, null, runMode);
 			execute(reconExec.getDependsOn().getRef().getUuid(),reconExec.getDependsOn().getRef().getVersion(),reconExec,null, execParams, runMode);
+		
 		} catch (Exception e) {
+			synchronized (reconExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Failed);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Recon.");
+					throw new Exception((message != null) ? message : "Can not parse Recon.");
+				}
+			}
 			e.printStackTrace();
-		}	
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Recon.");
+			throw new Exception((message != null) ? message : "Can not parse Recon.");
+		}
 	}
 
 	public String getReconExecByRGExec(String reconGroupExecUuid, String reconGroupExecVersion) throws JsonProcessingException {

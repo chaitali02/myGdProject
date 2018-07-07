@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -355,17 +357,44 @@ public class RuleServiceImpl extends RuleTemplate {
 	 */
 
 	public void restart(String type, String uuid, String version, List<FutureTask<TaskHolder>> taskList,
-			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, RunMode runMode) throws JsonProcessingException {
+			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, RunMode runMode) throws Exception {
 		// RuleExec ruleExec= ruleExecServiceImpl.findOneByUuidAndVersion(uuid,
 		// version);
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
-				MetaType.ruleExec.toString());
+				MetaType.ruleExec.toString());		
 		try {
-			HashMap<String, String> otherParams = execParams.getOtherParams();
-			ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, otherParams, null, null, runMode);
+			HashMap<String, String> otherParams = null;
+			if(execParams != null) 
+				otherParams = execParams.getOtherParams();
+			
+			ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, otherParams, null, null, runMode);			
 			execute(metaExecutor, ruleExec, null, taskList, execParams, runMode);
+			
 		} catch (Exception e) {
+			synchronized (ruleExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.");
+					throw new Exception((message != null) ? message : "Can not parse Business Rule.");
+				}
+			}
 			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.");
+			throw new Exception((message != null) ? message : "Can not parse Business Rule.");
 		}
 	}
 

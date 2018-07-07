@@ -28,6 +28,7 @@ import java.util.concurrent.FutureTask;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -800,20 +801,47 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		mi.setVersion(dataQualExec.getDependsOn().getRef().getVersion());
 		return mi;
 	}
-	public void restart(String type,String uuid,String version, ExecParams execParams, RunMode runMode) throws JsonProcessingException{
+	public void restart(String type,String uuid,String version, ExecParams execParams, RunMode runMode) throws Exception{
 		//DataQualExec dataQualExec= dataQualExecServiceImpl.findOneByUuidAndVersion(uuid,version);
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.dqExec.toString());
 //		try {
 //			dataQualExec = create(dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion(),dataQualExec, null, null, null);
 //		} catch (Exception e) {
 //			e.printStackTrace();
-//		}
-		HashMap<String, String> otherParams = execParams.getOtherParams();
+//		}		
 		try {
+			HashMap<String, String> otherParams = null;
+			if(execParams != null) 
+				otherParams  = execParams.getOtherParams();
+			
 			dataQualExec = (DataQualExec) parse(uuid,version, null, otherParams, null, null, runMode);
 			execute(dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion(),dataQualExec,null, execParams, runMode);
+		
 		} catch (Exception e) {
+			synchronized (dataQualExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.Failed);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Data Quality.");
+					throw new Exception((message != null) ? message : "Can not parse Data Quality.");
+				}
+			}
 			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Data Quality.");
+			throw new Exception((message != null) ? message : "Can not parse Data Quality.");
 		}
 		
 	}

@@ -689,9 +689,9 @@ public class RunStageServiceImpl implements Callable<String> {
 					continue;
 				}
 				
-				if (taskStatus.equals(Status.Stage.Resume)) {
+				/*if (taskStatus.equals(Status.Stage.Resume)) {
 					indvTaskExec.setDependsOn(new ArrayList<>());
-				}
+				}*/
 				
 				// Check if task has any dependents
 				if (indvTaskExec.getDependsOn() != null 
@@ -744,7 +744,7 @@ public class RunStageServiceImpl implements Callable<String> {
 					e.printStackTrace();
 				}
 				for (TaskExec indvTaskExec : depTaskExecs) {
-					
+					logger.info("Checking : "+indvTaskExec.getTaskId() + ":" + indvTaskExec.getName());
 					if (dependentTaskRunningLog.contains(dagExec.getUuid() + "_" + stageId + "_" + indvTaskExec.getTaskId())) {
 						continue;
 					}
@@ -774,7 +774,8 @@ public class RunStageServiceImpl implements Callable<String> {
 						continue;
 					}*/
 					if (!taskStatus.equals(Status.Stage.NotStarted)
-							&& !taskStatus.equals(Status.Stage.InProgress)) {
+							&& !taskStatus.equals(Status.Stage.InProgress)
+							&& !taskStatus.equals(Status.Stage.Resume)) {
 						continue;
 					}
 					

@@ -69,6 +69,7 @@ import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
@@ -3903,7 +3904,13 @@ public class RegisterService {
 			countHolder.add(addToCount(MetaType.operatorExec.toString(), operatorExecCount,
 					operatorExec.getCreatedBy().getRef().getName(), operatorExec.getCreatedOn()));
 		}
-
+		int graphExecCount = commonServiceImpl.findAllLatest(MetaType.graphExec).size();
+		GraphExec graphExec = (GraphExec) commonServiceImpl.getLatest(MetaType.graphExec.toString());
+		
+		if (graphExec != null) {
+			countHolder.add(addToCount(MetaType.graphExec.toString(), graphExecCount,
+					graphExec.getCreatedBy().getRef().getName(), graphExec.getCreatedOn()));
+		}
 
 		return countHolder;
 		
