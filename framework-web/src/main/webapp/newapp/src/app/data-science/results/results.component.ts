@@ -10,7 +10,7 @@ import { ModelService } from '../../metadata/services/model.service';
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.css']
 })
-export class ResultsComponent {
+export class ResultsComponent1 {
 
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   type: any;
