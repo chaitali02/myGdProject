@@ -1046,7 +1046,7 @@ public class ModelServiceImpl {
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.customCreate(simulateExec, execParams, runMode);
 					
 					//tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 
@@ -1121,7 +1121,7 @@ public class ModelServiceImpl {
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.customCreate(simulateExec, execParams, runMode);
 					
 //					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 					
@@ -2151,7 +2151,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.customCreate(simulateExec, execParams, runMode);
 
 					String tabName_2 = null;
 					String tableName_3 = null;
@@ -2223,7 +2223,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.customCreate(simulateExec, execParams, runMode);
 				
 					String tabName_2 = null;
 					String tableName_3 = null;

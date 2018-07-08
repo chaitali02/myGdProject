@@ -107,7 +107,7 @@ public class GraphpodOperator implements IOperator {
 	 * @see com.inferyx.framework.operator.Operator#create(com.inferyx.framework.domain.BaseExec, com.inferyx.framework.domain.ExecParams, com.inferyx.framework.enums.RunMode)
 	 */
 	@Override
-	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public Map<String, String> customCreate(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		String execVersion = baseExec.getVersion();
 		Map<String, String> otherParams = execParams.getOtherParams();
 		String tableName = null;
@@ -146,6 +146,12 @@ public class GraphpodOperator implements IOperator {
 		
 		/*************** Define the save location - START ****************/
 		/*************** Define the save location - END ****************/
+		return null;
+	}
+
+	@Override
+	public BaseExec create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

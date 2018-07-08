@@ -26,7 +26,17 @@ public interface IOperator extends IParsable, IExecutable{
 	 * @return
 	 * @throws Exception
 	 */
-	Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception;
+	BaseExec create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception;
+	
+	/**
+	 * 
+	 * @param baseExec
+	 * @param execParams
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	Map<String, String> customCreate(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception;
 	
 }
 	

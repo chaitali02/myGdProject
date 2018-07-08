@@ -271,12 +271,18 @@ public class GraphOperator implements IOperator {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.inferyx.framework.operator.Operator#create(com.inferyx.framework.domain.BaseExec, com.inferyx.framework.domain.ExecParams, com.inferyx.framework.enums.RunMode)
-	 */
 	@Override
-	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public BaseExec create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Map<String, String> customCreate(BaseExec baseExec, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
