@@ -1678,10 +1678,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 					
 				}
 		*/
-		
-		
-		
-		
+
 		Dataset<Row> motifs = null;
 		List<Map<String, Object>> vertexData = new ArrayList<>();
 		List<Map<String, Object>> edgesData = new ArrayList<>();
@@ -1707,7 +1704,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		motifs.show(false);
 		motifs = motifs
 				.filter("relationwithChild.src = '" + filterId + "' or relationwithChild.dst = '" + filterId + "'");
-		
+
 		String[] columns = motifs.columns();
 		for (Row row : motifs.collectAsList()) {
 			java.util.Map<String, Object> object = new HashMap<String, Object>();
@@ -1767,7 +1764,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
-		StringBuilder sb = new StringBuilder();
+		StringBuilder nodefilter = new StringBuilder();
+		StringBuilder edgefilter = new StringBuilder();
 		if (execParams != null) {
 			GraphFilter graphFilter = execParams.getGraphFilter();
 			if (graphFilter.getNodeFilter().size() > 0) {
@@ -1777,12 +1775,12 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 					if (logicalOperator == null) {
 						String operator = nodeFilter.getOperator();
 						Property operand = nodeFilter.getOperand();
-						sb.append("get_json_object(nodeProperties,'$." + "  " + operand.getPropertyName() + "')  "
-								+ operator + "  " + operand.getPropertyValue());
+						nodefilter.append("get_json_object(nodeProperties,'$." + "  " + operand.getPropertyName()
+								+ "')  " + operator + "  " + operand.getPropertyValue());
 					} else {
 						String operator = nodeFilter.getOperator();
 						Property operand = nodeFilter.getOperand();
-						sb.append("  " + logicalOperator + "  " + "get_json_object(nodeProperties,'$."
+						nodefilter.append("  " + logicalOperator + "  " + "get_json_object(nodeProperties,'$."
 								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
 					}
 				}
@@ -1795,13 +1793,13 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 					if (logicalOperator == "" && graphFilter.getNodeFilter().size() > 0) {
 						String operator = edgeFilter.getOperator();
 						Property operand = edgeFilter.getOperand();
-						sb.append("  and get_json_object(edgeProperties,'$." + operand.getPropertyName() + "')  "
+						edgefilter.append(" get_json_object(edgeProperties,'$." + operand.getPropertyName() + "')  "
 								+ operator + "  " + operand.getPropertyValue());
 
 					} else {
 						String operator = edgeFilter.getOperator();
 						Property operand = edgeFilter.getOperand();
-						sb.append("  " + logicalOperator + "  " + "get_json_object(edgeProperties,'$."
+						edgefilter.append("  " + logicalOperator + "  " + "get_json_object(edgeProperties,'$."
 								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
 					}
 				}
@@ -1810,9 +1808,11 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties")
 				.distinct();
-
 		edge_dataset.show(false);
+		if (edgefilter.length() > 0)
+			edge_dataset = edge_dataset.filter(edgefilter.toString());
 
+		@SuppressWarnings("deprecation")
 		Dataset<Row> node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
 						"Object.propertyId", "Object.propertyInfo", "Object.type")
@@ -1820,18 +1820,18 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 						"Child.nodeProperties", "Child.propertyId", "Child.propertyInfo", "Child.type"))
 				.distinct();
 
-		// motifs.select("Object.nodeProperties").toJSON().show(false);
-		node_dataset.show(false);
+		System.out.println("############   Nodefilter  Filter  String   #####" + nodefilter.toString());
+		if (nodefilter.length() > 0)
+			node_dataset = node_dataset.filter(nodefilter.toString());
 
-		System.out.println("############     Filter  String   #####" + sb.toString());
+		node_dataset.show(false);
 
 		Dataset<Row> result_datset = edge_dataset.join(node_dataset,
 				edge_dataset.col("src").equalTo(node_dataset.col("id")));
-
 		result_datset.show(false);
 		if (execParams != null)
-			result_datset = result_datset.filter(sb.toString());
-		result_datset.show(false);
+			// result_datset = result_datset.filter(sb.toString());
+			result_datset.show(false);
 		// Process and get the desired results
 		List<GraphpodResult> result = new ArrayList<>();
 

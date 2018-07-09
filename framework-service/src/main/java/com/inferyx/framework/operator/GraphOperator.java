@@ -126,7 +126,7 @@ public class GraphOperator implements IOperator {
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams()));
-				sb.append("\"'':', ");
+				sb.append("\"'':\"', ");
 				
 				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
@@ -134,10 +134,10 @@ public class GraphOperator implements IOperator {
 //				sb.append(" AS ");
 				
 				sb.append(", ");
-				sb.append("',' ");
+				sb.append("'\",' ");
 			}
 			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'}')");     
+			sb.append("'\"}')");     
 			sb.append(" AS nodeProperties ,");
 			// added propertyId
 			AttributeRefHolder propertyIdRefHolder = graphNode.getHighlightInfo().getPropertyId();
@@ -241,17 +241,17 @@ public class GraphOperator implements IOperator {
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams()));
-				sb.append("\"'':', ");
+				sb.append("\"'':\"', ");
 				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams(), execParams));
 //				sb.append(" AS ");
 				
 				sb.append(", ");
-				sb.append("',' ");
+				sb.append("'\",' ");
 			}
 			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'}')");
+			sb.append("'\"}')");
 			sb.append(" AS edgeProperties ");
 			sb.append(ConstantsUtil.FROM);
 			Object source = commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
@@ -271,12 +271,18 @@ public class GraphOperator implements IOperator {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.inferyx.framework.operator.Operator#create(com.inferyx.framework.domain.BaseExec, com.inferyx.framework.domain.ExecParams, com.inferyx.framework.enums.RunMode)
-	 */
 	@Override
-	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public BaseExec create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Map<String, String> customCreate(BaseExec baseExec, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

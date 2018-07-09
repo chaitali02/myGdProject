@@ -117,6 +117,60 @@ public class DagExecUtil {
 	}
 	
 	/**
+	 * 
+	 * @param dagExec
+	 * @param taskId
+	 * @return
+	 */
+	public static TaskExec getTaskExecFromDagExec(DagExec dagExec, String taskId){
+		List<TaskExec> taskExecList = null;
+		List<StageExec> stageExecList = null;
+		stageExecList = DagExecUtil.castToStageExecList(dagExec.getStages());
+		for (StageExec stageExec : stageExecList) {
+			taskExecList = DagExecUtil.castToTaskExecList(stageExec.getTasks());
+			if (taskExecList == null || taskExecList.isEmpty()) {
+				continue;
+			}
+			for (TaskExec taskExec : taskExecList) {
+				if (taskExec == null) {
+					continue;
+				}
+				if (taskExec.getTaskId().equals(taskId)) {
+					return taskExec;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param dagExec
+	 * @param taskId
+	 * @return
+	 */
+	public static StageExec getStageExecFromDagExecTask(DagExec dagExec, String taskId){
+		List<TaskExec> taskExecList = null;
+		List<StageExec> stageExecList = null;
+		stageExecList = DagExecUtil.castToStageExecList(dagExec.getStages());
+		for (StageExec stageExec : stageExecList) {
+			taskExecList = DagExecUtil.castToTaskExecList(stageExec.getTasks());
+			if (taskExecList == null || taskExecList.isEmpty()) {
+				continue;
+			}
+			for (TaskExec taskExec : taskExecList) {
+				if (taskExec == null) {
+					continue;
+				}
+				if (taskExec.getTaskId().equals(taskId)) {
+					return stageExec;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Convert refKeyList to refKeyMap
 	 * @param refKeyList
 	 * @return

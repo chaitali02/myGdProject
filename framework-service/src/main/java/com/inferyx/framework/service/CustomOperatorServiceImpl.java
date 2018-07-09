@@ -156,7 +156,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				MetaType.operator.toString());
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(helper.getOperatorType(operator.getOperatorType()));
-		Map<String, String> otherParams = newOperator.create(operatorExec, execParams, runMode);
+		Map<String, String> otherParams = newOperator.customCreate(operatorExec, execParams, runMode);
 		logger.info(" After Set not started status");
 		return operatorExec;
 	}
