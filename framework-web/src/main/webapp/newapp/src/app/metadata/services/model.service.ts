@@ -100,7 +100,22 @@ export class ModelService{
   })
    .catch(this.handleError);
   }
-  
+  getPredictResults(uuid:any,version:any): Observable<any[]> {
+    let url ="model/predict/getResults?action=view&uuid=" + uuid + "&version=" + version;
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
+  getSimulateResults(uuid:any,version:any): Observable<any[]> {
+    let url ="model/simulate/getResults?action=view&uuid=" + uuid + "&version=" + version;
+    return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+  })
+   .catch(this.handleError);
+  }
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
 }

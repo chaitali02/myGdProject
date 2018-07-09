@@ -32,6 +32,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
@@ -39,7 +40,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 	@Component
-	public class DatasetOperator implements Operator {
+	public class DatasetOperator {
 		
 		@Autowired
 		AttributeMapOperator attributeMapOperator;
@@ -98,8 +99,10 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		public String generateFrom(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
 			StringBuilder builder = new StringBuilder();
 			Relation relation = null;
-			usedRefKeySet.add(dataset.getDependsOn().getRef());
+	
+			
 			if (dataset.getDependsOn().getRef().getType() == MetaType.relation) {
+				usedRefKeySet.add(dataset.getDependsOn().getRef());
 				relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
 				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {
@@ -133,32 +136,8 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(dataset.getAttributeInfo()), refKeyMap, otherParams, execParams);
 		}
 
-		@Override
-		public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
 		private String generateLimit(DataSet dataset) {
 			return (dataset.getLimit() > 0) ? (ConstantsUtil.LIMIT + dataset.getLimit() + " ") : "";
-		}
-
-		@Override
-		public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
-				MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap,
-				HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, List<String> datapodList,
-				RunMode runMode) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-				Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-				Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
 		}
 
 }

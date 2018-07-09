@@ -78,7 +78,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   //  $scope.deferred = $q.defer();
   //  $scope.deferred.reject();
   });
-  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype','operator'];
+  $scope.nonExecTypes = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'relation', 'algorithm', 'paramlist', 'paramset', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod','model','distribution','operatortype','operator'];
   $scope.isExecutable = $scope.nonExecTypes.indexOf($scope.select);
   $scope.isUpload = ($scope.select == 'datapod' ? 0 : -1)
   
@@ -700,7 +700,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var uuid = data.uuid
     $scope.uploaaduuid = data.uuid
     var version = data.version
-    $scope,uploadDetail={
+    $scope.uploadDetail={
       uuid:data.uuid,
       index:data.index
     }
@@ -735,10 +735,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var fd = new FormData();
     fd.append('csvFileName', file);
     $('#fileupload').modal('hide')
-    $scope.gridOptions.data[$scope,uploadDetail.index].isupload=true;
+    $scope.gridOptions.data[$scope.uploadDetail.index].isupload=true;
     CommonService.uploadFile($scope.uploaaduuid, fd, "datapod").then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      $scope.gridOptions.data[$scope,uploadDetail.index].isupload=false;
+      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
       $scope,uploadDetail=null;
       $scope.executionmsg = "Data Uploaded Successfully"
       notify.type = 'success',
@@ -749,7 +749,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
     var onError = function (response) {
       $('#fileupload').modal('hide');
-      $scope.gridOptions.data[$scope,uploadDetail.index].isupload=false;
+      $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
       $scope,uploadDetail=null;
     }
     // CommonService.SaveFile(file.name,fd,"datapod").then(function(response){onSuccess(response.data)});

@@ -166,13 +166,7 @@ export class SidebarComponent {
       {
         name:"Simulation",
         type:"simulate"
-      },
-      {
-        name: "Results",
-        type: "trainexec"
-      },
-      
-
+      }
       ]
     };
     

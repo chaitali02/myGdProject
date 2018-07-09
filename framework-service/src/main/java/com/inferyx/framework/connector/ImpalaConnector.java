@@ -44,7 +44,7 @@ public class ImpalaConnector implements IConnector {
 			 Class.forName(datasource.getDriver());
 			 Connection con=null;			
 			 try {
-				 con=DriverManager.getConnection("jdbc:impala://"+datasource.getHost()+":"+datasource.getPort()+"/"+datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
+				 con = DriverManager.getConnection("jdbc:impala://"+datasource.getHost()+":"+datasource.getPort()+"/"+datasource.getDbname(), datasource.getUsername(), datasource.getPassword());
 			 } catch (SQLException e) {
 				 // TODO Auto-generated catch block
 				 e.printStackTrace();

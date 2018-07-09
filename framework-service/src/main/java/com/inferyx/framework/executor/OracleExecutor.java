@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
@@ -33,8 +31,6 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.connector.ConnectionHolder;
@@ -48,8 +44,10 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -64,6 +62,7 @@ public class OracleExecutor implements IExecutor {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ConnectionFactory  connectionFactory;
+	
 	static final Logger logger = Logger.getLogger(OracleExecutor.class);
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
@@ -88,21 +87,25 @@ public class OracleExecutor implements IExecutor {
 					rsHolder.setType(ResultType.resultset);
 				} catch (SQLException e) {				
 					e.printStackTrace();
+					throw new RuntimeException(e);
+				}  catch (Exception e) {				
+					e.printStackTrace();
+					throw new RuntimeException(e);
 				}		
 			}
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-			if(requestAttributes != null) {
-				HttpServletRequest request = requestAttributes.getRequest();
-				if(request != null) {
-					HttpSession session = request.getSession();
-					if(session != null) {
-						session.setAttribute("rsHolder", rsHolder);
-					}else
-						logger.info("HttpSession is \""+null+"\"");
-				}else
-					logger.info("HttpServletResponse is \""+null+"\"");
-			}else
-				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
+//			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//			if(requestAttributes != null) {
+//				HttpServletRequest request = requestAttributes.getRequest();
+//				if(request != null) {
+//					HttpSession session = request.getSession();
+//					if(session != null) {
+//						session.setAttribute("rsHolder", rsHolder);
+//					}else
+//						logger.info("HttpSession is \""+null+"\"");
+//				}else
+//					logger.info("HttpServletResponse is \""+null+"\"");
+//			}else
+//				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
 		} catch (IllegalArgumentException | SecurityException | NullPointerException e) {
 			e.printStackTrace();
 		}
@@ -214,7 +217,6 @@ public class OracleExecutor implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -341,8 +343,33 @@ public class OracleExecutor implements IExecutor {
 	 */
 	@Override
 	public Object getDataType(String dataType) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		if(dataType == null)
+			return null;
+
+		if(dataType.contains("(")) {
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
+		switch (dataType.toLowerCase()) {
+			case "integer": return "NUMBER(10)";
+			case "double": return "NUMBER(19,4)";
+			case "date": return "DATE";
+			case "string": return "VARCHAR(225)";
+			case "time": return "DATE";
+			case "timestamp": return "DATE";
+			case "long" : return "NUMBER(19)";
+			case "binary" : return "BINARY";
+			case "boolean" : return "NUMBER(1)";
+			case "byte" : return "NUMBER(3)";
+			case "float" : return "NUMBER(19,4)";
+			case "short" : return "NUMBER(5)";
+			case "decimal" : return "NUMBER(38)";
+			case "vector" : return "ARRAY";
+			case "array" : return "ARRAY";
+			case "null" : return "NULL";
+			
+            default: return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -415,6 +442,25 @@ public class OracleExecutor implements IExecutor {
 			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
+		return 0;
+	}
+
+	@Override
+	public String createGraphFrame(GraphExec graphExec, DataStore dataStore) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
+			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

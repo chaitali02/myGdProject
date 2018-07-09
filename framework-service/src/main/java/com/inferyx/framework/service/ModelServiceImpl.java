@@ -78,6 +78,7 @@ import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureRefHolder;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -94,15 +95,14 @@ import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SimulationType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.executor.MySqlExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
@@ -761,6 +761,37 @@ public class ModelServiceImpl {
 		}
 		return scriptPath;
 	}
+	
+	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType) throws FileNotFoundException, IOException, JSONException, ParseException {
+		String uploadFileName = file.getOriginalFilename();
+		FileType type = Helper.getFileType(fileType);
+		String fileLocation = null;
+		String directoryLocation = Helper.getFileDirectoryByFileType(type);
+		String metaUuid = null;
+		String metaVersion = null;
+		if(fileName == null) {
+			fileName = Helper.getFileCustomNameByFileType(type, extension);
+			String splits[] = fileName.split("_");
+			metaUuid = splits[0];
+			metaVersion = splits[1].substring(0, splits[1].lastIndexOf("."));
+		} 
+		
+		fileLocation = directoryLocation+"/" + fileName;
+		
+		File scriptFile = new File(fileLocation);
+		file.transferTo(scriptFile);
+		if(metaType==null)
+		{
+			metaType="model";
+		}
+		UploadExec uploadExec=new UploadExec();
+		uploadExec.setFileName(uploadFileName);
+		uploadExec.setBaseEntity();
+		uploadExec.setLocation(fileLocation);
+		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(metaType), metaUuid, metaVersion)));
+		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+		return fileName;
+	}
 
 	public boolean executeScript(String type, String scriptName, String modelExecUuid, String modelExecVersion, String object) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Model model = (Model) commonServiceImpl.getDomainFromDomainExec(MetaType.modelExec.toString(), modelExecUuid, modelExecVersion);
@@ -805,9 +836,14 @@ public class ModelServiceImpl {
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(execUuid, execVersion);
 		String location = datastore.getLocation();
 		String title = "";
-		if(location.contains(hdfsInfo.getHdfsURL()))
+		if(location.contains(hdfsInfo.getHdfsURL()) && location.contains("/bestModel/stages"))
+			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/bestModel");
+		else if(location.contains(hdfsInfo.getHdfsURL()) && location.contains("/stages"))
 			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/stages");
-		if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/stages"))
+		
+		if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/bestModel/stages"))
+			location = StringUtils.substringBetween(location, Helper.getPropertyValue("framework.model.train.path"), "/bestModel/stages");
+		else if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/stages"))
 			location = StringUtils.substringBetween(location, Helper.getPropertyValue("framework.model.train.path"), "/stages");
 		else if(location.contains(Helper.getPropertyValue("framework.model.train.path")))
 			location = location.replaceAll(Helper.getPropertyValue("framework.model.train.path"), "");
@@ -848,7 +884,7 @@ public class ModelServiceImpl {
 				in.close();
 				out.flush();
 			} else {
-				logger.info("Requested file " + "/" + location + "/" + fileName + ".pmml" + " not found.");
+				logger.info("PMML file requested " + "/" + location + "/" + fileName + ".pmml" + " not found.");
 				response.setStatus(300);
 				throw new FileNotFoundException();
 			}
@@ -1010,7 +1046,7 @@ public class ModelServiceImpl {
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
 					
 					//tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 
@@ -1030,7 +1066,7 @@ public class ModelServiceImpl {
 								}
 							}
 //							
-							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+							tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 //							String[] customFldArr = new String[] {fieldArray[i]};
 //							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
@@ -1057,7 +1093,7 @@ public class ModelServiceImpl {
 						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {
-						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+						tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 						
 						String sql = "SELECT * FROM " + tableName;	
 						tableName_3 = tableName;
@@ -1085,7 +1121,7 @@ public class ModelServiceImpl {
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
 					
 //					tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
 					
@@ -1105,7 +1141,7 @@ public class ModelServiceImpl {
 								}
 							}
 							
-							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+							tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 //							String[] customFldArr = new String[] {fieldArray[i]};
 //							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
@@ -1129,7 +1165,7 @@ public class ModelServiceImpl {
 						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {						
-						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+						tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 						
 						String sql = "SELECT * FROM " + tableName;
 						tableName_3 = tableName;
@@ -2115,7 +2151,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
 
 					String tabName_2 = null;
 					String tableName_3 = null;
@@ -2133,7 +2169,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 								}
 							}
 							
-							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+							tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 
 							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
 							String sql = simulateMLOperator.generateSql(simulate, tabName_2);
@@ -2159,7 +2195,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {
-						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+						tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 						
 						String sql = "SELECT * FROM " + tableName;	
 						tableName_3 = tableName;
@@ -2187,7 +2223,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					HashMap<String, String> otherParams = execParams.getOtherParams();
 					if(otherParams == null)
 						otherParams = new HashMap<>();
-					otherParams = (HashMap<String, String>) generateDataOperator.populateParams(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, null, runMode);
+					otherParams = (HashMap<String, String>) generateDataOperator.create(simulateExec, execParams, runMode);
 				
 					String tabName_2 = null;
 					String tableName_3 = null;
@@ -2205,7 +2241,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 								}
 							}
 							
-							tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+							tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 
 							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
 							if(i == 0)
@@ -2214,9 +2250,21 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 								tableName_3 = exec.joinDf(tableName_3, tabName_2, i, appUuid);
 						}
 
-						String sql = "SELECT * FROM " + tableName_3;
-						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, tableName_3, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
+						
+						if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {							
+							String targetTable = null;
+							MetaIdentifier targetIdentifier =simulate.getTarget().getRef(); 
+							Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetIdentifier.getUuid(), targetIdentifier.getVersion(), targetIdentifier.getType().toString());
+
+							String sql = "SELECT * FROM " + tableName_3;
+							if(datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+									|| datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+								targetTable = String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), simulateExec.getVersion());
+							} else {
+								targetTable = datasource.getDbname() + "." + datapod.getName();
+								sql = helper.buildInsertQuery(appUuid, targetTable, datapod, sql);
+							}
+							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, targetTable, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
 							result = rsHolder;
 							count = rsHolder.getCountRows();
 							createDatastore(filePath, simulate.getName(), 
@@ -2224,11 +2272,12 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 									new MetaIdentifier(MetaType.predictExec, simulateExec.getUuid(), simulateExec.getVersion()),
 									simulateExec.getAppInfo(), simulateExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, count, 
 									Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+							tableName_3 = targetTable;
 						} 
 						
 						tableName_3 = exec.assembleRandomDF(fieldArray, tableName_3, false, appUuid);
 					} else {						
-						tableName = generateDataOperator.execute(null, execParams, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()), null, otherParams, null, runMode);
+						tableName = generateDataOperator.execute(simulateExec, execParams, runMode);
 						
 						String sql = "SELECT * FROM " + tableName;
 						tableName_3 = tableName;
@@ -2284,6 +2333,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.");
 			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
 		}
+		
+		
 
 		return isSuccess;
 	}

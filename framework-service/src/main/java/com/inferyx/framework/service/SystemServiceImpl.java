@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -62,6 +64,14 @@ public class SystemServiceImpl {
 	DagExecServiceImpl dagExecServiceImpl;
 	@Autowired
 	private BatchExecServiceImpl btchServ;
+	@Autowired
+	ThreadPoolTaskExecutor stageExecutor;
+	@Autowired
+	ThreadPoolTaskExecutor taskExecutor;
+	@Autowired
+	ThreadPoolTaskExecutor dagExecutor;
+	@Autowired
+	ThreadPoolTaskExecutor metaExecutor;
 	
 	static final Logger logger = Logger.getLogger(SystemServiceImpl.class);
 	/*public List<BaseEntityStatus> getActiveSession(String type, String appUuid, String userName, String startDate, String endDate, String tags, String active, String status, String role) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JsonGenerationException, JsonMappingException, IOException {
@@ -208,6 +218,7 @@ public class SystemServiceImpl {
 					else
 						continue;
 					if(metaObject != null) {
+						@SuppressWarnings("unchecked")
 						List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) Helper.getDomainClass(type).getMethod("getAppInfo").invoke(metaObject);
 						activeThread.setAppInfo(appInfo);
 						activeThreadList.add(activeThread);
@@ -506,4 +517,36 @@ public class SystemServiceImpl {
 		}
 		return count;
 	}
+
+	public Object getThreadStats() {
+
+		Map<String, Map<String, Integer>> counts = new LinkedHashMap<>();
+		Map<String, Integer> task = new LinkedHashMap<>();
+		Map<String, Integer> stage = new LinkedHashMap<>();
+		Map<String, Integer> dag = new LinkedHashMap<>();
+		Map<String, Integer> meta = new LinkedHashMap<>();
+		
+		task.put("Pool Size", taskExecutor.getPoolSize());
+		task.put("Active Threads", taskExecutor.getActiveCount());
+		task.put("Queued Threads", taskExecutor.getThreadPoolExecutor().getQueue().size());
+		
+		stage.put("Pool Size", stageExecutor.getPoolSize());
+		stage.put("Active Threads", stageExecutor.getActiveCount());
+		stage.put("Queued Threads", stageExecutor.getThreadPoolExecutor().getQueue().size());
+		
+		dag.put("Pool Size", dagExecutor.getPoolSize());
+		dag.put("Active Threads", dagExecutor.getActiveCount());
+		dag.put("Queued Threads", dagExecutor.getThreadPoolExecutor().getQueue().size());
+		
+		meta.put("Pool Size", metaExecutor.getPoolSize());
+		meta.put("Active Threads", metaExecutor.getActiveCount());
+		meta.put("Queued Threads", metaExecutor.getThreadPoolExecutor().getQueue().size());
+		
+		counts.put("Task", task);
+		counts.put("Stage", stage);
+		counts.put("Dag", dag);
+		counts.put("Meta", meta);
+		return counts;
+	}
+	
 }

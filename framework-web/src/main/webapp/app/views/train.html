@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 
-                <div class="portlet-body form">
+                <div class="portlet-body">
                     <div class="form-body graph-body" ng-if="showGraphDiv">
                         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                         <div class="spinner" id="graphloader">
@@ -238,7 +238,10 @@
                                                         <span class="caption-subject  sbold ">Features</span>
                                                     </div>
                                                     <div class="actions">
-                                                        <div class="btn-group btn-group-devided" data-toggle="buttons">
+                                                        <a class="btn btn-circle btn-icon-only btn-default"  ng-click="autoMapFeature()" tooltip-placement="top" uib-tooltip="Auto Map" >
+                                                                <span class="fa fa-map-signs" aria-hidden="true" style="color:#a0a0a0;"></span>
+                                                        </a>
+                                                         <div class="btn-group btn-group-devided" data-toggle="buttons">
                                                             <!-- <div class="x_title" style="padding:10px;">
                                                                 <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="true"></button>
                                                                 <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="true"></button>

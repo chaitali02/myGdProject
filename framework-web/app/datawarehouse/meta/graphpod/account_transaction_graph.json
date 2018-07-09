@@ -1,0 +1,263 @@
+{
+    "nodeInfo" : [ 
+        {
+            "nodeId" : {
+                "attrId" : "12",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "nodeType" : "account",
+            "nodeIcon" : "bank",
+            "nodeName" : {
+                "attrId" : "12",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "nodeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "nodeProperties" : [ 
+                {
+                    "attrId" : "13",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "14",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }
+            ],
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "6",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "American",
+                        "propertyValue" : "#c9f2f2"
+                    }, 
+                    {
+                        "propertyName" : "Canadian",
+                        "propertyValue" : "#6aadac"
+                    }, 
+                    {
+                        "propertyName" : "British",
+                        "propertyValue" : "#f2162a"
+                    }, 
+                    {
+                        "propertyName" : "German",
+                        "propertyValue" : "#7c787b"
+                    }
+                ]
+            }
+        }, 
+        {
+            "nodeId" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeType" : "customer",
+            "nodeIcon" : "user",
+            "nodeName" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }
+            ],
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "3",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "Mr",
+                        "propertyValue" : "#51b3ff"
+                    }, 
+                    {
+                        "propertyName" : "Ms",
+                        "propertyValue" : "#da00ff"
+                    }, 
+                    {
+                        "propertyName" : "Mrs",
+                        "propertyValue" : "#814c83"
+                    }
+                ]
+            }
+        }
+    ],
+    "edgeInfo" : [ 
+        {
+            "edgeId" : "0",
+            "edgeType" : "tran",
+            "edgeName" : "transactionId",
+            "edgeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                }
+            },
+            "edgeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }
+            ],
+            "sourceNodeId" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                }
+            },
+            "sourceNodeType" : "account",
+            "targetNodeId" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                }
+            },
+            "targetNodeType" : "account"
+        }, 
+        {
+            "edgeId" : "1",
+            "edgeType" : "account",
+            "edgeName" : "account",
+            "edgeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "edgeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "14",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }
+            ],
+            "sourceNodeId" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "sourceNodeType" : "customer",
+            "targetNodeId" : {
+                "attrId" : "12",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "targetNodeType" : "account"
+        }
+    ],
+    "uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
+    "version" : "1530621986",
+    "name" : "account_transaction_graph",
+    "desc" : "account_transaction_graph",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196"
+           
+        }
+    },
+    "createdOn" : ISODate("2018-07-03T12:46:26.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ]
+}

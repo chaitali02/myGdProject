@@ -26,7 +26,7 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
  *
  */
 @Service
-public class JoinTablesOperator implements Operator {
+public class JoinTablesOperator {
 	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
@@ -46,7 +46,6 @@ public class JoinTablesOperator implements Operator {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@Override
 	public String execute(com.inferyx.framework.domain.Operator operator, 
 						ExecParams execParams, 
 						MetaIdentifier execIdentifier, 
@@ -59,22 +58,6 @@ public class JoinTablesOperator implements Operator {
 //		String joinTableName = paramSetServiceImpl.getParamByName(execParams, "JOIN_TABLE_NAME").getValue();
 		String sql = relationOperator.generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode);
 		logger.info("Inside JoinTablesOperator relation sql : " + sql);
-		return null;
-	}
-
-	@Override
-	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
-			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

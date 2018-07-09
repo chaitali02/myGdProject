@@ -14,7 +14,7 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
 
 import { CommonService } from '../metadata/services/common.service';
-
+import {MenuModule,MenuItem} from 'primeng/primeng';
 import { ModelComponent } from './model/model.component';
 import { ParamlistComponent } from './paramlist/paramlist.component';
 import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
@@ -26,7 +26,7 @@ import { AlgorithmComponent } from './algorithm/algorithm.component';
 import { DataScienceComponent } from './data-science.component';
 
 import { ModelService } from './../metadata/services/model.service';
-import { ResultsComponent } from './results/results.component';
+import { ResultsComponent } from './results/resultsCommon.component';
 import {TrainingComponent } from './training/training.component';
 import { TrainingService } from '../metadata/services/training.service';
 import { DistributionComponent } from './distribution/distribution.component';
@@ -41,7 +41,9 @@ import {SimulationService } from '../metadata/services/simulation.service';
 //import {PopupModule} from 'ng2-opd-popup';
 import { DialogModule } from 'primeng/components/dialog/dialog'
 import { CommonListService } from '../common-list/common-list.service';
-
+import { CalendarModule } from 'primeng/components/calendar/calendar';
+import {ResultDetailsComponent} from './results/resultDetails.component';
+;
 @NgModule({
     imports:[
         CommonModule,
@@ -60,6 +62,9 @@ import { CommonListService } from '../common-list/common-list.service';
         CheckboxModule,
         DataTableModule,
         DialogModule,
+        CalendarModule,
+        MenuModule,
+
        // PopupModule.forRoot()
 
     ],
@@ -75,7 +80,7 @@ import { CommonListService } from '../common-list/common-list.service';
         PredictionComponent,
         SimulationComponent,
         OperatorComponent,
-        
+        ResultDetailsComponent
     ],
     providers:[
         CommonService,

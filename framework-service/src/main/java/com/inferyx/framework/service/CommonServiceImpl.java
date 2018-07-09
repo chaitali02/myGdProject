@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +44,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.spark.sql.Dataset;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -64,6 +61,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.CustomLogger;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -94,6 +92,8 @@ import com.inferyx.framework.dao.IExpressionDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.dao.IFormulaDao;
 import com.inferyx.framework.dao.IFunctionDao;
+import com.inferyx.framework.dao.IGraphpodDao;
+import com.inferyx.framework.dao.IGraphpodExecDao;
 import com.inferyx.framework.dao.IGroupDao;
 import com.inferyx.framework.dao.IImportDao;
 import com.inferyx.framework.dao.ILoadDao;
@@ -166,6 +166,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -180,11 +181,12 @@ import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
-import com.inferyx.framework.enums.LovType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -426,8 +428,33 @@ public class CommonServiceImpl <T> {
 	Helper helper;
 	@Autowired
 	ILovDao iLovDao;
+	@Autowired
+	IGraphpodDao iGraphpodDao;
+	@Autowired
+	IGraphpodExecDao iGraphpodExecDao;	
+	@Autowired
+	DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	DatasetOperator datasetOperator;
+	@Autowired
+	RuleOperator ruleOperator;
 	
-	
+	public IGraphpodDao getiGraphpodDao() {
+		return this.iGraphpodDao;
+	}
+
+	public void setiGraphpodDao(IGraphpodDao iGraphpodDao) {
+		this.iGraphpodDao = iGraphpodDao;
+	}
+
+	public IGraphpodExecDao getiGraphpodExecDao() {
+		return this.iGraphpodExecDao;
+	}
+
+	public void setiGraphpodExecDao(IGraphpodExecDao iGraphpodExecDao) {
+		this.iGraphpodExecDao = iGraphpodExecDao;
+	}
+
 	public ILovDao getiLovDao() {
 		return iLovDao;
 	}
@@ -1539,11 +1566,12 @@ public class CommonServiceImpl <T> {
 							attrId = attributeId.toString();
 						/*else
 							logger.info("resolveName method: attributeId is null for the Object " + type);*/
-						for (Method innerMethod : methodList) {
-							if (innerMethod.getName().startsWith(SET + "Attr") /*|| innerMethod.getName().startsWith(SET + "Attribute")*/ && innerMethod.getName().contains("Name")) {
-								innerMethod.invoke(object, resolveAttributeName(attrId, object));
-							}
-						}	
+						if(attributeId != null)
+							for (Method innerMethod : methodList) {
+								if (innerMethod.getName().startsWith(SET + "Attr") /*|| innerMethod.getName().startsWith(SET + "Attribute")*/ && innerMethod.getName().contains("Name")) {
+									innerMethod.invoke(object, resolveAttributeName(attrId, object));
+								}
+							}	
 					}					
 					
 					if(object instanceof ParamSet) {
@@ -1840,6 +1868,7 @@ public class CommonServiceImpl <T> {
 	@SuppressWarnings("unchecked")
 	public List<BaseEntity> getAllLatest(String type, String active)  throws JsonProcessingException, ParseException {
 		MetaType metaType = Helper.getMetaType(type);
+		logger.info("Inside commonserviceImpl.getAllLatest : type : " + type + ":" + metaType);
 		List<BaseEntity> objectList = new ArrayList<>();
 		try {			
 			Aggregation aggr = null;
@@ -2372,8 +2401,12 @@ public class CommonServiceImpl <T> {
 			logger.info("Latest Status is not in InProgress. Exiting...");
 			return statusList;
 		}*/
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))) {
-			logger.info("Latest Status is not in Completed. Exiting...");
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) || 
+				Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
+			logger.info("Latest Status is in Completed or killed. Exiting...");
+			return statusList;
+		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))) {
+			statusList.add(new Status(Status.Stage.Killed, new Date()));
 			return statusList;
 		}
 		Status failedStatus = new Status(Status.Stage.Failed, new Date());
@@ -3368,7 +3401,7 @@ public class CommonServiceImpl <T> {
 				String location = directoryPath + "/" + uploadExec.getUuid() + fileExtention;
 				File dest = new File(location);
 				multipartFile.transferTo(dest);
-				String contenetType = multipartFile.getContentType();
+//				String contenetType = multipartFile.getContentType();
 				
 				uploadExec.setName(filename1);
 				uploadExec.setLocation(location);
@@ -3541,7 +3574,8 @@ public class CommonServiceImpl <T> {
 				uploadExec.setFileName(originalFileName);
 				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
 						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
-					ObjectMapper mapper = new ObjectMapper();/*
+//					ObjectMapper mapper = new ObjectMapper();
+																/*
 																 * uploadExec.setDependsOn(new MetaIdentifierHolder(new
 																 * MetaIdentifier(
 																 * Helper.getMetaType(MetaType.Import.toString()),
@@ -3603,8 +3637,8 @@ public class CommonServiceImpl <T> {
 			
 		//fileName=uploadExec.get(0).getFileName();
             String filePath = uploadExec.get(0).getLocation();
-            String FileName =uploadExec.get(0).getFileName();
-			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
+//            String FileName =uploadExec.get(0).getFileName();
+//			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
 			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
             File file = new File(filePath);
             
@@ -3655,7 +3689,7 @@ public class CommonServiceImpl <T> {
 	
 	public void updateLovForTag(BaseEntity baseEntity) {
 		List<Lov> lovs = metadataServiceImpl.getLovByType("TAG");
-		List<String> arrayOne = new ArrayList(Arrays.asList(baseEntity.getTags()));
+		List<String> arrayOne = new ArrayList<>(Arrays.asList(baseEntity.getTags()));
 	//	Set<String> arrayOne1 = (Set<String>) new ArrayList(Arrays.asList(baseEntity.getTags()));
 		
 		
@@ -3690,4 +3724,79 @@ public class CommonServiceImpl <T> {
 
 	}
 	
+	/**
+	 * Utility to populate refkeys given the data structure and a ref object
+	 * 
+	 * @param refKeyMap
+	 * @param ref
+	 */
+	public MetaIdentifier populateRefKeys(java.util.Map<String, MetaIdentifier> refKeyMap, MetaIdentifier ref,
+			java.util.Map<String, MetaIdentifier> inputRefKeyMap) {
+		if (ref == null) {
+			return null;
+		}
+		if (refKeyMap == null) {
+			refKeyMap = new HashMap<>();
+		}
+		if (inputRefKeyMap != null && inputRefKeyMap.containsKey(ref.getUuid())
+				&& inputRefKeyMap.get(ref.getUuid()).getVersion() != null) {
+			refKeyMap.put(ref.getType() + "_" + ref.getUuid(), inputRefKeyMap.get(ref.getUuid()));
+			return inputRefKeyMap.get(ref.getUuid());
+		} else if (refKeyMap.containsKey(ref.getType() + "_" + ref.getUuid())
+				&& refKeyMap.get(ref.getType() + "_" + ref.getUuid()).getVersion() != null) {
+			return refKeyMap.get(ref.getType() + "_" + ref.getUuid());
+		} // else
+		refKeyMap.put(ref.getType() + "_" + ref.getUuid(), ref);
+		return ref;
+
+	}
+	
+	/**
+	 * 
+	 * @param datapod
+	 * @param indvTask
+	 * @param datapodList
+	 * @param dagExec
+	 * @param otherParams
+	 * @return
+	 * @throws Exception
+	 */
+	protected String getTableName(Datapod datapod, 
+			HashMap<String, String> otherParams, BaseExec baseExec, RunMode runMode) throws Exception {
+		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+		} else {
+			try {
+				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} catch(Exception e) {
+				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), baseExec.getVersion());
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @param baseExec
+	 * @param execParams
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	public String getSource(Object object, BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		if (object == null) {
+			throw new Exception ("No source chosen");
+		} else if (object instanceof Datapod) {
+			return getTableName(((Datapod)object), execParams.getOtherParams(), baseExec, runMode);
+		} else if (object instanceof DataSet) {
+			return "(" + datasetOperator.generateSql(((DataSet)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+											execParams.getOtherParams(), new HashSet<>(), execParams, runMode) + ")";
+		} else if (object instanceof Rule) {
+			return "(" + ruleOperator.generateSql(((Rule)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+					execParams.getOtherParams(), null, execParams, runMode) + ")";
+		} else {
+			throw new Exception ("Wrong choice of source");
+		}
+		
+	}
 }

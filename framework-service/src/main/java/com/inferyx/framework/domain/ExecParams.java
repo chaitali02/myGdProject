@@ -17,7 +17,6 @@ public class ExecParams {
 
 	private List<MetaIdentifier> refKeyList;
 	private List<ParamSetHolder> paramInfo;
-	private List<MetaIdentifierHolder> dimInfo;
 	private List<AttributeRefHolder> filterInfo;
 	private List<String> stageInfo;
 	private ParamSetHolder paramSetHolder;
@@ -25,7 +24,9 @@ public class ExecParams {
 	private java.util.Map<String, String> internalVarMap;
 	private HashMap<String, String> otherParams;
 	private ExecutionContext executionContext;
+	private GraphFilter graphFilter;
 	
+
 	/**
 	 * @return the executionContext
 	 */
@@ -90,14 +91,6 @@ public class ExecParams {
 		this.refKeyList = refKeyList;
 	}
 
-	public List<MetaIdentifierHolder> getDimInfo() {
-		return dimInfo;
-	}
-
-	public void setDimInfo(List<MetaIdentifierHolder> filterList) {
-		this.dimInfo = filterList;
-	}
-
 	public List<String> getStageInfo() {
 		return stageInfo;
 	}
@@ -120,6 +113,14 @@ public class ExecParams {
 
 	public void setOtherParams(HashMap<String, String> otherParams) {
 		this.otherParams = otherParams;
+	}
+	
+	public GraphFilter getGraphFilter() {
+		return this.graphFilter;
+	}
+
+	public void setGraphFilter(GraphFilter graphFilter) {
+		this.graphFilter = graphFilter;
 	}
 
 }

@@ -127,7 +127,13 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
 	}
-
+	
+	$scope.onChangeSource=function(){
+		MetadataLoadSerivce.getRegistryByDatasource($scope.allDataSource.defaultoption.uuid,"").then(function (response) {onSuccessGetRegistryByDatasource(response.data)}, function (response) {onError(response.data)});
+			var onSuccessGetRegistryByDatasource = function (response) {
+				$scope.allRegistryDatasource=response;
+			}
+	}
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
 		var resultjoint = [];
@@ -167,6 +173,15 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 				defaultoption.version = $scope.loaddata.target.ref.version;
 				$scope.allload.defaultoption = defaultoption;
 			}
+			MetadataLoadSerivce.getAllLatest("datasource").then(function (response) { onSuccessDataSource(response.data) });
+			var onSuccessDataSource = function (response) {
+				$scope.allDataSource = response
+				var defaultoption = {};
+				defaultoption.uuid = $scope.loaddata.source.ref.uuid;
+				defaultoption.name = $scope.loaddata.source.ref.name;
+				defaultoption.version = $scope.loaddata.source.ref.version;
+				$scope.allDataSource.defaultoption = defaultoption;
+			}
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -182,6 +197,14 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		MetadataLoadSerivce.getAllLatest("datapod").then(function (response) { onSuccessLoad(response.data) });
 		var onSuccessLoad = function (response) {
 			$scope.allload = response
+		}
+		MetadataLoadSerivce.getAllLatest("datasource").then(function (response) { onSuccessDataSource(response.data) });
+		var onSuccessDataSource = function (response) {
+			$scope.allDataSource= response;
+			MetadataLoadSerivce.getRegistryByDatasource($scope.allDataSource.defaultoption.uuid,"").then(function (response) {onSuccessGetRegistryByDatasource(response.data)}, function (response) {onError(response.data)});
+			var onSuccessGetRegistryByDatasource = function (response) {
+				$scope.allRegistryDatasource=response;
+			}
 		}
 	}//End Else
 
@@ -256,9 +279,10 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		target.ref = targetref;
 		loadJson.target = target;
 
-		sourceref.type = $scope.lodesourcetype;
+		sourceref.type ="datasource";
+		sourceref.uuid=$scope.allDataSource.defaultoption.uuid;
 		source.ref = sourceref;
-		source.value = $scope.loaddata.source.value;
+		source.value = $scope.SelectRegistryDatasource.path;
 		loadJson.source = source;
 		console.log(JSON.stringify(loadJson));
 		MetadataLoadSerivce.submit(loadJson, 'load',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });

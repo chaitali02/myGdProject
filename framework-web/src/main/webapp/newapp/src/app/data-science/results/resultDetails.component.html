@@ -1,0 +1,89 @@
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+<br>
+<div class="row" *ngIf="showDiv">
+    <div class="col-md-12">
+        <div class="portlet box green" id="dag-exec-model">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>Training Result 
+                </div>
+                <div class="tools">
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip ng-click="savePng($index,dagExecName)">
+                        <i class="fa fa-download" area-hidden="true"></i>
+                    </a>
+                    <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
+                        <i class="glyphicon glyphicon-file" disabled="true" area-hidden="true"></i>
+                    </a>
+                    <a title="Show PMML" (click)="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
+                        <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                      </a>
+                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a title="Close"  (click)="goBack()" style="height:14px;">
+                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body" style="min-height:100px;">
+                <div class="form-body" *ngIf="!ppml">
+                    <form  class="form-horizontal" name="myform">
+                        <div class="form-group" >
+                            <div class="col-md-12" >
+                                <textarea  [value]="modelResult" placeholder=""  [disabled]="true"  style="min-height:150px; width:100%;"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-body" *ngIf="ppml">
+                    
+                </div>
+            </div>
+        </div>
+    </div>   
+</div>
+<div class="row" *ngIf="showDiv==false;else falsyTemplate">    
+    <div class="col-md-12">
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>{{tableHeading}}
+                </div>
+                <div class="tools">
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip ng-click="savePng($index,dagExecName)">
+                        <i class="fa fa-download" area-hidden="true"></i>
+                    </a>
+                    <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
+                        <i class="glyphicon glyphicon-file" disabled="true" area-hidden="true"></i>
+                    </a>
+
+                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a title="Close"  (click)="goBack()" style="height:14px;">
+                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row" *ngIf="showDiv==false;else falsyTemplate">
+                    <div class="col-md-12" *ngIf="cols !=null">                           
+                        <p-dataTable [value]="colsdata"  #dt  exportFilename="data"    selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
+                            <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
+                        </p-dataTable>
+                    </div>
+                </div>
+            </div>  
+        </div>  
+    </div>
+    <ng-template #falsyTemplate>
+        <div class="spinner text-center">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+            </div>
+    </ng-template>
+    <div class ="centercontent" *ngIf="IsError">
+        <span style="font-size:14px;color:red;">Some error occur</span>
+    </div>  
+</div>

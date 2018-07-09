@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class MongoGraphServiceImpl {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected Map<String, Object> getEdgeMap(Edge edge) {
+  	protected Map<String, Object> getEdgeMap(Edge edge) {
 		Map<String, Object> map = new LinkedHashMap<>();
 		if (edge == null) {
 			return null;
@@ -99,7 +100,7 @@ public class MongoGraphServiceImpl {
 		GraphMetaIdentifierHolder graphmetaholder = new GraphMetaIdentifierHolder();
 		GraphMetaIdentifier graphmi = new GraphMetaIdentifier();
 		if (vertex.getGraphMetaHolder() != null) {
-
+			graphmi.setVersion(vertex.getGraphMetaHolder().getRef().getVersion());
 			graphmi.setType(vertex.getGraphMetaHolder().getRef().getType());
 			graphmi.setUuid(vertex.getGraphMetaHolder().getRef().getUuid());
 		} else {
@@ -256,67 +257,104 @@ public class MongoGraphServiceImpl {
 		String result = null;
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
-		Map<String, Edge> edgeMap = new LinkedHashMap<>();
-		Map<String, Vertex> vertexMap = new LinkedHashMap<>();
+		Map<String, Edge> edgeMap = new HashMap<>();
+		Map<String, Vertex> vertexMap = new HashMap<>();
 		List<Edge> edgeList = null;
 		List<Vertex> vertexList = null;
 
 		Vertex parentvertex = null;
 		List<String> uuidList = null;
-		if(degree.equals("1")) {
-			edgeList = iEdgeDao.findAllBySrc(uuid);
-
-			// Get all dsts from edgeList
+		List<String> nodetype = null;
+		if (degree.equals("1")) {
+			if (!version.equalsIgnoreCase("0")) {
+				edgeList = iEdgeDao.findAllBySrc(uuid + "_" + version);
+			} else {
+				edgeList = iEdgeDao.findAllBySrc(uuid);
+			} // Get all dsts from edgeList
 			if (edgeList != null) {
 				uuidList = new ArrayList<>();
-				for (Edge edge : edgeList  ) {
-					edgeMap.put(edge.getSrc() + "_" + edge.getDst(), edge);
+				nodetype = new ArrayList<>();
+				for (Edge edge : edgeList) {
+					edgeMap.put(edge.getSrc() + "_" + edge.getDst() + "_" + edge.getRelationType(), edge);
 				}
 				for (String edgeKey : edgeMap.keySet()) {
 					Edge edge = edgeMap.get(edgeKey);
 					uuidList.add(edge.getDst());
+					nodetype.add(edge.getRelationType());
 					graphEdge.add(getEdgeMap(edge));
 				}
 			}
-		} else if(degree.equals("-1")) {
-			edgeList = iEdgeDao.findAllByDst(uuid);
+		} else if (degree.equals("-1")) {
 
+			if (!version.equalsIgnoreCase("0")) {
+				edgeList = iEdgeDao.findAllByDst(uuid + "_" + version);
+			} else {
+				edgeList = iEdgeDao.findAllByDst(uuid);
+			}
 			// Get all srcs from edgeList
 			if (edgeList != null) {
 				uuidList = new ArrayList<>();
+				nodetype = new ArrayList<>();
 				for (Edge edge : edgeList) {
-					edgeMap.put(edge.getDst() + "_" + edge.getSrc(), edge);
+					edgeMap.put(edge.getDst() + "_" + edge.getSrc() + "_" + edge.getRelationType(), edge);
 				}
 				for (String edgeKey : edgeMap.keySet()) {
 					Edge edge = edgeMap.get(edgeKey);
 					uuidList.add(edge.getSrc());
+					nodetype.add(edge.getRelationType());
 					graphEdge.add(getEdgeMap(edge));
 				}
 			}
 		}
-		
-		uuidList.add(uuid);
-		parentvertex = iVertexDao.findOneByUuid(uuid);
 
-		vertexList = iVertexDao.findAllByUuidContaining(uuidList);
+		// uuidList.add(uuid+"_"+version);
+		if (!version.equalsIgnoreCase("0")) {
+			parentvertex = iVertexDao.findOneByUuid(uuid + "_" + version);
+		} else {
+			parentvertex = iVertexDao.findOneByUuid(uuid);
+
+		}
+
+		// vertexList = iVertexDao.findAllByUuidContaining(uuidList);
+		vertexList = iVertexDao.findAllByUuidAndnodeTypeContaining(uuidList, nodetype);
 		if (vertexList != null) {
 			for (Vertex vertex : vertexList) {
 				String relationName = null;
-				if(degree.equalsIgnoreCase("1")) {
-				Edge edgeRelation =iEdgeDao.findOneBySrcAndDst(parentvertex.getUuid(),vertex.getUuid());
-				if(edgeRelation != null) {
-				 relationName=edgeRelation.getRelationType();
-					vertex.setNodeType(relationName);
-				}
-				}else {
-					Edge edgeRelation =iEdgeDao.findOneByDstAndSrc(vertex.getUuid(),parentvertex.getUuid());
-					if(edgeRelation != null) {
-					 relationName=edgeRelation.getRelationType();
+				// if(vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
+				// System.out.println("********"+relationName);
+				// s }
+				if (degree.equalsIgnoreCase("1")) {
+					// Edge edgeRelation
+					// =iEdgeDao.findOneBySrcAndDst(parentvertex.getUuid(),vertex.getUuid());
+					Edge edgeRelation = iEdgeDao.findOneBySrcAndDstAndRelationType(parentvertex.getUuid(),
+							vertex.getUuid(), vertex.getNodeType());
+					// Added this method for same src ,dst uuid ...
+					// Edge edgeRelation
+					// =iEdgeDao.findOneBySrcAndDstAndRelationType(parentvertex.getUuid(),vertex.getUuid(),vertex.getNodeType());
+					if (edgeRelation != null) {
+						relationName = edgeRelation.getRelationType();
+						vertex.setNodeType(relationName);
+					}
+				} else {
+					Edge edgeRelation = iEdgeDao.findOneBySrcAndDstAndRelationType(parentvertex.getUuid(),
+							vertex.getUuid(), vertex.getNodeType());
+
+					// Edge edgeRelation
+					// =iEdgeDao.findOneByDstAndSrcAndRelationType(vertex.getUuid(),parentvertex.getUuid(),vertex.getNodeType());
+					if (edgeRelation != null) {
+						relationName = edgeRelation.getRelationType();
 						vertex.setNodeType(relationName);
 					}
 				}
-			
-				vertexMap.put(vertex.getUuid(), vertex);
+				/*
+				 * if(vertex.getUuid().equalsIgnoreCase(
+				 * "ed47f654-2d4b-483c-971f-804ee88f092f_1488620292") ) {
+				 * System.out.println(vertex.getNodeType()); }
+				 * if(relationName.equalsIgnoreCase("refIntegrityCheck")
+				 * ||vertex.getNodeType().equalsIgnoreCase("dependsOn") ) {
+				 * System.out.println("********"+relationName); }
+				 */
+				vertexMap.put(vertex.getUuid() + "_" + relationName, vertex);
 			}
 			for (String vertexKey : vertexMap.keySet()) {
 				Vertex vertex = vertexMap.get(vertexKey);

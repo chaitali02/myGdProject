@@ -356,6 +356,7 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 				var filterInfo = {};
 				filterInfo.logicalOperator = response.filterInfo[i].logicalOperator;
 				filterInfo.operator = response.filterInfo[i].operator;
+				
 				if (response.filterInfo[i].operand[0].ref.type == "simple") {
 					var obj = {}
 					obj.text = "string"
@@ -364,7 +365,10 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.islhsSimple = true;
 					filterInfo.islhsDatapod = false;
 					filterInfo.islhsFormula = false;
-					filterInfo.lhsvalue = response.filterInfo[i].operand[0].value;
+					filterInfo.lhsvalue = response.filterInfo[i].operand[0].value//.replace(/["']/g, "");
+					if(response.filterInfo[i].operand[0].value.indexOf("'") ==-1){
+						obj.caption = "integer";
+					}
 				}
 				else if (response.filterInfo[i].operand[0].ref.type == "datapod" || response.filterInfo[i].operand[0].ref.type == "dataset") {
 					var lhsdatapodAttribute = {}
@@ -391,6 +395,7 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.islhsFormula = true;
 					filterInfo.islhsSimple = false;
 					filterInfo.islhsDatapod = false;
+					
 					lhsformula.uuid = response.filterInfo[i].operand[0].ref.uuid;
 					lhsformula.name = response.filterInfo[i].operand[0].ref.name;
 					filterInfo.lhsformula = lhsformula;
@@ -403,17 +408,38 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.isrhsSimple = true;
 					filterInfo.isrhsDatapod = false;
 					filterInfo.isrhsFormula = false;
-					filterInfo.rhsvalue = response.filterInfo[i].operand[1].value;
+					filterInfo.isrhsDataset = false;
+					
+					
+					if(response.filterInfo[i].operator =="BETWEEN"){
+						obj.caption = "integer";
+					//	filterInfo.rhsvalue = response.filterInfo[i].operand[1].value;
+						filterInfo.rhsvalue1=response.filterInfo[i].operand[1].value.split("and")[0];
+						filterInfo.rhsvalue2=response.filterInfo[i].operand[1].value.split("and")[1];	
+					}else if(['<','>',"<=",'>='].indexOf(response.filterInfo[i].operator) !=-1){
+						obj.caption = "integer";
+						
+					}else if(response.filterInfo[i].operator =='=' && response.filterInfo[i].operand[1].value.indexOf("'") ==-1){
+						obj.caption = "integer";
+						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
+					}
+					else{
+					filterInfo.rhsvalue = response.filterInfo[i].operand[1].value//.replace(/["']/g, "");
+				    }
 				}
-				else if (response.filterInfo[i].operand[1].ref.type == "datapod" || response.filterInfo[i].operand[1].ref.type == "dataset") {
+				else if (response.filterInfo[i].operand[1].ref.type == "datapod"  ||  response.filterInfo[i].operand[1].ref.type == "dataset") {
 					var rhsdatapodAttribute = {}
 					var obj = {}
 					obj.text = "datapod"
 					obj.caption = "attribute"
+					if(response.filterInfo[i].operand[1].ref.type == "dataset"  && response.dependsOn.ref.uuid != response.filterInfo[i].operand[1].ref.uuid){
+                    return false;
+					}
 					filterInfo.rhstype = obj;
 					filterInfo.isrhsSimple = false;
 					filterInfo.isrhsFormula = false
 					filterInfo.isrhsDatapod = true;
+					filterInfo.isrhsDataset = false;
 					rhsdatapodAttribute.uuid = response.filterInfo[i].operand[1].ref.uuid;
 					rhsdatapodAttribute.datapodname = response.filterInfo[i].operand[1].ref.name;
 					rhsdatapodAttribute.name = response.filterInfo[i].operand[1].attributeName;
@@ -430,9 +456,28 @@ MetadataModule.service('MetadataFilterSerivce', function ($http, $q, sortFactory
 					filterInfo.isrhsFormula = true;
 					filterInfo.isrhsSimple = false;
 					filterInfo.isrhsDatapod = false;
+					filterInfo.isrhsDataset = false;
 					rhsformula.uuid = response.filterInfo[i].operand[1].ref.uuid;
 					rhsformula.name = response.filterInfo[i].operand[1].ref.name;
 					filterInfo.rhsformula = rhsformula;
+				}
+				else if (response.filterInfo[i].operand[1].ref.type == "dataset") {
+					var rhsdataset = {}
+					var obj = {}
+					obj.text = "dataset"
+					obj.caption = "dataset"
+					filterInfo.rhstype = obj;
+					filterInfo.isrhsFormula = false;
+					filterInfo.isrhsSimple = false;
+					filterInfo.isrhsDatapod = false;
+					filterInfo.isrhsDataset = true;
+					rhsdataset.uuid = response.filterInfo[i].operand[1].ref.uuid;
+					rhsdataset.datapodname = response.filterInfo[i].operand[1].ref.name;
+					rhsdataset.name = response.filterInfo[i].operand[1].attributeName;
+					rhsdataset.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
+					rhsdataset.attributeId = response.filterInfo[i].operand[1].attributeId;
+			
+					filterInfo.rhsdataset = rhsdataset;
 				}
 				filterInfoArray[i] = filterInfo
 			}

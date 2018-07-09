@@ -6,12 +6,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { ModelComponent } from './model/model.component';
 import { ParamsetComponent } from './paramset/paramset.component';
-import { ResultsComponent } from './results/results.component';
+import { ResultsComponent } from './results/resultsCommon.component';
 import {TrainingComponent } from './training/training.component';
 import {DistributionComponent } from './distribution/distribution.component';
 import {PredictionComponent } from './prediction/prediction.component';
 import {SimulationComponent} from './simulation/simulation.component'
 import {OperatorComponent} from './operator/operator.component';
+import {ResultDetailsComponent} from './results/resultDetails.component';
 
 const routes: Routes = [
     {
@@ -46,6 +47,9 @@ const routes: Routes = [
             {path: 'simulation/:id/:version/:mode', component: SimulationComponent,pathMatch:'full' },
             {path: 'simulation/simulation/:id/:version/:mode', component:SimulationComponent, pathMatch: 'full'},
             {path: 'simulation', component:SimulationComponent, pathMatch: 'full'},
+
+            {path: 'results', component: ResultsComponent, pathMatch: 'full'},
+            {path: 'resultDetails/:id/:version/:type', component: ResultDetailsComponent, pathMatch: 'full'},
          ]
     }
 ]

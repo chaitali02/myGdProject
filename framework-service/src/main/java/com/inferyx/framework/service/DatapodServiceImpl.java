@@ -16,8 +16,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -32,7 +30,6 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -61,11 +58,9 @@ import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
-import com.inferyx.framework.dao.IDownloadDao;
 import com.inferyx.framework.dao.IUploadDao;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -73,7 +68,6 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DatapodStatsHolder;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Message;
@@ -113,8 +107,6 @@ public class DatapodServiceImpl {
 	private DagServiceImpl dagServiceImpl;*/
 	@Autowired
 	private DataStoreServiceImpl datastoreServiceImpl;
-	@Autowired
-	private DatasourceServiceImpl datasourceServiceImpl;
 	/*@Autowired
 	private HiveContext hiveContext;*/
 	@Autowired
@@ -451,9 +443,10 @@ public class DatapodServiceImpl {
 			logger.info("Attributes:" + attributes);
 
 			// Create datapod
-			List<Datasource> datasourceList = iDatasourceDao.findDatasourceByType(appUuid, ExecContext.FILE.toString());
+//			List<Datasource> datasourceList = iDatasourceDao.findDatasourceByType(appUuid, ExecContext.FILE.toString());
 			dp = new Datapod();
-			for(Datasource datasource:datasourceList) {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//			for(Datasource datasource : datasourceList) {
 				MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(),
 						datasource.getVersion());
 				MetaIdentifierHolder mHolder = new MetaIdentifierHolder();
@@ -469,7 +462,7 @@ public class DatapodServiceImpl {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+//			}
 
 			/*
 			 * // Create relation Relation r = new Relation();
@@ -521,7 +514,7 @@ public class DatapodServiceImpl {
 		//Create Load exec and datastore
 		LoadExec loadExec = null;
 		loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), null/*, null*/, RunMode.BATCH);
+		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), RunMode.BATCH);
 		
 		return new MetaIdentifierHolder(loadExec.getRef(MetaType.loadExec));
 	}
@@ -603,7 +596,7 @@ public class DatapodServiceImpl {
 	 */
 
 	// Generate excel file from datapod
-	@SuppressWarnings("resource")
+	@SuppressWarnings({ "resource", "unchecked" })
 	public void genDataDict(String multitab, HttpServletResponse response) {
 		response.setContentType("application/xml charset=utf-16");
 		try {
@@ -797,19 +790,19 @@ public class DatapodServiceImpl {
 		return baseEntityList;
 	}
 */
-	public List<Datapod> SearchDatapodByName(String name, String datasourceUuid) throws JsonProcessingException {		
+	public List<Datapod> searchDatapodByName(String name, String datasourceUuid) throws JsonProcessingException {		
 		 Aggregation filterAggr = 
 					newAggregation(	
 					match(Criteria.where("datasource.ref.uuid").is(datasourceUuid).andOperator(Criteria.where("name").is(name))),
 					group("uuid").max("version").as("version"));
 
 				 AggregationResults<Datapod> groupResults 
-					= mongoTemplate.aggregate(filterAggr, "datapod",Datapod.class);
+					= mongoTemplate.aggregate(filterAggr, MetaType.datapod.toString(), Datapod.class);
 				List<Datapod> datapodList = groupResults.getMappedResults();
 				List<Datapod> result = new ArrayList<Datapod>();
-				for (Datapod d : datapodList) {
+				for (Datapod datapod : datapodList) {
 					//Datapod datapodLatest = idatapodDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
-					Datapod datapodLatest = (Datapod) commonServiceImpl.getOneByUuidAndVersion(d.getId(), d.getVersion(), MetaType.datapod.toString());
+					Datapod datapodLatest = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapod.getId(), datapod.getVersion(), MetaType.datapod.toString());
 					if(datapodLatest != null)
 						result.add(datapodLatest);
 				}				
@@ -836,6 +829,7 @@ public class DatapodServiceImpl {
 		return refMeta;
 	}*/
 
+	@SuppressWarnings("unchecked")
 	public List<DatapodStatsHolder> getDatapodStats() throws JsonProcessingException {		
 		List<DatapodStatsHolder> result = new ArrayList<DatapodStatsHolder>();
 		//List<Datapod> datapodList = findAllLatest();
@@ -870,6 +864,7 @@ public class DatapodServiceImpl {
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	public List<DatapodStatsHolder> getDatapodStats2()
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, IOException {
@@ -1019,7 +1014,7 @@ public class DatapodServiceImpl {
 			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodUuid, MetaType.datapod.toString());
 			
 			//Check datapod and csv attributes name
-			Boolean flag = true;
+//			Boolean flag = true;
 			String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 			String parquetDir = null;
 			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
@@ -1099,7 +1094,7 @@ public class DatapodServiceImpl {
 			LoadExec loadExec = null;
 			loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
 			
-			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), null/*, null*/, RunMode.BATCH);
+			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 		
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException

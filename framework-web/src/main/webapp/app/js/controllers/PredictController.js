@@ -153,7 +153,13 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       });
     }     
   }
-
+  $scope.autoMapFeature=function(){
+    if($scope.featureMapTableArray && $scope.featureMapTableArray.length >0){
+      for(var i=0;i<$scope.featureMapTableArray.length;i++){
+        $scope.featureMapTableArray[i].targetFeature=$scope.allTargetAttribute[i];
+      }
+    }
+  }
   $scope.getAllLetestModel=function(defaultValue){
     PredictService.getAllModelByType("N","model").then(function(response) { onGetAllLatest(response.data)});
     var onGetAllLatest = function(response) {

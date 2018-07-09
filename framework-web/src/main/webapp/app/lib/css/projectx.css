@@ -186,6 +186,13 @@ th, td{vertical-align: middle !important}
     font: 10px sans-serif;
     pointer-events: none;
   }
+  .node-refesh{
+  position: static
+  }
+  @keyframes node-refesh {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
   div.tooltipFocus {
   /*position: absolute;
     text-align: center;
@@ -921,6 +928,9 @@ vertical-align: middle;
 .node text {
   font: 12px sans-serif;
 }
+.node span {
+  font: 12px sans-serif;
+}
 
 path.link {
   fill: none;
@@ -930,6 +940,12 @@ path.link {
 .link text {
   font: 10px sans-serif;
   /* fill: #CC0000; */
+}
+path.link:hover{
+  stroke: #32c5d2;
+  opacity: 0.5;
+  cursor: move;
+  stroke-width: 2px;
 }
 
 .hyper {
@@ -947,10 +963,10 @@ font-weight:bold;
 .not-selected {
 font-weight:normtal;
 }
-.tree-graph{
+/* .tree-graph{
   margin-top: -3%;
   padding-left: 2% !important;
-}
+} */
 
 
 .comment-panel-parent{
