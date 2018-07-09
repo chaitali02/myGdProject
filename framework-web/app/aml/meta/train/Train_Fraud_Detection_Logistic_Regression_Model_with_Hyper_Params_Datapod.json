@@ -1,5 +1,4 @@
 {
-  "id": "5b3e2a7d275052634b289570",
   "uuid": "dd11b477-0dfb-44c3-b666-a7bd96feca85",
   "version": "1530800765",
   "name": "Train Fraud Detection Logistic Regression Model with Hyper Params (Datapod)",
@@ -40,24 +39,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "0",
-        "featureName": "account_balance"
+        "featureId": "0"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "0",
-        "attrName": "time"
+        "attrId": "0"
       }
     },
     {
@@ -65,24 +56,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "1",
-        "featureName": "min_daily_balance"
+        "featureId": "1"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "1",
-        "attrName": "V1"
+        "attrId": "1"
       }
     },
     {
@@ -90,24 +73,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "2",
-        "featureName": "max_daily_balance"
+        "featureId": "2"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "2",
-        "attrName": "V2"
+        "attrId": "2"
       }
     },
     {
@@ -115,24 +90,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "3",
-        "featureName": "avg_daily_balance"
+        "featureId": "3"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "3",
-        "attrName": "V3"
+        "attrId": "3"
       }
     },
     {
@@ -140,24 +107,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "4",
-        "featureName": "min_monthly_balance"
+        "featureId": "4"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "4",
-        "attrName": "V4"
+        "attrId": "4"
       }
     },
     {
@@ -165,24 +124,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "5",
-        "featureName": "max_monthly_balance"
+        "featureId": "5"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "5",
-        "attrName": "V5"
+        "attrId": "5"
       }
     },
     {
@@ -190,24 +141,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "6",
-        "featureName": "avg_monthly_balance"
+        "featureId": "6"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "6",
-        "attrName": "V6"
+        "attrId": "6"
       }
     },
     {
@@ -215,24 +158,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "7",
-        "featureName": "min_quarterly_balance"
+        "featureId": "7"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "7",
-        "attrName": "V7"
+        "attrId": "7"
       }
     },
     {
@@ -240,24 +175,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "8",
-        "featureName": "max_quarterly_balance"
+        "featureId": "8"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "8",
-        "attrName": "V8"
+        "attrId": "8"
       }
     },
     {
@@ -265,24 +192,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "9",
-        "featureName": "avg_quarterly_balance"
+        "featureId": "9"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "9",
-        "attrName": "V9"
+        "attrId": "9"
       }
     },
     {
@@ -290,24 +209,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "10",
-        "featureName": "min_yearly_balance"
+        "featureId": "10"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "10",
-        "attrName": "V10"
+        "attrId": "10"
       }
     },
     {
@@ -315,24 +226,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "11",
-        "featureName": "max_yearly_balance"
+        "featureId": "11"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "11",
-        "attrName": "V11"
+        "attrId": "11"
       }
     },
     {
@@ -340,24 +243,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "12",
-        "featureName": "avg_yearly_balance"
+        "featureId": "12"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "12",
-        "attrName": "V12"
+        "attrId": "12"
       }
     },
     {
@@ -365,24 +260,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "13",
-        "featureName": "transaction_amount"
+        "featureId": "13"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "13",
-        "attrName": "V13"
+        "attrId": "13"
       }
     },
     {
@@ -390,24 +277,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "14",
-        "featureName": "min_daily_tran_amount"
+        "featureId": "14"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "14",
-        "attrName": "V14"
+        "attrId": "14"
       }
     },
     {
@@ -415,24 +294,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "15",
-        "featureName": "max_daily_tran_amount"
+        "featureId": "15"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "15",
-        "attrName": "V15"
+        "attrId": "15"
       }
     },
     {
@@ -440,24 +311,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "16",
-        "featureName": "avg_daily_tran_amount"
+        "featureId": "16"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "16",
-        "attrName": "V16"
+        "attrId": "16"
       }
     },
     {
@@ -465,24 +328,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "17",
-        "featureName": "min_monthly_tran_amount"
+        "featureId": "17"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "17",
-        "attrName": "V17"
+        "attrId": "17"
       }
     },
     {
@@ -490,24 +345,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "18",
-        "featureName": "max_monthly_tran_amount"
+        "featureId": "18"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "18",
-        "attrName": "V18"
+        "attrId": "18"
       }
     },
     {
@@ -515,24 +362,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "19",
-        "featureName": "avg_monthly_tran_amount"
+        "featureId": "19"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "19",
-        "attrName": "V19"
+        "attrId": "19"
       }
     },
     {
@@ -540,24 +379,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "20",
-        "featureName": "min_yearly_tran_amount"
+        "featureId": "20"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "20",
-        "attrName": "V20"
+        "attrId": "20"
       }
     },
     {
@@ -565,24 +396,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "21",
-        "featureName": "max_yearly_tran_amount"
+        "featureId": "21"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "21",
-        "attrName": "V21"
+        "attrId": "21"
       }
     },
     {
@@ -590,24 +413,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "22",
-        "featureName": "avg_yearly_tran_amount"
+        "featureId": "22"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "22",
-        "attrName": "V22"
+        "attrId": "22"
       }
     },
     {
@@ -615,24 +430,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "23",
-        "featureName": "num_daily_transactions"
+        "featureId": "23"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "23",
-        "attrName": "V23"
+        "attrId": "23"
       }
     },
     {
@@ -640,24 +447,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "24",
-        "featureName": "num_monthly_transactions"
+        "featureId": "24"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "24",
-        "attrName": "V24"
+        "attrId": "24"
       }
     },
     {
@@ -665,24 +464,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "25",
-        "featureName": "num_quarterly_transactions"
+        "featureId": "25"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "25",
-        "attrName": "V25"
+        "attrId": "25"
       }
     },
     {
@@ -690,24 +481,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "26",
-        "featureName": "num_yearly_transactions"
+        "featureId": "26"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
-          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
+          "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
         },
-        "value": null,
-        "attrId": "26",
-        "attrName": "V26"
+        "attrId": "26"
       }
     },
     {
@@ -715,24 +498,16 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68",
-          "version": null,
-          "name": "Fraud Detection Model"
+          "uuid": "41b247d5-0f64-4729-a72d-6637b275ab68"
         },
-        "value": null,
-        "featureId": "27",
-        "featureName": "num_payment_default_times"
+        "featureId": "27"
       },
       "attribute": {
         "ref": {
           "type": "datapod",
           "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-          "version": null,
-          "name": "cc_transactions"
         },
-        "value": null,
-        "attrId": "27",
-        "attrName": "V27"
+        "attrId": "27"
       }
     }
   ],
@@ -741,13 +516,9 @@
   "labelInfo": {
     "ref": {
       "type": "datapod",
-      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-      "version": null,
-      "name": "cc_transactions"
+      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7"
     },
-    "value": null,
-    "attrId": "30",
-    "attrName": "class"
+    "attrId": "30"
   },
   "useHyperParams": "Y"
 }

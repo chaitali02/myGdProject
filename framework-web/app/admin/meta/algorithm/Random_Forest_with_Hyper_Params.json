@@ -1,7 +1,7 @@
 {
-  "uuid": "901b9fce-1ced-475a-a83f-1a17e07a42dc",
-  "version": "1530798365",
-  "name": "Linear Regression with Hyper Params",
+  "uuid": "4eb27987-a4b1-4fde-af31-4ef792ba7d7d",
+  "version": "1530887353",
+  "name": "Random Forest with Hyper Params",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -9,7 +9,7 @@
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Thu Jul 05 19:16:05 IST 2018",
+  "createdOn": "Fri Jul 06 19:59:13 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -21,16 +21,16 @@
       }
     }
   ],
-  "type": "REGRESSION",
+  "type": "CLASSIFICATION",
   "library": "SPARKML",
-  "trainName": "org.apache.spark.ml.regression.LinearRegression",
-  "modelName": "org.apache.spark.ml.regression.LinearRegressionModel",
+  "trainName": "org.apache.spark.ml.classification.RandomForestClassifier",
+  "modelName": "org.apache.spark.ml.classification.RandomForestClassificationModel",
   "labelRequired": "Y",
   "returnType": null,
   "paramList": {
     "ref": {
       "type": "paramlist",
-      "uuid": "b8d2e676-bff6-4978-94be-1019e376a3c4"
+      "uuid": "a82581f7-3818-40bb-a98d-3b518b755e0b"
     }
   },
   "savePmml": "Y"
