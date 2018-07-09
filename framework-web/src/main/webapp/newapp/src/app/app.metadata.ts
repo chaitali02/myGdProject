@@ -10,7 +10,7 @@ export class AppMetadata {
   constructor() {
     this.obj = {};
     this.obj.metadataDefs = {
-            
+
       'dag': {
         name: 'dag',
         caption: 'Pipeline',
@@ -639,7 +639,7 @@ export class AppMetadata {
         moduleCaption: 'Data Pipeline',
         class: 'fa fa-random'
       },
-      
+
       'dataset': {
         name: 'dataset',
         caption: 'Data Set',
@@ -1050,7 +1050,7 @@ export class AppMetadata {
         detailState: 'operator',
         moduleState: 'dataScience',
         moduleCaption: 'Data Science',
-      //  detailState: 'createoperator'
+        //  detailState: 'createoperator'
       },
       'operatorexec': {
         name: 'operatorexec',
@@ -1376,7 +1376,7 @@ export class AppMetadata {
         moduleCaption: '',
         moduleState: '',
         detailState: ''
-      },      
+      },
       'predict': {
         name: 'predict',
         caption: 'Prediction',
@@ -1396,14 +1396,34 @@ export class AppMetadata {
       'predictexec': {
         name: 'predictexec',
         caption: 'Prediction Exec',
+        execType: 'predictexec',
+        metaType: 'predictexec',
+        color: '#EB54C3',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'predictExec',
+        resultState: 'predictExec',
+        moduleState: 'dataScience',
+        moduleCaption: 'Data Science',
+        childMenu: [],
+        class: 'fa fa-flask'
+
+      },
+      'predictExec': {
+        name: 'predict',
+        caption: 'predict Exec',
         execType: 'predictExec',
         metaType: 'predictExec',
         color: '#EB54C3',
         iconCaption: '',
         allowInMenu: false,
         listState: 'jobmonitoringlist',
-        detailState: 'jobexecutorlistpredictexec',
-        resultState: 'modelrestultpage'
+        detailState: 'predictExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'predictExec',
+        moduleCaption: 'Job Monitoring',
+        class: 'fa fa-flask'
       },
       'simulate': {
         name: 'simulate',
@@ -1416,8 +1436,8 @@ export class AppMetadata {
         iconPath: 'assets/layouts/layout/img/simulate.svg',
         allowInMenu: false,
         detailState: 'simulation',
-        moduleState:'dataScience',
-        moduleCaption:'Data Science ',
+        moduleState: 'dataScience',
+        moduleCaption: 'Data Science ',
         childMenu: [],
         allowInChildMenu: true,
       },
@@ -1432,9 +1452,47 @@ export class AppMetadata {
         listState: 'jobmonitoringlist',
         detailState: 'jobexecutorlistsimulateexec',
         resultState: 'modelrestultpage',
+        moduleState: 'dataScience',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-flask'
+
       },
+      'simulateExec': {
+        name: 'simulate',
+        caption: 'simulate Exec',
+        execType: 'simulateexec',
+        metaType: 'simulateexec',
+        color: '#EB54C3',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'simulateExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'simulateexec',
+        moduleCaption: 'Data Science',
+        class: 'fa fa-flask'
+
+        // name: 'trainexec',
+        // caption: 'Train Exec',
+        // execType: 'trainexec',
+        // metaType: 'trainexec',
+        // color: '#EB54C3',
+        // iconCaption: '',
+        // allowInMenu: false,
+        // listState: 'jobmonitoringlist',
+        // detailState: 'trainExec',
+        // moduleState: 'dataScience',
+        // resultState: 'trainexec',
+        // moduleCaption: 'Data Science',
+        // childMenu: [],
+        // allowInChildMenu: false,
+        // class: 'fa fa-flask'
+
+
+
+      },
+      
       'train': {
         name: 'train',
         caption: 'Training',
@@ -1453,19 +1511,21 @@ export class AppMetadata {
       },
       'trainexec': {
         name: 'trainexec',
-        caption: 'ModelResult',
+        caption: 'Train Exec',
         execType: 'trainexec',
         metaType: 'trainexec',
-        color: '#EB54C3',
+        color: '#8E44AD',
         iconCaption: '',
         allowInMenu: false,
         listState: 'jobmonitoringlist',
-        detailState: 'ModelResult',
+        detailState: 'trainExec',
         moduleState: 'dataScience',
         resultState: 'trainexec',
         moduleCaption: 'Data Science',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-flask'
+
       },
 
 
@@ -1474,7 +1534,7 @@ export class AppMetadata {
         caption: 'Train Exec',
         execType: 'trainExec',
         metaType: 'trainExec',
-        color: '#EB54C3',
+        color: '#8E44AD',
         iconCaption: '',
         allowInMenu: false,
         listState: 'jobmonitoringlist',
@@ -1482,7 +1542,9 @@ export class AppMetadata {
         moduleState: 'JobMonitoring',
         resultState: 'trainExec',
         moduleCaption: 'Job Monitoring',
-      
+        class: 'fa fa-flask'
+
+
       },
       'featureattrmap': {
         name: 'featureattrmap',

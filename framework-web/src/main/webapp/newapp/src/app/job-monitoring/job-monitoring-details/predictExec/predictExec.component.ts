@@ -10,11 +10,11 @@ import { Version } from '../../../shared/version';
 @Component({
     selector: 'app-trainExec',
     styleUrls: [],
-    templateUrl: './trainExec.template.html',
+    templateUrl: './predictExec.template.html',
     
   })
   
-export class TrainExecComponent{
+export class PredictExecComponent{
 
   breadcrumbDataFrom: any;
   id : any;
@@ -22,7 +22,7 @@ export class TrainExecComponent{
   VersionList: SelectItem[] = [];
   selectedVersion: Version;
   mode : any;
-  trainResultData : any;
+  predictResultData : any;
   uuid : any;
   name : any;
   createdBy : any;
@@ -35,19 +35,19 @@ export class TrainExecComponent{
   dependsOn : any;
   refKeyList : any;
   result : any;
-  showResultTrain : any;
+  showResultPredict : any;
  
   
   constructor(private datePipe: DatePipe,private _location: Location,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService){
-    this.showResultTrain = true;
-    this.trainResultData = {};
+    this.showResultPredict = true;
+    this.predictResultData = {};
     this.breadcrumbDataFrom=[{
         "caption":"Job Monitoring ",
         "routeurl":"/app/jobMonitoring"
       },
       {
-        "caption":"train Exec",
-        "routeurl":"/app/list/trainExec"
+        "caption":"Prediction Exec",
+        "routeurl":"/app/list/predictExec"
   
       },
       {
@@ -74,45 +74,45 @@ export class TrainExecComponent{
 
     onChangeActive(event) {
       if(event === true) {
-        this.trainResultData.active = 'Y';
+        this.predictResultData.active = 'Y';
       }
       else {
-        this.trainResultData.active = 'N';
+        this.predictResultData.active = 'N';
       }
     }
 
     onChangePublished(event) {
       if(event === true) {
-        this.trainResultData.published = 'Y';
+        this.predictResultData.published = 'Y';
       }
       else {
-        this.trainResultData.published = 'N';
+        this.predictResultData.published = 'N';
       }
     }
     
     getOneByUuidAndVersion(id,version){
-      this._commonService.getOneByUuidAndVersion(id,version,'trainexec')
+      this._commonService.getOneByUuidAndVersion(id,version,'predictexec')
       .subscribe(
       response =>{//console.log(response)},
         this.onSuccessgetOneByUuidAndVersion(response)},
       error => console.log("Error :: " + error)); 
     }
     getAllVersionByUuid(){
-      this._commonService.getAllVersionByUuid('trainexec',this.id)
+      this._commonService.getAllVersionByUuid('predictexec',this.id)
       .subscribe(
       response =>{
         this.OnSuccesgetAllVersionByUuid(response)},
       error => console.log("Error :: " + error));
     }
    onSuccessgetOneByUuidAndVersion(response){
-      this.trainResultData=response
-      this.createdBy=this.trainResultData.createdBy.ref.name;
-      this.dependsOn=this.trainResultData.dependsOn.ref.name;
-      this.result=this.trainResultData.result.ref.name;
-      if (this.trainResultData.result !== null) {
-        this.result = this.trainResultData.result.ref.name;
-      }
+      this.predictResultData=response
+      this.createdBy=this.predictResultData.createdBy.ref.name;
+      this.dependsOn=this.predictResultData.dependsOn.ref.name;
+      this.result=this.predictResultData.result.ref.name;
 
+      if (this.predictResultData.result !== null) {
+        this.result = this.predictResultData.result.ref.name;
+      }
       var d
       var statusList = [];
       for (let i = 0; i < response.statusList.length; i++) {
@@ -128,7 +128,7 @@ export class TrainExecComponent{
       if(this.active === 'Y') { this.active = true; } else { this.active = false; }
       this.tags = response['tags'];
    
-      this.breadcrumbDataFrom[2].caption=this.trainResultData.name;
+      this.breadcrumbDataFrom[2].caption=this.predictResultData.name;
     }
     OnSuccesgetAllVersionByUuid(response) {
       var temp=[]
@@ -143,7 +143,7 @@ export class TrainExecComponent{
       this.VersionList=temp
     }
     onVersionChange(){ 
-      this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'trainexec')
+      this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'predictexec')
       .subscribe(
       response =>{//console.log(response)},
         this.onSuccessgetOneByUuidAndVersion(response)},
