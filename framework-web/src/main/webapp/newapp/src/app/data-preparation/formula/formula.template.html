@@ -173,17 +173,17 @@
                       name="sourceattribute"
                       [disabled]="mode == 'true'"
                       [style]="{'width':'100%','padding':'3px'}"
-                      [filter]="true">
+                      [filter]="true" placeholder="select">
                       </p-dropdown>
                   </div>
                   <div *ngIf="isSourceAtributeFormula">
                       <p-dropdown [options]="allFormula"          
                       [(ngModel)]="sourceformula"
-                      name="sourceattribute"
+                      name="sourceformula"
                       [disabled]="mode == 'true'"
                       [style]="{'width':'100%','padding':'3px'}"
                       [filter]="true"
-                      >
+                      placeholder="select">
                       </p-dropdown>
                   </div>
                   <!-- <div *ngIf="isSourceAtributeFormula">
@@ -199,21 +199,21 @@
                   <div *ngIf="isSourceAtributeExpression">
                       <p-dropdown [options]="allExpression"          
                       [(ngModel)]="sourceexpression"
-                      name="sourceattribute"
+                      name="sourceexpression"
                       [disabled]="mode == 'true'"
                       [style]="{'width':'100%','padding':'3px'}"
                       [filter]="true"
-                      >
+                      placeholder="select">
                       </p-dropdown>
                   </div>
                   <div *ngIf="isSourceAtributeFunction">
                       <p-dropdown [options]="allFunction"          
                       [(ngModel)]="sourcefunction"
-                      name="sourceattribute"
+                      name="sourcefunction"
                       [disabled]="mode == 'true'"
                       [style]="{'width':'100%','padding':'3px'}"
                       [filter]="true"
-                      >
+                      placeholder="select">
                       </p-dropdown>
                   </div>
                 </div>
