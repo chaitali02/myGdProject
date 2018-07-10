@@ -19,8 +19,21 @@ public class SourceAttr {
 */	
 	private String value;
 	private String attributeName;
+	private String attributeType;
 
 	
+	/**
+	 * @return the attributeType
+	 */
+	public String getAttributeType() {
+		return this.attributeType;
+	}
+	/**
+	 * @param attributeType the attributeType to set
+	 */
+	public void setAttributeType(String attributeType) {
+		this.attributeType = attributeType;
+	}
 	public String getAttributeName() {
 		return attributeName;
 	}

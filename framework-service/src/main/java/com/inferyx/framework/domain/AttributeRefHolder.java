@@ -13,26 +13,40 @@ package com.inferyx.framework.domain;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AttributeRefHolder extends MetaIdentifierHolder{	
-	
+public class AttributeRefHolder extends MetaIdentifierHolder {
+
 	private String attrId;
 	private String attrName;
+	private String attrType;
+
+	public String getAttrType() {
+		return this.attrType;
+	}
+
+	public void setAttrType(String attrType) {
+		this.attrType = attrType;
+	}
 
 	public String getAttrId() {
 		return attrId;
 	}
+
 	public void setAttrId(String attrId) {
 		this.attrId = attrId;
 	}
+
 	public String getAttrName() {
 		return attrName;
 	}
+
 	public void setAttrName(String attrName) {
 		this.attrName = attrName;
 	}
+
 	@Override
 	public String toString() {
-		return "AttributeRefHolder [attrId=" + attrId + ", attrName=" + attrName + "]";
-	}	
-	
+		return "AttributeRefHolder [attrId=" + this.attrId + ", attrName=" + this.attrName + ", attrType="
+				+ this.attrType + "]";
+	}
+
 }
