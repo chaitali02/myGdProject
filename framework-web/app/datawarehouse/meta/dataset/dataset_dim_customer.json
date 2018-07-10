@@ -22,6 +22,7 @@
             "attrSourceName" : "src_customer_id",
             "sourceAttr" : {
                 "attrId" : "0",
+                 "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -33,6 +34,7 @@
             "attrSourceName" : "title",
             "sourceAttr" : {
                 "attrId" : "3",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -44,6 +46,7 @@
             "attrSourceName" : "first_name",
             "sourceAttr" : {
                 "attrId" : "4",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -55,6 +58,7 @@
             "attrSourceName" : "middle_name",
             "sourceAttr" : {
                 "attrId" : "5",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -66,6 +70,7 @@
             "attrSourceName" : "last_name",
             "sourceAttr" : {
                 "attrId" : "6",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -77,6 +82,7 @@
             "attrSourceName" : "address_line1",
             "sourceAttr" : {
                 "attrId" : "1",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -88,6 +94,7 @@
             "attrSourceName" : "address_line2",
             "sourceAttr" : {
                 "attrId" : "2",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -99,6 +106,7 @@
             "attrSourceName" : "phone",
             "sourceAttr" : {
                 "attrId" : "8",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -110,6 +118,7 @@
             "attrSourceName" : "date_first_purchase",
             "sourceAttr" : {
                 "attrId" : "9",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -121,6 +130,7 @@
             "attrSourceName" : "commute_distance_miles",
             "sourceAttr" : {
                 "attrId" : "10",
+                 "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -132,6 +142,7 @@
             "attrSourceName" : "city",
             "sourceAttr" : {
                 "attrId" : "4",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -143,6 +154,7 @@
             "attrSourceName" : "state",
             "sourceAttr" : {
                 "attrId" : "6",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -154,6 +166,7 @@
             "attrSourceName" : "postal_code",
             "sourceAttr" : {
                 "attrId" : "7",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -165,6 +178,7 @@
             "attrSourceName" : "country",
             "sourceAttr" : {
                 "attrId" : "8",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"

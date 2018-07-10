@@ -13,6 +13,7 @@
 			"attrSourceName": "customer_id",
 			"sourceAttr": {
 				"attrId": "6",
+				"attrType": "string",				
 				"ref": {
 					"type": "datapod",
 					"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
@@ -24,6 +25,7 @@
 			"attrSourceName": "yyyy_mm",
 			"sourceAttr": {
 				"attrId": "55",
+				"attrType": "string",
 				"ref": {
 					"type": "datapod",
 					"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
