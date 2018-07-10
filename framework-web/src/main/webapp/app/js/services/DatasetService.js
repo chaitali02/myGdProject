@@ -160,6 +160,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						attributedetail.name = response[j].attributes[i].name;
 						attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
 						attributedetail.attributeId = response[j].attributes[i].attributeId;
+						attributedetail.attrType = response[j].attributes[i].attributeType;
 						attributes.push(attributedetail)
 					}
 				}
@@ -181,6 +182,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
 					attributes.push(attributedetail)
 				}
@@ -203,6 +205,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					attributedetail.name = response[j].attrName;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
 					attributes.push(attributedetail)
 				}
 
@@ -328,6 +331,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					attributedetail.name = response[j].attributes[i].name;
 					attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
 					attributedetail.attributeId = response[j].attributes[i].attributeId;
+					attributedetail.attrType = response[j].attributes[i].attrType;
 					attributes.push(attributedetail)
 				}
 			}
@@ -554,10 +558,11 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					attributeInfo.isSourceAtributeFunction = false
 
 				}
-				if (response.attributeInfo[n].sourceAttr.ref.type == "datapod") {
+				if (response.attributeInfo[n].sourceAttr.ref.type == "datapod" || response.attributeInfo[n].sourceAttr.ref.type == "dataset") {
 					var sourcedatapod = {};
 					sourcedatapod.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-					sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId
+					sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId;
+					sourcedatapod.attrType = response.attributeInfo[n].sourceAttr.attrType
 					sourcedatapod.name = "";
 					var obj = {}
 					obj.text = "datapod"

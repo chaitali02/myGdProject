@@ -756,7 +756,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
         if (response.attributeInfo[n].sourceAttr.ref.type == "datapod" || response.attributeInfo[n].sourceAttr.ref.type == "dataset" || response.attributeInfo[n].sourceAttr.ref.type == "rule") {
           var sourcedatapod = {};
           sourcedatapod.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-          sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId
+          sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId;
+          sourcedatapod.attrType = response.attributeInfo[n].sourceAttr.attrType
           sourcedatapod.name = "";
           var obj = {}
           obj.text = "datapod"
@@ -822,7 +823,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
         if (response.attributeInfo[n].sourceAttr.ref.type == "paramlist") {
           var sourceparamlist = {};
           sourceparamlist.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-          sourceparamlist.attrId = response.attributeInfo[n].sourceAttr.attrId
+          sourceparamlist.attrId = response.attributeInfo[n].sourceAttr.attrId;
+          sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType
           sourceparamlist.name = "";
           var obj = {}
           obj.text = "paramlist"
@@ -997,7 +999,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
         if (response.attributeInfo[n].sourceAttr.ref.type == "datapod" || response.attributeInfo[n].sourceAttr.ref.type == "dataset" || response.attributeInfo[n].sourceAttr.ref.type == "rule") {
           var sourcedatapod = {};
           sourcedatapod.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-          sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId
+          sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId;
+          sourcedatapod.attrType = response.attributeInfo[n].sourceAttr.attrType
 
           sourcedatapod.name = "";
           var obj = {}
@@ -1063,7 +1066,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
         if (response.attributeInfo[n].sourceAttr.ref.type == "paramlist") {
           var sourceparamlist = {};
           sourceparamlist.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-          sourceparamlist.attrId = response.attributeInfo[n].sourceAttr.attrId
+          sourceparamlist.attrId = response.attributeInfo[n].sourceAttr.attrId;
+          sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType
           sourceparamlist.name = "";
           var obj = {}
           obj.text = "paramlist"
@@ -1165,6 +1169,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
             attributedetail.name = response[j].attributes[i].name;
             attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
             attributedetail.attributeId = response[j].attributes[i].attributeId;
+            attributedetail.attrType = response[j].attributes[i].attrType;
             attributes.push(attributedetail)
           }
         }
@@ -1184,6 +1189,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
           attributes.push(attributedetail)
         }
@@ -1202,6 +1208,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
+          attributedetail.attrType = response[j].attrType;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
           attributes.push(attributedetail)
         }
@@ -1222,6 +1229,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
           attributedetail.name = response[j].attrName;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
+          attributedetail.attrType = response[j].attrType;
           attributes.push(attributedetail)
         }
         deferred.resolve({

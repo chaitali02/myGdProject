@@ -195,6 +195,7 @@ public class RuleViewServiceImpl {
 					ref.setSourceAttr(sourceAttr);
 					
 					sourceAttr.setAttrId(Integer.toString(attrId));
+					sourceAttr.setAttrType(ruleSourceAttribute.get(i).getSourceAttr().getAttrType());
 					}else if(ruleSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.simple))	{
 					sourceAttr.setValue(ruleSourceAttribute.get(i).getSourceAttr().getValue());
 					ref.setAttrSourceId(ruleSourceAttribute.get(i).getAttrSourceId());

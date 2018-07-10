@@ -134,6 +134,7 @@ MetadataModule.service('MetadataRelationSerivce',function($q,sortFactory,Metadat
 							  attributedetail.name=response[j].attributes[i].name;
 							  attributedetail.dname=response[j].name+"."+response[j].attributes[i].name;
 							  attributedetail.attributeId=response[j].attributes[i].attributeId;
+							  attributedetail.attrType=response[j].attributes[i].attrType;
 							  allattributes.push(attributedetail)
 							  attr.push(attributedetail)
 							  }
@@ -162,6 +163,7 @@ MetadataModule.service('MetadataRelationSerivce',function($q,sortFactory,Metadat
 								  attributedetail.datapodname=response[j].ref.name;
 								  attributedetail.name=response[j].attrName;
 								  attributedetail.attributeId=response[j].attrId;
+								  attributedetail.attrType=response[j].attrType;
 								  attributedetail.dname=response[j].ref.name+"."+response[j].attrName;
 								  attributes.push(attributedetail)
 								}
@@ -184,6 +186,7 @@ MetadataModule.service('MetadataRelationSerivce',function($q,sortFactory,Metadat
 								  attributedetail.name=response[j].attrName;
 								  attributedetail.dname=response[j].ref.name+"."+response[j].attrName;
 								  attributedetail.attributeId=response[j].attrId;
+								  attributedetail.attrType=response[j].attrType;
 								  attributes.push(attributedetail)
 								}
 
@@ -244,6 +247,7 @@ MetadataModule.service('MetadataRelationSerivce',function($q,sortFactory,Metadat
 				  attributedetail.name=response[j].attrName;
 				  attributedetail.dname=response[j].ref.name+"."+response[j].attrName;
 				  attributedetail.attributeId=response[j].attrId;
+				  attributedetail.attrType=response[j].attrType;
 				  attributes.push(attributedetail)
 				}
 		   	//console.log(JSON.stringify(attributes))
@@ -296,10 +300,12 @@ MetadataModule.service('MetadataRelationSerivce',function($q,sortFactory,Metadat
 					lhsoperand.uuid=response.relationInfo[i].joinKey[l].operand[0].ref.uuid;
 				    lhsoperand.name=response.relationInfo[i].joinKey[l].operand[0].ref.name;
 					lhsoperand.attributeId=response.relationInfo[i].joinKey[l].operand[0].attributeId;
+					lhsoperand.attrType=response.relationInfo[i].joinKey[l].operand[0].attrType;
 					lhsoperand.attributeName=response.relationInfo[i].joinKey[l].operand[0].attributeName;
 					rhsoperand.uuid=response.relationInfo[i].joinKey[l].operand[1].ref.uuid;
 					rhsoperand.name=response.relationInfo[i].joinKey[l].operand[1].ref.name;
 					rhsoperand.attributeId=response.relationInfo[i].joinKey[l].operand[1].attributeId;
+					rhsoperand.attrType=response.relationInfo[i].joinKey[l].operand[1].attrType;
 					rhsoperand.attributeName=response.relationInfo[i].joinKey[l].operand[1].attributeName;
 					joinjson.lhsoperand=lhsoperand
 					joinjson.rhsoperand=rhsoperand
@@ -371,10 +377,12 @@ MetadataModule.service('MetadataRelationSerivce',function($q,sortFactory,Metadat
 						lhsoperand.uuid=response.relationInfo[i].joinKey[l].operand[0].ref.uuid;
 					    lhsoperand.name=response.relationInfo[i].joinKey[l].operand[0].ref.name;
 						lhsoperand.attributeId=response.relationInfo[i].joinKey[l].operand[0].attributeId;
+						lhsoperand.attrType=response.relationInfo[i].joinKey[l].operand[0].attributeType;
 						lhsoperand.attributeName=response.relationInfo[i].joinKey[l].operand[0].attributeName;
 						rhsoperand.uuid=response.relationInfo[i].joinKey[l].operand[1].ref.uuid;
 						rhsoperand.name=response.relationInfo[i].joinKey[l].operand[1].ref.name;
 						rhsoperand.attributeId=response.relationInfo[i].joinKey[l].operand[1].attributeId;
+						rhsoperand.attrType=response.relationInfo[i].joinKey[l].operand[1].attributeType;
 						rhsoperand.attributeName=response.relationInfo[i].joinKey[l].operand[1].attributeName;
 						joinjson.lhsoperand=lhsoperand
 						joinjson.rhsoperand=rhsoperand
