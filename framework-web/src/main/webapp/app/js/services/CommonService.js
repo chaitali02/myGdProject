@@ -741,6 +741,7 @@
             attributedetail.datapodname = response[j].ref.name;
             attributedetail.name = response[j].attrName;
             attributedetail.attributeId = response[j].attrId;
+            attributedetail.attrType = response[j].attrType;
             attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
             attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
             attributes.push(attributedetail)
@@ -765,6 +766,7 @@
             attributedetail.name = response[j].attrName;
             attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
             attributedetail.attributeId = response[j].attrId;
+            attributedetail.attrType = response[j].attrType;
             attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
             attributes.push(attributedetail)
           }
