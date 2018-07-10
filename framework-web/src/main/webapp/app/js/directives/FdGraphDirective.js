@@ -55,12 +55,16 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             nodeFilterObj.operator=scope.filter.nodeTableArray[i].operator;
                             operand.propertyName=scope.filter.nodeTableArray[i].selectAttribute.attributeName;
                             if(scope.filter.nodeTableArray[i].operator =="BETWEEN"){
-                                var value1="'"+scope.filter.nodeTableArray[i].rhsvalue1+"'";
-                                var value2="'"+scope.filter.nodeTableArray[i].rhsvalue2+"'";
+                                var value1=scope.filter.nodeTableArray[i].rhsvalue1;//"'"+scope.filter.nodeTableArray[i].rhsvalue1+"'";
+                                var value2=scope.filter.nodeTableArray[i].rhsvalue2;//"'"+scope.filter.nodeTableArray[i].rhsvalue2+"'";
                                 operand.propertyValue=value1+" and "+value2;
-                            }else{
+                            }else if(scope.filter.nodeTableArray[i].operator =="="){
                                 var value=scope.filter.nodeTableArray[i].rhsvalue.replace(/["']/g, "");
                                 operand.propertyValue="'"+value+"'"
+                            }
+                            else{
+                                var value=scope.filter.nodeTableArray[i].rhsvalue.replace(/["']/g, "");
+                                operand.propertyValue=value;//"'"+value+"'"
                             }
                             nodeFilterObj.operand=operand;
                             nodeFilter[i]=nodeFilterObj
@@ -74,12 +78,17 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             edgeFilterObj.operator=scope.filter.edgeTableArray[i].operator;
                             operand.propertyName=scope.filter.edgeTableArray[i].selectAttribute.attributeName;
                             if(scope.filter.edgeTableArray[i].operator =="BETWEEN"){
-                                var value1="'"+scope.filter.edgeTableArray[i].rhsvalue1+"'"
-                                var value2="'"+scope.filter.edgeTableArray[i].rhsvalue2+"'"
+                                var value1=scope.filter.edgeTableArray[i].rhsvalue1;//"'"+scope.filter.edgeTableArray[i].rhsvalue1+"'"
+                                var value2=scope.filter.edgeTableArray[i].rhsvalue2;//"'"+scope.filter.edgeTableArray[i].rhsvalue2+"'"
                                 operand.propertyValue=value1+" and "+value2;
-                            }else{
+                            }else if(scope.filter.edgeTableArray[i].operator =="="){
                                 var value=scope.filter.edgeTableArray[i].rhsvalue.replace(/["']/g, "");
                                 operand.propertyValue="'"+value+"'"
+
+                            }
+                            else{
+                                var value=scope.filter.edgeTableArray[i].rhsvalue.replace(/["']/g, "");
+                                operand.propertyValue=value;//"'"+value+"'"
                             }
                             edgeFilterObj.operand=operand;
                             edgeFilter[i]=edgeFilterObj
@@ -661,6 +670,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     nodePropertiesObj.type=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].ref.type;
                     nodePropertiesObj.name=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].ref.name;
                     nodePropertiesObj.attributeId=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].attrId;
+                    nodePropertiesObj.attrType=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].attrType;
                     nodePropertiesObj.attributeName=scope.graphpodData.nodeInfo[nodeIndex].nodeProperties[j].attrName;
                     allAttributeInto[j]=nodePropertiesObj;
                 }
@@ -725,6 +735,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     edgePropertiesObj.type=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].ref.type;
                     edgePropertiesObj.name=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].ref.name;
                     edgePropertiesObj.attributeId=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].attrId;
+                    edgePropertiesObj.attrType=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].attrType;
                     edgePropertiesObj.attributeName=scope.graphpodData.edgeInfo[edgeIndex].edgeProperties[j].attrName;
                     allAttributeInto[j]=edgePropertiesObj;
                 }

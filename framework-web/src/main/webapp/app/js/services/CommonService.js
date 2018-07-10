@@ -719,6 +719,7 @@
               attributedetail.name = response[j].attributes[i].name;
               attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
               attributedetail.attributeId = response[j].attributes[i].attributeId;
+              attributedetail.attrType = response[j].attributes[i].attrType;
               attributes.push(attributedetail)
             }
           }

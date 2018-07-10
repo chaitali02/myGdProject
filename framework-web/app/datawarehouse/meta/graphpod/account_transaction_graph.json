@@ -3,6 +3,7 @@
         {
             "nodeId" : {
                 "attrId" : "12",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -12,6 +13,7 @@
             "nodeIcon" : "bank",
             "nodeName" : {
                 "attrId" : "12",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -25,7 +27,16 @@
             },
             "nodeProperties" : [ 
                 {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
                     "attrId" : "13",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -33,6 +44,7 @@
                 }, 
                 {
                     "attrId" : "14",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -71,6 +83,7 @@
         {
             "nodeId" : {
                 "attrId" : "0",
+                "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -80,6 +93,7 @@
             "nodeIcon" : "user",
             "nodeName" : {
                 "attrId" : "4",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -94,6 +108,15 @@
             "nodeProperties" : [ 
                 {
                     "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -101,6 +124,7 @@
                 }, 
                 {
                     "attrId" : "4",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -108,6 +132,15 @@
                 }, 
                 {
                     "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -154,6 +187,7 @@
             "edgeProperties" : [ 
                 {
                     "attrId" : "0",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
@@ -161,6 +195,15 @@
                 }, 
                 {
                     "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
@@ -169,6 +212,7 @@
             ],
             "sourceNodeId" : {
                 "attrId" : "4",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
@@ -177,6 +221,7 @@
             "sourceNodeType" : "account",
             "targetNodeId" : {
                 "attrId" : "5",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
@@ -197,6 +242,7 @@
             "edgeProperties" : [ 
                 {
                     "attrId" : "0",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -204,6 +250,7 @@
                 }, 
                 {
                     "attrId" : "4",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -211,6 +258,7 @@
                 }, 
                 {
                     "attrId" : "14",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -219,6 +267,7 @@
             ],
             "sourceNodeId" : {
                 "attrId" : "4",
+                "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -227,6 +276,7 @@
             "sourceNodeType" : "customer",
             "targetNodeId" : {
                 "attrId" : "12",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -236,18 +286,18 @@
         }
     ],
     "uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
-    "version" : "1530621986",
+    "version" : "1531210810",
     "name" : "account_transaction_graph",
     "desc" : "account_transaction_graph",
     "createdBy" : {
         "ref" : {
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196"
-           
+            "version" : "1464977196",
+            "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-07-03T12:46:26.000Z"),
+    "createdOn" : ISODate("2018-07-10T08:20:10.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
