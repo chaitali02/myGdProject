@@ -18,6 +18,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.DataType;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.GraphEdge;
@@ -119,11 +120,11 @@ public class GraphOperator implements IOperator {
 			
 			sb.append(graphNode.getNodeIcon());
 			sb.append("' AS nodeIcon, ");
-			
+			Boolean status = true;
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
 				String type=propHolder.getAttrType();
-				if(type.equalsIgnoreCase("string")) {
+				if(type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString())) {
 				sb.append("'''\"");
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
@@ -137,6 +138,7 @@ public class GraphOperator implements IOperator {
 				
 				sb.append(", ");
 				sb.append("'\",' ");
+				status=true;
 				}else 
 				{
 					sb.append("'''\"");
@@ -152,10 +154,16 @@ public class GraphOperator implements IOperator {
 					
 					sb.append(", ");
 					sb.append("',' ");
+					status=false;
 				}
 			}
 			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'}')");     
+			if(status==true) {
+				sb.append("'\"}')");   
+			}else {
+				sb.append("'}')");   
+			}
+			  
 			sb.append(" AS nodeProperties ,");
 			// added propertyId
 			AttributeRefHolder propertyIdRefHolder = graphNode.getHighlightInfo().getPropertyId();
@@ -253,10 +261,11 @@ public class GraphOperator implements IOperator {
 			sb.append("' AS edgeName, '");
 			sb.append(graphEdge.getEdgeType());
 			sb.append("' AS edgeType, ");
+			Boolean status = true;
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphEdge.getEdgeProperties()) {
 				String type=propHolder.getAttrType();
-				if(type.equalsIgnoreCase("string")) {
+				if(type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString())) {
 				sb.append("'''\"");
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
@@ -270,6 +279,7 @@ public class GraphOperator implements IOperator {
 				
 				sb.append(", ");
 				sb.append("'\",' ");
+				status=true;
 				}else 
 				{
 					sb.append("'''\"");
@@ -285,11 +295,15 @@ public class GraphOperator implements IOperator {
 					
 					sb.append(", ");
 					sb.append("',' ");
+					status=false;
 				}
 			}
 			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'}')");     
-			
+			if(status==true) {
+				sb.append("'\"}')");   
+			}else {
+				sb.append("'}')");   
+			}
 			sb.append(" AS edgeProperties ");
 			sb.append(ConstantsUtil.FROM);
 			Object source = commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());

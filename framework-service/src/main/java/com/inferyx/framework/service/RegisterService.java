@@ -2848,7 +2848,12 @@ public class RegisterService {
 			finalDataRef.setName(dataset.getName());
 			attributeRef.setAttrId(sourceAttributes.get(i).getAttrSourceId());
 			attributeRef.setAttrName(dataset.getAttributeInfo().get(i).getAttrSourceName());
-			attributeRef.setAttrType(sourceAttributes.get(i).getSourceAttr().getAttrType());
+			if(sourceAttributes.get(i).getSourceAttr().getAttrType()!=null) {
+				attributeRef.setAttrType(sourceAttributes.get(i).getSourceAttr().getAttrType());
+			}else {
+				attributeRef.setAttrType("string");
+			}
+		
 			// attributeRef.setAttrDesc(sourceAttributes.get(i).getName());
 			attributeRef.setRef(finalDataRef);
 			attrRefDetails.add(attributeRef);

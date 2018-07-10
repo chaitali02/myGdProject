@@ -1811,7 +1811,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		edge_dataset.show(false);
 		if (edgefilter.length() > 0)
 			edge_dataset = edge_dataset.filter(edgefilter.toString());
-
+		edge_dataset.show(false);
 		@SuppressWarnings("deprecation")
 		Dataset<Row> node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
@@ -1882,12 +1882,18 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				if (dstVertexDf.count() > 0) {
 					for (Row dstrow : dstrows) {
 						for (String cloumn : vertexColumns) {
+							
 							if (cloumn.equalsIgnoreCase("nodeName")) {
 								String value1 = dstrow.getAs(cloumn).toString();
 								target.put("label", value1);
 							}
+							if(dstrow.anyNull()==false) {
 							String value1 = dstrow.getAs(cloumn).toString();
-							target.put(cloumn, value1);
+							target.put(cloumn, value1);}
+							else {
+								continue;
+							}
+							
 
 						}
 					}
