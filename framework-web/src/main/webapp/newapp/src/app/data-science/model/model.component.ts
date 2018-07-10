@@ -214,7 +214,7 @@ export class ModelComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-  onSuccessgetOneByUuidAndVersion(response) {
+  onSuccessgetOneByUuidAndVersion(response) {debugger
     this.breadcrumbDataFrom[2].caption = response.name;
     this.model = response;
     this.uuid = response.uuid;
@@ -231,8 +231,9 @@ export class ModelComponent implements OnInit {
     //this.source=response["source"]["ref"].type
     //this.dependsOn = response.dependsOn.ref.type;
     //this.dependsOnName = response.dependsOn.ref.name;
-
+    console.log(response.customFlag);
     this.customFlag = response["customFlag"] == 'Y' ? true : false;
+
     if (this.customFlag == true) {
       this.getModelScript();
     }
@@ -269,6 +270,7 @@ export class ModelComponent implements OnInit {
      
       console.log(JSON.stringify(response.features));
     }
+    console.log(response.customFlag);
   }
 
   getAllLatest() {
@@ -441,6 +443,7 @@ export class ModelComponent implements OnInit {
     this.modelJson["tags"] = tagArray;
     this.modelJson["active"] = this.model.active == true ? "Y" : "N"
     this.modelJson["published"] = this.model.published == true ? "Y" : "N"
+    debugger
     this.modelJson["type"] = this.type;
     if (this.model.type == "SPARK") {
       this.customFlag = false
