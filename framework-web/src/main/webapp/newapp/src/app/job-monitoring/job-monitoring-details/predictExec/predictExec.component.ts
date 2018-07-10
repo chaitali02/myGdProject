@@ -108,7 +108,7 @@ export class PredictExecComponent{
       this.predictResultData=response
       this.createdBy=this.predictResultData.createdBy.ref.name;
       this.dependsOn=this.predictResultData.dependsOn.ref.name;
-      this.result=this.predictResultData.result.ref.name;
+     // this.result=this.predictResultData.result.ref.name;
 
       if (this.predictResultData.result !== null) {
         this.result = this.predictResultData.result.ref.name;

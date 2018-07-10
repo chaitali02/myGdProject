@@ -108,7 +108,7 @@ export class TrainExecComponent{
       this.trainResultData=response
       this.createdBy=this.trainResultData.createdBy.ref.name;
       this.dependsOn=this.trainResultData.dependsOn.ref.name;
-      this.result=this.trainResultData.result.ref.name;
+   //   this.result=this.trainResultData.result.ref.name;
       if (this.trainResultData.result !== null) {
         this.result = this.trainResultData.result.ref.name;
       }

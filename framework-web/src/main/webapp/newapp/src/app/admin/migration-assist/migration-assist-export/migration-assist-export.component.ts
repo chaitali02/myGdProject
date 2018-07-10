@@ -48,15 +48,15 @@ export class MigrationAssistExportComponent implements OnInit {
 
     this.breadcrumbDataFrom = [{
       "caption": "Admin",
-      "routeurl": "/app/list"
+      "routeurl": "/app/admin/migration-assist"
     },
     {
       "caption": "Migration Assist",
-      "routeurl": "/app/list/migration-assist"
+      "routeurl": "/app/admin/migration-assist"
     },
     {
       "caption": "Export",
-      "routeurl": "/app/list/migration-assist/export"
+      "routeurl": "/app/admin/migration-assist"
     },
     {
       "caption": "",

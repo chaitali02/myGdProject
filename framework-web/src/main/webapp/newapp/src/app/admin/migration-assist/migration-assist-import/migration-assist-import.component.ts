@@ -64,15 +64,15 @@ export class MigrationAssistImportComponent implements OnInit {
         this.count =0;
         this.breadcrumbDataFrom = [{
             "caption": "Admin",
-            "routeurl": "/app/list"
+            "routeurl": "/app/admin/migration-assist"
         },
         {
             "caption": "Migration Assist",
-            "routeurl": "/app/list/migration-assist"
+            "routeurl": "/app/admin/migration-assist"
         },
         {
             "caption": "Import",
-            "routeurl": "/app/list/migration-assist/import"
+            "routeurl": "/app/admin/migration-assist"
         },
         {
             "caption": "",
