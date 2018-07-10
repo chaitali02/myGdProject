@@ -505,7 +505,7 @@
 	</dependencies>
 
 	<properties>
-		<spark.version>2.2.0.cloudera2</spark.version>
+		<spark.version>2.3.0.cloudera2</spark.version>
 		<livy.version>0.4.0-incubating</livy.version>
 		<hadoop.version>2.6.0-cdh5.13.0</hadoop.version>
 		<hive.version>1.1.0-cdh5.13.0</hive.version>
