@@ -26,6 +26,7 @@ import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -37,8 +38,10 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -46,6 +49,7 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
+import com.inferyx.framework.service.CommonServiceImpl;
 
 /**
  * @author Ganesh
@@ -55,6 +59,12 @@ public class PostGresExecutor implements IExecutor {
 
 	@Autowired 
 	ConnectionFactory connectionFactory;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private Helper helper;
 	
 	static Logger logger = Logger.getLogger(PostGresExecutor.class); 
 	
@@ -78,15 +88,21 @@ public class PostGresExecutor implements IExecutor {
 					countRows = stmt.executeUpdate(sql);
 					//countRows = stmt.executeLargeUpdate(sql); Need to check for the large volume of data.
 					rsHolder.setCountRows(countRows);
-				} else { 
+				} else if(sql.toUpperCase().contains("COPY")) {
+					stmt.executeUpdate(sql);
+					} else { 
 					rs = stmt.executeQuery(sql);
 					countRows = rs.getMetaData().getColumnCount();
 				}
 				rsHolder.setCountRows(countRows);
 				rsHolder.setResultSet(rs);
 				rsHolder.setType(ResultType.resultset);
-			} catch (SQLException e) {				
+			}catch (SQLException e) {				
 				e.printStackTrace();
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}			
 		}		
 		return rsHolder;
@@ -241,8 +257,9 @@ public class PostGresExecutor implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
+		return rsHolder.getCountRows();
 	}
 
 	/* (non-Javadoc)
@@ -421,8 +438,32 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public Object getDataType(String dataType) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		if(dataType == null)
+			return null;
+
+		if(dataType.contains("(")) {
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
+		switch (dataType.toLowerCase()) {
+			case "integer": return "INTEGER";
+			case "double": return "DOUBLE PRECISION";
+			case "date": return "DATE";
+			case "string": return "VARCHAR(100)";
+			case "time": return "TIME";
+			case "timestamp": return "TIMESTAMP";
+			case "long" : return "BIGINT";
+			case "boolean" : return "BOOLEAN";
+			case "byte" : return "TINYINT";
+			case "float" : return "REAL";
+			case "short" : return "SMALLINT";
+			case "decimal" : return "DECIMAL";
+			case "vector" : return "ARRAY";
+			case "array" : return "ARRAY";
+			case "null" : return "NULL";
+			
+            default: return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -495,6 +536,37 @@ public class PostGresExecutor implements IExecutor {
 			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
+//		String sourceTableName = load.getSource().getValue();
+//		String sql = "SELECT * FROM " + sourceTableName;
+//		sql = helper.buildInsertQuery(clientContext, datapodTableName, datapod, sql);
+//		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+		ResultSetHolder rsHolder = null;
+		try {
+			rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rsHolder.getCountRows();
+	}
+
+	@Override
+	public String createGraphFrame(GraphExec graphExec, DataStore dataStore) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
+			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

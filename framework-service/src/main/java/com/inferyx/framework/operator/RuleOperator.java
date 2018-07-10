@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,26 +25,33 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
-import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 @Component
-public class RuleOperator implements Operator {
+public class RuleOperator implements IParsable, IReferenceable {
 	
 	@Autowired
 	AttributeMapOperator attributeMapOperator;
+	@Autowired
+	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	RelationOperator relationOperator;
 	@Autowired
@@ -145,26 +153,40 @@ public class RuleOperator implements Operator {
 	}
 
 	@Override
-	public String execute(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		Rule rule = null;
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		// List<Status> statusList = null;
+		RuleExec ruleExec = (RuleExec) baseExec;
+		// rule = iRuleDao.findLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
+		// new Sort(Sort.Direction.DESC, "version"));
+		rule = (Rule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
+				MetaType.rule.toString());
+		ruleExec.setExec(generateSql(rule, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode));
+		if(rule.getParamList() != null) {
+			MetaIdentifier mi = rule.getParamList().getRef();
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString());
+			usedRefKeySet.add(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+		}
+		ruleExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+		logger.info("sql_generated: " + ruleExec.getExec());
+		synchronized (ruleExec.getUuid()) {
+			RuleExec ruleExec1 = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(),
+					MetaType.ruleExec.toString());
+			ruleExec1.setExec(ruleExec.getExec());
+			ruleExec1.setRefKeyList(ruleExec.getRefKeyList());
+			// iRuleExecDao.save(ruleExec1);
+			commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec1);
+			ruleExec1 = null;
+		}
+		return ruleExec;
 	}
 
 	@Override
-	public Map<String, String> populateParams(com.inferyx.framework.domain.Operator operator, ExecParams execParams,
-			MetaIdentifier execIdentifier, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
+	public MetaIdentifier populateRefKeys(Map<String, MetaIdentifier> refKeyMap, MetaIdentifier ref,
+			Map<String, MetaIdentifier> inputRefKeyMap) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public String parse(com.inferyx.framework.domain.Operator operator, ExecParams execParams, MetaIdentifier execIdentifier,
-			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, List<String> datapodList, RunMode runMode) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	} 
 
 }

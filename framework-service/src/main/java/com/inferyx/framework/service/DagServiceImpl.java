@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
@@ -134,7 +133,9 @@ public class DagServiceImpl {
 	@Autowired
 	private ReconGroupServiceImpl reconGroupServiceImpl;
 	@Autowired
-	private OperatorServiceImpl operatorServiceImpl;
+	private GraphServiceImpl graphServiceImpl;
+	@Autowired
+	private CustomOperatorServiceImpl operatorServiceImpl;
 	@Autowired
 	private Helper helper;
 	
@@ -749,33 +750,6 @@ public class DagServiceImpl {
 		return stageExecs;
 	}
 
-	/**
-	 * Utility to populate refkeys given the data structure and a ref object
-	 * 
-	 * @param refKeyMap
-	 * @param ref
-	 */
-	public static MetaIdentifier populateRefKeys(java.util.Map<String, MetaIdentifier> refKeyMap, MetaIdentifier ref,
-			java.util.Map<String, MetaIdentifier> inputRefKeyMap) {
-		if (ref == null) {
-			return null;
-		}
-		if (refKeyMap == null) {
-			refKeyMap = new HashMap<>();
-		}
-		if (inputRefKeyMap != null && inputRefKeyMap.containsKey(ref.getUuid())
-				&& inputRefKeyMap.get(ref.getUuid()).getVersion() != null) {
-			refKeyMap.put(ref.getType() + "_" + ref.getUuid(), inputRefKeyMap.get(ref.getUuid()));
-			return inputRefKeyMap.get(ref.getUuid());
-		} else if (refKeyMap.containsKey(ref.getType() + "_" + ref.getUuid())
-				&& refKeyMap.get(ref.getType() + "_" + ref.getUuid()).getVersion() != null) {
-			return refKeyMap.get(ref.getType() + "_" + ref.getUuid());
-		} // else
-		refKeyMap.put(ref.getType() + "_" + ref.getUuid(), ref);
-		return ref;
-
-	}
-
 	@SuppressWarnings("unused")
 	private List<TaskExec> createDagExecTasks(List<Task> dagTasks, List<String> dependsOn, Stage indvStg,
 			MetaIdentifier dagRef, ExecParams execParams) throws JsonProcessingException {
@@ -821,19 +795,19 @@ public class DagServiceImpl {
 						.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.mapiter)) {
 
 					mapRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
-					Map map = (Map) daoRegister.getRefObject(populateRefKeys(refKeys, mapRef, inputRefKeys));
+					Map map = (Map) daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, mapRef, inputRefKeys));
 
 					// Setting the Version for Map Object
 					sourceRef = map.getSource().getRef();
 					targetRef = map.getTarget().getRef();
-					daoRegister.getRefObject(populateRefKeys(refKeys, sourceRef, inputRefKeys));
-					daoRegister.getRefObject(populateRefKeys(refKeys, targetRef, inputRefKeys));
+					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceRef, inputRefKeys));
+					daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetRef, inputRefKeys));
 
 					for (AttributeMap attrMap : map.getAttributeMap()) {
 						targetAttrRef = attrMap.getTargetAttr().getRef();
-						daoRegister.getRefObject(populateRefKeys(refKeys, targetAttrRef, inputRefKeys));
+						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, targetAttrRef, inputRefKeys));
 						sourceAttrRef = attrMap.getSourceAttr().getRef();
-						daoRegister.getRefObject(populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
+						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
 					}
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.load)) {// MetaType
 																														// load
@@ -842,7 +816,7 @@ public class DagServiceImpl {
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.dag)) {// MetaType
 																														// dag
 					secondaryDagRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
-					populateRefKeys(refKeys, secondaryDagRef, inputRefKeys); // PopuPopulatelate
+					commonServiceImpl.populateRefKeys(refKeys, secondaryDagRef, inputRefKeys); // PopuPopulatelate
 																				// refKeys
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.dq)) {// MetaType
 
@@ -910,6 +884,7 @@ public class DagServiceImpl {
 
 	@SuppressWarnings({ "unused", "unlikely-arg-type", "unchecked" })
 	public DagExec parseDagExec(Dag dag, DagExec dagExec) throws Exception {
+
 		mapServiceImpl.setRunMode(runMode);
 		if (dagExec == null) {
 			logger.info("Nothing to parse. Aborting parseDagExec");
@@ -943,8 +918,11 @@ public class DagServiceImpl {
 							// consider inactive stage)
 			}
 			for (TaskExec indvExecTask : dagExecTasks) {
+
 				otherParams = execParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
+				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());
+				logger.info(" OtherParams : " + otherParams);
 				MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
 				List<TaskOperator> operatorList = new ArrayList<>();
 				TaskOperator operator = new TaskOperator();
@@ -973,12 +951,12 @@ public class DagServiceImpl {
 				java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
 						.convertRefKeyListToMap(execParams.getRefKeyList());
 				BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(ref.getType()), ref, indvExecTask);
-				
+
 				try {
 					// If conditions with parse goes here - START
 					if (ref.getType().equals(MetaType.map)) {
-						baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, stage,
-									indvExecTask, datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
+						baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, 
+								datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
 					} else if (ref.getType().equals(MetaType.rule)) {
 						baseExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), (RuleExec) baseExec, refKeyMap, execParams, datapodList, dagExec);
 						baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
@@ -1021,20 +999,26 @@ public class DagServiceImpl {
 								datapodList, (ReconGroupExec) baseExec, dagExec);
 						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
 					} else if (ref.getType().equals(MetaType.operator)) {
-						baseExec = operatorServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.operator, MetaType.operatorExec, (OperatorExec)baseExec, 
-								refKeyMap, datapodList, dagExec);
 						ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
-						otherParams = (HashMap<String, String>) operatorServiceImpl.parse(ref.getUuid(), ref.getVersion(), MetaType.operator, (OperatorExec)baseExec, 
-																							operatorExecParams, otherParams, runMode);
-						execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
-						if (indvTask.getDependsOn().size() > 0) {
+						operatorExecParams.setOtherParams((HashMap<String, String>) Helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
+						baseExec = operatorServiceImpl.create((OperatorExec)baseExec, operatorExecParams, runMode);
+						logger.info("operatorExecParams.getOtherParams : " + operatorExecParams.getOtherParams());
+						operatorServiceImpl.parse((OperatorExec)baseExec, operatorExecParams, runMode);
+						logger.info("operatorExecParams.getOtherParams : otherParams 1 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
+						otherParams = (HashMap<String, String>) Helper.mergeMap(operatorExecParams.getOtherParams(), otherParams);
+						logger.info("operatorExecParams.getOtherParams : otherParams 2 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
+						/*if (indvTask.getDependsOn().size() > 0) {
 							operatorExecParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
 							indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
-						}
-					}
-					execParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, execParams.getOtherParams()));
+						}*/
+					} else if (ref.getType().equals(MetaType.graphpod)) {
+						baseExec = graphServiceImpl.create(baseExec, execParams, runMode);
+						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+					} 
+					execParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, execParams.getOtherParams()));
 					// If conditions with parse goes here - END	
-					
+					logger.info(" otherParams : " + otherParams);
+					logger.info(" execParams.getOtherParams() : " + execParams.getOtherParams());
 					baseExec.setRefKeyList(execParams.getRefKeyList());
 					if (baseExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
 						throw new Exception();

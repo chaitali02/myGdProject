@@ -1,6 +1,6 @@
 {
-    "xPos" : 180.0,
-    "yPos" : 250.0,
+    "xPos" : 0.0,
+    "yPos" : 260.0,
     "templateFlg" : "N",
     "stages" : [ 
         {
@@ -25,7 +25,6 @@
                                 "EXEC_PARAMS" : {
                                     "refKeyList" : null,
                                     "paramInfo" : null,
-                                    "dimInfo" : null,
                                     "filterInfo" : null,
                                     "stageInfo" : null,
                                     "paramSetHolder" : null,
@@ -144,8 +143,9 @@
                             }
                         }
                     ],
-                    "xPos" : 710.0,
-                    "yPos" : 160.0,
+                    "xPos" : 600.0,
+                    "yPos" : 140.0,
+                    "active" : "Y",
                     "active" : "Y",
                     "statusList" : []
                 }, 
@@ -887,8 +887,8 @@
                             }
                         }
                     ],
-                    "xPos" : 710.0,
-                    "yPos" : 360.0,
+                    "xPos" : 610.0,
+                    "yPos" : 380.0,
                     "active" : "Y",
                     "statusList" : []
                 }, 
@@ -912,8 +912,8 @@
                             "operatorParams" : {}
                         }
                     ],
-                    "xPos" : 910.0,
-                    "yPos" : 250.0,
+                    "xPos" : 880.0,
+                    "yPos" : 260.0,
                     "active" : "Y",
                     "statusList" : []
                 }, 
@@ -936,15 +936,15 @@
                             "operatorParams" : {}
                         }
                     ],
-                    "xPos" : 1120.0,
-                    "yPos" : 250.0,
+                    "xPos" : 1130.0,
+                    "yPos" : 260.0,
                     "active" : "Y",
                     "statusList" : []
                 }
             ],
             "name" : "new stage",
-            "xPos" : 510.0,
-            "yPos" : 250.0,
+            "xPos" : 350.0,
+            "yPos" : 260.0,
             "active" : "Y",
             "statusList" : []
         }

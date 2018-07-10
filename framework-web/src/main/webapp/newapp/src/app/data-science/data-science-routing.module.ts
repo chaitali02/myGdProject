@@ -12,6 +12,7 @@ import {DistributionComponent } from './distribution/distribution.component';
 import {PredictionComponent } from './prediction/prediction.component';
 import {SimulationComponent} from './simulation/simulation.component'
 import {OperatorComponent} from './operator/operator.component';
+import {ResultDetailsComponent} from './results/resultDetails.component';
 
 const routes: Routes = [
     {
@@ -48,6 +49,7 @@ const routes: Routes = [
             {path: 'simulation', component:SimulationComponent, pathMatch: 'full'},
 
             {path: 'results', component: ResultsComponent, pathMatch: 'full'},
+            {path: 'resultDetails/:id/:version/:type', component: ResultDetailsComponent, pathMatch: 'full'},
          ]
     }
 ]

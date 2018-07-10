@@ -38,6 +38,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -49,8 +50,10 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -69,6 +72,10 @@ public class HiveExecutor implements IExecutor{
 	protected ConnectionFactory connectionFactory;
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	private Helper helper;
 	
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
@@ -79,7 +86,7 @@ public class HiveExecutor implements IExecutor{
 		Object obj = conHolder.getStmtObject();
 		if(obj instanceof Statement) {
 			Statement stmt = (Statement) conHolder.getStmtObject();
-			ResultSet rs=null;
+			ResultSet rs = null;
 			try {
 				if(sql.toUpperCase().contains("INSERT")) {
 					stmt.execute("SET hive.exec.dynamic.partition="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition=", "true")+";");
@@ -91,9 +98,13 @@ public class HiveExecutor implements IExecutor{
 						logger.info("Successfull insertion operation. Num. of rows changed: "+result);
 					else 
 						logger.info("Unsuccessfull insertion operation.");
-				}
-				else
+				} else if(sql.toUpperCase().contains("LOAD DATA")) {
+					stmt.execute("SET hive.exec.dynamic.partition="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition=", "true")+";");
+					stmt.execute("SET hive.exec.dynamic.partition.mode="+commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition.mode", "nonstrict")+";");
+					stmt.executeUpdate(sql);
+				} else {
 					rs = stmt.executeQuery(sql);
+				}
 				rsHolder.setResultSet(rs);
 				rsHolder.setType(ResultType.resultset);
 			} catch (SQLException 
@@ -103,8 +114,12 @@ public class HiveExecutor implements IExecutor{
 					| NoSuchMethodException 
 					| SecurityException 
 					| NullPointerException 
-					| ParseException e) {				
+					| ParseException e) {					
 				e.printStackTrace();
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}			
 		}		
 		return rsHolder;
@@ -216,8 +231,9 @@ public class HiveExecutor implements IExecutor{
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
+		return rsHolder.getCountRows();
 	}
 
 	@Override
@@ -343,8 +359,34 @@ public class HiveExecutor implements IExecutor{
 	 */
 	@Override
 	public Object getDataType(String dataType) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		if(dataType == null)
+			return null;
+
+		if(dataType.contains("(")) {
+			dataType = dataType.substring(0, dataType.indexOf("("));
+		}
+		
+		switch (dataType.toLowerCase()) {
+			case "integer": return "INT";
+			case "double": return "DOUBLE";
+			case "date": return "DATE";
+			case "string": return "STRING";
+			case "time": return "TIME";
+			case "timestamp": return "TIMESTAMP";
+			case "long" : return "BIGINT";
+			case "binary" : return "BINARY";
+			case "boolean" : return "BIT";
+			case "byte" : return "TINYINT";
+			case "float" : return "FLOAT";
+			case "short" : return "SMALLINT";
+			case "decimal" : return "DECIMAL";
+			case "vector" : return "ARRAY";
+			case "array" : return "ARRAY";
+			case "null" : return "NULL";
+			case "char" : return "CHAR";
+			
+            default: return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -417,6 +459,29 @@ public class HiveExecutor implements IExecutor{
 			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
+		String sourceTableName = load.getSource().getValue();
+		String sql = "SELECT * FROM " + sourceTableName;
+		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);
+		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+		return rsHolder.getCountRows();
+	}
+
+	@Override
+	public String createGraphFrame(GraphExec graphExec, DataStore dataStore) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
+			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

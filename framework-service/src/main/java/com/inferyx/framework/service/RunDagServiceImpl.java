@@ -34,7 +34,7 @@ public class RunDagServiceImpl implements Callable<String> {
 	DagServiceImpl dagServiceImpl;
 	DagExecServiceImpl dagExecServiceImpl;
 	BatchExecServiceImpl btchServ;
-	ConcurrentHashMap taskThreadMap;
+	ConcurrentHashMap<?, ?> taskThreadMap;
 	CommonServiceImpl<?> commonServiceImpl;
 	protected SessionContext sessionContext;
 	protected RunMode runMode;
@@ -114,14 +114,14 @@ public class RunDagServiceImpl implements Callable<String> {
 	/**
 	 * @return the taskThreadMap
 	 */
-	public ConcurrentHashMap getTaskThreadMap() {
+	public ConcurrentHashMap<?, ?> getTaskThreadMap() {
 		return taskThreadMap;
 	}
 
 	/**
 	 * @param taskThreadMap the taskThreadMap to set
 	 */
-	public void setTaskThreadMap(ConcurrentHashMap taskThreadMap) {
+	public void setTaskThreadMap(ConcurrentHashMap<?, ?> taskThreadMap) {
 		this.taskThreadMap = taskThreadMap;
 	}
 	

@@ -1479,15 +1479,15 @@
             },
             "value" : null
         }, 
-        {
+	{
             "ref" : {
-                "type" : "privilege",
-                "uuid" : "67ed08e0-5e72-4129-9d7e-41cf4f631e41",
-                "version" : null,
+	        "type" : "privilege",
+	        "uuid" : "67ed08e0-5e72-4129-9d7e-41cf4f631e41",
+	        "version" : null,
                 "name" : "LoadAdd"
-            },
-            "value" : null
-        }, 
+	    },
+	    "value" : null
+	},
         {
             "ref" : {
                 "type" : "privilege",
@@ -1503,15 +1503,6 @@
                 "uuid" : "86daa41b-840c-42ba-a794-d120d756da1c",
                 "version" : null,
                 "name" : "LoadDelete"
-            },
-            "value" : null
-        }, 
-        {
-            "ref" : {
-                "type" : "privilege",
-                "uuid" : "2ee3ee95-10fe-4eed-94f7-6301c229dbbf",
-                "version" : null,
-                "name" : "LoadEdit"
             },
             "value" : null
         }, 
@@ -3332,6 +3323,169 @@
 		            "name" : "CommentAdd"
 				},
 				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ee7ae-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ee920-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9eea4c-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodDelete"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9eeb6e-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodEdit"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9eef1a-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodExecute"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ef078-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ef190-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ef2a8-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ef3b6-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ef4e2-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphpodView"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ed520-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphExecAdd"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ed6ce-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphExecClone"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ed804-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphExecDelete"
+				},
+				"value" : null
+		},		
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ede8a-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphExecExport"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ee006-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphExecPublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ee132-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphExecRestore"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ee24a-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphExecUnpublish"
+				},
+				"value" : null
+		},
+		{
+			"ref" : {
+					"type" : "privilege",
+		 			"uuid" : "bf9ee362-75ec-11e8-adc0-fa7ae01bbebc",
+		 			"version" : null,
+		            "name" : "GraphExecView"
+				},
+				"value" : null
 		}
+		
     ]
 }

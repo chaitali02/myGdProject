@@ -22,7 +22,7 @@ import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
-import com.inferyx.framework.service.OperatorServiceImpl;
+import com.inferyx.framework.service.CustomOperatorServiceImpl;
 
 
 @RestController
@@ -31,7 +31,7 @@ public class OperatorController {
 	
 	
 	@Autowired
-	private OperatorServiceImpl operatorServiceImpl;
+	private CustomOperatorServiceImpl operatorServiceImpl;
 	@Autowired
 	RConnector rConnector;
 	@Autowired

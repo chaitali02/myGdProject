@@ -23,7 +23,6 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.types.DataType;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
@@ -35,8 +34,10 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
@@ -507,4 +508,40 @@ public interface IExecutor {
 			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, IOException;
+	
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param load
+	 * @param targetTableName
+	 * @param datasource 
+	 * @param datapod
+	 * @param clientContext
+	 * @return long
+	 * @throws IOException
+	 */
+	long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException;
+
+	String createGraphFrame(GraphExec graphExec, DataStore dataStore) throws IOException;
+
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param paramMap
+	 * @param fieldArray
+	 * @param label 
+	 * @param trainName
+	 * @param trainPercent
+	 * @param valPercent
+	 * @param tableName
+	 * @param hyperParamList 
+	 * @param clientContext
+	 * @return Object
+	 * @throws IOException
+	 */
+	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
+			throws IOException;
 }

@@ -462,6 +462,10 @@
       } else {
         url = url + "?uuid=" + uuid + "&version=" + version;
       }
+      if(type =="graphpod"){
+        url="";
+        url="graph/resgisterGraph?uuid="+uuid+"&version="+version+"&type="+type
+      }
       url += '&action=execute'
       var deferred = $q.defer();
       CommonFactory.httpPost(url, data).then(function(response) {
@@ -711,6 +715,7 @@
               var attributedetail = {};
               attributedetail.uuid = response[j].uuid;
               attributedetail.datapodname = response[j].name;
+              attributedetail.type = type;
               attributedetail.name = response[j].attributes[i].name;
               attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
               attributedetail.attributeId = response[j].attributes[i].attributeId;
@@ -732,6 +737,7 @@
           for (var j = 0; j < response.length; j++) {
             var attributedetail = {};
             attributedetail.uuid = response[j].ref.uuid;
+            attributedetail.type = response[j].ref.type;
             attributedetail.datapodname = response[j].ref.name;
             attributedetail.name = response[j].attrName;
             attributedetail.attributeId = response[j].attrId;
@@ -754,6 +760,7 @@
           for (var j = 0; j < response.length; j++) {
             var attributedetail = {};
             attributedetail.uuid = response[j].ref.uuid;
+            attributedetail.type = response[j].ref.type;
             attributedetail.datapodname = response[j].ref.name;
             attributedetail.name = response[j].attrName;
             attributedetail.dname = response[j].ref.name + "." + response[j].attrName;

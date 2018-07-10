@@ -14,7 +14,7 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
 
 import { CommonService } from '../metadata/services/common.service';
-
+import {MenuModule,MenuItem} from 'primeng/primeng';
 import { ModelComponent } from './model/model.component';
 import { ParamlistComponent } from './paramlist/paramlist.component';
 import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
@@ -42,7 +42,8 @@ import {SimulationService } from '../metadata/services/simulation.service';
 import { DialogModule } from 'primeng/components/dialog/dialog'
 import { CommonListService } from '../common-list/common-list.service';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
-
+import {ResultDetailsComponent} from './results/resultDetails.component';
+;
 @NgModule({
     imports:[
         CommonModule,
@@ -62,6 +63,8 @@ import { CalendarModule } from 'primeng/components/calendar/calendar';
         DataTableModule,
         DialogModule,
         CalendarModule,
+        MenuModule,
+
        // PopupModule.forRoot()
 
     ],
@@ -77,7 +80,7 @@ import { CalendarModule } from 'primeng/components/calendar/calendar';
         PredictionComponent,
         SimulationComponent,
         OperatorComponent,
-        
+        ResultDetailsComponent
     ],
     providers:[
         CommonService,

@@ -22,39 +22,20 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.ml.Pipeline;
-import org.apache.spark.ml.PipelineModel;
-import org.apache.spark.ml.PipelineStage;
-import org.apache.spark.ml.classification.DecisionTreeClassifier;
-import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.param.ParamMap;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.codehaus.jettison.json.JSONObject;
-import org.dmg.pmml.PMML;
-import org.jpmml.model.JAXBUtil;
-import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.dao.IAlgorithmDao;
-import com.inferyx.framework.dao.IModelExecDao;
 import com.inferyx.framework.domain.Algorithm;
-import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -64,26 +45,20 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FileType;
-import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
-import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
-import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 
 @Service
@@ -638,68 +613,107 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	}
 
 	public List<Map<String, Object>> getPredictResults(String execUuid, String execVersion, int rowLimit) throws Exception {
-		PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-				MetaType.predictExec.toString());
-		Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(
-				predictExec.getDependsOn().getRef().getUuid(), predictExec.getDependsOn().getRef().getVersion(),
-				MetaType.predict.toString());
-		Datapod targetDp = null;
-		if(predict.getTarget().getRef().getType().equals(MetaType.datapod))
-			targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(predict.getTarget().getRef().getUuid(),
-				predict.getTarget().getRef().getVersion(), MetaType.datapod.toString());
-		
-		DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
-				predictExec.getResult().getRef().getUuid(), predictExec.getResult().getRef().getVersion(),
-				MetaType.datastore.toString());
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		String targetTable = null;
-		if(targetDp != null)
-			targetTable = datasource.getDbname()+"."+targetDp.getName();
-		List<Map<String, Object>> strList = exec.fetchResults(datastore, targetDp, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
+		try {
+			PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+					MetaType.predictExec.toString());
+			Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(
+					predictExec.getDependsOn().getRef().getUuid(), predictExec.getDependsOn().getRef().getVersion(),
+					MetaType.predict.toString());
+			Datapod targetDp = null;
+			if(predict.getTarget().getRef().getType().equals(MetaType.datapod))
+				targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(predict.getTarget().getRef().getUuid(),
+					predict.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+			
+			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
+					predictExec.getResult().getRef().getUuid(), predictExec.getResult().getRef().getVersion(),
+					MetaType.datastore.toString());
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			String targetTable = null;
+			if(targetDp != null)
+				targetTable = datasource.getDbname()+"."+targetDp.getName();
+			List<Map<String, Object>> strList = exec.fetchResults(datastore, targetDp, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
+	
+			return strList;
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
 
-		return strList;
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.");
+			throw new RuntimeException((message != null) ? message : "No data found.");
+		}
 	}
 
 	public List<Map<String, Object>> getSimulateResults(String execUuid, String execVersion, int rowLimit) throws Exception {
-		SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-				MetaType.simulateExec.toString());
+		try {
+			SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+					MetaType.simulateExec.toString());
+	
+			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
+					simulateExec.getResult().getRef().getUuid(), simulateExec.getResult().getRef().getVersion(),
+					MetaType.datastore.toString());
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateExec.getDependsOn().getRef().getUuid(), simulateExec.getDependsOn().getRef().getVersion(), simulateExec.getDependsOn().getRef().getType().toString());
+			String targetTable = null;
+			if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
+				Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(simulate.getTarget().getRef().getUuid(), simulate.getTarget().getRef().getVersion(), simulate.getTarget().getRef().getType().toString());
+				targetTable = datasource.getDbname()+"."+targetDp.getName();
+			}
+			List<Map<String, Object>> strList = exec.fetchResults(datastore, null, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
+	
+			return strList;
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
 
-		DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
-				simulateExec.getResult().getRef().getUuid(), simulateExec.getResult().getRef().getVersion(),
-				MetaType.datastore.toString());
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateExec.getDependsOn().getRef().getUuid(), simulateExec.getDependsOn().getRef().getVersion(), simulateExec.getDependsOn().getRef().getType().toString());
-		String targetTable = null;
-		if(simulate.getTarget().getRef().getType().equals(MetaType.datapod)) {
-			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(simulate.getTarget().getRef().getUuid(), simulate.getTarget().getRef().getVersion(), simulate.getTarget().getRef().getType().toString());
-			targetTable = datasource.getDbname()+"."+targetDp.getName();
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.");
+			throw new RuntimeException((message != null) ? message : "No data found.");
 		}
-		List<Map<String, Object>> strList = exec.fetchResults(datastore, null, rowLimit, targetTable, commonServiceImpl.getApp().getUuid());
-
-		return strList;
 	}
 
 	public List<String> getModelResults(Train train, String execUuid, String execVersion, int rowLimit) throws Exception {
-		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-				MetaType.trainExec.toString());
+		try {
+			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+					MetaType.trainExec.toString());
+	
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
+					train.getSource().getRef().getVersion(), MetaType.datapod.toString());
+			if (null == datapod) {
+				datapod = (Datapod) commonServiceImpl.getLatestByUuid(train.getSource().getRef().getUuid(),
+						MetaType.datapod.toString());
+			}
+	
+			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
+					trainExec.getResult().getRef().getUuid(), trainExec.getResult().getRef().getVersion(),
+					MetaType.datastore.toString());
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			List<String> strList = exec.fetchModelResults(datastore, datapod, rowLimit, securityServiceImpl.getAppInfo().getRef().getUuid());
+	
+			return strList;
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
 
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
-				train.getSource().getRef().getVersion(), MetaType.datapod.toString());
-		if (null == datapod) {
-			datapod = (Datapod) commonServiceImpl.getLatestByUuid(train.getSource().getRef().getUuid(),
-					MetaType.datapod.toString());
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No data found.");
+			throw new RuntimeException((message != null) ? message : "No data found.");
 		}
-
-		DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
-				trainExec.getResult().getRef().getUuid(), trainExec.getResult().getRef().getVersion(),
-				MetaType.datastore.toString());
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		List<String> strList = exec.fetchModelResults(datastore, datapod, rowLimit, securityServiceImpl.getAppInfo().getRef().getUuid());
-
-		return strList;
 	}
 	
 	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion, String type) throws Exception {

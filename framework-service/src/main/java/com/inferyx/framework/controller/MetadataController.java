@@ -668,7 +668,7 @@ public class MetadataController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "action", required = false) String action)
-			throws JsonProcessingException {
+			throws IOException, SQLException {
 		return registerService.getRegistryByDatasource(datasourceUuid,status);
 	}
 

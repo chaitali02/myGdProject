@@ -17,7 +17,24 @@ public class Registry {
 	private String registeredOn;
 	private String registeredBy;
 	private String status;
+	private String path;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param path the path to set
+	 */
+	public void setPath(String path) {
+		this.path = path;
+	}
 	public String getRegisteredBy() {
 		return registeredBy;
 	}

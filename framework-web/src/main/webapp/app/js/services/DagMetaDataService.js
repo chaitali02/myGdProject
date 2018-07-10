@@ -300,6 +300,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       color : '#933f5b',
       icon : 'load.svg',
       parentIconCaption:'Load',
+      childIconCaption:'Load',
       execType:'loadExec',
       metaType:'load',
       iconPath : 'assets/layouts/layout/img/load.svg',
@@ -308,7 +309,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       state : 'metaListload',
       detailState : 'metaListload',
       childMenu:[],
-      allowInChildMenu : false,
+      allowInChildMenu : true,
     },
     'profile':{
       name : 'profile',
@@ -394,7 +395,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       allowInMenu : true,
       state: 'metaListmap',
       detailState: 'metaListmap',
-      childMenu:['map'],
+      childMenu:['map','load'],
       allowInChildMenu : true,
     },
     'recon':{
@@ -1678,7 +1679,34 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState : 'operator',
       childMenu:[],
       allowInChildMenu : true,
-	  }
+    },
+    'graphpod':{
+      name : 'graphpod',
+      caption :'Graph',
+      execType:'graphExec',
+      metaType:'graphpod',
+      color : '#00E5FF',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'listgraphpod',
+      detailState:'creaetgraphpod',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
+    'graphexec':{
+      name : 'graphexec',
+      caption : 'Graph Exec',
+      execType:'graphexec',
+      metaType:'graphexec',
+      color : '#EB54C3',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'graphpodresultlist',
+      detailState :'',
+      resultState:'graphpodresult',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
   };
 
   var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator'];
@@ -1694,7 +1722,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           attrs: {
             '.port-body': {
               fill: '#fff',
-              r:5,
+              r:7,
               cx:-5
             }
           }
@@ -1703,7 +1731,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           attrs: {
             '.port-body': {
               fill: '#fff',
-              r: 5,
+              r: 7,
               cx: 5
             },
             magnet:false

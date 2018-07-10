@@ -25,8 +25,6 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.ml.linalg.VectorUDT;
-import org.apache.spark.sql.types.DataTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,6 +57,8 @@ import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Import;
 import com.inferyx.framework.domain.Key;
@@ -274,6 +274,8 @@ public class Helper {
 				case comment : return "iCommentDao";
 				case tag : return "iTagDao";
 				case lov : return "iLovDao";
+				case graphpod : return "iGraphpodDao";
+				case graphExec : return "iGraphpodExecDao";
 				default:
 					return null;
 			}
@@ -300,7 +302,8 @@ public class Helper {
 		case recon : return "ReconServiceImpl";	
 		case reconExec : return "ReconExecServiceImpl";	
 		case recongroup : return "ReconGroupServiceImpl";	
-		case recongroupExec : return "ReconGroupExecServiceImpl";	
+		case recongroupExec : return "ReconGroupExecServiceImpl";		
+		case load : return "LoadExecServiceImpl";	
 		default:
 			return null;
 		}
@@ -382,6 +385,8 @@ public class Helper {
 		case comment : return Comment.class;
 		case tag : return Tag.class;
 		case lov : return Lov.class;
+		case graphpod : return Graphpod.class;
+		case graphExec : return GraphExec.class;
 
 
 		default:
@@ -468,6 +473,8 @@ public class Helper {
 //				case "clonedata" : return MetaType.CloneData;
 //				case "gendataattr" : return MetaType.GenDataAttr;
 //				case "gendatavallist" : return MetaType.GenDataValList;
+				case "graphpod" : return MetaType.graphpod;
+				case "graphexec" : return MetaType.graphExec;
 				default : return null;
 			}
 		}
@@ -516,34 +523,6 @@ public class Helper {
 		//logger.info(property.getProperty(key));
 		return  property.entrySet();
 	}
-	
-	/*public HttpServletResponse setResponse(String code, String status, String msg) throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		if(requestAttributes != null) {
-			HttpServletResponse response = requestAttributes.getResponse();
-			if(response != null) {
-					Message message = new Message(code, status, msg);
-					Message savedMessage = messageServiceImpl.save(message);
-					
-					//PrintWriter out = response.getWriter();
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					//response.setCharacterEncoding("UTF-8");
-					response.setStatus(404);
-					//out.print(messageJson);
-					///out.flush();
-					response.getOutputStream().write(messageJson.getBytes());
-					//response.getOutputStream().flush();
-					response.getOutputStream().close();
-					System.out.println("\n\n");
-					return response;					
-			}else
-				logger.info("HttpServletResponse response is \""+null+"\"");
-		}else
-			logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
-		return null;
-	}*/
 	
 	public static void updateRunStatus (Status.Stage latestStatus, RunStatusHolder statusHolder) {
 		if (statusHolder == null) {
@@ -639,7 +618,8 @@ public class Helper {
 		if(partitionColls.lastIndexOf(",")>partitionColls.length()) {
 			partitionColls.deleteCharAt(partitionColls.lastIndexOf(","));
 		}
-		partitionColls.deleteCharAt(partitionColls.length()-1);
+		if(partitionColls.length() > 0)
+			partitionColls.deleteCharAt(partitionColls.length()-1);
 		logger.info("Partition collumns: "+partitionColls);
 		return partitionColls.toString();
 	}
@@ -655,7 +635,8 @@ public class Helper {
 	public String buildInsertQuery(String executionContext, String tableName, Datapod datapod, String sql) {
 		if(executionContext.equalsIgnoreCase(ExecContext.HIVE.toString())
 				|| executionContext.equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			sql = "INSERT OVERWRITE table " + tableName + " PARTITION ( " + Helper.getPartitionColumns(datapod) +" ) " + " " + sql;
+			String partitionClos = getPartitionColumns(datapod);
+			sql = "INSERT OVERWRITE table " + tableName + (partitionClos.length() > 0 ? " PARTITION ( " + partitionClos +" ) " : " ") + " " + sql;
 		} else {	
 				sql = "INSERT INTO " + tableName + " " + sql;
 		}
@@ -792,7 +773,7 @@ public class Helper {
 		return null;
 	}
 	
-	public java.util.Map mergeMap (java.util.Map sourceMap, java.util.Map destMap) {
+	public static java.util.Map mergeMap (java.util.Map sourceMap, java.util.Map destMap) {
 		if (sourceMap == null || sourceMap.isEmpty()) {
 			if (destMap == null || destMap.isEmpty()) {
 				return new HashMap<>();
@@ -941,8 +922,25 @@ public class Helper {
 		case simulateExec : return new SimulateExec();
 		case predictExec : return new PredictExec();
 		case operatorExec : return new OperatorExec();
+		case graphExec : return new GraphExec();
 		default : return null;
 		}
+	}
+
+	public static String genUrlByDatasource(Datasource datasource) {
+		switch(datasource.getType().toLowerCase()) {
+			case "hive":  return "jdbc:hive2://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			  
+			case "impala": return "jdbc:impala://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			   
+			case "mysql": return "jdbc:mysql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			  
+			case "oracle": return "jdbc:oracle:thin:@" + datasource.getHost() + ":" + datasource.getPort() + ":" + datasource.getSid();
+			
+			case "postgres": return "jdbc:postgresql://" + datasource.getHost() + ":" + datasource.getPort() + "/" + datasource.getDbname();
+			  			   
+			default: return null;
+		}		
 	}
 	
 	

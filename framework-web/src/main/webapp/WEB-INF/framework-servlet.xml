@@ -98,6 +98,7 @@
 	
 	<bean id="taskThreadMap" name="taskThreadList" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="livyClientMap" name="livyClientMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="graphpodMap" name="graphpodMap" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />
@@ -300,6 +301,7 @@
 	<bean id="predictExec" class="com.inferyx.framework.domain.PredictExec"/>
 	<bean id="sparkMLOperator" class="com.inferyx.framework.operator.SparkMLOperator"/>
 	<bean id="uploadExecServiceImpl" class="com.inferyx.framework.service.UploadExecServiceImpl"/>
+	<bean id="graphpodServiceImpl" class="com.inferyx.framework.service.GraphpodServiceImpl"/>
 	
 	
 	<bean id="impalaConnector" class="com.inferyx.framework.connector.ImpalaConnector"/>
@@ -353,6 +355,7 @@
 	<bean id="predictMLOperator" class="com.inferyx.framework.operator.PredictMLOperator"/>
 	
 	<bean id="transposeOldOperator" class="com.inferyx.framework.operator.TransposeOldOperator"/>
+	<bean id="loadOperator" class="com.inferyx.framework.operator.LoadOperator"/>
 		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>

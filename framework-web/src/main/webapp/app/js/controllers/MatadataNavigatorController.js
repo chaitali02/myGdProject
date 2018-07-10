@@ -38,7 +38,7 @@
     CommonService.getMetaStats().then(function(response) {onSuccess(response.data)});
     var onSuccess = function(response) {
       var colorclassarray = ["blue-sharp", "green-sharp", "purple-soft", "red-haze"]
-      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov'];
+      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov','comment','graphExec'];
       var metaarray = []
       for (var i = 0; i < response.length; i++) {
         var metajson = {};
@@ -312,8 +312,17 @@
               metajson.icon='fa fa-compress';
               metajson.state="datareconrulegroup"
               metajson.param={type:'recongroup'};
-              break;  
+              break; 
+            case "graphpod":
+              metajson.caption="Graphpod"
+              metajson.icon='fa fa-bar-chart';
+              metajson.state="listgraphpod"
+              break
+            default:
+              console.log(response[i].type)
+                 
           }
+
 
           metaarray[i] = metajson
         }

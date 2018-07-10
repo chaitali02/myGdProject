@@ -11,7 +11,7 @@ import com.inferyx.framework.operator.CloneDataOperator;
 import com.inferyx.framework.operator.GenerateDataForAttrRef;
 import com.inferyx.framework.operator.GenerateDataForValList;
 import com.inferyx.framework.operator.GenerateDataOperator;
-import com.inferyx.framework.operator.Operator;
+import com.inferyx.framework.operator.IOperator;
 import com.inferyx.framework.operator.TransposeOperator;
 
 /**
@@ -44,7 +44,7 @@ public class CustomOperatorFactory implements IOperatorFactory {
 	 * @param operatorTypeName
 	 * @return
 	 */
-	public Operator getOperator (OperatorType operatorType) {
+	public IOperator getOperator (OperatorType operatorType) {
 		switch(operatorType) {
 			case generateData : return generateDataOperator;
 			case transpose : return transposeOperator;

@@ -244,9 +244,8 @@ public class DatapodRegister {
 			
 			String filepath = datastore.getLocation();
 			/*String dbName = datasource.getDbname();*/	
-			String tableName = null;
 			IExecutor exec = null;
-			tableName = Helper.genTableName(filepath);
+			String tableName = Helper.genTableName(filepath);
 			ExecContext execContext = null;
 			String appUuid = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
@@ -259,7 +258,7 @@ public class DatapodRegister {
 			}
 			exec = execFactory.getExecutor(execContext.toString());
 			String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
-			if (!filepath.contains(hdfsLocation)) {
+			if (filepath != null && !filepath.contains(hdfsLocation)) {
 				filepath = String.format("%s%s", hdfsLocation, filepath);
 			}
 			

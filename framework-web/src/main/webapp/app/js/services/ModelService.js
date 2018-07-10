@@ -559,7 +559,7 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
     return deferred.promise;
   }
   this.uploadFile = function (extension, data, fileType) {
-    var url = "common/upload?action=edit&extension=" + extension + "&fileType=" + fileType
+    var url = "model/upload?action=edit&extension=" + extension + "&fileType=" + fileType
     var deferred = $q.defer();
     ModelFactory.uploadFile(url, data).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {

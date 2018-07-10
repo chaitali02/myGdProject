@@ -142,7 +142,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
                 // Normalize for fixed-depth.
                 nodes.forEach(function (d) {
-                    d.y = d.depth * 180;
+                    d.y = d.depth * 250; //180 jitender
                 });
 
                 // Update the nodes…
@@ -165,7 +165,8 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
                     })
                     .on('contextmenu', rightClickNode);
-
+                
+                
                 nodeEnter.append("circle")
                     .attr("r", 10)
                     .style("stroke-width", 0.5) // set the stroke width //jitender
@@ -191,9 +192,9 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     .style("fill-opacity", 1e-6)
                     .text(function (d) {
                         if (d.parent == null) {
-                            return d.name.length > 20 ? d.name.substring(0, 20) + "...." : d.name
+                            return d.name.length > 20 ? d.name.substring(0, 15) + "...." : d.name
                         } else {
-                            return d.name;
+                            return  d.name.length > 15 ? d.name.substring(0, 15) + ".." : d.name;
                         }
                     })
                     .append("text:title")
@@ -201,7 +202,23 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                         return d.name;
                     });
 
-
+                    nodeEnter.append("svg:foreignObject")
+                    .attr("width", 20)
+                    .attr("height", 20)
+                    .attr("y", "-10")
+                    .attr("x", function(d){
+                        var x="100px";
+                        return x
+                    })
+                    .append("xhtml:img")
+                        .attr("class","node-refresh")
+                        .style("display","none")
+                       .attr("src","lib/images/loadingimg.gif")
+                    // .style("-webkit-animation","node-refesh 2s linear infinite")
+                    // .style("font-family","FontAwesome")
+                    //    .attr("class", "control fa-refresh  node-refesh");
+                    
+             
                 // Transition nodes to their new position.
                 var nodeUpdate = node.transition()
                     .duration(duration)
@@ -215,7 +232,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
                 nodeUpdate.select("text")
                     .style("fill-opacity", 1);
-
+                
                 // Transition exiting nodes to the parent's new position.
                 var nodeExit = node.exit().transition()
                     .duration(duration)
@@ -301,6 +318,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     .attr("font-family", "Arial, Helvetica, sans-serif")
                     .attr("fill", "73879C")
                     .style("font", "normal 11px Arial")
+                    .attr("x", 25) //add new for link text
                     .text(function (d) {
                         return d.target.nodeType;
                     })
@@ -331,7 +349,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
             scope.$watch('zoomSize', function (data, oldValue) {
                 var tempsize = data / 10;
-                $('#network-graph-wrapper').css({
+                $('#network-graph-wrapper svg').css({
                     '-webkit-transform': 'scale(' + tempsize + ')',
                     '-moz-transform': 'scale(' + tempsize + ')',
                     '-ms-transform': 'scale(' + tempsize + ')',
@@ -384,15 +402,21 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     if (d.metaRef.ref.type == null || d.metaRef.ref.type == "simple") {
                         return false;
                     }
-                    $('.show-graph-body').hide();
-                    $('#graphloader').show();
+                   
+                  //  $('.show-graph-body').hide();
+                 //   $('#graphloader').show();
+                 console.log(this)
+                    var this_node=this 
+                    $(this_node).find(".node-refresh").css("display","block");
                     $('#errorMsg').hide();
                     CommonService.getTreeGraphResults(d.metaRef.ref.uuid, d.metaRef.ref.version | "", scope.degree).then(function (result) {
+                        $(this_node).find(".node-refresh").css("display","none");
                         $('.show-graph-body').show();
                         $('#graphloader').hide();
-
+                      
                         for (var i = 0; i < result.data.children.length; i++) {
                             result.data.children[i].index = i;
+                            result.data.children[i].isProgess=false;
                             if (result.data.children.length > 20) {
                                 height = height + 30;
                             }
@@ -440,7 +464,10 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
 
             function rightClickNode(d, i) {
                 d3.event.preventDefault();
-                var Nodedata = d
+                var Nodedata = d;
+                if(Nodedata.metaRef.ref.uuid.indexOf("_") !=-1){
+                    return false;
+                }
                 d3.selectAll('.context-menu').data([1])
                     .enter()
                     .append('div')
@@ -450,7 +477,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                 d3.select('body').on('click.context-menu', function () {
                     d3.select('.context-menu').style('display', 'none');
                 });
-
+                
                 // this gets executed when a contextmenu event occurs
                 d3.selectAll('.context-menu')
                     .html('')
@@ -459,6 +486,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
                     .data(menus).enter()
                     .append('li')
                     .on('click', function (d) {
+                    
                         navigateTo(Nodedata, d);
                         d3.select('.context-menu').style('display', 'none');
                     })
@@ -505,13 +533,14 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
             }
 
             function navigateTo(data, d) {
+            
                 if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type != "attributes") {
                     data.metaRef.ref.name = data.name
-                    data.metaRef.ref.type = data.nodeType
+                    data.metaRef.ref.type = data.metaRef.ref.type
                     dagMetaDataService.navigateTo(data.metaRef.ref);
                 } else if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type == "attributes") {
                     data.metaRef.ref.name = data.name
-                    data.metaRef.ref.type = data.nodeType
+                    data.metaRef.ref.type = data.metaRef.ref.type
                     dagMetaDataService.navigateTo(data.parent.metaRef.ref);
                 }
             }
@@ -529,12 +558,12 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
        <!-- <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">-->
         <!--<div class="col-md-2 col-md-offset-10" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">--> 
       
-        <div class="col-md-2" style="margin-top-3%;position:absolute;margin: -6px -10px;"> 
+        <div class="col-md-2" style="margin-top-3%;position:absolute;margin:16px -9px;z-index:100;"> 
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="btn-group" ng-init="degree='1'">
-                    <label class="btn btn-default"  tooltip-placement="top" uib-tooltip="Downward" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-disabled="degree == 1?true:false" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></label>   
-                    <label class="btn btn-default" ng-model="degree" tooltip-placement="top" uib-tooltip="Upward" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-disabled="degree == -1?true:false" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></label>
+                        <button type="button" class="btn btn-circle btn-default"  tooltip-placement="top" uib-tooltip="Direction" ng-model="degree" ng-change="onChangeDegree(degree)" uib-btn-radio="'1'" ng-hide="degree == 1?true:false" uncheckable><i class="fa fa-arrow-down" aria-hidden="true"></i></button>   
+                        <button type="button" class="btn btn-circle btn-default" ng-model="degree" tooltip-placement="top" uib-tooltip="Direction" ng-change="onChangeDegree(degree)" uib-btn-radio="'-1'" ng-hide="degree == -1?true:false" uncheckable><i class="fa fa-arrow-up" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>
@@ -566,7 +595,7 @@ InferyxApp.directive('treeGraphDirective', function ($timeout, CommonService, da
         </div>
       </div>
       <br>
-      <div id="network-graph-wrapper" style="height:500px;margin-top:2%;"></div>
+      <div id="network-graph-wrapper" style="height:500px;"></div>
       `
     };
 })

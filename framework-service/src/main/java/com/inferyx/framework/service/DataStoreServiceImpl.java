@@ -64,6 +64,8 @@ import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.SimulateExec;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -549,8 +551,8 @@ public class DataStoreServiceImpl {
 		String metaid = dataStore.getMetaId().getRef().getUuid();
 		String metaV = dataStore.getMetaId().getRef().getVersion();
 		MetaType metaType = dataStore.getMetaId().getRef().getType();
-		Datasource datasource_2 = commonServiceImpl.getDatasourceByApp();
-		String dsType = datasource_2.getType();
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		String dsType = datasource.getType();
 		if (metaType == MetaType.datapod) {
 			//Datapod dp = datapodServiceImpl.findOneByUuidAndVersion(metaid, metaV);
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.datapod.toString());
@@ -558,10 +560,10 @@ public class DataStoreServiceImpl {
 				//dp = datapodServiceImpl.findLatestByUuid(metaid);
 				dp = (Datapod) commonServiceImpl.getLatestByUuid(metaid, MetaType.datapod.toString());
 			}
-			String datasource = dp.getDatasource().getRef().getUuid();
-			//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
-			Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
-			dsType = ds.getType();
+//			String datasource = dp.getDatasource().getRef().getUuid();
+//			//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
+//			Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
+//			dsType = ds.getType();
 			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				filePath = String.format("%s%s", hdfsLocation, filePath);
 				tableName = Helper.genTableName(filePath);
@@ -576,7 +578,7 @@ public class DataStoreServiceImpl {
 					}
 					tableName = Helper.genTableName(filePath);				
 				} else {
-					tableName = ds.getDbname() + "." + dp.getName();
+					tableName = datasource.getDbname() + "." + dp.getName();
 					if(tableName.startsWith("."))
 						tableName = tableName.substring(1);
 				}
@@ -599,7 +601,7 @@ public class DataStoreServiceImpl {
 					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource_2.getDbname() + "." + ruleName;
+					tableName = datasource.getDbname() + "." + ruleName;
 		} else if (metaType == MetaType.recon) {
 			Recon recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.recon.toString());
 			String reconName = recon.getName();
@@ -615,7 +617,7 @@ public class DataStoreServiceImpl {
 					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource_2.getDbname() + "." + reconName;
+					tableName = datasource.getDbname() + "." + reconName;
 		} else if (metaType == MetaType.operator) {
 			Operator recon = (Operator) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.operator.toString());
 			String operatorName = recon.getName();
@@ -631,7 +633,7 @@ public class DataStoreServiceImpl {
 					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
 					tableName = Helper.genTableName(filePath);
 				else
-					tableName = datasource_2.getDbname() + "." + operatorName;
+					tableName = datasource.getDbname() + "." + operatorName;
 		}
 		return tableName;
 	}
@@ -714,68 +716,81 @@ public class DataStoreServiceImpl {
 					if (requestIdExistFlag) {
 						tn = requestMap.get(requestId);
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-						else
-							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+						} else 
+							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
 										|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 									data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
-								else
+								} else {
 									data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum< " + limit, appUuid);
-							else
+								}
+							} else {
 								data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+							}
 					} else {
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 							data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
 									+ tn + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", appUuid);
-						}
-						else
-							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+						} else {
+							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
 										|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 									data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
-								else
+								} else {
 									data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum< " + limit, appUuid);
-							else
+								}
+							} else {
 								data = exec.executeAndFetch("SELECT * FROM "+ tn + " LIMIT ", appUuid);
+							}
+						}
 						// tabName = exec.registerTempTable(dfSorted,
 						// requestId.replace("-", "_"));
-						tn = requestId.replace("-", "_");
+						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+							tn = requestId.replace("-", "_");
+						}
 						requestMap.put(requestId, tn);
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
-						else
-							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+						} else {
+							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
 										|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 									data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
-								else
+								} else {
 									data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum< " + limit, appUuid);
-							else
+								}
+							} else {
 								data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, null);
+							}
+						}
 					}
 				}
 			} else {
 				if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM " + tn
 							+ ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-				else
-					if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+				} else {
+					if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 						if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
 								|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString()))
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
-						else
+						} else {
 							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum< " + limit, appUuid);
-					else
+						}
+					} else {
 						data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+					}
+				}
 			}
 			/*if (download.equalsIgnoreCase("n")) {
 				
@@ -905,51 +920,28 @@ public class DataStoreServiceImpl {
 			}*/
 
 			return data;
-		}catch (IOException e) {
+		}catch (IOException | NullPointerException e) {
 			e.printStackTrace();
-				if (response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(404);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				} else
-					logger.info("HttpServletResponse response is \"" + null + "\"");
-			throw new IOException("Table not found.");
-		}catch (NullPointerException e) {
-			e.printStackTrace();
-			if (response != null) {
-				response.setContentType("application/json");
-				Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
-				Message savedMessage = messageServiceImpl.save(message);
-				ObjectMapper mapper = new ObjectMapper();
-				String messageJson = mapper.writeValueAsString(savedMessage);
-				response.setContentType("application/json");
-				response.setStatus(404);
-				response.getOutputStream().write(messageJson.getBytes());
-				response.getOutputStream().close();
-			} else
-				logger.info("HttpServletResponse response is \"" + null + "\"");
-			throw new NullPointerException("Table not found.");
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			throw new RuntimeException((message != null) ? message : "Table not found.");
 		}catch (Exception e) {
 			e.printStackTrace();
-			if (response != null) {
-				response.setContentType("application/json");
-				Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
-				Message savedMessage = messageServiceImpl.save(message);
-				ObjectMapper mapper = new ObjectMapper();
-				String messageJson = mapper.writeValueAsString(savedMessage);
-				response.setContentType("application/json");
-				response.setStatus(404);
-				response.getOutputStream().write(messageJson.getBytes());
-				response.getOutputStream().close();
-			} else
-				logger.info("HttpServletResponse response is \"" + null + "\"");
-			throw new Exception("Table not found.");
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.");
+			throw new RuntimeException((message != null) ? message : "Table not found.");
 		}
 	}
 

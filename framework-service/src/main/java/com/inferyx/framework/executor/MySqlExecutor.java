@@ -12,7 +12,6 @@ package com.inferyx.framework.executor;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -30,23 +29,20 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.ml.PipelineModel;
-import org.apache.spark.ml.linalg.VectorUDT;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataType;
-import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -58,8 +54,10 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -67,16 +65,18 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.writer.IWriter;
+import com.inferyx.framework.service.CommonServiceImpl;
 
 @Component
 public class MySqlExecutor implements IExecutor {
 	@Autowired 
 	ConnectionFactory connectionFactory;
 	@Autowired
-	private SparkExecutor sparkExecutor;
+	private SparkExecutor<?> sparkExecutor;
 	@Autowired
-	private SparkSession sparkSession;
+	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(MySqlExecutor.class);	
 	
@@ -111,6 +111,10 @@ public class MySqlExecutor implements IExecutor {
 				rsHolder.setType(ResultType.resultset);
 			} catch (SQLException e) {				
 				e.printStackTrace();
+				throw new RuntimeException(e);
+			}  catch (Exception e) {				
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}			
 		}		
 		return rsHolder;
@@ -223,10 +227,11 @@ public class MySqlExecutor implements IExecutor {
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
+		return rsHolder.getCountRows();
 	}
-
+	
 	@Override
 	public void registerDatapod(String tableName, Datapod datapod, DataStore dataStore, ExecContext execContext,
 			String clientContext) throws IOException {
@@ -338,7 +343,7 @@ public class MySqlExecutor implements IExecutor {
 	public Object assembleDF(String[] fieldArray, String tableName, String trainName, String label,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return tableName;
 	}
 
 	@Override
@@ -388,19 +393,22 @@ public class MySqlExecutor implements IExecutor {
 		}
 		
 		switch (dataType.toLowerCase()) {
-			case "integer": return "INT";
+			case "integer": return "INTEGER";
 			case "double": return "DOUBLE";
 			case "date": return "DATE";
-			case "string": return "VARCHAR(50)";
+			case "string": return "VARCHAR(70)";
+			case "time": return "TIME";
 			case "timestamp": return "TIMESTAMP";
 			case "long" : return "BIGINT";
-			case "boolean" : return "BIT(1)";
+			case "binary" : return "BINARY";
+			case "boolean" : return "BIT";
 			case "byte" : return "TINYINT";
-			case "float" : return "FLOAT";
-			case "null" : return "NULL";
+			case "float" : return "REAL";
 			case "short" : return "SMALLINT";
 			case "decimal" : return "DECIMAL";
-			case "vector" : return "ARRAY";
+			case "vector" : return "ARRAY";//"VARCHAR(100)";
+			case "array" : return "ARRAY";//"VARCHAR(100)";
+			case "null" : return "NULL";
 			
             default: return null;
 		}
@@ -412,7 +420,7 @@ public class MySqlExecutor implements IExecutor {
 	@Override
 	public String joinDf(String joinTabName_1, String joinTabName_2, int i, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return joinTabName_2;
 	}
 
 	/* (non-Javadoc)
@@ -422,7 +430,7 @@ public class MySqlExecutor implements IExecutor {
 	public String renameColumn(String tableName, int targetColIndex, String targetColName, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return tableName;
 	}
 
 	/* (non-Javadoc)
@@ -493,6 +501,7 @@ public class MySqlExecutor implements IExecutor {
 		return rsHolder;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes,
 			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException, ClassNotFoundException {
@@ -525,11 +534,11 @@ public class MySqlExecutor implements IExecutor {
 					fieldArray[count] = field;
 					count ++;
 				}
-				StructType schema = new StructType(fieldArray);
+//				StructType schema = new StructType(fieldArray);
 				
-				StructField[] randFieldArray = new StructField[1];
-				randFieldArray[0] = new StructField(attributes.get(1).getName(), (DataType)getDataType(attributes.get(1).getType()), true, Metadata.empty());
-				schema = new StructType(randFieldArray);
+//				StructField[] randFieldArray = new StructField[1];
+//				randFieldArray[0] = new StructField(attributes.get(1).getName(), (DataType)getDataType(attributes.get(1).getType()), true, Metadata.empty());
+//				schema = new StructType(randFieldArray);
 				
 				
 				obj = (RDD<Double>)(Class.forName(distribution.getClassName())).getMethod(methodName, modParamTypes).invoke(null, arguments);
@@ -567,5 +576,28 @@ public class MySqlExecutor implements IExecutor {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, IOException {
 		return sparkExecutor.loadTrainedModel(modelClass, location);
+	}
+
+	@Override
+	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
+		String sourceTableName = load.getSource().getValue();
+		String sql = "SELECT * FROM " + sourceTableName;
+		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);
+		ResultSetHolder rsHolder = executeSql(sql, clientContext);
+		return rsHolder.getCountRows();
+	}
+
+	@Override
+	public String createGraphFrame(GraphExec graphExec, DataStore dataStore) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

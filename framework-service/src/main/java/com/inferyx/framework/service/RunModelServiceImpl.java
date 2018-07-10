@@ -20,7 +20,9 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
 
 import com.inferyx.framework.common.CustomLogger;
@@ -34,6 +36,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
@@ -41,6 +44,7 @@ import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 
 public class RunModelServiceImpl implements Callable<TaskHolder> {
@@ -659,9 +663,20 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
-				Object trngModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
-				result = trngModel;
 				
+				Object trngModel = null;
+			
+				if(train.getUseHyperParams().equalsIgnoreCase("N")) {
+					//Without hypertuning
+					trngModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+				} else {		
+					//With hypertuning
+					MetaIdentifier hyperParamMI = algorithm.getParamList().getRef();
+					ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
+					trngModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainName(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+				}
+				
+				result = trngModel;				
 				List<String> customDirectories = exec.getCustomDirsFromTrainedModel(trngModel);
 
 				boolean isModelSved = modelServiceImpl.save(algorithm.getModelName(), trngModel, filePathUrl);
@@ -683,10 +698,16 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						e.printStackTrace();
 					}
 				}
-				if (isModelSved)
-					filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
-				else
+				if (isModelSved) {					
+					if(trngModel instanceof CrossValidatorModel)
+						filePathUrl = filePathUrl + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
+					else if(trngModel instanceof PipelineModel)
+						filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
+					else
+						filePathUrl = null;
+				} else {
 					filePathUrl = null;
+				}
 				
 				//result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath, paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
 				dataStoreServiceImpl.setRunMode(RunMode.BATCH);
