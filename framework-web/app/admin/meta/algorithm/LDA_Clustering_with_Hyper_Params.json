@@ -1,0 +1,37 @@
+{
+  "uuid": "faf76c02-852c-421f-8ac3-544c12f61349",
+  "version": "1531146713",
+  "name": "LDA Clustering with Hyper Params",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+  "createdOn": "Mon Jul 09 20:01:53 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+      }
+    }
+  ],
+  "type": "CLUSTERING",
+  "library": "SPARKML",
+  "trainName": "org.apache.spark.ml.clustering.LDA",
+  "modelName": "org.apache.spark.ml.clustering.LDAModel",
+  "labelRequired": "Y",
+  "returnType": null,
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "53b44d5b-6571-4c46-af08-549b1445d056"
+    }
+  },
+  "savePmml": "N"
+}
