@@ -2369,6 +2369,7 @@ public class RegisterService {
 								Attribute attr = datapodDet.getAttribute(AttrId);
 								if (attr != null) {
 									attributeRef.setAttrId(Integer.toString((AttrId)));
+									attributeRef.setAttrType(datapodDet.getAttribute(AttrId).getType());
 									if (datapodDet.getAttribute(AttrId).getDispName() != null) {
 										attributeRef.setAttrName(datapodDet.getAttribute(AttrId).getDispName());
 									} else
@@ -2847,6 +2848,7 @@ public class RegisterService {
 			finalDataRef.setName(dataset.getName());
 			attributeRef.setAttrId(sourceAttributes.get(i).getAttrSourceId());
 			attributeRef.setAttrName(dataset.getAttributeInfo().get(i).getAttrSourceName());
+			attributeRef.setAttrType(sourceAttributes.get(i).getSourceAttr().getAttrType());
 			// attributeRef.setAttrDesc(sourceAttributes.get(i).getName());
 			attributeRef.setRef(finalDataRef);
 			attrRefDetails.add(attributeRef);
@@ -2868,6 +2870,8 @@ public class RegisterService {
 			finalDataRef.setName(rule.getName());
 			attributeRef.setAttrId(sourceAttributes.get(i).getAttrSourceId());
 			attributeRef.setAttrName(rule.getAttributeInfo().get(i).getAttrSourceName());
+			//attributeRef.setAttrType(rule.getAttributeInfo().get(i).getSourceAttr().getAttrType());
+			//attributeRef.setAttrName(sourceAttributes.get(i).getSourceAttr().getAttrType());
 			// attributeRef.setAttrDesc(sourceAttributes.get(i).getName());
 			attributeRef.setRef(finalDataRef);
 			attrRefDetails.add(attributeRef);
@@ -2889,6 +2893,7 @@ public class RegisterService {
 			finalDataRef.setVersion(datapod.getVersion());
 			finalDataRef.setName(datapod.getName());
 			attributeRef.setAttrId(Integer.toString(datapod.getAttributes().get(i).getAttributeId()));
+			attributeRef.setAttrType(datapod.getAttributes().get(i).getType());
 			if (datapod.getAttributes().get(i).getDispName() != null) {
 				attributeRef.setAttrName(datapod.getAttributes().get(i).getDispName());
 			} else

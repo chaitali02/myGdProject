@@ -122,6 +122,8 @@ public class GraphOperator implements IOperator {
 			
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
+				String type=propHolder.getAttrType();
+				if(type.equalsIgnoreCase("string")) {
 				sb.append("'''\"");
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
@@ -135,6 +137,22 @@ public class GraphOperator implements IOperator {
 				
 				sb.append(", ");
 				sb.append("'\",' ");
+				}else 
+				{
+					sb.append("'''");
+					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+							execParams.getOtherParams()));
+					sb.append("\"'':\"', ");
+					
+					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+							execParams.getOtherParams(), execParams));
+//					sb.append(" AS ");
+					
+					sb.append(", ");
+					sb.append("',' ");
+				}
 			}
 			sb.delete(sb.length() - 5, sb.length());
 			sb.append("'\"}')");     
