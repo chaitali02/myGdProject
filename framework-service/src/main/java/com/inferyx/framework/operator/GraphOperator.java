@@ -139,11 +139,11 @@ public class GraphOperator implements IOperator {
 				sb.append("'\",' ");
 				}else 
 				{
-					sb.append("'''");
+					sb.append("'''\"");
 					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 							execParams.getOtherParams()));
-					sb.append("\"'':\"', ");
+					sb.append("\"'':', ");
 					
 					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
@@ -155,7 +155,7 @@ public class GraphOperator implements IOperator {
 				}
 			}
 			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'\"}')");     
+			sb.append("'}')");     
 			sb.append(" AS nodeProperties ,");
 			// added propertyId
 			AttributeRefHolder propertyIdRefHolder = graphNode.getHighlightInfo().getPropertyId();
@@ -255,11 +255,14 @@ public class GraphOperator implements IOperator {
 			sb.append("' AS edgeType, ");
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphEdge.getEdgeProperties()) {
+				String type=propHolder.getAttrType();
+				if(type.equalsIgnoreCase("string")) {
 				sb.append("'''\"");
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams()));
 				sb.append("\"'':\"', ");
+				
 				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams(), execParams));
@@ -267,9 +270,26 @@ public class GraphOperator implements IOperator {
 				
 				sb.append(", ");
 				sb.append("'\",' ");
+				}else 
+				{
+					sb.append("'''\"");
+					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+							execParams.getOtherParams()));
+					sb.append("\"'':', ");
+					
+					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+							execParams.getOtherParams(), execParams));
+//					sb.append(" AS ");
+					
+					sb.append(", ");
+					sb.append("',' ");
+				}
 			}
 			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'\"}')");
+			sb.append("'}')");     
+			
 			sb.append(" AS edgeProperties ");
 			sb.append(ConstantsUtil.FROM);
 			Object source = commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());

@@ -504,10 +504,12 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 						firstoperandref.type = "datapod";
 						firstoperandref.uuid = $scope.relationTableArray[j].joinKey[i].lhsoperand.uuid
 						firstoperad.ref = firstoperandref;
-						firstoperad.attributeId = $scope.relationTableArray[j].joinKey[i].lhsoperand.attributeId
+						firstoperad.attributeId = $scope.relationTableArray[j].joinKey[i].lhsoperand.attributeId;
+						firstoperad.attributeType = $scope.relationTableArray[j].joinKey[i].lhsoperand.attrType
 						scecondoperandref.type = "datapod";
 						scecondoperandref.uuid = $scope.relationTableArray[j].joinKey[i].rhsoperand.uuid
-						scecondoperad.attributeId = $scope.relationTableArray[j].joinKey[i].rhsoperand.attributeId
+						scecondoperad.attributeId = $scope.relationTableArray[j].joinKey[i].rhsoperand.attributeId;
+						scecondoperad.attributeType = $scope.relationTableArray[j].joinKey[i].rhsoperand.attrType;
 						scecondoperad.ref = scecondoperandref;
 						operand[0] = firstoperad;
 

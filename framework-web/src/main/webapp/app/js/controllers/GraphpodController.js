@@ -480,6 +480,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				nodeIdRef.type=$scope.nodeTableArray[i].nodeId.type
 				nodeId.ref=nodeIdRef;
 				nodeId.attrId=$scope.nodeTableArray[i].nodeId.attributeId;
+				nodeId.attrType=$scope.nodeTableArray[i].nodeId.attrType;
 				nodeJson.nodeId=nodeId;
 				nodeJson.nodeType=$scope.nodeTableArray[i].nodeType;
 				nodeJson.nodeIcon=$scope.nodeTableArray[i].nodeIcon.value;
@@ -487,6 +488,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				nodeNameRef.type=$scope.nodeTableArray[i].nodeName.type;
 				nodeName.ref=nodeNameRef;
 				nodeName.attrId=$scope.nodeTableArray[i].nodeName.attributeId;
+				nodeName.attrType=$scope.nodeTableArray[i].nodeName.attrType;
 				nodeJson.nodeName=nodeName;
 				for(var j=0;j<$scope.nodeTableArray[i].nodeProperties.length;j++){
 					var nodeProperties={}
@@ -495,6 +497,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					nodePropertiesRef.type=$scope.nodeTableArray[i].nodeProperties[j].type;
 					nodeProperties.ref=nodeNameRef;
 					nodeProperties.attrId=$scope.nodeTableArray[i].nodeProperties[j].attributeId;
+					nodeProperties.attrType=$scope.nodeTableArray[i].nodeProperties[j].attrType;
 					nodePropertiesArry[j]=nodeProperties;
 				}
 				var highlightInfo={};
@@ -505,6 +508,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				propertyIdRef.uuid=$scope.nodeTableArray[i].highlightInfo.propertyId.uuid;
 				propertyId.ref=propertyIdRef;
 				propertyId.attrId=$scope.nodeTableArray[i].highlightInfo.propertyId.attributeId;
+				propertyId.attrType=$scope.nodeTableArray[i].highlightInfo.propertyId.attrType;
 				highlightInfo.propertyId=propertyId;
 				var propertyInfoArray=[];
 				if($scope.nodeTableArray[i].highlightInfo.propertyInfoTableArray.length >0){
@@ -549,6 +553,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					edgePropertiesRef.type=$scope.edgeTableArray[i].edgeProperties[j].type;
 					edgeProperties.ref=edgePropertiesRef;
 					edgeProperties.attrId=$scope.edgeTableArray[i].edgeProperties[j].attributeId;
+					edgeProperties.attrType=$scope.edgeTableArray[i].edgeProperties[j].attrType;
 					edgePropertiesArry[j]=edgeProperties;
 				}
 				edgeJson.edgeProperties=edgePropertiesArry;
@@ -557,6 +562,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				sourceNodeIdRef.type=$scope.edgeTableArray[i].sourceNodeId.type;
 				sourceNodeId.ref=sourceNodeIdRef;
 				sourceNodeId.attrId=$scope.edgeTableArray[i].sourceNodeId.attributeId;
+				sourceNodeId.attrType=$scope.edgeTableArray[i].sourceNodeId.attrType;
 				edgeJson.sourceNodeId=sourceNodeId;
 				edgeJson.sourceNodeType=$scope.edgeTableArray[i].sourceNodeType;
 
@@ -564,6 +570,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				targetNodeIdRef.type=$scope.edgeTableArray[i].targetNodeId.type;
 				targetNodeIdId.ref=targetNodeIdRef;
 				targetNodeIdId.attrId=$scope.edgeTableArray[i].targetNodeId.attributeId;
+				targetNodeIdId.attrType=$scope.edgeTableArray[i].targetNodeId.attrType;
 				edgeJson.targetNodeId=targetNodeIdId;
 				edgeJson.targetNodeType=$scope.edgeTableArray[i].targetNodeType;
 

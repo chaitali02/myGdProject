@@ -896,7 +896,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           var paramsjson = {};
           paramsjson.uuid = response.uuid;
           paramsjson.name = response.name + "." + response.params[i].paramName;
-          paramsjson.attrId = response.params[i].paramId
+          paramsjson.attrId = response.params[i].paramId;
+          paramsjson.attrType = response.params[i].paramType
           paramsjson.paramName = response.params[i].paramName
           paramsArray[i] = paramsjson
         }
@@ -1174,6 +1175,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           }
           sourceAttr.ref = ref;
           sourceAttr.attrId = $scope.attributeTableArray[l].sourcedatapod.attributeId;
+          sourceAttr.attrType = $scope.attributeTableArray[l].sourcedatapod.attrType;
           attributeinfo.sourceAttr = sourceAttr;
         } else if ($scope.attributeTableArray[l].sourceAttributeType.text == "expression") {
 
@@ -1197,7 +1199,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           ref.type = "paramlist";
           ref.uuid = $scope.attributeTableArray[l].sourceparamlist.uuid;
           sourceAttr.ref = ref;
-          sourceAttr.attrId = $scope.attributeTableArray[l].sourceparamlist.attrId
+          sourceAttr.attrId = $scope.attributeTableArray[l].sourceparamlist.attrId;
+          sourceAttr.attrType = $scope.attributeTableArray[l].sourceparamlist.attrType
           attributeinfo.sourceAttr = sourceAttr;
         }
 
