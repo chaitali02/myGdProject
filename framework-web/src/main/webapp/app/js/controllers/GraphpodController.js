@@ -363,19 +363,41 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		
 	}
 
-	$scope.addHighlightInfo=function(index){
-		if($scope.nodeTableArray[index].highlightInfo){
-			$scope.highlightInfo=$scope.nodeTableArray[index].highlightInfo;
-			$scope.propertyInfoTableArray=$scope.highlightInfo.propertyInfoTableArray;
-		}else{
-			$scope.highlightInfo={};
-			$scope.highlightInfo.selectType="category";
-			$scope.propertyInfoTableArray=[];
-			$scope.addPropertyInfoRow();
+	$scope.addHighlightInfo=function(index,type){
+
+		if(type =='node'){
+			if($scope.nodeTableArray[index].highlightInfo){
+				$scope.highlightInfo=$scope.nodeTableArray[index].highlightInfo;
+				$scope.propertyInfoTableArray=$scope.highlightInfo.propertyInfoTableArray;
+				$scope.highlightInfo.type=type;
+			}else{
+				$scope.highlightInfo={};
+				$scope.highlightInfo.selectType="category";
+				$scope.highlightInfo.type=type;
+				$scope.propertyInfoTableArray=[];
+				$scope.addPropertyInfoRow();
+			}
+			
+			$scope.highlightInfo.index=index
+			$scope.allAttr=$scope.nodeTableArray[index].allAttributeInto;
 		}
-		
-        $scope.highlightInfo.index=index
-		$scope.allAttr=$scope.nodeTableArray[index].allAttributeInto;
+		if(type =='edge'){
+			if($scope.edgeTableArray[index].highlightInfo){
+				$scope.highlightInfo=$scope.edgeTableArray[index].highlightInfo;
+				$scope.propertyInfoTableArray=$scope.highlightInfo.propertyInfoTableArray;
+				$scope.highlightInfo.type=type;
+			}else{
+				$scope.highlightInfo={};
+				$scope.highlightInfo.selectType="category";
+				$scope.highlightInfo.type=type;
+				$scope.propertyInfoTableArray=[];
+				$scope.addPropertyInfoRow();
+			}
+			
+			$scope.highlightInfo.index=index
+			$scope.allAttr=$scope.edgeTableArray[index].allAttributeInto;
+
+		}
 		setTimeout(function(){$('#addHiglightInfo').modal({
 			backdrop: 'static',
 			keyboard: false
@@ -385,9 +407,16 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	
 	$scope.SubmitHighlightInfo=function(){
 		$('#addHiglightInfo').modal('hide');
-		$scope.highlightInfo.value=$scope.highlightInfo.selectType+","+$scope.highlightInfo.propertyId.name;
-		$scope.highlightInfo.propertyInfoTableArray=$scope.propertyInfoTableArray;
-		$scope.nodeTableArray[$scope.highlightInfo.index].highlightInfo=$scope.highlightInfo;
+		if($scope.highlightInfo.type=='node'){
+			$scope.highlightInfo.value=$scope.highlightInfo.selectType+","+$scope.highlightInfo.propertyId.name;
+			$scope.highlightInfo.propertyInfoTableArray=$scope.propertyInfoTableArray;
+			$scope.nodeTableArray[$scope.highlightInfo.index].highlightInfo=$scope.highlightInfo;
+		}
+		if($scope.highlightInfo.type=='edge'){
+			$scope.highlightInfo.value=$scope.highlightInfo.selectType+","+$scope.highlightInfo.propertyId.name;
+			$scope.highlightInfo.propertyInfoTableArray=$scope.propertyInfoTableArray;
+			$scope.edgeTableArray[$scope.highlightInfo.index].highlightInfo=$scope.highlightInfo;
+		}
 	
 	}
 	$scope.allPropertyRow = function () {
@@ -557,6 +586,27 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					edgePropertiesArry[j]=edgeProperties;
 				}
 				edgeJson.edgeProperties=edgePropertiesArry;
+                var highlightInfo={};
+				var propertyId={};
+				var propertyIdRef={};
+				highlightInfo.type=$scope.edgeTableArray[i].highlightInfo.selectType;
+				propertyIdRef.type=$scope.edgeTableArray[i].highlightInfo.propertyId.type;
+				propertyIdRef.uuid=$scope.edgeTableArray[i].highlightInfo.propertyId.uuid;
+				propertyId.ref=propertyIdRef;
+				propertyId.attrId=$scope.edgeTableArray[i].highlightInfo.propertyId.attributeId;
+				propertyId.attrType=$scope.edgeTableArray[i].highlightInfo.propertyId.attrType;
+				highlightInfo.propertyId=propertyId;
+				var propertyInfoArray=[];
+				if($scope.edgeTableArray[i].highlightInfo.propertyInfoTableArray.length >0){
+					for (var j=0;j<$scope.edgeTableArray[i].highlightInfo.propertyInfoTableArray.length;j++){
+						var propertyInfo={};
+						propertyInfo.propertyName=$scope.edgeTableArray[i].highlightInfo.propertyInfoTableArray[j].propertyName;
+						propertyInfo.propertyValue=$scope.edgeTableArray[i].highlightInfo.propertyInfoTableArray[j].propertyValue;
+					    propertyInfoArray[j]=propertyInfo;
+					}
+				}
+				highlightInfo.propertyInfo=propertyInfoArray;
+				edgeJson.highlightInfo=highlightInfo
 
 				sourceNodeIdRef.uuid=$scope.edgeTableArray[i].sourceNodeId.uuid;
 				sourceNodeIdRef.type=$scope.edgeTableArray[i].sourceNodeId.type;

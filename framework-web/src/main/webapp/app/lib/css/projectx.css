@@ -1043,3 +1043,7 @@ transition: right 1m
   white-space: nowrap;
   max-width: 250px;
 }
+
+ .ui-select-bootstrap .ui-select-choices-row>span{
+  padding: 3px 4px !important;
+}
