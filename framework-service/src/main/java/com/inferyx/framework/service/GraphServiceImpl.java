@@ -1809,7 +1809,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties")
 				.distinct();
 		edge_dataset.show(false);
-		if (edgefilter.length() > 0)
+		System.out.println("############   Edgefilter  Filter  String   #####" + nodefilter.toString());
+		if (edgefilter.length() > 0)			
 			edge_dataset = edge_dataset.filter(edgefilter.toString());
 		edge_dataset.show(false);
 		@SuppressWarnings("deprecation")
@@ -1887,6 +1888,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 								String value1 = dstrow.getAs(cloumn).toString();
 								target.put("label", value1);
 							}
+							if(dstrow.anyNull()==true) {
+							System.out.println("test");
+							}
+							
 							if(dstrow.anyNull()==false) {
 							String value1 = dstrow.getAs(cloumn).toString();
 							target.put(cloumn, value1);}
