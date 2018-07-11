@@ -154,8 +154,8 @@ export class FormulaComponent {
       if (this.sourceattribute != null) {
         data["type"] = "datapod"
         data["value"] = this.sourceattribute.label
-        data["uuid"] = this.sourceattribute.value.uuid
-        data["attrId"] = this.sourceattribute.value.attributeId;
+        data["uuid"] = this.sourceattribute.uuid
+        data["attrId"] = this.sourceattribute.attributeId;
         this.sourceattribute = null;
       }
     }
@@ -366,7 +366,8 @@ export class FormulaComponent {
         formulainfo["type"] = response.formulaInfo[i].ref.type;
         formulainfo["uuid"] = response.formulaInfo[i].ref.uuid;
         formulainfo["attrId"] = response.formulaInfo[i].attributeId;
-        formulainfo["value"] = response.formulaInfo[i].ref.name + "." + response.formulaInfo[i].attributeName;
+       formulainfo["value"] = response.formulaInfo[i].ref.name + "." + response.formulaInfo[i].attributeName;
+        //formulainfo["value"] = response.formulaInfo[i].value;
       }
       else {
         if (response.formulaInfo[i].ref.type == "function") {
@@ -454,8 +455,7 @@ export class FormulaComponent {
         this.onSuccesgetAllLatest(response)
       },
       error => console.log('Error :: ' + error)
-    )
-    
+    )   
   }
 
   onSuccesgetAllLatest(response) {
@@ -472,7 +472,7 @@ export class FormulaComponent {
   }
 
   changeType() {
-    this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.depandsOnTypes).subscribe(
+    this._commonService.getAllAttributeBySource(this.dependsOn.uuid, this.dependsontype).subscribe(
       response => {
         this.OnSuccesgetAllAttributeBySource(response)
       },
@@ -503,12 +503,13 @@ export class FormulaComponent {
     formulaSubmitJson["dependsOn"] = dependsOn;
     formulaSubmitJson["active"] = this.formulajson.active == true ? 'Y' : "N"
     formulaSubmitJson["published"] = this.formulajson.published == true ? 'Y' : "N"
- 
+
     let formulaArray = [];
     if (this.formulaarray.length > 0) {
       for (let i = 0; i < this.formulaarray.length; i++) {
         let formulainfo = {}
         let ref = {};
+        
         if (this.formulaarray[i].type == "simple") {
           if (aggrfun.indexOf(this.formulaarray[i].value.toLowerCase()) > -1) {
             formulaSubmitJson["formulaType"] = "aggr"
@@ -522,6 +523,7 @@ export class FormulaComponent {
           formulainfo["ref"] = ref;
           formulainfo["value"] = this.formulaarray[i].value;
         }
+       
         else if (this.formulaarray[i].type == "datapod" || this.formulaarray[i].type == "dataset") {
           if (this.formulatype == "dataset") {
             ref["type"] = "dataset";
@@ -531,13 +533,11 @@ export class FormulaComponent {
             ref["type"] = this.formulaarray[i].type;
             ref["uuid"] = this.formulaarray[i].uuid;
           }
-          
-          //ref["name"] = this.formulaarray[i].name;
           formulainfo["ref"] = ref;
           formulainfo["attributeId"] = this.formulaarray[i].attrId;
-          //formulainfo["attributeName"] = this.formulaarray[i].attributeName;
-          formulainfo["value"] = this.formulaarray[i].value;
+         //// formulainfo["value"] = this.formulaarray[i].value;
         }
+        
         else {
           if (this.formulaarray[i].type == "formula") {
             if (formulaSubmitJson["formulaType"] != "aggr")
@@ -565,8 +565,8 @@ export class FormulaComponent {
         error => console.log('error', +error)
       )
     }
-
   }
+
   onSuccessSubmit(response) {
     this.isSubmitEnable=true;
     this.msgs = [];
