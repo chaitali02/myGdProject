@@ -17,7 +17,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12" style="margin-top:2%;">
+    <!-- <div class="col-md-12" style="margin-top:2%;">
         <form class="form-inline" novalidate="novalidate" name="myform" ng-submit="search()">
             <div class="form-group" style="width:32%;">
                 <label class="col-md-4 control-label" style="margin-top:2%">Node Type</label>
@@ -43,12 +43,12 @@
                     <button type="submit" class="btn btn-success">Search</button>
                 </div>
             </div>
-        </form>
+        </form> 
+    </div>-->
 
-
-    </div>
     <div class="clearfix"></div>
     <div class="col-md-12">
+        <div class="form-body centercontent" ng-if="isFilterSelect" style="color:blue;min-height:500px;">Please Select Filter</div>
         <div class="form-body centercontent" ng-if="isError" style="color:red;">Some Error Occurred</div>
         <div class="form-body centercontent" ng-if="noRecordFound" style="color:blue;">No Record Found</div>
         <div class="spinner centercontent" style="min-height:300px;" ng-show="isGraphInProgess">
@@ -111,6 +111,7 @@
         </div>
     </div>
 </div>
+
 <div id="nodeDetail" class="modal fade bs-modal-lg in" aria-hidden="true" style="display:none;">
     <div class="modal-dialog" style="width:35%;">
         <div class="modal-content">
@@ -234,14 +235,43 @@
         <div class="modal-content" style="max-height:600px;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">Filter</h4>
-            </div>
-            <form class="form-horizontal" novalidate="novalidate" name="myformFilter" ng-submit="submitFilter()">
+                <div class="form-group row">
+                    <div class="col-md-6"> 
+                        <h4 class="modal-title">Filter</h4>
+                    </div>
+                    
+                </div>
+                
+             </div>
+            <form novalidate="novalidate" name="myformFilter" ng-submit="submitFilter()">
                 <div class="modal-body">
                     <div class="slimScrollDiv" style="padding-top:10px;">
                         <div class="scroller" style="max-height:400px;min-height:100px; overflow-y: auto !important; width: auto;" data-always-visible="1"
                             data-rail-visible1="1" data-initialized="1">
-
+                          
+                            <div class="row" style="margin-left:-46px;">
+                                <div class="col-md-12">
+                                    <div class="col-md-5 col-sm-5 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 col-sm-4 col-xs-6" style="margin-top:2%;">Node Type</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-6">
+                                                <select class="form-control" select2 data-ng-model="nodeType" ng-options="r.nodeType as r.nodeType for r in graphpodData.nodeInfo"
+                                                    ng-change="selectType()" required disable-validation-message="">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 col-sm-5 col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 col-sm-4 col-xs-6" style="margin-top:2%;">Node Id</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-6">
+                                                <input type="text" class="form-control" ng-model="nodeId" required disable-validation-message="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
                             <div class="x_title">
                                 <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeNodeRow()" ng-disabled="{{mode}}"></button>
                                 <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addNodeRow()" ng-disabled="{{mode}}"></button>
@@ -251,7 +281,7 @@
                                 <hr>
                             </div>
                             <br/>
-                            <table class="table table-bordered" style="table-layout:fixed;">
+                            <table class="table table-bordered" style=" table-layout: fixed;">
                                 <thead>
                                     <tr>
                                         <th style="width:5%;text-align: center; Vertical-align: middle;">
@@ -262,40 +292,39 @@
                                         </th>
                                         <th style="width:20%;text-align:center;">Logical Operator</th>
                                         <th style="width:20%;text-align:center;">Source</th>
-                                        <th style="width:20%;text-align:center;">Attribute</th>
+                                        <th style="text-align:center;">Attribute</th>
                                         <th style="width:15%;text-align:center;">Operator</th>
                                         <th style="width:20%;text-align:center;">Value</th>
                                     </tr>
                                 </thead>
                                 <tr ng-repeat="tabledata in nodeTableArray">
                                     <td style="text-align:center;Vertical-align:middle;">
-                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <span class="form-group" style="margin-left:0px;margin-right:0px;width:100%;">
                                             <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                            <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first" class="form-control"></select>
+                                        <span class="form-group" style="margin-left:0px;margin-right:0px;width:100%;">
+                                            <select select2 ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first" class="form-control"></select>
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;width:100%;">
                                             <select select2 ng-model="tabledata.selectSource" ng-change="getAttributesByNodeSource(tabledata.selectSource.index,$index)"
-                                                ng-options="x  as x.name  for x in tabledata.source  track by x.uuid" class="form-control" required disable-validation-message=""></select>
+                                                ng-options="x  as x.name  for x in tabledata.source  track by x.uuid" class="form-control"
+                                                required disable-validation-message=""></select>
                                         </span>
                                     </td>
-                                    <td>  
-                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                            <select select2 ng-model="tabledata.selectAttribute" 
-                                                ng-options="x  as x.attributeName  for x in tabledata.allAttributeInto  track by x.uuid+x.attributeId"
-                                                class="form-control"  required disable-validation-message=""></select>
+                                    <td>
+                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;width:100%;">
+                                            <select select2 ng-model="tabledata.selectAttribute" ng-options="x  as x.attributeName  for x in tabledata.allAttributeInto  track by x.uuid+x.attributeId"
+                                                class="form-control" required disable-validation-message=""></select>
                                         </span>
                                     </td>
                                     <td>
                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                            <select  ng-model="tabledata.operator"
-                                                ng-options="x.value as x.caption for x in operator" ng-disabled="{{mode}}"
-                                                class="form-control"  required disable-validation-message=""></select>
+                                            <select ng-model="tabledata.operator" ng-options="x.value as x.caption for x in operator" ng-disabled="{{mode}}" class="form-control"
+                                                required disable-validation-message=""></select>
                                         </span>
                                     </td>
                                     <td style="width:200px;">
@@ -317,7 +346,7 @@
                                                     <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                                         <input ng-model="tabledata.rhsvalue2" name="rhsvalue2_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
                                                             ng-pattern="/^[0-9]{1,20}$/" required disable-validation-message=""
-                                                            uib-tooltip="{{myform['rhsvalue2_'+$index].$valid ? '' : 'enter only integer'}}"
+                                                            uib-tooltip="{{myformFilter['rhsvalue2_'+$index].$valid ? '' : 'enter only integer'}}"
                                                             tooltip-placement="left">
                                                     </span>
                                                 </div>
@@ -335,7 +364,6 @@
                                                         ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/" tooltip-placement="left">
                                                 </span>
                                             </span>
-                                            
                                         </div>
                                     </td>
                                 </tr>
@@ -347,7 +375,7 @@
                                     <strong>Edge Filter</strong>
                                 </h4>
                                 <hr>
-                                <table class="table table-bordered">
+                                <table class="table table-bordered" style=" table-layout: fixed;">
                                     <thead>
                                         <tr>
                                             <th style="width:5%;text-align: center; Vertical-align: middle;">
@@ -370,30 +398,27 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" 
-                                                ng-disabled=" $first" class="form-control"></select>
+                                            <span class="form-group" style="margin-left:0px;margin-right: 0px">
+                                                <select select2 ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first" class="form-control"></select>
                                             </span>
                                         </td>
                                         <td>
                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                <select select2 ng-model="tabledata.selectSource" 
-                                                    ng-change="getAttributesByEdgeSource(tabledata.selectSource.index,$index)"
-                                                    ng-options="x  as x.name  for x in tabledata.source track by x.uuid" class="form-control"  required disable-validation-message=""></select>
+                                                <select select2 ng-model="tabledata.selectSource" ng-change="getAttributesByEdgeSource(tabledata.selectSource.index,$index)"
+                                                    ng-options="x  as x.name  for x in tabledata.source track by x.uuid" class="form-control"
+                                                    required disable-validation-message=""></select>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                                <select select2 ng-model="tabledata.selectAttribute" ng-options="x  as x.attributeName  for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
+                                                    class="form-control" required disable-validation-message=""></select>
                                             </span>
                                         </td>
                                         <td>
                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                <select select2 ng-model="tabledata.selectAttribute" 
-                                                    ng-options="x  as x.attributeName  for x in tabledata.allAttributeInto track by x.uuid+x.attributeId"
-                                                    class="form-control"  required disable-validation-message=""></select>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                <select  ng-model="tabledata.operator"
-                                                    ng-options="x.value as x.caption for x in operator" ng-disabled="{{mode}}"
-                                                    class="form-control"  required disable-validation-message=""></select>
+                                                <select ng-model="tabledata.operator" ng-options="x.value as x.caption for x in operator" ng-disabled="{{mode}}" class="form-control"
+                                                    required disable-validation-message=""></select>
                                             </span>
                                         </td>
                                         <td style="width:200px;">
@@ -438,13 +463,12 @@
                                     </tr>
                                 </table>
                             </div>
-                            <br/>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-                    <input type="submit" class="btn btn-success" value="submit">
+                    <input type="submit" class="btn btn-success" value="Submit">
                 </div>
             </form>
         </div>

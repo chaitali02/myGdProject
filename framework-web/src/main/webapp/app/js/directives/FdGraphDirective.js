@@ -10,6 +10,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
             var menus = ["Show Details"];
             scope.selectedAllEdgeRow=false;
             scope.selectedAllNodeRow=false;
+            scope.isFilterSelect=true;
             scope.filter=null;
             scope.operator=[
                 {"caption":"EQUAL TO (=)","value":"="},
@@ -106,6 +107,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 scope.isGraphInProgess=true;
                 scope.noRecordFound=false;
                 scope.isError=false;
+                scope.isFilterSelect=false;
                 var graphFilerBody= scope.getFilterData();
                
                 console.log(JSON.stringify(graphFilerBody));
@@ -415,9 +417,9 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
 
                     force
                         .charge(-10000)
-                        .friction(0.5)
+                        .friction(0.1)
                         .linkDistance(linkDistance)
-                        .size([w, h])
+                        .size([w/2, h/2])
                         .start();
                     keepNodesOnTop();
 
@@ -778,18 +780,25 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 }
                 scope.edgeTableArray = newDataList;
             }
-        
+            
+            scope.$on('transferUp',function(event,data){
+                console.log('on working');
+                scope.applyFilter();
+            });
+
             scope.applyFilter=function(){
                 $('#applyFilter').modal({
                     backdrop: 'static',
                     keyboard: false
                 });	
             }
+            
             scope.submitFilter=function(){
                 scope.filter={};
                 scope.filter.nodeTableArray=scope.nodeTableArray;
                 scope.filter.edgeTableArray=scope.edgeTableArray;
                 $('#applyFilter').modal('hide');
+                scope.search(); 
             }
         },
         

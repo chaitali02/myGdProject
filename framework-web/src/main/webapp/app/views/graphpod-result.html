@@ -81,6 +81,9 @@
         </div>
         <div class="tools">
           <!-- <a class="fullscreen" tooltip-placement="top" uib-tooltip="{{showtooltiptitle}}"></a> -->
+          <a uib-tooltip="Aplly Filter" tooltip-placement="top"  ng-click="applyFilter()" href="javascript:;"    ng-class="isD3KnowlageGraphShow==true? 'currentpage':'notcurrentpage'"style="height:16px;">
+            <span class="fa fa-filter" style="color:white;"></span>
+          </a>
           <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3FDGraphShow==true? 'currentpage':'notcurrentpage'"
             ng-disabled="isD3FDGraphShow" href="javascript:;" data-ng-click="showFDGraph()" style="height:16px;">
             <span class="glyphicon glyphicon-file" style="color:white;"></span>

@@ -641,4 +641,8 @@ GraphAnalysisModule.controller('GraphpodResultController',function($state,$state
 			$scope.isD3FDGraphShow=false;
 			$scope.isD3KnowlageGraphShow=true;
 		}
+
+		$scope.applyFilter=function(){
+			 $scope.$broadcast('transferUp',null);
+		}
 });
