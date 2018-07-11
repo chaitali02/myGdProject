@@ -419,7 +419,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                         .charge(-10000)
                         .friction(0.1)
                         .linkDistance(linkDistance)
-                        .size([w/2, h/2])
+                        .size([w, h])
                         .start();
                     keepNodesOnTop();
 
