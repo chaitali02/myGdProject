@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class GraphNode {
 	
+	
 	AttributeRefHolder nodeId;
 	String nodeType;
 	String nodeIcon;
@@ -18,6 +19,8 @@ public class GraphNode {
 	MetaIdentifierHolder nodeSource;
 	List<AttributeRefHolder> nodeProperties;
 	Highlight highlightInfo;
+	String nodeSize;
+	
 	
 	/**
 	 * @return the nodeId
@@ -103,6 +106,12 @@ public class GraphNode {
 	 */
 	public void setHighlightInfo(Highlight highlightInfo) {
 		this.highlightInfo = highlightInfo;
+	}
+	public String getNodeSize() {
+		return this.nodeSize;
+	}
+	public void setNodeSize(String nodeSize) {
+		this.nodeSize = nodeSize;
 	}
 
 }
