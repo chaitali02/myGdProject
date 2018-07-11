@@ -461,19 +461,36 @@ export class AppMetadata {
         class: 'fa fa-flask'
       },
       'downloadexec': {
-        name: 'download',
+        name: 'downloadexec',
         caption: 'download Exec',
-        execType: 'downloadExec',
-        metaType: 'downloadExec',
+        execType: 'downloadexec',
+        metaType: 'downloadexec',
         color: '#33691E',
         allowInMenu: false,
         listState: 'jobmonitoringlist',
-        detailState: 'jobexecutorlistdownloadexec',
-        resultState: 'resultgraphwf',
-        moduleState: 'JobMonitoring',
-        moduleCaption: 'Job Monitoring',
+        detailState: 'downloadExec',
+        resultState: 'downloadexec',
+        moduleState: 'dataScience',
+        moduleCaption: 'Data Science',
         class: 'fa fa-flask'
-      },
+ },
+ 'downloadExec': {
+  name: 'download',
+  caption: 'download Exec',
+  execType: 'downloadExec',
+  metaType: 'downloadExec',
+  color: '#8E44AD',
+  iconCaption: '',
+  allowInMenu: false,
+  listState: 'jobmonitoringlist',
+  detailState: 'downloadExec',
+  moduleState: 'JobMonitoring',
+  resultState: 'downloadExec',
+  moduleCaption: 'Job Monitoring',
+  class: 'fa fa-flask'
+
+
+},
       'uploadexec': {
         name: 'download',
         caption: 'upload Exec',
@@ -1473,23 +1490,7 @@ export class AppMetadata {
         moduleCaption: 'Data Science',
         class: 'fa fa-flask'
 
-        // name: 'trainexec',
-        // caption: 'Train Exec',
-        // execType: 'trainexec',
-        // metaType: 'trainexec',
-        // color: '#EB54C3',
-        // iconCaption: '',
-        // allowInMenu: false,
-        // listState: 'jobmonitoringlist',
-        // detailState: 'trainExec',
-        // moduleState: 'dataScience',
-        // resultState: 'trainexec',
-        // moduleCaption: 'Data Science',
-        // childMenu: [],
-        // allowInChildMenu: false,
-        // class: 'fa fa-flask'
-
-
+      
 
       },
       

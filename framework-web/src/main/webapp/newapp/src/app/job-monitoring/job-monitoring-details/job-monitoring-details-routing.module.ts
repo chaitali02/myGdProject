@@ -15,6 +15,9 @@ import { DqGroupExecComponent } from './dqGroupExec/dqGroupExec.component';
 import { RuleExecComponent } from './ruleExec/ruleExec.component';
 import { RuleGroupExecComponent } from './ruleGroupExec/ruleGroupExec.component';
 import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
+import { DownloadExecComponent } from './downloadExec/downloadExec.component';
+
+DownloadExecComponent
 
 
 const routes: Routes = [
@@ -33,7 +36,10 @@ const routes: Routes = [
             { path: 'dqgroupExec/:id/:version/:mode', component: DqGroupExecComponent, pathMatch: 'full' },
             { path: 'ruleExec/:id/:version/:mode', component: RuleExecComponent, pathMatch: 'full' },
             { path: 'rulegroupExec/:id/:version/:mode', component: RuleGroupExecComponent, pathMatch: 'full' },
-            { path: 'dagExec/:id/:version/:mode', component: PipelineExecComponent, pathMatch: 'full' }
+            { path: 'dagExec/:id/:version/:mode', component: PipelineExecComponent, pathMatch: 'full' },
+            { path: 'downloadExec/:id/:version/:mode', component: DownloadExecComponent, pathMatch: 'full' }
+
+            
         ]
     }
 ]

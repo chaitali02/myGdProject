@@ -32,6 +32,9 @@ import { DqGroupExecComponent } from './dqGroupExec/dqGroupExec.component';
 import { RuleExecComponent } from './ruleExec/ruleExec.component';
 import { RuleGroupExecComponent } from './ruleGroupExec/ruleGroupExec.component';
 import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
+import { DownloadExecComponent } from './downloadExec/downloadExec.component';
+
+
 
 @NgModule({
     imports: [
@@ -64,7 +67,8 @@ import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
         RuleGroupExecComponent,
         PipelineExecComponent,
         PredictExecComponent,
-        SimulateExecComponent
+        SimulateExecComponent,
+        DownloadExecComponent
 
 
     ],

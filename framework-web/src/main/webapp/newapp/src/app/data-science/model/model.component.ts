@@ -214,7 +214,7 @@ export class ModelComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-  onSuccessgetOneByUuidAndVersion(response) {debugger
+  onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
     this.model = response;
     this.uuid = response.uuid;
@@ -443,7 +443,6 @@ export class ModelComponent implements OnInit {
     this.modelJson["tags"] = tagArray;
     this.modelJson["active"] = this.model.active == true ? "Y" : "N"
     this.modelJson["published"] = this.model.published == true ? "Y" : "N"
-    debugger
     this.modelJson["type"] = this.type;
     if (this.model.type == "SPARK") {
       this.customFlag = false
