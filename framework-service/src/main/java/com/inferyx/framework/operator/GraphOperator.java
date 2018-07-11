@@ -112,49 +112,50 @@ public class GraphOperator implements IOperator {
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 					execParams.getOtherParams()));
 			sb.append(", ");*/
+			
 			sb.append(graphNode.getNodeType());
 			sb.append("' AS nodeType, '");
 
-			
-			
-			
+			sb.append(graphNode.getNodeSize());
+			sb.append("' AS nodeSize, '");
+
 			sb.append(graphNode.getNodeIcon());
 			sb.append("' AS nodeIcon, ");
+			
 			Boolean status = true;
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
 				String type=propHolder.getAttrType();
-				if(type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString())) {
-				sb.append("'''\"");
-				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
-						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-						execParams.getOtherParams()));
-				sb.append("\"'':\"', ");
-				
-				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
-						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-						execParams.getOtherParams(), execParams));
-//				sb.append(" AS ");
-				
-				sb.append(", ");
-				sb.append("'\",' ");
-				status=true;
-				}else 
-				{
+				if (type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString())) {
 					sb.append("'''\"");
-					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
-							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+							execParams.getOtherParams()));
+					sb.append("\"'':\"', ");
+
+					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder,
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+							execParams));
+					// sb.append(" AS ");
+
+					sb.append(", ");
+					sb.append("'\",' ");
+					status = true;
+				} else {
+					sb.append("'''\"");
+					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 							execParams.getOtherParams()));
 					sb.append("\"'':', ");
-					
-					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
-							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-							execParams.getOtherParams(), execParams));
-//					sb.append(" AS ");
-					
+
+					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder,
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+							execParams));
+					// sb.append(" AS ");
+
 					sb.append(", ");
 					sb.append("',' ");
-					status=false;
+					status = false;
 				}
 			}
 			sb.delete(sb.length() - 5, sb.length());
@@ -176,6 +177,30 @@ public class GraphOperator implements IOperator {
 			sb.append("' AS type, ");
 			// added propertyInfo
 
+			
+			AttributeRefHolder propertyIdRefHolder1 = graphNode.getHighlightInfo().getPropertyId();
+			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder1, propertyIdRefHolder1,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
+			sb.append(" AS nodeBackgroundId ,");
+			
+			
+			sb.append("concat('{', ");
+			for (Property property : graphNode.getNodeBackgroundInfo().getPropertyInfo()) {
+				sb.append("'''");
+				sb.append(property.getPropertyName());
+				sb.append("'':', ");
+				sb.append("'");
+				sb.append(property.getPropertyValue());
+				sb.append("'");
+				sb.append(", ");
+				sb.append("',' ");
+			}
+			sb.delete(sb.length() - 5, sb.length());
+			sb.append("'}')");
+			sb.append(" AS nodeBackground, ");
+
+			
 			sb.append("concat('{', ");
 			for (Property property : graphNode.getHighlightInfo().getPropertyInfo()) {
 				sb.append("'''");
@@ -304,7 +329,26 @@ public class GraphOperator implements IOperator {
 			}else {
 				sb.append("'}')");   
 			}
-			sb.append(" AS edgeProperties ");
+			sb.append(" AS edgeProperties, ");
+			
+			
+			sb.append("concat('{', ");
+			for (Property property : graphEdge.getHighlightInfo().getPropertyInfo()) {
+				sb.append("'''");
+				sb.append(property.getPropertyName());
+				sb.append("'':', ");
+				sb.append("'");
+				sb.append(property.getPropertyValue());
+				sb.append("'");
+				sb.append(", ");
+				sb.append("',' ");
+			}
+			sb.delete(sb.length() - 5, sb.length());
+			sb.append("'}')");
+			sb.append(" AS propertyInfo ");
+
+			
+			
 			sb.append(ConstantsUtil.FROM);
 			Object source = commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
 			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(((BaseEntity) source).getName()).append(" ");
