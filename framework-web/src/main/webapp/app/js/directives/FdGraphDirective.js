@@ -147,7 +147,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                 };
 
                 this.addLink = function (d) {
-                    links.push({ "source": findNode(d.source.id), "target": findNode(d.target.id), "value": d.value.replace(/["\"]/g, ""),"edgeName":d.edgeName,"edgeType":d.edgeType,"edgeProperties":d.edgeProperties});
+                    links.push({ "source": findNode(d.source.id), "target": findNode(d.target.id), "value": d.value.replace(/["\"]/g, ""),"edgeName":d.edgeName,"edgeType":d.edgeType,"edgeProperties":d.edgeProperties,"edgeIndex":d.edgeIndex,"eHPropertyId":d.eHPropertyId});
                     update();
                 };
 
@@ -245,15 +245,42 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
 
                 var update = function () {
 
-                    var path = svg.selectAll("path.link")
+                    var path = svg.selectAll("path.link1")
                         .data(force.links());
 
                     path.enter().append("svg:path")
                         .attr("id", function (d) {
                             return d.source.id + "-" + d.value + "-" + d.target.id;
                         })
-                        .attr("class", "link")
+                        .attr("class", "link1")
                         .attr('marker-end', 'url(#arrowhead)')
+                        .attr('stroke',function(d){
+                            try{ 
+                                //return CF_GRAPHPOD.nodeIconMap[d.nodeIcon].color
+                                var result=null;
+                                var tempPInfo=scope.graphpodData.edgeInfo[d.edgeIndex].highlightInfo.propertyInfo;
+                                var tempType=scope.graphpodData.edgeInfo[d.edgeIndex].highlightInfo.type;
+                                for(var i=0;i<tempPInfo.length;i++){
+                                    if(tempType =='numerical'){
+                                        if(d.eHPropertyId <= tempPInfo[i].propertyName){
+                                            result =tempPInfo[i].propertyValue;
+                                            break;
+                                        }
+                                    }
+                                    else{
+                                        if(d.eHPropertyId == tempPInfo[i].propertyName){
+                                            result =tempPInfo[i].propertyValue;
+                                            break;
+                                        }                                
+                                    }
+                                }
+                                if(result !=null){
+                                    return result;
+                                }else{
+                                    return '#cccccc';
+                                }
+                                }catch(e){ return"#cccccc"}
+                        })
                         .on("click", onClickEdge)
                         // .on("mouseover",function(d){
                         //     d3.select(this).attr({
@@ -314,12 +341,24 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                         })
                         .attr("stroke",function(d){
                             var result=null;
+                            ///console.log(JSON.parse(d.nodeProperties));
+                           
+                          //  var nodeProperties=JSON.parse(d.nodeProperties);
+                           // console.log(nodeProperties[scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo.propertyId.attrName])
                             var tempPInfo=scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo.propertyInfo;
+                            var tempType=scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo.type;
                             for(var i=0;i<tempPInfo.length;i++){
-                                if(d.nHPropertyId == tempPInfo[i].propertyName){
-                                    result =tempPInfo[i].propertyValue;
-                                    break;
-                                }                                
+                                if(tempType =='numerical'){
+                                    if(d.nHPropertyId <= tempPInfo[i].propertyName){
+                                        result =tempPInfo[i].propertyValue;
+                                        break;
+                                    }      
+                                }else{
+                                    if(d.nHPropertyId == tempPInfo[i].propertyName){
+                                        result =tempPInfo[i].propertyValue;
+                                        break;
+                                    }                                
+                                }
                             }
                             if(result !=null){
                                 return result;
@@ -330,15 +369,24 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                         .attr("class", "nodeStrokeClass")
                         //.attr("fill", "#0db7ed")
                         .attr("fill", function(d) { 
+                          
                             try{ 
                             //return CF_GRAPHPOD.nodeIconMap[d.nodeIcon].color
                             var result=null;
                             var tempPInfo=scope.graphpodData.nodeInfo[d.nodeIndex].nodeBackgroundInfo.propertyInfo;
+                            var tempType=scope.graphpodData.nodeInfo[d.nodeIndex].nodeBackgroundInfo.type;
                             for(var i=0;i<tempPInfo.length;i++){
-                                if(d.nBPropertyId == tempPInfo[i].propertyName){
-                                    result =tempPInfo[i].propertyValue;
-                                    break;
-                                }                                
+                                if(tempType =='numerical'){
+                                    if(d.nBPropertyId <= tempPInfo[i].propertyName){
+                                        result =tempPInfo[i].propertyValue;
+                                        break;
+                                    }      
+                                }else{
+                                    if(d.nBPropertyId == tempPInfo[i].propertyName){
+                                        result =tempPInfo[i].propertyValue;
+                                        break;
+                                    }                                
+                                }
                             }
                             if(result !=null){
                                 return result;
