@@ -41,8 +41,8 @@
 	],
 	"type": "REGRESSION",
 	"library": "SPARKML",
-	"trainName": "org.apache.spark.ml.clustering.LDA",
-	"modelName": "org.apache.spark.ml.clustering.LDAModel",
+	"trainClass": "org.apache.spark.ml.clustering.LDA",
+	"modelClass": "org.apache.spark.ml.clustering.LDAModel",
 	"labelRequired": "Y",
 	"paramList": {
 		"ref": {

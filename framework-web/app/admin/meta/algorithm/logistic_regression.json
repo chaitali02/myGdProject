@@ -41,8 +41,8 @@
 	],
     "type": "CLASSIFICATION",
     "library": "SPARKML",
-	"trainName": "org.apache.spark.ml.classification.LogisticRegression",
-	"modelName": "org.apache.spark.ml.classification.LogisticRegressionModel",
+	"trainClass": "org.apache.spark.ml.classification.LogisticRegression",
+	"modelClass": "org.apache.spark.ml.classification.LogisticRegressionModel",
 	"labelRequired": "Y",
 	"paramList": {
 		"ref": {

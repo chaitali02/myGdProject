@@ -23,8 +23,8 @@
   ],
   "type": "CLASSIFICATION",
   "library": "SPARKML",
-  "trainName": "org.apache.spark.ml.classification.LinearSVC",
-  "modelName": "org.apache.spark.ml.classification.LinearSVCModel",
+  "trainClass": "org.apache.spark.ml.classification.LinearSVC",
+  "modelClass": "org.apache.spark.ml.classification.LinearSVCModel",
   "labelRequired": "Y",
   "returnType": null,
   "paramList": {
