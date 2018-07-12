@@ -41,8 +41,8 @@
 	],
 	"type": "REGRESSION",
 	"library": "SPARKML",
-	"trainName": "org.apache.spark.ml.regression.LinearRegression",
-	"modelName": "org.apache.spark.ml.regression.LinearRegressionModel",
+	"trainClass": "org.apache.spark.ml.regression.LinearRegression",
+	"modelClass": "org.apache.spark.ml.regression.LinearRegressionModel",
 	"labelRequired": "Y",
 	"paramList": {
 		"ref": {

@@ -23,8 +23,8 @@
   ],
   "type": "REGRESSION",
   "library": "SPARKML",
-  "trainName": "org.apache.spark.ml.regression.AFTSurvivalRegression",
-  "modelName": "org.apache.spark.ml.regression.AFTSurvivalRegressionModel",
+  "trainClass": "org.apache.spark.ml.regression.AFTSurvivalRegression",
+  "modelClass": "org.apache.spark.ml.regression.AFTSurvivalRegressionModel",
   "labelRequired": "Y",
   "returnType": null,
   "paramList": {
