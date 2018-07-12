@@ -600,4 +600,10 @@ public class MySqlExecutor implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<Map<String, Object>> summary(Object trndModel, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

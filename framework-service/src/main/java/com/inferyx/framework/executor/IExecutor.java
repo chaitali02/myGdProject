@@ -544,4 +544,15 @@ public interface IExecutor {
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
 			throws IOException;
+
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param trndModel 
+	 * @param clientContext
+	 * @return List<Map<String, Object>>
+	 * @throws IOException
+	 */
+	List<Map<String, Object>> summary(Object trndModel, String clientContext) throws IOException;
 }

@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
+import org.apache.spark.ml.classification.LogisticRegressionModel;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
 import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
@@ -56,6 +58,8 @@ import org.apache.spark.ml.param.IntParam;
 import org.apache.spark.ml.param.LongParam;
 import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.ml.regression.LinearRegressionModel;
+import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.ml.tuning.ParamGridBuilder;
@@ -792,8 +796,8 @@ public class SparkExecutor<T> implements IExecutor {
 		List<String> strList = new ArrayList<>();
 		Dataset<Row> df = null;
 		if (datastore == null) {
-			logger.error("Datastore is not available for this datapod");
-			throw new Exception();
+			logger.error("Datastore is not available for this datapod.");
+			throw new Exception("Datastore is not available for this datapod.");
 		}
 		IReader iReader = dataSourceFactory.getDatapodReader();
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -812,6 +816,39 @@ public class SparkExecutor<T> implements IExecutor {
 			strList.add(row.toString());
 		}
 		return strList;
+	}
+	
+	public List<Map<String, Object>> fetchModelResults2(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception {
+		
+		List<Map<String, Object>> data = new ArrayList<>();
+		Dataset<Row> df = null;
+		if (datastore == null) {
+			logger.error("Datastore is not available for this datapod.");
+			throw new Exception("Datastore is not available for this datapod.");
+		}
+		IReader iReader = dataSourceFactory.getDatapodReader();
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
+		ConnectionHolder conHolder = conn.getConnection();
+
+		ResultSetHolder rsHolder = iReader.read(datapod, datastore, hdfsInfo, conHolder.getStmtObject(), datasource);
+		df = rsHolder.getDataFrame();		
+		
+		df.show(false);
+		String[] columns = df.columns();
+		Row [] rows = (Row[]) df.head(rowLimit);
+		for (Row row : rows) {
+			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			for (String column : columns) {
+//				object.put(column, (row.getAs(column)==null ? "":
+//					(row.getAs(column) instanceof WrappedArray<?>) ? Arrays.toString((Double[])((WrappedArray<?>)row.getAs(column)).array()) : row.getAs(column).toString()) );
+				object.put(column, (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
+			}
+			data.add(object);
+		}
+
+		return data;
 	}
 
 	@Override
@@ -1569,12 +1606,17 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String assembledDFSQL = "SELECT * FROM " + tableName + " limit 100";
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		//df.show(true);
+		df.show(true);
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
 				.invoke(trainedModel, df);
 		predictionDf.show(true);
-
+//		Evaluator evaluator = getEvaluatorByTrainClass("LogisticRegressor");
+//		RegressionEvaluator regressionEvaluator = (RegressionEvaluator) evaluator;
+//		regressionEvaluator.setMetricName(regressionEvaluator.getMetricName());
+//		double accuracy = regressionEvaluator.evaluate(predictionDf);
+//		System.out.println("accuracy: "+accuracy);
+//		System.out.println();
 		//String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
 
 		//if (targetType.equalsIgnoreCase(MetaType.datapod.toString())) {
@@ -2013,12 +2055,12 @@ public class SparkExecutor<T> implements IExecutor {
 				method = dynamicClass.getMethod("setLabelCol", String.class);
 				method.invoke(obj, "label");
 			}
-
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
 			Pipeline pipeline = new Pipeline()
 					.setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
 			int numFolds = 3;
+			
 			for(com.inferyx.framework.domain.Param param : hyperParamList) {
 				if(param.getParamName().equalsIgnoreCase("numFolds")) {
 					numFolds = Integer.parseInt(param.getParamValue().getValue());
@@ -2237,5 +2279,127 @@ public class SparkExecutor<T> implements IExecutor {
 				return paramGridBuilder;
 		}
 		return paramGridBuilder;
+	}
+	
+	@Override
+	public List<Map<String, Object>> summary(Object trndModel, String clientContext) throws IOException {
+		List<Map<String, Object>> summary = null;
+		PipelineModel pipelineModel = null;
+		if(trndModel instanceof PipelineModel) {
+			pipelineModel = (PipelineModel)trndModel;
+		} else if(trndModel instanceof CrossValidatorModel) {
+			pipelineModel = (PipelineModel)((CrossValidatorModel)trndModel).bestModel();
+		}
+		Transformer[] transformers = pipelineModel.stages();
+		for (Transformer transformer : transformers) {
+			if(transformer instanceof LinearRegressionModel) {
+				summary = linearRegressionSummay((LinearRegressionModel)transformer);
+			} else if(transformer instanceof LogisticRegressionModel) {
+				summary = logisticRegressionSummay((LogisticRegressionModel)transformer);
+			}
+		}
+		
+		return summary;
+	}
+
+	private List<Map<String, Object>> linearRegressionSummay(LinearRegressionModel lrModel) throws JsonProcessingException {
+		List<Map<String, Object>> result = new ArrayList<>();
+		Vector coefficients = lrModel.coefficients();
+		Map<String, Object> coefficientsMap = new HashMap<>();
+		coefficientsMap.put("coefficients", Arrays.toString(coefficients.toArray()));
+		result.add(coefficientsMap);
+		
+//		int aggrgtnDepth = lrModel.getAggregationDepth();
+//		double elasticNetParam = lrModel.getElasticNetParam();
+//		double epsilon = lrModel.getEpsilon();
+//		boolean fitIntercept = lrModel.getFitIntercept();
+//		String loss = lrModel.getLoss();
+//		int maxIter = lrModel.getMaxIter();
+//		double regParam = lrModel.getRegParam();
+//		String solver = lrModel.getSolver();
+//		boolean standerdization = lrModel.getStandardization();
+//		double tol = lrModel.getTol();
+////		String weightCol = lrModel.getWeightCol();
+//		int numFeatures = lrModel.numFeatures();
+//		double scale = lrModel.scale();
+		
+		LinearRegressionTrainingSummary summary = lrModel.summary();
+//		double[] coefficientStandardErrors = summary.coefficientStandardErrors();
+		long degreesOfFreedom = summary.degreesOfFreedom();
+		Map<String, Object> degreesOfFreedomMap = new HashMap<>();
+		degreesOfFreedomMap.put("degreesOfFreedom", degreesOfFreedom);
+		result.add(degreesOfFreedomMap);
+		
+		double[] devianceResiduals = summary.devianceResiduals();
+		Map<String, Object> devianceResidualsMap = new HashMap<>();
+		devianceResidualsMap.put("devianceResiduals", Arrays.toString(devianceResiduals));
+		result.add(devianceResidualsMap);
+		
+		
+		double explainedVariance = summary.explainedVariance();
+		Map<String, Object> explainedVarianceMap = new HashMap<>();
+		explainedVarianceMap.put("explainedVariance", explainedVariance);
+		result.add(explainedVarianceMap);
+		
+		double meanAbsoluteError = summary.meanAbsoluteError();
+		Map<String, Object> meanAbsoluteErrorMap = new HashMap<>();
+		meanAbsoluteErrorMap.put("meanAbsoluteError", meanAbsoluteError);
+		result.add(meanAbsoluteErrorMap);
+		
+		double meanSquaredError = summary.meanSquaredError();
+		Map<String, Object> meanSquaredErrorMap = new HashMap<>();
+		meanSquaredErrorMap.put("meanSquaredError", meanSquaredError);
+		result.add(meanSquaredErrorMap);
+		
+		long numInstances = summary.numInstances();
+		Map<String, Object> numInstancesMap = new HashMap<>();
+		numInstancesMap.put("numInstances", numInstances);
+		result.add(numInstancesMap);
+		
+		double[] objectiveHistory = summary.objectiveHistory();
+		Map<String, Object> objectiveHistoryMap = new HashMap<>();
+		objectiveHistoryMap.put("objectiveHistory", Arrays.toString(objectiveHistory));
+		result.add(objectiveHistoryMap);
+		
+		double r2 = summary.r2();
+		Map<String, Object> r2Map = new HashMap<>();
+		r2Map.put("r2", r2);
+		result.add(r2Map);
+		
+		double r2adj = summary.r2adj();
+		Map<String, Object> r2adjMap = new HashMap<>();
+		r2adjMap.put("r2adj", r2adj);
+		result.add(r2adjMap);
+		
+		Dataset<Row> residuals = summary.residuals();		
+		residuals.show(false);
+		Map<String, Object> residualsMap = new HashMap<>();
+		int size = (Integer.parseInt(""+residuals.count()) > 20) ? 20 : Integer.parseInt(""+residuals.count());
+		Object[] residualVals = new Object[size];
+		Row[] rows = (Row[]) residuals.head(size);
+		int i = 0;
+		for(Row row : rows) {
+			residualVals[i] = row.get(0);
+			i++;
+		}
+		residualsMap.put("residuals", Arrays.toString(residualVals));
+		result.add(residualsMap);
+		
+		double rootMeanSquaredError = summary.rootMeanSquaredError();
+		Map<String, Object> rootMeanSquaredErrorMap = new HashMap<>();
+		rootMeanSquaredErrorMap.put("rootMeanSquaredError", rootMeanSquaredError);
+		result.add(rootMeanSquaredErrorMap);
+		
+		int totalIterations = summary.totalIterations();
+		Map<String, Object> totalIterationsMap = new HashMap<>();
+		totalIterationsMap.put("totalIterations", totalIterations);
+		result.add(totalIterationsMap);
+//		double[] tValues = summary.tValues();
+		return result;
+	}
+
+	private List<Map<String, Object>> logisticRegressionSummay(LogisticRegressionModel transformer) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
