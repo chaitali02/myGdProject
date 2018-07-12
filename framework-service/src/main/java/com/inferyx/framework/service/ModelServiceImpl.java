@@ -103,6 +103,8 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
@@ -813,8 +815,35 @@ public class ModelServiceImpl {
 		if(filePath == null) {
 			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type);
 			MetaIdentifierHolder dependsOn = trainExec.getDependsOn();
-			filePath = Helper.getPropertyValue("framework.model.log.path") + "/" + trainExec.getUuid() + "_" + trainExec.getVersion() + "_" + dependsOn.getRef().getVersion() + ".log";
+			filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + trainExec.getUuid() + "_" + trainExec.getVersion() + "_" + dependsOn.getRef().getVersion() + ".log";
 		}
+		FileInputStream fstream = new FileInputStream(filePath);
+		BufferedReader buffReader = new BufferedReader(new InputStreamReader(fstream));
+		String strLine = "";
+		StringBuilder log = new StringBuilder();
+		List<String> logList = new ArrayList<>();
+	   
+		while ((strLine = buffReader.readLine()) != null)   {
+			log.append(strLine).append("\n");
+			//logList.add(strLine);
+		}
+		logList.add(log.toString());
+		buffReader.close();
+		fstream.close();
+		return logList;
+	}
+	
+	public List<String> readLog2(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		if(filePath == null) {
+			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type);
+			MetaIdentifierHolder execDependsOn = trainExec.getDependsOn();
+			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(execDependsOn.getRef().getUuid(),
+					execDependsOn.getRef().getVersion(), MetaType.train.toString());
+			MetaIdentifierHolder trainDependsOn = train.getDependsOn();
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(trainDependsOn.getRef().getUuid(), trainDependsOn.getRef().getVersion(), MetaType.model.toString());
+			filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + model.getUuid().replaceAll("-", "_") + "/" + model.getVersion() + "/" + trainExec.getVersion()  + "/" + model.getUuid().replaceAll("-", "_") + "_" + model.getVersion() + "_" + trainExec.getVersion() + ".result";
+		}
+		//FileInputStream fstream = new FileInputStream("/user/hive/warehouse/framework/model/train/3dfc4042_00db_48f5_a075_572c5aead3ca/1530799218/1531305060/3dfc4042_00db_48f5_a075_572c5aead3ca_1530799218_1531305060.result");
 		FileInputStream fstream = new FileInputStream(filePath);
 		BufferedReader buffReader = new BufferedReader(new InputStreamReader(fstream));
 		String strLine = "";
@@ -1445,7 +1474,7 @@ public class ModelServiceImpl {
 		runModelServiceImpl.setModelType(model.getType());
 		runModelServiceImpl.setModelServiceImpl(this);
 		if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) 
-			runModelServiceImpl.setLogPath(Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log");
+			runModelServiceImpl.setLogPath(Helper.getPropertyValue("framework.model.train.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log");
 		runModelServiceImpl.setExecFactory(execFactory);
 		runModelServiceImpl.setSecurityServiceImpl(securityServiceImpl);
 		runModelServiceImpl.setTrainExec(trainExec);
@@ -1702,7 +1731,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreHolder.getRef().getUuid(),
 				datastoreHolder.getRef().getVersion(), datastoreHolder.getRef().getType().toString());
 		if (dataStore == null)
-			throw new NullPointerException("No datastore available");
+			throw new NullPointerException("No datastore available.");
 		String location = dataStore.getLocation();
 
 		if (location.contains("/data"))
@@ -1740,7 +1769,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					MetaType.algorithm.toString());
 
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
-			String filePath = "/predict"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
+			String filePath = "/model/predict"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 			String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
@@ -1781,8 +1810,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					throw new Exception("Executed model not found.");
 
 				String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
-				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainName(), label, appUuid);
-				Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelName(), trainExec);
+				exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), label, appUuid);
+				Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
 				ResultSetHolder rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_data"), appUuid);
 				String query = "SELECT * FROM " + rsHolder.getTableName();
 				
@@ -1906,7 +1935,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 					MetaType.algorithm.toString());
 
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
-			String filePath = "/predict"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
+			String filePath = "/model/predict"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 			String tableName = null;//String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), predictExec.getVersion());
 
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
@@ -1967,8 +1996,8 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 //						&& dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 //					exec.assembleDF(fieldArray, tableName, algorithm.getTrainName(), label, appUuid);
 //				}
-				Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelName(), trainExec);
-				ResultSetHolder rsHolder =  exec.predict2(trainedModel, target, filePathUrl, tableName, fieldArray, algorithm.getTrainName(), label, datasource, appUuid);
+				Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+				ResultSetHolder rsHolder =  exec.predict2(trainedModel, target, filePathUrl, tableName, fieldArray, algorithm.getTrainClass(), label, datasource, appUuid);
 				
 				if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
 						|| dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
@@ -2081,7 +2110,7 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 				targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
 			
 			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
-			String filePath = "/simulate"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());	
+			String filePath = "/model/simulate"+String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());	
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();

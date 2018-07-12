@@ -191,7 +191,7 @@ public class GraphOperator implements IOperator {
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
-			sb.append(" AS nHpropertyId,' ");
+			sb.append(" AS nBPropertyId,' ");
 			// added type
 			sb.append(graphNode.getHighlightInfo().getType());
 			sb.append("' AS type, ");
@@ -201,7 +201,7 @@ public class GraphOperator implements IOperator {
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder1, propertyIdRefHolder1,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
-			sb.append(" AS nBPropertyId");
+			sb.append(" AS nHPropertyId");
 
 			sb.append(ConstantsUtil.FROM);
 

@@ -132,15 +132,15 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
-		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
-		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), trainExecUUID,
-				trainExecVersion);
-		Model model =  (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
-		if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-				|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-			return modelServiceImpl.readLog(null, MetaType.trainExec.toString(), trainExecUUID, trainExecVersion);
-		} else
-			return modelExecServiceImpl.getModelResults(train, trainExecUUID, trainExecVersion, rowLimit);
+//		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+//		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), trainExecUUID,
+//				trainExecVersion);
+//		Model model =  (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+//		if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//				|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+			return modelServiceImpl.readLog2(null, MetaType.trainExec.toString(), trainExecUUID, trainExecVersion);
+//		} else
+//			return modelExecServiceImpl.getModelResults(train, trainExecUUID, trainExecVersion, rowLimit);
 	}
 
 	@RequestMapping(value = "/getModelScript", method = RequestMethod.GET)

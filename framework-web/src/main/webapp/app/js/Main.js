@@ -3018,7 +3018,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('graphpodresult', {
             url: "/GraphAnalysis/GraphpodResult?id&version&type&name",
             templateUrl: "views/graphpod-result.html",
-            data: { pageTitle: 'Graph Analysi' },
+            data: { pageTitle: 'Graph Analysis' },
             //controller: "BlankController",
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {

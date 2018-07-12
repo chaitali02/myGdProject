@@ -334,9 +334,9 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		}
 	}
     $scope.onChangePropertyName=function(index,value,type){
-	
+	   debugger
 		if(type =='category'){
-			if($scope.propertyInfoTableArray.length >1){
+			if(index >0){
 				for(var i=0;i<$scope.propertyInfoTableArray.length-1;i++){
 					if($scope.propertyInfoTableArray[i].propertyName == value){
 						$scope.myHighlightForm['propertyName'+index].$invalid=true;
@@ -348,7 +348,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				$scope.myHighlightForm['propertyName'+index].$invalid=false;
 			}
 	    }else if(type=='numerical'){
-			if($scope.propertyInfoTableArray.length >1){
+			if(index >0){
 				for(var i=0;i<$scope.propertyInfoTableArray.length-1;i++){
 					if(parseInt($scope.propertyInfoTableArray[i].propertyName) >= parseInt(value)){
 						$scope.myHighlightForm['propertyName'+index].$invalid=true;

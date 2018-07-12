@@ -467,4 +467,10 @@ public class RExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public List<Map<String, Object>> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

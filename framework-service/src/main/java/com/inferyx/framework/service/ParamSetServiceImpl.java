@@ -423,7 +423,7 @@ public class ParamSetServiceImpl {
 			//algo = iAlgorithmDao.findOneByUuidAndVersion(model.getAlgorithm().getRef().getUuid(), model.getAlgorithm().getRef().getVersion());
 			algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 		}
-		String className = algo.getTrainName();
+		String className = algo.getTrainClass();
 		
 		List<ParamMap> paramMapList = new ArrayList<>();
 		if(null!= execParams) {

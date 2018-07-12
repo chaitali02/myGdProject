@@ -41,8 +41,8 @@
 	],
 	"type": "REGRESSION",
 	"library": "SPARKML",
-	"trainName": "org.apache.spark.ml.regression.LinearRegression",
-	"modelName": "org.apache.spark.ml.regression.LinearRegressionModel",
+	"trainClass": "org.apache.spark.ml.regression.LinearRegression",
+	"modelClass": "org.apache.spark.ml.regression.LinearRegressionModel",
 	"labelRequired": "Y",
 	"paramList": {
 		"ref": {
@@ -50,5 +50,19 @@
 			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82"
 		}
 	},
-  	"savePmml" : "Y"
+  	"savePmml" : "Y",
+	"summaryMethods" : [  
+		"summary",
+		"coefficients",
+		"getAggregationDepth",
+		"getElasticNetParam",
+		"getEpsilon",
+		"getLoss",
+		"getMaxIter",
+		"getRegParam",
+		"getSolver",
+		"getTol",
+		"intercept",
+		"numFeatures"
+	    ]
 }

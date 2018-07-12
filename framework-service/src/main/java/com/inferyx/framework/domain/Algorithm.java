@@ -10,20 +10,87 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="algorithm")
 public class Algorithm extends BaseEntity {
 
-	private String type; // clustering, regression
-	private String library; //sparkML, R, tensorflow
-	private String trainName; //org.apache.spark.ml.classification.LogisticRegression;
-	private String modelName; //org.apache.spark.ml.classification.LogisticRegressionModel;
+	private String type; // clustering, regression, classification
+	private String libraryType; //sparkML, R, tensorflow, H2O
+	private String trainClass; //e.g. org.apache.spark.ml.classification.LogisticRegression;
+	private String modelClass; //e.g. org.apache.spark.ml.classification.LogisticRegressionModel;
+	private List<String> summaryMethods;
 	private String labelRequired;
 	private String returnType; 
 	private MetaIdentifierHolder paramList;
 	private String savePmml;
 
+	/**
+	 * @Ganesh
+	 *
+	 * @return the libraryType
+	 */
+	public String getLibraryType() {
+		return libraryType;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param libraryType the libraryType to set
+	 */
+	public void setLibraryType(String libraryType) {
+		this.libraryType = libraryType;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the trainClass
+	 */
+	public String getTrainClass() {
+		return trainClass;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param trainClass the trainClass to set
+	 */
+	public void setTrainClass(String trainClass) {
+		this.trainClass = trainClass;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the modelClass
+	 */
+	public String getModelClass() {
+		return modelClass;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param modelClass the modelClass to set
+	 */
+	public void setModelClass(String modelClass) {
+		this.modelClass = modelClass;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the summaryMethods
+	 */
+	public List<String> getSummaryMethods() {
+		return summaryMethods;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param summaryMethods the summaryMethods to set
+	 */
+	public void setSummaryMethods(List<String> summaryMethods) {
+		this.summaryMethods = summaryMethods;
+	}
 	/**
 	 * @Ganesh
 	 *
@@ -46,18 +113,6 @@ public class Algorithm extends BaseEntity {
 	public void setLabelRequired(String labelRequired) {
 		this.labelRequired = labelRequired;
 	}
-	public String getTrainName() {
-		return trainName;
-	}
-	public void setTrainName(String trainName) {
-		this.trainName = trainName;
-	}
-	public String getModelName() {
-		return modelName;
-	}
-	public void setModelName(String modelName) {
-		this.modelName = modelName;
-	}
 	public String getReturnType() {
 		return returnType;
 	}
@@ -69,12 +124,6 @@ public class Algorithm extends BaseEntity {
 	}
 	public void setType(String type) {
 		this.type = type;
-	}
-	public String getLibrary() {
-		return library;
-	}
-	public void setLibrary(String library) {
-		this.library = library;
 	}
 
 	public MetaIdentifierHolder getParamList() {

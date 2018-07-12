@@ -23,8 +23,8 @@
   ],
   "type": "CLUSTERING",
   "library": "SPARKML",
-  "trainName": "org.apache.spark.ml.clustering.KMeans",
-  "modelName": "org.apache.spark.ml.clustering.KMeansModel",
+  "trainClass": "org.apache.spark.ml.clustering.KMeans",
+  "modelClass": "org.apache.spark.ml.clustering.KMeansModel",
   "labelRequired": "Y",
   "returnType": null,
   "paramList": {
@@ -33,5 +33,15 @@
       "uuid": "67773bc7-6db5-4598-a288-c8d33d7e8c52"
     }
   },
-  "savePmml": "Y"
+  "savePmml": "Y",
+	"summaryMethods" : [  
+		"summary",
+		"clusterCenters",
+		"getInitMode",
+		"getInitSteps",
+		"getK",
+		"getMaxIter",
+		"getSeed",
+		"getTol"
+	    ]
 }

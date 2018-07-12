@@ -394,6 +394,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.published = $scope.trainData.published;
     TrainJson.published = $scope.trainData.published;
     TrainJson.valPercent = $scope.trainData.valPercent;
+    TrainJson.trainPercent = $scope.trainData.trainPercent;
     TrainJson.useHyperParams = $scope.trainData.useHyperParams;
     var tagArray = [];
     if ($scope.tags != null) {
