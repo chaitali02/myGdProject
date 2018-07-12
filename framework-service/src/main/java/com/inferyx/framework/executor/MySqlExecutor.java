@@ -602,7 +602,7 @@ public class MySqlExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Map<String, Object>> summary(Object trndModel, String clientContext) throws IOException {
+	public List<Map<String, Object>> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
