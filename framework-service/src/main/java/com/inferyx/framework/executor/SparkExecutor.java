@@ -40,8 +40,8 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
-import org.apache.spark.ml.classification.LogisticRegressionModel;
 import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
+import org.apache.spark.ml.clustering.KMeansSummary;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
 import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
@@ -59,8 +59,6 @@ import org.apache.spark.ml.param.IntParam;
 import org.apache.spark.ml.param.LongParam;
 import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
-import org.apache.spark.ml.regression.AFTSurvivalRegressionModel;
-import org.apache.spark.ml.regression.LinearRegressionModel;
 import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
@@ -2283,46 +2281,9 @@ public class SparkExecutor<T> implements IExecutor {
 		return paramGridBuilder;
 	}
 	
-	@Override
-	public List<Map<String, Object>> summary(Object trndModel, String clientContext) throws IOException {
-		List<Map<String, Object>> summary = null;
-		PipelineModel pipelineModel = null;
-		if(trndModel instanceof PipelineModel) {
-			pipelineModel = (PipelineModel)trndModel;
-		} else if(trndModel instanceof CrossValidatorModel) {
-			pipelineModel = (PipelineModel)((CrossValidatorModel)trndModel).bestModel();
-		}
-		Transformer[] transformers = pipelineModel.stages();
-		for (Transformer transformer : transformers) {
-			if(transformer instanceof LinearRegressionModel) {
-				summary = linearRegressionSummay((LinearRegressionModel)transformer);
-			} else if(transformer instanceof LogisticRegressionModel) {
-				summary = logisticRegressionSummay((LogisticRegressionModel)transformer);
-			} else if(transformer instanceof AFTSurvivalRegressionModel) {
-				summary = aftSurvivalRegressionModelSummay((AFTSurvivalRegressionModel)transformer);
-			} 
-		}
-		
-		return summary;
-	}
-	
-	private List<Map<String, Object>> aftSurvivalRegressionModelSummay(AFTSurvivalRegressionModel aftSurvivalRegModel) {
-		List<Map<String, Object>> aftSurvivalRegSummary = new ArrayList<>();
-		aftSurvivalRegModel.aggregationDepth();
-		aftSurvivalRegModel.coefficients();
-		aftSurvivalRegModel.getAggregationDepth();
-		aftSurvivalRegModel.getAggregationDepth();
-		aftSurvivalRegModel.getMaxIter();
-		aftSurvivalRegModel.getQuantileProbabilities();
-		aftSurvivalRegModel.getQuantilesCol();
-		aftSurvivalRegModel.getTol();
-		aftSurvivalRegModel.intercept();
-		aftSurvivalRegModel.scale();
-		return aftSurvivalRegSummary;
-	}
-
-//	public List<Map<String, Object>> summary2(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-//		List<Map<String, Object>> summary = new ArrayList<>();
+//	@Override
+//	public List<Map<String, Object>> summary(Object trndModel, String clientContext) throws IOException {
+//		List<Map<String, Object>> summary = null;
 //		PipelineModel pipelineModel = null;
 //		if(trndModel instanceof PipelineModel) {
 //			pipelineModel = (PipelineModel)trndModel;
@@ -2331,48 +2292,63 @@ public class SparkExecutor<T> implements IExecutor {
 //		}
 //		Transformer[] transformers = pipelineModel.stages();
 //		for (Transformer transformer : transformers) {
-//			if(transformer instanceof org.apache.spark.ml.Model<?>) {
-//				org.apache.spark.ml.Model<?> model = (org.apache.spark.ml.Model<?>)transformer;
-//				for(String method : summaryMethods) {
-//					Object result = model.getClass().getMethod(method.trim()).invoke(model);
-//					if(result.getClass().isArray()) {
-//						Map<String, Object> coefficientsMap = new HashMap<>();
-//						coefficientsMap.put(method, Arrays.toString((double[])result));
-//						summary.add(coefficientsMap);
-//					} else {
-//						Map<String, Object> coefficientsMap = new HashMap<>();
-//						coefficientsMap.put(method, result);
-//						summary.add(coefficientsMap);
-//					}
-//				}
-//			}
+//			if(transformer instanceof LinearRegressionModel) {
+//				summary = linearRegressionSummay((LinearRegressionModel)transformer);
+//			} else if(transformer instanceof LogisticRegressionModel) {
+//				summary = logisticRegressionSummay((LogisticRegressionModel)transformer);
+//			} else if(transformer instanceof KMeansModel) {
+//				summary = kmeansClusteringModelSummay((KMeansModel)transformer);
+//			} 
 //		}
 //		
 //		return summary;
 //	}
+	
+	@Override
+	public List<Map<String, Object>> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		List<Map<String, Object>> summary = new ArrayList<>();
+		PipelineModel pipelineModel = null;
+		if(trndModel instanceof PipelineModel) {
+			pipelineModel = (PipelineModel)trndModel;
+		} else if(trndModel instanceof CrossValidatorModel) {
+			pipelineModel = (PipelineModel)((CrossValidatorModel)trndModel).bestModel();
+		}
+		Transformer[] transformers = pipelineModel.stages();
+		for (Transformer transformer : transformers) {
+			if(transformer instanceof org.apache.spark.ml.Model<?>) {
+				org.apache.spark.ml.Model<?> model = (org.apache.spark.ml.Model<?>)transformer;
+				for(String method : summaryMethods) {
+					Object result = model.getClass().getMethod(method.trim()).invoke(model);
+					if(method.equalsIgnoreCase("summary")) {
+						summary = getSummaryFromSummaryMethod(summary, result);
+					}
+					String key = method.toLowerCase();
+					if(method.startsWith("get")) {
+						key = method.substring(3).toLowerCase();
+					}
+					if(result.getClass().isArray()) {
+						Map<String, Object> outPutMap = new HashMap<>();
+						outPutMap.put(key, Arrays.toString((double[])result));
+						summary.add(outPutMap);
+					}else if(result instanceof Vector) {
+						Map<String, Object> outPutMap = new HashMap<>();
+						outPutMap.put(key, Arrays.toString(((Vector)result).toArray()));
+						summary.add(outPutMap);
+					} else {
+						Map<String, Object> outPutMap = new HashMap<>();
+						outPutMap.put(key, result);
+						summary.add(outPutMap);
+					}
+				}
+			}
+		}
+		
+		return summary;
+	}
 
-	private List<Map<String, Object>> linearRegressionSummay(LinearRegressionModel lrModel) throws JsonProcessingException {
-		List<Map<String, Object>> lrSummary = new ArrayList<>();
-		Vector coefficients = lrModel.coefficients();
-		Map<String, Object> coefficientsMap = new HashMap<>();
-		coefficientsMap.put("coefficients", Arrays.toString(coefficients.toArray()));
-		lrSummary.add(coefficientsMap);
+	private List<Map<String, Object>> linearRegressionSummay(List<Map<String, Object>> lrSummary, Object result) throws JsonProcessingException {
 		
-//		int aggrgtnDepth = lrModel.getAggregationDepth();
-//		double elasticNetParam = lrModel.getElasticNetParam();
-//		double epsilon = lrModel.getEpsilon();
-//		boolean fitIntercept = lrModel.getFitIntercept();
-//		String loss = lrModel.getLoss();
-//		int maxIter = lrModel.getMaxIter();
-//		double regParam = lrModel.getRegParam();
-//		String solver = lrModel.getSolver();
-//		boolean standerdization = lrModel.getStandardization();
-//		double tol = lrModel.getTol();
-////		String weightCol = lrModel.getWeightCol();
-//		int numFeatures = lrModel.numFeatures();
-//		double scale = lrModel.scale();
-		
-		LinearRegressionTrainingSummary summary = lrModel.summary();
+		LinearRegressionTrainingSummary summary = (LinearRegressionTrainingSummary) result;
 //		double[] coefficientStandardErrors = summary.coefficientStandardErrors();
 		long degreesOfFreedom = summary.degreesOfFreedom();
 		Map<String, Object> degreesOfFreedomMap = new HashMap<>();
@@ -2383,7 +2359,6 @@ public class SparkExecutor<T> implements IExecutor {
 		Map<String, Object> devianceResidualsMap = new HashMap<>();
 		devianceResidualsMap.put("devianceResiduals", Arrays.toString(devianceResiduals));
 		lrSummary.add(devianceResidualsMap);
-		System.out.println(devianceResiduals.getClass().isArray());
 		
 		double explainedVariance = summary.explainedVariance();
 		Map<String, Object> explainedVarianceMap = new HashMap<>();
@@ -2447,9 +2422,8 @@ public class SparkExecutor<T> implements IExecutor {
 		return lrSummary;
 	}
 
-	private List<Map<String, Object>> logisticRegressionSummay(LogisticRegressionModel lrModel) {
-		List<Map<String, Object>> lrSummary = new ArrayList<>();
-		LogisticRegressionTrainingSummary summary = lrModel.summary();
+	private List<Map<String, Object>> logisticRegressionSummay(List<Map<String, Object>> lrSummary, Object result) {
+		LogisticRegressionTrainingSummary summary = (LogisticRegressionTrainingSummary) result;
 		
 		double accuracy = summary.accuracy();
 		Map<String, Object> accuracyMap = new HashMap<>();
@@ -2517,5 +2491,39 @@ public class SparkExecutor<T> implements IExecutor {
 		lrSummary.add(weightedTruePositiveRateMap);
 		
 		return lrSummary;
+	}
+	
+	private List<Map<String, Object>> kmeansClusteringModelSummay(List<Map<String, Object>> kmeansClusteringSummary, Object result) {
+		KMeansSummary summary = (KMeansSummary) result;
+		long[] clusterSizes = summary.clusterSizes();
+		Map<String, Object> clusterSizesMap = new HashMap<>();
+		clusterSizesMap.put("clusterSizes",  Arrays.toString(clusterSizes));
+		kmeansClusteringSummary.add(clusterSizesMap);
+		
+		Dataset<Row> cluster = summary.cluster();		
+		cluster.show(false);
+		Map<String, Object> clusterMap = new HashMap<>();
+		int size = (Integer.parseInt(""+cluster.count()) > 20) ? 20 : Integer.parseInt(""+cluster.count());
+		Object[] clusterVals = new Object[size];
+		Row[] rows = (Row[]) cluster.head(size);
+		int i = 0;
+		for(Row row : rows) {
+			clusterVals[i] = row.get(0);
+			i++;
+		}
+		clusterMap.put("cluster", Arrays.toString(clusterVals));
+		kmeansClusteringSummary.add(clusterMap);
+		return kmeansClusteringSummary;
+	}
+	
+	private List<Map<String, Object>> getSummaryFromSummaryMethod(List<Map<String, Object>> summary, Object result) throws JsonProcessingException {
+		if(result instanceof KMeansSummary) {
+			summary = kmeansClusteringModelSummay(summary, result);
+		} else if(result instanceof LogisticRegressionTrainingSummary) {
+			summary = logisticRegressionSummay(summary, result);
+		} else if(result instanceof LinearRegressionTrainingSummary) {
+			summary = linearRegressionSummay(summary, result);
+		}
+		return summary;
 	}
 }
