@@ -1806,7 +1806,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			}
 		}
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
-				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties","relationwithChild.edgeIndex")
+				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties","relationwithChild.edgeIndex","relationwithChild.eHpropertyId")
 				.distinct();
 		edge_dataset.show(false);
 		System.out.println("############   Edgefilter  Filter  String   #####" + nodefilter.toString());
@@ -1855,6 +1855,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				String edge_type = row.getAs(resultDatesetColumns[3]);
 				String edge_properties = row.getAs(resultDatesetColumns[4]);
 				String edge_index = row.getAs(resultDatesetColumns[5]).toString();
+				String edge_propertyID = row.getAs(resultDatesetColumns[6]).toString();
 				String relation = null;
 				if (edge_properties.contains(","))
 					relation = edge_properties.substring(edge_properties.indexOf(':') + 1,
@@ -1903,10 +1904,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 						}
 					}
 					GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
-							edge_properties,edge_index);
+							edge_properties,edge_index,edge_propertyID);
 					result.add(graphpodresult);
 				} else {
-					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null,null);
+					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null,null,null);
 					result.add(graphpodresult);
 				}
 
