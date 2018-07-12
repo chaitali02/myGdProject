@@ -141,7 +141,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
             function myGraph() {
                 this.addNode = function (n) {
                     if (!findNode(n.id)) {
-                        nodes.push({ "id": n.id, "label": n.label,"nodeName":n.nodeName,"nodeType":n.nodeType,"nodeProperties":n.nodeProperties,"nodeIcon":n.nodeIcon,"propertyId":n.propertyId,"propertyInfo":n.propertyInfo,"type":n.type});
+                        nodes.push({ "id": n.id, "label": n.label,"nodeName":n.nodeName,"nodeType":n.nodeType,"nodeProperties":n.nodeProperties,"nodeIcon":n.nodeIcon,"nBPropertyId":n.nBPropertyId,"nHPropertyId":n.nHPropertyId,"type":n.type,"nodeIndex":n.nodeIndex});
                         update();
                     }
                 };
@@ -313,30 +313,40 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             return "Node;" + d.id;
                         })
                         .attr("stroke",function(d){
-                            var temp=d;
                             var result=null;
-                            if(temp.propertyInfo !=null &&  typeof temp.propertyInfo=== 'string' ) {
-                                temp=temp.propertyInfo.replace('{', ' ');
-                                temp=temp.replace('}', ' ');
-                                var tempPInfo=temp.split(",");
-                                for(var i=0;i<tempPInfo.length;i++){
-                                    var temp=tempPInfo[i].split(":");
-                                    if(d.propertyId ==temp[0].trim()){
-                                        result =temp[1];
-                                        break;
-                                    }                                
-                                }
-                                if(result !=null){
-                                    return result;
-                                }else{
-                                    return 'white';
-                                }
-                                
+                            var tempPInfo=scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo.propertyInfo;
+                            for(var i=0;i<tempPInfo.length;i++){
+                                if(d.nHPropertyId == tempPInfo[i].propertyName){
+                                    result =tempPInfo[i].propertyValue;
+                                    break;
+                                }                                
+                            }
+                            if(result !=null){
+                                return result;
+                            }else{
+                                return 'black';
                             }
                         })
                         .attr("class", "nodeStrokeClass")
                         //.attr("fill", "#0db7ed")
-                        .attr("fill", function(d) { try{ return CF_GRAPHPOD.nodeIconMap[d.nodeIcon].color}catch(e){ return"#0db7ed"}})
+                        .attr("fill", function(d) { 
+                            try{ 
+                            //return CF_GRAPHPOD.nodeIconMap[d.nodeIcon].color
+                            var result=null;
+                            var tempPInfo=scope.graphpodData.nodeInfo[d.nodeIndex].nodeBackgroundInfo.propertyInfo;
+                            for(var i=0;i<tempPInfo.length;i++){
+                                if(d.nBPropertyId == tempPInfo[i].propertyName){
+                                    result =tempPInfo[i].propertyValue;
+                                    break;
+                                }                                
+                            }
+                            if(result !=null){
+                                return result;
+                            }else{
+                                return '#0db7ed';
+                            }
+                            }catch(e){ return"#0db7ed"}
+                        })
                     nodeEnter.append('text')
                         .attr('font-family', 'FontAwesome')
                         .attr("class", "iconNode")
