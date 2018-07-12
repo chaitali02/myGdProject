@@ -54,6 +54,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             
                             nodeFilterObj.logicalOperator=scope.filter.nodeTableArray[i].logicalOperator;
                             nodeFilterObj.operator=scope.filter.nodeTableArray[i].operator;
+                            nodeFilterObj.source=scope.filter.nodeTableArray[i].selectSource.name;
                             operand.propertyName=scope.filter.nodeTableArray[i].selectAttribute.attributeName;
                             if(scope.filter.nodeTableArray[i].operator =="BETWEEN"){
                                 var value1=scope.filter.nodeTableArray[i].rhsvalue1;//"'"+scope.filter.nodeTableArray[i].rhsvalue1+"'";
@@ -77,6 +78,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             var operand={};
                             edgeFilterObj.logicalOperator=scope.filter.edgeTableArray[i].logicalOperator;
                             edgeFilterObj.operator=scope.filter.edgeTableArray[i].operator;
+                            edgeFilterObj.source=scope.filter.edgeTableArray[i].selectSource.name;
                             operand.propertyName=scope.filter.edgeTableArray[i].selectAttribute.attributeName;
                             if(scope.filter.edgeTableArray[i].operator =="BETWEEN"){
                                 var value1=scope.filter.edgeTableArray[i].rhsvalue1;//"'"+scope.filter.edgeTableArray[i].rhsvalue1+"'"

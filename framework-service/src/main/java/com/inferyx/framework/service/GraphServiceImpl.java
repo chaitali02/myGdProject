@@ -55,6 +55,7 @@ import com.inferyx.framework.domain.Edge;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.FilterInfo;
+import com.inferyx.framework.domain.GraphEdge;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.GraphFilter;
 import com.inferyx.framework.domain.GraphMetaIdentifier;
@@ -1764,6 +1765,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
+		List<String> source1=new ArrayList<>();
 		StringBuilder nodefilter = new StringBuilder();
 		StringBuilder edgefilter = new StringBuilder();
 		if (execParams != null) {
@@ -1790,28 +1792,58 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				for (GraphFilter.EdgeFilter edgeFilter : graphFilter.getEdgeFilter()) {
 
 					String logicalOperator = edgeFilter.getLogicalOperator();
-					if (logicalOperator == "" && graphFilter.getNodeFilter().size() > 0) {
+					if (logicalOperator!=null && graphFilter.getNodeFilter().size() > 0) {
 						String operator = edgeFilter.getOperator();
+						 source1.add(edgeFilter.getSource()); 
 						Property operand = edgeFilter.getOperand();
-						edgefilter.append(" get_json_object(edgeProperties,'$." + operand.getPropertyName() + "')  "
+						edgefilter.append(logicalOperator +" get_json_object(edgeProperties,'$." + operand.getPropertyName() + "')  "
 								+ operator + "  " + operand.getPropertyValue());
 
 					} else {
 						String operator = edgeFilter.getOperator();
 						Property operand = edgeFilter.getOperand();
-						edgefilter.append("  " + logicalOperator + "  " + "get_json_object(edgeProperties,'$."
+						 source1.add(edgeFilter.getSource()); 
+						edgefilter.append("  " + logicalOperator +" get_json_object(edgeProperties,'$."
 								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
 					}
 				}
 			}
 		}
+		
+		StringBuilder sourceName = new StringBuilder();
+
+		for (GraphEdge edgename : graphpod.getEdgeInfo() ) {
+			for(int i=0;i<source1.size();i++)
+			/*if(source1.get(source1.size()).toString()!=null) */{
+			if ( !edgename.getEdgeSource().getRef().getName().equalsIgnoreCase(source1.get(i).toString())) 
+			 {
+				sourceName.append("   edgeSource='" + edgename.getEdgeSource().getRef().getName() + "' or ");
+				}
+			
+			}
+		}
+		int count2 = 0;
+		for(String sour:source1) {
+			if(count2==0) {
+				sourceName.append("(  edgeSource = '"+sour+"' and" );
+			}else {
+				sourceName.append("  edgeSource = '"+sour+"' and" );
+			}
+			count2++;
+		}
+	//	sourceName.append(" ( edgeSource = '"+source1+"' and" );
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
-				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties","relationwithChild.edgeIndex","relationwithChild.eHpropertyId")
+				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties",
+				"relationwithChild.edgeIndex", "relationwithChild.eHpropertyId", "relationwithChild.edgeSource")
 				.distinct();
 		edge_dataset.show(false);
-		System.out.println("############   Edgefilter  Filter  String   #####" + nodefilter.toString());
+		     
+		
+		
+		System.out.println("############   Edgefilter  Filter  String   #####" + sourceName+edgefilter.toString()+")");
 		if (edgefilter.length() > 0)			
-			edge_dataset = edge_dataset.filter(edgefilter.toString());
+			edge_dataset = edge_dataset.filter(sourceName+edgefilter.toString()+")");
+			
 		edge_dataset.show(false);
 		@SuppressWarnings("deprecation")
 		Dataset<Row> node_dataset = motifs

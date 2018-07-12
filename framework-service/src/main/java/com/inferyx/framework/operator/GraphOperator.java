@@ -26,6 +26,8 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.GraphEdge;
 import com.inferyx.framework.domain.GraphNode;
 import com.inferyx.framework.domain.Graphpod;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Property;
@@ -127,6 +129,17 @@ public class GraphOperator implements IOperator {
 			sb.append(graphNode.getNodeIcon());
 			sb.append("' AS nodeIcon, ");
 
+		/*	@SuppressWarnings("unchecked")
+			List<AttributeRefHolder> setAttrRefHolder = graphNode.getNodeProperties();
+			
+			AttributeRefHolder attrRefHolder=	 graphNode.getNodeBackgroundInfo().getPropertyId();
+			
+			//setAttrRefHolder.add(attrRefHolder);
+			  for (AttributeRefHolder attrRefHolder1 : setAttrRefHolder)
+				  setAttrRefHolder.add(attrRefHolder.getAttrName().contains(attrRefHolder1.getAttrName()) ? : null);
+	          System.out.println(setAttrRefHolder);*/
+
+			
 			Boolean status = true;
 
 			sb.append("concat('{', ");
@@ -234,6 +247,7 @@ public class GraphOperator implements IOperator {
 	 * @return
 	 * @throws Exception 
 	 */
+	@SuppressWarnings("unused")
 	private String createEdgeSql(List<GraphEdge> edgeList, ExecParams execParams, BaseExec baseExec, RunMode runMode) throws Exception {
 		if (edgeList == null || edgeList.isEmpty()) {
 			return null;
@@ -266,9 +280,20 @@ public class GraphOperator implements IOperator {
 			sb.append(graphEdge.getEdgeName());
 			sb.append("' AS edgeName, '");
 			sb.append(graphEdge.getEdgeType());
-			sb.append("' AS edgeType, ");
+			sb.append("' AS edgeType,'");
+			
+			
+			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.getOneByUuidAndVersion(
+					graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(),
+					graphEdge.getEdgeSource().getRef().getType().toString());
+			String edgeSource = (baseEntity == null) ? "" : baseEntity.getName();
+
+			sb.append(edgeSource);
+			sb.append("' AS edgeSource, ");
+			
 			Boolean status = true;
 			sb.append("concat('{', ");
+			 //graphEdge.getEdgeProperties().set(graphEdge.getEdgeProperties().size()-1, graphEdge.getHighlightInfo().getPropertyId());
 			for (AttributeRefHolder propHolder : graphEdge.getEdgeProperties()) {
 				String type=propHolder.getAttrType();
 				if(type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString())) {
@@ -311,12 +336,15 @@ public class GraphOperator implements IOperator {
 				sb.append("'}')");   
 			}
 			sb.append(" AS edgeProperties, ");
-			
+			//remove
 			AttributeRefHolder propertyIdRefHolder = graphEdge.getHighlightInfo().getPropertyId();
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
 			sb.append(" AS eHpropertyId, ");
+			
+			//graphEdge.getEdgeSource().getRef().get
+		
 			
 			sb.append("concat('{', ");
 			for (Property property : graphEdge.getHighlightInfo().getPropertyInfo()) {
