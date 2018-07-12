@@ -50,5 +50,15 @@
 			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a79"
 		}
 	},
-  	"savePmml" : "Y"
+  	"savePmml" : "Y",
+	"summaryMethods" : [  
+		"summary",
+		"clusterCenters",
+		"getInitMode",
+		"getInitSteps",
+		"getK",
+		"getMaxIter",
+		"getSeed",
+		"getTol"
+	    ]
 }

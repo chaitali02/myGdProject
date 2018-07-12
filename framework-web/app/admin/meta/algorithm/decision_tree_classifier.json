@@ -50,5 +50,21 @@
 			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84"
 		}
 	},
-  	"savePmml" : "Y"
+  	"savePmml" : "Y",
+	"summaryMethods" : [  
+		"depth",
+		"featureImportances",
+		"getCheckpointInterval",
+		"getImpurity",
+		"getMaxBins",
+		"getMaxDepth",
+		"getMaxMemoryInMB",
+		"getMinInfoGain",
+		"getMinInstancesPerNode",
+		"getSeed",
+		"getThresholds",
+		"numClasses",
+		"numFeatures",
+		"numNodes"
+	    ]
 }
