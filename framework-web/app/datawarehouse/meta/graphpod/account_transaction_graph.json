@@ -1,4 +1,5 @@
 {
+    
     "nodeInfo" : [ 
         {
             "nodeId" : {
@@ -51,10 +52,40 @@
                     }
                 }
             ],
+            "nodeBackgroundInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "American",
+                        "propertyValue" : "#c9f2f2"
+                    }, 
+                    {
+                        "propertyName" : "Canadian",
+                        "propertyValue" : "#6aadac"
+                    }, 
+                    {
+                        "propertyName" : "British",
+                        "propertyValue" : "#f2162a"
+                    }, 
+                    {
+                        "propertyName" : "German",
+                        "propertyValue" : "#7c787b"
+                    }
+                ]
+            },
             "highlightInfo" : {
                 "type" : "category",
                 "propertyId" : {
                     "attrId" : "6",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -147,10 +178,36 @@
                     }
                 }
             ],
+            "nodeBackgroundInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "3",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "Mr",
+                        "propertyValue" : "#51b3ff"
+                    }, 
+                    {
+                        "propertyName" : "Ms",
+                        "propertyValue" : "#da00ff"
+                    }, 
+                    {
+                        "propertyName" : "Mrs",
+                        "propertyValue" : "#814c83"
+                    }
+                ]
+            },
             "highlightInfo" : {
                 "type" : "category",
                 "propertyId" : {
                     "attrId" : "3",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -227,7 +284,29 @@
                     "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
                 }
             },
-            "targetNodeType" : "account"
+            "targetNodeType" : "account",
+            "highlightInfo" : {
+                "type" : "numerical",
+                "propertyId" : {
+                    "attrId" : "7",
+                    "attrType" : "integer",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "2000",
+                        "propertyValue" : "#45062d"
+                    }, 
+                    {
+                        "propertyName" : "300000",
+                        "propertyValue" : "#61595e"
+                    }
+                ]
+            }
         }, 
         {
             "edgeId" : "1",
@@ -282,11 +361,28 @@
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                 }
             },
-            "targetNodeType" : "account"
+            "targetNodeType" : "account",
+            "highlightInfo" : {
+                "type" : "numerical",
+                "propertyId" : {
+                    "attrId" : "14",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "2000",
+                        "propertyValue" : "#61595e"
+                    }
+                ]
+            }
         }
     ],
     "uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
-    "version" : "1531210810",
+    "version" : "1531376096",
     "name" : "account_transaction_graph",
     "desc" : "account_transaction_graph",
     "createdBy" : {
@@ -297,7 +393,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-07-10T08:20:10.000Z"),
+    "createdOn" : ISODate("2018-07-12T06:14:56.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

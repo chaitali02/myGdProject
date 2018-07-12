@@ -101,6 +101,8 @@ public class GraphOperator implements IOperator {
 												execParams.getOtherParams(), execParams));
 			sb.append(" AS id, ");
 			
+
+			sb.append(count+" AS nodeIndex, ");
 			
 			AttributeRefHolder nodeNameRefHolder =  graphNode.getNodeName();
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeNameRefHolder, nodeNameRefHolder, 
@@ -167,11 +169,11 @@ public class GraphOperator implements IOperator {
 			  
 			sb.append(" AS nodeProperties ,");
 			// added propertyId
-			AttributeRefHolder propertyIdRefHolder = graphNode.getHighlightInfo().getPropertyId();
+			AttributeRefHolder propertyIdRefHolder = graphNode.getNodeBackgroundInfo().getPropertyId();
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
-			sb.append(" AS propertyId,' ");
+			sb.append(" AS nHpropertyId,' ");
 			// added type
 			sb.append(graphNode.getHighlightInfo().getType());
 			sb.append("' AS type, ");
@@ -182,39 +184,7 @@ public class GraphOperator implements IOperator {
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder1, propertyIdRefHolder1,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
-			sb.append(" AS nodeBackgroundId ,");
-			
-			
-			sb.append("concat('{', ");
-			for (Property property : graphNode.getNodeBackgroundInfo().getPropertyInfo()) {
-				sb.append("'''");
-				sb.append(property.getPropertyName());
-				sb.append("'':', ");
-				sb.append("'");
-				sb.append(property.getPropertyValue());
-				sb.append("'");
-				sb.append(", ");
-				sb.append("',' ");
-			}
-			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'}')");
-			sb.append(" AS nodeBackground, ");
-
-			
-			sb.append("concat('{', ");
-			for (Property property : graphNode.getHighlightInfo().getPropertyInfo()) {
-				sb.append("'''");
-				sb.append(property.getPropertyName());
-				sb.append("'':', ");
-				sb.append("'");
-				sb.append(property.getPropertyValue());
-				sb.append("'");
-				sb.append(", ");
-				sb.append("',' ");
-			}
-			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'}')");
-			sb.append(" AS propertyInfo ");
+			sb.append(" AS nBPropertyId");
 
 			sb.append(ConstantsUtil.FROM);
 
@@ -272,6 +242,11 @@ public class GraphOperator implements IOperator {
 			sb.append(ConstantsUtil.SELECT);
 			sb.append(" ");
 			// Fetch id attribute 
+			
+
+			sb.append(count+" AS edgeIndex, ");
+			
+			
 			AttributeRefHolder sourceNodeIdRefHolder = graphEdge.getSourceNodeId();
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, sourceNodeIdRefHolder, sourceNodeIdRefHolder, 
 												DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 

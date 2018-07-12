@@ -56,7 +56,8 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	$scope.selectedAllPropertyRow = false;
 	$scope.allType=CF_GRAPHPOD.allType;
 	$scope.selectType=$scope.allType[0];
-	$scope.allNodeHighlightType=CF_GRAPHPOD.nodeHighlightType
+	$scope.allNodeHighlightType=CF_GRAPHPOD.nodeHighlightType;
+	$scope.nodeColorInfo=CF_GRAPHPOD.nodeHighlightColor;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.graphpod] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -534,7 +535,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					nodePropertiesArry[j]=nodeProperties;
 				}
 				nodeJson.nodeProperties=nodePropertiesArry;
-				
+
 				var highlightInfo={};
 				var propertyId={};
 				var propertyIdRef={};

@@ -1806,7 +1806,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			}
 		}
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
-				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties")
+				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties","relationwithChild.edgeIndex")
 				.distinct();
 		edge_dataset.show(false);
 		System.out.println("############   Edgefilter  Filter  String   #####" + nodefilter.toString());
@@ -1816,9 +1816,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		@SuppressWarnings("deprecation")
 		Dataset<Row> node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
-						"Object.propertyId", "Object.propertyInfo", "Object.type")
+						"Object.nBPropertyId", "Object.nHpropertyId", "Object.type","Object.nodeIndex")
 				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
-						"Child.nodeProperties", "Child.propertyId", "Child.propertyInfo", "Child.type"))
+						"Child.nodeProperties", "Child.nBPropertyId", "Child.nHpropertyId", "Child.type","Child.nodeIndex"))
 				.distinct();
 
 		System.out.println("############   Nodefilter  Filter  String   #####" + nodefilter.toString());
@@ -1854,7 +1854,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				String edge_name = row.getAs(resultDatesetColumns[2]);
 				String edge_type = row.getAs(resultDatesetColumns[3]);
 				String edge_properties = row.getAs(resultDatesetColumns[4]);
-
+				String edge_index = row.getAs(resultDatesetColumns[5]).toString();
 				String relation = null;
 				if (edge_properties.contains(","))
 					relation = edge_properties.substring(edge_properties.indexOf(':') + 1,
@@ -1903,10 +1903,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 						}
 					}
 					GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
-							edge_properties);
+							edge_properties,edge_index);
 					result.add(graphpodresult);
 				} else {
-					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null);
+					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null,null);
 					result.add(graphpodresult);
 				}
 

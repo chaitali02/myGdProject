@@ -591,7 +591,26 @@
                             </span>
                           </td>
                           <td>
+                            <!-- <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                <div class="custom-ui-select" style="min-width:150px;">
+                                  <ui-select  name ="nodeIcon" ng-model="nodeColor"  theme="" ng-disabled="{{mode}}"  append-to-body="false">
+                                      
+                                      <ui-select-match  required disable-validation-message="">
+                                        
+                                        <div style="background-color:{{nodeColor}};text-align:center;border:1px solid black;" title="{{nodeColor}}"> {{nodeColor}} </div>
+                                      </ui-select-match>
+                                      <ui-select-choices repeat="x in (nodeColorInfo | filter: $select.search) track by $index " position='down'  required disable-validation-message="">
+                                        <div>
+                                          
+                                          <div style="background-color:{{x}};text-align:center;border:1px solid black;" ng-bind-html="x| highlight: $select.search"></div>
+                                        </div>
+                                      </ui-select-choices>
+                                    </ui-select>
+                                    <input type="hidden" name="nodeIcon" ng-model="nodeColor" required disable-validation-message="" >
+                                </div>
+                              </span> -->
                             <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                              
                               <div>
                                 <input type="color" class="form-control" ng-disabled="{{mode}}" name="propertyValue{{$index}}" ng-model="tabledata.propertyValue" required disable-validation-message="" style="height:36px;padding: 0px;">
                               </div>
