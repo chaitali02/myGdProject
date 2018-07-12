@@ -22,6 +22,7 @@
             "attrSourceName" : "src_transaction_type_id",
             "sourceAttr" : {
                 "attrId" : "0",
+                "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "b51a6e3d-792a-4298-a8de-c216d0c5424e"
@@ -33,6 +34,7 @@
             "attrSourceName" : "transaction_type_code",
             "sourceAttr" : {
                 "attrId" : "1",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "b51a6e3d-792a-4298-a8de-c216d0c5424e"
@@ -44,6 +46,7 @@
             "attrSourceName" : "transaction_type_desc",
             "sourceAttr" : {
                 "attrId" : "2",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "b51a6e3d-792a-4298-a8de-c216d0c5424e"

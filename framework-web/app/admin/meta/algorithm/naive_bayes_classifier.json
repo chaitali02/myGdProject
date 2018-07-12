@@ -45,8 +45,8 @@
   ],
   "type": "CLASSIFICATION",
   "library": "SPARKML",
-  "trainName": "org.apache.spark.ml.classification.NaiveBayes",
-  "modelName": "org.apache.spark.ml.classification.NaiveBayesModel",
+  "trainClass": "org.apache.spark.ml.classification.NaiveBayes",
+  "modelClass": "org.apache.spark.ml.classification.NaiveBayesModel",
   "labelRequired": "Y",
   "returnType": null,
   "paramList": {

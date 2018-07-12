@@ -1806,18 +1806,19 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			}
 		}
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
-				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties")
+				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties","relationwithChild.edgeIndex","relationwithChild.eHpropertyId")
 				.distinct();
 		edge_dataset.show(false);
-		if (edgefilter.length() > 0)
+		System.out.println("############   Edgefilter  Filter  String   #####" + nodefilter.toString());
+		if (edgefilter.length() > 0)			
 			edge_dataset = edge_dataset.filter(edgefilter.toString());
-
+		edge_dataset.show(false);
 		@SuppressWarnings("deprecation")
 		Dataset<Row> node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
-						"Object.propertyId", "Object.propertyInfo", "Object.type")
+						"Object.nBPropertyId", "Object.nHpropertyId", "Object.type","Object.nodeIndex")
 				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
-						"Child.nodeProperties", "Child.propertyId", "Child.propertyInfo", "Child.type"))
+						"Child.nodeProperties", "Child.nBPropertyId", "Child.nHpropertyId", "Child.type","Child.nodeIndex"))
 				.distinct();
 
 		System.out.println("############   Nodefilter  Filter  String   #####" + nodefilter.toString());
@@ -1853,7 +1854,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				String edge_name = row.getAs(resultDatesetColumns[2]);
 				String edge_type = row.getAs(resultDatesetColumns[3]);
 				String edge_properties = row.getAs(resultDatesetColumns[4]);
-
+				String edge_index = row.getAs(resultDatesetColumns[5]).toString();
+				String edge_propertyID = row.getAs(resultDatesetColumns[6]).toString();
 				String relation = null;
 				if (edge_properties.contains(","))
 					relation = edge_properties.substring(edge_properties.indexOf(':') + 1,
@@ -1882,20 +1884,30 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				if (dstVertexDf.count() > 0) {
 					for (Row dstrow : dstrows) {
 						for (String cloumn : vertexColumns) {
+							
 							if (cloumn.equalsIgnoreCase("nodeName")) {
 								String value1 = dstrow.getAs(cloumn).toString();
 								target.put("label", value1);
 							}
+							if(dstrow.anyNull()==true) {
+							System.out.println("test");
+							}
+							
+							if(dstrow.anyNull()==false) {
 							String value1 = dstrow.getAs(cloumn).toString();
-							target.put(cloumn, value1);
+							target.put(cloumn, value1);}
+							else {
+								continue;
+							}
+							
 
 						}
 					}
 					GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
-							edge_properties);
+							edge_properties,edge_index,edge_propertyID);
 					result.add(graphpodresult);
 				} else {
-					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null);
+					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null,null,null);
 					result.add(graphpodresult);
 				}
 

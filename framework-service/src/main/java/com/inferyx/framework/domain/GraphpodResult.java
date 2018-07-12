@@ -30,15 +30,36 @@ public class GraphpodResult {
 	String edgeName;	
 	String edgeType;
 	String edgeProperties;	
-	
-	
+	String edgeIndex;
+	String eHPropertiesId;
+	public String geteHPropertiesId() {
+		return this.eHPropertiesId;
+	}
+
+
+
+
+	public void seteHPropertiesId(String eHPropertiesId) {
+		this.eHPropertiesId = eHPropertiesId;
+	}
+
+
+
+
 	public GraphpodResult() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	
+	
+
+	
+
+
+
+
 	public GraphpodResult(Map<String, String> source, Map<String, String> target, String value, String edgeName,
-			String edgeType, String edgeProperties) {
+			String edgeType, String edgeProperties, String edgeIndex, String eHPropertiesId) {
 		super();
 		this.source = source;
 		this.target = target;
@@ -46,7 +67,32 @@ public class GraphpodResult {
 		this.edgeName = edgeName;
 		this.edgeType = edgeType;
 		this.edgeProperties = edgeProperties;
+		this.edgeIndex = edgeIndex;
+		this.eHPropertiesId = eHPropertiesId;
 	}
+
+
+
+
+	public String getEdgeIndex() {
+		return edgeIndex;
+	}
+
+
+
+
+	public void setEdgeIndex(String edgeIndex) {
+		this.edgeIndex = edgeIndex;
+	}
+
+
+
+
+	public void setEdgeProperties(String edgeProperties) {
+		this.edgeProperties = edgeProperties;
+	}
+
+
 
 
 	public String getEdgeName() {

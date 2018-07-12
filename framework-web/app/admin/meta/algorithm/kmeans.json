@@ -41,8 +41,8 @@
 	],
 	"type": "REGRESSION",
 	"library": "SPARKML",
-	"trainName": "org.apache.spark.ml.clustering.KMeans",
-	"modelName": "org.apache.spark.ml.clustering.KMeansModel",
+	"trainClass": "org.apache.spark.ml.clustering.KMeans",
+	"modelClass": "org.apache.spark.ml.clustering.KMeansModel",
 	"labelRequired": "N",
 	"paramList": {
 		"ref": {

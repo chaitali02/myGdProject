@@ -41,8 +41,8 @@
 	],
 	"type": "REGRESSION",
 	"library": "SPARKML",
-	"trainName": "org.apache.spark.ml.classification.DecisionTreeClassifier",
-	"modelName": "org.apache.spark.ml.classification.DecisionTreeClassificationModel",
+	"trainClass": "org.apache.spark.ml.classification.DecisionTreeClassifier",
+	"modelClass": "org.apache.spark.ml.classification.DecisionTreeClassificationModel",
 	"labelRequired": "Y",
 	"paramList": {
 		"ref": {

@@ -9,6 +9,7 @@ import java.util.List;
  * @author joy
  *
  */
+
 public class GraphEdge {
 
 	String edgeId;
@@ -20,6 +21,8 @@ public class GraphEdge {
 	String sourceNodeType;
 	AttributeRefHolder targetNodeId;
 	String targetNodeType;
+	Highlight highlightInfo;
+
 	/**
 	 * @return the edgeId
 	 */
@@ -127,6 +130,16 @@ public class GraphEdge {
 	 */
 	public void setTargetNodeType(String targetNodeType) {
 		this.targetNodeType = targetNodeType;
+	}
+	
+	/**
+	 * @return
+	 */
+	public Highlight getHighlightInfo() {
+		return this.highlightInfo;
+	}
+	public void setHighlightInfo(Highlight highlightInfo) {
+		this.highlightInfo = highlightInfo;
 	}
 
 }

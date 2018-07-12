@@ -1607,7 +1607,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var iconMenuItems = [];
              if($scope.execMode){
                var status = $(".status[element-id=" + id + "] .statusTitle")[0].innerHTML;
-               if(status && (status=='NotStarted' || status=='Resume')){
+               if(status && ( status=='Resume')){
                  iconMenuItems.push({title:'On Hold', type : 'onhold'});
                }
                else if(status && status=='InProgress'){

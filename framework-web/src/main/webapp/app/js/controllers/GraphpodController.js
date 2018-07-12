@@ -56,7 +56,8 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	$scope.selectedAllPropertyRow = false;
 	$scope.allType=CF_GRAPHPOD.allType;
 	$scope.selectType=$scope.allType[0];
-	$scope.allNodeHighlightType=CF_GRAPHPOD.nodeHighlightType
+	$scope.allNodeHighlightType=CF_GRAPHPOD.nodeHighlightType;
+	$scope.nodeColorInfo=CF_GRAPHPOD.nodeHighlightColor;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.graphpod] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -363,19 +364,45 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		
 	}
 
-	$scope.addHighlightInfo=function(index){
-		if($scope.nodeTableArray[index].highlightInfo){
-			$scope.highlightInfo=$scope.nodeTableArray[index].highlightInfo;
-			$scope.propertyInfoTableArray=$scope.highlightInfo.propertyInfoTableArray;
-		}else{
-			$scope.highlightInfo={};
-			$scope.highlightInfo.selectType="category";
-			$scope.propertyInfoTableArray=[];
-			$scope.addPropertyInfoRow();
+	$scope.addHighlightInfo=function(index,type,propertyType){
+
+		if(type =='node'){
+			if($scope.nodeTableArray[index][propertyType]){
+				$scope.highlightInfo=$scope.nodeTableArray[index][propertyType];
+				$scope.propertyInfoTableArray=$scope.highlightInfo.propertyInfoTableArray;
+				$scope.highlightInfo.type=type;
+				$scope.highlightInfo.propertyType=propertyType;
+			}else{
+				$scope.highlightInfo={};
+				$scope.highlightInfo.selectType="category";
+				$scope.highlightInfo.type=type;
+				$scope.highlightInfo.propertyType=propertyType;
+				$scope.propertyInfoTableArray=[];
+				$scope.addPropertyInfoRow();
+			}
+			
+			$scope.highlightInfo.index=index
+			$scope.allAttr=$scope.nodeTableArray[index].allAttributeInto;
 		}
-		
-        $scope.highlightInfo.index=index
-		$scope.allAttr=$scope.nodeTableArray[index].allAttributeInto;
+		if(type =='edge'){
+			if($scope.edgeTableArray[index][propertyType]){
+				$scope.highlightInfo=$scope.edgeTableArray[index][propertyType];
+				$scope.propertyInfoTableArray=$scope.highlightInfo.propertyInfoTableArray;
+				$scope.highlightInfo.type=type;
+				$scope.highlightInfo.propertyType=propertyType;
+			}else{
+				$scope.highlightInfo={};
+				$scope.highlightInfo.selectType="category";
+				$scope.highlightInfo.type=type;
+				$scope.highlightInfo.propertyType=propertyType;
+				$scope.propertyInfoTableArray=[];
+				$scope.addPropertyInfoRow();
+			}
+			
+			$scope.highlightInfo.index=index
+			$scope.allAttr=$scope.edgeTableArray[index].allAttributeInto;
+
+		}
 		setTimeout(function(){$('#addHiglightInfo').modal({
 			backdrop: 'static',
 			keyboard: false
@@ -385,9 +412,16 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	
 	$scope.SubmitHighlightInfo=function(){
 		$('#addHiglightInfo').modal('hide');
-		$scope.highlightInfo.value=$scope.highlightInfo.selectType+","+$scope.highlightInfo.propertyId.name;
-		$scope.highlightInfo.propertyInfoTableArray=$scope.propertyInfoTableArray;
-		$scope.nodeTableArray[$scope.highlightInfo.index].highlightInfo=$scope.highlightInfo;
+		if($scope.highlightInfo.type=='node'){
+			$scope.highlightInfo.value=$scope.highlightInfo.selectType+","+$scope.highlightInfo.propertyId.name;
+			$scope.highlightInfo.propertyInfoTableArray=$scope.propertyInfoTableArray;
+			$scope.nodeTableArray[$scope.highlightInfo.index][$scope.highlightInfo.propertyType]=$scope.highlightInfo;
+		}
+		if($scope.highlightInfo.type=='edge'){
+			$scope.highlightInfo.value=$scope.highlightInfo.selectType+","+$scope.highlightInfo.propertyId.name;
+			$scope.highlightInfo.propertyInfoTableArray=$scope.propertyInfoTableArray;
+			$scope.edgeTableArray[$scope.highlightInfo.index][$scope.highlightInfo.propertyType]=$scope.highlightInfo;
+		}
 	
 	}
 	$scope.allPropertyRow = function () {
@@ -480,6 +514,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				nodeIdRef.type=$scope.nodeTableArray[i].nodeId.type
 				nodeId.ref=nodeIdRef;
 				nodeId.attrId=$scope.nodeTableArray[i].nodeId.attributeId;
+				nodeId.attrType=$scope.nodeTableArray[i].nodeId.attrType;
 				nodeJson.nodeId=nodeId;
 				nodeJson.nodeType=$scope.nodeTableArray[i].nodeType;
 				nodeJson.nodeIcon=$scope.nodeTableArray[i].nodeIcon.value;
@@ -487,6 +522,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				nodeNameRef.type=$scope.nodeTableArray[i].nodeName.type;
 				nodeName.ref=nodeNameRef;
 				nodeName.attrId=$scope.nodeTableArray[i].nodeName.attributeId;
+				nodeName.attrType=$scope.nodeTableArray[i].nodeName.attrType;
 				nodeJson.nodeName=nodeName;
 				for(var j=0;j<$scope.nodeTableArray[i].nodeProperties.length;j++){
 					var nodeProperties={}
@@ -495,8 +531,11 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					nodePropertiesRef.type=$scope.nodeTableArray[i].nodeProperties[j].type;
 					nodeProperties.ref=nodeNameRef;
 					nodeProperties.attrId=$scope.nodeTableArray[i].nodeProperties[j].attributeId;
+					nodeProperties.attrType=$scope.nodeTableArray[i].nodeProperties[j].attrType;
 					nodePropertiesArry[j]=nodeProperties;
 				}
+				nodeJson.nodeProperties=nodePropertiesArry;
+
 				var highlightInfo={};
 				var propertyId={};
 				var propertyIdRef={};
@@ -505,6 +544,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				propertyIdRef.uuid=$scope.nodeTableArray[i].highlightInfo.propertyId.uuid;
 				propertyId.ref=propertyIdRef;
 				propertyId.attrId=$scope.nodeTableArray[i].highlightInfo.propertyId.attributeId;
+				propertyId.attrType=$scope.nodeTableArray[i].highlightInfo.propertyId.attrType;
 				highlightInfo.propertyId=propertyId;
 				var propertyInfoArray=[];
 				if($scope.nodeTableArray[i].highlightInfo.propertyInfoTableArray.length >0){
@@ -517,8 +557,28 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				}
 				highlightInfo.propertyInfo=propertyInfoArray;
 				nodeJson.highlightInfo=highlightInfo
-				nodeJson.nodeProperties=nodePropertiesArry;
 
+				var nodeBackgroundInfo={};
+				var NBPropertyId={};
+				var NBPropertyIdRef={};
+				nodeBackgroundInfo.type=$scope.nodeTableArray[i].nodeBackgroundInfo.selectType;
+				NBPropertyIdRef.type=$scope.nodeTableArray[i].nodeBackgroundInfo.propertyId.type;
+				NBPropertyIdRef.uuid=$scope.nodeTableArray[i].nodeBackgroundInfo.propertyId.uuid;
+				NBPropertyId.ref=NBPropertyIdRef;
+				NBPropertyId.attrId=$scope.nodeTableArray[i].nodeBackgroundInfo.propertyId.attributeId;
+				NBPropertyId.attrType=$scope.nodeTableArray[i].nodeBackgroundInfo.propertyId.attrType;
+				nodeBackgroundInfo.propertyId=NBPropertyId;
+				var NBPropertyInfoArray=[];
+				if($scope.nodeTableArray[i].nodeBackgroundInfo.propertyInfoTableArray.length >0){
+					for (var j=0;j<$scope.nodeTableArray[i].nodeBackgroundInfo.propertyInfoTableArray.length;j++){
+						var propertyInfo={};
+						propertyInfo.propertyName=$scope.nodeTableArray[i].nodeBackgroundInfo.propertyInfoTableArray[j].propertyName;
+						propertyInfo.propertyValue=$scope.nodeTableArray[i].nodeBackgroundInfo.propertyInfoTableArray[j].propertyValue;
+					    NBPropertyInfoArray[j]=propertyInfo;
+					}
+				}
+				nodeBackgroundInfo.propertyInfo=NBPropertyInfoArray;
+				nodeJson.nodeBackgroundInfo=nodeBackgroundInfo
 				nodeInfo[i]=nodeJson
 			}
 	    }
@@ -549,14 +609,37 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 					edgePropertiesRef.type=$scope.edgeTableArray[i].edgeProperties[j].type;
 					edgeProperties.ref=edgePropertiesRef;
 					edgeProperties.attrId=$scope.edgeTableArray[i].edgeProperties[j].attributeId;
+					edgeProperties.attrType=$scope.edgeTableArray[i].edgeProperties[j].attrType;
 					edgePropertiesArry[j]=edgeProperties;
 				}
 				edgeJson.edgeProperties=edgePropertiesArry;
+                var highlightInfo={};
+				var propertyId={};
+				var propertyIdRef={};
+				highlightInfo.type=$scope.edgeTableArray[i].highlightInfo.selectType;
+				propertyIdRef.type=$scope.edgeTableArray[i].highlightInfo.propertyId.type;
+				propertyIdRef.uuid=$scope.edgeTableArray[i].highlightInfo.propertyId.uuid;
+				propertyId.ref=propertyIdRef;
+				propertyId.attrId=$scope.edgeTableArray[i].highlightInfo.propertyId.attributeId;
+				propertyId.attrType=$scope.edgeTableArray[i].highlightInfo.propertyId.attrType;
+				highlightInfo.propertyId=propertyId;
+				var propertyInfoArray=[];
+				if($scope.edgeTableArray[i].highlightInfo.propertyInfoTableArray.length >0){
+					for (var j=0;j<$scope.edgeTableArray[i].highlightInfo.propertyInfoTableArray.length;j++){
+						var propertyInfo={};
+						propertyInfo.propertyName=$scope.edgeTableArray[i].highlightInfo.propertyInfoTableArray[j].propertyName;
+						propertyInfo.propertyValue=$scope.edgeTableArray[i].highlightInfo.propertyInfoTableArray[j].propertyValue;
+					    propertyInfoArray[j]=propertyInfo;
+					}
+				}
+				highlightInfo.propertyInfo=propertyInfoArray;
+				edgeJson.highlightInfo=highlightInfo
 
 				sourceNodeIdRef.uuid=$scope.edgeTableArray[i].sourceNodeId.uuid;
 				sourceNodeIdRef.type=$scope.edgeTableArray[i].sourceNodeId.type;
 				sourceNodeId.ref=sourceNodeIdRef;
 				sourceNodeId.attrId=$scope.edgeTableArray[i].sourceNodeId.attributeId;
+				sourceNodeId.attrType=$scope.edgeTableArray[i].sourceNodeId.attrType;
 				edgeJson.sourceNodeId=sourceNodeId;
 				edgeJson.sourceNodeType=$scope.edgeTableArray[i].sourceNodeType;
 
@@ -564,6 +647,7 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				targetNodeIdRef.type=$scope.edgeTableArray[i].targetNodeId.type;
 				targetNodeIdId.ref=targetNodeIdRef;
 				targetNodeIdId.attrId=$scope.edgeTableArray[i].targetNodeId.attributeId;
+				targetNodeIdId.attrType=$scope.edgeTableArray[i].targetNodeId.attrType;
 				edgeJson.targetNodeId=targetNodeIdId;
 				edgeJson.targetNodeType=$scope.edgeTableArray[i].targetNodeType;
 
@@ -633,5 +717,9 @@ GraphAnalysisModule.controller('GraphpodResultController',function($state,$state
 		$scope.showKGraph=function(){
 			$scope.isD3FDGraphShow=false;
 			$scope.isD3KnowlageGraphShow=true;
+		}
+
+		$scope.applyFilter=function(){
+			 $scope.$broadcast('transferUp',null);
 		}
 });
