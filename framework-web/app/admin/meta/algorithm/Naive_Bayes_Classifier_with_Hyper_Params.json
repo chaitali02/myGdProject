@@ -33,5 +33,17 @@
       "uuid": "45f293c8-ea4b-482c-838e-69ed4b19bc9a"
     }
   },
-  "savePmml": "Y"
+  "savePmml": "Y",
+	"summaryMethods" : [  
+		"getSmoothing",
+		"getThresholds",
+		"numClasses",
+		"numFeatures",
+		"pi",
+		"getWeightCol",
+		"getRawPredictionCol",
+		"getProbabilityCol",
+		"getPredictionCol",
+		"getModelType"
+	    ]
 }

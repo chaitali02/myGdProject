@@ -23,8 +23,8 @@
   ],
   "type": "CLUSTERING",
   "library": "SPARKML",
-  "trainName": "org.apache.spark.ml.clustering.LDA",
-  "modelName": "org.apache.spark.ml.clustering.LDAModel",
+  "trainClass": "org.apache.spark.ml.clustering.LDA",
+  "modelClass": "org.apache.spark.ml.clustering.LDAModel",
   "labelRequired": "Y",
   "returnType": null,
   "paramList": {
@@ -33,5 +33,20 @@
       "uuid": "53b44d5b-6571-4c46-af08-549b1445d056"
     }
   },
-  "savePmml": "N"
+  "savePmml": "N",
+	"summaryMethods" : [  
+		"estimatedDocConcentration",
+		"getDocConcentration",
+		"getK",
+		"getLearningDecay",
+		"getLearningOffset",
+		"getOldDocConcentration",
+		"getOldTopicConcentration",
+		"getSubsamplingRate",
+		"getTopicConcentration",
+		"getOptimizer",
+		"getTopicDistributionCol",
+		"supportedOptimizers",
+		"vocabSize"
+	    ]
 }

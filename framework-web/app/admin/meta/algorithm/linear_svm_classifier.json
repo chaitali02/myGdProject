@@ -58,5 +58,16 @@
     },
     "value": null
   },
-  "savePmml" : "N"
+  "savePmml" : "N",
+	"summaryMethods" : [  
+		"coefficients",
+		"getAggregationDepth",
+		"getMaxIter",
+		"getRegParam",
+		"getThreshold",
+		"getTol",
+		"intercept",
+		"numClasses",
+		"numFeatures"
+	    ]
 }

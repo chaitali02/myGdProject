@@ -58,5 +58,22 @@
     },
     "value": null
   },
-  "savePmml" : "Y"
+  "savePmml" : "Y",
+	"summaryMethods" : [  
+		"featureImportances",
+		"getCheckpointInterval",
+		"getMaxBins",
+		"getMaxDepth",
+		"getMaxMemoryInMB",
+		"getMinInfoGain",
+		"getMinInstancesPerNode",
+		"getNumTrees",
+		"getSeed",
+		"getSubsamplingRate",
+		"getThresholds",
+		"numClasses",
+		"numFeatures",
+		"totalNumNodes",
+		"treeWeights"
+	    ]
 }

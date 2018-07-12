@@ -33,5 +33,22 @@
       "uuid": "ffc49c07-e7cb-40ee-8050-fc69121a189b"
     }
   },
-  "savePmml": "Y"
+  "savePmml": "Y",
+	"summaryMethods" : [  
+		"summary",
+		"coefficients",
+		"getAggregationDepth",
+		"getElasticNetParam",
+		"getFamily",
+		"getLowerBoundsOnIntercepts",
+		"getMaxIter",
+		"getRegParam",
+		"getThresholds",
+		"getTol",
+		"getUpperBoundsOnIntercepts",
+		"intercept",
+		"interceptVector",
+		"numClasses",
+		"numFeatures"
+	    ]
 }

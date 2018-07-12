@@ -58,5 +58,17 @@
     },
     "value": null
   },
-  "savePmml" : "N"
+  "savePmml" : "N",
+	"summaryMethods" : [  
+		"getSmoothing",
+		"getThresholds",
+		"numClasses",
+		"numFeatures",
+		"pi",
+		"getWeightCol",
+		"getRawPredictionCol",
+		"getProbabilityCol",
+		"getPredictionCol",
+		"getModelType"
+	    ]
 }
