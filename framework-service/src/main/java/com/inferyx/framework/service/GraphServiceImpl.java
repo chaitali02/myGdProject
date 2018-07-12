@@ -1904,7 +1904,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 						}
 					}
 					GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
-							edge_properties,edge_index,edge_propertyID);
+							edge_properties,edge_index,edge_propertyID.toString());
 					result.add(graphpodresult);
 				} else {
 					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null,null,null);

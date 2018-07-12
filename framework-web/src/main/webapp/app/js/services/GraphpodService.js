@@ -202,7 +202,7 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
             NBPropertyId.attributeId=response.nodeInfo[i].nodeBackgroundInfo.propertyId.attrId;
             NBPropertyId.attrType=response.nodeInfo[i].nodeBackgroundInfo.propertyId.attrType;
             NBPropertyId.id =response.nodeInfo[i].nodeBackgroundInfo.propertyId.ref.uuid+"_"+response.nodeInfo[i].nodeBackgroundInfo.propertyId.attrId;
-            nodeBackgroundInfo.propertyId=propertyId;
+            nodeBackgroundInfo.propertyId=NBPropertyId;
             nodeBackgroundInfo.value=response.nodeInfo[i].nodeBackgroundInfo.type+","+response.nodeInfo[i].nodeBackgroundInfo.propertyId.attrName;
             nodeBackgroundInfo.propertyInfoTableArray=response.nodeInfo[i].nodeBackgroundInfo.propertyInfo;
             nodeJson.nodeBackgroundInfo=nodeBackgroundInfo;

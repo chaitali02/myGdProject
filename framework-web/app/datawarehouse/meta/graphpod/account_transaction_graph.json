@@ -55,7 +55,7 @@
             "nodeBackgroundInfo" : {
                 "type" : "category",
                 "propertyId" : {
-                    "attrId" : "6",
+                    "attrId" : "18",
                     "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
@@ -64,20 +64,12 @@
                 },
                 "propertyInfo" : [ 
                     {
-                        "propertyName" : "American",
+                        "propertyName" : "Compound",
                         "propertyValue" : "#c9f2f2"
                     }, 
                     {
-                        "propertyName" : "Canadian",
+                        "propertyName" : "Simple",
                         "propertyValue" : "#6aadac"
-                    }, 
-                    {
-                        "propertyName" : "British",
-                        "propertyValue" : "#f2162a"
-                    }, 
-                    {
-                        "propertyName" : "German",
-                        "propertyValue" : "#7c787b"
                     }
                 ]
             },
@@ -94,19 +86,19 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "American",
-                        "propertyValue" : "#c9f2f2"
+                        "propertyValue" : "#3a4d4d"
                     }, 
                     {
                         "propertyName" : "Canadian",
-                        "propertyValue" : "#6aadac"
+                        "propertyValue" : "#173f3e"
                     }, 
                     {
                         "propertyName" : "British",
-                        "propertyValue" : "#f2162a"
+                        "propertyValue" : "#750711"
                     }, 
                     {
                         "propertyName" : "German",
-                        "propertyValue" : "#7c787b"
+                        "propertyValue" : "#352e33"
                     }
                 ]
             }
@@ -216,15 +208,15 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "Mr",
-                        "propertyValue" : "#51b3ff"
+                        "propertyValue" : "#1f4563"
                     }, 
                     {
                         "propertyName" : "Ms",
-                        "propertyValue" : "#da00ff"
+                        "propertyValue" : "#3d1344"
                     }, 
                     {
                         "propertyName" : "Mrs",
-                        "propertyValue" : "#814c83"
+                        "propertyValue" : "#301b31"
                     }
                 ]
             }
@@ -290,7 +282,6 @@
                 "propertyId" : {
                     "attrId" : "7",
                     "attrType" : "integer",
-                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
@@ -302,7 +293,7 @@
                         "propertyValue" : "#45062d"
                     }, 
                     {
-                        "propertyName" : "300000",
+                        "propertyName" : "500000",
                         "propertyValue" : "#61595e"
                     }
                 ]
@@ -376,13 +367,17 @@
                     {
                         "propertyName" : "2000",
                         "propertyValue" : "#61595e"
+                    }, 
+                    {
+                        "propertyName" : "10000",
+                        "propertyValue" : "#2a232a"
                     }
                 ]
             }
         }
     ],
     "uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
-    "version" : "1531376096",
+    "version" : "1531404680",
     "name" : "account_transaction_graph",
     "desc" : "account_transaction_graph",
     "createdBy" : {
@@ -393,7 +388,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-07-12T06:14:56.000Z"),
+    "createdOn" : ISODate("2018-07-12T14:11:20.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
