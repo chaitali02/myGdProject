@@ -12,6 +12,10 @@ package com.inferyx.framework.service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +27,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.Transformer;
+import org.apache.spark.ml.classification.LogisticRegressionModel;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.ml.regression.LinearRegressionModel;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
 
@@ -707,6 +714,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					if(trndModel instanceof CrossValidatorModel) {
 						filePathUrl = filePathUrl + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
 						List<Map<String, Object>> summary = exec.summary(trndModel, appUuid);
+						summary2(trndModel, algorithm.getSummaryMethods(), appUuid);
 						String fileName = tableName+".result";
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else if(trndModel instanceof PipelineModel) {
@@ -766,8 +774,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		}		
 	}
 	
-
-	
 	public String writeSummaryToFile(List<Map<String, Object>> summary, String directory, String fileName) throws IOException {		
 		String filePath = directory + "/" + fileName;		
 		String resultJson = new ObjectMapper().writeValueAsString(summary);
@@ -775,5 +781,35 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		printWriter.write(resultJson);
 		printWriter.close();
 		return null;
+	}
+	
+	public List<Map<String, Object>> summary2(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		List<Map<String, Object>> summary = new ArrayList<>();
+		PipelineModel pipelineModel = null;
+		if(trndModel instanceof PipelineModel) {
+			pipelineModel = (PipelineModel)trndModel;
+		} else if(trndModel instanceof CrossValidatorModel) {
+			pipelineModel = (PipelineModel)((CrossValidatorModel)trndModel).bestModel();
+		}
+		Transformer[] transformers = pipelineModel.stages();
+		for (Transformer transformer : transformers) {
+			if(transformer instanceof org.apache.spark.ml.Model<?>) {
+				org.apache.spark.ml.Model<?> model = (org.apache.spark.ml.Model<?>)transformer;
+				for(String method : summaryMethods) {
+					Object result = model.getClass().getMethod(method.trim()).invoke(model);
+					if(result.getClass().isArray()) {
+						Map<String, Object> coefficientsMap = new HashMap<>();
+						coefficientsMap.put(method, Arrays.toString((double[])result));
+						summary.add(coefficientsMap);
+					} else {
+						Map<String, Object> coefficientsMap = new HashMap<>();
+						coefficientsMap.put(method, result);
+						summary.add(coefficientsMap);
+					}
+				}
+			}
+		}
+		
+		return summary;
 	}
 }

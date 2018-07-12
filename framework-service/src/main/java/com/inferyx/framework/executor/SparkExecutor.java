@@ -41,6 +41,7 @@ import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.classification.LogisticRegressionModel;
+import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
 import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
@@ -58,6 +59,7 @@ import org.apache.spark.ml.param.IntParam;
 import org.apache.spark.ml.param.LongParam;
 import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.ml.regression.AFTSurvivalRegressionModel;
 import org.apache.spark.ml.regression.LinearRegressionModel;
 import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
@@ -2296,18 +2298,65 @@ public class SparkExecutor<T> implements IExecutor {
 				summary = linearRegressionSummay((LinearRegressionModel)transformer);
 			} else if(transformer instanceof LogisticRegressionModel) {
 				summary = logisticRegressionSummay((LogisticRegressionModel)transformer);
-			}
+			} else if(transformer instanceof AFTSurvivalRegressionModel) {
+				summary = aftSurvivalRegressionModelSummay((AFTSurvivalRegressionModel)transformer);
+			} 
 		}
 		
 		return summary;
 	}
+	
+	private List<Map<String, Object>> aftSurvivalRegressionModelSummay(AFTSurvivalRegressionModel aftSurvivalRegModel) {
+		List<Map<String, Object>> aftSurvivalRegSummary = new ArrayList<>();
+		aftSurvivalRegModel.aggregationDepth();
+		aftSurvivalRegModel.coefficients();
+		aftSurvivalRegModel.getAggregationDepth();
+		aftSurvivalRegModel.getAggregationDepth();
+		aftSurvivalRegModel.getMaxIter();
+		aftSurvivalRegModel.getQuantileProbabilities();
+		aftSurvivalRegModel.getQuantilesCol();
+		aftSurvivalRegModel.getTol();
+		aftSurvivalRegModel.intercept();
+		aftSurvivalRegModel.scale();
+		return aftSurvivalRegSummary;
+	}
+
+//	public List<Map<String, Object>> summary2(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+//		List<Map<String, Object>> summary = new ArrayList<>();
+//		PipelineModel pipelineModel = null;
+//		if(trndModel instanceof PipelineModel) {
+//			pipelineModel = (PipelineModel)trndModel;
+//		} else if(trndModel instanceof CrossValidatorModel) {
+//			pipelineModel = (PipelineModel)((CrossValidatorModel)trndModel).bestModel();
+//		}
+//		Transformer[] transformers = pipelineModel.stages();
+//		for (Transformer transformer : transformers) {
+//			if(transformer instanceof org.apache.spark.ml.Model<?>) {
+//				org.apache.spark.ml.Model<?> model = (org.apache.spark.ml.Model<?>)transformer;
+//				for(String method : summaryMethods) {
+//					Object result = model.getClass().getMethod(method.trim()).invoke(model);
+//					if(result.getClass().isArray()) {
+//						Map<String, Object> coefficientsMap = new HashMap<>();
+//						coefficientsMap.put(method, Arrays.toString((double[])result));
+//						summary.add(coefficientsMap);
+//					} else {
+//						Map<String, Object> coefficientsMap = new HashMap<>();
+//						coefficientsMap.put(method, result);
+//						summary.add(coefficientsMap);
+//					}
+//				}
+//			}
+//		}
+//		
+//		return summary;
+//	}
 
 	private List<Map<String, Object>> linearRegressionSummay(LinearRegressionModel lrModel) throws JsonProcessingException {
-		List<Map<String, Object>> result = new ArrayList<>();
+		List<Map<String, Object>> lrSummary = new ArrayList<>();
 		Vector coefficients = lrModel.coefficients();
 		Map<String, Object> coefficientsMap = new HashMap<>();
 		coefficientsMap.put("coefficients", Arrays.toString(coefficients.toArray()));
-		result.add(coefficientsMap);
+		lrSummary.add(coefficientsMap);
 		
 //		int aggrgtnDepth = lrModel.getAggregationDepth();
 //		double elasticNetParam = lrModel.getElasticNetParam();
@@ -2328,48 +2377,48 @@ public class SparkExecutor<T> implements IExecutor {
 		long degreesOfFreedom = summary.degreesOfFreedom();
 		Map<String, Object> degreesOfFreedomMap = new HashMap<>();
 		degreesOfFreedomMap.put("degreesOfFreedom", degreesOfFreedom);
-		result.add(degreesOfFreedomMap);
+		lrSummary.add(degreesOfFreedomMap);
 		
 		double[] devianceResiduals = summary.devianceResiduals();
 		Map<String, Object> devianceResidualsMap = new HashMap<>();
 		devianceResidualsMap.put("devianceResiduals", Arrays.toString(devianceResiduals));
-		result.add(devianceResidualsMap);
-		
+		lrSummary.add(devianceResidualsMap);
+		System.out.println(devianceResiduals.getClass().isArray());
 		
 		double explainedVariance = summary.explainedVariance();
 		Map<String, Object> explainedVarianceMap = new HashMap<>();
 		explainedVarianceMap.put("explainedVariance", explainedVariance);
-		result.add(explainedVarianceMap);
+		lrSummary.add(explainedVarianceMap);
 		
 		double meanAbsoluteError = summary.meanAbsoluteError();
 		Map<String, Object> meanAbsoluteErrorMap = new HashMap<>();
 		meanAbsoluteErrorMap.put("meanAbsoluteError", meanAbsoluteError);
-		result.add(meanAbsoluteErrorMap);
+		lrSummary.add(meanAbsoluteErrorMap);
 		
 		double meanSquaredError = summary.meanSquaredError();
 		Map<String, Object> meanSquaredErrorMap = new HashMap<>();
 		meanSquaredErrorMap.put("meanSquaredError", meanSquaredError);
-		result.add(meanSquaredErrorMap);
+		lrSummary.add(meanSquaredErrorMap);
 		
 		long numInstances = summary.numInstances();
 		Map<String, Object> numInstancesMap = new HashMap<>();
 		numInstancesMap.put("numInstances", numInstances);
-		result.add(numInstancesMap);
+		lrSummary.add(numInstancesMap);
 		
 		double[] objectiveHistory = summary.objectiveHistory();
 		Map<String, Object> objectiveHistoryMap = new HashMap<>();
 		objectiveHistoryMap.put("objectiveHistory", Arrays.toString(objectiveHistory));
-		result.add(objectiveHistoryMap);
+		lrSummary.add(objectiveHistoryMap);
 		
 		double r2 = summary.r2();
 		Map<String, Object> r2Map = new HashMap<>();
 		r2Map.put("r2", r2);
-		result.add(r2Map);
+		lrSummary.add(r2Map);
 		
 		double r2adj = summary.r2adj();
 		Map<String, Object> r2adjMap = new HashMap<>();
 		r2adjMap.put("r2adj", r2adj);
-		result.add(r2adjMap);
+		lrSummary.add(r2adjMap);
 		
 		Dataset<Row> residuals = summary.residuals();		
 		residuals.show(false);
@@ -2383,23 +2432,90 @@ public class SparkExecutor<T> implements IExecutor {
 			i++;
 		}
 		residualsMap.put("residuals", Arrays.toString(residualVals));
-		result.add(residualsMap);
+		lrSummary.add(residualsMap);
 		
 		double rootMeanSquaredError = summary.rootMeanSquaredError();
 		Map<String, Object> rootMeanSquaredErrorMap = new HashMap<>();
 		rootMeanSquaredErrorMap.put("rootMeanSquaredError", rootMeanSquaredError);
-		result.add(rootMeanSquaredErrorMap);
+		lrSummary.add(rootMeanSquaredErrorMap);
 		
 		int totalIterations = summary.totalIterations();
 		Map<String, Object> totalIterationsMap = new HashMap<>();
 		totalIterationsMap.put("totalIterations", totalIterations);
-		result.add(totalIterationsMap);
+		lrSummary.add(totalIterationsMap);
 //		double[] tValues = summary.tValues();
-		return result;
+		return lrSummary;
 	}
 
-	private List<Map<String, Object>> logisticRegressionSummay(LogisticRegressionModel transformer) {
-		// TODO Auto-generated method stub
-		return null;
+	private List<Map<String, Object>> logisticRegressionSummay(LogisticRegressionModel lrModel) {
+		List<Map<String, Object>> lrSummary = new ArrayList<>();
+		LogisticRegressionTrainingSummary summary = lrModel.summary();
+		
+		double accuracy = summary.accuracy();
+		Map<String, Object> accuracyMap = new HashMap<>();
+		accuracyMap.put("accuracy", accuracy);
+		lrSummary.add(accuracyMap);
+		
+		double[] falsePositiveRateByLabel = summary.falsePositiveRateByLabel();
+		Map<String, Object> falsePositiveRateByLabelMap = new HashMap<>();
+		falsePositiveRateByLabelMap.put("falsePositiveRateByLabel", Arrays.toString(falsePositiveRateByLabel));
+		lrSummary.add(falsePositiveRateByLabelMap);
+		
+		double[] fMeasureByLabel = summary.fMeasureByLabel();
+		Map<String, Object> fMeasureByLabelMap = new HashMap<>();
+		fMeasureByLabelMap.put("fMeasureByLabel", Arrays.toString(fMeasureByLabel));
+		lrSummary.add(fMeasureByLabelMap);
+		
+		double[] labels = summary.labels();
+		Map<String, Object> labelsMap = new HashMap<>();
+		labelsMap.put("labels", Arrays.toString(labels));
+		lrSummary.add(labelsMap);
+		
+		double[] objectiveHistory = summary.objectiveHistory();
+		Map<String, Object> objectiveHistoryMap = new HashMap<>();
+		objectiveHistoryMap.put("objectiveHistory", Arrays.toString(objectiveHistory));
+		lrSummary.add(objectiveHistoryMap);
+		
+		double[] precisionByLabel = summary.precisionByLabel();
+		Map<String, Object> precisionByLabelMap = new HashMap<>();
+		precisionByLabelMap.put("precisionByLabel", Arrays.toString(precisionByLabel));
+		lrSummary.add(precisionByLabelMap);
+		
+		double[] recallByLabel = summary.recallByLabel();
+		Map<String, Object> recallByLabelMap = new HashMap<>();
+		recallByLabelMap.put("recallByLabel", Arrays.toString(recallByLabel));
+		lrSummary.add(recallByLabelMap);
+		
+		int totalIterations = summary.totalIterations();
+		Map<String, Object> totalIterationsMap = new HashMap<>();
+		totalIterationsMap.put("totalIterations", totalIterations);
+		lrSummary.add(totalIterationsMap);
+		
+		double[] truePositiveRateByLabel = summary.truePositiveRateByLabel();
+		Map<String, Object> truePositiveRateByLabelMap = new HashMap<>();
+		truePositiveRateByLabelMap.put("truePositiveRateByLabel",  Arrays.toString(truePositiveRateByLabel));
+		lrSummary.add(truePositiveRateByLabelMap);
+		
+		double weightedFMeasure = summary.weightedFMeasure();
+		Map<String, Object> weightedFMeasureMap = new HashMap<>();
+		weightedFMeasureMap.put("weightedFMeasure", weightedFMeasure);
+		lrSummary.add(weightedFMeasureMap);
+		
+		double weightedPrecision = summary.weightedPrecision();
+		Map<String, Object> weightedPrecisionMap = new HashMap<>();
+		weightedPrecisionMap.put("weightedPrecision", weightedPrecision);
+		lrSummary.add(weightedPrecisionMap);
+		
+		double weightedRecall = summary.weightedRecall();
+		Map<String, Object> weightedRecallMap = new HashMap<>();
+		weightedRecallMap.put("weightedRecall", weightedRecall);
+		lrSummary.add(weightedRecallMap);
+		
+		double weightedTruePositiveRate = summary.weightedTruePositiveRate();
+		Map<String, Object> weightedTruePositiveRateMap = new HashMap<>();
+		weightedTruePositiveRateMap.put("weightedTruePositiveRate", weightedTruePositiveRate);
+		lrSummary.add(weightedTruePositiveRateMap);
+		
+		return lrSummary;
 	}
 }
