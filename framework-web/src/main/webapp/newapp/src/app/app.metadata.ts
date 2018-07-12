@@ -462,7 +462,7 @@ export class AppMetadata {
       },
       'downloadexec': {
         name: 'downloadexec',
-        caption: 'download Exec',
+        caption: 'Download Exec',
         execType: 'downloadexec',
         metaType: 'downloadexec',
         color: '#33691E',
