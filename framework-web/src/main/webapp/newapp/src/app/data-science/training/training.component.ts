@@ -176,9 +176,13 @@ export class TrainingComponent implements OnInit {
     this.allTarget = temp
   }
 
-  onChangeSourceType() {
+  onChangeSourceType() {debugger
     this.getAllLatestSource(this.selectSourceType)
-  }
+    this.selectLabel = null;
+    for(const i in this.featureMapTableArray){
+    this.featureMapTableArray[i].targetFeature= null;
+    }
+  } 
 
   onSuccessgetAllLatestSource(response) {
     let temp = []
@@ -207,12 +211,10 @@ export class TrainingComponent implements OnInit {
         error => console.log("Error ::" + error)
         )
     }
-
   }
   countContinue() {
     this.continueCount = this.continueCount + 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
-
   }
 
   countBack = function () {
@@ -308,7 +310,7 @@ export class TrainingComponent implements OnInit {
   onChangeSource() {
     this.getAttribute();
 
-  } Password
+  } 
   getAttribute() {
 
     this._commonService.getAllAttributeBySource(this.selectSource.uuid, this.selectSourceType).subscribe(

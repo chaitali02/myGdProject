@@ -161,7 +161,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                                                 <p-dropdown [options]="allModel" [(ngModel)]="selectModel" name="selectModel" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
-                                                    [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeModel(true)">
+                                                    [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeModel(true)" placeholder = "Select">
                                                 </p-dropdown>
 
                                             </div>
@@ -188,7 +188,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Label</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                                                 <p-dropdown [options]="allsourceLabel" [(ngModel)]="selectLabel" name="selectLabel" dataKey="label" [style]="{'width':'100%','padding':'3px'}"
-                                                    [filter]="true" [disabled]="mode == 'true'">
+                                                    [filter]="true" [disabled]="mode == 'true'" placeholder= "Select">
                                                 </p-dropdown>
 
                                             </div>
@@ -220,19 +220,19 @@
                                                                 <tr *ngFor="let data of featureMapTableArray;let i=index">
                                                                     <td>
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <input type="text" class="form-control" [(ngModel)]="data.featureMapId" name="id+{{i}}" value="{{i}}" [disabled]="true">
+                                                                            <input type="text" class="form-control" [(ngModel)]="data.featureMapId" name="id+{{i}}" value="{{i}}" [disabled]="true" placeholder = "Select">
                                                                         </span>
                                                                     </td>
                                                                     <td>
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <input type="text" class="form-control" [(ngModel)]="data.sourceFeature.featureName" name="sourceFeature+{{i}}" title="{{data.sourceFeature.dname}}"
-                                                                                [disabled]="true">
+                                                                                [disabled]="true" placeholder = "Select">
                                                                         </span>
                                                                     </td>
                                                                     <td>
                                                                         <p-dropdown [options]="allTargetAttribute" [(ngModel)]="featureMapTableArray[i].targetFeature" name="sourceattribute+{{i}}"
                                                                             dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                                                                            [filter]="true">
+                                                                            [filter]="true" placeholder = "Select">
                                                                         </p-dropdown>
                                                                     </td>
                                                                 </tr>
@@ -262,9 +262,6 @@
                                 <div class="tab-pane" id="tab3" [ngClass]="{'active' : continueCount == 3}">
                                     <form class="form-horizontal" name="myform3" id="submit_form3" novalidate="novalidate">
 
-
-
-
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Train Percent</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
@@ -286,7 +283,6 @@
                                                 <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"
                                                     (onChange)="onChangeRunImmediately()"></p-checkbox>
                                             </div>
-
                                         </div>
 
                                         <div *ngIf="isShowExecutionparam">
