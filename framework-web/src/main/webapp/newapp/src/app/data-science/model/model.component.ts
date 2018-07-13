@@ -247,7 +247,7 @@ export class ModelComponent implements OnInit {
 
         this.dependsType = response.dependsOn.ref.type;
         console.log(JSON.stringify(this.dependsOn));
-       
+      
         if (this.dependsType == "algorithm") {
           this.getAllLatest();
         }
@@ -443,6 +443,7 @@ export class ModelComponent implements OnInit {
     this.modelJson["tags"] = tagArray;
     this.modelJson["active"] = this.model.active == true ? "Y" : "N"
     this.modelJson["published"] = this.model.published == true ? "Y" : "N"
+    
     this.modelJson["type"] = this.type;
     if (this.model.type == "SPARK") {
       this.customFlag = false

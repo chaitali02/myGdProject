@@ -13,6 +13,7 @@ import {AppHepler} from '../../app.helper';
     // styleUrls: ['./resultsCommon.component.css']
   })
 export class ResultsComponent implements OnInit {
+    rowStatus1: any;
   routerUrl: any;
   execType: string;
   gridTitle: string;
@@ -26,7 +27,7 @@ export class ResultsComponent implements OnInit {
   selectedType: any;
   columnDefs: any;
   isExec: string;
-  items: ({ label: string; icon: string; command: (onclick: any) => void; } | { label: string; icon: string; visible: boolean; command: (onclick: any) => void; })[];
+  items: ({ label: string; icon: string; disabled: any;command: (onclick: any) => void; } | { label: string; icon: string; visible: boolean; command: (onclick: any) => void; } | any)[];
   arrayNames: any[];
   type: any;
   mode: any;
@@ -80,6 +81,7 @@ export class ResultsComponent implements OnInit {
     }
 ];
     constructor(public apphelper : AppHepler,private http: Http, public _sharedService: SharedService, public datePipe: DatePipe, public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, private _commonService: CommonService, private activeroute: ActivatedRoute,private _commonListService : CommonListService) {
+    this.rowStatus= {}
     this.breadcrumbDataFrom = [{
       "caption":"Data Science ",
       "routeurl":"/app/list/trainexec"
@@ -186,19 +188,21 @@ export class ResultsComponent implements OnInit {
   }
   
   onSuccess(response){
+    // let len = response[0].status.length;
+    // let menuStatus= response[0].status[len-1]["stage"];
     this.items = [
-      {
+      {// menuStatus!= 'Completed' || this.rowStatus.stage != 'Inprogress')
           label: 'View', icon: 'fa fa-eye', command: (onclick) => {
-              this.view(this.rowUUid, this.rowVersion)
-          }
+              this.view(this.rowUUid, this.rowVersion,this.rowStatus) }, disabled: (false)
+         
       },
-      {
-          label: 'Kill', icon: 'fa fa-times', command: (onclick) => {
+      { //menuStatus != 'Inprogress'
+          label: 'Kill', icon: 'fa fa-times' , disabled: (false), command: (onclick) => {
               //this.kill(this.rowUUid, this.rowVersion, this.rowStatus)
           }
       },
-      {
-          label: 'Restart', icon: 'fa fa-repeat', command: (onclick) => {
+      {//menuStatus != 'Failed'
+          label: 'Restart', icon: 'fa fa-repeat',disabled: (false), command: (onclick) => {
               //this.restart(this.rowUUid, this.rowVersion)
           }
       },
@@ -229,6 +233,7 @@ onClickMenu(data) {
   this.rowID = data.id
   this.rowName = data.name
   this.rowStatus = data.status
+ // this.rowStatus1 = data.status.stage
 }
 onSearchCriteria() {  
           let startDateUtcStr = "";
@@ -253,7 +258,7 @@ onSearchCriteria() {
               )
   
       }
-      view(uuid, version) {
+      view(uuid, version,status) {
             this.router.navigate(["../resultDetails", uuid, version, this.type], { relativeTo: this.activeroute });        
     }
 }
