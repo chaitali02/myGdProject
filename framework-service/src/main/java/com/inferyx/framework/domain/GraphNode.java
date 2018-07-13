@@ -4,6 +4,7 @@
 package com.inferyx.framework.domain;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author joy
@@ -97,17 +98,13 @@ public class GraphNode {
 		this.nodeSource = nodeSource;
 	}
 
-	/**
-	 * @return the nodeProperties
-	 */
+
+
+
 	public List<AttributeRefHolder> getNodeProperties() {
-		return nodeProperties;
+		return this.nodeProperties;
 	}
 
-	/**
-	 * @param nodeProperties
-	 *            the nodeProperties to set
-	 */
 	public void setNodeProperties(List<AttributeRefHolder> nodeProperties) {
 		this.nodeProperties = nodeProperties;
 	}

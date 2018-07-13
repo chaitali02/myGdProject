@@ -2305,8 +2305,8 @@ public class SparkExecutor<T> implements IExecutor {
 //	}
 	
 	@Override
-	public List<Map<String, Object>> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		List<Map<String, Object>> summary = new ArrayList<>();
+	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Map<String, Object> outPutMap = new HashMap<>();
 		PipelineModel pipelineModel = null;
 		if(trndModel instanceof PipelineModel) {
 			pipelineModel = (PipelineModel)trndModel;
@@ -2319,85 +2319,62 @@ public class SparkExecutor<T> implements IExecutor {
 				org.apache.spark.ml.Model<?> model = (org.apache.spark.ml.Model<?>)transformer;
 				for(String method : summaryMethods) {
 					Object result = model.getClass().getMethod(method.trim()).invoke(model);
+
 					if(method.equalsIgnoreCase("summary")) {
-						summary = getSummaryFromSummaryMethod(summary, result);
+						outPutMap = getSummaryFromSummaryMethod(outPutMap, result);
 					}
+					
 					String key = method.toLowerCase();
 					if(method.startsWith("get")) {
 						key = method.substring(3).toLowerCase();
 					}
-					if(result.getClass().isArray()) {
-						Map<String, Object> outPutMap = new HashMap<>();
+					
+					/*if(result.getClass().isArray()) {
 						outPutMap.put(key, Arrays.toString((double[])result));
-						summary.add(outPutMap);
-					}else if(result instanceof Vector) {
-						Map<String, Object> outPutMap = new HashMap<>();
-						outPutMap.put(key, Arrays.toString(((Vector)result).toArray()));
-						summary.add(outPutMap);
+					}else*/ if(result instanceof Vector) {
+						outPutMap.put(key, ((Vector)result).toArray());
 					} else {
-						Map<String, Object> outPutMap = new HashMap<>();
-						outPutMap.put(key, result);
-						summary.add(outPutMap);
+						outPutMap.put(key, result);						
 					}
 				}
 			}
-		}
-		
-		return summary;
+		}		
+		return outPutMap;
 	}
 
-	private List<Map<String, Object>> linearRegressionSummay(List<Map<String, Object>> lrSummary, Object result) throws JsonProcessingException {
+	private Map<String, Object> linearRegressionSummay(Map<String, Object> outPutMap, Object result) throws JsonProcessingException {
 		
 		LinearRegressionTrainingSummary summary = (LinearRegressionTrainingSummary) result;
 //		double[] coefficientStandardErrors = summary.coefficientStandardErrors();
 		long degreesOfFreedom = summary.degreesOfFreedom();
-		Map<String, Object> degreesOfFreedomMap = new HashMap<>();
-		degreesOfFreedomMap.put("degreesOfFreedom", degreesOfFreedom);
-		lrSummary.add(degreesOfFreedomMap);
+		outPutMap.put("degreesOfFreedom", degreesOfFreedom);		
 		
 		double[] devianceResiduals = summary.devianceResiduals();
-		Map<String, Object> devianceResidualsMap = new HashMap<>();
-		devianceResidualsMap.put("devianceResiduals", Arrays.toString(devianceResiduals));
-		lrSummary.add(devianceResidualsMap);
+		outPutMap.put("devianceResiduals", devianceResiduals);		
 		
 		double explainedVariance = summary.explainedVariance();
-		Map<String, Object> explainedVarianceMap = new HashMap<>();
-		explainedVarianceMap.put("explainedVariance", explainedVariance);
-		lrSummary.add(explainedVarianceMap);
+		outPutMap.put("explainedVariance", explainedVariance);		
 		
 		double meanAbsoluteError = summary.meanAbsoluteError();
-		Map<String, Object> meanAbsoluteErrorMap = new HashMap<>();
-		meanAbsoluteErrorMap.put("meanAbsoluteError", meanAbsoluteError);
-		lrSummary.add(meanAbsoluteErrorMap);
+		outPutMap.put("meanAbsoluteError", meanAbsoluteError);		
 		
 		double meanSquaredError = summary.meanSquaredError();
-		Map<String, Object> meanSquaredErrorMap = new HashMap<>();
-		meanSquaredErrorMap.put("meanSquaredError", meanSquaredError);
-		lrSummary.add(meanSquaredErrorMap);
+		outPutMap.put("meanSquaredError", meanSquaredError);		
 		
 		long numInstances = summary.numInstances();
-		Map<String, Object> numInstancesMap = new HashMap<>();
-		numInstancesMap.put("numInstances", numInstances);
-		lrSummary.add(numInstancesMap);
+		outPutMap.put("numInstances", numInstances);		
 		
 		double[] objectiveHistory = summary.objectiveHistory();
-		Map<String, Object> objectiveHistoryMap = new HashMap<>();
-		objectiveHistoryMap.put("objectiveHistory", Arrays.toString(objectiveHistory));
-		lrSummary.add(objectiveHistoryMap);
+		outPutMap.put("objectiveHistory", objectiveHistory);		
 		
 		double r2 = summary.r2();
-		Map<String, Object> r2Map = new HashMap<>();
-		r2Map.put("r2", r2);
-		lrSummary.add(r2Map);
+		outPutMap.put("r2", r2);		
 		
 		double r2adj = summary.r2adj();
-		Map<String, Object> r2adjMap = new HashMap<>();
-		r2adjMap.put("r2adj", r2adj);
-		lrSummary.add(r2adjMap);
+		outPutMap.put("r2adj", r2adj);		
 		
 		Dataset<Row> residuals = summary.residuals();		
 		residuals.show(false);
-		Map<String, Object> residualsMap = new HashMap<>();
 		int size = (Integer.parseInt(""+residuals.count()) > 20) ? 20 : Integer.parseInt(""+residuals.count());
 		Object[] residualVals = new Object[size];
 		Row[] rows = (Row[]) residuals.head(size);
@@ -2406,103 +2383,70 @@ public class SparkExecutor<T> implements IExecutor {
 			residualVals[i] = row.get(0);
 			i++;
 		}
-		residualsMap.put("residuals", Arrays.toString(residualVals));
-		lrSummary.add(residualsMap);
+		outPutMap.put("residuals", residualVals);		
 		
 		double rootMeanSquaredError = summary.rootMeanSquaredError();
-		Map<String, Object> rootMeanSquaredErrorMap = new HashMap<>();
-		rootMeanSquaredErrorMap.put("rootMeanSquaredError", rootMeanSquaredError);
-		lrSummary.add(rootMeanSquaredErrorMap);
+		outPutMap.put("rootMeanSquaredError", rootMeanSquaredError);		
 		
 		int totalIterations = summary.totalIterations();
-		Map<String, Object> totalIterationsMap = new HashMap<>();
-		totalIterationsMap.put("totalIterations", totalIterations);
-		lrSummary.add(totalIterationsMap);
+		outPutMap.put("totalIterations", totalIterations);
+		
 //		double[] tValues = summary.tValues();
-		return lrSummary;
+		return outPutMap;
 	}
 
-	private List<Map<String, Object>> logisticRegressionSummay(List<Map<String, Object>> lrSummary, Object result) {
+	private  Map<String, Object> logisticRegressionSummay(Map<String, Object> outPutMap, Object result) {
 		LogisticRegressionTrainingSummary summary = (LogisticRegressionTrainingSummary) result;
 		
 		double accuracy = summary.accuracy();
-		Map<String, Object> accuracyMap = new HashMap<>();
-		accuracyMap.put("accuracy", accuracy);
-		lrSummary.add(accuracyMap);
+		outPutMap.put("accuracy", accuracy);		
 		
 		double[] falsePositiveRateByLabel = summary.falsePositiveRateByLabel();
-		Map<String, Object> falsePositiveRateByLabelMap = new HashMap<>();
-		falsePositiveRateByLabelMap.put("falsePositiveRateByLabel", Arrays.toString(falsePositiveRateByLabel));
-		lrSummary.add(falsePositiveRateByLabelMap);
+		outPutMap.put("falsePositiveRateByLabel", falsePositiveRateByLabel);		
 		
 		double[] fMeasureByLabel = summary.fMeasureByLabel();
-		Map<String, Object> fMeasureByLabelMap = new HashMap<>();
-		fMeasureByLabelMap.put("fMeasureByLabel", Arrays.toString(fMeasureByLabel));
-		lrSummary.add(fMeasureByLabelMap);
+		outPutMap.put("fMeasureByLabel", fMeasureByLabel);		
 		
 		double[] labels = summary.labels();
-		Map<String, Object> labelsMap = new HashMap<>();
-		labelsMap.put("labels", Arrays.toString(labels));
-		lrSummary.add(labelsMap);
+		outPutMap.put("labels", Arrays.toString(labels));		
 		
 		double[] objectiveHistory = summary.objectiveHistory();
-		Map<String, Object> objectiveHistoryMap = new HashMap<>();
-		objectiveHistoryMap.put("objectiveHistory", Arrays.toString(objectiveHistory));
-		lrSummary.add(objectiveHistoryMap);
+		outPutMap.put("objectiveHistory", objectiveHistory);		
 		
 		double[] precisionByLabel = summary.precisionByLabel();
-		Map<String, Object> precisionByLabelMap = new HashMap<>();
-		precisionByLabelMap.put("precisionByLabel", Arrays.toString(precisionByLabel));
-		lrSummary.add(precisionByLabelMap);
+		outPutMap.put("precisionByLabel", precisionByLabel);		
 		
 		double[] recallByLabel = summary.recallByLabel();
-		Map<String, Object> recallByLabelMap = new HashMap<>();
-		recallByLabelMap.put("recallByLabel", Arrays.toString(recallByLabel));
-		lrSummary.add(recallByLabelMap);
+		outPutMap.put("recallByLabel", recallByLabel);		
 		
 		int totalIterations = summary.totalIterations();
-		Map<String, Object> totalIterationsMap = new HashMap<>();
-		totalIterationsMap.put("totalIterations", totalIterations);
-		lrSummary.add(totalIterationsMap);
+		outPutMap.put("totalIterations", totalIterations);		
 		
 		double[] truePositiveRateByLabel = summary.truePositiveRateByLabel();
-		Map<String, Object> truePositiveRateByLabelMap = new HashMap<>();
-		truePositiveRateByLabelMap.put("truePositiveRateByLabel",  Arrays.toString(truePositiveRateByLabel));
-		lrSummary.add(truePositiveRateByLabelMap);
+		outPutMap.put("truePositiveRateByLabel",  truePositiveRateByLabel);		
 		
 		double weightedFMeasure = summary.weightedFMeasure();
-		Map<String, Object> weightedFMeasureMap = new HashMap<>();
-		weightedFMeasureMap.put("weightedFMeasure", weightedFMeasure);
-		lrSummary.add(weightedFMeasureMap);
+		outPutMap.put("weightedFMeasure", weightedFMeasure);		
 		
 		double weightedPrecision = summary.weightedPrecision();
-		Map<String, Object> weightedPrecisionMap = new HashMap<>();
-		weightedPrecisionMap.put("weightedPrecision", weightedPrecision);
-		lrSummary.add(weightedPrecisionMap);
+		outPutMap.put("weightedPrecision", weightedPrecision);		
 		
 		double weightedRecall = summary.weightedRecall();
-		Map<String, Object> weightedRecallMap = new HashMap<>();
-		weightedRecallMap.put("weightedRecall", weightedRecall);
-		lrSummary.add(weightedRecallMap);
+		outPutMap.put("weightedRecall", weightedRecall);		
 		
 		double weightedTruePositiveRate = summary.weightedTruePositiveRate();
-		Map<String, Object> weightedTruePositiveRateMap = new HashMap<>();
-		weightedTruePositiveRateMap.put("weightedTruePositiveRate", weightedTruePositiveRate);
-		lrSummary.add(weightedTruePositiveRateMap);
+		outPutMap.put("weightedTruePositiveRate", weightedTruePositiveRate);		
 		
-		return lrSummary;
+		return outPutMap;
 	}
 	
-	private List<Map<String, Object>> kmeansClusteringModelSummay(List<Map<String, Object>> kmeansClusteringSummary, Object result) {
+	private  Map<String, Object> kmeansClusteringModelSummay(Map<String, Object> outPutMap, Object result) {
 		KMeansSummary summary = (KMeansSummary) result;
 		long[] clusterSizes = summary.clusterSizes();
-		Map<String, Object> clusterSizesMap = new HashMap<>();
-		clusterSizesMap.put("clusterSizes",  Arrays.toString(clusterSizes));
-		kmeansClusteringSummary.add(clusterSizesMap);
+		outPutMap.put("clusterSizes", clusterSizes);
 		
 		Dataset<Row> cluster = summary.cluster();		
 		cluster.show(false);
-		Map<String, Object> clusterMap = new HashMap<>();
 		int size = (Integer.parseInt(""+cluster.count()) > 20) ? 20 : Integer.parseInt(""+cluster.count());
 		Object[] clusterVals = new Object[size];
 		Row[] rows = (Row[]) cluster.head(size);
@@ -2511,19 +2455,18 @@ public class SparkExecutor<T> implements IExecutor {
 			clusterVals[i] = row.get(0);
 			i++;
 		}
-		clusterMap.put("cluster", Arrays.toString(clusterVals));
-		kmeansClusteringSummary.add(clusterMap);
-		return kmeansClusteringSummary;
+		outPutMap.put("cluster", clusterVals);
+		return outPutMap;
 	}
 	
-	private List<Map<String, Object>> getSummaryFromSummaryMethod(List<Map<String, Object>> summary, Object result) throws JsonProcessingException {
+	private Map<String, Object> getSummaryFromSummaryMethod(Map<String, Object> outPutMap, Object result) throws JsonProcessingException {
 		if(result instanceof KMeansSummary) {
-			summary = kmeansClusteringModelSummay(summary, result);
+			outPutMap = kmeansClusteringModelSummay(outPutMap, result);
 		} else if(result instanceof LogisticRegressionTrainingSummary) {
-			summary = logisticRegressionSummay(summary, result);
+			outPutMap = logisticRegressionSummay(outPutMap, result);
 		} else if(result instanceof LinearRegressionTrainingSummary) {
-			summary = linearRegressionSummay(summary, result);
+			outPutMap = linearRegressionSummay(outPutMap, result);
 		}
-		return summary;
+		return outPutMap;
 	}
 }

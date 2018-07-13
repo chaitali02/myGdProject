@@ -127,7 +127,7 @@ public class ModelController {
 	}*/
 
 	@RequestMapping(value = "/train/getResults", method = RequestMethod.GET)
-	public List<String> getModelResults(@RequestParam("uuid") String trainExecUUID,
+	public String getModelResults(@RequestParam("uuid") String trainExecUUID,
 			@RequestParam("version") String trainExecVersion,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,

@@ -54,6 +54,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             
                             nodeFilterObj.logicalOperator=scope.filter.nodeTableArray[i].logicalOperator;
                             nodeFilterObj.operator=scope.filter.nodeTableArray[i].operator;
+                            nodeFilterObj.source=scope.filter.nodeTableArray[i].selectSource.name;
                             operand.propertyName=scope.filter.nodeTableArray[i].selectAttribute.attributeName;
                             if(scope.filter.nodeTableArray[i].operator =="BETWEEN"){
                                 var value1=scope.filter.nodeTableArray[i].rhsvalue1;//"'"+scope.filter.nodeTableArray[i].rhsvalue1+"'";
@@ -77,6 +78,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             var operand={};
                             edgeFilterObj.logicalOperator=scope.filter.edgeTableArray[i].logicalOperator;
                             edgeFilterObj.operator=scope.filter.edgeTableArray[i].operator;
+                            edgeFilterObj.source=scope.filter.edgeTableArray[i].selectSource.name;
                             operand.propertyName=scope.filter.edgeTableArray[i].selectAttribute.attributeName;
                             if(scope.filter.edgeTableArray[i].operator =="BETWEEN"){
                                 var value1=scope.filter.edgeTableArray[i].rhsvalue1;//"'"+scope.filter.edgeTableArray[i].rhsvalue1+"'"
@@ -430,16 +432,19 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             dr = Math.sqrt(dx * dx + dy * dy),
                             drx = dr,
                             dry = dr,
+                            
                             sweep = leftHand ? 0 : 1;
                             siblingCount = countSiblingLinks(d.source, d.target)
                             xRotation = 0,
                             largeArc = 0;
-
+                            
                         if (siblingCount > 1) {
                              if(siblingCount >10){
                                 largeArc=1;
                              }
-                           
+                            if(siblingCount ==2){
+                                siblingCount=3;
+                            }
                             var siblings = getSiblingLinks(d.source, d.target);
                            // console.log(siblings);
                             var arcScale = d3.scale.ordinal()
@@ -447,6 +452,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                                 .rangePoints([-1, siblingCount]);
                             drx = drx / (1 + (1 / siblingCount) * (arcScale(d.value) - 1));
                             dry = dry / (1 + (1 / siblingCount) * (arcScale(d.value) - 1));
+                           
+
                         }
 
                         return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
