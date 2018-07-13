@@ -44,7 +44,7 @@
         }
   ],
   "type": "CLASSIFICATION",
-  "library": "SPARKML",
+  "libraryType": "SPARKML",
   "trainClass": "org.apache.spark.ml.classification.NaiveBayes",
   "modelClass": "org.apache.spark.ml.classification.NaiveBayesModel",
   "labelRequired": "Y",
