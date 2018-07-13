@@ -1609,6 +1609,16 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * @return
 	 * @throws Exception
 	 */
+	/**
+	 * @param uuid
+	 * @param version
+	 * @param degree
+	 * @param filterId
+	 * @param nodeType
+	 * @param execParams
+	 * @return
+	 * @throws Exception
+	 */
 	@SuppressWarnings("unused")
 	public Map<String, List<GraphpodResult>> getGraphResults(String uuid, String version, String degree,
 			String filterId, String nodeType,ExecParams execParams) throws Exception {
@@ -1623,8 +1633,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		// Get the datastore. If there is no existing datastore then create graph
 		DataStore ds = dataStoreServiceImpl.findLatestByMeta(graphpod.getUuid(), graphpod.getVersion());
 		// DataStore ds = dataStoreServiceImpl.findLatestByMeta(uuid, version);
-		
-	
+
 		if (ds != null) {
 			graphExecKey = ds.getMetaId().getRef().getUuid() + "_" + ds.getMetaId().getRef().getVersion() + "_"
 					+ ds.getExecId().getRef().getVersion();
@@ -1645,14 +1654,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		}
 		// Get the graphFrame and parse
 		GraphFrame graph = (GraphFrame) graphpodMap.get(graphExecKey);
-		
+
 		graph.edges().show(false);
 		graph.vertices().show(false);
-	
-		
-		
-		
-		
+
 	/*	Dataset<Row> edgeProperties=graph.edges().toJSON().select("edgeProperties");
 		edgeProperties.createTempView("V1").show();
 		List<Row> al=edgeProperties.collectAsList();
@@ -1766,100 +1771,79 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
-		List<String> source1=new ArrayList<>();
-		List<String> source2=new ArrayList<>();
+		List<String> edgeSelectedSourceList = new ArrayList<>();
+		List<String> edgeSourceList = new ArrayList<>();
 		StringBuilder nodefilter = new StringBuilder();
 		StringBuilder edgefilter = new StringBuilder();
 		if (execParams != null) {
 			GraphFilter graphFilter = execParams.getGraphFilter();
 			if (graphFilter.getNodeFilter().size() > 0) {
 				for (GraphFilter.NodeFilter nodeFilter : graphFilter.getNodeFilter()) {
-
 					String logicalOperator = nodeFilter.getLogicalOperator();
-					if (logicalOperator == null) {
-						String operator = nodeFilter.getOperator();
-						Property operand = nodeFilter.getOperand();
-						nodefilter.append("get_json_object(nodeProperties,'$." + "  " + operand.getPropertyName()
-								+ "')  " + operator + "  " + operand.getPropertyValue());
-					} else {
-						String operator = nodeFilter.getOperator();
-						Property operand = nodeFilter.getOperand();
-						nodefilter.append("  " + logicalOperator + "  " + "get_json_object(nodeProperties,'$."
-								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
-					}
+					String operator = nodeFilter.getOperator();
+					Property operand = nodeFilter.getOperand();
+					nodefilter.append("  " + logicalOperator + "  " + "get_json_object(nodeProperties,'$."
+							+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
 				}
 			}
-						
+
 			if (graphFilter.getEdgeFilter().size() > 0) {
 				for (GraphFilter.EdgeFilter edgeFilter : graphFilter.getEdgeFilter()) {
-
 					String logicalOperator = edgeFilter.getLogicalOperator();
-					if (logicalOperator!=null && graphFilter.getNodeFilter().size() > 0) {
-						String operator = edgeFilter.getOperator();
-						 source1.add(edgeFilter.getSource()); 
-						Property operand = edgeFilter.getOperand();
-						edgefilter.append(logicalOperator +" get_json_object(edgeProperties,'$." + operand.getPropertyName() + "')  "
-								+ operator + "  " + operand.getPropertyValue());
-
-					} else {
-						String operator = edgeFilter.getOperator();
-						Property operand = edgeFilter.getOperand();
-						 source1.add(edgeFilter.getSource()); 
-						edgefilter.append(" " + logicalOperator +"(edgeSource = '"+edgeFilter.getSource()+"'  and  get_json_object(edgeProperties,'$."
-								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue()+")");
-					}
+					String operator = edgeFilter.getOperator();
+					Property operand = edgeFilter.getOperand();
+					edgeSelectedSourceList.add(edgeFilter.getSource());
+					edgefilter.append(" " + logicalOperator + "(edgeSource = '" + edgeFilter.getSource()
+							+ "'  and  get_json_object(edgeProperties,'$." + operand.getPropertyName() + "')  "
+							+ operator + "  " + operand.getPropertyValue() + ")");
 				}
 			}
 		}
 		String restSource = null;
 		StringBuilder sourceName = new StringBuilder();
 
-		for (GraphEdge edgename : graphpod.getEdgeInfo() ) {
-			source2.add(edgename.getEdgeSource().getRef().getName());
+		for (GraphEdge edgename : graphpod.getEdgeInfo()) {
+			edgeSourceList.add(edgename.getEdgeSource().getRef().getName());
 		}
-		 ArrayList<String> al3= new ArrayList<String>();
-         for (String temp : source2)
-             al3.add(!source1.contains(temp) ? temp : "");
-         
-         al3.removeAll(Collections.singleton(""));
-         System.out.println(al3);
-		//Country IN ('Germany', 'France', 'UK');
+		ArrayList<String> otherEdgeSourceList = new ArrayList<String>();
+		for (String temp : edgeSourceList)
+			otherEdgeSourceList.add(!edgeSelectedSourceList.contains(temp) ? temp : "");
+
+		otherEdgeSourceList.removeAll(Collections.singleton(""));
+		System.out.println(otherEdgeSourceList);
+		// Country IN ('Germany', 'France', 'UK');
 		int count2 = 0;
-		for(String sour:al3) {
-			if(count2==0) {
-				sourceName.append("'"+sour+"'" );
-			}else {
-				sourceName.append(",'"+sour+"'" );
+		for (String sour : otherEdgeSourceList) {
+			if (count2 == 0) {
+				sourceName.append("'" + sour + "'");
+			} else {
+				sourceName.append(",'" + sour + "'");
 			}
 			count2++;
 		}
-		if(al3.isEmpty()!=true)
-	    restSource="(  edgeSource IN ("+sourceName+") ) OR";
-		
-	//	sourceName.append(" ( edgeSource = '"+source1+"' and" );
+		if (otherEdgeSourceList.isEmpty() != true)
+			restSource = "(  edgeSource IN (" + sourceName + ") ) OR";
+
+		// sourceName.append(" ( edgeSource = '"+source1+"' and" );
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties",
 				"relationwithChild.edgeIndex", "relationwithChild.eHpropertyId", "relationwithChild.edgeSource")
 				.distinct();
 		edge_dataset.show(false);
-	/*	String Filter123222="(edgeSource = ' transaction'  and  get_json_object(edgeProperties,'$.transaction_id')  =  '0FM291525M9845967B') OR(edgeSource = ' account'  and  get_json_object(edgeProperties,'$.account_id')  =  '101')";
-		String Filter123 = "( (edgeSource = 'transaction' and get_json_object(edgeProperties,'$.transaction_id')  =  '0FM291525M9845967B') or  (edgeSource = 'account' and  get_json_object(edgeProperties,'$.account_id')  =  '101'))";
-		String Filter1234 ="("+edgefilter.toString()+")";
-		System.out.println("############   Edgefilter  Filter  String   #####" + restSource+"("+edgefilter.toString()+")");*/
-		if (edgefilter.length() > 0 && restSource!=null)	
-			edge_dataset = edge_dataset.filter(restSource+"("+edgefilter.toString()+")");
-		else if (edgefilter.length() > 0 )	
-			edge_dataset = edge_dataset.filter("("+edgefilter.toString()+")");
-			//edge_dataset = edge_dataset.filter(sourceName+edgefilter.toString()+")");
-			// (  edgeSource = 'transaction' and  edgeSource = 'account' and   get_json_object(edgeProperties,'$.transaction_id')  =  '0FM291525M9845967B'  OR get_json_object(edgeProperties,'$.account_id')  =  '101')
+
+		if (edgefilter.length() > 0 && restSource != null)
+			edge_dataset = edge_dataset.filter(restSource + "(" + edgefilter.toString() + ")");
+		else if (edgefilter.length() > 0)
+			edge_dataset = edge_dataset.filter("(" + edgefilter.toString() + ")");
 
 		edge_dataset.show(false);
 		@SuppressWarnings("deprecation")
 		Dataset<Row> node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
-						"Object.nBPropertyId", "Object.nHpropertyId", "Object.type","Object.nodeIndex")
+						"Object.nBPropertyId", "Object.nHpropertyId", "Object.type", "Object.nodeIndex")
 				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
-						"Child.nodeProperties", "Child.nBPropertyId", "Child.nHpropertyId", "Child.type","Child.nodeIndex"))
+						"Child.nodeProperties", "Child.nBPropertyId", "Child.nHpropertyId", "Child.type",
+						"Child.nodeIndex"))
 				.distinct();
 
 		System.out.println("############   Nodefilter  Filter  String   #####" + nodefilter.toString());
@@ -1927,30 +1911,30 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				if (dstVertexDf.count() > 0) {
 					for (Row dstrow : dstrows) {
 						for (String cloumn : vertexColumns) {
-							
+
 							if (cloumn.equalsIgnoreCase("nodeName")) {
 								String value1 = dstrow.getAs(cloumn).toString();
 								target.put("label", value1);
 							}
-							if(dstrow.anyNull()==true) {
-							System.out.println("test");
+							if (dstrow.anyNull() == true) {
+								System.out.println("test");
 							}
-							
-							if(dstrow.anyNull()==false) {
-							String value1 = dstrow.getAs(cloumn).toString();
-							target.put(cloumn, value1);}
-							else {
+
+							if (dstrow.anyNull() == false) {
+								String value1 = dstrow.getAs(cloumn).toString();
+								target.put(cloumn, value1);
+							} else {
 								continue;
 							}
-							
 
 						}
 					}
 					GraphpodResult graphpodresult = new GraphpodResult(source, target, relation, edge_name, edge_type,
-							edge_properties,edge_index,edge_propertyID.toString());
+							edge_properties, edge_index, edge_propertyID.toString());
 					result.add(graphpodresult);
 				} else {
-					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null,null,null);
+					GraphpodResult graphpodresult = new GraphpodResult(source, null, null, null, null, null, null,
+							null);
 					result.add(graphpodresult);
 				}
 

@@ -3,6 +3,7 @@
  */
 package com.inferyx.framework.domain;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,7 +18,7 @@ public class GraphNode {
 	String nodeIcon;
 	AttributeRefHolder nodeName;
 	MetaIdentifierHolder nodeSource;
-	Set<AttributeRefHolder> nodeProperties;
+	List<AttributeRefHolder> nodeProperties;
 	Highlight nodeBackgroundInfo;
 	Highlight highlightInfo;
 	String nodeSize;
@@ -99,11 +100,12 @@ public class GraphNode {
 
 
 
-	public Set<AttributeRefHolder> getNodeProperties() {
+
+	public List<AttributeRefHolder> getNodeProperties() {
 		return this.nodeProperties;
 	}
 
-	public void setNodeProperties(Set<AttributeRefHolder> nodeProperties) {
+	public void setNodeProperties(List<AttributeRefHolder> nodeProperties) {
 		this.nodeProperties = nodeProperties;
 	}
 
