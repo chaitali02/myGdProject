@@ -423,6 +423,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     node.exit().remove();
 
                     function arcPath(leftHand, d) {
+                       
                         var x1 = leftHand ? d.source.x : d.target.x,
                             y1 = leftHand ? d.source.y : d.target.y,
                             x2 = leftHand ? d.target.x : d.source.x,
@@ -432,16 +433,19 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             dr = Math.sqrt(dx * dx + dy * dy),
                             drx = dr,
                             dry = dr,
+                            
                             sweep = leftHand ? 0 : 1;
                             siblingCount = countSiblingLinks(d.source, d.target)
                             xRotation = 0,
                             largeArc = 0;
-
+                            
                         if (siblingCount > 1) {
                              if(siblingCount >10){
                                 largeArc=1;
                              }
-                           
+                            if(siblingCount ==2){
+                                siblingCount=3;
+                            }
                             var siblings = getSiblingLinks(d.source, d.target);
                            // console.log(siblings);
                             var arcScale = d3.scale.ordinal()
@@ -449,6 +453,8 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                                 .rangePoints([-1, siblingCount]);
                             drx = drx / (1 + (1 / siblingCount) * (arcScale(d.value) - 1));
                             dry = dry / (1 + (1 / siblingCount) * (arcScale(d.value) - 1));
+                           
+
                         }
 
                         return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;

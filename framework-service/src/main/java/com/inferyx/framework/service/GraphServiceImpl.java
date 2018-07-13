@@ -14,6 +14,7 @@ package com.inferyx.framework.service;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1766,6 +1767,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		List<Map<String, Object>> graphVertex = new ArrayList<>();
 		List<Map<String, Object>> graphEdge = new ArrayList<>();
 		List<String> source1=new ArrayList<>();
+		List<String> source2=new ArrayList<>();
 		StringBuilder nodefilter = new StringBuilder();
 		StringBuilder edgefilter = new StringBuilder();
 		if (execParams != null) {
@@ -1787,7 +1789,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 					}
 				}
 			}
-
+						
 			if (graphFilter.getEdgeFilter().size() > 0) {
 				for (GraphFilter.EdgeFilter edgeFilter : graphFilter.getEdgeFilter()) {
 
@@ -1803,47 +1805,54 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 						String operator = edgeFilter.getOperator();
 						Property operand = edgeFilter.getOperand();
 						 source1.add(edgeFilter.getSource()); 
-						edgefilter.append("  " + logicalOperator +" get_json_object(edgeProperties,'$."
-								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue());
+						edgefilter.append(" " + logicalOperator +"(edgeSource = '"+edgeFilter.getSource()+"'  and  get_json_object(edgeProperties,'$."
+								+ operand.getPropertyName() + "')  " + operator + "  " + operand.getPropertyValue()+")");
 					}
 				}
 			}
 		}
-		
+		String restSource = null;
 		StringBuilder sourceName = new StringBuilder();
 
 		for (GraphEdge edgename : graphpod.getEdgeInfo() ) {
-			for(int i=0;i<source1.size();i++)
-			/*if(source1.get(source1.size()).toString()!=null) */{
-			if ( !edgename.getEdgeSource().getRef().getName().equalsIgnoreCase(source1.get(i).toString())) 
-			 {
-				sourceName.append("   edgeSource='" + edgename.getEdgeSource().getRef().getName() + "' or ");
-				}
-			
-			}
+			source2.add(edgename.getEdgeSource().getRef().getName());
 		}
+		 ArrayList<String> al3= new ArrayList<String>();
+         for (String temp : source2)
+             al3.add(!source1.contains(temp) ? temp : "");
+         
+         al3.removeAll(Collections.singleton(""));
+         System.out.println(al3);
+		//Country IN ('Germany', 'France', 'UK');
 		int count2 = 0;
-		for(String sour:source1) {
+		for(String sour:al3) {
 			if(count2==0) {
-				sourceName.append("(  edgeSource = '"+sour+"' and" );
+				sourceName.append("'"+sour+"'" );
 			}else {
-				sourceName.append("  edgeSource = '"+sour+"' and" );
+				sourceName.append(",'"+sour+"'" );
 			}
 			count2++;
 		}
+		if(al3.isEmpty()!=true)
+	    restSource="(  edgeSource IN ("+sourceName+") ) OR";
+		
 	//	sourceName.append(" ( edgeSource = '"+source1+"' and" );
 		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties",
 				"relationwithChild.edgeIndex", "relationwithChild.eHpropertyId", "relationwithChild.edgeSource")
 				.distinct();
 		edge_dataset.show(false);
-		     
-		
-		
-		System.out.println("############   Edgefilter  Filter  String   #####" + sourceName+edgefilter.toString()+")");
-		if (edgefilter.length() > 0)			
-			edge_dataset = edge_dataset.filter(sourceName+edgefilter.toString()+")");
-			
+	/*	String Filter123222="(edgeSource = ' transaction'  and  get_json_object(edgeProperties,'$.transaction_id')  =  '0FM291525M9845967B') OR(edgeSource = ' account'  and  get_json_object(edgeProperties,'$.account_id')  =  '101')";
+		String Filter123 = "( (edgeSource = 'transaction' and get_json_object(edgeProperties,'$.transaction_id')  =  '0FM291525M9845967B') or  (edgeSource = 'account' and  get_json_object(edgeProperties,'$.account_id')  =  '101'))";
+		String Filter1234 ="("+edgefilter.toString()+")";
+		System.out.println("############   Edgefilter  Filter  String   #####" + restSource+"("+edgefilter.toString()+")");*/
+		if (edgefilter.length() > 0 && restSource!=null)	
+			edge_dataset = edge_dataset.filter(restSource+"("+edgefilter.toString()+")");
+		else if (edgefilter.length() > 0 )	
+			edge_dataset = edge_dataset.filter("("+edgefilter.toString()+")");
+			//edge_dataset = edge_dataset.filter(sourceName+edgefilter.toString()+")");
+			// (  edgeSource = 'transaction' and  edgeSource = 'account' and   get_json_object(edgeProperties,'$.transaction_id')  =  '0FM291525M9845967B'  OR get_json_object(edgeProperties,'$.account_id')  =  '101')
+
 		edge_dataset.show(false);
 		@SuppressWarnings("deprecation")
 		Dataset<Row> node_dataset = motifs
@@ -1854,6 +1863,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				.distinct();
 
 		System.out.println("############   Nodefilter  Filter  String   #####" + nodefilter.toString());
+		node_dataset.show(false);
 		if (nodefilter.length() > 0)
 			node_dataset = node_dataset.filter(nodefilter.toString());
 
@@ -1893,7 +1903,8 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 					relation = edge_properties.substring(edge_properties.indexOf(':') + 1,
 							edge_properties.indexOf(','));
 				else
-					relation = edge_properties;
+					relation = edge_properties.substring(edge_properties.indexOf(':') + 1,
+							edge_properties.indexOf('}'));
 
 				Dataset<Row> srcVertexDf = graph.vertices().filter("id = '" + resultDatasetValue[0] + "'");
 				String[] vertexColumns = srcVertexDf.columns();
