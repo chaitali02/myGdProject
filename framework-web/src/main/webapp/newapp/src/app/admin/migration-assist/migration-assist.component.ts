@@ -128,7 +128,7 @@ export class MigrationAssistComponent implements OnInit {
       },
       {
         "caption": "Migration Assist",
-        "routeurl": ""
+        "routeurl": "/app/admin/migration-assist"
       }
       
     ]

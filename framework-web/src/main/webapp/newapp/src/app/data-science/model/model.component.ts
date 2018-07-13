@@ -247,7 +247,7 @@ export class ModelComponent implements OnInit {
 
         this.dependsType = response.dependsOn.ref.type;
         console.log(JSON.stringify(this.dependsOn));
-       
+      
         if (this.dependsType == "algorithm") {
           this.getAllLatest();
         }
