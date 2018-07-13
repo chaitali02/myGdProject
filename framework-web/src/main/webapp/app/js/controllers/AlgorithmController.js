@@ -143,7 +143,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			defaultversion.uuid = response.uuid;
 			$scope.algorithm.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
-			$scope.selectlibrary = response.library
+			$scope.selectlibrary = response.libraryType
 			AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 			var onSuccessGetAllLatestParamlist = function (response) {
 				$scope.allparamlist = response;
@@ -162,6 +162,16 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 					$scope.tags = tags;
 				}
 			}
+			var summaryMethodsArray=[];
+			if(response.summaryMethods !=null){
+				for(var i=0;i<response.summaryMethods.length;i++){
+					var summaryMethods={};
+					summaryMethods.text=response.summaryMethods[i];
+					summaryMethodsArray[i]=summaryMethods;
+
+				}
+			}
+			$scope.summaryMethods=summaryMethodsArray;
 		}
 	}//End If
 	else {
@@ -187,7 +197,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			defaultversion.uuid = response.uuid;
 			$scope.algorithm.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
-			$scope.selectlibrary = response.library
+			$scope.selectlibrary = response.libraryType
 			AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 			var onSuccessGetAllLatestParamlist = function (response) {
 				$scope.allparamlist = response;
@@ -197,6 +207,25 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 				$scope.selectparamlist = paramlist;
 
 			}
+			var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
+			var summaryMethodsArray=[];
+			if(response.summaryMethods !=null){
+				for(var i=0;i<response.summaryMethods.length;i++){
+					var summaryMethods={};
+					summaryMethods.text=response.summaryMethods[i];
+					summaryMethodsArray[i]=summaryMethods;
+
+				}
+			}
+			$scope.summaryMethods=summaryMethodsArray;
 		}
 
 	}
@@ -214,9 +243,9 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		algorithmJson.savePmml = $scope.algorithmData.savePmml;
 		algorithmJson.published = $scope.algorithmData.published;
 		algorithmJson.type = $scope.selecttype;
-		algorithmJson.library = $scope.selectlibrary;
-		algorithmJson.trainName = $scope.algorithmData.trainName;
-		algorithmJson.modelName = $scope.algorithmData.modelName;
+		algorithmJson.libraryType = $scope.selectlibrary;
+		algorithmJson.trainClass = $scope.algorithmData.trainClass;
+		algorithmJson.modelClass = $scope.algorithmData.modelClass;
 		algorithmJson.labelRequired = $scope.algorithmData.labelRequired;
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -228,7 +257,14 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 				upd_tag="Y"	
 			}
 		}
-		algorithmJson.tags = tagArray;
+		var summaryMethodsArray = [];
+		if ($scope.summaryMethods != null) {
+			for (var counttag = 0; counttag < $scope.summaryMethods.length; counttag++) {
+				summaryMethodsArray[counttag] = $scope.summaryMethods[counttag].text;
+			}
+			
+		}
+		algorithmJson.summaryMethods = summaryMethodsArray;
 		var paramlist = {};
 		var ref = {};
 		ref.type = "paramlist";
