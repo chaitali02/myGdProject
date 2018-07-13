@@ -2084,12 +2084,12 @@ public class CommonServiceImpl <T> {
 	@SuppressWarnings("unchecked")
 	public T getOneById(String id, String type) throws JsonProcessingException {
 		String appUuid = null;
-		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
 			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-		}
+		}*/
 		MetaType metaType = Helper.getMetaType(type);
 		Object iDao = null;
 		try{
@@ -2112,12 +2112,12 @@ public class CommonServiceImpl <T> {
 	@SuppressWarnings("unchecked")
 	public T getOneByUuidAndVersion(String uuid, String version, String type) throws JsonProcessingException {
 		String appUuid = null;
-		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
 			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-		}
+		}*/
 		Object iDao = null;
 		MetaType metaType = Helper.getMetaType(type);
 		try{
@@ -2153,12 +2153,12 @@ public class CommonServiceImpl <T> {
 		public T getLatestByUuid(String uuid, String type) throws JsonProcessingException {
 			try {
 				String appUuid = null;						
-				if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+				/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
 					&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-				}
+				}*/
 				MetaType metaType = Helper.getMetaType(type);
 				Object object = null;
 				Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
@@ -2183,13 +2183,13 @@ public class CommonServiceImpl <T> {
 		public T getLatestByUuid(String uuid, String type, String resolveFlag) throws JsonProcessingException {
 			try {
 				String appUuid = null;
-				if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+				/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
 					&& !type.equalsIgnoreCase(MetaType.application.toString()))
 				{
 					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-				}
+				}*/
 
 				MetaType metaType = Helper.getMetaType(type);
 				Object object = null;
