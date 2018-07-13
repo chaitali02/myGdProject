@@ -41,11 +41,9 @@
 		"getImpurity",
 		"getMaxBins",
 		"getMaxDepth",
-		"getMaxMemoryInMB",
 		"getMinInfoGain",
 		"getMinInstancesPerNode",
 		"getSeed",
-		"getThresholds",
 		"numClasses",
 		"numFeatures",
 		"numNodes"
