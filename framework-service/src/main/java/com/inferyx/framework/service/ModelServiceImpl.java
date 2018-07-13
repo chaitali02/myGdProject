@@ -833,7 +833,7 @@ public class ModelServiceImpl {
 		return logList;
 	}
 	
-	public List<String> readLog2(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public String readLog2(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		if(filePath == null) {
 			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type);
 			MetaIdentifierHolder execDependsOn = trainExec.getDependsOn();
@@ -847,17 +847,12 @@ public class ModelServiceImpl {
 		FileInputStream fstream = new FileInputStream(filePath);
 		BufferedReader buffReader = new BufferedReader(new InputStreamReader(fstream));
 		String strLine = "";
-		StringBuilder log = new StringBuilder();
-		List<String> logList = new ArrayList<>();
+		String result = "";
 	   
 		while ((strLine = buffReader.readLine()) != null)   {
-			log.append(strLine).append("\n");
-			//logList.add(strLine);
+			result = result.concat(strLine).concat("\n");
 		}
-		logList.add(log.toString());
-		buffReader.close();
-		fstream.close();
-		return logList;
+		return result;
 	}
 	
 	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,RunMode runMode) throws Exception {

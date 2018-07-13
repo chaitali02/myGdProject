@@ -706,13 +706,13 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				if (isModelSved) {					
 					if(trndModel instanceof CrossValidatorModel) {
 						filePathUrl = filePathUrl + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
-						List<Map<String, Object>> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 						
 						String fileName = tableName+".result";
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
-						List<Map<String, Object>> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
 						String fileName = tableName+".result";
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else {
@@ -767,7 +767,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		}		
 	}
 	
-	public String writeSummaryToFile(List<Map<String, Object>> summary, String directory, String fileName) throws IOException {		
+	public String writeSummaryToFile(Map<String, Object> summary, String directory, String fileName) throws IOException {		
 		String filePath = directory + "/" + fileName;		
 		String resultJson = new ObjectMapper().writeValueAsString(summary);
 		PrintWriter printWriter = new PrintWriter(filePath);

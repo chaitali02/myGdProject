@@ -421,6 +421,7 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                     node.exit().remove();
 
                     function arcPath(leftHand, d) {
+                        console.log(d)
                         var x1 = leftHand ? d.source.x : d.target.x,
                             y1 = leftHand ? d.source.y : d.target.y,
                             x2 = leftHand ? d.target.x : d.source.x,
