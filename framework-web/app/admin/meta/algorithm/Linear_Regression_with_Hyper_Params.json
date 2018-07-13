@@ -22,7 +22,7 @@
     }
   ],
   "type": "REGRESSION",
-  "library": "SPARKML",
+  "libraryType": "SPARKML",
   "trainClass": "org.apache.spark.ml.regression.LinearRegression",
   "modelClass": "org.apache.spark.ml.regression.LinearRegressionModel",
   "labelRequired": "Y",

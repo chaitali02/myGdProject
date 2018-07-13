@@ -40,7 +40,7 @@
         }
 	],
 	"type": "REGRESSION",
-	"library": "SPARKML",
+	"libraryType": "SPARKML",
 	"trainClass": "org.apache.spark.ml.clustering.KMeans",
 	"modelClass": "org.apache.spark.ml.clustering.KMeansModel",
 	"labelRequired": "N",

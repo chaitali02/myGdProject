@@ -685,6 +685,8 @@
         case 'dagexec':
           api = 'dag';
           break;
+        case 'trainExec':
+          api= 'model/train';
       }
       if(!api){
         return

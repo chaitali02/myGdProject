@@ -44,7 +44,7 @@
         }
   ],
   "type": "CLASSIFICATION",
-  "library": "SPARKML",
+  "libraryType": "SPARKML",
   "trainClass": "org.apache.spark.ml.classification.RandomForestClassifier",
   "modelClass": "org.apache.spark.ml.classification.RandomForestClassificationModel",
   "labelRequired": "Y",
