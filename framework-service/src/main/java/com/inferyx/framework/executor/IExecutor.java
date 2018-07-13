@@ -551,10 +551,10 @@ public interface IExecutor {
 	 *
 	 * @param trndModel 
 	 * @param clientContext
-	 * @return List<String>
+	 * @return Map<String, Object>
 	 * @throws IOException
 	 */
-	List<Map<String, Object>> summary(Object trndModel, List<String> summaryMethods, String clientContext)
+	Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException;
 }

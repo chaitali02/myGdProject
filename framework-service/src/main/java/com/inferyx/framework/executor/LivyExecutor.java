@@ -437,7 +437,7 @@ public class LivyExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Map<String, Object>> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
+	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -334,7 +334,6 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		}
 	}
     $scope.onChangePropertyName=function(index,value,type){
-	   debugger
 		if(type =='category'){
 			if(index >0){
 				for(var i=0;i<$scope.propertyInfoTableArray.length-1;i++){
@@ -371,12 +370,15 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 				$scope.highlightInfo=$scope.nodeTableArray[index][propertyType];
 				$scope.propertyInfoTableArray=$scope.highlightInfo.propertyInfoTableArray;
 				$scope.highlightInfo.type=type;
+				$scope.highlightInfo.caption=propertyType=='nodeBackgroundInfo'?'Node Background':'Node Highlight'
 				$scope.highlightInfo.propertyType=propertyType;
+			
 			}else{
 				$scope.highlightInfo={};
 				$scope.highlightInfo.selectType="category";
 				$scope.highlightInfo.type=type;
 				$scope.highlightInfo.propertyType=propertyType;
+				$scope.highlightInfo.caption=propertyType=='nodeBackgroundInfo'?'Node Background':'Node Highlight'
 				$scope.propertyInfoTableArray=[];
 				$scope.addPropertyInfoRow();
 			}
@@ -385,16 +387,19 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 			$scope.allAttr=$scope.nodeTableArray[index].allAttributeInto;
 		}
 		if(type =='edge'){
+			
 			if($scope.edgeTableArray[index][propertyType]){
 				$scope.highlightInfo=$scope.edgeTableArray[index][propertyType];
 				$scope.propertyInfoTableArray=$scope.highlightInfo.propertyInfoTableArray;
 				$scope.highlightInfo.type=type;
+				$scope.highlightInfo.caption='Edge Highlight'
 				$scope.highlightInfo.propertyType=propertyType;
 			}else{
 				$scope.highlightInfo={};
 				$scope.highlightInfo.selectType="category";
 				$scope.highlightInfo.type=type;
 				$scope.highlightInfo.propertyType=propertyType;
+				$scope.highlightInfo.caption='Edge Highlight'
 				$scope.propertyInfoTableArray=[];
 				$scope.addPropertyInfoRow();
 			}

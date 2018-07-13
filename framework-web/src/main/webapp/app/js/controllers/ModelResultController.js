@@ -334,7 +334,10 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
         $scope.getModelByTrainExec();
         ModelService.getModelResult(uuid, version).then(function(response){ onSuccessGetModelResult(response.data)});
         var onSuccessGetModelResult = function(response) {
+            $scope.modelresult1={}
             $scope.modelresult = response;
+            $scope.modelresult1.data=response;
+           
             $scope.model = false;
             $scope.isMoldeSelect = false;
             $scope.selectedmodelExecdata = true;
