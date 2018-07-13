@@ -170,7 +170,12 @@ export class PredictionComponent implements OnInit {
 
   onChangeSourceType() {
     this.getAllLatestSource(this.selectSourceType)
-  }
+    this.selectLabel = null;
+    for(const i in this.featureMapTableArray){
+    this.featureMapTableArray[i].targetFeature= null;
+    }
+  } 
+
   onSuccessgetAllLatestSource(response) {
     let temp = []
     for (const i in response) {
