@@ -921,8 +921,8 @@
     ],
     "uuid" : "e5e1aee8-86a3-11e8-adc0-fa7ae01bbebc",
     "version" : "1531489940",
-    "name" : "account_transaction_graph",
-    "desc" : "account_transaction_graph",
+    "name" : "end_to_end_graph",
+    "desc" : " node : account,customer,branch,bank  && edges : account ...",
     "createdBy" : {
         "ref" : {
             "type" : "user",
