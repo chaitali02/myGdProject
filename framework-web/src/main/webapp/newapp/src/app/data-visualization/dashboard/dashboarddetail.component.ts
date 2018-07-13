@@ -354,6 +354,7 @@ export class DashboardDetailComponent {
     onSuccessGetOneByUuidAndVersion(response){
        this.breadcrumbDataFrom[2].caption=response.name
        this.dashboardData=response;
+       this.uuid =response.uuid;
        const version: Version = new Version();
        version.label = response['version'];
        version.uuid = response['uuid'];
@@ -503,6 +504,10 @@ export class DashboardDetailComponent {
               this.goBack()
             }, 1000);
          
+
+    }
+    showview(uuid,version){
+        this.router.navigate(['app/dataVisualization/dashboarddetail',this.uuid , this.version, 'true']);
 
     }
 }
