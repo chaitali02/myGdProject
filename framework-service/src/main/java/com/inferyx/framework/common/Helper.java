@@ -488,6 +488,7 @@ public class Helper {
 				case "clonedata" : return OperatorType.cloneData;
 				case "gendataattr" : return OperatorType.genDataAttr;
 				case "gendatavallist" : return OperatorType.genDataValList;
+				case "matrix" : return OperatorType.matrix;
 				default : return null;
 			}
 		}
