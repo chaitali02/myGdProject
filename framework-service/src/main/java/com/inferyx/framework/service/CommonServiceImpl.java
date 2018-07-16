@@ -2095,7 +2095,7 @@ public class CommonServiceImpl <T> {
 		try{
 			T object = null;
 			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			if (appUuid == null) 
+			if (appUuid != null) 
 				object = (T) iDao.getClass().getMethod("findOneById", String.class,String.class).invoke(iDao, appUuid,id);	
 			else
 				object = (T) iDao.getClass().getMethod("findOneById", String.class).invoke(iDao,id);
