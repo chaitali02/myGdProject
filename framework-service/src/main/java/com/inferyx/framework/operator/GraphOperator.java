@@ -91,6 +91,7 @@ public class GraphOperator implements IOperator {
 		}
 		String nodeSql = null;
 		StringBuilder sb = new StringBuilder();
+		StringBuilder sb2 = new StringBuilder();
 		int count = 0;
 		for (GraphNode graphNode : nodeList) {
 			if (count > 0) {
@@ -104,7 +105,12 @@ public class GraphOperator implements IOperator {
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
 			sb.append(" AS id, ");
-
+			AttributeRefHolder nbpropID = graphNode.getNodeBackgroundInfo().getPropertyId();
+			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nbpropID, nbpropID,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
+			sb.append(" AS nBPropertyId, ");
+			
 			sb.append(count + " AS nodeIndex, ");
 
 			AttributeRefHolder nodeNameRefHolder = graphNode.getNodeName();
@@ -139,14 +145,31 @@ public class GraphOperator implements IOperator {
 				  setAttrRefHolder.add(attrRefHolder.getAttrName().contains(attrRefHolder1.getAttrName()) ? : null);
 	          System.out.println(setAttrRefHolder);*/
 
+			// added propertyId into sb2
+			AttributeRefHolder propertyIdRefHolder = graphNode.getNodeBackgroundInfo().getPropertyId();
+			sb2.append("'''\"");
+			sb2.append(attributeMapOperator.sourceAttrAlias(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+					execParams.getOtherParams()));
+			sb2.append("\"'':\"', ");
+
+
+			sb2.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
 			
+			sb2.append(", ");
+			String propertyIdKey=attributeMapOperator.sourceAttrAlias(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+					execParams.getOtherParams());
 			Boolean status = true;
+			Boolean flag = true;
 
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
 
 				String type = propHolder.getAttrType();
-				if (type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString())) {
+				if (type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString()) ) {
 					sb.append("'''\"");
 					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
@@ -177,21 +200,25 @@ public class GraphOperator implements IOperator {
 					sb.append("',' ");
 					status = false;
 				}
+				if( propertyIdKey.equalsIgnoreCase(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
+						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+						execParams.getOtherParams()))) {
+					flag=false;
+				}
 			}
-			sb.delete(sb.length() - 5, sb.length());
+			if(flag==true) {
+				//sb.delete(sb.length() - 5, sb.length());
+				sb.append(sb2);
+			}else {sb.delete(sb.length() - 5, sb.length());}
+			
 			if (status == true) {
 				sb.append("'\"}')");
 			} else {
 				sb.append("'}')");
 			}
 
-			sb.append(" AS nodeProperties ,");
-			// added propertyId
-			AttributeRefHolder propertyIdRefHolder = graphNode.getNodeBackgroundInfo().getPropertyId();
-			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
-					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-					execParams));
-			sb.append(" AS nBPropertyId,' ");
+			sb.append(" AS nodeProperties ,'");
+	
 			// added type
 			sb.append(graphNode.getHighlightInfo().getType());
 			sb.append("' AS type, ");
@@ -202,6 +229,9 @@ public class GraphOperator implements IOperator {
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
 			sb.append(" AS nHPropertyId");
+			
+			
+			
 
 			sb.append(ConstantsUtil.FROM);
 
