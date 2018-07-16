@@ -117,8 +117,17 @@ public class GraphOperator implements IOperator {
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeNameRefHolder, nodeNameRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
-			sb.append(" AS nodeName, '");
+			sb.append(" AS nodeName, ");
 
+			if(graphNode.getNodeSize() !=null) {
+				AttributeRefHolder nodeSizeRefHolder = graphNode.getNodeSize();
+				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeSizeRefHolder, nodeSizeRefHolder,
+						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+						execParams));
+			}else {
+				sb.append(0);
+			}
+			sb.append(" AS nodeSize, '");
 			/*
 			 * sb.append(attributeMapOperator.sourceAttrAlias(daoRegister,
 			 * nodeNameRefHolder, nodeNameRefHolder,
@@ -129,8 +138,7 @@ public class GraphOperator implements IOperator {
 			sb.append(graphNode.getNodeType());
 			sb.append("' AS nodeType, '");
 
-			sb.append(graphNode.getNodeSize());
-			sb.append("' AS nodeSize, '");
+			
 
 			sb.append(graphNode.getNodeIcon());
 			sb.append("' AS nodeIcon, ");

@@ -65,11 +65,11 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "Compound",
-                        "propertyValue" : "#c9f2f2"
+                        "propertyValue" : "#ef9a9a"
                     }, 
                     {
                         "propertyName" : "Simple",
-                        "propertyValue" : "#6aadac"
+                        "propertyValue" : "#B39DDB"
                     }
                 ]
             },
@@ -86,19 +86,19 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "American",
-                        "propertyValue" : "#3a4d4d"
+                        "propertyValue" : "#b71c1c"
                     }, 
                     {
                         "propertyName" : "Canadian",
-                        "propertyValue" : "#173f3e"
+                        "propertyValue" : "#004D40"
                     }, 
                     {
                         "propertyName" : "British",
-                        "propertyValue" : "#750711"
+                        "propertyValue" : "#0D47A1"
                     }, 
                     {
                         "propertyName" : "German",
-                        "propertyValue" : "#352e33"
+                        "propertyValue" : "#FF9800"
                     }
                 ]
             }
@@ -183,15 +183,15 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "Mr",
-                        "propertyValue" : "#51b3ff"
+                        "propertyValue" : "#ef9a9a"
                     }, 
                     {
                         "propertyName" : "Ms",
-                        "propertyValue" : "#da00ff"
+                        "propertyValue" : "#80DEEA"
                     }, 
                     {
                         "propertyName" : "Mrs",
-                        "propertyValue" : "#814c83"
+                        "propertyValue" : "#B39DDB"
                     }
                 ]
             },
@@ -208,15 +208,15 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "Mr",
-                        "propertyValue" : "#1f4563"
+                        "propertyValue" : "#004D40"
                     }, 
                     {
                         "propertyName" : "Ms",
-                        "propertyValue" : "#3d1344"
+                        "propertyValue" : "#FF9800"
                     }, 
                     {
                         "propertyName" : "Mrs",
-                        "propertyValue" : "#301b31"
+                        "propertyValue" : "#263238"
                     }
                 ]
             }
@@ -290,11 +290,11 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "2000",
-                        "propertyValue" : "#45062d"
+                        "propertyValue" : "#004D40"
                     }, 
                     {
                         "propertyName" : "500000",
-                        "propertyValue" : "#61595e"
+                        "propertyValue" : "#263238"
                     }
                 ]
             }
@@ -366,18 +366,18 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "2000",
-                        "propertyValue" : "#61595e"
+                        "propertyValue" : "#263238"
                     }, 
                     {
                         "propertyName" : "10000",
-                        "propertyValue" : "#2a232a"
+                        "propertyValue" : "#FF9800"
                     }
                 ]
             }
         }
     ],
     "uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
-    "version" : "1531404680",
+    "version" : "1531737711",
     "name" : "account_transaction_graph",
     "desc" : "account_transaction_graph",
     "createdBy" : {
@@ -388,7 +388,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-07-12T14:11:20.000Z"),
+    "createdOn" : ISODate("2018-07-16T10:41:51.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
