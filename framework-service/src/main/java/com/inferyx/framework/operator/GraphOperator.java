@@ -155,11 +155,11 @@ public class GraphOperator implements IOperator {
 
 			// added propertyId into sb2
 			AttributeRefHolder propertyIdRefHolder = graphNode.getNodeBackgroundInfo().getPropertyId();
-			sb2.append("'''\"");
+			sb2.append("\"");
 			sb2.append(attributeMapOperator.sourceAttrAlias(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 					execParams.getOtherParams()));
-			sb2.append("\"'':\"', ");
+			sb2.append("\"':\"', ");
 
 
 			sb2.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
@@ -178,11 +178,11 @@ public class GraphOperator implements IOperator {
 
 				String type = propHolder.getAttrType();
 				if (type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString()) ) {
-					sb.append("'''\"");
+					sb.append("\"");
 					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 							execParams.getOtherParams()));
-					sb.append("\"'':\"', ");
+					sb.append("\"':\"', ");
 
 					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
@@ -193,11 +193,11 @@ public class GraphOperator implements IOperator {
 					sb.append("'\",' ");
 					status = true;
 				} else {
-					sb.append("'''\"");
+					sb.append("\"");
 					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 							execParams.getOtherParams()));
-					sb.append("\"'':', ");
+					sb.append("\"':', ");
 
 					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
@@ -292,6 +292,8 @@ public class GraphOperator implements IOperator {
 		}
 		String edgeSql = null;
 		StringBuilder sb = new StringBuilder();
+		StringBuilder sb3 = new StringBuilder();
+
 		int count = 0;
 		for (GraphEdge graphEdge : edgeList) {
 			if (count > 0) {
@@ -329,17 +331,36 @@ public class GraphOperator implements IOperator {
 			sb.append(edgeSource);
 			sb.append("' AS edgeSource, ");
 			
+			// added propertyId into sb2
+			AttributeRefHolder hIpropIdRefHolder = graphEdge.getHighlightInfo().getPropertyId();
+			sb3.append("\"");
+			sb3.append(attributeMapOperator.sourceAttrAlias(daoRegister, hIpropIdRefHolder, hIpropIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+					execParams.getOtherParams()));
+			sb3.append("\"':\"', ");
+
+
+			sb3.append(attributeMapOperator.sourceAttrSql(daoRegister, hIpropIdRefHolder, hIpropIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
+			
+			sb3.append(", ");
+			String propertyIdKey=attributeMapOperator.sourceAttrAlias(daoRegister, hIpropIdRefHolder, hIpropIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+					execParams.getOtherParams());
+
+			Boolean flag = true;
 			Boolean status = true;
 			sb.append("concat('{', ");
 			 //graphEdge.getEdgeProperties().set(graphEdge.getEdgeProperties().size()-1, graphEdge.getHighlightInfo().getPropertyId());
 			for (AttributeRefHolder propHolder : graphEdge.getEdgeProperties()) {
 				String type=propHolder.getAttrType();
 				if(type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString())) {
-				sb.append("'''\"");
+				sb.append("\"");
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams()));
-				sb.append("\"'':\"', ");
+				sb.append("\"':\"', ");
 				
 				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
@@ -351,11 +372,11 @@ public class GraphOperator implements IOperator {
 				status=true;
 				}else 
 				{
-					sb.append("'''\"");
+					sb.append("\"");
 					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 							execParams.getOtherParams()));
-					sb.append("\"'':', ");
+					sb.append("\"':', ");
 					
 					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
@@ -365,13 +386,22 @@ public class GraphOperator implements IOperator {
 					sb.append(", ");
 					sb.append("',' ");
 					status=false;
+				}	
+				if( propertyIdKey.equalsIgnoreCase(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
+						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+						execParams.getOtherParams()))) {
+					flag=false;
 				}
 			}
-			sb.delete(sb.length() - 5, sb.length());
-			if(status==true) {
-				sb.append("'\"}')");   
-			}else {
-				sb.append("'}')");   
+			if(flag==true) {
+				//sb.delete(sb.length() - 5, sb.length());
+				sb.append(sb3);
+			}else {sb.delete(sb.length() - 5, sb.length());}
+			
+			if (status == true) {
+				sb.append("'\"}')");
+			} else {
+				sb.append("'}')");
 			}
 			sb.append(" AS edgeProperties, ");
 			//remove
