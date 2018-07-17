@@ -26,7 +26,41 @@ public class Algorithm extends BaseEntity {
 	private String returnType; 
 	private MetaIdentifierHolder paramList;
 	private String savePmml;
+	private MetaIdentifierHolder paramListWH;
+	private MetaIdentifierHolder paramListWoH;
 
+	/**
+	 * @Ganesh
+	 *
+	 * @return the paramListWH
+	 */
+	public MetaIdentifierHolder getParamListWH() {
+		return paramListWH;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param paramListWH the paramListWH to set
+	 */
+	public void setParamListWH(MetaIdentifierHolder paramListWH) {
+		this.paramListWH = paramListWH;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the paramListWoH
+	 */
+	public MetaIdentifierHolder getParamListWoH() {
+		return paramListWoH;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param paramListWoH the paramListWoH to set
+	 */
+	public void setParamListWoH(MetaIdentifierHolder paramListWoH) {
+		this.paramListWoH = paramListWoH;
+	}
 	/**
 	 * @Ganesh
 	 *
