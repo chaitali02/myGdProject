@@ -279,7 +279,8 @@ public class ModelController {
 					MetaType.train.toString());			
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(),
 					MetaType.model.toString());
-			if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
+			if (train.getUseHyperParams().equalsIgnoreCase("N") 
+					&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				paramMapList = paramSetServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion());
 			}

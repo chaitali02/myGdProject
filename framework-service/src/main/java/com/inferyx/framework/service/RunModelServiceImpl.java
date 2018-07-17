@@ -40,6 +40,8 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ParamList;
+import com.inferyx.framework.domain.ParamListHolder;
+import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
@@ -674,9 +676,20 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
 				} else {		
 					//With hypertuning
-					MetaIdentifier hyperParamMI = algorithm.getParamList().getRef();
-					ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-					trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+					List<ParamListHolder> paramListHolderList = null;
+					if(execParams.getParamInfo() != null) {
+						for(ParamSetHolder paramSetHolder : execParams.getParamInfo()){
+							paramListHolderList = paramSetServiceImpl.getParamListHolder(paramSetHolder);
+						}
+					} else if(execParams.getParamListInfo() != null) {
+						paramListHolderList = execParams.getParamListInfo();
+					}					
+					
+					for(ParamListHolder paramListHolder : paramListHolderList) {
+						MetaIdentifier hyperParamMI = paramListHolder.getRef();
+						ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
+						trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+					}
 				}
 								
 				result = trndModel;				
