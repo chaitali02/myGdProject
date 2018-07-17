@@ -153,9 +153,9 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Is Template</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group" ng-init="paramlistData.templateFlg='Y'" >
-                    <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'Y'" ng-change="onChangeIsTemplate()"  ng-disabled="({{mode}} || addMode== true) ? false:true" uncheckable >Yes</label>
-                    <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'N'"  ng-change="onChangeIsTemplate()" ng-disabled="({{mode}} ||  addMode== true) ? false:true" uncheckable >No</label>
+                  <div class="btn-group" ng-init="paramlistData.templateFlg='Y'" >{{addMode}}
+                    <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'Y'" ng-change="onChangeIsTemplate()"  ng-disabled="isAdd == true ? false:true" uncheckable >Yes</label>
+                    <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'N'"  ng-change="onChangeIsTemplate()" ng-disabled="isAdd== true ? false:true" uncheckable >No</label>
                   </div>
                 </div>
               </div>
@@ -163,10 +163,12 @@
               <div class="form-group" >
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Use Template</label>
                 <div class="col-md-5 col-sm-5 col-xs-12">
-                  <select class="form-control" select2  ng-disabled="!isUseTemlate"  data-ng-model="selectedTemplate" ng-options="c as c.name for c in allParamList track by c.uuid">    <!--||!isTemplate -->
+                  <select class="form-control" select2   name="templateInfo" ng-disabled="(isAdd ==true && !isUseTemlate == false) ? false:true" ng-change="onChangeTemplateInfo()" data-ng-model="selectedTemplate" ng-options="c as c.name for c in allParamList track by c.uuid" >    <!--||!isTemplate -->
                     <option value="">-select-</option>
                   </select>
+                  <input type="hidden" name="templateInfo" data-ng-model="selectedTemplate.uuid" ng-required="isTemplageInfoRequired">
                 </div>
+               
               </div>
   
               <div class="form-group" style="padding-top:10px;">

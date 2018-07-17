@@ -3827,7 +3827,11 @@ public class CommonServiceImpl <T> {
 		List<ParamList> latestParamList = new ArrayList<>();
 		Set<String> uuidSet = new HashSet<>();
 		for(ParamList paramList : paramLists) {
-			if(uuidSet.size() > 0 && !uuidSet.contains(paramList.getUuid())) {
+			if(uuidSet.isEmpty()) {
+				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
+				latestParamList.add(latestPL);
+				uuidSet.add(paramList.getUuid());
+			} else if(!uuidSet.isEmpty() && !uuidSet.contains(paramList.getUuid())) {
 				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
 				latestParamList.add(latestPL);
 				uuidSet.add(paramList.getUuid());
