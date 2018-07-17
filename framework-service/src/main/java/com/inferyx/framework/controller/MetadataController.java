@@ -877,11 +877,12 @@ public class MetadataController {
 		return metadataServiceImpl.getParamListByOperator(operatorUuid);
 	}
 	
-	@RequestMapping(value = "/getParamListByOperatorType", method = RequestMethod.GET)
-	public @ResponseBody List<ParamListHolder> getParamListByOperatorType(
-			@RequestParam(value = "uuid") String operatorTypeUuid ,
-			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
-		return metadataServiceImpl.getParamListByOperatorType(operatorTypeUuid);
+	@RequestMapping(value = "/getParamListByTrain", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamListByTrain(
+			@RequestParam(value = "uuid") String trainUuid ,
+			@RequestParam(value = "version") String trainVersion,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
+		return metadataServiceImpl.getParamListByTrain(trainUuid, trainVersion);
 	}
 	
 	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET)

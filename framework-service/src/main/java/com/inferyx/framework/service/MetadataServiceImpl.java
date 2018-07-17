@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -53,6 +54,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMetaDao;
+import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
@@ -99,6 +101,7 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.StatusHolder;
+import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
@@ -1522,6 +1525,84 @@ public class MetadataServiceImpl {
 		List<Lov> lov = new ArrayList<>();
 		lov = (List<Lov>) mongoTemplate.find(query, Lov.class);
 		return lov;
+	}
+
+	public List<ParamListHolder> getParamListByTrain(String trainUuid, String trainVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+		Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), model.getDependsOn().getRef().getType().toString());
+		//ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(algorithm.getParamList().getRef().getUuid(), algorithm.getParamList().getRef().getVersion(), algorithm.getParamList().getRef().getType().toString());
+		
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		if(train.getUseHyperParams().equalsIgnoreCase("Y")) {
+			ParamListHolder plHolder = new ParamListHolder();
+			MetaIdentifier plMI = algorithm.getParamListWH().getRef();
+			plMI.setName(null);
+			plHolder.setRef(plMI);
+			plHolderList.add(plHolder);
+			ParamList plWH = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+			if(plWH.getTemplateFlg().equalsIgnoreCase("Y")) {
+				List<ParamList> childs = getChilds(plWH.getUuid(), plWH.getVersion());
+				for(ParamList paramList : childs) {
+					ParamListHolder childPLHolder = new ParamListHolder();
+					MetaIdentifier childIdentifier = new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion());
+					childPLHolder.setRef(childIdentifier);
+					plHolderList.add(childPLHolder);
+				}
+			}
+		} else {
+			ParamListHolder plHolder = new ParamListHolder();
+			MetaIdentifier plMI = algorithm.getParamListWoH().getRef();
+			plMI.setName(null);
+			plHolder.setRef(plMI);
+			plHolderList.add(plHolder);
+			ParamList plWoH = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+			if(plWoH.getTemplateFlg().equalsIgnoreCase("Y")) {
+				List<ParamList> childs = getChilds(plWoH.getUuid(), plWoH.getVersion());
+				for(ParamList paramList : childs) {
+					ParamListHolder childPLHolder = new ParamListHolder();
+					MetaIdentifier childIdentifier = new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion());
+					childPLHolder.setRef(childIdentifier);
+					plHolderList.add(childPLHolder);
+				}
+			}
+		}
+		
+		return plHolderList;
+	}
+
+	private List<ParamList> getChilds(String parentPLUuid, String parentPLVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("actuve");
+		query.fields().include("name");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+		query.fields().include("createdOn");
+		query.fields().include("desc");
+		query.fields().include("tags");
+		query.fields().include("published");
+		query.fields().include("templateFlg");
+		query.fields().include("templateInfo");
+		query.fields().include("params");
+		query.fields().include("paramListType");
+		
+		query.addCriteria(Criteria.where("templateInfo.ref.uuid").is(parentPLUuid));
+		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+		
+		List<ParamList> paramLists = mongoTemplate.find(query, ParamList.class);
+		
+		List<ParamList> latestParamList = new ArrayList<>();
+		Set<String> uuidSet = new HashSet<>();
+		for(ParamList paramList : paramLists) {
+			if(uuidSet.size() > 0 && !uuidSet.contains(paramList.getUuid())) {
+				ParamList latestPL = (ParamList) commonServiceImpl.getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
+				latestParamList.add(latestPL);
+				uuidSet.add(paramList.getUuid());
+			}
+		}
+		return latestParamList;
 	}
 	
 }
