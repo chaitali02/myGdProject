@@ -21,7 +21,7 @@ DatascienceModule.directive('lowercase', function () {
 });
 DatascienceModule.controller('CreateParamListController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, ParamListService, privilegeSvc,$timeout,$filter) {
 
-	$scope.mode = " ";
+	$scope.mode="";
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -67,6 +67,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.paramlist.versions = [];
 	$scope.isshowmodel = false;
 	$scope.paramtable = null;
+	$scope.isUseTemlate=false;
+	$scope.isTemplageInfoRequired=false;
 	$scope.typeSimple = ["string", "double", "date", "integer", "list"];
 	$scope.type = [
 		{"name":"string","caption":"string"},
@@ -147,11 +149,54 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$sessionStorage.fromParams = fromParams
 
 	});
-
+	
+	
 	$scope.orderByValue = function (value) {
 		return value;
 	};
 
+	$scope.getAllLatestParamListByTemplate=function(){
+		ParamListService.getAllLatestParamListByTemplate('Y', "paramlist").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
+		var onSuccessGetAllLatestParamListByTemplate = function (response) {
+			$scope.allParamList=response;
+
+		}//End getAllVersionByUuid
+	}
+	
+	$scope.onChangeIsTemplate=function(){
+		$scope.isUseTemlate=!$scope.isUseTemlate;
+		if($scope.isUseTemlate){
+			$scope.getAllLatestParamListByTemplate();
+			$scope.isTemplageInfoRequired=true;
+		}else{
+			$scope.isTemplageInfoRequired=false;
+			$scope.allParamList=null;
+			$scope.paramtable=null;
+			
+		}
+	}
+    $scope.onChangeTemplateInfo=function(){
+		
+		var paramArray=[];
+		for(var i=0;i<$scope.selectedTemplate.params.length;i++){
+		  var paramInfo={}
+			paramInfo.paramId=$scope.selectedTemplate.params[i].paramId; 
+			paramInfo.paramName=$scope.selectedTemplate.params[i].paramName;
+			paramInfo.paramType=$scope.selectedTemplate.params[i].paramType.toLowerCase();
+			if($scope.selectedTemplate.params[i].paramValue !=null && $scope.selectedTemplate.params[i].paramValue.ref.type == "simple"){
+			  paramInfo.paramValue=$scope.selectedTemplate.params[i].paramValue.value;
+			  paramInfo.paramValueType="simple"
+		  }else if($scope.selectedTemplate.params[i].paramValue !=null){
+			var paramValue={};
+			paramValue.uuid=$scope.selectedTemplate.params[i].paramValue.ref.uuid;
+			paramValue.type=$scope.selectedTemplate.params[i].paramValue.ref.type;
+			paramInfo.paramValue=paramValue;
+			paramInfo.paramValueType=$scope.selectedTemplate.params[i].paramValue.ref.type;
+		  }
+		  paramArray[i]=paramInfo;
+		}
+		$scope.paramtable = paramArray;
+	}
 	$scope.addRow = function () {
 		if ($scope.paramtable == null) {
 			$scope.paramtable = [];
@@ -209,6 +254,18 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			defaultversion.uuid = response.uuid;
 			$scope.paramlist.defaultVersion = defaultversion;
 			$scope.paramtable = response.paramInfo;
+			if($scope.paramlistData.templateFlg =='N'){
+				$scope.getAllLatestParamListByTemplate();
+				var selectedTemplate={};
+				selectedTemplate.uuid=$scope.paramlistData.templateInfo.ref.uuid;
+				$scope.selectedTemplate=selectedTemplate;
+				$scope.isUseTemlate=true;
+				$scope.isTemplageInfoRequired=true;
+			}else{
+				$scope.isUseTemlate=false;
+				$scope.isTemplageInfoRequired=false;
+			}
+
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -232,6 +289,26 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			defaultversion.uuid = response.uuid;
 			$scope.paramlist.defaultVersion = defaultversion;
 			$scope.paramtable = response.params;
+			if($scope.paramlistData.templateFlg =='N'){
+				$scope.getAllLatestParamListByTemplate();
+				var selectedTemplate={};
+				selectedTemplate.uuid=$scope.paramlistData.templateInfo.ref.uuid;
+				$scope.selectedTemplate=selectedTemplate;
+				$scope.isUseTemlate=true;
+				$scope.isTemplageInfoRequired=true;
+			}else{
+				$scope.isUseTemlate=false;
+				$scope.isTemplageInfoRequired=false;
+			}
+			var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
+			}
 		}
 
 	}
@@ -263,9 +340,20 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		paramlistJson.desc = $scope.paramlistData.desc
 		paramlistJson.active = $scope.paramlistData.active;
 		paramlistJson.published = $scope.paramlistData.published;
+		paramlistJson.templateFlg = $scope.paramlistData.templateFlg;
+		var templateInfo={};
+		if($scope.paramlistData.templateFlg =='N'){
+			var templateInfoRef={};
+			templateInfoRef.type="paramlist"
+			templateInfoRef.uuid=$scope.selectedTemplate.uuid;	
+			templateInfo.ref=templateInfoRef;
+	    }else{
+			templateInfo=null;
+		}
+		
+		paramlistJson.templateInfo = templateInfo;
 		if($scope.parantType){
 	    	paramlistJson.paramListType = $scope.parantType;
-			
 		}
 		var tagArray = [];
 		if ($scope.tags != null) {

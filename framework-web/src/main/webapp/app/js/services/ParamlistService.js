@@ -63,11 +63,29 @@ DatascienceModule.factory('ParamListFactory', function ($http, $location) {
     }).then(function (response) { return response })
   }
 
+  factory.findAllLatestParamListByTemplate = function (templateFlg,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "common/getAllLatestParamListByTemplate?action=view&templateFlg=" + templateFlg + "&type=" + type,
+      method: "GET"
+    }).then(function (response) { return response })
+  }
+
   return factory;
 })
 
 DatascienceModule.service("ParamListService", function ($http, ParamListFactory, $q) {
 
+  this.getAllLatestParamListByTemplate = function (templateFlg, type) {
+    var deferred = $q.defer();
+    ParamListFactory.findAllLatestParamListByTemplate(templateFlg, type).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.getAllVersionByUuid = function (uuid, type) {
     var deferred = $q.defer();
     ParamListFactory.findAllVersionByUuid(uuid, type).then(function (response) { onSuccess(response.data) });
