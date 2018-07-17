@@ -13,6 +13,7 @@ package com.inferyx.framework.service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -3798,6 +3800,40 @@ public class CommonServiceImpl <T> {
 			throw new Exception ("Wrong choice of source");
 		}
 		
+	}
+
+	public List<ParamList> getAllLatestParamListByTemplate(String templateFlg) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("actuve");
+		query.fields().include("name");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+		query.fields().include("createdOn");
+		query.fields().include("desc");
+		query.fields().include("tags");
+		query.fields().include("published");
+		query.fields().include("templateFlg");
+		query.fields().include("templateInfo");
+		query.fields().include("params");
+		query.fields().include("paramListType");
+		
+		query.addCriteria(Criteria.where("templateFlg").is(templateFlg));
+		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(getApp().getUuid()));
+		
+		List<ParamList> paramLists = mongoTemplate.find(query, ParamList.class);
+		
+		List<ParamList> latestParamList = new ArrayList<>();
+		Set<String> uuidSet = new HashSet<>();
+		for(ParamList paramList : paramLists) {
+			if(uuidSet.size() > 0 && !uuidSet.contains(paramList.getUuid())) {
+				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
+				latestParamList.add(latestPL);
+				uuidSet.add(paramList.getUuid());
+			}
+		}
+		return latestParamList;
 	}
 	
 }

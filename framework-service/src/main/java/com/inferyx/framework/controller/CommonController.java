@@ -39,6 +39,7 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ImportServiceImpl;
 import com.inferyx.framework.service.MessageServiceImpl;
@@ -347,5 +348,10 @@ public class CommonController<T> {
 		return null;
     }
 	
-	
+	@RequestMapping(value = "/getAllLatestParamListByTemplate", method = RequestMethod.GET)
+	public List<ParamList> getAllLatestParamListByTemplate(@RequestParam(value = "type", required = false) String type,
+															@RequestParam(value = "action", required = false) String action,
+															@RequestParam(value = "templateFlg") String templateFlg) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		return commonServiceImpl.getAllLatestParamListByTemplate(templateFlg);
+	}
 }
