@@ -10,9 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +21,6 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -49,7 +45,6 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.RegisterService;
-import com.inferyx.framework.service.RuleExecServiceImpl;
 import com.inferyx.framework.service.RuleGroupServiceImpl;
 import com.inferyx.framework.service.RuleServiceImpl;
 import com.inferyx.framework.service.TaskHolder;
