@@ -119,6 +119,12 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	    }
 	}
 	
+	$scope.getAllLatestParamListByTemplate=function(){
+		CommonService.getAllLatestParamListByTemplate('Y', "paramlist").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
+		var onSuccessGetAllLatestParamListByTemplate = function (response) {
+			$scope.allParamList=response;
+		}//End getAllLatestParamListByTemplate
+	}
 
 	$scope.getAllVersion = function (uuid) {
 		AlgorithmService.getAllVersionByUuid(uuid, "algorithm").then(function (response) { onGetAllVersionByUuid(response.data) });
@@ -153,6 +159,15 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 				$scope.selectparamlist = paramlist;
 
 			}
+			$scope.getAllLatestParamListByTemplate();
+			var selectParamlistWithoutHype={};
+			selectParamlistWithoutHype.uuid=response.paramListWoH.ref.uuid;
+			selectParamlistWithoutHype.name=response.paramListWoH.ref.name;
+			$scope.selectParamlistWithoutHyper=selectParamlistWithoutHype;
+			var selectParamlistWithHype={};
+			selectParamlistWithHype.uuid=response.paramListWH.ref.uuid;
+			selectParamlistWithHype.name=response.paramListWH.ref.name;
+			$scope.selectParamlistWithHyper=selectParamlistWithHype;
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -180,6 +195,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			$scope.allparamlist = response;
 			$scope.selectparamlist = $scope.allparamlist[0];
 		}
+		$scope.getAllLatestParamListByTemplate();
 	}
 
 
@@ -207,6 +223,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 				$scope.selectparamlist = paramlist;
 
 			}
+			$scope.getAllLatestParamListByTemplate();
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -271,6 +288,21 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		ref.uuid = $scope.selectparamlist.uuid;
 		paramlist.ref = ref;
 		algorithmJson.paramList = paramlist
+
+		var paramListWHParam={}
+		var paramListWHParamRef={};
+		paramListWHParamRef.uuid=$scope.selectParamlistWithHyper.uuid;
+		paramListWHParamRef.type="paramlist";
+		paramListWHParam.ref=paramListWHParamRef;
+		algorithmJson.paramListWH=paramListWHParam;
+		
+		var paramListWOHParam={}
+		var paramListWOHParamRef={};
+		paramListWOHParamRef.uuid=$scope.selectParamlistWithoutHyper.uuid;
+		paramListWOHParamRef.type="paramlist";
+		paramListWOHParam.ref=paramListWOHParamRef;
+		algorithmJson.paramListWoH=paramListWOHParam;
+
 		console.log(JSON.stringify(algorithmJson));
 		AlgorithmService.submit(algorithmJson, 'algorithm',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {

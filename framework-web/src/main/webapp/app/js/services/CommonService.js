@@ -859,6 +859,21 @@
     }
     return deferred.promise;
   }
+  this.getAllLatestParamListByTemplate = function(templateFlg,type) {
+    var deferred = $q.defer();
+    var url;
+    url ="common/getAllLatestParamListByTemplate?action=view&templateFlg=" + templateFlg + "&type=" + type;
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
+
     
   });
   

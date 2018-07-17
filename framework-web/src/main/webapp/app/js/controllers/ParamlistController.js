@@ -289,7 +289,17 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			defaultversion.uuid = response.uuid;
 			$scope.paramlist.defaultVersion = defaultversion;
 			$scope.paramtable = response.params;
-			$scope.paramlistData.templateFlg =='Y'?$scope.getAllLatestParamListByTemplate():"";
+			if($scope.paramlistData.templateFlg =='N'){
+				$scope.getAllLatestParamListByTemplate();
+				var selectedTemplate={};
+				selectedTemplate.uuid=$scope.paramlistData.templateInfo.ref.uuid;
+				$scope.selectedTemplate=selectedTemplate;
+				$scope.isUseTemlate=true;
+				$scope.isTemplageInfoRequired=true;
+			}else{
+				$scope.isUseTemlate=false;
+				$scope.isTemplageInfoRequired=false;
+			}
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
