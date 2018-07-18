@@ -202,12 +202,28 @@
                           <br>
                           <form class="form-horizontal">
                             <div class="form-group">
-                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set
+                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Type
                               </label>
                               <div class="col-md-6">
+                                <select class="form-control" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r  for r in paramTypes">
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Select
+                              </label>
+                              <div class="col-md-6" ng-show="selectParamType =='paramset'">
                                 <select class="form-control" select2 ng-change="onSelectparamSet()" data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'">
                                   <option value="" style="color:red;">USE DEFAULT VALUE</option>
                                 </select>
+                              </div>
+                              <div class="col-md-6" ng-show="selectParamType =='paramlist'">
+                                  <select class="form-control" select2 ng-change="onChangeParamList()"  data-ng-model="paramlistdata" ng-options="r as r.name for r in allParamList">
+                                  </select>
+                              </div>
+                              <div class="col-md-6" ng-if="selectParamType== null">
+                                  <select class="form-control" select2   data-ng-model="paramlistdata" ng-options="r as r.name for r in allParamList">
+                                  </select>
                               </div>
                             </div>
                           </form>

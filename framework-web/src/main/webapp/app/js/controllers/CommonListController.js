@@ -17,7 +17,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     timeout: 3000 //time in ms
   };
   $rootScope.isCommentDisabled=true;
-
+  $scope.paramTypes=["paramlist","paramset"];
   var cached = cacheService.getCache('searchCriteria', $scope.select);
   $scope.isJobExec = $stateParams.isJobExec;
   $scope.isExec = $stateParams.isExec;
@@ -401,21 +401,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       }
     }
   }
-  $scope.getExecParamsSet = function () {
-    $scope.paramtablecol = null
-    $scope.paramtable = null;
-    $scope.isTabelShow = false;
-    CommonService.getParamSetByType($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version).then(function (response) {
-      onSuccessGetExecuteModel(response.data)
-    });
-    var onSuccessGetExecuteModel = function (response) {
-      $('#responsive').modal({
-        backdrop: 'static',
-        keyboard: false
-      });
-      $scope.allparamset = response;
-    }
-  }
+  
+ 
+
+
   $scope.getExecParamList=function(){
     $scope.attributeTypes=['datapod','dataset','rule'];
     CommonService.getParamListByType($scope.select,$scope.exeDetail.uuid, $scope.exeDetail.version).then(function (response) {
@@ -520,6 +509,49 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       console.log(JSON.stringify(response));
     }
   }
+
+  $scope.getExecParamsSet = function () {
+    $scope.paramtablecol = null
+    $scope.paramtable = null;
+    $scope.isTabelShow = false;
+    CommonService.getParamSetByType($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version).then(function (response) {
+      onSuccessGetExecuteModel(response.data)
+    });
+    var onSuccessGetExecuteModel = function (response) {
+      $('#responsive').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+      $scope.allparamset = response;
+    }
+  }
+  
+  $scope.getParamListByTrain=function(){
+    $scope.paramlistdata=null;
+    CommonService.getParamListByTrain($scope.exeDetail.uuid, $scope.exeDetail.version,$scope.select).then(function (response){ onSuccesGetParamListByTrain(response.data)});
+    var onSuccesGetParamListByTrain = function (response) {
+      $scope.allParamList=response;
+    }
+  }
+  
+  $scope.onChangeParamType=function(){
+    if($scope.selectParamType =="paramlist"){
+      $scope.paramlistdata=null;
+      $scope.getParamListByTrain();
+    }
+    else if($scope.selectParamType =="paramset"){
+      $scope.getExecParamsSet();
+    }
+   
+  }
+
+  // $scope.onChangeParamList=function(){
+  //   CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
+  //   var onSuccesGetParamListByTrain = function (response) {
+  //     $scope.selectParamList=response;
+  //   }
+  // }
+
   $scope.onSelectparamSet = function () {
     var paramSetjson = {};
     var paramInfoArray = [];
@@ -555,30 +587,44 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     });
   }
   $scope.executeWithExecParams = function () {
-    $scope.newDataList = [];
-    $scope.selectallattribute = false;
-    angular.forEach($scope.paramtable, function (selected) {
-      if (selected.selected) {
-        $scope.newDataList.push(selected);
+    if($scope.selectParamType =="paramlist"){
+      var execParams = {};
+      var paramListInfo =[];
+      var paramInfo={};
+      var paramInfoRef={};
+      paramInfoRef.uuid=$scope.paramlistdata.uuid;
+      paramInfoRef.type="paramlist";
+      paramInfo.ref=paramInfoRef;
+      paramListInfo[0]=paramInfo;
+      execParams.paramListInfo=paramListInfo;
+      $scope.paramlistdata=null;
+      $scope.selectParamType=null;
+    }else{
+      $scope.newDataList = [];
+      $scope.selectallattribute = false;
+      angular.forEach($scope.paramtable, function (selected) {
+        if (selected.selected) {
+          $scope.newDataList.push(selected);
+        }
+      });
+      var paramInfoArray = [];
+      if ($scope.newDataList.length > 0) {
+        var execParams = {}
+        var ref = {}
+        ref.uuid = $scope.paramsetdata.uuid;
+        ref.version = $scope.paramsetdata.version;
+        for (var i = 0; i < $scope.newDataList.length; i++) {
+          var paraminfo = {};
+          paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
+          paraminfo.ref = ref;
+          paramInfoArray[i] = paraminfo;
+        }
       }
-    });
-    var paramInfoArray = [];
-    if ($scope.newDataList.length > 0) {
-      var execParams = {}
-      var ref = {}
-      ref.uuid = $scope.paramsetdata.uuid;
-      ref.version = $scope.paramsetdata.version;
-      for (var i = 0; i < $scope.newDataList.length; i++) {
-        var paraminfo = {};
-        paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
-        paraminfo.ref = ref;
-        paramInfoArray[i] = paraminfo;
+      if (paramInfoArray.length > 0) {
+        execParams.paramInfo = paramInfoArray;
+      } else {
+        execParams = null
       }
-    }
-    if (paramInfoArray.length > 0) {
-      execParams.paramInfo = paramInfoArray;
-    } else {
-      execParams = null
     }
     $('#responsive').modal('hide');
 
@@ -613,8 +659,15 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     
     $('#DagConfExModal').modal('hide');
    
-    if ($scope.select == 'rule' || $scope.select == 'train') {
+    if($scope.select == 'rule') {  //|| $scope.select == 'train'
       $scope.getExecParamsSet();
+    }
+    else if($scope.select == 'train'){
+      $scope.selectParamType=null;
+      $('#responsive').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
     }
     else if($scope.select == 'simulate' || $scope.select == 'operator' ){
       $scope.getExecParamList();
