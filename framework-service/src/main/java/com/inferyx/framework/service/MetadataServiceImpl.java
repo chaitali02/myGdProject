@@ -1546,7 +1546,7 @@ public class MetadataServiceImpl {
 		List<ParamListHolder> plHolderList = new ArrayList<>();
 		for(ParamList paramList : childs) {
 			ParamListHolder childPLHolder = new ParamListHolder();
-			MetaIdentifier childIdentifier = new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion());
+			MetaIdentifier childIdentifier = new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion(), paramList.getName());
 			childPLHolder.setRef(childIdentifier);
 			plHolderList.add(childPLHolder);
 		}

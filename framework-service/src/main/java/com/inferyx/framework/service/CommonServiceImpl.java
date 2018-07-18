@@ -3819,8 +3819,6 @@ public class CommonServiceImpl <T> {
 		
 		if(parentPLUuid != null)
 			query.addCriteria(Criteria.where("templateInfo.ref.uuid").is(parentPLUuid));
-		if(parentVersion != null)
-			query.addCriteria(Criteria.where("templateInfo.ref.version").is(parentVersion));
 		if(templateFlg != null)
 			query.addCriteria(Criteria.where("templateFlg").is(templateFlg));
 		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(getApp().getUuid()));
