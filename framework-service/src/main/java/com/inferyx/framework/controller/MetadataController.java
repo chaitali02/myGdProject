@@ -900,6 +900,15 @@ public class MetadataController {
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
 	}
+	
+	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET, params = {"uuid", "version"})
+	public @ResponseBody List<ParamListHolder> getParamListByRule(
+			@RequestParam(value = "uuid", required = false) String ruleUuid,
+			@RequestParam(value = "version", required = false) String ruleVersion,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListByRule(ruleUuid, ruleVersion);
+	}
+		
 	@RequestMapping(value = "/getParamListByModel", method = RequestMethod.GET)
 	public @ResponseBody List<BaseEntity> getParamListByModel(
 			@RequestParam(value = "type", required = false) String type,

@@ -84,6 +84,7 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
@@ -1069,10 +1070,6 @@ public class MetadataServiceImpl {
 		return null;
 	}	
 	
-	
-	
-	
-	
 	public List<Function> getFunctionByType(String category){
 		Query query = new Query();
 		query.fields().include("uuid");
@@ -1690,5 +1687,20 @@ public class MetadataServiceImpl {
 			}
 		}
 		return paramListHolderList;
+	}
+
+	public List<ParamListHolder> getParamListByRule(String ruleUuid, String ruleVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.rule.toString());
+		MetaIdentifier plMI = rule.getParamList().getRef();
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		ParamListHolder plHolder = new ParamListHolder();
+		plHolder.setRef(plMI);
+		plHolderList.add(plHolder);
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+		if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion());
+			plHolderList.addAll(persistPLTemplateChilds(childs));
+		}
+		return plHolderList;
 	}
 }
