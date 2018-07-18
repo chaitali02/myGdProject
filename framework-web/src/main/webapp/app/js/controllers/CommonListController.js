@@ -664,6 +664,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
     else if($scope.select == 'train'){
       $scope.selectParamType=null;
+      $scope.paramtable=null;
+      $scope.isTabelShow=false;
       $('#responsive').modal({
         backdrop: 'static',
         keyboard: false
