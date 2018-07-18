@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
@@ -126,16 +127,26 @@ public class RuleController {
 		MetaIdentifier ruleExecInfo = new MetaIdentifier(MetaType.rule, ruleUUID, ruleVersion);
 		ruleExecMeta.setRef(ruleExecInfo);
 		try {
-			if (execParams != null && execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
-				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-					MetaIdentifier ref = paramSetHolder.getRef();
-					ref.setType(MetaType.paramset);
-					paramSetHolder.setRef(ref);
-					execParams.setParamSetHolder(paramSetHolder);
-					ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
-					ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
-					ruleExec = ruleServiceImpl.execute(metaExecutor, ruleExec, taskList, execParams, runMode);
+			if (execParams != null) {
+				if(execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
+					for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
+						MetaIdentifier ref = paramSetHolder.getRef();
+						ref.setType(MetaType.paramset);
+						paramSetHolder.setRef(ref);
+						execParams.setParamSetHolder(paramSetHolder);
+						ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
+						ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
+						ruleExec = ruleServiceImpl.execute(metaExecutor, ruleExec, taskList, execParams, runMode);
+					}
+				} else if(execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
+					for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+						execParams.setParamListHolder(paramListHolder);
+						ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
+						ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
+						ruleExec = ruleServiceImpl.execute(metaExecutor, ruleExec, taskList, execParams, runMode);
+					}
 				}
+				
 			} else {
 				ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
 				ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
