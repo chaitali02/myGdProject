@@ -13,10 +13,11 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   var notify = {
     type: 'success',
     title: 'Success',
-    content: 'Dashboard deleted Successfully',
+    content: '',
     timeout: 3000 //time in ms
   };
   $rootScope.isCommentDisabled=true;
+
   var cached = cacheService.getCache('searchCriteria', $scope.select);
   $scope.isJobExec = $stateParams.isJobExec;
   $scope.isExec = $stateParams.isExec;
@@ -40,14 +41,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   $scope.updateStats();
   
   var groups = ['profileexec', 'profilegroupexec', 'dqexec', 'dqgroupexec', 'ruleexec', 'rulegroupexec','reconexec','recongroupexec'];
-  // $scope.pagination={
-  //   currentPage:1,
-  //   pageSize:10,
-  //   paginationPageSizes:[10, 25, 50, 75, 100],
-  //   maxSize:5,
-  // }
 
-  if (!$scope.isJobExec) {
+  if(!$scope.isJobExec) {
     $scope.handleGroup = groups.indexOf($scope.select.toLowerCase());
   }
   $scope.caption = dagMetaDataService.elementDefs[$scope.select].caption;
@@ -234,55 +229,23 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.originalData = []
     $scope.originalData = data.data;
     var changerowarray = [];
-    if ($scope.handleGroup > -1) {
-      // $scope.newType = data.type+'exec';
+    if($scope.handleGroup > -1) {
       $scope.newType = data.type;
-      // if(data.data.length >0){
-      //   $scope.gridOptions.data=data.data;
-      //   $scope.$watch('originalData',function(newValue, oldValue) {
-      //     if(newValue != oldValue  && $scope.gridOptions.data.length > 0) {
-      //
-      //     for(var i=0;i<$scope.originalData.length;i++) {
-      //       if($scope.originalData[i].status != $scope.gridOptions.data[i].status){
-      //          $scope.gridOptions.data[i].status=$scope.originalData[i].status;
-      //        }
-      //     }
-      //     }
-      //     else{
-      //       $scope.gridOptions.data =[];
-      //       $scope.gridOptions.data=data.data;
-      //     }
-      //   },true);
-      // }
     }
-    //
-    // else{
-    // $scope.gridOptions.data =[];
-    // $scope.gridOptions.data=data.data;
-    // }
     $scope.gridOptions.data = [];
     $scope.gridOptions.data = data.data;
-    
     if($scope.select =="paramlist") {
       var countObj={};
       countObj.type=$scope.select;
       countObj.count=data.data.length;      
       $rootScope.metaStats[$scope.select+$scope.parantType]=countObj;
     }
-    // if($scope.originalData.length >0){
-    //   $scope.getResults($scope.originalData);
-    // }
   }
+
   $scope.refreshData = function (searchtext) {
     $scope.gridOptions.data = $filter('filter')($scope.originalData, searchtext, undefined);
   };
-  
-  // $scope.refreshData = function(s) {
-  //   $scope.gridOptions.data
-  //    var data= $filter('filter')($scope.originalData, s, undefined);
-  //   $scope.getResults(data);
-  //
-  // };
+ 
   
   $scope.getDetail = function (data) {
     $scope.setActivity(data.uuid, data.version, $scope.select, "export");
@@ -301,12 +264,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.selectuuid = uuid;
     $scope.deleteModalMsg = restore ? 'Restore' : 'Delete';
     $scope.onSuccessDelete = function (response) {
-      // $rootScope.refreshSearchResults();
-      //$scope.originalData.splice($scope.originalData.indexOf(data),1);
       data.active = restore ? 'Y' : 'N';
       $('#DeleteConfModal').modal('hide');
       $scope.message = $scope.caption + (restore ? " Restored" : " Deleted") + " Successfully";
-      //  $('#showMsgModel').modal('show');
     }
    
     $scope.okDelete = function () {
@@ -326,32 +286,30 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
  
   
-  $scope.publish = function (data, unpublish) {
+  $scope.publish = function (data, unpublish){
     var action = unpublish == true ? "unpublish" : "publish";
     $scope.setActivity(data.uuid, data.version, $scope.select, action);
     var uuid = data.id;
     $scope.selectuuid = uuid;
     $scope.publishModalMsg = unpublish ? 'Unpublish' : 'Publish';
     $scope.onSuccessPublish = function (response) {
-      // $rootScope.refreshSearchResults();
-      //$scope.originalData.splice($scope.originalData.indexOf(data),1);
       data.published = unpublish ? 'N' : 'Y';
       $scope.publishmessage = $scope.caption + (unpublish ? " Unpublished" : " Published") + " Successfully";
     }
 
-  $scope.okpublished = function () {
-    $('#publishedConfModal').modal('hide');
-    CommonService[unpublish ? 'unpublish' : 'publish']($scope.selectuuid, $scope.select).then(function (response) {
-    $scope.onSuccessPublish(response.data);
-      notify.type = 'success',
-      notify.title = 'Success',
-      notify.content = $scope.publishmessage//"Dashboard Deleted Successfully"
-      $scope.$emit('notify', notify);
-    });
-  }
-  $('#publishedConfModal').modal({
-    backdrop: 'static',
-    keyboard: false
+    $scope.okpublished = function () {
+      $('#publishedConfModal').modal('hide');
+      CommonService[unpublish ? 'unpublish' : 'publish']($scope.selectuuid, $scope.select).then(function (response) {
+      $scope.onSuccessPublish(response.data);
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = $scope.publishmessage;
+        $scope.$emit('notify', notify);
+      });
+    }
+    $('#publishedConfModal').modal({
+      backdrop: 'static',
+      keyboard: false
     });
   }
 
@@ -367,7 +325,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       });
       FileSaver.saveAs(data, response.name + '.json');
       $scope.message = $scope.caption + " Downloaded Successfully";
-      //$('#showMsgModel').modal('show');
       notify.type = 'success',
       notify.title = 'Success',
       notify.content = $scope.message
@@ -395,17 +352,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.updateStats();
     });
     var onSuccessSaveAs = function (response) {
-      // CommonService.getBaseEntityByCriteria($scope.select, '', '', '', '', '', '').then(function(response) {
-      //   onSuccess(response.data)
-      // });
       var onSuccess = function (response) {
-        // $scope.gridOptions.data = response;
-        // $rootScope.refreshSearchResults();
-
       }
-      // $scope.originalData.push(response);
       $scope.originalData.splice(0, 0, response);
-      // $scope.getResults($scope.originalData);
       $scope.message = $scope.caption + " Cloned Successfully"
       notify.type = 'success',
       notify.title = 'Success',
@@ -720,8 +669,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 }
 
   $scope.uploadFile = function () {
-    //var file = $scope.myFile;
-    
     if($scope.isFileSubmitDisable){
       $scope.msg = "Special character or space not allowed in file name."
       notify.type = 'info',
@@ -752,57 +699,15 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.gridOptions.data[$scope.uploadDetail.index].isupload=false;
       $scope,uploadDetail=null;
     }
-    // CommonService.SaveFile(file.name,fd,"datapod").then(function(response){onSuccess(response.data)});
-    // var onSuccess=function(response){
-    //   $('#fileupload').modal('hide');
-    // 	CommonService.getRegisterFile(response).then(function(response){onSuccessGetRegisterFile(response.data)});
-    // 	var onSuccessGetRegisterFile=function(response){
-    // 	$scope.executionmsg="Data Uploaded Successfully"
-    // 		// $('#executionsubmit').modal({
-    // 		// 	backdrop: 'static',
-    // 		// 	keyboard: false
-    // 		// });
-    //     notify.type='success',
-    // 		 notify.title= 'Success',
-    //     notify.content=$scope.executionmsg//"Dashboard Deleted Successfully"
-    //     $scope.$emit('notify', notify);
-    // 	}
-    // }
   }
-  // $scope.selectPage = function(pageNo) {
-  //   $scope.pagination.currentPage = pageNo;
-  // };
-  // $scope.onPerPageChange = function() {
-  //     $scope.pagination.currentPage = 1;
-  //   $scope.getResults($scope.originalData)
-  // }
-  // $scope.pageChanged = function() {
-  //   $scope.getResults($scope.originalData)
-  // };
-  // $scope.getResults = function(params) {
-  //   $scope.pagination.totalItems=params.length;
-  //   if($scope.pagination.totalItems >0){
-  //   $scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize))+1);
-  //   }
-  //   else{
-  //     $scope.pagination.to=0;
-  //   }
-  //   if ($scope.pagination.totalItems < ($scope.pagination.pageSize*$scope.pagination.currentPage)) {
-  //     $scope.pagination.from = $scope.pagination.totalItems;
-  //   } else {
-  //     $scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
-  //   }
-  //   var limit = ($scope.pagination.pageSize*$scope.pagination.currentPage);
-  //   var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
-  //    $scope.gridOptions.data=params.slice(offset,limit);
-  // }
 
+ 
   $scope.setActivity = function (uuid, version, type, action) {
     CommonService.setActivity(uuid, version, type, action).then(function (response) { onSuccessSetActivity(response.data) });
     var onSuccessSetActivity = function (response) {
     }
-
   }
+
   var myVar;
   $scope.autoRefreshOnChange = function () {
     if ($scope.autorefresh) {
@@ -819,12 +724,12 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     // Make sure that the interval is destroyed too
     clearInterval(myVar);
   })
+
   $scope.refreshRowData = function () {
     if ($scope.data.length > 0) {
       $scope.gridOptions.data = $scope.data;
       $scope.$watch('data', function (newValue, oldValue) {
         if (newValue != oldValue && $scope.gridOptions.data.length > 0) {
-
           for (var i = 0; i < $scope.data.length; i++) {
             if ($scope.data[i].status != $scope.gridOptions.data[i].status) {
               $scope.gridOptions.data[i].status = $scope.data[i].status;
