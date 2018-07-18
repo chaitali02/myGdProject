@@ -20,9 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -1533,7 +1531,6 @@ public class MetadataServiceImpl {
 		}
 		
 		ParamListHolder plHolder = new ParamListHolder();
-		plMI.setName(null);
 		plHolder.setRef(plMI);
 		plHolderList.add(plHolder);
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
@@ -1555,6 +1552,7 @@ public class MetadataServiceImpl {
 		}
 		return plHolderList;
 	}
+	
 	/********************** UNUSED **********************/
 //	private List<ParamList> getChilds(String parentPLUuid, String parentPLVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Query query = new Query();
