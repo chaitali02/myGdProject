@@ -526,9 +526,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
   }
   
-  $scope.getParamListByTrain=function(){
+  $scope.getParamListByTrainORRule=function(){
     $scope.paramlistdata=null;
-    CommonService.getParamListByTrain($scope.exeDetail.uuid, $scope.exeDetail.version,$scope.select).then(function (response){ onSuccesGetParamListByTrain(response.data)});
+    CommonService.getParamListByTrainORRule($scope.exeDetail.uuid, $scope.exeDetail.version,$scope.select).then(function (response){ onSuccesGetParamListByTrain(response.data)});
     var onSuccesGetParamListByTrain = function (response) {
       $scope.allParamList=response;
     }
@@ -537,7 +537,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   $scope.onChangeParamType=function(){
     if($scope.selectParamType =="paramlist"){
       $scope.paramlistdata=null;
-      $scope.getParamListByTrain();
+      $scope.getParamListByTrainORRule();
     }
     else if($scope.selectParamType =="paramset"){
       $scope.getExecParamsSet();
@@ -588,15 +588,19 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
   $scope.executeWithExecParams = function () {
     if($scope.selectParamType =="paramlist"){
-      var execParams = {};
-      var paramListInfo =[];
-      var paramInfo={};
-      var paramInfoRef={};
-      paramInfoRef.uuid=$scope.paramlistdata.uuid;
-      paramInfoRef.type="paramlist";
-      paramInfo.ref=paramInfoRef;
-      paramListInfo[0]=paramInfo;
-      execParams.paramListInfo=paramListInfo;
+      if($scope.paramlistdata){
+        var execParams = {};
+        var paramListInfo =[];
+        var paramInfo={};
+        var paramInfoRef={};
+        paramInfoRef.uuid=$scope.paramlistdata.uuid;
+        paramInfoRef.type="paramlist";
+        paramInfo.ref=paramInfoRef;
+        paramListInfo[0]=paramInfo;
+        execParams.paramListInfo=paramListInfo;
+      }else{
+        execParams=null;
+      }
       $scope.paramlistdata=null;
       $scope.selectParamType=null;
     }else{
@@ -659,13 +663,18 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     
     $('#DagConfExModal').modal('hide');
    
-    if($scope.select == 'rule') {  //|| $scope.select == 'train'
-      $scope.getExecParamsSet();
-    }
-    else if($scope.select == 'train'){
+    // if($scope.select == 'rule') {  //|| $scope.select == 'train'
+    //   $scope.getExecParamsSet();
+    // }
+    if($scope.select == 'train' || $scope.select == 'rule'){
       $scope.selectParamType=null;
       $scope.paramtable=null;
       $scope.isTabelShow=false;
+      if($scope.select =='rule'){
+        $scope.isParamListRquired=false;
+      }else{
+        $scope.isParamListRquired=true;
+      }
       $('#responsive').modal({
         backdrop: 'static',
         keyboard: false

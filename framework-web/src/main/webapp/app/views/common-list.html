@@ -228,7 +228,7 @@
                                 <div >  
                                   <select class="form-control" name="paramlistdata" select2 ng-change="onChangeParamList()"  data-ng-model="$parent.paramlistdata" ng-options="r as r.name for r in allParamList">
                                   </select>
-                                  <input type="hidden" name="paramlistdata" ng-model="$parent.paramlistdata" required>
+                                  <input type="hidden" name="paramlistdata" ng-model="$parent.paramlistdata" ng-required="isParamListRquired">
                                 </div>
                               </div>
                             </div>

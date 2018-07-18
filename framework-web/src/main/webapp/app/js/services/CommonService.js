@@ -876,10 +876,13 @@
     return deferred.promise;
   }
 
-  this.getParamListByTrain = function(uuid,version,type) {
+  this.getParamListByTrainORRule = function(uuid,version,type) {
     var deferred = $q.defer();
     var url;
+    if(type=="train")
     url ="metadata/getParamListByTrain?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
+    else if(type=="rule")
+    url ="metadata/getParamListByRule?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
     CommonFactory.httpGet(url).then(function(response) {
       onSuccess(response.data)
     });
@@ -901,6 +904,7 @@
     }
     return deferred.promise;
   }
+  
   this.getParamByParamList = function(uuid,version,type) {
     var deferred = $q.defer();
     var url;
