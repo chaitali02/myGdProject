@@ -403,19 +403,19 @@ public class ParamSetServiceImpl {
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID, modelVersion, MetaType.model.toString());
 		Algorithm algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 		
-		String className = algo.getTrainClass();
+		String algoClassName = algo.getTrainClass();
 		
 		List<ParamMap> paramMapList = new ArrayList<>();
 		if(null!= execParams) {
 			if(execParams.getParamInfo() != null) {
 				for(ParamSetHolder paramSetHolder : execParams.getParamInfo()){
 					List<ParamListHolder> paramListHolder = getParamListHolder(paramSetHolder);
-					ParamMap paramMap = getParamMapByPLHolder(paramListHolder, className);					
+					ParamMap paramMap = getParamMapByPLHolder(paramListHolder, algoClassName, true);					
 					paramMapList.add(paramMap);
 				}
 			} else if(execParams.getParamListInfo() != null) {
 				List<ParamListHolder> paramListHolder = execParams.getParamListInfo();
-				ParamMap paramMap = getParamMapByPLHolder(paramListHolder, className);						
+				ParamMap paramMap = getParamMapByPLHolder(paramListHolder, algoClassName, false);						
 				paramMapList.add(paramMap);
 			}					
 		}
@@ -423,55 +423,94 @@ public class ParamSetServiceImpl {
 		return paramMapList;
 	}
 
-	@SuppressWarnings("unchecked")
-	public ParamMap getParamMapByPLHolder(List<ParamListHolder> paramListHolder, String className) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, JsonProcessingException {
+	public ParamMap getParamMapByPLHolder(List<ParamListHolder> paramListHolder, String algoClassName, boolean filterParams) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, JsonProcessingException {
 		ParamMap paramMap = new ParamMap();
 		try {
 			for(ParamListHolder plh : paramListHolder) {
 				ParamList paramList= (ParamList) commonServiceImpl.getLatestByUuid(plh.getRef().getUuid(), MetaType.paramlist.toString());
-										
-				for(com.inferyx.framework.domain.Param param : paramList.getParams()){
-					if(param.getParamId().equals(plh.getParamId())){
-						plh.setParamType(param.getParamType());
-						plh.setParamName(param.getParamName());
-						break;
+				if(filterParams) {						
+					for(com.inferyx.framework.domain.Param param : paramList.getParams()){
+						if(param.getParamId().equals(plh.getParamId())){
+							plh.setParamType(param.getParamType());
+							plh.setParamName(param.getParamName());
+							break;
+						}
+					}
+					paramMap.put(getParamPair(algoClassName, plh.getParamName(), plh.getParamType(), plh.getValue()));
+				} else {
+					for(com.inferyx.framework.domain.Param param : paramList.getParams()){
+						paramMap.put(getParamPair(algoClassName, param.getParamName(), param.getParamType(), param.getParamValue().getValue()));
 					}
 				}
 				
-				Class<?> dynamicClass = Class.forName(className);						
-				Method method = dynamicClass.getMethod(plh.getParamName() );
-				Object obj = method.invoke(dynamicClass.newInstance());
-				
-				if(plh.getParamType().equalsIgnoreCase("integer")){
-					Class<?>[] param = new Class[1];
-					param[0] = int.class;
-					Method method1 = obj.getClass().getMethod("w", param);
-					paramMap.put((ParamPair<Object>)method1.invoke((IntParam)obj,Integer.parseInt(plh.getValue())));
-				} 
-				else if(plh.getParamType().equalsIgnoreCase("String")) {
-					Class<?>[] param = new Class[1];
-					param[0] = String.class;
-					obj = (Param<String>)obj;
-					Method method1 = obj.getClass().getMethod("w", param);
-					paramMap.put((ParamPair<Object>)method1.invoke((Param<String>)obj,plh.getValue()));
-				} 
-				else if(plh.getParamType().equalsIgnoreCase("long")) {
-					Class<?>[] param = new Class[1];
-					param[0] = long.class;
-					Method method1 = obj.getClass().getMethod("w", param);
-					paramMap.put((ParamPair<Object>)method1.invoke((LongParam)obj,Long.parseLong(plh.getValue())));
-				}
-				else if(plh.getParamType().equalsIgnoreCase("double")) {
-					Class<?>[] param = new Class[1];
-					param[0] = double.class;
-					Method method1 = obj.getClass().getMethod("w", param);
-					paramMap.put((ParamPair<Object>)method1.invoke((DoubleParam)obj,Double.parseDouble(plh.getValue())));
-				}
+//				Class<?> dynamicClass = Class.forName(algoClassName);						
+//				Method method = dynamicClass.getMethod(plh.getParamName() );
+//				Object obj = method.invoke(dynamicClass.newInstance());
+//				
+//				if(plh.getParamType().equalsIgnoreCase("integer")){
+//					Class<?>[] param = new Class[1];
+//					param[0] = int.class;
+//					Method method1 = obj.getClass().getMethod("w", param);
+//					paramMap.put((ParamPair<Object>)method1.invoke((IntParam)obj,Integer.parseInt(plh.getValue())));
+//				} 
+//				else if(plh.getParamType().equalsIgnoreCase("String")) {
+//					Class<?>[] param = new Class[1];
+//					param[0] = String.class;
+//					obj = (Param<String>)obj;
+//					Method method1 = obj.getClass().getMethod("w", param);
+//					paramMap.put((ParamPair<Object>)method1.invoke((Param<String>)obj,plh.getValue()));
+//				} 
+//				else if(plh.getParamType().equalsIgnoreCase("long")) {
+//					Class<?>[] param = new Class[1];
+//					param[0] = long.class;
+//					Method method1 = obj.getClass().getMethod("w", param);
+//					paramMap.put((ParamPair<Object>)method1.invoke((LongParam)obj,Long.parseLong(plh.getValue())));
+//				}
+//				else if(plh.getParamType().equalsIgnoreCase("double")) {
+//					Class<?>[] param = new Class[1];
+//					param[0] = double.class;
+//					Method method1 = obj.getClass().getMethod("w", param);
+//					paramMap.put((ParamPair<Object>)method1.invoke((DoubleParam)obj,Double.parseDouble(plh.getValue())));
+//				}
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		} 		
 		return paramMap;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ParamPair<Object> getParamPair(String algoClassName, String paramName, String paramType, String paramValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+		Class<?> dynamicClass = Class.forName(algoClassName);						
+		Method method = dynamicClass.getMethod(paramName);
+		Object obj = method.invoke(dynamicClass.newInstance());
+		
+		if(paramType.equalsIgnoreCase("integer")){
+			Class<?>[] param = new Class[1];
+			param[0] = int.class;
+			Method method1 = obj.getClass().getMethod("w", param);
+			return (ParamPair<Object>)method1.invoke((IntParam)obj,Integer.parseInt(paramValue));
+		} 
+		else if(paramType.equalsIgnoreCase("String")) {
+			Class<?>[] param = new Class[1];
+			param[0] = String.class;
+			obj = (Param<String>)obj;
+			Method method1 = obj.getClass().getMethod("w", param);
+			return (ParamPair<Object>)method1.invoke((Param<String>)obj, paramValue);
+		} 
+		else if(paramType.equalsIgnoreCase("long")) {
+			Class<?>[] param = new Class[1];
+			param[0] = long.class;
+			Method method1 = obj.getClass().getMethod("w", param);
+			return (ParamPair<Object>)method1.invoke((LongParam)obj,Long.parseLong(paramValue));
+		}
+		else if(paramType.equalsIgnoreCase("double")) {
+			Class<?>[] param = new Class[1];
+			param[0] = double.class;
+			Method method1 = obj.getClass().getMethod("w", param);
+			return (ParamPair<Object>)method1.invoke((DoubleParam)obj,Double.parseDouble(paramValue));
+		}
+		return null;
 	}
 	
 	public ParamMap getParamMapCombined(ExecParams execParams, String modelUUID, String modelVersion) throws Exception {
