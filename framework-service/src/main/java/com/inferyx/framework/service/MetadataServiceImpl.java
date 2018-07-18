@@ -1069,10 +1069,6 @@ public class MetadataServiceImpl {
 		return null;
 	}	
 	
-	
-	
-	
-	
 	public List<Function> getFunctionByType(String category){
 		Query query = new Query();
 		query.fields().include("uuid");
