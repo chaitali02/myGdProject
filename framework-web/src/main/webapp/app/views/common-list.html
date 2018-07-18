@@ -193,85 +193,102 @@
                   <!-- <h4 class="modal-title">{{caption}} Execution</h4> -->
                   <h4 class="modal-title">Run Params</h4>
                 </div>
-                <div class="modal-body">
-                  <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 300px;">
-                    <div class="scroller" style="height: 300px; overflow: hidden; width: auto;" data-always-visible="1" data-rail-visible1="1"
-                      data-initialized="1">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <br>
-                          <form class="form-horizontal">
+                <form class="form-horizontal" name="responsive" ng-submit="executeWithExecParams()"  novalidate="novalidate">
+                  <div class="modal-body">
+                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 300px;">
+                      <div class="scroller" style="height: 300px; overflow: hidden; width: auto;" data-always-visible="1" data-rail-visible1="1"
+                        data-initialized="1">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <br>
                             <div class="form-group">
                               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Type
                               </label>
                               <div class="col-md-6">
-                                <select class="form-control" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r  for r in paramTypes">
+                                <select class="form-control" name="ParamType" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r  for r in paramTypes" >
                                 </select>
+                                <input type="hidden" name="ParamType" ng-model="selectParamType" required>
                               </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-show ="selectParamType =='paramset'">
                               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Select
                               </label>
-                              <div class="col-md-6" ng-show="selectParamType =='paramset'">
-                                <select class="form-control" select2 ng-change="onSelectparamSet()" data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'">
+                              <div class="col-md-6" >
+                                <select class="form-control"  name="paramsetdata" select2 ng-change="onSelectparamSet()" data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'">
                                   <option value="" style="color:red;">USE DEFAULT VALUE</option>
                                 </select>
-                              </div>
-                              <div class="col-md-6" ng-show="selectParamType =='paramlist'">
-                                  <select class="form-control" select2 ng-change="onChangeParamList()"  data-ng-model="paramlistdata" ng-options="r as r.name for r in allParamList">
-                                  </select>
-                              </div>
-                              <div class="col-md-6" ng-if="selectParamType== null">
-                                  <select class="form-control" select2   data-ng-model="paramlistdata" ng-options="r as r.name for r in allParamList">
-                                  </select>
+                              
                               </div>
                             </div>
-                          </form>
-                          <br>
-                          <div ng-show="isTabelShow" style="overflow-x: auto;">
-                            <table class=" row-border hover table  table-striped table-bordered">
-                              <thead>
-                                <tr>
-                                  <th style="text-align:center;Vertical-align: middle;width:5%;">
-                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"
-                                      />
-                                    </span>
-                                  </th>
-                                  <th class="text-center"> ID </th>
-                                  <th class="text-center" ng-repeat="tablecol in paramtablecol"> {{tablecol.paramName}} </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr ng-repeat="tabledata in paramtable">
-                                  <td style="text-align:center;Vertical-align:middle;width:5%;">
-                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <input style="width:16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
-                                    </span>
-                                  </td>
-                                  <td>
-                                    <input style="width:50px" type="text" ng-model="tabledata.paramSetId" ng-disabled="true"
-                                      class="form-control">
-                                  </td>
-                                  <td ng-repeat="tablecol in tabledata.paramSetVal">
-                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <input style="width:{{paramtablecol.length}} < 3?0:{{paramtablecol[$index].paramName.split('').length + 100}}px" type="text"
-                                        ng-model="tablecol.value" ng-disabled="true" class="form-control">
-                                    </span>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                          
+                            <div class="form-group" ng-if="selectParamType =='paramlist'" > 
+                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Select
+                              </label>
+                              <div class="col-md-6">
+                                <div >  
+                                  <select class="form-control" name="paramlistdata" select2 ng-change="onChangeParamList()"  data-ng-model="$parent.paramlistdata" ng-options="r as r.name for r in allParamList">
+                                  </select>
+                                  <input type="hidden" name="paramlistdata" ng-model="$parent.paramlistdata" ng-required="isParamListRquired">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group" ng-if="selectParamType== null">
+                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Select
+                                </label> 
+                              <div class="col-md-6" >
+                                <select class="form-control" select2  name="paramlistdata1"  data-ng-model="paramlistdata1" ng-options="r as r.name for r in allParamList">
+                                </select>
+                                <input type="hidden" name="paramlistdata1" ng-model="paramlistdata1" required>
+                              </div>
+                            </div>
+                            <br>
+                            <div ng-if="isTabelShow" style="overflow-x: auto;">
+                              <table class=" row-border hover table  table-striped table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th style="text-align:center;Vertical-align: middle;width:5%;">
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="$parent.selectallattribute" ng-change="selectAllRow()"
+                                        />
+                                      </span>
+                                    </th>
+                                    <th class="text-center"> ID </th>
+                                    <th class="text-center" ng-repeat="tablecol in paramtablecol"> {{tablecol.paramName}} </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr ng-repeat="tabledata in paramtable">
+                                    <td style="text-align:center;Vertical-align:middle;width:5%;">
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <input style="width:16px;height:16px;"  class="form-control"  type="checkbox" ng-model="tabledata.selected" ng-required="true"  disable-validation-message="" />
+                                      </span>
+                                    </td>
+                                    <td>
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <input style="width:50px" type="text" ng-model="tabledata.paramSetId" ng-disabled="true"
+                                        class="form-control">
+                                      </span>
+                                    </td>
+                                    <td ng-repeat="tablecol in tabledata.paramSetVal">
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <input style="width:{{paramtablecol.length}} < 3?0:{{paramtablecol[$index].paramName.split('').length + 100}}px" type="text"
+                                          ng-model="tablecol.value" ng-disabled="true" class="form-control">
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-                  <button type="button" class="btn green" ng-click="executeWithExecParams()">Submit</button>
-                </div>
+                  <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    <input type="submit" class="btn green" value="Submit"/>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
