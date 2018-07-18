@@ -697,9 +697,19 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				} else {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
-					if(execParams.getParamInfo() != null) {
-						for(ParamSetHolder paramSetHolder : execParams.getParamInfo()){
-							paramListHolderList = metadataServiceImpl.getParamListHolder(paramSetHolder);
+					if(execParams != null) {
+						if(execParams.getParamInfo() != null) {
+							for(ParamSetHolder paramSetHolder : execParams.getParamInfo()){
+								paramListHolderList = metadataServiceImpl.getParamListHolder(paramSetHolder);
+								for(ParamListHolder paramListHolder : paramListHolderList) {
+									MetaIdentifier hyperParamMI = paramListHolder.getRef();
+									ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
+									trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+								}
+							}
+						} else if(execParams.getParamListInfo() != null) {
+								paramListHolderList = execParams.getParamListInfo();
+							
 							for(ParamListHolder paramListHolder : paramListHolderList) {
 								MetaIdentifier hyperParamMI = paramListHolder.getRef();
 								ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
@@ -707,14 +717,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							}
 						}
 					} else {
-						if(execParams.getParamListInfo() != null) {
-							paramListHolderList = execParams.getParamListInfo();
-						} else {
-							ParamListHolder plHolder = new ParamListHolder();
-							plHolder.setRef(algorithm.getParamListWH().getRef());
-							paramListHolderList = new ArrayList<>();
-							paramListHolderList.add(plHolder);
-						} 
+						ParamListHolder plHolder = new ParamListHolder();
+						plHolder.setRef(algorithm.getParamListWH().getRef());
+						paramListHolderList = new ArrayList<>();
+						paramListHolderList.add(plHolder);
 						
 						for(ParamListHolder paramListHolder : paramListHolderList) {
 							MetaIdentifier hyperParamMI = paramListHolder.getRef();

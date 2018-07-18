@@ -1605,13 +1605,14 @@ public class MetadataServiceImpl {
 				List<ParamListHolder> paramListHolderList = execParams.getParamListInfo();
 				ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClassName, false);						
 				paramMapList.add(paramMap);
-			} else {
-				List<ParamListHolder> paramListHolderList = new ArrayList<>();
-				ParamListHolder plHolder = new ParamListHolder();
-				plHolder.setRef(algo.getParamListWoH().getRef());
-				ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClassName, false);						
-				paramMapList.add(paramMap);
-			}
+			} 
+		} else {
+			List<ParamListHolder> paramListHolderList = new ArrayList<>();
+			ParamListHolder plHolder = new ParamListHolder();
+			plHolder.setRef(algo.getParamListWoH().getRef());
+			paramListHolderList.add(plHolder);
+			ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClassName, false);						
+			paramMapList.add(paramMap);
 		}
 
 		return paramMapList;
