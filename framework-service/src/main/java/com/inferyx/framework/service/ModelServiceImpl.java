@@ -103,8 +103,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.RExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
-import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
@@ -183,6 +181,8 @@ public class ModelServiceImpl {
 	Engine engine;
 	@Autowired
 	private Helper helper;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
 	
 	//private ParamMap paramMap;
 
@@ -1476,6 +1476,7 @@ public class ModelServiceImpl {
 		runModelServiceImpl.setTrain(train);
 		runModelServiceImpl.setName(MetaType.trainExec+"_"+trainExec.getUuid()+"_"+trainExec.getVersion());
 		runModelServiceImpl.setExecType(MetaType.trainExec);
+		runModelServiceImpl.setMetadataServiceImpl(metadataServiceImpl);
 		/*FutureTask<TaskHolder> futureTask = new FutureTask<TaskHolder>(runModelServiceImpl);
 		metaExecutor.execute(futureTask);
 		taskList.add(futureTask);

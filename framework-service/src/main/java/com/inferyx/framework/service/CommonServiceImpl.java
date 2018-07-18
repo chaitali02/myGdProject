@@ -13,7 +13,6 @@ package com.inferyx.framework.service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -3802,7 +3800,7 @@ public class CommonServiceImpl <T> {
 		
 	}
 
-	public List<ParamList> getAllLatestParamListByTemplate(String templateFlg) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<ParamList> getAllLatestParamListByTemplate(String templateFlg, String parentPLUuid, String parentVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -3819,7 +3817,12 @@ public class CommonServiceImpl <T> {
 		query.fields().include("params");
 		query.fields().include("paramListType");
 		
-		query.addCriteria(Criteria.where("templateFlg").is(templateFlg));
+		if(parentPLUuid != null)
+			query.addCriteria(Criteria.where("templateInfo.ref.uuid").is(parentPLUuid));
+		if(parentVersion != null)
+			query.addCriteria(Criteria.where("templateInfo.ref.version").is(parentVersion));
+		if(templateFlg != null)
+			query.addCriteria(Criteria.where("templateFlg").is(templateFlg));
 		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(getApp().getUuid()));
 		
 		List<ParamList> paramLists = mongoTemplate.find(query, ParamList.class);
@@ -3827,11 +3830,7 @@ public class CommonServiceImpl <T> {
 		List<ParamList> latestParamList = new ArrayList<>();
 		Set<String> uuidSet = new HashSet<>();
 		for(ParamList paramList : paramLists) {
-			if(uuidSet.isEmpty()) {
-				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
-				latestParamList.add(latestPL);
-				uuidSet.add(paramList.getUuid());
-			} else if(!uuidSet.isEmpty() && !uuidSet.contains(paramList.getUuid())) {
+			if(!uuidSet.contains(paramList.getUuid())) {
 				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
 				latestParamList.add(latestPL);
 				uuidSet.add(paramList.getUuid());
