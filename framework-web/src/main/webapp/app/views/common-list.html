@@ -2,10 +2,10 @@
   .select2-container--open {
     z-index: 10060;
   }
-
 </style>
- <script src="assets/jquery-filestyle/js/jquery-filestyle.js"></script>
+<script src="assets/jquery-filestyle/js/jquery-filestyle.js"></script>
 <div class="row" data-ng-controller="CommonListController" ng-cloak>
+
   <div class="col-md-12">
     <!-- BEGIN PAGE HEADER-->
     <div class="page-bar">
@@ -16,7 +16,7 @@
         </li>
         <li>
           <a ui-sref="jobexecutor" ng-if="isJobExec">{{$state.current.data.pageTitle}}</a>
-          <a  ng-if="!isJobExec">{{$state.current.data.pageTitle}}</a>
+          <a ng-if="!isJobExec">{{$state.current.data.pageTitle}}</a>
           <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -32,16 +32,22 @@
       </div>
     </div>
     <br/>
+
     <!-- END MAIN CONTENT -->
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
 
     <div class="row">
       <div class="col-md-12">
-        <search-criteria loading="loading" module-type="select" handle-group="handleGroup != -1" no-exec="!(isJobExec || isExec)" on-submit="selectData" data="data" parant-type="parantType"></search-criteria>
+
+        <search-criteria loading="loading" module-type="select" handle-group="handleGroup != -1" no-exec="!(isJobExec || isExec)"
+          on-submit="selectData" data="data" parant-type="parantType"></search-criteria>
+
         <div class="portlet box green">
           <div class="portlet-title">
             <div class="caption">
-              <i class="fa fa-cogs"></i><span style="text-transform: capitalize">{{ caption}}</span></div>
+              <i class="fa fa-cogs"></i>
+              <span style="text-transform: capitalize">{{ caption}}</span>
+            </div>
             <div class="actions">
               <a ng-disabled="privileges.indexOf('Add') == -1" ng-click="addMode()" ng-hide="isExec || isJobExec" class="btn btn-default btn-sm">
                 <i class="fa fa-plus"></i> Add </a>
@@ -51,7 +57,7 @@
                 <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
                 </i>
               </a>
-              <a href="javascript:;"  class="collapse aSize" style="height:14px;">
+              <a href="javascript:;" class="collapse aSize" style="height:14px;">
               </a>
             </div>
           </div>
@@ -61,58 +67,56 @@
               <div class="modal-content rulemodel">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-               </button>
+                  </button>
                   <h4 class="modal-title">Confirm</h4>
                 </div>
-                <div class="modal-body"> Execute <span style="text-transform: capitalize">{{caption}}</span> ?
-                 
-                
+                <div class="modal-body"> Execute
+                  <span style="text-transform: capitalize">{{caption}}</span> ?
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-                  <budivtton type="button" class="btn green" ng-click="ok()">Ok</button>
+                  <button type="button" class="btn green" ng-click="ok()">Ok</button>
                 </div>
-              </div>
-              <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
           </div>
+
           <div class="modal fade in" id="publishedConfModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
             <div class="modal-dialog">
               <div class="modal-content rulemodel">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-               </button>
+                  </button>
                   <h4 class="modal-title">Confirm</h4>
                 </div>
-                <div class="modal-body"> {{publishModalMsg}} <span style="text-transform: capitalize">{{caption}}</span> ?</div>
+                <div class="modal-body"> {{publishModalMsg}}
+                  <span style="text-transform: capitalize">{{caption}}</span> ?</div>
                 <div class="modal-footer">
                   <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
                   <button type="button" class="btn green" ng-click="okpublished()">Ok</button>
                 </div>
-              </div>
-              <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
           </div>
+
           <div class="modal fade in" id="DeleteConfModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
             <div class="modal-dialog">
               <div class="modal-content rulemodel">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-               </button>
+                  </button>
                   <h4 class="modal-title">Confirm</h4>
                 </div>
-                <div class="modal-body"> {{deleteModalMsg || 'Delete'}} <span style="text-transform: capitalize">{{caption}}</span> ?</div>
+                <div class="modal-body"> {{deleteModalMsg || 'Delete'}}
+                  <span style="text-transform: capitalize">{{caption}}</span> ?</div>
                 <div class="modal-footer">
                   <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
                   <button type="button" class="btn green" ng-click="okDelete()">Ok</button>
                 </div>
-              </div>
-              <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
+              </div><!-- /.modal-content -->
+            </div> <!-- /.modal-dialog -->
           </div>
+
           <div class="modal fade in" id="filemodal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
             <div class="modal-dialog">
               <div class="modal-content rulemodel">
@@ -125,12 +129,11 @@
                   <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
                   <button type="button" class="btn green" ng-click="okFile()">Ok</button>
                 </div>
-              </div>
-              <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
           </div>
-          <div class="modal fade in" id="showMsgModel" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+
+          <!-- <div class="modal fade in" id="showMsgModel" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
             <div class="modal-dialog">
               <div class="modal-content rulemodel">
                 <div class="modal-header">
@@ -142,10 +145,12 @@
                   <button type="button" class="btn green" data-dismiss="modal">OK</button>
                 </div>
               </div>
-              <!-- /.modal-content -->
+            
             </div>
-            <!-- /.modal-dialog -->
-          </div>
+           
+          </div> -->
+
+
           <div class="modal fade in" id="clonemodal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
             <div class="modal-dialog">
               <div class="modal-content rulemodel">
@@ -153,18 +158,17 @@
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                   <h4 class="modal-title">Confirm</h4>
                 </div>
-                <div class="modal-body"> Clone <span style="text-transform: capitalize">{{caption}}</span> ?</div>
+                <div class="modal-body"> Clone
+                  <span style="text-transform: capitalize">{{caption}}</span> ?</div>
                 <div class="modal-footer">
                   <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
                   <button type="button" class="btn green" ng-click="okClone()">Ok</button>
                 </div>
-              </div>
-              <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
           </div>
 
-          <div class="modal fade in" id="executionsubmit" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+          <!-- <div class="modal fade in" id="executionsubmit" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
             <div class="modal-dialog">
               <div class="modal-content rulemodel">
                 <div class="modal-header">
@@ -172,17 +176,15 @@
                   <h4 class="modal-title">Info</h4>
                 </div>
                 <div class="modal-body">{{executionmsg}}
-                  
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn green" data-dismiss="modal">OK</button>
-
                 </div>
               </div>
-              <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
-          </div>
+          </div> -->
+
           <div id="responsive" class="modal fade bs-modal-lg in   " tabindex="-1" aria-hidden="true" style="display: none;">
             <div class="modal-dialog">
               <div class="modal-content" style="resize: both;overflow: auto;">
@@ -193,53 +195,74 @@
                 </div>
                 <div class="modal-body">
                   <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 300px;">
-                    <div class="scroller" style="height: 300px; overflow: hidden; width: auto;" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                    <div class="scroller" style="height: 300px; overflow: hidden; width: auto;" data-always-visible="1" data-rail-visible1="1"
+                      data-initialized="1">
                       <div class="row">
                         <div class="col-md-12">
                           <br>
                           <form class="form-horizontal">
                             <div class="form-group">
-                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set
-                                </label>
+                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Type
+                              </label>
                               <div class="col-md-6">
+                                <select class="form-control" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r  for r in paramTypes">
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Select
+                              </label>
+                              <div class="col-md-6" ng-show="selectParamType =='paramset'">
                                 <select class="form-control" select2 ng-change="onSelectparamSet()" data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'">
-                                    <option value="" style="color:red;">USE DEFAULT VALUE</option>
+                                  <option value="" style="color:red;">USE DEFAULT VALUE</option>
+                                </select>
+                              </div>
+                              <div class="col-md-6" ng-show="selectParamType =='paramlist'">
+                                  <select class="form-control" select2 ng-change="onChangeParamList()"  data-ng-model="paramlistdata" ng-options="r as r.name for r in allParamList">
+                                  </select>
+                              </div>
+                              <div class="col-md-6" ng-if="selectParamType== null">
+                                  <select class="form-control" select2   data-ng-model="paramlistdata" ng-options="r as r.name for r in allParamList">
                                   </select>
                               </div>
                             </div>
                           </form>
                           <br>
                           <div ng-show="isTabelShow" style="overflow-x: auto;">
-                              <table class=" row-border hover table  table-striped table-bordered">
-                                <thead>
-                                  <tr>
-                                    <th style="text-align:center;Vertical-align: middle;width:5%;">
-                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                          <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()" />
-                                        </span>
-                                    </th>
-                                    <th class="text-center" > ID </th>
-                                    <th  class="text-center" ng-repeat="tablecol in paramtablecol">  {{tablecol.paramName}}  </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr ng-repeat="tabledata in paramtable">
-                                    <td style="text-align:center;Vertical-align:middle;width:5%;">
-                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                        <input style="width:16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
-                                      </span>
-                                    </td>
-                                    <td ><input style="width:50px"  type="text" ng-model="tabledata.paramSetId" ng-disabled="true" class="form-control">
-                                    </td>
-                                    <td  ng-repeat="tablecol in tabledata.paramSetVal">
-                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                        <input style="width:{{paramtablecol.length}} < 3?0:{{paramtablecol[$index].paramName.split('').length + 100}}px"type="text" ng-model="tablecol.value" ng-disabled="true" class="form-control">
-                                      </span>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
+                            <table class=" row-border hover table  table-striped table-bordered">
+                              <thead>
+                                <tr>
+                                  <th style="text-align:center;Vertical-align: middle;width:5%;">
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"
+                                      />
+                                    </span>
+                                  </th>
+                                  <th class="text-center"> ID </th>
+                                  <th class="text-center" ng-repeat="tablecol in paramtablecol"> {{tablecol.paramName}} </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr ng-repeat="tabledata in paramtable">
+                                  <td style="text-align:center;Vertical-align:middle;width:5%;">
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <input style="width:16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <input style="width:50px" type="text" ng-model="tabledata.paramSetId" ng-disabled="true"
+                                      class="form-control">
+                                  </td>
+                                  <td ng-repeat="tablecol in tabledata.paramSetVal">
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                      <input style="width:{{paramtablecol.length}} < 3?0:{{paramtablecol[$index].paramName.split('').length + 100}}px" type="text"
+                                        ng-model="tablecol.value" ng-disabled="true" class="form-control">
+                                    </span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -252,18 +275,17 @@
               </div>
             </div>
           </div>
-          
-       
-          <div id="executeParamList" class="modal fade bs-modal-lg in"   style="display: none;">
+
+
+          <div id="executeParamList" class="modal fade bs-modal-lg in" style="display: none;">
             <div class="modal-dialog" style="width:70%">
               <div class="modal-content" style="resize: both;overflow: auto;">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" ng-click="ClosePop()" aria-hidden="true"></button>
-                    <h4 class="modal-title">{{caption}} Execution</h4>
+                  <h4 class="modal-title">{{caption}} Execution</h4>
                   <!-- <h4 class="modal-title">Run Params </h4> -->
                 </div>
-                <form class="form-horizontal" name="myform3" id="submit_formParamList" ng-submit="executeWithExecParamList()"
-                  novalidate="novalidate">
+                <form class="form-horizontal" name="myform3" id="submit_formParamList" ng-submit="executeWithExecParamList()" novalidate="novalidate">
                   <div class="modal-body" style="padding-top:0px">
                     <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
                       <div class="scroller" style="height:300px;min-height:100px; overflow-y: auto !important; width: auto;" data-always-visible="1"
@@ -272,8 +294,8 @@
                           <div class="col-md-12">
                             <div>
                               <div class=" form-group row modal-header" style="padding-bottom: 25px;">
-                                  <h4 class="modal-title">Run Params</h4>
-                              </div>  
+                                <h4 class="modal-title">Run Params</h4>
+                              </div>
                               <div class="col-md-12" style="padding-top: 25px;">
                                 <table class=" row-border hover table  table-striped table-bordered" width="100%">
                                   <thead>
@@ -317,7 +339,7 @@
                                           </span>
                                         </div>
                                       </td>
-          
+
                                       <td width="20%">
                                         <div style="width:150px !important">
                                           <div ng-if="listHolder.selectedParamValueType =='simple'">
@@ -329,10 +351,11 @@
                                           </div>
                                           <div ng-if="listHolder.selectedParamValueType =='list'">
                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                              <select select2 class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" data-ng-model="listHolder.paramValue" 
+                                              <select select2 class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" data-ng-model="listHolder.paramValue"
                                                 ng-options="r for r in listHolder.allListInfo" required disable-validation-message="">
                                               </select>
-                                              <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.paramValue" required disable-validation-message=""/> </span>
+                                              <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.paramValue" required disable-validation-message=""
+                                              /> </span>
                                           </div>
                                           <div ng-if="listHolder.selectedParamValueType =='datapod'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -344,23 +367,23 @@
                                             </span>
                                           </div>
                                           <div ng-if="listHolder.selectedParamValueType =='dataset'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
-                                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                <select select2 class="form-control" name="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValue" ng-change="onChangeForAttributeInfo(listHolder.selectedParamValue,listHolder.selectedParamValueType,$index)"
-                                                  ng-options="r as r.name for r in allDataset track by r.uuid" required disable-validation-message="">
-                                                </select>
-                                                <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required disable-validation-message=""
-                                                />
-                                              </span>
-                                            </div>
-                                            <div ng-if="listHolder.selectedParamValueType =='rule'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
-                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                  <select select2 class="form-control" name="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValue" ng-change="onChangeForAttributeInfo(listHolder.selectedParamValue,listHolder.selectedParamValueType,$index)"
-                                                    ng-options="r as r.name for r in allRule track by r.uuid" required disable-validation-message="">
-                                                  </select>
-                                                  <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required disable-validation-message=""
-                                                  />
-                                                </span>
-                                              </div>
+                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                              <select select2 class="form-control" name="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValue" ng-change="onChangeForAttributeInfo(listHolder.selectedParamValue,listHolder.selectedParamValueType,$index)"
+                                                ng-options="r as r.name for r in allDataset track by r.uuid" required disable-validation-message="">
+                                              </select>
+                                              <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required disable-validation-message=""
+                                              />
+                                            </span>
+                                          </div>
+                                          <div ng-if="listHolder.selectedParamValueType =='rule'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index,false)">
+                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                              <select select2 class="form-control" name="paramValue{{$index}}" data-ng-model="listHolder.selectedParamValue" ng-change="onChangeForAttributeInfo(listHolder.selectedParamValue,listHolder.selectedParamValueType,$index)"
+                                                ng-options="r as r.name for r in allRule track by r.uuid" required disable-validation-message="">
+                                              </select>
+                                              <input name="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required disable-validation-message=""
+                                              />
+                                            </span>
+                                          </div>
                                           <div ng-if="listHolder.selectedParamValueType =='distribution'" ng-init="getAllLatest('distribution',$index,false)">
                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                               <select select2 class="form-control" name="paramValue{{$index}}" ng-change="onChangeDistribution(listHolder.selectedParamValue,$index)"
@@ -383,19 +406,19 @@
                                               <select select2 class="form-control" name="paramattributeinfo{{$index}}" data-ng-model="listHolder.attributeInfo" ng-options="r as r.dname for r in listHolder.allAttributeinto track by r.uuid+r.attributeId"
                                                 required disable-validation-message="">
                                               </select>
-          
+
                                               <input name="paramattributeinfo{{$index}}" type="hidden" ng-model="listHolder.attributeInfo" required disable-validation-message=""
                                               />
                                             </span>
                                           </div>
-          
+
                                           <div ng-if="listHolder.paramType=='attributes'" ng-init="getAllAttributeBySource(listHolder.attributeInfoTag[0],listHolder.selectedParamValueType,$index)">
                                             <span ng-if="listHolder.allAttributeinto.length >1" class="form-group" style="margin-left:0px;margin-right: 0px;">
                                               <!-- <select  select2 class="form-control"  name ="paramattributeinfo{{$index}}" data-ng-model="listHolder.attributeInfoTag" multiple="multiple" ng-options="r as r.dname for r in listHolder.allAttributeinto track by r.uuid+r.attributeId"  required  disable-validation-message="">
                                                   </select> -->
                                               <multiselect class="" multiple="true" ng-model="listHolder.attributeInfoTag" options="r.name for r in listHolder.allAttributeinto"
                                                 change="selected()"></multiselect>
-          
+
                                               <input name="paramattributeinfo{{$index}}" type="hidden" ng-model="listHolder.attributeInfoTag" required disable-validation-message=""
                                               />
                                             </span>
@@ -423,10 +446,10 @@
                 </form>
               </div>
             </div>
-            </div>
+          </div>
 
 
-          <div id="fileupload" class="modal fade bs-modal-lg in"tabindex="-1" aria-hidden="true" style="display: none;">
+          <div id="fileupload" class="modal fade bs-modal-lg in" tabindex="-1" aria-hidden="true" style="display: none;">
             <div class="modal-dialog" style="width:27%;">
               <div class="modal-content">
                 <div class="modal-header">
@@ -437,18 +460,20 @@
                   <div class="slimScrollDiv" style="padding-top:10px;">
                     <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
                       <div class="row">
-                        <div class="col-md-2"style="margin-top:5px;">
+                        <div class="col-md-2" style="margin-top:5px;">
                           <label style="margin-left:4px;">Select</label>
                         </div>
                         <div class="col-md-10">
-                          <input type="file"  id="csv_file" class="jfilestyle"  file-model-change " on-submit="fileNameValidate"  accept=".csv" data-buttonText="<span class='glyphicon glyphicon-folder-open'style='color:#94A0B2;'></span>" style="float:left;margin-left:4px;">
+                          <input type="file" id="csv_file" class="jfilestyle" file-model-change " on-submit="fileNameValidate "  accept=".csv
+                            " data-buttonText="<span class='glyphicon glyphicon-folder-open' style='color:#94A0B2;'>
+                          </span>" style="float:left;margin-left:4px;">
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col-md-12"style="margin-left:4px;font-size:12px;color: red;">
-                      <div ng-show="!isFileNameValid">Special character or space not allowed in file name.</div>
+                        <div class="col-md-12" style="margin-left:4px;font-size:12px;color: red;">
+                          <div ng-show="!isFileNameValid">Special character or space not allowed in file name.</div>
+                        </div>
                       </div>
-                  </div>
                     </div>
                   </div>
                 </div>
@@ -459,72 +484,35 @@
               </div>
             </div>
           </div>
-          <div class="portlet-body" >
+
+          <div class="portlet-body">
             <div class="row">
-              <div class="col-md-6 col-sm-6" >
+              <div class="col-md-6 col-sm-6">
                 <div id="datastoredatatable_filter" class="dataTables_filter" ng-show="handleGroup!=-1 || select=='dagexec'|| isJobExec==true">
-                  <input style="width:15px !important;height:15px;margin:0 0 0;"  class="form-control input-sm input-small input-inline"  type="checkbox" ng-model="autorefresh" ng-change="autoRefreshOnChange()"/>
+                  <input style="width:15px !important;height:15px;margin:0 0 0;" class="form-control input-sm input-small input-inline" type="checkbox"
+                    ng-model="autorefresh" ng-change="autoRefreshOnChange()" />
                   <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
-                  <input style="width:55px !important;"  min="5" max="99"type="number"  class="form-control input-sm input-small input-inline"  ng-model="autorefreshcounter" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
+                  <input style="width:55px !important;" min="5" max="99" type="number" class="form-control input-sm input-small input-inline"
+                    ng-model="autorefreshcounter" />
+                  <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
                 </div>
               </div>
               <div class="col-md-6 col-sm-6">
                 <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
                   <label>Search:</label>
-                  <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext" aria-controls="datastoredatatable">
+                  <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext"
+                    aria-controls="datastoredatatable">
                 </div>
               </div>
             </div>
-
             <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
-               <div class="nodatawatermark" ng-show="!loading && !gridOptions.data.length">No data available</div>
+              <div class="nodatawatermark" ng-show="!loading && !gridOptions.data.length">No data available</div>
             </div>
-            <!-- <div class="row">
-              <div class="col-md-6" style="margin-top:17px">
-                Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
-              </div>
-              <div class="col-md-6">
-                <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage" ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize" class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
-              </div>
-            </div> -->
           </div>
         </div>
-       <!-- <div class="col-md-12 noPaddingRight" ng-show="isExec || isJobExec">
-          <div class="col-md-6 col-md-offset-6 noPaddingRight iconMeaning">
-            <div class="col-md-10 col-md-offset-2 noPaddingRight" >
-              <div class="col-md-3 noPaddingRight" style="float:right" >
-                <img ng-src="assets/layouts/layout/img/new_status/Killed.svg" border="0" width="15" />
-                <span> Killed</span>
-              </div>
-              <div class="col-md-4" style="float:right" >
-                <img ng-src="assets/layouts/layout/img/new_status/Completed.svg" border="0" width="15" />
-                <span> Completed</span>
-              </div>
-              <div class="col-md-4" style="float:right">
-                <img ng-src="assets/layouts/layout/img/new_status/NotStarted.svg" border="0" width="15" />
-                <span> Not Started</span>
-              </div>
-            </div>
-            <div class="col-md-10 col-md-offset-2 noPaddingRight">
-              <div class="col-md-3 noPaddingRight" style="float:right" >
-                <img ng-src="assets/layouts/layout/img/new_status/Failed.svg" border="0" width="15" />
-                <span> Failed</span>
-              </div>
-              <div class="col-md-4" style="float:right" >
-                <img ng-src="assets/layouts/layout/img/new_status/OnHold.svg" border="0" width="15" />
-                <span> On Hold</span>
-              </div>
-              <div class="col-md-4" style="float:right" >
-                <img ng-src="assets/layouts/layout/img/new_status/InProgress2.svg" border="0" width="15" />
-                <span> In Progress</span>
-              </div>
-            </div>
-          </div>
-        </div> -->
       </div>
       <!-- BEGIN MAIN JS-->
     </div>
-
   </div>
 </div>
 <br/>
