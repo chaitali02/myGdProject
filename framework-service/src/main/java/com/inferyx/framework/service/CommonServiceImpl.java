@@ -13,7 +13,6 @@ package com.inferyx.framework.service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -3827,11 +3825,7 @@ public class CommonServiceImpl <T> {
 		List<ParamList> latestParamList = new ArrayList<>();
 		Set<String> uuidSet = new HashSet<>();
 		for(ParamList paramList : paramLists) {
-			if(uuidSet.isEmpty()) {
-				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
-				latestParamList.add(latestPL);
-				uuidSet.add(paramList.getUuid());
-			} else if(!uuidSet.isEmpty() && !uuidSet.contains(paramList.getUuid())) {
+			if(!uuidSet.contains(paramList.getUuid())) {
 				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
 				latestParamList.add(latestPL);
 				uuidSet.add(paramList.getUuid());
