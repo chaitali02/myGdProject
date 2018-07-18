@@ -12,6 +12,7 @@ package com.inferyx.framework.service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -680,15 +681,27 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					if(execParams.getParamInfo() != null) {
 						for(ParamSetHolder paramSetHolder : execParams.getParamInfo()){
 							paramListHolderList = paramSetServiceImpl.getParamListHolder(paramSetHolder);
+							for(ParamListHolder paramListHolder : paramListHolderList) {
+								MetaIdentifier hyperParamMI = paramListHolder.getRef();
+								ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
+								trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+							}
 						}
-					} else if(execParams.getParamListInfo() != null) {
-						paramListHolderList = execParams.getParamListInfo();
-					}					
-					
-					for(ParamListHolder paramListHolder : paramListHolderList) {
-						MetaIdentifier hyperParamMI = paramListHolder.getRef();
-						ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-						trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+					} else {
+						if(execParams.getParamListInfo() != null) {
+							paramListHolderList = execParams.getParamListInfo();
+						} else {
+							ParamListHolder plHolder = new ParamListHolder();
+							plHolder.setRef(algorithm.getParamListWH().getRef());
+							paramListHolderList = new ArrayList<>();
+							paramListHolderList.add(plHolder);
+						} 
+						
+						for(ParamListHolder paramListHolder : paramListHolderList) {
+							MetaIdentifier hyperParamMI = paramListHolder.getRef();
+							ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
+							trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid);
+						}
 					}
 				}
 								

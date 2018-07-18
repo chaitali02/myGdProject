@@ -1515,43 +1515,36 @@ public class MetadataServiceImpl {
 		//ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(algorithm.getParamList().getRef().getUuid(), algorithm.getParamList().getRef().getVersion(), algorithm.getParamList().getRef().getType().toString());
 		
 		List<ParamListHolder> plHolderList = new ArrayList<>();
+		MetaIdentifier plMI = null;
 		if(train.getUseHyperParams().equalsIgnoreCase("Y")) {
-			ParamListHolder plHolder = new ParamListHolder();
-			MetaIdentifier plMI = algorithm.getParamListWH().getRef();
-			plMI.setName(null);
-			plHolder.setRef(plMI);
-			plHolderList.add(plHolder);
-			ParamList plWH = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
-			if(plWH.getTemplateFlg().equalsIgnoreCase("Y")) {
-				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, plWH.getUuid(), plWH.getVersion());
-				for(ParamList paramList : childs) {
-					ParamListHolder childPLHolder = new ParamListHolder();
-					MetaIdentifier childIdentifier = new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion());
-					childPLHolder.setRef(childIdentifier);
-					plHolderList.add(childPLHolder);
-				}
-			}
+			plMI = algorithm.getParamListWH().getRef();
 		} else {
-			ParamListHolder plHolder = new ParamListHolder();
-			MetaIdentifier plMI = algorithm.getParamListWoH().getRef();
-			plMI.setName(null);
-			plHolder.setRef(plMI);
-			plHolderList.add(plHolder);
-			ParamList plWoH = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
-			if(plWoH.getTemplateFlg().equalsIgnoreCase("Y")) {
-				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, plWoH.getUuid(), plWoH.getVersion());
-				for(ParamList paramList : childs) {
-					ParamListHolder childPLHolder = new ParamListHolder();
-					MetaIdentifier childIdentifier = new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion());
-					childPLHolder.setRef(childIdentifier);
-					plHolderList.add(childPLHolder);
-				}
-			}
+			plMI = algorithm.getParamListWoH().getRef();			
+		}
+		
+		ParamListHolder plHolder = new ParamListHolder();
+		plMI.setName(null);
+		plHolder.setRef(plMI);
+		plHolderList.add(plHolder);
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+		if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion());
+			plHolderList.addAll(persistPLTemplateChilds(childs));
 		}
 		
 		return plHolderList;
 	}
 
+	public List<ParamListHolder> persistPLTemplateChilds(List<ParamList> childs){
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		for(ParamList paramList : childs) {
+			ParamListHolder childPLHolder = new ParamListHolder();
+			MetaIdentifier childIdentifier = new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion());
+			childPLHolder.setRef(childIdentifier);
+			plHolderList.add(childPLHolder);
+		}
+		return plHolderList;
+	}
 	/********************** UNUSED **********************/
 //	private List<ParamList> getChilds(String parentPLUuid, String parentPLVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Query query = new Query();

@@ -275,14 +275,12 @@ public class ModelController {
 			TrainExec trainExec = null;
 			List<ParamMap> paramMapList = new ArrayList<>();
 
-			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion,
-					MetaType.train.toString());			
-			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(),
-					MetaType.model.toString());
+			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());			
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 			if (train.getUseHyperParams().equalsIgnoreCase("N") 
 					&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion());
+				paramMapList = paramSetServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion());
 			}
 			if (paramMapList.size() > 0) {
 				for (ParamMap paramMap : paramMapList) {

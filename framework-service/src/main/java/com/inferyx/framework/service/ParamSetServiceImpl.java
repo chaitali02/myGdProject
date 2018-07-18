@@ -399,8 +399,9 @@ public class ParamSetServiceImpl {
 		return paramListHolderList;
 	}
 	
-	public List<ParamMap> getParamMap(ExecParams execParams, String modelUUID, String modelVersion) throws Exception{
-		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID, modelVersion, MetaType.model.toString());
+	public List<ParamMap> getParamMap(ExecParams execParams, String trainUuid, String trainVersion) throws Exception{
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());		
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
 		Algorithm algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 		
 		String algoClassName = algo.getTrainClass();
@@ -414,10 +415,16 @@ public class ParamSetServiceImpl {
 					paramMapList.add(paramMap);
 				}
 			} else if(execParams.getParamListInfo() != null) {
-				List<ParamListHolder> paramListHolder = execParams.getParamListInfo();
-				ParamMap paramMap = getParamMapByPLHolder(paramListHolder, algoClassName, false);						
+				List<ParamListHolder> paramListHolderList = execParams.getParamListInfo();
+				ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClassName, false);						
 				paramMapList.add(paramMap);
-			}					
+			} else {
+				List<ParamListHolder> paramListHolderList = new ArrayList<>();
+				ParamListHolder plHolder = new ParamListHolder();
+				plHolder.setRef(algo.getParamListWoH().getRef());
+				ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClassName, false);						
+				paramMapList.add(paramMap);
+			}
 		}
 
 		return paramMapList;
