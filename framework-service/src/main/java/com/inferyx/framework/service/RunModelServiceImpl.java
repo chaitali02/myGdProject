@@ -82,7 +82,26 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private Train train;
 	private String name;
 	private MetaType execType;
+	MetadataServiceImpl metadataServiceImpl;
 
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the metadataServiceImpl
+	 */
+	public MetadataServiceImpl getMetadataServiceImpl() {
+		return metadataServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param metadataServiceImpl the metadataServiceImpl to set
+	 */
+	public void setMetadataServiceImpl(MetadataServiceImpl metadataServiceImpl) {
+		this.metadataServiceImpl = metadataServiceImpl;
+	}
 
 	/**
 	 * @return the name
@@ -680,7 +699,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					List<ParamListHolder> paramListHolderList = null;
 					if(execParams.getParamInfo() != null) {
 						for(ParamSetHolder paramSetHolder : execParams.getParamInfo()){
-							paramListHolderList = paramSetServiceImpl.getParamListHolder(paramSetHolder);
+							paramListHolderList = metadataServiceImpl.getParamListHolder(paramSetHolder);
 							for(ParamListHolder paramListHolder : paramListHolderList) {
 								MetaIdentifier hyperParamMI = paramListHolder.getRef();
 								ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());

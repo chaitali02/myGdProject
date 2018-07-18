@@ -48,17 +48,15 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
-import com.inferyx.framework.service.ParamSetServiceImpl;
 
 @RestController
 @RequestMapping(value = "/model")
 public class ModelController {
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
-	@Autowired
-	private ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	private ModelExecServiceImpl modelExecServiceImpl;
 	@Autowired
@@ -67,6 +65,8 @@ public class ModelController {
 	RExecutor rExecutor;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
 
 	/*@RequestMapping(value = "/train/execute", method = RequestMethod.POST)
 	public boolean train(@RequestParam("uuid") String modelUUID, @RequestParam("version") String modelVersion,
@@ -280,7 +280,7 @@ public class ModelController {
 			if (train.getUseHyperParams().equalsIgnoreCase("N") 
 					&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion());
+				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion());
 			}
 			if (paramMapList.size() > 0) {
 				for (ParamMap paramMap : paramMapList) {

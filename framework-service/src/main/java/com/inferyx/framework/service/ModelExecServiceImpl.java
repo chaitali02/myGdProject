@@ -78,7 +78,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	@Autowired
 	Helper helper;
 	@Autowired
-	ParamSetServiceImpl paramSetServiceImpl;
+	MetadataServiceImpl metadataServiceImpl;
 
 	static final Logger logger = Logger.getLogger(ModelExecServiceImpl.class);
 
@@ -827,7 +827,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			List<ParamMap> paramMapList = null;
 			if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion());
+				paramMapList = metadataServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion());
 			}
 			if (paramMapList.size() > 0) {
 				for (ParamMap paramMap : paramMapList) {
