@@ -35,8 +35,8 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DatasetServiceImpl;
+import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.ParamListServiceImpl;
-import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.service.RuleServiceImpl;
 
 @Component
@@ -45,9 +45,10 @@ public class FormulaOperator {
 	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected DatasetServiceImpl datasetServiceImpl;
 	@Autowired protected FunctionOperator functionOperator;
-	@Autowired protected ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired protected ParamListServiceImpl paramListServiceImpl;
 	@Autowired protected RuleServiceImpl ruleServiceImpl;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
 	
 	static final Logger LOGGER = Logger.getLogger(FormulaOperator.class);
 
@@ -62,7 +63,7 @@ public class FormulaOperator {
 				builder.append(sourceAttr.getValue());
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && execParams.getParamSetHolder() != null) {
 				String value = null;
-				value = paramSetServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				builder.append(value);
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams == null) {
 				String value = null;
