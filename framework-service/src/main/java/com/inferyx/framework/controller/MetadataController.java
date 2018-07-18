@@ -942,4 +942,12 @@ public class MetadataController {
 		return metadataServiceImpl.getLovByType(type);
 	}
 	
+	@RequestMapping(value = "/getParamListByAlgorithm", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamListByAlgorithm(
+			@RequestParam(value = "uuid", required = false) String algoUuid,
+			@RequestParam(value = "version", required = false) String algoVersion,
+			@RequestParam(value = "isHyperParam", required = false) String isHyperParam,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListByAlgorithm(algoUuid, algoVersion, isHyperParam);
+	}
 }

@@ -1707,4 +1707,27 @@ public class MetadataServiceImpl {
 		}
 		return plHolderList;
 	}
+
+	public List<ParamListHolder> getParamListByAlgorithm(String algoUuid, String algoVersion, String isHyperParam) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algoUuid, algoVersion, MetaType.algorithm.toString());
+		
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		MetaIdentifier plMI = null;
+		if(isHyperParam.equalsIgnoreCase("Y")) {
+			plMI = algorithm.getParamListWH().getRef();
+		} else {
+			plMI = algorithm.getParamListWoH().getRef();
+		}
+		
+		ParamListHolder plHolder = new ParamListHolder();
+		plHolder.setRef(plMI);
+		plHolderList.add(plHolder);
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+		if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion());
+			plHolderList.addAll(persistPLTemplateChilds(childs));
+		}
+		
+		return plHolderList;
+	}
 }
