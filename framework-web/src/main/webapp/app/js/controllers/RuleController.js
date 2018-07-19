@@ -458,30 +458,49 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     }
   }
   $scope.modelExecute = function (modeldetail) {
-    $scope.newDataList = [];
-    $scope.selectallattribute = false;
-    angular.forEach($scope.paramtable, function (selected) {
-      if (selected.selected) {
-        $scope.newDataList.push(selected);
+    if($scope.selectParamType =="paramlist"){
+      if($scope.paramlistdata){
+        var execParams = {};
+        var paramListInfo =[];
+        var paramInfo={};
+        var paramInfoRef={};
+        paramInfoRef.uuid=$scope.paramlistdata.uuid;
+        paramInfoRef.type="paramlist";
+        paramInfo.ref=paramInfoRef;
+        paramListInfo[0]=paramInfo;
+        execParams.paramListInfo=paramListInfo;
+      }else{
+        execParams=null;
       }
-    });
-    var paramInfoArray = [];
-    if ($scope.newDataList.length > 0) {
-      var execParams = {}
-      var ref = {}
-      ref.uuid = $scope.paramsetdata.uuid;
-      ref.version = $scope.paramsetdata.version;
-      for (var i = 0; i < $scope.newDataList.length; i++) {
-        var paraminfo = {};
-        paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
-        paraminfo.ref = ref;
-        paramInfoArray[i] = paraminfo;
-      }
+      $scope.paramlistdata=null;
+      $scope.selectParamType=null;
     }
-    if (paramInfoArray.length > 0) {
-      execParams.paramInfo = paramInfoArray;
-    } else {
-      execParams = null
+    else{
+      $scope.newDataList = [];
+      $scope.selectallattribute = false;
+      angular.forEach($scope.paramtable, function (selected) {
+        if (selected.selected) {
+          $scope.newDataList.push(selected);
+        }
+      });
+      var paramInfoArray = [];
+      if ($scope.newDataList.length > 0) {
+        var execParams = {}
+        var ref = {}
+        ref.uuid = $scope.paramsetdata.uuid;
+        ref.version = $scope.paramsetdata.version;
+        for (var i = 0; i < $scope.newDataList.length; i++) {
+          var paraminfo = {};
+          paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
+          paraminfo.ref = ref;
+          paramInfoArray[i] = paraminfo;
+        }
+      }
+      if (paramInfoArray.length > 0) {
+        execParams.paramInfo = paramInfoArray;
+      } else {
+        execParams = null
+      }
     }
     //console.log(JSON.stringify(execParams));
     RuleService.executeRuleWithParams(modeldetail.uuid, modeldetail.version, execParams).then(function (response) {
@@ -492,8 +511,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
      $scope.dataLoading = false;
       $scope.saveMessage = "Rule Saved and Submited Successfully"
       notify.type = 'success',
-        notify.title = 'Success',
-        notify.content = $scope.saveMessage
+      notify.title = 'Success',
+      notify.content = $scope.saveMessage
       $scope.$emit('notify', notify);
       $scope.okrulesave();
     }
@@ -524,7 +543,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       paramSetjson.paramInfoArray = paramInfoArray;
       $scope.isTabelShow = true;
     } else {
-      linkElement.setAttribute("download", filename);
+     // linkElement.setAttribute("download", filename);
       $scope.isTabelShow = false;
     }
   }
@@ -553,13 +572,42 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     });
     $scope.paramtable = newDataList;
   }
-  
+
+  $scope.onChangeParamList=function(){
+    $scope.isParamLsitTable=false;
+    CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
+    var onSuccesGetParamListByTrain = function (response) {
+      $scope.isParamLsitTable=true;
+      $scope.selectParamList=response;
+      var paramArray=[];
+      for(var i=0;i<response.length;i++){
+        var paramInfo={}
+          paramInfo.paramId=response[i].paramId; 
+          paramInfo.paramName=response[i].paramName;
+          paramInfo.paramType=response[i].paramType.toLowerCase();
+          if(response[i].paramValue !=null && response[i].paramValue.ref.type == "simple"){
+            paramInfo.paramValue=response[i].paramValue.value;
+            paramInfo.paramValueType="simple"
+        }else if(response[i].paramValue !=null){
+          var paramValue={};
+          paramValue.uuid=response[i].paramValue.ref.uuid;
+          paramValue.type=response[i].paramValue.ref.type;
+          paramInfo.paramValue=paramValue;
+          paramInfo.paramValueType=response[i].paramValue.ref.type;
+        }else{
+          
+        }
+        paramArray[i]=paramInfo;
+      }
+      $scope.selectParamList.paramInfo=paramArray;
+    }
+  }
+
   $scope.getParamSetByParamList=function(){
     RuleService.getParamSetByParamList($scope.allparamlist.defaultoption.uuid,"").then(function (response){ onSuccessGetParamSetByParmLsit(response.data)});
     var onSuccessGetParamSetByParmLsit = function (response) {
       $scope.allparamset = response
       $scope.isShowExecutionparam = true;
-
     }
   }
 
@@ -586,20 +634,30 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.selectParamList=null;
     if($scope.selectParamType == "paramlist"){
       $scope.paramlistdata=null;
-      $scope.getParamListByAlgorithm();
+      $scope.getParamListChilds();
     }
     else if($scope.selectParamType =="paramset"){
       $scope.getParamSetByParamList();
     }
   }
-
-  $scope.changeCheckboxExecution = function () {
-    debugger;
+  $scope.onChangeParamListOFRule=function(){
     $scope.allparamset=null;
     $scope.allParamList=null;
     $scope.isParamLsitTable=false;
     $scope.selectParamList=null;
+    $scope.paramTypes=null;
     $scope.selectParamType=null;
+    setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },1);
+    $scope.checkboxModelexecution="NO";
+  }
+  $scope.changeCheckboxExecution = function () {
+    $scope.allparamset=null;
+    $scope.allParamList=null;
+    $scope.isParamLsitTable=false;
+    $scope.selectParamList=null;
+    $scope.paramTypes=null;
+    $scope.selectParamType=null;
+    setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },1);
     if($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
       $('#responsive').modal({
         backdrop: 'static',
@@ -610,7 +668,10 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.allparamset = null;
     }
   }
-
+  
+  $scope.executeWithExecParams = function () {
+    $('#responsive').modal('hide');
+  }
   $scope.countBack = function () {
     $scope.continueCount = $scope.continueCount - 1;
     $scope.isSubmitShow = false;
