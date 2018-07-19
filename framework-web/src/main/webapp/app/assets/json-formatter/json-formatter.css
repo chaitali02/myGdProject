@@ -5,16 +5,26 @@
  * License: Apache-2.0
  */
 
-
+ .json-formatter{
+    padding: 3px 12px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: -10px 10px 0px 10px;
+    width:98%;
+    height:500px;overflow:auto;
+ }
 .json-formatter-row {
   font-family: monospace;
-  padding: 3px 12px;
+ 
 }
 .json-formatter-row,
 .json-formatter-row a,
 .json-formatter-row a:hover {
   color: black;
   text-decoration: none;
+
+  
 }
 .json-formatter-row .json-formatter-row {
   margin-left: 1em;
