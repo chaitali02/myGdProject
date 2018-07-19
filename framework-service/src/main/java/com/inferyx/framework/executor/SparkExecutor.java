@@ -1715,10 +1715,17 @@ public class SparkExecutor<T> implements IExecutor {
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
 			Pipeline pipeline = new Pipeline()
-					.setStages(new PipelineStage[] { /* labelIndexer, */vectorAssembler, (PipelineStage) obj });
+					.setStages(new PipelineStage[] { /* labelIndexer, */vectorAssembler, (PipelineStage) obj});
 			try {
 				if (null != paramMap) {
+//					trainingDf.show(false);
+//					pipeline.setDefault(paramMap.toSeq());
 					trngModel = pipeline.fit(trainingDf, paramMap);
+//					for(Param<?> param : trngModel.params()) {
+//						System.out.println(param.name());
+//					}
+//					
+//					System.out.println();
 				} else {
 					trngModel = pipeline.fit(trainingDf);
 				}
