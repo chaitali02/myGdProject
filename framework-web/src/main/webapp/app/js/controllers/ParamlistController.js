@@ -83,6 +83,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"datapod","caption":"datapod"},
 	    {"name":"list","caption":"list"}, ];
 	$scope.isDependencyShow = false;
+	$scope.isTableDisable=false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['paramlist'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -156,9 +157,21 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	};
 
 	$scope.getAllLatestParamListByTemplate=function(){
-		ParamListService.getAllLatestParamListByTemplate('Y', "paramlist").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
+		ParamListService.getAllLatestParamListByTemplate('Y', "paramlist","").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
 		var onSuccessGetAllLatestParamListByTemplate = function (response) {
 			$scope.allParamList=response;
+
+		}//End getAllVersionByUuid
+	}
+	$scope.getParamListChilds=function(uuid,version){
+		CommonService.getParamListChilds(uuid,version,"paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
+		var onSuccessGetParamListChilds = function (response) {
+			if(response.length >0){
+				$scope.isTableDisable=true;
+				$scope.isUseTemlateText=true;
+			}else{
+				$scope.isUseTemlateText=false;
+			}
 
 		}//End getAllVersionByUuid
 	}
@@ -198,6 +211,9 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$scope.paramtable = paramArray;
 	}
 	$scope.addRow = function () {
+		if($scope.isTableDisable){
+			return false;
+		}
 		if ($scope.paramtable == null) {
 			$scope.paramtable = [];
 		}
@@ -207,12 +223,18 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	}
 
 	$scope.selectAllRow = function () {
+		if($scope.isTableDisable){
+			return false;
+		}
 		angular.forEach($scope.paramtable, function (stage) {
 			stage.selected = $scope.selectallattribute;
 		});
 	}
 
 	$scope.removeRow = function () {
+		if($scope.isTableDisable){
+			return false;
+		}
 		var newDataList = [];
 		$scope.selectallattribute = false;
 		angular.forEach($scope.paramtable, function (selected) {
@@ -255,6 +277,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			$scope.paramlist.defaultVersion = defaultversion;
 			$scope.paramtable = response.paramInfo;
 			if($scope.paramlistData.templateFlg =='N'){
+				$scope.isTableDisable=true;
 				$scope.getAllLatestParamListByTemplate();
 				var selectedTemplate={};
 				selectedTemplate.uuid=$scope.paramlistData.templateInfo.ref.uuid;
@@ -264,6 +287,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			}else{
 				$scope.isUseTemlate=false;
 				$scope.isTemplageInfoRequired=false;
+				$scope.getParamListChilds($scope.paramlistData.uuid,$scope.paramlistData.version)
 			}
 
 			var tags = [];
@@ -290,6 +314,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			$scope.paramlist.defaultVersion = defaultversion;
 			$scope.paramtable = response.params;
 			if($scope.paramlistData.templateFlg =='N'){
+				$scope.isTableDisable=true;
 				$scope.getAllLatestParamListByTemplate();
 				var selectedTemplate={};
 				selectedTemplate.uuid=$scope.paramlistData.templateInfo.ref.uuid;

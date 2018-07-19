@@ -111,10 +111,10 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
   }).then(function (response) { return response })
   }
 
-  factory.findParamSetByAlgorithm = function (uuid, version) {
+  factory.findParamSetByAlgorithm = function (uuid, version,isHyperParam) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "metadata/getParamSetByAlgorithm?action=view&algorithmUuid=" + uuid + "&algorithmVersion=" + version,
+      url: url + "metadata/getParamSetByAlgorithm?action=view&algorithmUuid=" + uuid + "&algorithmVersion=" + version+"&isHyperParam="+isHyperParam,
       method: "GET"
     }).then(function (response) { return response })
   };
@@ -149,9 +149,9 @@ DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sor
     }
     return deferred.promise;
   }
-  this.getParamSetByAlgorithm = function (uuid, version) {
+  this.getParamSetByAlgorithm = function (uuid, version,isHyperParam) {
     var deferred = $q.defer();
-    TrainFactory.findParamSetByAlgorithm(uuid, version).then(function (response) { onSuccess(response.data) });
+    TrainFactory.findParamSetByAlgorithm(uuid, version,isHyperParam).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response

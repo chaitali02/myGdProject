@@ -319,7 +319,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
      },
      template: `
        <div class="row" ng-show="type =='train'">
-         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 json-formatter" style="margin:10px;">
           <!--<pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>-->
            <json-formatter open="1" key="'Result'" json ='modelresult'></json-formatter>
          </div>        
@@ -1126,6 +1126,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      var taskDetail=null;
      $rootScope.showGrid=false;
      $rootScope.showGroupDowne=false;
+     $scope.selectallattribute=false;
      $scope.elementDefs = dagMetaDataService.elementDefs;
      $scope.paramTypes=["paramlist","paramset"];
      $scope.changeSliderForward=function() {
@@ -2702,7 +2703,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       $scope.onSelectparamSet = function (selectedParamInfo) {
         var paramSetjson = {};
         var paramInfoArray = [];
-        $scope.selectallattribute=false;
+     
         var selectedParamIdArray=[];
         if(selectedParamInfo !=null){
           for(var i=0;i<selectedParamInfo.length;i++){
