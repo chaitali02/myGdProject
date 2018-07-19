@@ -3689,12 +3689,13 @@ public class RegisterService {
 		return dagExecServiceImpl.getStatusByDagExec(dagExecUuid);
 	}
 
-	public String getParamSetByModel(String modelUuid, String modelVersion) throws JsonProcessingException {
+	/********************** UNUSED **********************/
+	/*public String getParamSetByModel(String modelUuid, String modelVersion) throws JsonProcessingException {
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByModel(modelUuid, modelVersion));
 		return result;
-	}
+	}*/
 	
 	public String getParamSetByTrain(String trainUuid, String trainVersion) throws JsonProcessingException {
 		String result = null;
@@ -3717,10 +3718,10 @@ public class RegisterService {
 		return result;
 	}
 
-	public String getParamSetByAlogrithm(String algorithmUUID, String algorithmVersion) throws JsonProcessingException {
+	public String getParamSetByAlogrithm(String algorithmUUID, String algorithmVersion, String isHyperParam) throws JsonProcessingException {
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByAlgorithm(algorithmUUID, algorithmVersion));
+		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByAlgorithm(algorithmUUID, algorithmVersion, isHyperParam));
 		return result;
 	}
 

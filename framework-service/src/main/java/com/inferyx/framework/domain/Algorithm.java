@@ -24,7 +24,6 @@ public class Algorithm extends BaseEntity {
 	private List<String> summaryMethods;
 	private String labelRequired;
 	private String returnType; 
-	private MetaIdentifierHolder paramList;
 	private String savePmml;
 	private MetaIdentifierHolder paramListWoH;
 	private MetaIdentifierHolder paramListWH;
@@ -158,12 +157,5 @@ public class Algorithm extends BaseEntity {
 	}
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public MetaIdentifierHolder getParamList() {
-		return paramList;
-	}
-	public void setParamList(MetaIdentifierHolder paramInfo) {
-		this.paramList = paramInfo;
 	}
 }
