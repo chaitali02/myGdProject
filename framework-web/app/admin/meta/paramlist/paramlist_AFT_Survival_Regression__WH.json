@@ -1,7 +1,7 @@
 {
-  "uuid": "faf76c02-852c-421f-8ac3-544c12f61349",
-  "version": "1531146713",
-  "name": "LDA Clustering with Hyper Params",
+  "uuid": "7b894ae4-e9c4-46f1-ad8e-431beee90032",
+  "version": "1530949002",
+  "name": "paramlist_AFT_Survival_Regression_WH",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -9,12 +9,12 @@
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Mon Jul 09 20:01:53 IST 2018",
+  "createdOn": "Sat Jul 07 13:06:42 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
   "appInfo": [
-		{
+			{
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -40,32 +40,31 @@
             }
         }
 	],
-  "type": "CLUSTERING",
-  "libraryType": "SPARKML",
-  "trainClass": "org.apache.spark.ml.clustering.LDA",
-  "modelClass": "org.apache.spark.ml.clustering.LDAModel",
-  "labelRequired": "Y",
-  "returnType": null,
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "53b44d5b-6571-4c46-af08-549b1445d056"
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "aggregationDepth",
+      "paramType": "list",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "2, 4, 6"
+      }
+    },
+    {
+      "paramId": "1",
+      "paramName": "numFolds",
+      "paramType": "integer",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "3"
+      }
     }
-  },
-  "savePmml": "N",
-	"summaryMethods" : [  
-		"estimatedDocConcentration",
-		"getDocConcentration",
-		"getK",
-		"getLearningDecay",
-		"getLearningOffset",
-		"getOldDocConcentration",
-		"getOldTopicConcentration",
-		"getSubsamplingRate",
-		"getTopicConcentration",
-		"getOptimizer",
-		"getTopicDistributionCol",
-		"supportedOptimizers",
-		"vocabSize"
-	    ]
+  ],
+  "paramListType": "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null
 }

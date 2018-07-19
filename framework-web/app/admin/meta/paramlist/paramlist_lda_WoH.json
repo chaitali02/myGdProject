@@ -8,13 +8,13 @@
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "2"
+				"value" : "10"
 			    }
 		},
 		{
 			"paramId": 1,
-			"paramName": "maxIter",
-			"paramType": "integer",
+			"paramName": "learningDecay",
+			"paramType": "double",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -24,42 +24,42 @@
 		},
 		{
 			"paramId": 2,
-			"paramName": "predictionCol",
-			"paramType": "string",
+			"paramName": "learningOffset",
+			"paramType": "double",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "Col1"
+				"value" : "12"
 			    }
 		},
 		{
 			"paramId": 3,
+			"paramName": "maxIter",
+			"paramType": "integer",
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "4"
+			    }
+		},
+		{
+			"paramId": 4,
 			"paramName": "seed",
 			"paramType": "long",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "10"
-			    }
-		},
-		{
-			"paramId": 4,
-			"paramName": "tol",
-			"paramType": "double",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "10"
+				"value" : "13.14"
 			    }
 		}
 	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a79",
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a85",
 	"version": "1495146809",
-	"name": "paramlist_kmeans",
-	"desc": "K-Means Param List",
+	"name": "paramlist_lda_WoH",
+	"desc": "LDA Param List",
 	"createdBy": {
 		"ref": {
 			"type": "user",
@@ -74,6 +74,8 @@
 	"active": "Y",
 	"published": "N",	
     "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
 	"appInfo": [
 			{
             "ref" : {

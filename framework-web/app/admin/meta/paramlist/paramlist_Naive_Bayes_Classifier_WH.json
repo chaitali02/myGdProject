@@ -1,7 +1,7 @@
 {
-  "uuid": "31c8012f-5f18-43fb-bd3d-a99eed37b516",
-  "version": "1530964808",
-  "name": "KMeans Clustering with Hyper Params",
+  "uuid": "45f293c8-ea4b-482c-838e-69ed4b19bc9a",
+  "version": "1530958619",
+  "name": "paramlist_Naive_Bayes_Classifier_WH",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -9,12 +9,12 @@
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Sat Jul 07 17:30:08 IST 2018",
+  "createdOn": "Sat Jul 07 15:46:59 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
-  "appInfo": [
-		{
+ "appInfo": [
+			{
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -40,27 +40,31 @@
             }
         }
 	],
-  "type": "CLUSTERING",
-  "libraryType": "SPARKML",
-  "trainClass": "org.apache.spark.ml.clustering.KMeans",
-  "modelClass": "org.apache.spark.ml.clustering.KMeansModel",
-  "labelRequired": "Y",
-  "returnType": null,
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "67773bc7-6db5-4598-a288-c8d33d7e8c52"
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "smoothing",
+      "paramType": "list",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "0.3, 1.0, 2.5"
+      }
+    },
+    {
+      "paramId": "1",
+      "paramName": "numFolds",
+      "paramType": "integer",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "3"
+      }
     }
-  },
-  "savePmml": "Y",
-	"summaryMethods" : [  
-		"summary",
-		"clusterCenters",
-		"getInitMode",
-		"getInitSteps",
-		"getK",
-		"getMaxIter",
-		"getSeed",
-		"getTol"
-	    ]
+  ],
+  "paramListType": "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null
 }
