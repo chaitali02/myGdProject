@@ -861,10 +861,10 @@
     }
     return deferred.promise;
   }
-  this.getAllLatestParamListByTemplate = function(templateFlg,type) {
+  this.getAllLatestParamListByTemplate = function(templateFlg,type,paramListType) {
     var deferred = $q.defer();
     var url;
-    url ="common/getAllLatestParamListByTemplate?action=view&templateFlg=" + templateFlg + "&type=" + type;
+    url ="common/getAllLatestParamListByTemplate?action=view&templateFlg=" + templateFlg + "&type=" + type+"&paramListType="+paramListType;
     CommonFactory.httpGet(url).then(function(response) {
       onSuccess(response.data)
     });

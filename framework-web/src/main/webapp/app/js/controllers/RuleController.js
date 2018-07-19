@@ -292,11 +292,13 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         defaultoption.name = $scope.ruleData.source.ref.name;
         $scope.ruleRelation.defaultoption = defaultoption;
       }
-      RuleService.getAllLatest("paramlist").then(function (response) {
-        onSuccessGetAllLatestParamList(response.data)
+      CommonService.getAllLatestParamListByTemplate('Y', "paramlist","rule").then(function (response) {
+        onSuccessGetAllLatestParamListByTemplate(response.data)
       });
-      var onSuccessGetAllLatestParamList = function (response) {
-        $scope.allparamlist = response
+      var onSuccessGetAllLatestParamListByTemplate = function (response) {
+        
+        $scope.allparamlist={};
+        $scope.allparamlist.options = response
         if ($scope.ruleData.paramList != null) {
           var defaultoption = {};
           defaultoption.uuid = $scope.ruleData.paramList.ref.uuid;
@@ -340,11 +342,12 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
   else {
     $scope.showactive = "false"
-    RuleService.getAllLatest("paramlist").then(function (response) {
-      onSuccessGetAllLatestParamList(response.data)
+    CommonService.getAllLatestParamListByTemplate('Y', "paramlist","rule").then(function (response) {
+      onSuccessGetAllLatestParamListByTemplate(response.data)
     });
-    var onSuccessGetAllLatestParamList = function (response) {
-      $scope.allparamlist = response
+    var onSuccessGetAllLatestParamListByTemplate = function (response) {
+      $scope.allparamlist={};
+      $scope.allparamlist.options = response
       if (response)
         $scope.allparamlist.defaultoption = null;
       $scope.getOneByUuidParamList();
@@ -384,11 +387,12 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         defaultoption.name = $scope.ruleData.source.ref.name;
         $scope.ruleRelation.defaultoption = defaultoption;
       }
-      RuleService.getAllLatest("paramlist").then(function (response) {
-        onSuccessGetAllLatestParamList(response.data)
+      CommonService.getAllLatestParamListByTemplate('Y', "paramlist","rule").then(function (response) {
+        onSuccessGetAllLatestParamListByTemplate(response.data)
       });
-      var onSuccessGetAllLatestParamList = function (response) {
-        $scope.allparamlist = response
+      var onSuccessGetAllLatestParamListByTemplate = function (response) {
+        $scope.allparamlist={};
+        $scope.allparamlist.options = response
         if ($scope.ruleData.paramList != null) {
           var defaultoption = {};
           defaultoption.uuid = $scope.ruleData.paramList.ref.uuid;
