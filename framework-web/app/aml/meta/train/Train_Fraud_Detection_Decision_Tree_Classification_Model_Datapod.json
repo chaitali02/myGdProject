@@ -1,15 +1,15 @@
 {
-  "uuid": "d36670e1-c7c6-48d0-b458-c3de29bc33f8",
-  "version": "1531220276",
-  "name": "Fraud Detection Random Forest Model with Hyper Params",
-  "desc": null,
+  "uuid": "8f1bfdc3-09e7-4a7e-b4d0-f75ab98b8f26",
+  "version": "1531208606",
+  "name": "Train Fraud Detection Decision Tree Classification Model (Datapod)",
+  "desc": "Train the Decision Tree Classification model using CC transactions training datapod  with Hyper Params .",
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Tue Jul 10 16:27:56 IST 2018",
+  "createdOn": "Tue Jul 10 13:13:26 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -24,7 +24,7 @@
   "dependsOn": {
     "ref": {
       "type": "model",
-      "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+      "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
     }
   },
   "source": {
@@ -39,7 +39,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "0"
       },
@@ -56,7 +56,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "1"
       },
@@ -73,7 +73,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "2"
       },
@@ -90,7 +90,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "3"
       },
@@ -107,7 +107,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "4"
       },
@@ -124,7 +124,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "5"
       },
@@ -141,7 +141,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "6"
       },
@@ -158,7 +158,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "7"
       },
@@ -175,7 +175,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "8"
       },
@@ -192,7 +192,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "9"
       },
@@ -209,7 +209,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "10"
       },
@@ -226,7 +226,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "11"
       },
@@ -243,7 +243,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "12"
       },
@@ -260,7 +260,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "13"
       },
@@ -277,7 +277,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "14"
       },
@@ -294,7 +294,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "15"
       },
@@ -311,7 +311,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "16"
       },
@@ -328,7 +328,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "17"
       },
@@ -345,7 +345,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "18"
       },
@@ -362,7 +362,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "19"
       },
@@ -379,7 +379,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "20"
       },
@@ -396,7 +396,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "21"
       },
@@ -413,7 +413,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "22"
       },
@@ -430,7 +430,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "23"
       },
@@ -447,7 +447,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "24"
       },
@@ -464,7 +464,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "25"
       },
@@ -481,7 +481,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "26"
       },
@@ -498,7 +498,7 @@
       "feature": {
         "ref": {
           "type": "model",
-          "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785"
+          "uuid": "9e557aba-be17-4e77-96f8-41644cad6245"
         },
         "featureId": "27"
       },

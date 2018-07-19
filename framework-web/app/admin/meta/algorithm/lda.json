@@ -50,6 +50,18 @@
 			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a85"
 		}
 	},
+	 "paramListWoH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a85"
+        }
+    },
+    "paramListWH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "53b44d5b-6571-4c46-af08-549b1445d056"
+        }
+    },
   	"savePmml" : "N",
 	"summaryMethods" : [  
 		"estimatedDocConcentration",

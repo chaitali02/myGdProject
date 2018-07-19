@@ -1,7 +1,7 @@
 {
   "uuid": "8a3db9b7-f64c-4e9c-b595-dda723aa7545",
   "version": "1530800685",
-  "name": "Fraud Detection Logistic Regression Model with Hyper Params",
+  "name": "Fraud Detection Logistic Regression Model",
   "desc": "Logistic Regression Model for detection fraudulent transactions with Hyper Params.",
   "createdBy": {
     "ref": {
@@ -25,7 +25,7 @@
   "dependsOn": {
     "ref": {
       "type": "algorithm",
-      "uuid": "8f22430d-ed6a-4bb0-b266-757bd0f32668"
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b72345"
     }
   },
   "label": "fraud_indicator",

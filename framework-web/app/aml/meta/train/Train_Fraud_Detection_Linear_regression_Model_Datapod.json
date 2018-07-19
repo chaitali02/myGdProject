@@ -1,15 +1,15 @@
 {
-  "uuid": "dd11b477-0dfb-44c3-b666-a7bd96feca85",
-  "version": "1530800765",
-  "name": "Train Fraud Detection Logistic Regression Model with Hyper Params (Datapod)",
-  "desc": "Train the Logistic Regression  model using CC transactions training datapod  with Hyper Params .",
+  "uuid": "1cd3e1b0-ec2c-4302-a96c-ece3d730c89b",
+  "version": "1530799357",
+  "name": "Train Fraud Detection Linear Regression Model (Datapod)",
+  "desc": "Train the model using CC transactions training datapod  with Hyper Params .",
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Thu Jul 05 19:56:05 IST 2018",
+  "createdOn": "Thu Jul 05 19:32:37 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -24,7 +24,7 @@
   "dependsOn": {
     "ref": {
       "type": "model",
-      "uuid": "8a3db9b7-f64c-4e9c-b595-dda723aa7545"
+      "uuid": "3dfc4042-00db-48f5-a075-572c5aead3ca"
     }
   },
   "source": {

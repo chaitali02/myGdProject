@@ -1,15 +1,15 @@
 {
-  "uuid": "3dfc4042-00db-48f5-a075-572c5aead3ca",
-  "version": "1530799218",
-  "name": "Fraud Detection Linear Regression Model with Hyper Params",
-  "desc": "Model for detection fraudulent transactions with Hyper Params.",
+  "uuid": "9e557aba-be17-4e77-96f8-41644cad6245",
+  "version": "1531208312",
+  "name": "Fraud Detection Decision Tree Model",
+  "desc": "Decision Tree Model for detection fraudulent transactions with Hyper Params.",
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Thu Jul 05 19:30:18 IST 2018",
+  "createdOn": "Tue Jul 10 13:08:32 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -25,7 +25,7 @@
   "dependsOn": {
     "ref": {
       "type": "algorithm",
-      "uuid": "901b9fce-1ced-475a-a83f-1a17e07a42dc"
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
     }
   },
   "label": "fraud_indicator",
@@ -36,8 +36,7 @@
       "type": "double",
       "desc": "account_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "1",
@@ -45,8 +44,7 @@
       "type": "double",
       "desc": "min_daily_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "2",
@@ -54,8 +52,7 @@
       "type": "double",
       "desc": "max_daily_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "3",
@@ -63,8 +60,7 @@
       "type": "double",
       "desc": "avg_daily_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "4",
@@ -72,8 +68,7 @@
       "type": "double",
       "desc": "min_monthly_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "5",
@@ -81,8 +76,7 @@
       "type": "double",
       "desc": "max_monthly_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "6",
@@ -90,8 +84,7 @@
       "type": "double",
       "desc": "avg_monthly_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "7",
@@ -99,8 +92,7 @@
       "type": "double",
       "desc": "min_quarterly_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "8",
@@ -108,8 +100,7 @@
       "type": "double",
       "desc": "max_quarterly_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "9",
@@ -117,8 +108,7 @@
       "type": "double",
       "desc": "avg_quarterly_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "10",
@@ -126,8 +116,7 @@
       "type": "double",
       "desc": "min_yearly_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "11",
@@ -135,8 +124,7 @@
       "type": "double",
       "desc": "max_yearly_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "12",
@@ -144,8 +132,7 @@
       "type": "double",
       "desc": "avg_yearly_balance",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "13",
@@ -153,8 +140,7 @@
       "type": "double",
       "desc": "transaction_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "14",
@@ -162,8 +148,7 @@
       "type": "double",
       "desc": "min_daily_tran_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "15",
@@ -171,8 +156,7 @@
       "type": "double",
       "desc": "max_daily_tran_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "16",
@@ -180,8 +164,7 @@
       "type": "double",
       "desc": "avg_daily_tran_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "17",
@@ -189,8 +172,7 @@
       "type": "double",
       "desc": "min_monthly_tran_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "18",
@@ -198,8 +180,7 @@
       "type": "double",
       "desc": "max_monthly_tran_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "19",
@@ -207,8 +188,7 @@
       "type": "double",
       "desc": "avg_monthly_tran_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "20",
@@ -216,8 +196,7 @@
       "type": "double",
       "desc": "min_yearly_tran_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "21",
@@ -225,8 +204,7 @@
       "type": "double",
       "desc": "max_yearly_tran_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "22",
@@ -234,8 +212,7 @@
       "type": "double",
       "desc": "avg_yearly_tran_amount",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "23",
@@ -243,8 +220,7 @@
       "type": "double",
       "desc": "num_daily_transactions",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "24",
@@ -252,8 +228,7 @@
       "type": "double",
       "desc": "num_monthly_transactions",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "25",
@@ -261,8 +236,7 @@
       "type": "double",
       "desc": "num_quarterly_transactions",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "26",
@@ -270,8 +244,7 @@
       "type": "double",
       "desc": "num_yearly_transactions",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     },
     {
       "featureId": "27",
@@ -279,8 +252,7 @@
       "type": "double",
       "desc": "num_payment_default_times",
       "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null
+      "maxVal": 0
     }
   ],
   "scriptName": null,
