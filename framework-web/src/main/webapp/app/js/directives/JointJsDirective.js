@@ -1126,6 +1126,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      var taskDetail=null;
      $rootScope.showGrid=false;
      $rootScope.showGroupDowne=false;
+     $scope.selectallattribute=false;
      $scope.elementDefs = dagMetaDataService.elementDefs;
      $scope.paramTypes=["paramlist","paramset"];
      $scope.changeSliderForward=function() {
@@ -2702,7 +2703,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       $scope.onSelectparamSet = function (selectedParamInfo) {
         var paramSetjson = {};
         var paramInfoArray = [];
-        $scope.selectallattribute=false;
+     
         var selectedParamIdArray=[];
         if(selectedParamInfo !=null){
           for(var i=0;i<selectedParamInfo.length;i++){

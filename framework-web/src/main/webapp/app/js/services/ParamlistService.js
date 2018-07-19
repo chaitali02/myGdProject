@@ -63,10 +63,10 @@ DatascienceModule.factory('ParamListFactory', function ($http, $location) {
     }).then(function (response) { return response })
   }
 
-  factory.findAllLatestParamListByTemplate = function (templateFlg,type) {
+  factory.findAllLatestParamListByTemplate = function (templateFlg,type,paramListType) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "common/getAllLatestParamListByTemplate?action=view&templateFlg=" + templateFlg + "&type=" + type,
+      url: url + "common/getAllLatestParamListByTemplate?action=view&templateFlg=" + templateFlg + "&type=" + type+"&paramListType="+paramListType,
       method: "GET"
     }).then(function (response) { return response })
   }
@@ -76,9 +76,9 @@ DatascienceModule.factory('ParamListFactory', function ($http, $location) {
 
 DatascienceModule.service("ParamListService", function ($http, ParamListFactory, $q) {
 
-  this.getAllLatestParamListByTemplate = function (templateFlg, type) {
+  this.getAllLatestParamListByTemplate = function (templateFlg, type,paramListType) {
     var deferred = $q.defer();
-    ParamListFactory.findAllLatestParamListByTemplate(templateFlg, type).then(function (response) { onSuccess(response.data) });
+    ParamListFactory.findAllLatestParamListByTemplate(templateFlg, type,paramListType).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response
