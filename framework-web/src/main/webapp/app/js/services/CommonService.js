@@ -861,10 +861,10 @@
     }
     return deferred.promise;
   }
-  this.getAllLatestParamListByTemplate = function(templateFlg,type) {
+  this.getAllLatestParamListByTemplate = function(templateFlg,type,paramListType) {
     var deferred = $q.defer();
     var url;
-    url ="common/getAllLatestParamListByTemplate?action=view&templateFlg=" + templateFlg + "&type=" + type;
+    url ="common/getAllLatestParamListByTemplate?action=view&templateFlg=" + templateFlg + "&type=" + type+"&paramListType="+paramListType;
     CommonFactory.httpGet(url).then(function(response) {
       onSuccess(response.data)
     });
@@ -918,9 +918,31 @@
       });
     }
     return deferred.promise;
+  };
+  this.getParamListChilds = function(uuid,version,type) {
+    var deferred = $q.defer();
+    var url;
+    url ="metadata/getParamListChilds?action=view&uuid=" +uuid+"&version="+version+"&type="+type;
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      var result=[];
+      if(response && response.length >0){
+        for(var i=0;i<response.length;i++){
+          var res={};
+          res.uuid=response[i].ref.uuid;
+          res.name=response[i].ref.name;
+          result[i]=res;
+        }
+      }
+      deferred.resolve({
+        data: result
+      });
+    }
+    return deferred.promise;
   }
-
-    
+   
   });
   
   

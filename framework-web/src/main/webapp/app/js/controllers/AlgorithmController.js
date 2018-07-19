@@ -120,7 +120,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	}
 	
 	$scope.getAllLatestParamListByTemplate=function(){
-		CommonService.getAllLatestParamListByTemplate('Y', "paramlist").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
+		CommonService.getAllLatestParamListByTemplate('Y', "paramlist","model").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
 		var onSuccessGetAllLatestParamListByTemplate = function (response) {
 			$scope.allParamList=response;
 		}//End getAllLatestParamListByTemplate

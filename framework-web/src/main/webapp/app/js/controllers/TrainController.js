@@ -61,6 +61,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   $scope.selectSourceType = $scope.sourceTypes[0];
   //$scope.targetTypes = ["datapod", "file"];
   //$scope.selectTargetType = $scope.targetTypes[0];
+  $scope.paramTypes=["paramlist","paramset"];
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
   $scope.backCount;
@@ -222,6 +223,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     if(!$scope.selectModel){
       return false;
     }
+    $scope.selectedRunImmediately='No';
+    $scope.allparamset=null;
+    $scope.allParamList=null;
+    $scope.isParamLsitTable=false;
+    $scope.selectParamList=null;
+    $scope.selectParamType=null;
     TrainService.getOneByUuidandVersion($scope.selectModel.uuid, $scope.selectModel.version, "model").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
       $scope.modelData = response;
@@ -472,16 +479,16 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       else {
         $scope.dataLoading = false;
         notify.type = 'success',
-          notify.title = 'Success',
-          notify.content = 'Configuration Saved Successfully'
+        notify.title = 'Success',
+        notify.content = 'Configuration Saved Successfully'
         $scope.$emit('notify', notify);
         $scope.okmodelsave();
       }
     }
     var onError = function (response) {
       notify.type = 'error',
-        notify.title = 'Error',
-        notify.content = "Some Error Occurred"
+      notify.title = 'Error',
+      notify.content = "Some Error Occurred"
       $scope.$emit('notify', notify);
     }
   }
@@ -509,48 +516,130 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.trainData.trainPercent = 100 - $scope.trainData.valPercent;
   }
 
+  $scope.onChangeParamList=function(){
+    $scope.isParamLsitTable=false;
+    CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
+    var onSuccesGetParamListByTrain = function (response) {
+      $scope.isParamLsitTable=true;
+      $scope.selectParamList=response;
+      var paramArray=[];
+      for(var i=0;i<response.length;i++){
+        var paramInfo={}
+          paramInfo.paramId=response[i].paramId; 
+          paramInfo.paramName=response[i].paramName;
+          paramInfo.paramType=response[i].paramType.toLowerCase();
+          if(response[i].paramValue !=null && response[i].paramValue.ref.type == "simple"){
+            paramInfo.paramValue=response[i].paramValue.value;
+            paramInfo.paramValueType="simple"
+        }else if(response[i].paramValue !=null){
+          var paramValue={};
+          paramValue.uuid=response[i].paramValue.ref.uuid;
+          paramValue.type=response[i].paramValue.ref.type;
+          paramInfo.paramValue=paramValue;
+          paramInfo.paramValueType=response[i].paramValue.ref.type;
+        }else{
+          
+        }
+        paramArray[i]=paramInfo;
+      }
+      $scope.selectParamList.paramInfo=paramArray;
+    }
+  }
 
-  $scope.onChangeRunImmediately = function () {
-
-    if ($scope.selectedRunImmediately == "YES" && $scope.modelData.dependsOn.ref.type == "algorithm") {
-      TrainService.getParamSetByAlgorithm($scope.modelData.dependsOn.ref.uuid, $scope.modelData.dependsOn.ref.version).then(function (response) { onSuccessGetParamSetByAlgorithm(response.data) });
+  $scope.getParamSetByAlgorithm=function(){
+    TrainService.getParamSetByAlgorithm($scope.modelData.dependsOn.ref.uuid, $scope.modelData.dependsOn.ref.version).then(function (response) { onSuccessGetParamSetByAlgorithm(response.data) });
       var onSuccessGetParamSetByAlgorithm = function (response) {
         $scope.allparamset = response
         $scope.isShowExecutionparam = true;
       }
-    } else {
+  }
+
+  $scope.getParamListByAlgorithm=function(){
+    TrainService.getParamListByAlgorithm($scope.modelData.dependsOn.ref.uuid, $scope.modelData.dependsOn.ref.version || "","paramlist",$scope.trainData.useHyperParams).then(function (response) { onSuccessGetParamListByAlgorithm(response.data) });
+      var onSuccessGetParamListByAlgorithm = function (response) {
+        $scope.allParamList=response;
+      }
+  }
+
+  $scope.onChangeParamType=function(){
+    $scope.allparamset=null;
+    $scope.allParamList=null;
+    $scope.isParamLsitTable=false;
+    $scope.selectParamList=null;
+    if($scope.selectParamType == "paramlist"){
+      $scope.paramlistdata=null;
+      $scope.getParamListByAlgorithm();
+    }
+    else if($scope.selectParamType =="paramset"){
+      $scope.getParamSetByAlgorithm();
+    }
+  }
+  
+  $scope.onChangeRunImmediately = function () {
+    $scope.allparamset=null;
+    $scope.allParamList=null;
+    $scope.isParamLsitTable=false;
+    $scope.selectParamList=null;
+    $scope.selectParamType=null;
+
+    if($scope.selectedRunImmediately == "YES" && $scope.modelData.dependsOn.ref.type == "algorithm") {
+      $('#responsive').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+    }else {
       $scope.isShowExecutionparam = false;
       $scope.allparamset = null;
     }
   }
 
+  $scope.executeWithExecParams = function () {
+    $('#responsive').modal('hide');
+  }
 
   $scope.trainExecute = function (data) {
-    $scope.newDataList = [];
-
-    angular.forEach($scope.paramtable, function (selected) {
-      if (selected.selected) {
-        $scope.newDataList.push(selected);
+    if($scope.selectParamType =="paramlist"){
+      if($scope.paramlistdata){
+        var execParams = {};
+        var paramListInfo =[];
+        var paramInfo={};
+        var paramInfoRef={};
+        paramInfoRef.uuid=$scope.paramlistdata.uuid;
+        paramInfoRef.type="paramlist";
+        paramInfo.ref=paramInfoRef;
+        paramListInfo[0]=paramInfo;
+        execParams.paramListInfo=paramListInfo;
+      }else{
+        execParams=null;
       }
-    });
-
-    var paramInfoArray = [];
-    if ($scope.newDataList.length > 0) {
-      var execParams = {}
-      var ref = {}
-      ref.uuid = $scope.paramsetdata.uuid;
-      ref.version = $scope.paramsetdata.version;
-      for (var i = 0; i < $scope.newDataList.length; i++) {
-        var paraminfo = {};
-        paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
-        paraminfo.ref = ref;
-        paramInfoArray[i] = paraminfo;
-      }
+      $scope.paramlistdata=null;
+      $scope.selectParamType=null;
     }
-    if (paramInfoArray.length > 0) {
-      execParams.paramInfo = paramInfoArray;
-    } else {
-      execParams = null
+    else{
+      $scope.newDataList = [];
+      angular.forEach($scope.paramtable, function (selected) {
+        if (selected.selected) {
+          $scope.newDataList.push(selected);
+        }
+      });
+      var paramInfoArray = [];
+      if ($scope.newDataList.length > 0) {
+        var execParams = {}
+        var ref = {}
+        ref.uuid = $scope.paramsetdata.uuid;
+        ref.version = $scope.paramsetdata.version;
+        for (var i = 0; i < $scope.newDataList.length; i++) {
+          var paraminfo = {};
+          paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
+          paraminfo.ref = ref;
+          paramInfoArray[i] = paraminfo;
+        }
+      }
+      if (paramInfoArray.length > 0) {
+        execParams.paramInfo = paramInfoArray;
+      } else {
+        execParams = null
+      }
     }
 
     // console.log(JSON.stringify(execParams));
