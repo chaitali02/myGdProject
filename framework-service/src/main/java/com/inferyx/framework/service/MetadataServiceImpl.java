@@ -1760,4 +1760,13 @@ public class MetadataServiceImpl {
 		}
 		return "''";
 	}// End method	
+
+	public List<ParamListHolder> getParamListChilds(String plUuid, String plVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		List<ParamListHolder> plHolderList = new ArrayList<>();				
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plUuid, plVersion, MetaType.paramlist.toString());
+		List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion());
+		plHolderList.addAll(persistPLTemplateChilds(childs));
+				
+		return plHolderList;
+	}
 }
