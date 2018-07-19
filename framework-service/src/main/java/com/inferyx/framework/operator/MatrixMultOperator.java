@@ -9,13 +9,14 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.mllib.linalg.distributed.BlockMatrix;
 import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
 import org.apache.spark.mllib.linalg.distributed.IndexedRow;
 import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
-import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +62,8 @@ public class MatrixMultOperator implements IOperator {
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	private RandomDistributionFactory randomDistributionFactory;
+	@Autowired
+	private MatrixToRddConverter matrixToRddConverter;
 
 	static final Logger logger = Logger.getLogger(MatrixMultOperator.class);
 
@@ -124,8 +127,13 @@ public class MatrixMultOperator implements IOperator {
 		CoordinateMatrix lhsCoMat = new CoordinateMatrix(lhsMatrixEntry.rdd());
 		CoordinateMatrix rhsCoMat = new CoordinateMatrix(rhsMatrixEntry.rdd());
 		BlockMatrix resultMatrix = lhsCoMat.toBlockMatrix().multiply(rhsCoMat.toBlockMatrix());
-		
+		printResult(resultMatrix, baseExec, otherParams, runMode, exec);
 		return null;
+	}
+	
+	private void printResult(BlockMatrix resultMatrix, BaseExec baseExec, Map<String, String> otherParams, RunMode runMode, IExecutor exec) {
+		resultMatrix.toCoordinateMatrix().toIndexedRowMatrix().rows().toJavaRDD().collect().forEach(t -> System.out.println(t.vector()));
+		JavaRDD<Row> rowRdd = matrixToRddConverter.convertToRows(resultMatrix);
 	}
 
 	/**
@@ -136,7 +144,7 @@ public class MatrixMultOperator implements IOperator {
 	 */
 	private String generateSql(String tableName, List<AttributeRefHolder> attrList) {
 		StringBuilder sb = new StringBuilder(
-				" select ceil((row_number() over (PARTITION BY 1 ORDER BY 1))/3-0.000000001) as rn, ((row_number() over (PARTITION BY 1 ORDER BY 1))%3+1) as colnum, exp.val from ")
+				" select floor((row_number() over (PARTITION BY 1 ORDER BY 1))/3-0.000000001) as rn, ((row_number() over (PARTITION BY 1 ORDER BY 1))%3) as colnum, exp.val from ")
 						.append(tableName).append(" matatab lateral view explode(ARRAY(");
 		AttributeRefHolder attrRefHolder = null;
 		for (int count = 0; count < attrList.size(); count++) {
