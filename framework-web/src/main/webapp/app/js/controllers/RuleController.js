@@ -10,6 +10,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   $scope.ruleSourceTypes = ["datapod", "relation", "dataset", "rule"];
   $scope.logicalOperator = ["OR", "AND"];
   $scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
+  $scope.paramTypes=["paramlist","paramset"];
   $scope.operator = CF_FILTER.operator;//["=", "<", ">", "<=", ">=", "BETWEEN"];
   $scope.lhsType = [
 		{ "text": "string", "caption": "string" },
@@ -552,17 +553,58 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     });
     $scope.paramtable = newDataList;
   }
+  
+  $scope.getParamSetByParamList=function(){
+    RuleService.getParamSetByParamList($scope.allparamlist.defaultoption.uuid,"").then(function (response){ onSuccessGetParamSetByParmLsit(response.data)});
+    var onSuccessGetParamSetByParmLsit = function (response) {
+      $scope.allparamset = response
+      $scope.isShowExecutionparam = true;
+
+    }
+  }
+
+  $scope.getParamListChilds=function(){
+    CommonService.getParamListChilds($scope.allparamlist.defaultoption.uuid,"","paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
+      var onSuccessGetParamListChilds = function (response) {
+        var defaultoption={};
+        defaultoption.uuid=$scope.allparamlist.defaultoption.uuid;
+        defaultoption.name=$scope.allparamlist.defaultoption.name;
+        if(response.length >0){
+          $scope.allParamList=response;
+          $scope.allParamList.splice(0, 0,defaultoption);
+        }else{
+          $scope.allParamList=[];
+          $scope.allParamList[0]=defaultoption;
+        }
+      }
+  }
+
+  $scope.onChangeParamType=function(){
+    $scope.allparamset=null;
+    $scope.allParamList=null;
+    $scope.isParamLsitTable=false;
+    $scope.selectParamList=null;
+    if($scope.selectParamType == "paramlist"){
+      $scope.paramlistdata=null;
+      $scope.getParamListByAlgorithm();
+    }
+    else if($scope.selectParamType =="paramset"){
+      $scope.getParamSetByParamList();
+    }
+  }
 
   $scope.changeCheckboxExecution = function () {
-    if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
-      RuleService.getParamSetByParamList($scope.allparamlist.defaultoption.uuid, "").then(function (response) {
-        onSuccessGetParamSetByParmLsit(response.data)
+    debugger;
+    $scope.allparamset=null;
+    $scope.allParamList=null;
+    $scope.isParamLsitTable=false;
+    $scope.selectParamList=null;
+    $scope.selectParamType=null;
+    if($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
+      $('#responsive').modal({
+        backdrop: 'static',
+        keyboard: false
       });
-      var onSuccessGetParamSetByParmLsit = function (response) {
-        $scope.allparamset = response
-        $scope.isShowExecutionparam = true;
-
-      }
     } else {
       $scope.isShowExecutionparam = false;
       $scope.allparamset = null;

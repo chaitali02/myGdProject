@@ -227,23 +227,23 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-md-3 control-label">With Hyper Parameter List
+                  <label class="col-md-3 control-label">Default Param List
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <select class="form-control"  select2 name="paramlistWoH" ng-disabled="{{mode}}" data-ng-model="selectParamlistWithoutHyper" ng-options="r as r.name for r in allParamList | orderBy:'name' track by r.uuid ">
+                    </select>
+                    <input type="hidden" name="paramlistWoH" data-ng-model="selectParamlistWithoutHyper.uuid" ng-required="true">
+                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Default Param List (HP)
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
                   <select class="form-control"  select2name="paramlistWH" ng-disabled="{{mode}}" data-ng-model="selectParamlistWithHyper" ng-options="r as r.name for r in allParamList | orderBy:'name' track by r.uuid ">
                   </select>
                   <input type="hidden" name="paramlistWH" data-ng-model="selectParamlistWithHyper.uuid" ng-required="true">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Without Hyper Parameter List
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <select class="form-control"  select2 name="paramlistWoH" ng-disabled="{{mode}}" data-ng-model="selectParamlistWithoutHyper" ng-options="r as r.name for r in allParamList | orderBy:'name' track by r.uuid ">
-                  </select>
-                  <input type="hidden" name="paramlistWoH" data-ng-model="selectParamlistWithoutHyper.uuid" ng-required="true">
                 </div>
               </div>
               <div class="form-group" style="padding-top:10px;">

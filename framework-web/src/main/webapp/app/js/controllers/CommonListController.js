@@ -535,6 +535,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
   
   $scope.onChangeParamType=function(){
+    $scope.allparamset=null;
+    $scope.allParamList=null;
+    $scope.isParamLsitTable=false;
+    $scope.selectParamList=null;
     if($scope.selectParamType =="paramlist"){
       $scope.paramlistdata=null;
       $scope.getParamListByTrainORRule();
@@ -545,12 +549,35 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
    
   }
 
-  // $scope.onChangeParamList=function(){
-  //   CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
-  //   var onSuccesGetParamListByTrain = function (response) {
-  //     $scope.selectParamList=response;
-  //   }
-  // }
+  $scope.onChangeParamList=function(){
+    $scope.isParamLsitTable=false;
+    CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
+    var onSuccesGetParamListByTrain = function (response) {
+      $scope.isParamLsitTable=true;
+      $scope.selectParamList=response;
+      var paramArray=[];
+      for(var i=0;i<response.length;i++){
+        var paramInfo={}
+          paramInfo.paramId=response[i].paramId; 
+          paramInfo.paramName=response[i].paramName;
+          paramInfo.paramType=response[i].paramType.toLowerCase();
+          if(response[i].paramValue !=null && response[i].paramValue.ref.type == "simple"){
+            paramInfo.paramValue=response[i].paramValue.value;
+            paramInfo.paramValueType="simple"
+        }else if(response[i].paramValue !=null){
+          var paramValue={};
+          paramValue.uuid=response[i].paramValue.ref.uuid;
+          paramValue.type=response[i].paramValue.ref.type;
+          paramInfo.paramValue=paramValue;
+          paramInfo.paramValueType=response[i].paramValue.ref.type;
+        }else{
+          
+        }
+        paramArray[i]=paramInfo;
+      }
+      $scope.selectParamList.paramInfo=paramArray;
+    }
+  }
 
   $scope.onSelectparamSet = function () {
     var paramSetjson = {};
@@ -616,6 +643,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         var execParams = {}
         var ref = {}
         ref.uuid = $scope.paramsetdata.uuid;
+        ref.type = "paramlsit";
         ref.version = $scope.paramsetdata.version;
         for (var i = 0; i < $scope.newDataList.length; i++) {
           var paraminfo = {};
