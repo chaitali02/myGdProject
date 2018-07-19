@@ -119,6 +119,10 @@ public class MetadataServiceImpl {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	UploadExecServiceImpl uploadExecServiceImpl;
+	@Autowired
+	ParamSetServiceImpl paramSetServiceImpl;
+	@Autowired
+	ParamListServiceImpl paramListServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(MetadataServiceImpl.class);
 //	private static final String GET = "get";
@@ -1728,6 +1732,41 @@ public class MetadataServiceImpl {
 			plHolderList.addAll(persistPLTemplateChilds(childs));
 		}
 		
+		return plHolderList;
+	}	
+
+	/**
+	 * 
+	 * @param execParams
+	 * @param attributeId
+	 * @param ref
+	 * @return value
+	 * @throws JsonProcessingException
+	 */
+	public String getParamValue(ExecParams execParams, Integer attributeId, MetaIdentifier ref) throws JsonProcessingException {
+		if(execParams != null) {
+			if(execParams.getParamSetHolder() != null) {
+				return paramSetServiceImpl.getParamValue(execParams, attributeId, ref);
+			} else if(execParams.getParamSetHolder() != null) {
+				return paramListServiceImpl.getParamValue(execParams, attributeId, ref);
+			} else {
+					ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
+						if (param.getParamId().equals(attributeId+"")) {
+							return param.getParamValue().getValue();
+						}
+					}
+			}
+		}
+		return "''";
+	}// End method	
+
+	public List<ParamListHolder> getParamListChilds(String plUuid, String plVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		List<ParamListHolder> plHolderList = new ArrayList<>();				
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plUuid, plVersion, MetaType.paramlist.toString());
+		List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion());
+		plHolderList.addAll(persistPLTemplateChilds(childs));
+				
 		return plHolderList;
 	}
 }

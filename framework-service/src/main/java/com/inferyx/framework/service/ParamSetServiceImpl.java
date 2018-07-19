@@ -395,51 +395,6 @@ public class ParamSetServiceImpl {
 		}
 		return paramMapCombined;	
 	}
-	/**
-	 * 
-	 * @param execParams
-	 * @param attributeId
-	 * @param ref
-	 * @return
-	 * @throws JsonProcessingException
-	 */
-	public String getParamValue(ExecParams execParams,  
-									Integer attributeId, 
-									MetaIdentifier ref) throws JsonProcessingException {
-		ParamSetHolder paramSetHolder = null;
-		String value = null;
-		if (execParams != null) {
-			paramSetHolder = execParams.getParamSetHolder();
-		}
-		if (paramSetHolder == null) {
-			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
-			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
-				if (param.getParamId().equals(attributeId+"")) {
-					value = param.getParamValue().getValue();
-					return value;
-				}
-			}
-		}
-		ParamSet paramSet = (ParamSet) daoRegister.getRefObject(paramSetHolder.getRef());
-		ParamInfo paramInfo = paramSet.getParamInfo().get(Integer.parseInt(paramSetHolder.getParamSetId()));
-		for (ParamListHolder paramListHolder : paramInfo.getParamSetVal()) {
-			if (paramListHolder.getParamId().equals(attributeId.toString())) {
-				if (StringUtils.isNotBlank(paramListHolder.getValue())) {
-					value = paramListHolder.getValue();
-					return value;
-				} else {
-					ParamList paramList = (ParamList)daoRegister.getRefObject(paramListHolder.getRef());
-					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
-						if (param.getParamId().equals(attributeId+"")) {
-							value = param.getParamValue().getValue();
-							return value;
-						}
-					}
-				}
-			}
-		}
-		return "''";
-	}// End method	
 	
 	/**
 	 * 
@@ -476,5 +431,47 @@ public class ParamSetServiceImpl {
 		}
 		return null;
 	}
-
+	/**
+	 * 
+	 * @param execParams
+	 * @param attributeId
+	 * @param ref
+	 * @return value
+	 * @throws JsonProcessingException
+	 */
+	public String getParamValue(ExecParams execParams,  
+									Integer attributeId, 
+									MetaIdentifier ref) throws JsonProcessingException {		
+		ParamSetHolder paramSetHolder = null;
+		if (execParams != null) {
+			paramSetHolder = execParams.getParamSetHolder();
+		}
+		
+		if (paramSetHolder == null) {
+			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
+				if (param.getParamId().equals(attributeId+"")) {
+					return param.getParamValue().getValue();
+				}
+			}
+		}
+		
+		ParamSet paramSet = (ParamSet) daoRegister.getRefObject(paramSetHolder.getRef());
+		ParamInfo paramInfo = paramSet.getParamInfo().get(Integer.parseInt(paramSetHolder.getParamSetId()));
+		for (ParamListHolder paramListHolder : paramInfo.getParamSetVal()) {
+			if (paramListHolder.getParamId().equals(attributeId.toString())) {
+				if (StringUtils.isNotBlank(paramListHolder.getValue())) {
+					return paramListHolder.getValue();
+				} else {
+					ParamList paramList = (ParamList)daoRegister.getRefObject(paramListHolder.getRef());
+					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
+						if (param.getParamId().equals(attributeId+"")) {
+							return param.getParamValue().getValue();
+						}
+					}
+				}
+			}
+		}
+		return "''";
+	}// End method	
 }

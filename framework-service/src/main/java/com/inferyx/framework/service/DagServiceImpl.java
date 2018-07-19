@@ -53,6 +53,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
@@ -452,21 +453,39 @@ public class DagServiceImpl {
 		List<DagExec> dagExecList = new ArrayList<>();
 		List<MetaIdentifierHolder> dagExecMetas = new ArrayList<>();
 
-		if (execParams != null && execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
-			for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-				execParams.setParamSetHolder(paramSetHolder);
-				// Create object
-				dagExec = createDAGExec(dag, execParams);
-				dagExec.setExecParams(execParams); // Set execParams in DAGExec
-				commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
-				//dagExecServiceImpl.save(dagExec);
-
-				// Parse to create SQL
-				dagExec = parseDagExec(dag, dagExec);
-
-				commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
-				//dagExecServiceImpl.save(dagExec);
-				dagExecList.add(dagExec);
+		if (execParams != null) {
+			if (execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
+				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
+					execParams.setParamSetHolder(paramSetHolder);
+					// Create object
+					dagExec = createDAGExec(dag, execParams);
+					dagExec.setExecParams(execParams); // Set execParams in DAGExec
+					commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
+					//dagExecServiceImpl.save(dagExec);
+	
+					// Parse to create SQL
+					dagExec = parseDagExec(dag, dagExec);
+	
+					commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
+					//dagExecServiceImpl.save(dagExec);
+					dagExecList.add(dagExec);
+				}
+			} else if (execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
+				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+					execParams.setParamListHolder(paramListHolder);
+					// Create object
+					dagExec = createDAGExec(dag, execParams);
+					dagExec.setExecParams(execParams); // Set execParams in DAGExec
+					commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
+					//dagExecServiceImpl.save(dagExec);
+	
+					// Parse to create SQL
+					dagExec = parseDagExec(dag, dagExec);
+	
+					commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
+					//dagExecServiceImpl.save(dagExec);
+					dagExecList.add(dagExec);
+				}
 			}
 		}
 
@@ -944,6 +963,20 @@ public class DagServiceImpl {
 					if (paramSetHolderList != null && !paramSetHolderList.isEmpty()) {
 						execParams.setParamInfo(paramSetHolders);
 						execParams.setParamSetHolder(paramSetHolders.get(0));
+					}
+				}
+				if (indvTask.getOperators().get(0).getOperatorParams() != null
+						&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramlist.toString())
+						&& execParams.getParamListHolder() == null) {
+					List<ParamListHolder> paramListHolderList = (List<ParamListHolder>) indvTask.getOperators().get(0).getOperatorParams().get(MetaType.paramlist.toString());
+					List<ParamListHolder> paramListHolders = new ArrayList<>();
+					ObjectMapper mapper = new ObjectMapper();
+					for(Object obj : paramListHolderList) {
+						paramListHolders.add(mapper.convertValue(obj, ParamListHolder.class));
+					}
+					if (paramListHolderList != null && !paramListHolderList.isEmpty()) {
+						execParams.setParamListInfo(paramListHolders);
+						execParams.setParamListHolder(paramListHolders.get(0));
 					}
 				}
 				operator.setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());

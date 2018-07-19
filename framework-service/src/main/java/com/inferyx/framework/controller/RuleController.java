@@ -90,9 +90,15 @@ public class RuleController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		RuleExec ruleExec = null;
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
-		if (execParams != null && execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
-			for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-				execParams.setParamSetHolder(paramSetHolder);
+		if (execParams != null) {
+			if (execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
+				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
+					execParams.setParamSetHolder(paramSetHolder);
+				}
+			} else if (execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
+				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+					execParams.setParamListHolder(paramListHolder);
+				}
 			}
 		} 
 		

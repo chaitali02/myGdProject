@@ -950,4 +950,12 @@ public class MetadataController {
 			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamListByAlgorithm(algoUuid, algoVersion, isHyperParam);
 	}
+	
+	@RequestMapping(value = "/getParamListChilds", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamListChilds(
+			@RequestParam(value = "uuid", required = false) String plUuid,
+			@RequestParam(value = "version", required = false) String plVersion,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListChilds(plUuid, plVersion);
+	}
 }
