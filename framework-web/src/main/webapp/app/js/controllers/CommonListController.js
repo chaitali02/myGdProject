@@ -698,6 +698,10 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.selectParamType=null;
       $scope.paramtable=null;
       $scope.isTabelShow=false;
+      $scope.paramTypes=null;
+      $scope.selectParamType=null;
+      $scope.isParamLsitTable=false;
+      setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },100);
       if($scope.select =='rule'){
         $scope.isParamListRquired=false;
       }else{
