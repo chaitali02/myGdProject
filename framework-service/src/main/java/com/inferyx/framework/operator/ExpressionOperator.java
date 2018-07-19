@@ -228,7 +228,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
 				operandValue.add(sourceAttr.getValue());
-			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && execParams.getParamSetHolder() != null) {
+			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getParamSetHolder() != null || execParams.getParamListHolder() != null)) {
 				String value = null;
 				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				operandValue.add(value);

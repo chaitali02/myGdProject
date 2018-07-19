@@ -1747,7 +1747,7 @@ public class MetadataServiceImpl {
 		if(execParams != null) {
 			if(execParams.getParamSetHolder() != null) {
 				return paramSetServiceImpl.getParamValue(execParams, attributeId, ref);
-			} else if(execParams.getParamSetHolder() != null) {
+			} else if(execParams.getParamListHolder() != null) {
 				return paramListServiceImpl.getParamValue(execParams, attributeId, ref);
 			} else {
 					ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
