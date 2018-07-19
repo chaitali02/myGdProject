@@ -3800,7 +3800,7 @@ public class CommonServiceImpl <T> {
 		
 	}
 
-	public List<ParamList> getAllLatestParamListByTemplate(String templateFlg, String parentPLUuid, String parentVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<ParamList> getAllLatestParamListByTemplate(String templateFlg, String parentPLUuid, String parentVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -3821,6 +3821,8 @@ public class CommonServiceImpl <T> {
 			query.addCriteria(Criteria.where("templateInfo.ref.uuid").is(parentPLUuid));
 		if(templateFlg != null)
 			query.addCriteria(Criteria.where("templateFlg").is(templateFlg));
+		if(paramListType != null)
+			query.addCriteria(Criteria.where("paramListType").is(paramListType));
 		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(getApp().getUuid()));
 		
 		List<ParamList> paramLists = mongoTemplate.find(query, ParamList.class);

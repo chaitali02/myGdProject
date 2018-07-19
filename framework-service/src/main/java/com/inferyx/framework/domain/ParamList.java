@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="paramlist")
 public class ParamList extends BaseEntity{
 	List<Param> params;
-	String paramListType; 
+	MetaType paramListType; 
     private String templateFlg = "N";
     private MetaIdentifierHolder templateInfo;
     
@@ -57,11 +57,11 @@ public class ParamList extends BaseEntity{
 		this.templateFlg = templateFlg;
 	}
 
-	public String getParamListType() {
+	public MetaType getParamListType() {
 		return paramListType;
 	}
 
-	public void setParamListType(String paramListType) {
+	public void setParamListType(MetaType paramListType) {
 		this.paramListType = paramListType;
 	}
 
