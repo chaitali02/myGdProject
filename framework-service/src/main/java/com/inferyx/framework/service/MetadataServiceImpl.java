@@ -1536,7 +1536,7 @@ public class MetadataServiceImpl {
 		plHolderList.add(plHolder);
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
 		if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
-			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion());
+			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), MetaType.model);
 			plHolderList.addAll(persistPLTemplateChilds(childs));
 		}
 		
@@ -1694,7 +1694,7 @@ public class MetadataServiceImpl {
 		return paramListHolderList;
 	}
 
-	public List<ParamListHolder> getParamListByRule(String ruleUuid, String ruleVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<ParamListHolder> getParamListByRule(String ruleUuid, String ruleVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.rule.toString());
 
 		List<ParamListHolder> plHolderList = new ArrayList<>();
@@ -1705,7 +1705,7 @@ public class MetadataServiceImpl {
 			plHolderList.add(plHolder);
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
 			if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
-				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion());
+				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), paramListType);
 				plHolderList.addAll(persistPLTemplateChilds(childs));
 			}
 		}
@@ -1728,7 +1728,7 @@ public class MetadataServiceImpl {
 		plHolderList.add(plHolder);
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
 		if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
-			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion());
+			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), MetaType.model);
 			plHolderList.addAll(persistPLTemplateChilds(childs));
 		}
 		
@@ -1764,7 +1764,7 @@ public class MetadataServiceImpl {
 	public List<ParamListHolder> getParamListChilds(String plUuid, String plVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		List<ParamListHolder> plHolderList = new ArrayList<>();				
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plUuid, plVersion, MetaType.paramlist.toString());
-		List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion());
+		List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), null);
 		plHolderList.addAll(persistPLTemplateChilds(childs));
 				
 		return plHolderList;

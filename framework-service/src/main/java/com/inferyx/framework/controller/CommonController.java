@@ -350,8 +350,9 @@ public class CommonController<T> {
 	
 	@RequestMapping(value = "/getAllLatestParamListByTemplate", method = RequestMethod.GET)
 	public List<ParamList> getAllLatestParamListByTemplate(@RequestParam(value = "type", required = false) String type,
-															@RequestParam(value = "action", required = false) String action,
-															@RequestParam(value = "templateFlg") String templateFlg) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
-		return commonServiceImpl.getAllLatestParamListByTemplate(templateFlg, null, null);
+														   @RequestParam(value = "action", required = false) String action,
+														   @RequestParam(value = "templateFlg") String templateFlg,
+														   @RequestParam(value = "paramListType") MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		return commonServiceImpl.getAllLatestParamListByTemplate(templateFlg, null, null, paramListType);
 	}
 }
