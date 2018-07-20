@@ -50,6 +50,18 @@
 			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a83"
 		}
 	},
+	 "paramListWoH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a83"
+        }
+    },
+    "paramListWH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "7b894ae4-e9c4-46f1-ad8e-431beee90032"
+        }
+    },
   	"savePmml" : "N",
 	"summaryMethods" : [  
 		"coefficients",

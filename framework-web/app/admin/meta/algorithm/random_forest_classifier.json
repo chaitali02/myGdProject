@@ -58,6 +58,18 @@
     },
     "value": null
   },
+	 "paramListWoH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "2b6f8552-f5ce-428b-b7eb-32b05a589729"
+        }
+    },
+    "paramListWH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "a82581f7-3818-40bb-a98d-3b518b755e0b"
+        }
+    },
   "savePmml" : "Y",
 	"summaryMethods" : [  
 		"featureImportances",

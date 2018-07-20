@@ -1,16 +1,6 @@
 {
 	"params": [
-		{
-			"paramId": 0,
-			"paramName": "labelCol",
-			"paramType": "string",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "label"
-			    }
-		},
+		
 		{
 			"paramId": 1,
 			"paramName": "maxIter",
@@ -20,28 +10,6 @@
 				    "type" : "simple"
 				},
 				"value" : "10"
-			    }
-					},
-		{
-			"paramId": 2,
-			"paramName": "predictionCol",
-			"paramType": "String",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "Col1"
-			    }
-		},
-		{
-			"paramId": 3,
-			"paramName": "featuresCol",
-			"paramType": "string",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "Col2"
 			    }
 		},
 		{
@@ -58,7 +26,7 @@
 	],
 	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a83",
 	"version": "1495146809",
-	"name": "paramlist_aft-survival_regression",
+	"name": "paramlist_aft-survival_regression_WoH",
 	"desc": "AFTSurvivalRegression Param List",
 	"createdBy": {
 		"ref": {
@@ -74,6 +42,8 @@
 	"active": "Y",
 	"published": "N",
     "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
 	"appInfo": [
 			{
             "ref" : {

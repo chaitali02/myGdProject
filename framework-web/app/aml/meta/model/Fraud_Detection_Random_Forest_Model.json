@@ -1,15 +1,15 @@
 {
-  "uuid": "9e557aba-be17-4e77-96f8-41644cad6245",
-  "version": "1531208312",
-  "name": "Fraud Detection Decision Tree Model with Hyper Params",
-  "desc": "Decision Tree Model for detection fraudulent transactions with Hyper Params.",
+  "uuid": "f862f4aa-476b-4898-9360-b7a5c5e1a785",
+  "version": "1531220147",
+  "name": "Fraud Detection Random Forest Model",
+  "desc": "Random Forest Model for detection fraudulent transactions with Hyper Params.",
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Tue Jul 10 13:08:32 IST 2018",
+  "createdOn": "Tue Jul 10 16:25:47 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -25,7 +25,7 @@
   "dependsOn": {
     "ref": {
       "type": "algorithm",
-      "uuid": "896c59e6-0026-4059-92fa-03f13898632f"
+      "uuid": "27350544-dd58-4d22-a14f-5789ca9c55ca"
     }
   },
   "label": "fraud_indicator",
