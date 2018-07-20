@@ -1,8 +1,8 @@
 {
-  "uuid": "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
-  "version": "1520009572",
-  "name": "paramlist_linear_svm_classifier",
-  "desc": "LinearSupportVectorMachine Param List",
+  "uuid": "2b6f8552-f5ce-428b-b7eb-32b05a589729",
+  "version": "1519980881",
+  "name": "paramlist_randomforest_classifier_WoH",
+  "desc": "RandomForestClassifier Param LIst",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -16,6 +16,8 @@
   "active": "Y",
   "published": "N",
   "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
   "appInfo": [
     	{
             "ref" : {
@@ -46,7 +48,7 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "maxIter",
+      "paramName": "maxBins",
       "paramType": "integer",
       "paramValue": {
         "ref" : {
@@ -57,35 +59,25 @@
     },
     {
       "paramId": "1",
-      "paramName": "regParam",
-      "paramType": "double",
+      "paramName": "maxDepth",
+      "paramType": "integer",
       "paramValue": {
         "ref" : {
             "type" : "simple"
         },
-	"value" : "1.0"
+	"value" : "10"
     }
     },
+    
     {
-      "paramId": "2",
-      "paramName": "predictionCol",
-      "paramType": "string",
+      "paramId": "4",
+      "paramName": "maxMemoryInMB",
+      "paramType": "integer",
       "paramValue": {
         "ref" : {
             "type" : "simple"
         },
-	"value" : "Col1"
-    }
-    },
-    {
-      "paramId": "3",
-      "paramName": "featuresCol",
-      "paramType": "string",
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "Col2"
+	"value" : "100"
     }
     }
   ]

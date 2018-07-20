@@ -237,11 +237,11 @@
                   </div>
               </div>
               <div class="form-group">
-                <label class="col-md-3 control-label">Default Param List (HP)
+                <label class="col-md-3 control-label">Param List (Hyper Param)
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <select class="form-control"  select2name="paramlistWH" ng-disabled="{{mode}}" data-ng-model="selectParamlistWithHyper" ng-options="r as r.name for r in allParamList | orderBy:'name' track by r.uuid ">
+                  <select class="form-control"  select2 name="paramlistWH" ng-disabled="{{mode}}" data-ng-model="selectParamlistWithHyper" ng-options="r as r.name for r in allParamList | orderBy:'name' track by r.uuid ">
                   </select>
                   <input type="hidden" name="paramlistWH" data-ng-model="selectParamlistWithHyper.uuid" ng-required="true">
                 </div>
