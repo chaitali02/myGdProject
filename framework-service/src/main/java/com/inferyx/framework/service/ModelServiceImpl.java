@@ -1434,7 +1434,7 @@ public class ModelServiceImpl {
 		return trainExec;
 	}
 	
-	public TrainExec train(Train train, Model model, TrainExec  trainExec, ExecParams execParams, ParamMap paramMap, RunMode runMode) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException{
+	public TrainExec train(Train train, Model model, TrainExec  trainExec, ExecParams execParams, ParamMap paramMap, RunMode runMode, Object algoClass) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException{
 		
 		if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
 			commonServiceImpl.sendResponse("400", MessageStatus.FAIL.toString(), "Training can not be performed on formula.");
@@ -1477,6 +1477,7 @@ public class ModelServiceImpl {
 		runModelServiceImpl.setName(MetaType.trainExec+"_"+trainExec.getUuid()+"_"+trainExec.getVersion());
 		runModelServiceImpl.setExecType(MetaType.trainExec);
 		runModelServiceImpl.setMetadataServiceImpl(metadataServiceImpl);
+		runModelServiceImpl.setAlgoclass(algoClass);
 		/*FutureTask<TaskHolder> futureTask = new FutureTask<TaskHolder>(runModelServiceImpl);
 		metaExecutor.execute(futureTask);
 		taskList.add(futureTask);
@@ -2367,20 +2368,29 @@ public class ModelServiceImpl {
 			List<ParamMap> paramMapList = new ArrayList<>();
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());			
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+			Algorithm algorithm= null;
+			if (model.getDependsOn().getRef().getVersion() != null)
+				algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
+			else 
+				algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
+				
+			String algoClassName = algorithm.getTrainClass();
+			Object algoClass = Class.forName(algoClassName).newInstance();
+			
 			if (train.getUseHyperParams().equalsIgnoreCase("N") 
 					&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion());
+				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(),algoClass);
 			}
 			if (paramMapList.size() > 0) {
 				for (ParamMap paramMap : paramMapList) {
 					trainExec = create(train, model, execParams, paramMap, trainExec);
 					Thread.sleep(1000); // Should be parameterized in a class
-					train(train, model, trainExec, execParams, paramMap, runMode);
+					train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
 				}
 			} else {
 				trainExec = create(train, model, execParams, null, trainExec);
-				train(train, model, trainExec, execParams, null, runMode);
+				train(train, model, trainExec, execParams, null, runMode,algoClass);
 			}
 			return true;
 		} catch (Exception e) {

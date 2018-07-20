@@ -392,7 +392,8 @@ public class ParamSetServiceImpl {
 	}	
 	
 	public ParamMap getParamMapCombined(ExecParams execParams, String trainUuid, String trainVersion) throws Exception {
-		List<ParamMap> paramMapList = metadataServiceImpl.getParamMap(execParams, trainUuid, trainVersion);
+		Object paramMapList1 = null;
+		List<ParamMap> paramMapList = metadataServiceImpl.getParamMap(execParams, trainUuid, trainVersion, paramMapList1);
 		ParamMap paramMapCombined = null;
 		int i=0;
 		if(null != paramMapList){

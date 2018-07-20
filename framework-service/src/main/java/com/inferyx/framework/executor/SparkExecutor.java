@@ -1673,7 +1673,7 @@ public class SparkExecutor<T> implements IExecutor {
 
 	@SuppressWarnings("unused")
 	@Override
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass ) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
@@ -1715,7 +1715,7 @@ public class SparkExecutor<T> implements IExecutor {
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
 			
-			ParamMap paramMap2 = new ParamMap();
+			/*ParamMap paramMap2 = new ParamMap();
 			for(ParamPair<?> paramPair : paramMap.toList()) {
 				Param<?> param = paramPair.param();
 				for(Param<?> param2 : (Param<?>[]) obj.getClass().getMethod("params").invoke(obj)) {
@@ -1734,12 +1734,12 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 			}
 			System.out.println(paramMap2.toList().get(0).param().parent());
-			
+			*/
 			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj});
 			try {
 				PipelineModel trngModel = null;
-				if (null != paramMap2)
-					trngModel = pipeline.fit(trainingDf, paramMap2);
+				if (null != paramMap)
+					trngModel = pipeline.fit(trainingDf, paramMap);
 				else
 					trngModel = pipeline.fit(trainingDf);
 				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);

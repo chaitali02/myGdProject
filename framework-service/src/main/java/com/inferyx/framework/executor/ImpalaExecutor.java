@@ -307,7 +307,7 @@ public class ImpalaExecutor implements IExecutor {
 	}
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
