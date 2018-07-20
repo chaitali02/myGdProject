@@ -1486,7 +1486,7 @@ public class ModelServiceImpl {
 		return trainExec;
 	}
 	
-public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVersion, HttpServletResponse response,RunMode runMode) throws Exception {
+	public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVersion, HttpServletResponse response,RunMode runMode) throws Exception {
 
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion,
 				MetaType.trainExec.toString());
@@ -2357,10 +2357,35 @@ public HttpServletResponse downloadLog(String trainExecUuid, String trainExecVer
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.");
 			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
-		}
-		
-		
+		}		
 
 		return isSuccess;
+	}
+		
+	public boolean configureTrain(String trainUuid, String trainVersion, TrainExec trainExec, ExecParams execParams, RunMode runMode) throws Exception {
+		try {
+			List<ParamMap> paramMapList = new ArrayList<>();
+			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());			
+			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+			if (train.getUseHyperParams().equalsIgnoreCase("N") 
+					&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
+					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion());
+			}
+			if (paramMapList.size() > 0) {
+				for (ParamMap paramMap : paramMapList) {
+					trainExec = create(train, model, execParams, paramMap, trainExec);
+					Thread.sleep(1000); // Should be parameterized in a class
+					train(train, model, trainExec, execParams, paramMap, runMode);
+				}
+			} else {
+				trainExec = create(train, model, execParams, null, trainExec);
+				train(train, model, trainExec, execParams, null, runMode);
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 }
