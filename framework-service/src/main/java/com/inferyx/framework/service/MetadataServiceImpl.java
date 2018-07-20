@@ -1650,16 +1650,10 @@ public class MetadataServiceImpl {
 	}
 	
 	public ParamPair<?> getParamPair(String algoClassName, Object algoClass2, String paramName, String paramType, String paramValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+								
+		Method method = algoClass2.getClass().getMethod(paramName);
+		Object obj = method.invoke(algoClass2);
 		
-		
-		
-		
-		
-
-		Class<?> dynamicClass = Class.forName(algoClassName);						
-		Method method = dynamicClass.getMethod(paramName);
-		Object obj = method.invoke(dynamicClass.newInstance());
-	
 		if(paramType.equalsIgnoreCase("integer")){
 			Class<?>[] param = new Class[1];
 			param[0] = int.class;

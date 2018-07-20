@@ -1673,7 +1673,7 @@ public class SparkExecutor<T> implements IExecutor {
 
 	@SuppressWarnings("unused")
 	@Override
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass ) throws IOException {
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass ) throws IOException {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
@@ -1692,8 +1692,8 @@ public class SparkExecutor<T> implements IExecutor {
 			@SuppressWarnings("unused")
 			String labelColName = (trainName.contains("classification")) ? "indexedLabel" : "label";
 			
-			Class<?> dynamicClass = Class.forName(trainName);
-			Object obj = dynamicClass.newInstance();
+			/*Class<?> dynamicClass = Class.forName(trainName);
+			Object obj = dynamicClass.newInstance();*/
 			Method method = null;
 			if (trainName.contains("LinearRegression")
 					|| trainName.contains("LogisticRegression")
@@ -1702,8 +1702,8 @@ public class SparkExecutor<T> implements IExecutor {
 					|| trainName.contains("AFTSurvivalRegression")
 					|| trainName.contains("DecisionTree")
 					|| trainName.contains("NaiveBayes")) {
-				method = dynamicClass.getMethod("setLabelCol", String.class);
-				method.invoke(obj, "label");
+				method = algoClass.getClass().getMethod("setLabelCol", String.class);
+				method.invoke(algoClass, "label");
 				
 				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
 				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
@@ -1712,16 +1712,16 @@ public class SparkExecutor<T> implements IExecutor {
 				validateDf = valDf;
 			}
 
-			method = dynamicClass.getMethod("setFeaturesCol", String.class);
-			method.invoke(obj, "features");
+			method = algoClass.getClass().getMethod("setFeaturesCol", String.class);
+			method.invoke(algoClass, "features");
 			
-			/*ParamMap paramMap2 = new ParamMap();
+		/*	ParamMap paramMap2 = new ParamMap();
 			for(ParamPair<?> paramPair : paramMap.toList()) {
 				Param<?> param = paramPair.param();
-				for(Param<?> param2 : (Param<?>[]) obj.getClass().getMethod("params").invoke(obj)) {
+				for(Param<?> param2 : (Param<?>[]) algoClass.getClass().getMethod("params").invoke(algoClass)) {
 					if(param.name().equalsIgnoreCase(param2.name())) {
-						Method method2 = obj.getClass().getMethod(param.name());
-						Object obj2 = method2.invoke(obj);
+						Method method2 = algoClass.getClass().getMethod(param.name());
+						Object obj2 = method2.invoke(algoClass);
 						Class<?>[] param3 = new Class[1];
 						param3[0] = int.class;
 						Method method1 = obj2.getClass().getMethod("w", param3);						
@@ -1729,13 +1729,13 @@ public class SparkExecutor<T> implements IExecutor {
 						System.out.println("metadata: "+param.name()+"    spark: "+param2.name());
 						System.out.println("metadata: "+param.parent()+"    spark: "+param2.parent());
 						System.out.println("metadata: "+param.doc()+"    spark: "+param2.doc());
-						System.out.println(obj.getClass().getMethod("uid").invoke(obj));
+						System.out.println(algoClass.getClass().getMethod("uid").invoke(algoClass));
 					}
 				}
 			}
-			System.out.println(paramMap2.toList().get(0).param().parent());
-			*/
-			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj});
+			System.out.println(paramMap2.toList().get(0).param().parent());*/
+			
+			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
 			try {
 				PipelineModel trngModel = null;
 				if (null != paramMap)
@@ -1753,10 +1753,8 @@ public class SparkExecutor<T> implements IExecutor {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}			
-		} catch (ClassNotFoundException
-				| IllegalAccessException 
-				| IllegalArgumentException 
-				| InstantiationException 
+		} catch (IllegalAccessException 
+				| IllegalArgumentException
 				| SecurityException
 				| NoSuchMethodException
 				| InvocationTargetException e) {

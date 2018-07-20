@@ -704,7 +704,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			
 				if(train.getUseHyperParams().equalsIgnoreCase("N")) {
 					//Without hypertuning
-					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid,algoclass);
+					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass);
 				} else {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
