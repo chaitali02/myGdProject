@@ -35,15 +35,13 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
-import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
-import org.apache.spark.ml.clustering.KMeansSummary;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
-import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
 import org.apache.spark.ml.evaluation.RegressionEvaluator;
@@ -59,11 +57,11 @@ import org.apache.spark.ml.param.IntParam;
 import org.apache.spark.ml.param.LongParam;
 import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
-import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.ml.tuning.ParamGridBuilder;
 import org.apache.spark.rdd.RDD;
+import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
@@ -233,7 +231,19 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		return resultSetHolder;
 	}
-
+	
+	/**
+	 * 
+	 * @param rowRDD
+	 * @param schema
+	 * @param tableName
+	 * @throws AnalysisException
+	 */
+	public void createAndRegisterDataset(JavaRDD<Row> rowRDD, StructType schema, String tableName) throws AnalysisException {
+		Dataset<Row> dataset = sparkSession.createDataFrame(rowRDD, schema);
+		dataset.createGlobalTempView(tableName);
+	}
+	
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
 		return executeSql(sql, null);
@@ -2114,7 +2124,7 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(trainName.contains("classification") || trainName.contains("Classifier")) {
 			return new BinaryClassificationEvaluator() ;
 		} else if(trainName.contains("clustering")) {
-			return new ClusteringEvaluator();
+			//return new ClusteringEvaluator();
 		}
 		return null;		
 	}
@@ -2321,7 +2331,7 @@ public class SparkExecutor<T> implements IExecutor {
 					Object result = model.getClass().getMethod(method.trim()).invoke(model);
 
 					if(method.equalsIgnoreCase("summary")) {
-						outPutMap = getSummaryFromSummaryMethod(outPutMap, result);
+//						outPutMap = getSummaryFromSummaryMethod(outPutMap, result);
 					}
 					
 					String key = method.toLowerCase();
@@ -2342,7 +2352,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return outPutMap;
 	}
 
-	private Map<String, Object> linearRegressionSummay(Map<String, Object> outPutMap, Object result) throws JsonProcessingException {
+	/*private Map<String, Object> linearRegressionSummay(Map<String, Object> outPutMap, Object result) throws JsonProcessingException {
 		
 		LinearRegressionTrainingSummary summary = (LinearRegressionTrainingSummary) result;
 //		double[] coefficientStandardErrors = summary.coefficientStandardErrors();
@@ -2469,4 +2479,4 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		return outPutMap;
 	}
-}
+*/}
