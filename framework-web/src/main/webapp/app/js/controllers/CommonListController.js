@@ -643,7 +643,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         var execParams = {}
         var ref = {}
         ref.uuid = $scope.paramsetdata.uuid;
-        ref.type = "paramlsit";
+        ref.type = "paramset";
         ref.version = $scope.paramsetdata.version;
         for (var i = 0; i < $scope.newDataList.length; i++) {
           var paraminfo = {};

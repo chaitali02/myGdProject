@@ -489,90 +489,98 @@
   </div>
 </div>
 
-<!-- <div id="executeParamList" class="modal fade bs-modal-lg in"   style="display: none;">
-      <div class="modal-dialog">
-        <div class="modal-content" style="resize: both;overflow: auto;">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-            <h4 class="modal-title">Run Params </h4>
-          </div>
-          <form class="form-horizontal" name="myform3" id="submit_formParamList" ng-submit="executeWithExecParamList()" novalidate="novalidate">
-          <div class="modal-body">
-            <div class="slimScrollDiv" style="max-height:300px;position: relative; overflow-y: auto !important; width: auto;">
-              <div class="scroller" style="max-height: 300px; width: auto;  overflow-y: auto !important;" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-                <div class="row">
-                  <div class="col-md-12">
-
-                    <div  style="overflow-x: auto;">
-                      <table class=" row-border hover table  table-striped table-bordered">
-                        <thead>
-                          <tr>
-                          
-                            <th style="width:6%;text-align:center">ID</th>
-                            <th class="text-center">Param Name</th>
-                            <th class="text-center">Type</th>
-                            <th class="text-center">Param Value</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                         
-                          <tr ng-repeat="listHolder in paramListHolder">
-                            
-                            <td style="width:6%;">
-                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <input type="text" ng-model="$index" ng-disabled="true" class="form-control"></span>
-                            </td>
-                            <td style="width:15%;">
-                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <input type="text" ng-model="listHolder.paramName" ng-disabled="true" class="form-control">
-                                </span>
-                            </td>
-                            <td  style="width:15%;">
-                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                <select class="form-control" ng-disabled="listHolder.isParamType =='simple'" ng-init="getAllLatest(listHolder.selectedParamValueType,$index)" ng-change="onChangeParamValueType(listHolder.selectedParamValueType,$index)" data-ng-model="listHolder.selectedParamValueType" ng-options="r for r in paramValueTypes"
-                                  required="">
-                                </select>
-                              </span>
-                            </td>
-                            <td style="width:25%;">
-                              <div ng-if="listHolder.isParamType =='simple'">
-                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <input ng-if="listHolder.paramType !='integer'" type="text" ng-model="listHolder.paramValue"  class="form-control" required disable-validation-message="">
-                                  <input ng-if="listHolder.paramType =='integer'" type="text " ng-model="listHolder.paramValue"   class="form-control" required disable-validation-message=""s>
-                                </span>
-                                </div>
-                              <div ng-if="listHolder.selectedParamValueType =='datapod'">
-                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select  select2 class="form-control"  name ="paramValue{{$index}}"    data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allDatapod track by r.uuid"  required  disable-validation-message="">
-                                      </select >
-                                      <input name ="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required  disable-validation-message=""/>
-                                  </span>
-                              </div>
-                              <div ng-if="listHolder.selectedParamValueType =='relation'">
-                                  <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <select  select2 class="form-control"  name ="paramValue{{$index}}"    data-ng-model="listHolder.selectedParamValue" ng-options="r as r.name for r in allRelation track by r.uuid"  required  disable-validation-message="">
-                                    </select >
-                                    <input name ="paramValue{{$index}}" type="hidden" ng-model="listHolder.selectedParamValue.uuid" required  disable-validation-message=""/>
-                                  </span>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                 
-                  </div>
+<div id="viewResultModel" class="modal fade bs-modal-lg in" style="display: none;">
+  <div class="modal-dialog" style="width:60%;">
+    <div class="modal-content" style="resize: both;overflow: auto;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Operators</h4>
+      </div>
+      <form class="form-horizontal" name="viewResultFrom"  novalidate="novalidate">
+      <div class="modal-body">
+        <div class="slimScrollDiv" style="max-height:300px;position: relative; overflow-y: auto !important; width: auto;">
+          <div class="scroller" style="max-height: 300px; width: auto;  overflow-y: auto !important;" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+            <div class="row">
+              <div class="col-md-12">
+                <div style="overflow-x: auto;">
+                  <table class=" row-border hover table  table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="width:6%;text-align:center"></th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">ParamSet Name</th>
+                        <th class="text-center">ParamSet Id</th>
+                        <th class="text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="tabaldata in taskOnOperator">
+                        <td> <span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="radio"  class="form-control" ng-model="tabaldata.selected" name="operator" ng-change="onChangeOperator($index)" style="height:18px;"></span></td>
+                        <td><input name="paramSetId" class="form-control" type="text" ng-disabled="true" title="{{tabaldata.name}}" ng-model="tabaldata.name"></td>
+                        <td><input name="paramSetId" class="form-control" type="text" ng-disabled="true" title="{{tabaldata.paramSetName}}" ng-model="tabaldata.paramSetName"></td>
+                        <td><input name="paramSetId" class="form-control" type="text" ng-disabled="true" title="{{tabaldata.paramSetId}}" ng-model="tabaldata.paramSetId"/></td>
+                        <td><input type="button" class="btn btn-success" value="Result" name="submit" ng-click="operatorResult(tabaldata.param)"></td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
+              
               </div>
             </div>
+  
+            <div class="row" >
+                <div class="col-md-12">
+                  <div class=" form-group row modal-header">
+                    <h4 class="modal-title">Run Params</h4>
+                  </div>
+                  <br>
+                  <div style="overflow-x: auto;" ng-if="isExecParamsetTable">
+                    <table class=" row-border hover table  table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th style="text-align:center;Vertical-align: middle;width:5%;">
+                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                              <input style="width:16px;height:16px;" type="checkbox" ng-disabled="true" ng-model="$parent.selectallattribute" ng-change="selectAllRow()"
+                              />
+                            </span>
+                          </th>
+                          <th class="text-center"> ID </th>
+                          <th class="text-center" ng-repeat="tablecol in execParamParamsetCol"> {{tablecol.paramName}} </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="tabledata in execParamParamset">
+                          <td style="text-align:center;Vertical-align:middle;width:5%;">
+                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                              <input style="width:16px;height:16px;" type="checkbox"  ng-disabled="true" ng-model="tabledata.selected" />
+                            </span>
+                          </td>
+                          <td>
+                            <input style="width:50px" type="text" ng-model="tabledata.paramSetId" ng-disabled="true" class="form-control">
+                          </td>
+                          <td ng-repeat="tablecol in tabledata.paramSetVal">
+                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                              <input style="width:{{paramtablecol.length}} < 3?0:{{paramtablecol[$index].paramName.split('').length + 100}}px" type="text"
+                                ng-model="tablecol.value" ng-disabled="true" class="form-control">
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                
+                </div>
+              </div>
+            
           </div>
-          <div class="modal-footer">
-            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-            <button type="submit"  class="btn green">Submit</button>
-          </div>
-        </form>
         </div>
       </div>
+      <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+      </div>
+    </form>
     </div>
+  </div>
+</div>
 
-   -->
+  
