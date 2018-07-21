@@ -837,10 +837,12 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
             
          d3.selectAll('#showgrouppaper .joint-element .body')
            .on('contextmenu', function(){
+             
              d3.event.preventDefault();
              d3.event.stopPropagation();
              var vm = this;
              var id = vm.getAttribute("element-id");
+            
              var cell = graph.getCell(id);
              if(!cell){
                return false
@@ -1155,9 +1157,47 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      $scope.closeResultDiv = function () {
        $scope.showResults = false;
      }
+     $scope.operatorResult=function(param){
+      $('#viewResultModel').modal("hide");
+      showResult(param)
+     }
      
+     $scope.onChangeOperator=function(index){
+      $scope.isExecParamsetTable=false;
+      CommonService.getOneByUuidAndVersion($scope.taskOnOperator[index].paramSetUuid,"","paramset").then(function(response){ 
+        var paramInfoArray=[];
+        $scope.isExecParamsetTable=true;
+        var result=response.data
+        if(response !=null) {
+          for (var i=0; i < result.paramInfo.length; i++) {
+            var paramInfo = {};
+            paramInfo.paramSetId=result.paramInfo[i].paramSetId;
+            if($scope.taskOnOperator[index].paramSetId == result.paramInfo[i].paramSetId){
+              paramInfo.selected=true;
+            }
+            var paramSetValarray = [];
+            for (var j = 0; j < result.paramInfo[i].paramSetVal.length; j++) {
+              var paramSetValjson = {};
+              paramSetValjson.paramId = result.paramInfo[i].paramSetVal[j].paramId;
+              paramSetValjson.paramName = result.paramInfo[i].paramSetVal[j].paramName;
+              paramSetValjson.value = result.paramInfo[i].paramSetVal[j].value;
+              paramSetValjson.ref = result.paramInfo[i].paramSetVal[j].ref;
+              paramSetValarray[j] = paramSetValjson;
+              paramInfo.paramSetVal = paramSetValarray;
+              paramInfo.value = result.paramInfo[i].paramSetVal[j].value;
+            }
+            paramInfoArray[i] = paramInfo;
+          }
+          $scope.execParamParamsetCol = paramInfoArray[0].paramSetVal;
+          $scope.execParamParamset = paramInfoArray;
+         
+        }
+      });
+     }
+
      window.showResult = function(params){
        $scope.lastParams = params;
+       $scope.isExecParamsetTable=false;
        App.scrollTop();
        if(params.type.slice(-5).toLowerCase() == 'group'){
          $scope.showGroupGraph = true;
@@ -1165,14 +1205,46 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $scope.lastGroupParams = params;
          $scope.$broadcast('generateGroupGraph',params);
        }
-       else {
-         $scope.lastResultsParams = params;
-         $scope.showResults = true;
-         setTimeout(function () {
-           $scope.$broadcast('generateResults',params);
-           $scope.$emit('resultExecChanged',params.name)
-         }, 100);
-       }
+       else{
+        console.log(params);
+        $scope.taskOnOperator=[];
+        if(params.operator && params.operator.length >1){
+          for(var i=0;i<params.operator.length;i++){
+            var taskOperators={};
+            var paramObj={};
+            paramObj.elementType=params.elementType;
+            paramObj.id=params.id;
+            paramObj.name=params.name;
+            paramObj.parentStage=params.parentStage;
+            paramObj.ref=params.ref;
+            paramObj.taskId=params.taskId;
+            paramObj.type=params.type;
+            paramObj.typeLabel=params.typeLabel;
+            paramObj.version=params.version;
+            taskOperators.param=paramObj;
+         //   taskOperators.param.operator=null;
+            taskOperators.uuid=params.operator[i].operatorInfo.ref.uuid;
+            taskOperators.version=params.operator[i].operatorInfo.ref.version;
+            taskOperators.name=params.operator[i].operatorInfo.ref.name;
+            taskOperators.selected=false
+            taskOperators.paramSetId=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].paramSetId;
+            taskOperators.paramSetUuid=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.uuid;
+            taskOperators.paramSetName=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.name;
+            $scope.taskOnOperator[i]=taskOperators;
+          }
+          $('#viewResultModel').modal({
+            backdrop: 'static',
+            keyboard: false
+          });
+        }else{
+          $scope.lastResultsParams = params;
+          $scope.showResults = true;
+          setTimeout(function () {
+            $scope.$broadcast('generateResults',params);
+            $scope.$emit('resultExecChanged',params.name)
+          }, 100);
+        }
+      }
      }
      
      window.setStatus = function(params,status){
@@ -1598,7 +1670,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $('#paper svg').addClass('view-mode');
          d3.selectAll('.joint-element .body')
          .on('contextmenu', function(){
-          
            d3.event.preventDefault();
            d3.event.stopPropagation();
            var vm = this;
@@ -1647,6 +1718,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            } 
            var ref = cell.attributes['model-data'].operators[0].operatorInfo.ref;
            var type = ref.type;
+           var operator=cell.attributes['model-data'].operators;
            if(type.slice(-4) == 'Exec'){
              if(type.slice(-9) == 'groupExec'){
                var isGroupExec = true;
@@ -1702,8 +1774,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                recon : {name:'recon', label: 'Recon'},
                recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
              }
-
-             var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId};
+          
+             var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId,operator:operator};
              var url=$location.absUrl().split("app")[0];
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};

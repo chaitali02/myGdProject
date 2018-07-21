@@ -172,6 +172,7 @@ import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
+import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.StageExec;
@@ -1665,7 +1666,9 @@ public class CommonServiceImpl <T> {
 					
 					resolveName(invokedObj, type);
 				}
-			}catch (NullPointerException | NoSuchMethodException e) {
+			} catch (NullPointerException | NoSuchMethodException e) {
+				//e.printStackTrace();
+			} catch (Exception e) {
 				//e.printStackTrace();
 			}
 			return object;
@@ -1682,7 +1685,7 @@ public class CommonServiceImpl <T> {
 	 */
 	private ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
 				List<ParamListHolder> paramListInfo= execParams.getParamListInfo();
-				
+				List<ParamSetHolder> paramSetHolder= execParams.getParamInfo();
 				if(paramListInfo != null)
 					for(ParamListHolder holder : paramListInfo) {
 						MetaIdentifier ref = holder.getRef();
@@ -1732,7 +1735,17 @@ public class CommonServiceImpl <T> {
 								}
 							}
 						}
-					}				
+					}
+				if(paramSetHolder !=null) {
+					for(ParamSetHolder holder : paramSetHolder) {
+						MetaIdentifier ref = holder.getRef();
+						if(ref != null) {
+							ParamSet paramSet = (ParamSet) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							ref.setName(paramSet.getName());
+							holder.setRef(ref);
+						}
+					}
+				}
 		return execParams;
 	}
 
