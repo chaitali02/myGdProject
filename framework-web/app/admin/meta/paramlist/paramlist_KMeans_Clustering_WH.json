@@ -13,8 +13,13 @@
   "tags": [],
   "active": "Y",
   "published": "N",
+<<<<<<< HEAD:framework-web/app/admin/meta/paramlist/paramlist_KMeans_Clustering_WH.json
   "appInfo": [
 			{
+=======
+ "appInfo": [
+		{
+>>>>>>> master:framework-web/app/admin/meta/paramlist/paramlist_KMeans_Clustering_with_Hyper_Params.json
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"

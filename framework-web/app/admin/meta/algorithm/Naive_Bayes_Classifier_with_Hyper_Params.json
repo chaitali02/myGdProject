@@ -1,18 +1,15 @@
 {
-  "uuid": "4e0d5928-39c7-4e0c-aa98-0d32ad2c1518",
-  "version": "1519980439",
-  "name": "Naive Bayes Classifier",
-  "desc": "Naive Bayes Classifier Algorithm",
+  "uuid": "698d5a9f-d172-40ab-b890-893b483dbed2",
+  "version": "1530959425",
+  "name": "Naive Bayes Classifier with Hyper Params",
+  "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
   },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+  "createdOn": "Sat Jul 07 16:00:25 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -52,25 +49,10 @@
   "paramList": {
     "ref": {
       "type": "paramlist",
-      "uuid": "e3dd3eaf-4420-49c0-a36c-46f76b455a1a",
-      "version": null,
-      "name": "paramlist_naivebayes_classifier"
-    },
-    "value": null
+      "uuid": "45f293c8-ea4b-482c-838e-69ed4b19bc9a"
+    }
   },
-	 "paramListWoH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "e3dd3eaf-4420-49c0-a36c-46f76b455a1a"
-        }
-    },
-    "paramListWH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "45f293c8-ea4b-482c-838e-69ed4b19bc9a"
-        }
-    },
-  "savePmml" : "N",
+  "savePmml": "Y",
 	"summaryMethods" : [  
 		"getSmoothing",
 		"getThresholds",

@@ -3,6 +3,8 @@
  */
 package com.inferyx.framework.operator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,16 +13,19 @@ import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.mllib.linalg.distributed.BlockMatrix;
 import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
-import org.apache.spark.mllib.linalg.distributed.IndexedRow;
 import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
-import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.datascience.distribution.RandomDistributionFactory;
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
@@ -33,9 +38,11 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -61,6 +68,10 @@ public class MatrixMultOperator implements IOperator {
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	private RandomDistributionFactory randomDistributionFactory;
+	@Autowired
+	private MatrixToRddConverter matrixToRddConverter;
+	@Autowired
+	private SparkExecutor sparkExecutor;
 
 	static final Logger logger = Logger.getLogger(MatrixMultOperator.class);
 
@@ -111,6 +122,9 @@ public class MatrixMultOperator implements IOperator {
 				.get("datapodUuid_" + rhsDataInfo.getParamValue().getRef().getUuid() + "_tableName");
 		String saveTableName = otherParams
 				.get("datapodUuid_" + locationInfo.getParamValue().getRef().getUuid() + "_tableName");
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locationInfo.getParamValue().getRef().getUuid(), 
+																			locationInfo.getParamValue().getRef().getVersion(), 
+																			locationInfo.getParamValue().getRef().getType().toString());
 		List<AttributeRefHolder> lhsAttrList = lhsAttrInfo.getAttributeInfo();
 		List<AttributeRefHolder> rhsAttrList = rhsAttrInfo.getAttributeInfo();
 		Dataset<Row> lhsDf = exec.executeSql(generateSql(lhsTableName, lhsAttrList)).getDataFrame();
@@ -124,9 +138,74 @@ public class MatrixMultOperator implements IOperator {
 		CoordinateMatrix lhsCoMat = new CoordinateMatrix(lhsMatrixEntry.rdd());
 		CoordinateMatrix rhsCoMat = new CoordinateMatrix(rhsMatrixEntry.rdd());
 		BlockMatrix resultMatrix = lhsCoMat.toBlockMatrix().multiply(rhsCoMat.toBlockMatrix());
+		JavaRDD<Row> rowRdd = printResult(resultMatrix, baseExec, otherParams, runMode, exec);
+		// Convert Rdd to Dataframe and register Dataframe
+		// Obtain list of attr names from locationDatapod
+		String[] columns = new String[locationDatapod.getAttributes().size()];
+		int count = 0;
+		for (Attribute attr : locationDatapod.getAttributes()) {
+			columns[count] = attr.getName();
+			count++;
+		}
+		List<String> tableColumns = Arrays.asList(columns);
+		StructType schema = createSchema(tableColumns);
+		
+		// Save result
+		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
+		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
+		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+		
+		sparkExecutor.createAndRegisterDataset(rowRdd, schema, saveTableName+"_Df");
+		String sql = "SELECT * FROM " + saveTableName+"_Df";
+		ResultSetHolder resultSetHolder = exec.executeRegisterAndPersist(sql, saveTableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		
+		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.operatorExec.toString());
+		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
+		@SuppressWarnings("unchecked")
+		List<MetaIdentifierHolder> appInfo = (List<MetaIdentifierHolder>) metaExec.getClass().getMethod("getAppInfo").invoke(metaExec);
+		
+		dataStoreServiceImpl.setRunMode(runMode);
+		dataStoreServiceImpl.create(filePath, fileName, 
+				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
+				, new MetaIdentifier(MetaType.operatorExec, baseExec.getUuid(), execVersion) ,
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+		
+		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
+		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
 		
 		return null;
 	}
+	
+	/**
+	 * 
+	 * @param resultMatrix
+	 * @param baseExec
+	 * @param otherParams
+	 * @param runMode
+	 * @param exec
+	 * @return
+	 */
+	private JavaRDD<Row> printResult(BlockMatrix resultMatrix, BaseExec baseExec, Map<String, String> otherParams, RunMode runMode, IExecutor exec) {
+		resultMatrix.toCoordinateMatrix().toIndexedRowMatrix().rows().toJavaRDD().collect().forEach(t -> logger.info(t.vector()));
+		JavaRDD<Row> rowRdd = matrixToRddConverter.convertToRows(resultMatrix);
+		return rowRdd;
+	}
+	
+	/**
+	 * 
+	 * @param tableColumns
+	 * @return
+	 */
+	public StructType createSchema(List<String> tableColumns){
+
+        List<StructField> fields  = new ArrayList<StructField>();
+        for(String column : tableColumns){         
+
+                fields.add(DataTypes.createStructField(column, DataTypes.StringType, true));            
+
+        }
+        return DataTypes.createStructType(fields);
+    }
 
 	/**
 	 * 
@@ -136,7 +215,7 @@ public class MatrixMultOperator implements IOperator {
 	 */
 	private String generateSql(String tableName, List<AttributeRefHolder> attrList) {
 		StringBuilder sb = new StringBuilder(
-				" select ceil((row_number() over (PARTITION BY 1 ORDER BY 1))/3-0.000000001) as rn, ((row_number() over (PARTITION BY 1 ORDER BY 1))%3+1) as colnum, exp.val from ")
+				" select floor((row_number() over (PARTITION BY 1 ORDER BY 1))/3-0.000000001) as rn, ((row_number() over (PARTITION BY 1 ORDER BY 1))%3) as colnum, exp.val from ")
 						.append(tableName).append(" matatab lateral view explode(ARRAY(");
 		AttributeRefHolder attrRefHolder = null;
 		for (int count = 0; count < attrList.size(); count++) {
