@@ -362,7 +362,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 
 		/** this if condition is handeled temporarily, it can be changed in future **/
 		if (type.equalsIgnoreCase(OperatorType.generateData.toString())) {
-			query.addCriteria(Criteria.where("operatorType").in("GenerateData", "GenDataAttr"));
+			query.addCriteria(Criteria.where("operatorType").in("GenerateData", "GenDataAttr","genDataValList"));
 		} else {
 			query.addCriteria(Criteria.where("operatorType").is(type));
 		}
