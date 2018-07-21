@@ -24,6 +24,7 @@ export class DashboardComponent{
     databoardData: any;
     dashboardName: any;
     sectionRows:any[];
+    columns:any[];
     filterAttribureIdValues:any[];
     selectedAttributeValue:any[];
     breadcrumbDataFrom: { "caption": string; "routeurl": any; }[];
@@ -127,7 +128,10 @@ export class DashboardComponent{
     
     }
     onSuccessLatestByUuid (response){
+        
         this.databoardData=response;
+        this._dashbaordUuid =response.uuid
+        this._dashbaordVersion=response.version
         this.dashboardName=response["name"];
         this.breadcrumbDataFrom[2].caption= this.dashboardName;
         this.convertSectionInfo(response["sectionInfo"])
@@ -155,6 +159,7 @@ export class DashboardComponent{
     }
     
     preparColumnData(){
+        
         var colorcount=0;
         for(var i=0;i<this.sectionRows.length;i++){
             for(var j=0;j<this.sectionRows[i].columns.length;j++){
@@ -356,4 +361,13 @@ export class DashboardComponent{
     public goBack() {
         this._location.back();
       }
-}
+
+
+    enableEdit(uuid, version) {
+        this._router.navigate(['app/dataVisualization/dashboarddetail',this. _dashbaordUuid, this._dashbaordVersion, 'false']);
+      }
+
+
+   
+
+ }

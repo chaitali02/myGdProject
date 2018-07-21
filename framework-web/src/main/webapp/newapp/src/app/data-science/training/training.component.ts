@@ -176,7 +176,7 @@ export class TrainingComponent implements OnInit {
     this.allTarget = temp
   }
 
-  onChangeSourceType() {debugger
+  onChangeSourceType() {
     this.getAllLatestSource(this.selectSourceType)
     this.selectLabel = null;
     for(const i in this.featureMapTableArray){
