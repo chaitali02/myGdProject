@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
@@ -683,6 +684,28 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.train)) {
 			try {
+<<<<<<< HEAD
+				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
+				TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.trainExec.toString());
+				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", trainExec.getVersion());
+				execParams.setInternalVarMap(internalVarMap);
+				Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
+				Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+				Algorithm algorithm= null;
+				if (model.getDependsOn().getRef().getVersion() != null)
+					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
+				else 
+					algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
+					
+				
+				String algoClassName = algorithm.getTrainClass();
+				Object algoClass = Class.forName(algoClassName).newInstance();
+				ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, train.getUuid(), train.getVersion());
+				ExecParams execParams = commonServiceImpl.getExecParams(operator);
+				modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
+				if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+					throw new Exception();
+=======
 				for(TaskOperator taskOperator : taskExec.getOperators()) {
 					TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(taskOperator.getOperatorInfo().getRef().getUuid(), taskOperator.getOperatorInfo().getRef().getVersion(), MetaType.trainExec.toString());
 					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", trainExec.getVersion());
@@ -696,6 +719,7 @@ public class TaskServiceImpl implements Callable<String> {
 					if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 						throw new Exception("Train execution failed.");
 					}
+>>>>>>> 1840892ec8a7fa6798a3e9281d7a9e445533928d
 				}
 				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				

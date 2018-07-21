@@ -371,7 +371,7 @@ public class ModelController {
 		return modelServiceImpl.getTrainByModel(modelUuid, modelVersion);
 	}	
 	
-	@RequestMapping(value = "/train/kill",  method = RequestMethod.GET)
+	@RequestMapping(value = "/train/kill",  method = RequestMethod.PUT)
 	public void killTrain(@RequestParam(value = "uuid") String trainExecUuid,
 						  @RequestParam(value = "version") String trainExecVersion,
 						  @RequestParam(value = "type", required = false) String type,

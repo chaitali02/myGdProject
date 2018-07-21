@@ -1554,7 +1554,8 @@ public class MetadataServiceImpl {
 		return plHolderList;
 	}
 	
-	/********************** UNUSED **********************/
+	/********************** UNUSED 
+	 * @param algoClass **********************/
 //	private List<ParamList> getChilds(String parentPLUuid, String parentPLVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Query query = new Query();
 //		query.fields().include("uuid");
@@ -1590,7 +1591,7 @@ public class MetadataServiceImpl {
 //	}
 	
 
-	public List<ParamMap> getParamMap(ExecParams execParams, String trainUuid, String trainVersion) throws Exception{
+	public List<ParamMap> getParamMap(ExecParams execParams, String trainUuid, String trainVersion, Object algoClass) throws Exception{
 		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());		
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
 		Algorithm algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
@@ -1602,12 +1603,12 @@ public class MetadataServiceImpl {
 			if(execParams.getParamInfo() != null) {
 				for(ParamSetHolder paramSetHolder : execParams.getParamInfo()){
 					List<ParamListHolder> paramListHolder = getParamListHolder(paramSetHolder);
-					ParamMap paramMap = getParamMapByPLHolder(paramListHolder, algoClassName, true);					
+					ParamMap paramMap = getParamMapByPLHolder(paramListHolder, algoClass, true,algoClassName);					
 					paramMapList.add(paramMap);
 				}
 			} else if(execParams.getParamListInfo() != null) {
 				List<ParamListHolder> paramListHolderList = execParams.getParamListInfo();
-				ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClassName, false);						
+				ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClass, false,algoClassName);						
 				paramMapList.add(paramMap);
 			} 
 		} else {
@@ -1615,14 +1616,14 @@ public class MetadataServiceImpl {
 			ParamListHolder plHolder = new ParamListHolder();
 			plHolder.setRef(algo.getParamListWoH().getRef());
 			paramListHolderList.add(plHolder);
-			ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClassName, false);						
+			ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClass, false,algoClassName);						
 			paramMapList.add(paramMap);
 		}
 
 		return paramMapList;
 	}
 
-	public ParamMap getParamMapByPLHolder(List<ParamListHolder> paramListHolder, String algoClassName, boolean filterParams) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, JsonProcessingException {
+	public ParamMap getParamMapByPLHolder(List<ParamListHolder> paramListHolder, Object algoClass, boolean filterParams, String algoClassName) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, JsonProcessingException {
 		ParamMap paramMap = new ParamMap();
 		try {
 			for(ParamListHolder plh : paramListHolder) {
@@ -1635,10 +1636,10 @@ public class MetadataServiceImpl {
 							break;
 						}
 					}
-					paramMap.put(getParamPair(algoClassName, plh.getParamName(), plh.getParamType(), plh.getValue()));
+					paramMap.put(getParamPair(algoClassName,algoClass, plh.getParamName(), plh.getParamType(), plh.getValue()));
 				} else {
 					for(com.inferyx.framework.domain.Param param : paramList.getParams()){
-						paramMap.put(getParamPair(algoClassName, param.getParamName(), param.getParamType(), param.getParamValue().getValue()));
+						paramMap.put(getParamPair(algoClassName,algoClass, param.getParamName(), param.getParamType(), param.getParamValue().getValue()));
 					}
 				}
 			}
@@ -1648,10 +1649,10 @@ public class MetadataServiceImpl {
 		return paramMap;
 	}
 	
-	public ParamPair<?> getParamPair(String algoClassName, String paramName, String paramType, String paramValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
-		Class<?> dynamicClass = Class.forName(algoClassName);						
-		Method method = dynamicClass.getMethod(paramName);
-		Object obj = method.invoke(dynamicClass.newInstance());
+	public ParamPair<?> getParamPair(String algoClassName, Object algoClass2, String paramName, String paramType, String paramValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+								
+		Method method = algoClass2.getClass().getMethod(paramName);
+		Object obj = method.invoke(algoClass2);
 		
 		if(paramType.equalsIgnoreCase("integer")){
 			Class<?>[] param = new Class[1];

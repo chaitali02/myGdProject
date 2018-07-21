@@ -80,8 +80,19 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private SecurityServiceImpl securityServiceImpl;
 	private TrainExec trainExec;
 	private Train train;
+	private Object algoclass;
+	
+
 	private String name;
 	private MetaType execType;
+	
+	public Object getAlgoclass() {
+		return this.algoclass;
+	}
+
+	public void setAlgoclass(Object algoclass) {
+		this.algoclass = algoclass;
+	}
 	MetadataServiceImpl metadataServiceImpl;
 
 
@@ -693,7 +704,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			
 				if(train.getUseHyperParams().equalsIgnoreCase("N")) {
 					//Without hypertuning
-					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid);
+					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass);
 				} else {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
