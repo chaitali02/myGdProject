@@ -2380,7 +2380,7 @@ public class ModelServiceImpl {
 			if (train.getUseHyperParams().equalsIgnoreCase("N") 
 					&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(),algoClass);
+				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion(), algoClass);
 			}
 			if (paramMapList.size() > 0) {
 				for (ParamMap paramMap : paramMapList) {
@@ -2388,9 +2388,9 @@ public class ModelServiceImpl {
 						trainExec = create(train, model, execParams, paramMap, trainExec);
 					Thread.sleep(1000); // Should be parameterized in a class
 					train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
+					trainExec = null;
 				}
 			} else {
-
 				if(trainExec == null)
 					trainExec = create(train, model, execParams, null, trainExec);
 				train(train, model, trainExec, execParams, null, runMode,algoClass);

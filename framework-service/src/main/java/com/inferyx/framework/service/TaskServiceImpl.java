@@ -691,7 +691,7 @@ public class TaskServiceImpl implements Callable<String> {
 //					Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
 //					Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 //					ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, train.getUuid(), train.getVersion());
-					ExecParams execParams = commonServiceImpl.getExecParams(operator);
+					ExecParams execParams = commonServiceImpl.getExecParams(taskOperator);
 					//modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
 					modelServiceImpl.prepareTrain(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec, execParams, runMode);
 					if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {

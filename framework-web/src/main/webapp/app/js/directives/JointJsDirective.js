@@ -94,7 +94,7 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
                method: 'GET',
                url:url,
                  }).then(function (response,status,headers) {
-                   debugger
+                   
                   $('#resultsloader').hide();
                   if(params.type == "train"){
                     $scope.trainData=response.data;
@@ -1213,14 +1213,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             var taskOperators={};
             var paramObj={};
             paramObj.elementType=params.elementType;
-            paramObj.id=params.id;
+            paramObj.id=params.operator[i].operatorInfo.ref.uuid;
             paramObj.name=params.name;
             paramObj.parentStage=params.parentStage;
             paramObj.ref=params.ref;
             paramObj.taskId=params.taskId;
             paramObj.type=params.type;
             paramObj.typeLabel=params.typeLabel;
-            paramObj.version=params.version;
+            paramObj.version=params.operator[i].operatorInfo.ref.version;;
             taskOperators.param=paramObj;
          //   taskOperators.param.operator=null;
             taskOperators.uuid=params.operator[i].operatorInfo.ref.uuid;
