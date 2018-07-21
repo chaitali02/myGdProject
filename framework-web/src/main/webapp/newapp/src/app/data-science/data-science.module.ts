@@ -43,8 +43,8 @@ import { DialogModule } from 'primeng/components/dialog/dialog'
 import { CommonListService } from '../common-list/common-list.service';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import {ResultDetailsComponent} from './results/resultDetails.component';
-import { HighlightJsModule, HighlightJsService } from 'angular2-highlight-js';
 
+//import {PmmlDirective} from './results/pmml.directive';
 @NgModule({
     imports:[
         CommonModule,
@@ -65,8 +65,7 @@ import { HighlightJsModule, HighlightJsService } from 'angular2-highlight-js';
         DialogModule,
         CalendarModule,
         MenuModule,
-        HighlightJsModule
-       // PopupModule.forRoot()
+
 
     ],
     declarations :[
@@ -81,7 +80,8 @@ import { HighlightJsModule, HighlightJsService } from 'angular2-highlight-js';
         PredictionComponent,
         SimulationComponent,
         OperatorComponent,
-        ResultDetailsComponent
+        ResultDetailsComponent,
+        //PmmlDirective
     ],
     providers:[
         CommonService,
@@ -94,7 +94,7 @@ import { HighlightJsModule, HighlightJsService } from 'angular2-highlight-js';
         OperatorService,
         OperatorComponent,
         CommonListService,
-        HighlightJsService
+
     ]
 })
  

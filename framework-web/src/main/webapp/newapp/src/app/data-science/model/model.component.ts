@@ -14,7 +14,7 @@ import { AttributeHolder } from '../../metadata/domain/domain.attributeHolder'
 import { DatasetService } from '../../metadata/services/dataset.service';
 
 @Component({
-  selector: 'app-model',
+  selector: 'app-modelList',
   templateUrl: './model.template.html',
 })
 export class ModelComponent implements OnInit {
