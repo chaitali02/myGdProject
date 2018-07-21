@@ -17,7 +17,6 @@ export class CommonListService {
     this.baseUrl = config.getBaseUrl();
     let userDetail = JSON.parse(localStorage.getItem('userDetail'));
     this.sessionId = userDetail['sessionId'];
-
   }
   private headers = new Headers({ 'sessionId': this.sessionId });
 
@@ -94,7 +93,6 @@ export class CommonListService {
     // .catch(this.handleError);
   }
   export(uuid, type): Observable<any> {
-
     this.url = this.baseUrl + 'common/getLatestByUuid?action=export&uuid=' + uuid + '&type=' + type;
     return this.http
       .get(this.url, { headers: this.headers })
@@ -300,6 +298,26 @@ export class CommonListService {
     return Observable.throw(error.statusText);
   }
 
+  downloadFile(id,version){
+    var url=this.baseUrl+'/model/predict/download?action=view&predictExecUUID='+id+'&predictExecVersion='+version+'&mode=BATCH';
+    // return this.http
+    //   .get(url, { headers: this.headers })
+    //   .map((response: Response) => {
+    //     console.log("response is"+response);
+    //     return <any>response.json();
+    //   });
+    return this.http
+    .get(url, { headers: this.headers })
+    .map((response: Response) => {
+      return <any>response;
+    })
+
+    }
+    
+    // private newFunction(): any {
+    //     return this.headers();
+    // }
+
   getParamListByType(executeId,executeVersion,type,action): Observable<any> {
     if(type=="simulate"){
       this.url = this.baseUrl+ 'metadata/getParamListBySimulate?action='+action + '&uuid=' + executeId + '&type=' + type;
@@ -312,5 +330,5 @@ export class CommonListService {
   })
   // .catch(this.handleError);
   }
-  
+
 }

@@ -4,7 +4,11 @@ import { AppMetadata } from '../../app.metadata';
 import { CommonService } from '../../metadata/services/common.service';
 import { Location } from '@angular/common';
 import { ModelService } from '../../metadata/services/model.service';
-
+import { CommonListService } from './../../common-list/common-list.service';
+import { saveAs } from 'file-saver';
+//import 'rxjs/add/operator/toPromise';
+import { Http, Headers} from '@angular/http';
+import { AppConfig } from '../../app.config';
 @Component({
   selector: 'app-results',
   templateUrl: './resultDetails.component.html',
@@ -30,11 +34,12 @@ export class ResultDetailsComponent {
   modelResult : any;
   id: any;
   uid: any;
-  constructor(private _location:Location,private _activatedRoute: ActivatedRoute,private router: Router,public appMetadata: AppMetadata,private _commonService:CommonService, private _modelService:ModelService) {
-    
+  baseUrl: any;
+  constructor(private config : AppConfig,private http : Http, private _location:Location,private _activatedRoute: ActivatedRoute,private router: Router,public appMetadata: AppMetadata,private _commonService:CommonService, private _modelService:ModelService, private _commonListService : CommonListService) {
+    this.baseUrl = config.getBaseUrl();
     this.breadcrumbDataFrom=[{
       "caption":"Data Science ",
-      "routeurl":"/app/list/trainexec"
+      "routeurl":"/app/dataScience/results"
     },
     // {
     //   "caption":"Results",
@@ -70,6 +75,34 @@ export class ResultDetailsComponent {
       this.tableHeading="Simulation"
     }
    }
+
+   savePng(){
+    var headers = new Headers();
+    headers.append('Accept', 'text/plain');
+    if(this.type =="prediction"){
+    this.http.get(this.baseUrl+'/model/predict/download?action=view&predictExecUUID='+this.id+'&predictExecVersion='+this.version+'&mode=BATCH',
+          { headers: headers })
+      .subscribe(response => this.saveToFileSystem(response))
+    }
+    if(this.type =="simulation"){ 
+      this.http.get(this.baseUrl+'/model/simulate/download?action=view&simulateExecUUID='+this.id+'&simulateExecVersion='+this.version+'&mode=""',
+            { headers: headers })
+        .subscribe(response => this.saveToFileSystem(response))
+    }
+    if(this.type =="training"){
+      this.http.get(this.baseUrl+'model/train/download?action=view&trainExecUUID='+this.id+'&trainExecVersion='+this.version+'&mode=""',
+            { headers: headers })
+        .subscribe(response => this.saveToFileSystem(response))
+      }
+   }
+
+   saveToFileSystem(response){
+   const contentTypeParts: string[] = response.headers.get('Content-Type').split(','); 
+   const filename = contentTypeParts[1];
+   const blob = new Blob([response._body], { type:contentTypeParts[0].split(';')[0] });
+   saveAs(blob, filename);
+   }
+
    showPMMLResult(){
     this.ppml=true;
    }
@@ -88,10 +121,8 @@ export class ResultDetailsComponent {
       error => {
         this.IsTableShow=true; 
         console.log("Error :: " + error)
-        this.IsError=true;    
-    
-    }); 
-   
+        this.IsError=true;        
+    });    
    }
    getSimulateResults(){
     this._modelService.getSimulateResults(this.id,this.version)
@@ -108,7 +139,7 @@ export class ResultDetailsComponent {
    }
    onSuccessgetModelResults(response){
     this.modelResult = response;
-    
+
    }
    onSuccessgetPredictResults(response){
     this.IsTableShow=true;
