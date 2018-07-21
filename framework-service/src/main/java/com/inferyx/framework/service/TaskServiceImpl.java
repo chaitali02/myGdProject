@@ -681,18 +681,22 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.train)) {
 			try {
-				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
-				TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.trainExec.toString());
-				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", trainExec.getVersion());
-				execParams.setInternalVarMap(internalVarMap);
-				Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
-				Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-				ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, train.getUuid(), train.getVersion());
-				ExecParams execParams = commonServiceImpl.getExecParams(operator);
-				modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
-				if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-					throw new Exception();
+				for(TaskOperator taskOperator : taskExec.getOperators()) {
+					TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(taskOperator.getOperatorInfo().getRef().getUuid(), taskOperator.getOperatorInfo().getRef().getVersion(), MetaType.trainExec.toString());
+					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", trainExec.getVersion());
+					execParams.setInternalVarMap(internalVarMap);
+//					Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
+//					Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+//					ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, train.getUuid(), train.getVersion());
+					ExecParams execParams = commonServiceImpl.getExecParams(operator);
+					//modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
+					modelServiceImpl.prepareTrain(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec, execParams, runMode);
+					if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+						throw new Exception("Train execution failed.");
+					}
 				}
+				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;

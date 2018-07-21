@@ -1715,31 +1715,31 @@ public class SparkExecutor<T> implements IExecutor {
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
 			
-			ParamMap paramMap2 = new ParamMap();
-			for(ParamPair<?> paramPair : paramMap.toList()) {
-				Param<?> param = paramPair.param();
-				for(Param<?> param2 : (Param<?>[]) obj.getClass().getMethod("params").invoke(obj)) {
-					if(param.name().equalsIgnoreCase(param2.name())) {
-						Method method2 = obj.getClass().getMethod(param.name());
-						Object obj2 = method2.invoke(obj);
-						Class<?>[] param3 = new Class[1];
-						param3[0] = int.class;
-						Method method1 = obj2.getClass().getMethod("w", param3);						
-						paramMap2.put((ParamPair<?>)method1.invoke((IntParam)obj2, Integer.parseInt(""+250)));
-						System.out.println("metadata: "+param.name()+"    spark: "+param2.name());
-						System.out.println("metadata: "+param.parent()+"    spark: "+param2.parent());
-						System.out.println("metadata: "+param.doc()+"    spark: "+param2.doc());
-						System.out.println(obj.getClass().getMethod("uid").invoke(obj));
-					}
-				}
-			}
-			System.out.println(paramMap2.toList().get(0).param().parent());
+//			ParamMap paramMap2 = new ParamMap();
+//			for(ParamPair<?> paramPair : paramMap.toList()) {
+//				Param<?> param = paramPair.param();
+//				for(Param<?> param2 : (Param<?>[]) obj.getClass().getMethod("params").invoke(obj)) {
+//					if(param.name().equalsIgnoreCase(param2.name())) {
+//						Method method2 = obj.getClass().getMethod(param.name());
+//						Object obj2 = method2.invoke(obj);
+//						Class<?>[] param3 = new Class[1];
+//						param3[0] = int.class;
+//						Method method1 = obj2.getClass().getMethod("w", param3);						
+//						paramMap2.put((ParamPair<?>)method1.invoke((IntParam)obj2, Integer.parseInt(""+250)));
+//						System.out.println("metadata: "+param.name()+"    spark: "+param2.name());
+//						System.out.println("metadata: "+param.parent()+"    spark: "+param2.parent());
+//						System.out.println("metadata: "+param.doc()+"    spark: "+param2.doc());
+//						System.out.println(obj.getClass().getMethod("uid").invoke(obj));
+//					}
+//				}
+//			}
+//			System.out.println(paramMap2.toList().get(0).param().parent());
 			
 			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj});
 			try {
 				PipelineModel trngModel = null;
-				if (null != paramMap2)
-					trngModel = pipeline.fit(trainingDf, paramMap2);
+				if (null != paramMap)
+					trngModel = pipeline.fit(trainingDf, paramMap);
 				else
 					trngModel = pipeline.fit(trainingDf);
 				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);

@@ -3515,11 +3515,31 @@ public class CommonServiceImpl <T> {
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
 	 */
-	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec, int i) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		T execObject = (T)createExec(metaType, ref);
 		MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType, String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
 				String.class.cast(execObject.getClass().getMethod("getVersion", null).invoke(execObject, null)));
-		taskExec.getOperators().get(0).getOperatorInfo().setRef(metaExecIdentifier);
+		List<TaskOperator> taskOperatorList = taskExec.getOperators();
+		TaskOperator taskOperator = new TaskOperator();
+		taskOperator.setDependsOn(taskOperatorList.get(i).getDependsOn());
+		taskOperator.setOperatorId(taskOperatorList.get(i).getOperatorId());
+		taskOperator.setOperatorParams(taskOperatorList.get(i).getOperatorParams());
+		taskOperator.setOperatorType(taskOperatorList.get(i).getOperatorType());
+		MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
+		operatorInfo.setRef(metaExecIdentifier);
+		taskOperator.setOperatorInfo(operatorInfo);
+		
+		List<TaskOperator> taskOperatorList2 = new ArrayList<>();
+		int j = 0;
+		for(TaskOperator taskOperator2 : taskOperatorList) {
+			if(j == i) {
+				taskOperatorList2.add(taskOperator);
+			} else {
+				taskOperatorList2.add(taskOperator2);
+			}
+			j++;
+		}		
+		taskExec.setOperators(taskOperatorList2);
 		return execObject;
 	}
 

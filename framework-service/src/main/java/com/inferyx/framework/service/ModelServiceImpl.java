@@ -2362,7 +2362,7 @@ public class ModelServiceImpl {
 		return isSuccess;
 	}
 		
-	public boolean configureTrain(String trainUuid, String trainVersion, TrainExec trainExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public boolean prepareTrain(String trainUuid, String trainVersion, TrainExec trainExec, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
 			List<ParamMap> paramMapList = new ArrayList<>();
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());			
@@ -2374,12 +2374,14 @@ public class ModelServiceImpl {
 			}
 			if (paramMapList.size() > 0) {
 				for (ParamMap paramMap : paramMapList) {
-					trainExec = create(train, model, execParams, paramMap, trainExec);
+					if(trainExec == null)
+						trainExec = create(train, model, execParams, paramMap, trainExec);
 					Thread.sleep(1000); // Should be parameterized in a class
 					train(train, model, trainExec, execParams, paramMap, runMode);
 				}
 			} else {
-				trainExec = create(train, model, execParams, null, trainExec);
+				if(trainExec == null)
+					trainExec = create(train, model, execParams, null, trainExec);
 				train(train, model, trainExec, execParams, null, runMode);
 			}
 			return true;
