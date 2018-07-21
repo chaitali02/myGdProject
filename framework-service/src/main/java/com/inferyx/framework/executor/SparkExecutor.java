@@ -1715,6 +1715,7 @@ public class SparkExecutor<T> implements IExecutor {
 			method = algoClass.getClass().getMethod("setFeaturesCol", String.class);
 			method.invoke(algoClass, "features");
 			
+
 		/*	ParamMap paramMap2 = new ParamMap();
 			for(ParamPair<?> paramPair : paramMap.toList()) {
 				Param<?> param = paramPair.param();
@@ -1734,6 +1735,7 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 			}
 			System.out.println(paramMap2.toList().get(0).param().parent());*/
+
 			
 			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
 			try {

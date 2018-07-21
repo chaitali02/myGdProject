@@ -37,6 +37,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IDagDao;
+import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
@@ -794,16 +795,69 @@ public class DagServiceImpl {
 		}
 		// Iterate the task and set it
 		for (Task indvTask : dagTasks) {
-			TaskExec taskExec = new TaskExec(indvTask);
-			taskExec.getOperators().get(0).setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
+			TaskExec taskExec = null;
+			if(indvTask.getOperators() != null && indvTask.getOperators().get(0).getOperatorInfo() != null ) {
+				MetaIdentifier taskMI = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+				if(taskMI.getType().equals(MetaType.train)/*
+						|| indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.rule)*/) {					
+					if(indvTask.getOperators().get(0).getOperatorParams() != null && !indvTask.getOperators().get(0).getOperatorParams().isEmpty()) {
+						HashMap<?, ?> operatorParams = indvTask.getOperators().get(0).getOperatorParams();
+						ExecParams trainExecParams = new ObjectMapper().convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+						if(trainExecParams.getParamInfo() != null) {
+							taskExec = new TaskExec(indvTask);
+							int i = 0;
+							for(ParamSetHolder paramSetHolder : trainExecParams.getParamInfo()) {	
+								if(i != 0) {
+									TaskExec tempTaskExec = new TaskExec(indvTask);
+									TaskOperator operator = new TaskOperator();
+									operator.setOperatorInfo(tempTaskExec.getOperators().get(0).getOperatorInfo());
+									List<TaskOperator> taskOperators = taskExec.getOperators();
+									taskOperators.add(operator);
+									taskExec.setOperators(taskOperators);
+								}
+								taskExec.getOperators().get(i).setOperatorParams(createOperatorParamsForPSHolder(paramSetHolder));
+								// Set Tasks status to Not Started
+								taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
+								i++;
+							}
+							taskExecs.add(taskExec);
+						} else {
+							taskExec = new TaskExec(indvTask);
+							taskExec.getOperators().get(0).setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
+							taskExecs.add(taskExec);
+							// Set Tasks status to Not Started
+							taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
+						}
+					}  else {
+						taskExec = new TaskExec(indvTask);
+						taskExec.getOperators().get(0).setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
+						taskExecs.add(taskExec);
+						// Set Tasks status to Not Started
+						taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
+					} 
+					
+					
+				}  else {
+					taskExec = new TaskExec(indvTask);
+					taskExec.getOperators().get(0).setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
+					taskExecs.add(taskExec);
+					// Set Tasks status to Not Started
+					taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
+				}
+			} else {
+				taskExec = new TaskExec(indvTask);
+				taskExec.getOperators().get(0).setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
+				taskExecs.add(taskExec);
+				// Set Tasks status to Not Started
+				taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
+			}
+			
 			refKeys = DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()); // Get
 																						// refKeys
 																						// placeholder
 																						// for
 			// refKey preparation
 
-			// Set Tasks status to Not Started
-			taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
 
 			// Below code need reformatting, the setting should be done
 			// while doing getter action
@@ -883,8 +937,6 @@ public class DagServiceImpl {
 				}
 			}
 			execParams.setRefKeyList(DagExecUtil.convertRefKeyMapToList(refKeys));
-
-			taskExecs.add(taskExec);
 		}
 		// For GC - START
 		mapRef = null;
@@ -899,6 +951,17 @@ public class DagServiceImpl {
 		// For GC - END
 		return taskExecs;
 
+	}
+	
+	public HashMap<String, Object> createOperatorParamsForPSHolder(ParamSetHolder paramSetHolder){
+		HashMap<String, Object> operatorParamsForPSHolder = new HashMap<>();
+		ExecParams indvTskExecParams = new ExecParams();
+		List<ParamSetHolder> indvTskPSHolder = new ArrayList<>();
+		indvTskPSHolder.add(paramSetHolder); 
+		indvTskExecParams.setParamInfo(indvTskPSHolder);
+		operatorParamsForPSHolder.put("EXEC_PARAMS", indvTskExecParams);
+		
+		return operatorParamsForPSHolder;
 	}
 
 	@SuppressWarnings({ "unused", "unlikely-arg-type", "unchecked" })
@@ -937,146 +1000,147 @@ public class DagServiceImpl {
 							// consider inactive stage)
 			}
 			for (TaskExec indvExecTask : dagExecTasks) {
-
 				otherParams = execParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
 				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());
 				logger.info(" OtherParams : " + otherParams);
-				MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
-				List<TaskOperator> operatorList = new ArrayList<>();
-				TaskOperator operator = new TaskOperator();
-				MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
-				operator.setOperatorInfo(operatorInfo);
-				operatorList.add(operator);
-				indvExecTask.setOperators(operatorList);
-				StringBuilder builder = null;
-				if (indvTask.getOperators().get(0).getOperatorParams() != null
-						&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramset.toString())
-						&& execParams.getParamSetHolder() == null) {
-					List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(0)
-							.getOperatorParams().get(MetaType.paramset.toString());
-					List<ParamSetHolder> paramSetHolders = new ArrayList<>();
-					ObjectMapper mapper = new ObjectMapper();
-					for(Object obj : paramSetHolderList) {
-						paramSetHolders.add(mapper.convertValue(obj, ParamSetHolder.class));
-					}
-					if (paramSetHolderList != null && !paramSetHolderList.isEmpty()) {
-						execParams.setParamInfo(paramSetHolders);
-						execParams.setParamSetHolder(paramSetHolders.get(0));
-					}
-				}
-				if (indvTask.getOperators().get(0).getOperatorParams() != null
-						&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramlist.toString())
-						&& execParams.getParamListHolder() == null) {
-					List<ParamListHolder> paramListHolderList = (List<ParamListHolder>) indvTask.getOperators().get(0).getOperatorParams().get(MetaType.paramlist.toString());
-					List<ParamListHolder> paramListHolders = new ArrayList<>();
-					ObjectMapper mapper = new ObjectMapper();
-					for(Object obj : paramListHolderList) {
-						paramListHolders.add(mapper.convertValue(obj, ParamListHolder.class));
-					}
-					if (paramListHolderList != null && !paramListHolderList.isEmpty()) {
-						execParams.setParamListInfo(paramListHolders);
-						execParams.setParamListHolder(paramListHolders.get(0));
-					}
-				}
-				operator.setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
-				// Have few parts in common area
-				java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-						.convertRefKeyListToMap(execParams.getRefKeyList());
-				BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(ref.getType()), ref, indvExecTask);
-
-				try {
-					// If conditions with parse goes here - START
-					if (ref.getType().equals(MetaType.map)) {
-						baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, 
-								datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
-					} else if (ref.getType().equals(MetaType.rule)) {
-						baseExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), (RuleExec) baseExec, refKeyMap, execParams, datapodList, dagExec);
-						baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
-					} else if (ref.getType().equals(MetaType.rulegroup)) {
-						baseExec = ruleGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
-								datapodList, (RuleGroupExec)baseExec, dagExec);
-						baseExec = ruleGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
-					} else if (ref.getType().equals(MetaType.dq)) {
-						baseExec = dataQualServiceImpl.create(ref.getUuid(),ref.getVersion(),(DataQualExec) baseExec,refKeyMap,datapodList,dagExec);
-						baseExec =  (DataQualExec)dataQualServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
-					} else if (ref.getType().equals(MetaType.dqgroup)) {
-						baseExec = dataQualGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
-								datapodList, (DataQualGroupExec)baseExec, dagExec);
-						baseExec = dataQualGroupServiceImpl.parse(indvExecTask.getOperators().get(0).getOperatorInfo().getRef(),refKeyMap, datapodList, dagExec, runMode);
-					} else if (ref.getType().equals(MetaType.profile)) {
-						baseExec = profileServiceImpl.create(ref.getUuid(),ref.getVersion(),(ProfileExec)baseExec,refKeyMap,datapodList,dagExec);
-						baseExec =  (ProfileExec)profileServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
-					} else if (ref.getType().equals(MetaType.profilegroup)) {
-						baseExec = profileGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
-								datapodList, dagExec, (ProfileGroupExec) baseExec);
-						baseExec = (ProfileGroupExec) profileGroupServiceImpl.parse(baseExec.getUuid(),baseExec.getVersion(),refKeyMap, datapodList, dagExec, runMode);
-					} else if (ref.getType().equals(MetaType.load)) {
-						baseExec = loadServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, null, (LoadExec)baseExec);
-					} else if (ref.getType().equals(MetaType.train)) {
-						Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
-						Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
-						baseExec = modelServiceImpl.create(train, model, execParams, null,
-								(TrainExec)baseExec);
-					}  else if (ref.getType().equals(MetaType.predict)) {
-						Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
-						baseExec = modelServiceImpl.create(predict, execParams, null, (PredictExec) baseExec);
-					} else if (ref.getType().equals(MetaType.simulate)) {
-						Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
-						baseExec = modelServiceImpl.create(simulate, execParams, null, (SimulateExec) baseExec);
-					} else if (ref.getType().equals(MetaType.recon)) {
-						baseExec = reconServiceImpl.create(ref.getUuid(), ref.getVersion(), (ReconExec) baseExec, refKeyMap, datapodList, dagExec);
-						baseExec = (ReconExec) reconServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
-					} else if (ref.getType().equals(MetaType.recongroup)) {
-						baseExec = reconGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
-								datapodList, (ReconGroupExec) baseExec, dagExec);
-						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
-					} else if (ref.getType().equals(MetaType.operator)) {
-						ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
-						operatorExecParams.setOtherParams((HashMap<String, String>) Helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
-						baseExec = operatorServiceImpl.create((OperatorExec)baseExec, operatorExecParams, runMode);
-						logger.info("operatorExecParams.getOtherParams : " + operatorExecParams.getOtherParams());
-						operatorServiceImpl.parse((OperatorExec)baseExec, operatorExecParams, runMode);
-						logger.info("operatorExecParams.getOtherParams : otherParams 1 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
-						otherParams = (HashMap<String, String>) Helper.mergeMap(operatorExecParams.getOtherParams(), otherParams);
-						logger.info("operatorExecParams.getOtherParams : otherParams 2 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
-						/*if (indvTask.getDependsOn().size() > 0) {
-							operatorExecParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
-							indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
-						}*/
-					} else if (ref.getType().equals(MetaType.graphpod)) {
-						baseExec = graphServiceImpl.create(baseExec, execParams, runMode);
-						baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
-					} 
-					execParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, execParams.getOtherParams()));
-					// If conditions with parse goes here - END	
-					logger.info(" otherParams : " + otherParams);
-					logger.info(" execParams.getOtherParams() : " + execParams.getOtherParams());
-					baseExec.setRefKeyList(execParams.getRefKeyList());
-					if (baseExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
-						throw new Exception();
-					}
-				} catch (Exception e) {
-					Status failedStatus = new Status(Status.Stage.Failed, new Date());
-					List<Status> statusList = indvExecTask.getStatusList();
-					if (statusList == null) {
-						statusList = new ArrayList<Status>();
-					}
-					statusList.remove(failedStatus);
-					statusList.add(failedStatus);
-					e.printStackTrace();
-					String message = null;
-					try {
-						message = e.getMessage();
-					}catch (Exception e2) {
-						// TODO: handle exception
-					}
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
-					throw new Exception((message != null) ? message : "Pipeline execution failed.");
-				} finally {
-					commonServiceImpl.save(helper.getExecType(ref.getType()).toString(), baseExec);
-				}
 				
+				List<TaskOperator> operatorList = new ArrayList<>();
+				for(int i=0; i<indvTask.getOperators().size(); i++) {
+					MetaIdentifier ref = indvTask.getOperators().get(i).getOperatorInfo().getRef();
+					TaskOperator operator = new TaskOperator();
+					MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
+					operator.setOperatorInfo(operatorInfo);
+					operatorList.add(operator);
+					StringBuilder builder = null;
+					if (indvTask.getOperators().get(i).getOperatorParams() != null
+							&& indvTask.getOperators().get(i).getOperatorParams().containsKey(MetaType.paramset.toString())
+							&& execParams.getParamSetHolder() == null) {
+						List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(i)
+								.getOperatorParams().get(MetaType.paramset.toString());
+						List<ParamSetHolder> paramSetHolders = new ArrayList<>();
+						ObjectMapper mapper = new ObjectMapper();
+						for(Object obj : paramSetHolderList) {
+							paramSetHolders.add(mapper.convertValue(obj, ParamSetHolder.class));
+						}
+						if (paramSetHolderList != null && !paramSetHolderList.isEmpty()) {
+							execParams.setParamInfo(paramSetHolders);
+							execParams.setParamSetHolder(paramSetHolders.get(0));
+						}
+					}
+					if (indvTask.getOperators().get(i).getOperatorParams() != null
+							&& indvTask.getOperators().get(i).getOperatorParams().containsKey(MetaType.paramlist.toString())
+							&& execParams.getParamListHolder() == null) {
+						List<ParamListHolder> paramListHolderList = (List<ParamListHolder>) indvTask.getOperators().get(i).getOperatorParams().get(MetaType.paramlist.toString());
+						List<ParamListHolder> paramListHolders = new ArrayList<>();
+						ObjectMapper mapper = new ObjectMapper();
+						for(Object obj : paramListHolderList) {
+							paramListHolders.add(mapper.convertValue(obj, ParamListHolder.class));
+						}
+						if (paramListHolderList != null && !paramListHolderList.isEmpty()) {
+							execParams.setParamListInfo(paramListHolders);
+							execParams.setParamListHolder(paramListHolders.get(0));
+						}
+					}
+					operator.setOperatorParams(indvTask.getOperators().get(i).getOperatorParams());
+					// Have few parts in common area
+					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
+							.convertRefKeyListToMap(execParams.getRefKeyList());
+					BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(ref.getType()), ref, indvExecTask, i);
+
+					try {
+						// If conditions with parse goes here - START
+						if (ref.getType().equals(MetaType.map)) {
+							baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, 
+									datapodList, refKeyMap, otherParams, execParams, RunMode.BATCH);
+						} else if (ref.getType().equals(MetaType.rule)) {
+							baseExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), (RuleExec) baseExec, refKeyMap, execParams, datapodList, dagExec);
+							baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+						} else if (ref.getType().equals(MetaType.rulegroup)) {
+							baseExec = ruleGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
+									datapodList, (RuleGroupExec)baseExec, dagExec);
+							baseExec = ruleGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+						} else if (ref.getType().equals(MetaType.dq)) {
+							baseExec = dataQualServiceImpl.create(ref.getUuid(),ref.getVersion(),(DataQualExec) baseExec,refKeyMap,datapodList,dagExec);
+							baseExec =  (DataQualExec)dataQualServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+						} else if (ref.getType().equals(MetaType.dqgroup)) {
+							baseExec = dataQualGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
+									datapodList, (DataQualGroupExec)baseExec, dagExec);
+							baseExec = dataQualGroupServiceImpl.parse(indvExecTask.getOperators().get(0).getOperatorInfo().getRef(),refKeyMap, datapodList, dagExec, runMode);
+						} else if (ref.getType().equals(MetaType.profile)) {
+							baseExec = profileServiceImpl.create(ref.getUuid(),ref.getVersion(),(ProfileExec)baseExec,refKeyMap,datapodList,dagExec);
+							baseExec =  (ProfileExec)profileServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+						} else if (ref.getType().equals(MetaType.profilegroup)) {
+							baseExec = profileGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
+									datapodList, dagExec, (ProfileGroupExec) baseExec);
+							baseExec = (ProfileGroupExec) profileGroupServiceImpl.parse(baseExec.getUuid(),baseExec.getVersion(),refKeyMap, datapodList, dagExec, runMode);
+						} else if (ref.getType().equals(MetaType.load)) {
+							baseExec = loadServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, null, (LoadExec)baseExec);
+						} else if (ref.getType().equals(MetaType.train)) {
+							Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+							baseExec = modelServiceImpl.create(train, model, execParams, null,
+									(TrainExec)baseExec);
+						}  else if (ref.getType().equals(MetaType.predict)) {
+							Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							baseExec = modelServiceImpl.create(predict, execParams, null, (PredictExec) baseExec);
+						} else if (ref.getType().equals(MetaType.simulate)) {
+							Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							baseExec = modelServiceImpl.create(simulate, execParams, null, (SimulateExec) baseExec);
+						} else if (ref.getType().equals(MetaType.recon)) {
+							baseExec = reconServiceImpl.create(ref.getUuid(), ref.getVersion(), (ReconExec) baseExec, refKeyMap, datapodList, dagExec);
+							baseExec = (ReconExec) reconServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+						} else if (ref.getType().equals(MetaType.recongroup)) {
+							baseExec = reconGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
+									datapodList, (ReconGroupExec) baseExec, dagExec);
+							baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+						} else if (ref.getType().equals(MetaType.operator)) {
+							ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
+							operatorExecParams.setOtherParams((HashMap<String, String>) Helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
+							baseExec = operatorServiceImpl.create((OperatorExec)baseExec, operatorExecParams, runMode);
+							logger.info("operatorExecParams.getOtherParams : " + operatorExecParams.getOtherParams());
+							operatorServiceImpl.parse((OperatorExec)baseExec, operatorExecParams, runMode);
+							logger.info("operatorExecParams.getOtherParams : otherParams 1 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
+							otherParams = (HashMap<String, String>) Helper.mergeMap(operatorExecParams.getOtherParams(), otherParams);
+							logger.info("operatorExecParams.getOtherParams : otherParams 2 : " + operatorExecParams.getOtherParams() + ":" + otherParams);
+							/*if (indvTask.getDependsOn().size() > 0) {
+								operatorExecParams.setOtherParams((HashMap<String, String>)helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
+								indvExecTask.getOperators().get(0).getOperatorParams().put(ConstantsUtil.EXEC_PARAMS, operatorExecParams);
+							}*/
+						} else if (ref.getType().equals(MetaType.graphpod)) {
+							baseExec = graphServiceImpl.create(baseExec, execParams, runMode);
+							baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+						} 
+						execParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, execParams.getOtherParams()));
+						// If conditions with parse goes here - END	
+						logger.info(" otherParams : " + otherParams);
+						logger.info(" execParams.getOtherParams() : " + execParams.getOtherParams());
+						baseExec.setRefKeyList(execParams.getRefKeyList());
+						if (baseExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
+							throw new Exception();
+						}
+					} catch (Exception e) {
+						Status failedStatus = new Status(Status.Stage.Failed, new Date());
+						List<Status> statusList = indvExecTask.getStatusList();
+						if (statusList == null) {
+							statusList = new ArrayList<Status>();
+						}
+						statusList.remove(failedStatus);
+						statusList.add(failedStatus);
+						e.printStackTrace();
+						String message = null;
+						try {
+							message = e.getMessage();
+						}catch (Exception e2) {
+							// TODO: handle exception
+						}
+						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
+						throw new Exception((message != null) ? message : "Pipeline execution failed.");
+					} finally {
+						commonServiceImpl.save(helper.getExecType(ref.getType()).toString(), baseExec);
+					}
+				}	
+				//indvExecTask.setOperators(operatorList);
 				// Set Stage and Task status
 				List<Status> statusList = new ArrayList<Status>();
 				Status status = new Status(Status.Stage.NotStarted, new Date());

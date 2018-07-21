@@ -267,7 +267,7 @@ public class ModelController {
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
-			modelServiceImpl.configureTrain(trainUuid, trainVersion, null, execParams, runMode);
+			modelServiceImpl.prepareTrain(trainUuid, trainVersion, null, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
