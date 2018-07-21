@@ -41,7 +41,10 @@ import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
+import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
+import org.apache.spark.ml.clustering.KMeansSummary;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
+import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
 import org.apache.spark.ml.evaluation.RegressionEvaluator;
@@ -57,12 +60,9 @@ import org.apache.spark.ml.param.IntParam;
 import org.apache.spark.ml.param.LongParam;
 import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
-<<<<<<< HEAD
 import org.apache.spark.ml.param.ParamPair;
 import org.apache.spark.ml.regression.LinearRegression;
 import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
-=======
->>>>>>> master
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.ml.tuning.ParamGridBuilder;
@@ -2138,7 +2138,7 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(trainName.contains("classification") || trainName.contains("Classifier")) {
 			return new BinaryClassificationEvaluator() ;
 		} else if(trainName.contains("clustering")) {
-			//return new ClusteringEvaluator();
+			return new ClusteringEvaluator();
 		}
 		return null;		
 	}
@@ -2343,7 +2343,7 @@ public class SparkExecutor<T> implements IExecutor {
 					Object result = model.getClass().getMethod(method.trim()).invoke(model);
 
 					if(method.equalsIgnoreCase("summary")) {
-//						outPutMap = getSummaryFromSummaryMethod(outPutMap, result);
+						outPutMap = getSummaryFromSummaryMethod(outPutMap, result);
 					}
 					
 					String key = method.toLowerCase();
@@ -2364,7 +2364,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return outPutMap;
 	}
 
-	/*private Map<String, Object> linearRegressionSummay(Map<String, Object> outPutMap, Object result) throws JsonProcessingException {
+	private Map<String, Object> linearRegressionSummay(Map<String, Object> outPutMap, Object result) throws JsonProcessingException {
 		
 		LinearRegressionTrainingSummary summary = (LinearRegressionTrainingSummary) result;
 //		double[] coefficientStandardErrors = summary.coefficientStandardErrors();
@@ -2491,4 +2491,4 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		return outPutMap;
 	}
-*/}
+}
