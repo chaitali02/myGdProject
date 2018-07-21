@@ -629,15 +629,17 @@ public class TaskServiceImpl implements Callable<String> {
 		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.rule)) {
 			logger.info("Going to ruleServiceImpl.execute");
 			try {
-				//RuleExec ruleExec = ruleExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
-				RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.ruleExec.toString());
-				//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
-				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
-				execParams.setInternalVarMap(internalVarMap);
-				ruleServiceImpl.execute(null, ruleExec, null, null, execParams, runMode);
-				// ruleServiceImpl.execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(), ruleExec, null, null, null);
-				if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-					throw new Exception();
+				for(TaskOperator taskOperator : taskExec.getOperators()) {
+					//RuleExec ruleExec = ruleExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
+					RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(taskOperator.getOperatorInfo().getRef().getUuid(), taskOperator.getOperatorInfo().getRef().getVersion(), MetaType.ruleExec.toString());
+					//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
+					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
+					execParams.setInternalVarMap(internalVarMap);
+					ruleServiceImpl.execute(null, ruleExec, null, null, execParams, runMode);
+					// ruleServiceImpl.execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(), ruleExec, null, null, null);
+					if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+						throw new Exception();
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

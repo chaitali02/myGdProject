@@ -798,8 +798,8 @@ public class DagServiceImpl {
 			TaskExec taskExec = null;
 			if(indvTask.getOperators() != null && indvTask.getOperators().get(0).getOperatorInfo() != null ) {
 				MetaIdentifier taskMI = indvTask.getOperators().get(0).getOperatorInfo().getRef();
-				if(taskMI.getType().equals(MetaType.train)/*
-						|| indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.rule)*/) {					
+				if(taskMI.getType().equals(MetaType.train)
+						|| taskMI.getType().equals(MetaType.rule)) {					
 					if(indvTask.getOperators().get(0).getOperatorParams() != null && !indvTask.getOperators().get(0).getOperatorParams().isEmpty()) {
 						HashMap<?, ?> operatorParams = indvTask.getOperators().get(0).getOperatorParams();
 						ExecParams trainExecParams = new ObjectMapper().convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
