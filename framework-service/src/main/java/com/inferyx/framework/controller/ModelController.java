@@ -14,13 +14,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.spark.ml.param.ParamMap;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,9 +41,7 @@ import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
-import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
@@ -271,28 +267,7 @@ public class ModelController {
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
-
-			TrainExec trainExec = null;
-			List<ParamMap> paramMapList = new ArrayList<>();
-
-			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());			
-			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-			if (train.getUseHyperParams().equalsIgnoreCase("N") 
-					&& !model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = metadataServiceImpl.getParamMap(execParams, train.getUuid(), train.getVersion());
-			}
-			if (paramMapList.size() > 0) {
-				for (ParamMap paramMap : paramMapList) {
-					trainExec = modelServiceImpl.create(train, model, execParams, paramMap, trainExec);
-					Thread.sleep(1000); // Should be parameterized in a class
-					modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
-					trainExec = null;
-				}
-			} else {
-				trainExec = modelServiceImpl.create(train, model, execParams, null, trainExec);
-				modelServiceImpl.train(train, model, trainExec, execParams, null, runMode);
-			}
+			modelServiceImpl.configureTrain(trainUuid, trainVersion, null, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

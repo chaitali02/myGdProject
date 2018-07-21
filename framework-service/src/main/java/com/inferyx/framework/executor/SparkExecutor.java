@@ -59,6 +59,8 @@ import org.apache.spark.ml.param.IntParam;
 import org.apache.spark.ml.param.LongParam;
 import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.ml.param.ParamPair;
+import org.apache.spark.ml.regression.LinearRegression;
 import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
@@ -1669,35 +1671,22 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
-		PipelineModel trngModel = null;
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
 		try {
-			Dataset<Row>[] splits = df
-					.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
+			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
 			Dataset<Row> valDf = splits[1];
 			Dataset<Row> trainingDf = null;
 			Dataset<Row> validateDf = null;
 			
-			//VectorAssembler vectorAssembler = (VectorAssembler) va;
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
-			if (trainName.contains("LinearRegression")
-					|| trainName.contains("LogisticRegression")) {
-				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-				//trainingDf.show(true);
-				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-				//validateDf.show(true);
-			} else {
-				trainingDf = trngDf;
-				validateDf = valDf;
-			}
 
-			Dataset<Row> trainedDataSet = null;
 			@SuppressWarnings("unused")
 			StringIndexer labelIndexer = null;
 			@SuppressWarnings("unused")
@@ -1707,33 +1696,63 @@ public class SparkExecutor<T> implements IExecutor {
 			Object obj = dynamicClass.newInstance();
 			Method method = null;
 			if (trainName.contains("LinearRegression")
-					|| trainName.contains("LogisticRegression")) {
+					|| trainName.contains("LogisticRegression")
+					|| trainName.contains("LinearSVC")
+					|| trainName.contains("RandomForest")
+					|| trainName.contains("AFTSurvivalRegression")
+					|| trainName.contains("DecisionTree")
+					|| trainName.contains("NaiveBayes")) {
 				method = dynamicClass.getMethod("setLabelCol", String.class);
 				method.invoke(obj, "label");
+				
+				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+			} else {
+				trainingDf = trngDf;
+				validateDf = valDf;
 			}
 
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
-			Pipeline pipeline = new Pipeline()
-					.setStages(new PipelineStage[] { /* labelIndexer, */vectorAssembler, (PipelineStage) obj });
-			try {
-				if (null != paramMap) {
-					trngModel = pipeline.fit(trainingDf, paramMap);
-				} else {
-					trngModel = pipeline.fit(trainingDf);
+			
+			ParamMap paramMap2 = new ParamMap();
+			for(ParamPair<?> paramPair : paramMap.toList()) {
+				Param<?> param = paramPair.param();
+				for(Param<?> param2 : (Param<?>[]) obj.getClass().getMethod("params").invoke(obj)) {
+					if(param.name().equalsIgnoreCase(param2.name())) {
+						Method method2 = obj.getClass().getMethod(param.name());
+						Object obj2 = method2.invoke(obj);
+						Class<?>[] param3 = new Class[1];
+						param3[0] = int.class;
+						Method method1 = obj2.getClass().getMethod("w", param3);						
+						paramMap2.put((ParamPair<?>)method1.invoke((IntParam)obj2, Integer.parseInt(""+250)));
+						System.out.println("metadata: "+param.name()+"    spark: "+param2.name());
+						System.out.println("metadata: "+param.parent()+"    spark: "+param2.parent());
+						System.out.println("metadata: "+param.doc()+"    spark: "+param2.doc());
+						System.out.println(obj.getClass().getMethod("uid").invoke(obj));
+					}
 				}
+			}
+			System.out.println(paramMap2.toList().get(0).param().parent());
+			
+			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj});
+			try {
+				PipelineModel trngModel = null;
+				if (null != paramMap2)
+					trngModel = pipeline.fit(trainingDf, paramMap2);
+				else
+					trngModel = pipeline.fit(trainingDf);
+				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);
+				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
+				trainedDataSet.show(false);
+				return trngModel;
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			} catch (Error e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
-			}
-			
-			trainedDataSet = trngModel.transform(validateDf);
-			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-			trainedDataSet.show(false);
-			return trngModel;
+			}			
 		} catch (ClassNotFoundException
 				| IllegalAccessException 
 				| IllegalArgumentException 
@@ -1889,21 +1908,23 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
 			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
-		String sql = "SELECT * FROM " + tableName + " LIMIT 100";
+		String sql = "SELECT * FROM " + tableName /*+ " LIMIT 100"*/;
 		Dataset<Row> df1 = executeSql(sql, clientContext).getDataFrame();
 		
 		VectorAssembler va = new VectorAssembler();
 		Dataset<Row> transformedDf = null;
 
 		if (trainName.contains("LinearRegression")
-				|| trainName.contains("LogisticRegression")) {
+				|| trainName.contains("LogisticRegression")
+				|| trainName.contains("LinearSVC")
+				|| trainName.contains("RandomForest")
+				|| trainName.contains("AFTSurvivalRegression")
+				|| trainName.contains("DecisionTree")
+				|| trainName.contains("NaiveBayes")) {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 			Dataset<Row> trainingTmp = va.transform(df1);
-			transformedDf = trainingTmp.withColumn("label", trainingTmp.col(label).cast("Double"))
-					.select("label", "features");
-
+			transformedDf = trainingTmp.withColumn("label", trainingTmp.col(label).cast("Double")).select("label", "features");
 			logger.info("DataFrame count: " + transformedDf.count());
-
 		} else {
 			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 			transformedDf = va.transform(df1);
@@ -1911,18 +1932,17 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		transformedDf.show(false);
 		@SuppressWarnings("unchecked")
-		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class)
-				.invoke(trainedModel, transformedDf);
-		predictionDf.show(true);
+		Dataset<Row> predictedDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, transformedDf);
+		predictedDf.show(true);
 
 		String targetTableName = null;
 		if(targetDp != null)
 			targetTableName = modelServiceImpl.getTableNameByMetaObject(targetDp);
-		sqlContext.registerDataFrameAsTable(predictionDf, "tempPredictResult");
+		sqlContext.registerDataFrameAsTable(predictedDf, "tempPredictResult");
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setType(ResultType.dataframe);
-		rsHolder.setDataFrame(predictionDf);
-		rsHolder.setCountRows(predictionDf.count());
+		rsHolder.setDataFrame(predictedDf);
+		rsHolder.setCountRows(predictedDf.count());
 		rsHolder.setTableName(targetTableName);
 		String dsType = datasource.getType();
 		if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
@@ -2017,8 +2037,7 @@ public class SparkExecutor<T> implements IExecutor {
 		df.show(false);
 		df.printSchema();
 		try {
-			Dataset<Row>[] splits = df
-					.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
+			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
 			Dataset<Row> valDf = splits[1];
 			Dataset<Row> trainingDf = null;
@@ -2026,21 +2045,6 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
-			if (trainName.contains("LinearRegression")
-					|| trainName.contains("LogisticRegression")
-					|| trainName.contains("LinearSVC")
-					|| trainName.contains("RandomForest")
-					|| trainName.contains("AFTSurvivalRegression")
-					|| trainName.contains("DecisionTree")
-					|| trainName.contains("NaiveBayes")) {
-				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-			} else {
-				trainingDf = trngDf;
-				validateDf = valDf;
-			}
-
-			Dataset<Row> trainedDataSet = null;
 			
 			Class<?> dynamicClass = Class.forName(trainName);
 			Object obj = dynamicClass.newInstance();
@@ -2054,23 +2058,29 @@ public class SparkExecutor<T> implements IExecutor {
 					|| trainName.contains("NaiveBayes")) {
 				method = dynamicClass.getMethod("setLabelCol", String.class);
 				method.invoke(obj, "label");
+				
+				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
+			} else {
+				trainingDf = trngDf;
+				validateDf = valDf;
 			}
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
-			Pipeline pipeline = new Pipeline()
-					.setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
-			int numFolds = 3;
 			
+			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
+			
+			int numFolds = 3;
 			for(com.inferyx.framework.domain.Param param : hyperParamList) {
 				if(param.getParamName().equalsIgnoreCase("numFolds")) {
 					numFolds = Integer.parseInt(param.getParamValue().getValue());
 					break;
 				}
 			}
+			
 			CrossValidator cv = new CrossValidator()
 					.setEstimator(pipeline)
 					.setEvaluator(getEvaluatorByTrainClass(trainName))
-//					.setEstimatorParamMaps(getHyperParamsByAlgo(trainName, obj))
 					.setEstimatorParamMaps(getHyperParams(hyperParamList, obj))
 					.setNumFolds(numFolds);
 			CrossValidatorModel cvModel = null;
@@ -2083,7 +2093,7 @@ public class SparkExecutor<T> implements IExecutor {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
-			trainedDataSet = cvModel.transform(validateDf);			
+			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);			
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 			trainedDataSet.show(false);
 			return cvModel;
@@ -2207,7 +2217,6 @@ public class SparkExecutor<T> implements IExecutor {
 		Param<?>[] params = (Param<?>[]) trainClassObject.getClass().getMethod("params").invoke(trainClassObject);
 		ParamGridBuilder paramGridBuilder = new ParamGridBuilder();
 		for(com.inferyx.framework.domain.Param param : hyperParamList) {
-			//if(param.getParamType().equalsIgnoreCase("list")) {
 				for(Param<?> hyperParam : params) {
 					if(hyperParam.name().equalsIgnoreCase(param.getParamName())) {
 						String paramValue = param.getParamValue().getValue();
@@ -2217,7 +2226,6 @@ public class SparkExecutor<T> implements IExecutor {
 						break;
 					}
 				}
-			//}
 		} 
 		return paramGridBuilder.build();
 	}

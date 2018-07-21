@@ -1648,8 +1648,7 @@ public class MetadataServiceImpl {
 		return paramMap;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public ParamPair<Object> getParamPair(String algoClassName, String paramName, String paramType, String paramValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+	public ParamPair<?> getParamPair(String algoClassName, String paramName, String paramType, String paramValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
 		Class<?> dynamicClass = Class.forName(algoClassName);						
 		Method method = dynamicClass.getMethod(paramName);
 		Object obj = method.invoke(dynamicClass.newInstance());
@@ -1658,17 +1657,17 @@ public class MetadataServiceImpl {
 			Class<?>[] param = new Class[1];
 			param[0] = int.class;
 			Method method1 = obj.getClass().getMethod("w", param);
-			return (ParamPair<Object>)method1.invoke((IntParam)obj,Integer.parseInt(paramValue));
+			return (ParamPair<?>)method1.invoke((IntParam)obj,Integer.parseInt(paramValue));
 		}  else if(paramType.equalsIgnoreCase("long")) {
 			Class<?>[] param = new Class[1];
 			param[0] = long.class;
 			Method method1 = obj.getClass().getMethod("w", param);
-			return (ParamPair<Object>)method1.invoke((LongParam)obj,Long.parseLong(paramValue));
+			return (ParamPair<?>)method1.invoke((LongParam)obj,Long.parseLong(paramValue));
 		} else if(paramType.equalsIgnoreCase("double")) {
 			Class<?>[] param = new Class[1];
 			param[0] = double.class;
 			Method method1 = obj.getClass().getMethod("w", param);
-			return (ParamPair<Object>)method1.invoke((DoubleParam)obj,Double.parseDouble(paramValue));
+			return (ParamPair<?>)method1.invoke((DoubleParam)obj,Double.parseDouble(paramValue));
 		} /*else if(paramType.equalsIgnoreCase("String")) {
 			Class<?>[] param = new Class[1];
 			param[0] = String.class;

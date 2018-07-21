@@ -688,7 +688,8 @@ public class MetadataController {
 		return privilegeServiceImpl.getRolePriv(roleUuid);
 	}
 
-	@RequestMapping(value = "/getParamSetByModel", method = RequestMethod.GET)
+	/********************** UNUSED **********************/
+	/*@RequestMapping(value = "/getParamSetByModel", method = RequestMethod.GET)
 	public @ResponseBody String getParamSetByModel(@RequestParam("modelUuid") String modelUuid,
 			@RequestParam("modelVersion") String modelVersion,
 			@RequestParam(value = "type", required = false) String type,
@@ -698,7 +699,7 @@ public class MetadataController {
 				return registerService.getParamSetByModel(modelUuid, modelVersion);
 			} else
 				return null;			
-	}
+	}*/
 	
 	@RequestMapping(value = "/getParamSetByTrain", method = RequestMethod.GET)
 	public @ResponseBody String getParamSetByTrain(@RequestParam("trainUuid") String trainUuid,
@@ -733,9 +734,10 @@ public class MetadataController {
 	@RequestMapping(value = "/getParamSetByAlgorithm", method = RequestMethod.GET)
 	public @ResponseBody String getParamSetByAlgorithm(@RequestParam("algorithmUuid") String algorithmUuid,
 			@RequestParam("algorithmVersion") String algorithmVersion,
+			@RequestParam(value = "isHyperParam", required = false) String isHyperParam,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return registerService.getParamSetByAlogrithm(algorithmUuid, algorithmVersion);
+		return registerService.getParamSetByAlogrithm(algorithmUuid, algorithmVersion, isHyperParam);
 	}
 
 	@RequestMapping(value = "/getMetaIdByExecId", method = RequestMethod.GET)

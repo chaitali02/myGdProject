@@ -293,10 +293,16 @@ public class ParamSetServiceImpl {
 		return baseEntityList;
 	}*/
 	
-   public List<ParamSet> getParamSetByAlgorithm (String algorithmUUID, String algorithmVersion) throws JsonProcessingException {		
+   public List<ParamSet> getParamSetByAlgorithm (String algorithmUUID, String algorithmVersion, String isHyperParam) throws JsonProcessingException {		
 		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(algorithmUUID, MetaType.algorithm.toString());
 		//ParamList paramList = paramListServiceImpl.findLatestByUuid(algo.getParamList().getRef().getUuid());
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
+		MetaIdentifier plMI = null;
+		if(isHyperParam.equalsIgnoreCase("Y")) {
+			plMI = algo.getParamListWH().getRef();
+		} else {
+			plMI = algo.getParamListWoH().getRef();
+		}
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(plMI.getUuid(), MetaType.paramlist.toString());
 		MetaIdentifier dependsOnRef = new MetaIdentifier();
 		dependsOnRef.setType(MetaType.paramlist);
 		dependsOnRef.setUuid(paramList.getUuid());
@@ -308,29 +314,35 @@ public class ParamSetServiceImpl {
 		return paramSetList;		
 	}
 
-	public List<ParamSet> getParamSetByModel (String modelUUID, String modelVersion) throws JsonProcessingException {		
-		//Model model = modelServiceImpl.findOneByUuidAndVersion(modelUUID,modelVersion);
-		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID,modelVersion, MetaType.model.toString());
-		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-		//ParamList paramList = paramListServiceImpl.findLatestByUuid(algo.getParamList().getRef().getUuid());
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
-		MetaIdentifier dependsOnRef = new MetaIdentifier();
-		dependsOnRef.setType(MetaType.paramlist);
-		dependsOnRef.setUuid(paramList.getUuid());
-		dependsOnRef.setVersion(paramList.getVersion());		
-		MetaIdentifierHolder dependsOnRefHolder = new MetaIdentifierHolder();
-		dependsOnRefHolder.setRef(dependsOnRef);
-		List<ParamSet> paramSetList = findLatestByDependsOn(dependsOnRefHolder);
-		paramSetList = resolveName(paramSetList);
-		return paramSetList;		
-	}
+	/********************** UNUSED **********************/
+//	public List<ParamSet> getParamSetByModel (String modelUUID, String modelVersion) throws JsonProcessingException {		
+//		//Model model = modelServiceImpl.findOneByUuidAndVersion(modelUUID,modelVersion);
+//		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID,modelVersion, MetaType.model.toString());
+//		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
+//		//ParamList paramList = paramListServiceImpl.findLatestByUuid(algo.getParamList().getRef().getUuid());
+//		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
+//		MetaIdentifier dependsOnRef = new MetaIdentifier();
+//		dependsOnRef.setType(MetaType.paramlist);
+//		dependsOnRef.setUuid(paramList.getUuid());
+//		dependsOnRef.setVersion(paramList.getVersion());		
+//		MetaIdentifierHolder dependsOnRefHolder = new MetaIdentifierHolder();
+//		dependsOnRefHolder.setRef(dependsOnRef);
+//		List<ParamSet> paramSetList = findLatestByDependsOn(dependsOnRefHolder);
+//		paramSetList = resolveName(paramSetList);
+//		return paramSetList;		
+//	}
 	
 	public List<ParamSet> getParamSetByTrain (String trainUUID, String trainVersion) throws JsonProcessingException {		
 		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUUID,trainVersion, MetaType.train.toString());
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(),train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-
 		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
+		MetaIdentifier plMI = null;
+		if(train.getUseHyperParams().equalsIgnoreCase("Y")) {
+			plMI = algo.getParamListWH().getRef();
+		} else {
+			plMI = algo.getParamListWoH().getRef();
+		}
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(plMI.getUuid(), MetaType.paramlist.toString());
 		MetaIdentifier dependsOnRef = new MetaIdentifier();
 		dependsOnRef.setType(MetaType.paramlist);
 		dependsOnRef.setUuid(paramList.getUuid());
