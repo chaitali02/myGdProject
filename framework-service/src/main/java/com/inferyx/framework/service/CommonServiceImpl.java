@@ -3101,6 +3101,7 @@ public class CommonServiceImpl <T> {
 	}
 	 
 
+		@SuppressWarnings("deprecation")
 		public HttpServletResponse download(String uuid, String version, String format, int offset,
 				int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 				RunMode runMode, List<Map<String, Object>> results,MetaType metaType, MetaIdentifierHolder dependsOn) throws Exception {
@@ -3115,10 +3116,13 @@ public class CommonServiceImpl <T> {
 				FileOutputStream fileOut = null;
 				HSSFWorkbook workbook = WorkbookUtil.getWorkbook(results);
 				downloadPath = Helper.getPropertyValue("framework.file.download.path");
-				//response.addHeader("Content-Disposition", "attachment; filename=" + uuid + ".xls");
-				response.setContentType("application/xml charset=utf-16");
-				response.setHeader("Content-disposition", "attachment");
 				response.setHeader("filename", "" + uuid+"_"+version + ".xls");
+				
+				response.setContentType("application/xml charset=utf-16");
+				response.setCharacterEncoding( "," + uuid+"_"+version + ".xls");
+			
+				response.setHeader("Content-disposition", "attachment");
+				
 				ServletOutputStream os = response.getOutputStream();
 				workbook.write(os);
 

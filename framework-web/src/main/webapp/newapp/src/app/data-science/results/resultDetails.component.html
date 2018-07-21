@@ -1,14 +1,15 @@
 <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
 <br>
-<div class="row" *ngIf="showDiv">
+<!-- <div class="row" *ngIf="showDiv">
     <div class="col-md-12">
         <div class="portlet box green" id="dag-exec-model">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="fa fa-cogs"></i>Training Result 
+                    <i class="fa fa-cogs"></i>{{tableHeading}}
                 </div>
                 <div class="tools">
                     <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip ng-click="savePng($index,dagExecName)">
+                    
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
                     <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
@@ -20,7 +21,7 @@
                     <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
-                    <a title="Close"  (click)="goBack()" style="height:14px;">
+                    <a title="Close" (click)="goBack()" style="height:14px;">
                         <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
                     </a>
                 </div>
@@ -41,7 +42,7 @@
             </div>
         </div>
     </div>   
-</div>
+</div> -->
 <div class="row" *ngIf="showDiv==false;else falsyTemplate">    
     <div class="col-md-12">
         <div class="portlet box green">
@@ -50,13 +51,12 @@
                     <i class="fa fa-cogs"></i>{{tableHeading}}
                 </div>
                 <div class="tools">
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip ng-click="savePng($index,dagExecName)">
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="savePng()">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
                     <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
                         <i class="glyphicon glyphicon-file" disabled="true" area-hidden="true"></i>
                     </a>
-
                     <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
