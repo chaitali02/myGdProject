@@ -258,7 +258,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					}
 					if (futureTask != null && !futureTask.isDone()) {
 					futureTask.cancel(true);
-					MetaIdentifier operatorRef = taskExec.getOperators().get(0).getOperatorInfo().getRef();
+					MetaIdentifier operatorRef = taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef();
 					commonServiceImpl.kill(operatorRef.getType(), operatorRef.getUuid(), operatorRef.getVersion());
 					logger.info("Kill Signal sent to Task Thread");
 					status = "Kill Signal sent to Task Thread";

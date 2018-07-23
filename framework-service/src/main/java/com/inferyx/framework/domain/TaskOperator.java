@@ -22,7 +22,7 @@ public class TaskOperator {
 	private String operatorId;
 	private List<MetaIdentifierHolder> dependsOn = new ArrayList<>(0);
 	private String operatorType;
-	private MetaIdentifierHolder operatorInfo;
+	private List<MetaIdentifierHolder> operatorInfo;
 	private HashMap<String, Object> operatorParams = new HashMap<String, Object>();
 	/*private List<AttributeRefHolder> filterInfo = new ArrayList<>();
 	private MetaIdentifierHolder groupInfo;*/
@@ -76,11 +76,11 @@ public class TaskOperator {
 		this.dependsOn = depdendsOn;
 	}
 
-	public MetaIdentifierHolder getOperatorInfo() {
+	public List<MetaIdentifierHolder> getOperatorInfo() {
 		return operatorInfo;
 	}
 
-	public void setOperatorInfo(MetaIdentifierHolder operatorInfo) {
+	public void setOperatorInfo(List<MetaIdentifierHolder> operatorInfo) {
 		this.operatorInfo = operatorInfo;
 	}
 	

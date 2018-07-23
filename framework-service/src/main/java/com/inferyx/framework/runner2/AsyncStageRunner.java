@@ -44,7 +44,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 public class AsyncStageRunner {
 	
 	@Autowired
-	private CommonServiceImpl commonServiceImpl;
+	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private DagExecServiceImpl dagExecServiceImpl;
 	@SuppressWarnings("rawtypes")
@@ -111,8 +111,7 @@ public class AsyncStageRunner {
 	
 				datapodKey = fetchDatapodKey(indvTask);
 				// Fetch datapod key
-				MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0)
-						.getOperatorInfo();
+				MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0).getOperatorInfo().get(0);
 				if (datapodKey == null) {
 					if (operationInfoHolder != null && operationInfoHolder.getRef() != null
 						&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
@@ -262,8 +261,7 @@ public class AsyncStageRunner {
 					// Start process for Task submission
 					datapodKey = fetchDatapodKey(indvTask);
 					// Fetch datapod key
-					MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0)
-							.getOperatorInfo();
+					MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0).getOperatorInfo().get(0);
 					if (datapodKey == null) {
 						if (operationInfoHolder != null && operationInfoHolder.getRef() != null
 							&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 

@@ -569,9 +569,9 @@ public class DagExecServiceImpl {
 									com.inferyx.framework.domain.Status.Stage.Terminating, date);
 							taskStatusList.add(status);
 							logger.info("Starting to kill operator");
-							commonServiceImpl.kill(taskExec.getOperators().get(0).getOperatorInfo().getRef().getType()
-													, taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid()
-													, taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion()); 
+							commonServiceImpl.kill(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
+													, taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid()
+													, taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion()); 
 							logger.info("After operator is killed");
 							status = new Status(
 									com.inferyx.framework.domain.Status.Stage.Killed, new Date());
@@ -803,7 +803,7 @@ public class DagExecServiceImpl {
 						if (indvTaskExec.getTaskId().equals(taskId)) {
 							// Check the latest task status and decide
 							// Get operator statusList
-							operatorStatusList = commonServiceImpl.getAllStatusForExec(indvTaskExec.getOperators().get(0).getOperatorInfo().getRef());
+							operatorStatusList = commonServiceImpl.getAllStatusForExec(indvTaskExec.getOperators().get(0).getOperatorInfo().get(0).getRef());
 							Status operatorStatus = Helper.getLatestStatus(operatorStatusList);
 							com.inferyx.framework.domain.Status status = null;
 							if (operatorStatus.getStage().equals(Status.Stage.Killed)) {

@@ -517,10 +517,13 @@ public class DagServiceImpl2 {
 
 			// Traverse task & Populate RefKeys
 			if (indvTask.getOperators() != null && indvTask.getOperators().get(0).getOperatorInfo() != null) {
-				BaseExec baseExec = execFactory2.getExec(indvTask.getOperators().get(0).getOperatorInfo().getRef().getType(), indvTask.getOperators().get(0).getOperatorInfo().getRef());
-				taskExec.getOperators().get(0).setOperatorInfo(baseExec.getMetaIdentifierHolder(indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()));
+				BaseExec baseExec = execFactory2.getExec(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType(), indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef());
+
+				List<MetaIdentifierHolder> operatorInfoList = new ArrayList<>();
+				operatorInfoList.add(baseExec.getMetaIdentifierHolder(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()));
+				taskExec.getOperators().get(0).setOperatorInfo(operatorInfoList);
 				try {
-					commonServiceImpl.save(helper.getExecType(indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()).toString(), baseExec);
+					commonServiceImpl.save(helper.getExecType(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()).toString(), baseExec);
 				} catch (JSONException | ParseException e) {
 					e.printStackTrace();
 				}
@@ -591,13 +594,15 @@ public class DagServiceImpl2 {
 
 				otherParams = execParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());
+				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType());
 				logger.info(" OtherParams : " + otherParams);
-				MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+				MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 				List<TaskOperator> operatorList = new ArrayList<>();
 				TaskOperator operator = new TaskOperator();
 				MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
-				operator.setOperatorInfo(operatorInfo);
+				List<MetaIdentifierHolder> operatorInfoList = new ArrayList<>();
+				operatorInfoList.add(operatorInfo);
+				operator.setOperatorInfo(operatorInfoList);
 				operatorList.add(operator);
 				indvExecTask.setOperators(operatorList);
 				StringBuilder builder = null;
@@ -634,15 +639,15 @@ public class DagServiceImpl2 {
 				// Have few parts in common area
 				java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
 						.convertRefKeyListToMap(execParams.getRefKeyList());
-				BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(indvExecTask.getOperators().get(0).getOperatorInfo().getRef().getUuid(), 
-																						indvExecTask.getOperators().get(0).getOperatorInfo().getRef().getVersion(), 
-																						indvExecTask.getOperators().get(0).getOperatorInfo().getRef().getType().toString());
+				BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(indvExecTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), 
+																						indvExecTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), 
+																						indvExecTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().toString());
 
 				try {
 					// If conditions with parse goes here - START
-					IOperator operator2 = systemOperatorFactory2.getOperator(indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());
+					IOperator operator2 = systemOperatorFactory2.getOperator(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType());
 					baseExec = operator2.parse(baseExec, execParams, runMode);
-					commonServiceImpl.save(indvExecTask.getOperators().get(0).getOperatorInfo().getRef().getType().toString(), baseExec);
+					commonServiceImpl.save(indvExecTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().toString(), baseExec);
 					
 					execParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, execParams.getOtherParams()));
 					// If conditions with parse goes here - END	

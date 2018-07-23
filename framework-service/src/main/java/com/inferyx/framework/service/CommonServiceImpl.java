@@ -3543,7 +3543,9 @@ public class CommonServiceImpl <T> {
 			taskOperator.setOperatorType(taskOperatorList.get(i).getOperatorType());
 			MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
 			operatorInfo.setRef(metaExecIdentifier);
-			taskOperator.setOperatorInfo(operatorInfo);
+			List<MetaIdentifierHolder> operatorInfoList = new ArrayList<>();
+			operatorInfoList.add(operatorInfo);
+			taskOperator.setOperatorInfo(operatorInfoList);
 			
 			List<TaskOperator> taskOperatorList2 = new ArrayList<>();
 			int j = 0;
