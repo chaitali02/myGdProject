@@ -17,11 +17,12 @@ public class GraphNode {
 	String nodeType;
 	String nodeIcon;
 	AttributeRefHolder nodeName;
+	AttributeRefHolder nodeSize;
 	MetaIdentifierHolder nodeSource;
 	List<AttributeRefHolder> nodeProperties;
 	Highlight nodeBackgroundInfo;
 	Highlight highlightInfo;
-	String nodeSize;
+	
 	
 	/**
 	 * @return the nodeId
@@ -124,11 +125,13 @@ public class GraphNode {
 		this.highlightInfo = highlightInfo;
 	}
 
-	public String getNodeSize() {
-		return this.nodeSize;
+
+
+	public AttributeRefHolder getNodeSize() {
+		return nodeSize;
 	}
 
-	public void setNodeSize(String nodeSize) {
+	public void setNodeSize(AttributeRefHolder nodeSize) {
 		this.nodeSize = nodeSize;
 	}
 

@@ -38,50 +38,6 @@
                                             },
                                             "value" : null,
                                             "paramId" : "1",
-                                            "paramName" : "lhsData",
-                                            "paramType" : "datapod",
-                                            "paramValue" : {
-                                                "ref" : {
-                                                    "type" : "datapod",
-                                                    "uuid" : "ca3da873-f1c1-478b-b4dc-b17c6f3f6efb",
-                                                    "version" : "1531646139",
-                                                    "name" : null
-                                                },
-                                                "value" : null
-                                            },
-                                            "attributeInfo" : null
-                                        }, 
-                                        {
-                                            "ref" : {
-                                                "type" : "paramlist",
-                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29f24",
-                                                "version" : "1525530897",
-                                                "name" : "Matrix Multiplication"
-                                            },
-                                            "value" : null,
-                                            "paramId" : "2",
-                                            "paramName" : "rhsData",
-                                            "paramType" : "datapod",
-                                            "paramValue" : {
-                                                "ref" : {
-                                                    "type" : "datapod",
-                                                    "uuid" : "ca3da873-f1c1-478b-b4dc-b17c6f3f6efb",
-                                                    "version" : "1531646139",
-                                                    "name" : null
-                                                },
-                                                "value" : null
-                                            },
-                                            "attributeInfo" : null
-                                        }, 
-                                        {
-                                            "ref" : {
-                                                "type" : "paramlist",
-                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29f24",
-                                                "version" : "1525530897",
-                                                "name" : "Matrix Multiplication"
-                                            },
-                                            "value" : null,
-                                            "paramId" : "3",
                                             "paramName" : "lhsAttrs",
                                             "paramType" : "attributes",
                                             "paramValue" : null,
@@ -117,7 +73,7 @@
                                                 "name" : "Matrix Multiplication"
                                             },
                                             "value" : null,
-                                            "paramId" : "4",
+                                            "paramId" : "2",
                                             "paramName" : "rhsAttrs",
                                             "paramType" : "attributes",
                                             "paramValue" : null,
@@ -154,7 +110,7 @@
                                                 "name" : "Matrix Multiplication"
                                             },
                                             "value" : null,
-                                            "paramId" : "5",
+                                            "paramId" : "3",
                                             "paramName" : "saveLocation",
                                             "paramType" : "datapod",
                                             "paramValue" : {
@@ -165,6 +121,22 @@
                                                     "name" : null
                                                 },
                                                 "value" : null
+                                            },
+                                            "attributeInfo" : null
+                                        }, 
+                                        {
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29f24",
+                                                "version" : "1525530897",
+                                                "name" : "Matrix Multiplication"
+                                            },
+                                            "value" : null,
+                                            "paramId" : "4",
+                                            "paramName" : "operatorType",
+                                            "paramType" : "string",
+                                            "paramValue" : {
+                                                "value" : "MUL"
                                             },
                                             "attributeInfo" : null
                                         }

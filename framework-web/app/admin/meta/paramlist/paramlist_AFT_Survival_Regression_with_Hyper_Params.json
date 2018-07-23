@@ -1,24 +1,20 @@
 {
-  "uuid": "ffc49c07-e7cb-40ee-8050-fc69121a189b",
-  "version": "1530800450",
-  "name": "paramlist_logistic_regression_WH",
-  "desc": "LogisticRegression Param List with Hyper Params",
+  "uuid": "7b894ae4-e9c4-46f1-ad8e-431beee90032",
+  "version": "1530949002",
+  "name": "paramlist_AFT_Survival_Regression_with_Hyper_Params",
+  "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Thu Jul 05 19:50:50 IST 2018",
+  "createdOn": "Sat Jul 07 13:06:42 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
   "appInfo": [
-<<<<<<< HEAD:framework-web/app/admin/meta/paramlist/paramlist_logistic_regression_WH.json
-			{
-=======
 		{
->>>>>>> master:framework-web/app/admin/meta/paramlist/paramlist_logistic_regression_with_hyper_params.json
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -47,28 +43,17 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "regParam",
+      "paramName": "aggregationDepth",
       "paramType": "list",
       "paramValue": {
         "ref": {
           "type": "simple"
         },
-        "value": "0.3, 0.1, 0.05, 0.01, 0.005"
+        "value": "2, 4, 6"
       }
     },
     {
       "paramId": "1",
-      "paramName": "elasticNetParam",
-      "paramType": "list",
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "0.1, 0.05, 0.01, 0.005, 0.001"
-      }
-    },
-    {
-      "paramId": "2",
       "paramName": "numFolds",
       "paramType": "integer",
       "paramValue": {
@@ -79,7 +64,5 @@
       }
     }
   ],
-  "paramListType": "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null
+  "paramListType": "model"
 }

@@ -631,18 +631,14 @@ public class TaskServiceImpl implements Callable<String> {
 			logger.info("Going to ruleServiceImpl.execute");
 			try {
 				for(TaskOperator taskOperator : taskExec.getOperators()) {
-					//RuleExec ruleExec = ruleExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 					RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(taskOperator.getOperatorInfo().getRef().getUuid(), taskOperator.getOperatorInfo().getRef().getVersion(), MetaType.ruleExec.toString());
-					//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
 					execParams.setInternalVarMap(internalVarMap);
 					ExecParams execParams = commonServiceImpl.getExecParams(taskOperator);
 					execParams.setParamSetHolder(execParams.getParamInfo().get(0));
 					ruleExec.setExecParams(execParams);
 					commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
-					//ruleServiceImpl.execute(null, ruleExec, null, null, execParams, runMode);
 					ruleServiceImpl.prepareRule(taskOperator.getOperatorInfo().getRef().getUuid(), taskOperator.getOperatorInfo().getRef().getVersion(), execParams, ruleExec, runMode);
-					// ruleServiceImpl.execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(), ruleExec, null, null, null);
 					if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 						throw new Exception();
 					}
