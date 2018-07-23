@@ -1208,28 +1208,28 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        else{
         console.log(params);
         $scope.taskOnOperator=[];
-        if(params.operator && params.operator.length >1){
-          for(var i=0;i<params.operator.length;i++){
+        if(params.operator && params.operator[0].operatorInfo.length >1){
+          for(var i=0;i<params.operator[0].operatorInfo.length;i++){
             var taskOperators={};
             var paramObj={};
             paramObj.elementType=params.elementType;
-            paramObj.id=params.operator[i].operatorInfo.ref.uuid;
+            paramObj.id=params.operator[0].operatorInfo[i].ref.uuid;
             paramObj.name=params.name;
             paramObj.parentStage=params.parentStage;
             paramObj.ref=params.ref;
             paramObj.taskId=params.taskId;
             paramObj.type=params.type;
             paramObj.typeLabel=params.typeLabel;
-            paramObj.version=params.operator[i].operatorInfo.ref.version;;
+            paramObj.version=params.operator[0].operatorInfo[i].ref.version;;
             taskOperators.param=paramObj;
          //   taskOperators.param.operator=null;
-            taskOperators.uuid=params.operator[i].operatorInfo.ref.uuid;
-            taskOperators.version=params.operator[i].operatorInfo.ref.version;
-            taskOperators.name=params.operator[i].operatorInfo.ref.name;
+            taskOperators.uuid=params.operator[0].operatorInfo[i].ref.uuid;
+            taskOperators.version=params.operator[0].operatorInfo[i].ref.version;
+            taskOperators.name=params.operator[0].operatorInfo[i].ref.name;
             taskOperators.selected=false
-            taskOperators.paramSetId=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].paramSetId;
-            taskOperators.paramSetUuid=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.uuid;
-            taskOperators.paramSetName=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.name;
+            taskOperators.paramSetId=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].paramSetId;
+            taskOperators.paramSetUuid=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.uuid;
+            taskOperators.paramSetName=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.name;
             $scope.taskOnOperator[i]=taskOperators;
           }
           $('#viewResultModel').modal({
