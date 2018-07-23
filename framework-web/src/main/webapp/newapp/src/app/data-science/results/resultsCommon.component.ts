@@ -285,7 +285,7 @@ export class ResultsComponent {
             "functionName": "okKill()"
         }
     }
-    restart(uuid, version) {debugger
+    restart(uuid, version) {
         this.restartId = uuid
         this.restartVersion = version;
         this.isModel = "true"
