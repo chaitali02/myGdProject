@@ -431,7 +431,13 @@ export class ModelComponent implements OnInit {
     console.log(JSON.stringify(response));
     console.log(JSON.stringify(this.scriptCode));
   }
-
+  onVersionChange(){ 
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'model')
+    .subscribe(
+    response =>{//console.log(response)},
+      this.onSuccessgetOneByUuidAndVersion(response)},
+    error => console.log("Error :: " + error)); 
+  }
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataScience/model', uuid, version, 'false']);
   }

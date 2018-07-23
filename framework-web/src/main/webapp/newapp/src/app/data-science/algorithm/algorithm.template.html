@@ -68,8 +68,13 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">Version </label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" dataKey="u_Id" [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
+                  <p-dropdown [options]="VersionList"          
+                  [(ngModel)]="selectedVersion"
+                  name="selectedVersion"
+                  [style]="{'width':'100%','padding':'3px'}"
+                  [filter]="true"
+                  [disabled]="mode == 'false'"
+                  (onChange)="onVersionChange()">
                   </p-dropdown>
                 </div>
               </div>

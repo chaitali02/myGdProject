@@ -258,8 +258,12 @@ export class ParamlistComponent implements OnInit {
     });
   }
 
-  onVersionChange() {
-    this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
+  onVersionChange(){ 
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'paramlist')
+    .subscribe(
+    response =>{//console.log(response)},
+      this.onSuccessgetOneByUuidAndVersion(response)},
+    error => console.log("Error :: " + error)); 
   }
 
   submitParamlist() {

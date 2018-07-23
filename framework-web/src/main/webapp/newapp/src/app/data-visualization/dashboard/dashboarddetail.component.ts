@@ -384,6 +384,16 @@ export class DashboardDetailComponent {
        this.getVizpodByType();
        
     }
+
+  onVersionChange() {
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'dashboard')
+      .subscribe(
+      response => {//console.log(response)},
+        this.onSuccessGetOneByUuidAndVersion(response)
+      },
+      error => console.log("Error :: " + error));
+  }
+
     getVizpodByType(){
         this._dashboardService.getVizpodByType(this.source,this.sourcedata.uuid)
         .subscribe(

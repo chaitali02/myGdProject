@@ -144,8 +144,10 @@ export class AlgorithmComponent implements OnInit {
       ver["value"]["label"] = response[i]['version'];
       ver["value"]["uuid"] = response[i]['uuid'];
       temp[i] = ver;
+
     }
     this.VersionList = temp
+
   }
 
   onSuccessgetAllLatest(response){
@@ -195,7 +197,7 @@ export class AlgorithmComponent implements OnInit {
       this.algorithm.published = 'N';
     }
   }
-
+  
   submitAlgorithm(){
     this.isSubmitEnable=true;
     let algoJson = {};

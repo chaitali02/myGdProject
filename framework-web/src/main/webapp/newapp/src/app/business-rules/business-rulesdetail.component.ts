@@ -596,7 +596,10 @@ export class BusinessRulesDetailComponent {
         }
         this.VersionList = temp
     }
-
+    
+    onVersionChange(){
+        this.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label);
+      }
     ruleSubmit() {
         this.isSubmit = "true"
         let dqJson = {};
