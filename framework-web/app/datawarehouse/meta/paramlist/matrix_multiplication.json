@@ -46,35 +46,30 @@
     "params" : [ 
         {
             "paramId" : "1",
-            "paramName" : "lhsData",
-            "paramType" : "datapod",
-            "paramValue" : null,
-            "paramRef" : null
-        }, 
-        {
-            "paramId" : "2",
-            "paramName" : "rhsData",
-            "paramType" : "datapod",
-            "paramValue" : null,
-            "paramRef" : null
-        }, 
-        {
-            "paramId" : "3",
             "paramName" : "lhsAttrs",
             "paramType" : "attributes",
             "paramRef" : null
         }, 
         {
-            "paramId" : "4",
+            "paramId" : "2",
             "paramName" : "rhsAttrs",
             "paramType" : "attributes",
             "paramRef" : null
         }, 
         {
-            "paramId" : "5",
+            "paramId" : "3",
             "paramName" : "saveLocation",
             "paramType" : "datapod",
             "paramRef" : null
+        }, 
+        {
+            "paramId" : "4",
+            "paramName" : "operatorType",
+            "paramType" : "string",
+            "paramRef" : null,
+            "paramValue" : {
+                "value" : "MUL"
+            }
         }
     ]
 }

@@ -72,6 +72,10 @@ public class MatrixMultOperator implements IOperator {
 	private MatrixToRddConverter matrixToRddConverter;
 	@Autowired
 	private SparkExecutor sparkExecutor;
+	
+	protected final String ADD = "ADD";
+	protected final String SUB = "SUB";
+	protected final String MUL = "MUL";
 
 	static final Logger logger = Logger.getLogger(MatrixMultOperator.class);
 
@@ -111,15 +115,24 @@ public class MatrixMultOperator implements IOperator {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		Map<String, String> otherParams = execParams.getOtherParams();
-		ParamListHolder lhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "lhsData");
-		ParamListHolder rhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "rhsData");
+//		ParamListHolder lhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "lhsData");
+//		ParamListHolder rhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "rhsData");
 		ParamListHolder lhsAttrInfo = paramSetServiceImpl.getParamByName(execParams, "lhsAttrs");
 		ParamListHolder rhsAttrInfo = paramSetServiceImpl.getParamByName(execParams, "rhsAttrs");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
+		ParamListHolder operationType = paramSetServiceImpl.getParamByName(execParams, "operatorType");
+		MetaIdentifier lhsAttrDpIdentifier = lhsAttrInfo.getAttributeInfo().get(0).getRef();
+		MetaIdentifier rhsAttrDpIdentifier = rhsAttrInfo.getAttributeInfo().get(0).getRef();
+		
 		String lhsTableName = otherParams
+				.get("datapodUuid_" + lhsAttrDpIdentifier.getUuid() + "_tableName");
+		String rhsTableName = otherParams
+				.get("datapodUuid_" + rhsAttrDpIdentifier.getUuid() + "_tableName");
+		String operation = operationType.getParamValue().getValue();
+/*		String lhsTableName = otherParams
 				.get("datapodUuid_" + lhsDataInfo.getParamValue().getRef().getUuid() + "_tableName");
 		String rhsTableName = otherParams
-				.get("datapodUuid_" + rhsDataInfo.getParamValue().getRef().getUuid() + "_tableName");
+				.get("datapodUuid_" + rhsDataInfo.getParamValue().getRef().getUuid() + "_tableName");*/
 		String saveTableName = otherParams
 				.get("datapodUuid_" + locationInfo.getParamValue().getRef().getUuid() + "_tableName");
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locationInfo.getParamValue().getRef().getUuid(), 
@@ -127,6 +140,7 @@ public class MatrixMultOperator implements IOperator {
 																			locationInfo.getParamValue().getRef().getType().toString());
 		List<AttributeRefHolder> lhsAttrList = lhsAttrInfo.getAttributeInfo();
 		List<AttributeRefHolder> rhsAttrList = rhsAttrInfo.getAttributeInfo();
+
 		Dataset<Row> lhsDf = exec.executeSql(generateSql(lhsTableName, lhsAttrList)).getDataFrame();
 		Dataset<Row> rhsDf = exec.executeSql(generateSql(rhsTableName, rhsAttrList)).getDataFrame();
 		JavaRDD<MatrixEntry> lhsMatrixEntry = lhsDf.toJavaRDD().map(data -> {
@@ -137,7 +151,22 @@ public class MatrixMultOperator implements IOperator {
 		});
 		CoordinateMatrix lhsCoMat = new CoordinateMatrix(lhsMatrixEntry.rdd());
 		CoordinateMatrix rhsCoMat = new CoordinateMatrix(rhsMatrixEntry.rdd());
-		BlockMatrix resultMatrix = lhsCoMat.toBlockMatrix().multiply(rhsCoMat.toBlockMatrix());
+		BlockMatrix resultMatrix = null;
+		
+		switch (operation) {
+		case ADD:
+			resultMatrix = lhsCoMat.toBlockMatrix().add(rhsCoMat.toBlockMatrix());
+			break;
+		case SUB:
+			resultMatrix = lhsCoMat.toBlockMatrix().subtract(rhsCoMat.toBlockMatrix());
+			break;
+		case MUL:
+			resultMatrix = lhsCoMat.toBlockMatrix().multiply(rhsCoMat.toBlockMatrix());
+			break;
+		default:
+			resultMatrix = lhsCoMat.toBlockMatrix().multiply(rhsCoMat.toBlockMatrix());
+			break;
+		}
 		JavaRDD<Row> rowRdd = printResult(resultMatrix, baseExec, otherParams, runMode, exec);
 		// Convert Rdd to Dataframe and register Dataframe
 		// Obtain list of attr names from locationDatapod
@@ -155,8 +184,8 @@ public class MatrixMultOperator implements IOperator {
 		String fileName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
-		sparkExecutor.createAndRegisterDataset(rowRdd, schema, saveTableName+"_Df");
-		String sql = "SELECT * FROM " + saveTableName+"_Df";
+		sparkExecutor.createAndRegisterDataset(rowRdd, schema, saveTableName+"_df");
+		String sql = "SELECT * FROM " + saveTableName+"_df";
 		ResultSetHolder resultSetHolder = exec.executeRegisterAndPersist(sql, saveTableName, filePath, locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.operatorExec.toString());
@@ -261,21 +290,28 @@ public class MatrixMultOperator implements IOperator {
 		}
 		String execVersion = baseExec.getVersion();
 		// Set destination
-		ParamListHolder lhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "lhsData");
-		ParamListHolder rhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "rhsData");
+//		ParamListHolder lhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "lhsData");
+//		ParamListHolder rhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "rhsData");
+		ParamListHolder lhsAttrInfo = paramSetServiceImpl.getParamByName(execParams, "lhsAttrs");
+		ParamListHolder rhsAttrInfo = paramSetServiceImpl.getParamByName(execParams, "rhsAttrs");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(),
 				locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 
-		Datapod lhsDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+		// Get the attribute's corresponding datapod
+		MetaIdentifier lhsAttrDpIdentifier = lhsAttrInfo.getAttributeInfo().get(0).getRef();
+		Datapod lhsDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(lhsAttrDpIdentifier.getUuid(), lhsAttrDpIdentifier.getVersion(), lhsAttrDpIdentifier.getType().toString());
+		MetaIdentifier rhsAttrDpIdentifier = rhsAttrInfo.getAttributeInfo().get(0).getRef();
+		Datapod rhsDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rhsAttrDpIdentifier.getUuid(), rhsAttrDpIdentifier.getVersion(), rhsAttrDpIdentifier.getType().toString());
+		/*Datapod lhsDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
 				lhsDataInfo.getParamValue().getRef().getUuid(), lhsDataInfo.getParamValue().getRef().getVersion(),
-				lhsDataInfo.getParamValue().getRef().getType().toString());
+				lhsDataInfo.getParamValue().getRef().getType().toString());*/
 
-		Datapod rhsDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+		/*Datapod rhsDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
 				rhsDataInfo.getParamValue().getRef().getUuid(), rhsDataInfo.getParamValue().getRef().getVersion(),
-				rhsDataInfo.getParamValue().getRef().getType().toString());
+				rhsDataInfo.getParamValue().getRef().getType().toString());*/
 
 		String lhsTableName = null;
 		if (otherParams.containsKey("datapodUuid_" + lhsDatapod.getUuid() + "_tableName")) {
@@ -303,6 +339,13 @@ public class MatrixMultOperator implements IOperator {
 		return otherParams;
 	}
 
+	/**
+	 * 
+	 * @param sourceData
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
 	public String getTableNameBySource(Object sourceData, RunMode runMode) throws Exception {
 		String sourceTableName = null;
 		if (sourceData instanceof Datapod) {

@@ -60,8 +60,6 @@ import org.apache.spark.ml.param.IntParam;
 import org.apache.spark.ml.param.LongParam;
 import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
-import org.apache.spark.ml.param.ParamPair;
-import org.apache.spark.ml.regression.LinearRegression;
 import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
@@ -247,7 +245,7 @@ public class SparkExecutor<T> implements IExecutor {
 	 */
 	public void createAndRegisterDataset(JavaRDD<Row> rowRDD, StructType schema, String tableName) throws AnalysisException {
 		Dataset<Row> dataset = sparkSession.createDataFrame(rowRDD, schema);
-		dataset.createGlobalTempView(tableName);
+		dataset.createOrReplaceTempView(tableName);
 	}
 	
 	@Override
