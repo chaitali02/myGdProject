@@ -1208,28 +1208,28 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        else{
         console.log(params);
         $scope.taskOnOperator=[];
-        if(params.operator && params.operator.length >1){
-          for(var i=0;i<params.operator.length;i++){
+        if(params.operator && params.operator[0].operatorInfo.length >1){
+          for(var i=0;i<params.operator[0].operatorInfo.length;i++){
             var taskOperators={};
             var paramObj={};
             paramObj.elementType=params.elementType;
-            paramObj.id=params.operator[i].operatorInfo.ref.uuid;
+            paramObj.id=params.operator[0].operatorInfo[i].ref.uuid;
             paramObj.name=params.name;
             paramObj.parentStage=params.parentStage;
             paramObj.ref=params.ref;
             paramObj.taskId=params.taskId;
             paramObj.type=params.type;
             paramObj.typeLabel=params.typeLabel;
-            paramObj.version=params.operator[i].operatorInfo.ref.version;;
+            paramObj.version=params.operator[0].operatorInfo[i].ref.version;;
             taskOperators.param=paramObj;
          //   taskOperators.param.operator=null;
-            taskOperators.uuid=params.operator[i].operatorInfo.ref.uuid;
-            taskOperators.version=params.operator[i].operatorInfo.ref.version;
-            taskOperators.name=params.operator[i].operatorInfo.ref.name;
+            taskOperators.uuid=params.operator[0].operatorInfo[i].ref.uuid;
+            taskOperators.version=params.operator[0].operatorInfo[i].ref.version;
+            taskOperators.name=params.operator[0].operatorInfo[i].ref.name;
             taskOperators.selected=false
-            taskOperators.paramSetId=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].paramSetId;
-            taskOperators.paramSetUuid=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.uuid;
-            taskOperators.paramSetName=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.name;
+            taskOperators.paramSetId=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].paramSetId;
+            taskOperators.paramSetUuid=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.uuid;
+            taskOperators.paramSetName=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.name;
             $scope.taskOnOperator[i]=taskOperators;
           }
           $('#viewResultModel').modal({
@@ -1716,7 +1716,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            if( taskDetail &&  taskDetail.taskId == taskId){
              return false;
            } 
-           var ref = cell.attributes['model-data'].operators[0].operatorInfo.ref;
+           var ref = cell.attributes['model-data'].operators[0].operatorInfo[0].ref;
            var type = ref.type;
            var operator=cell.attributes['model-data'].operators;
            if(type.slice(-4) == 'Exec'){
@@ -1862,11 +1862,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          headers : {color:color,title:text}
        };
           
-       if(thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid){
-         $scope.popupModel.selectedType = thisModel.attributes['model-data'].operators[0].operatorInfo.ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo.ref.name;
+       if(thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid){
+         $scope.popupModel.selectedType = thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.name;
        }
        if(elementType =="operator" &&  !newCell){
-        var uuid=$scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid;
+        var uuid=$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid;
         CommonService.getOneByUuidAndVersion(uuid,"","operator").then(function(response){ 
           if(!response || !response.data){
             $scope.operatorinfoMapInfo = [];
@@ -1945,7 +1945,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           backdrop: 'static',
           keyboard: false
         });
-        var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
+        var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         var typeParamListArray=["simulate","operator"];
         var typeParamSetArray=["train","rule"];
         if(typeParamSetArray.indexOf(type) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
@@ -1960,8 +1960,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },100);
           if($scope.popupModel.selectedType){
             var temp = $scope.popupModel.selectedType.split('|');
-            $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-            $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+            $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+            $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
           
             var objDetail={}
             objDetail.uuid=temp[0];
@@ -1974,8 +1974,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         else if( typeParamListArray.indexOf(type) != -1 && ($scope.paramListHolder || $scope.popupModel.modelData.operators[0].operatorParams !=null)){
           $scope.isExecParamList=true;
           var temp = $scope.popupModel.selectedType.split('|');
-          $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-          $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+          $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+          $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
           var objDetail={}
           objDetail.uuid=temp[0];
           objDetail.version="";
@@ -2003,8 +2003,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         return;
         }
         var temp = popupModel.selectedType.split('|');
-        popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-        popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+        popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+        popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
         cell.attr('text', { text: popupModel.modelData.name});
        /* var objDetail={}
         objDetail.uuid=temp[0];
@@ -2202,7 +2202,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          var elementModel = cell.attributes['model-data'];
       
          try {
-           var elementType = elementModel.operators[0].operatorInfo.ref.type;
+           var elementType = elementModel.operators[0].operatorInfo[0].ref.type;
            if(elementType.slice(-4) == 'Exec'){
              elementType = elementType.slice(0,-4);
            }
@@ -2310,12 +2310,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          "model-data": {
            name : 'New '+operator,
            operators : [ {
-             operatorInfo : {
+             operatorInfo : [{
                ref : {
                  name : '',
                  type : operator,
                }
-             },
+             }],
              operatorParams:null
            }]
          },
@@ -2349,12 +2349,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             "model-data": {
               name : 'New '+operator,
               operators : [ {
-                operatorInfo : {
+                operatorInfo :[ {
                   ref : {
                     name : '',
                     type : operator,
                   }
-                },
+                }],
                 operatorParams:{}
               }]
             },
@@ -2649,12 +2649,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        // $scope.popupModel.modelData.operators[0].operatorParams=null;
        $scope.paramListHolder=null;
         var temp = $scope.popupModel.selectedType.split('|');
-        $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-        $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+        $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+        $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
         var objDetail={}
         objDetail.uuid=temp[0];
         objDetail.version="";
-        var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
+        var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         objDetail.type=type;
         var typeParamSetArray=["train","rule"];
         var typeParamListArray=["simulate","operator"];
@@ -2715,8 +2715,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         $scope.selectParamList=null;
         $scope.popupModel.modelData.operators[0].operatorInfo;
         var objDetail={};
-        objDetail.uuid=$scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid;
-        objDetail.type=$scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
+        objDetail.uuid=$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid;
+        objDetail.type=$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         objDetail.version= "";
         if($scope.selectParamType =="paramlist"){
           $scope.paramlistdata=null;

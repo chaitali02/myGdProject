@@ -14,13 +14,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" : [{
                                 "ref" : {
                                     "type" : "operator",
                                     "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
                                     "name" : "Transpose"
                                 }
-                            },
+                            }],
                             "operatorParams" : {
                                 "EXEC_PARAMS" : {
                                     "refKeyList" : null,
@@ -156,13 +156,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" : [{
                                 "ref" : {
                                     "type" : "operator",
                                     "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
                                     "name" : "Transpose"
                                 }
-                            },
+                            }],
                             "operatorParams" : {
                                 "EXEC_PARAMS" : {
                                     "paramListInfo" : [ 
@@ -902,13 +902,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" : [{
                                 "ref" : {
                                     "type" : "rule",
                                     "uuid" : "fe506c16-8991-439a-95d4-b83664b25008",
                                     "name" : "rule_portfolio_loss_simulation"
                                 }
-                            },
+                            }],
                             "operatorParams" : {}
                         }
                     ],
@@ -926,13 +926,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" : [{
                                 "ref" : {
                                     "type" : "rule",
                                     "uuid" : "8d00dae5-70c2-4fa8-b29e-600c971de83c",
                                     "name" : "rule_economic_capital"
                                 }
-                            },
+                            }],
                             "operatorParams" : {}
                         }
                     ],
