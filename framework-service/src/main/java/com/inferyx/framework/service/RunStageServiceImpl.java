@@ -702,8 +702,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	
 				datapodKey = fetchDatapodKey(indvTask);
 				// Fetch datapod key
-				MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0)
-						.getOperatorInfo();
+				MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0).getOperatorInfo().get(0);
 				if (datapodKey == null) {
 					if (operationInfoHolder != null && operationInfoHolder.getRef() != null
 						&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
@@ -865,8 +864,7 @@ public class RunStageServiceImpl implements Callable<String> {
 					// Start process for Task submission
 					datapodKey = fetchDatapodKey(indvTask);
 					// Fetch datapod key
-					MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0)
-							.getOperatorInfo();
+					MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0).getOperatorInfo().get(0);
 					if (datapodKey == null) {
 						if (operationInfoHolder != null && operationInfoHolder.getRef() != null
 							&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
@@ -1064,8 +1062,7 @@ public class RunStageServiceImpl implements Callable<String> {
 	public OrderKey fetchDatapodKey(Task indvTask) throws JsonProcessingException {
 		OrderKey datapodKey = null;
 		// Fetch datapod key
-		MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0)
-				.getOperatorInfo();
+		MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0).getOperatorInfo().get(0);
 		if (operationInfoHolder != null && operationInfoHolder.getRef() != null
 				&& operationInfoHolder.getRef().getType().equals(MetaType.load)) {
 
@@ -1201,8 +1198,8 @@ public class RunStageServiceImpl implements Callable<String> {
 		indivTaskExe.setFilePath(filePath);
 		indivTaskExe.setDagServiceImpl(dagServiceImpl);
 		indivTaskExe.setHdfsInfo(hdfsInfo);
-		TaskOperator operator = indvTask.getOperators().get(0); 
-		indivTaskExe.setOperatorInfo(operator.getOperatorInfo());
+		TaskOperator operator = indvTask.getOperators().get(0);
+		indivTaskExe.setOperatorInfo(operator.getOperatorInfo().get(0));
 		indivTaskExe.setCommonServiceImpl(commonServiceImpl);
 		indivTaskExe.setOperatorType(operator.getOperatorType());
 		indivTaskExe.setExecParams(execParams);

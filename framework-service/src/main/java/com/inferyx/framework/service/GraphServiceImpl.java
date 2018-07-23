@@ -1840,10 +1840,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		@SuppressWarnings("deprecation")
 		Dataset<Row> node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
-						"Object.nBPropertyId", "Object.nHpropertyId", "Object.type", "Object.nodeIndex")
+						"Object.nBPropertyId", "Object.nHpropertyId", "Object.type", "Object.nodeIndex","Object.nodeSize")
 				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
 						"Child.nodeProperties", "Child.nBPropertyId", "Child.nHpropertyId", "Child.type",
-						"Child.nodeIndex"))
+						"Child.nodeIndex","Child.nodeSize"))
 				.distinct();
 
 		System.out.println("############   Nodefilter  Filter  String   #####" + nodefilter.toString());
@@ -1917,7 +1917,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 								target.put("label", value1);
 							}
 							if (dstrow.anyNull() == true) {
-								System.out.println("test");
+								System.out.println("null");
 							}
 
 							if (dstrow.anyNull() == false) {

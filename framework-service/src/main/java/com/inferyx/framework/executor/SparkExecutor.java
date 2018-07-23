@@ -35,6 +35,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
@@ -59,13 +60,12 @@ import org.apache.spark.ml.param.IntParam;
 import org.apache.spark.ml.param.LongParam;
 import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
-import org.apache.spark.ml.param.ParamPair;
-import org.apache.spark.ml.regression.LinearRegression;
 import org.apache.spark.ml.regression.LinearRegressionTrainingSummary;
 import org.apache.spark.ml.tuning.CrossValidator;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.ml.tuning.ParamGridBuilder;
 import org.apache.spark.rdd.RDD;
+import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
@@ -235,7 +235,19 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		return resultSetHolder;
 	}
-
+	
+	/**
+	 * 
+	 * @param rowRDD
+	 * @param schema
+	 * @param tableName
+	 * @throws AnalysisException
+	 */
+	public void createAndRegisterDataset(JavaRDD<Row> rowRDD, StructType schema, String tableName) throws AnalysisException {
+		Dataset<Row> dataset = sparkSession.createDataFrame(rowRDD, schema);
+		dataset.createOrReplaceTempView(tableName);
+	}
+	
 	@Override
 	public ResultSetHolder executeSql(String sql) throws IOException {
 		return executeSql(sql, null);

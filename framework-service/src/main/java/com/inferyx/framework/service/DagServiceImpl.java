@@ -797,7 +797,7 @@ public class DagServiceImpl {
 		for (Task indvTask : dagTasks) {
 			TaskExec taskExec = null;
 			if(indvTask.getOperators() != null && indvTask.getOperators().get(0).getOperatorInfo() != null ) {
-				MetaIdentifier taskMI = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+				MetaIdentifier taskMI = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 				if(taskMI.getType().equals(MetaType.train)
 						|| taskMI.getType().equals(MetaType.rule)) {					
 					if(indvTask.getOperators().get(0).getOperatorParams() != null && !indvTask.getOperators().get(0).getOperatorParams().isEmpty()) {
@@ -864,10 +864,10 @@ public class DagServiceImpl {
 
 			// Traverse task & Populate RefKeys
 			if (indvTask.getOperators() != null && indvTask.getOperators().get(0).getOperatorInfo() != null) {
-				if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.map) || indvTask
-						.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.mapiter)) {
+				if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.map) || indvTask
+						.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.mapiter)) {
 
-					mapRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+					mapRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 					Map map = (Map) daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, mapRef, inputRefKeys));
 
 					// Setting the Version for Map Object
@@ -882,20 +882,20 @@ public class DagServiceImpl {
 						sourceAttrRef = attrMap.getSourceAttr().getRef();
 						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
 					}
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.load)) {// MetaType
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.load)) {// MetaType
 																														// load
-					loadRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+					loadRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.dag)) {// MetaType
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.dag)) {// MetaType
 																														// dag
-					secondaryDagRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+					secondaryDagRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 					commonServiceImpl.populateRefKeys(refKeys, secondaryDagRef, inputRefKeys); // PopuPopulatelate
 																				// refKeys
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.dq)) {// MetaType
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.dq)) {// MetaType
 
 					DataQualExec dataqualExec = new DataQualExec();
 					dataqualExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.rule)) {// MetaType
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.rule)) {// MetaType
 
 					RuleExec ruleExec = new RuleExec();
 					ruleExec.setBaseEntity();
@@ -904,7 +904,7 @@ public class DagServiceImpl {
 					 * ruleExec.getVersion());
 					 * taskExec.getOperators().get(0).getOperatorInfo().setRef(execIdentifier);
 					 */
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.rulegroup)) {// MetaType
 
 					RuleGroupExec ruleGroupExec = new RuleGroupExec();
@@ -914,23 +914,23 @@ public class DagServiceImpl {
 					 * ruleGroupExec.getUuid(), ruleGroupExec.getVersion());
 					 * taskExec.getOperators().get(0).getOperatorInfo().setRef(execIdentifier);
 					 */
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.train)) {
 					TrainExec trainExec = new TrainExec();
 					trainExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.predict)) {
 					PredictExec predictExec = new PredictExec();
 					predictExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.simulate)) {
 					SimulateExec simulateExec = new SimulateExec();
 					simulateExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.recon)) {
 					ReconExec reconExec = new ReconExec();
 					reconExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.recongroup)) {
 					ReconGroupExec reconGroupExec = new ReconGroupExec();
 					reconGroupExec.setBaseEntity();
@@ -1002,15 +1002,17 @@ public class DagServiceImpl {
 			for (TaskExec indvExecTask : dagExecTasks) {
 				otherParams = execParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());
+				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType());
 				logger.info(" OtherParams : " + otherParams);
 				
 				List<TaskOperator> operatorList = new ArrayList<>();
 				for(int i=0; i<indvTask.getOperators().size(); i++) {
-					MetaIdentifier ref = indvTask.getOperators().get(i).getOperatorInfo().getRef();
+					MetaIdentifier ref = indvTask.getOperators().get(i).getOperatorInfo().get(0).getRef();
 					TaskOperator operator = new TaskOperator();
 					MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
-					operator.setOperatorInfo(operatorInfo);
+					List<MetaIdentifierHolder> operatorInfoList = new ArrayList<>();
+					operatorInfoList.add(operatorInfo);
+					operator.setOperatorInfo(operatorInfoList);
 					operatorList.add(operator);
 					StringBuilder builder = null;
 					if (indvTask.getOperators().get(i).getOperatorParams() != null
@@ -1046,6 +1048,7 @@ public class DagServiceImpl {
 					// Have few parts in common area
 					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
 							.convertRefKeyListToMap(execParams.getRefKeyList());
+					
 					BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(ref.getType()), ref, indvExecTask, i);
 
 					try {
@@ -1066,7 +1069,7 @@ public class DagServiceImpl {
 						} else if (ref.getType().equals(MetaType.dqgroup)) {
 							baseExec = dataQualGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
 									datapodList, (DataQualGroupExec)baseExec, dagExec);
-							baseExec = dataQualGroupServiceImpl.parse(indvExecTask.getOperators().get(0).getOperatorInfo().getRef(),refKeyMap, datapodList, dagExec, runMode);
+							baseExec = dataQualGroupServiceImpl.parse(indvExecTask.getOperators().get(0).getOperatorInfo().get(0).getRef(),refKeyMap, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.profile)) {
 							baseExec = profileServiceImpl.create(ref.getUuid(),ref.getVersion(),(ProfileExec)baseExec,refKeyMap,datapodList,dagExec);
 							baseExec =  (ProfileExec)profileServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);

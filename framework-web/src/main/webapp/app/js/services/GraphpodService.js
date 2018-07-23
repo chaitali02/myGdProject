@@ -152,7 +152,21 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
           nodeName.dname=response.nodeInfo[i].nodeName.ref.name+"."+response.nodeInfo[i].nodeName.attrName;
           nodeName.attributeId=response.nodeInfo[i].nodeName.attrId;
           nodeName.attrType=response.nodeInfo[i].nodeName.attrType;
-          nodeJson.nodeName=nodeName;1
+          nodeJson.nodeName=nodeName;
+          
+          var nodeSize={};
+          if(response.nodeInfo[i].nodeSize !=null){
+            nodeSize.uuid=response.nodeInfo[i].nodeSize.ref.uuid;
+            nodeSize.datapodname=response.nodeInfo[i].nodeSize.ref.name;
+            nodeSize.type=response.nodeInfo[i].nodeSize.ref.type;
+            nodeSize.name=response.nodeInfo[i].nodeSize.attrName;
+            nodeSize.dname=response.nodeInfo[i].nodeSize.ref.name+"."+response.nodeInfo[i].nodeSize.attrName;
+            nodeSize.attributeId=response.nodeInfo[i].nodeSize.attrId;
+            nodeSize.attrType=response.nodeInfo[i].nodeSize.attrType;
+            nodeJson.nodeSize=nodeSize;
+          }else{
+            nodeJson.nodeSize=null;
+          }
           var nodePropertiesArr=[];
           if(response.nodeInfo[i].nodeProperties !=null){
             for(var j=0;j<response.nodeInfo[i].nodeProperties.length;j++){

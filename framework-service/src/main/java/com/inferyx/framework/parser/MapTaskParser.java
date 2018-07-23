@@ -67,7 +67,7 @@ public class MapTaskParser extends TaskParser {
 
 		java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList());
 		Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-		MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+		MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 		String operatorType = indvTask.getOperators().get(0).getOperatorType();
 		HashMap<String, Object> operatorParams = indvTask.getOperators().get(0).getOperatorParams();
 		ref = populateRefVersion(ref, refKeyMap);
