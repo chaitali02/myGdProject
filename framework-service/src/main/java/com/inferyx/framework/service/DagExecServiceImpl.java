@@ -569,9 +569,11 @@ public class DagExecServiceImpl {
 									com.inferyx.framework.domain.Status.Stage.Terminating, date);
 							taskStatusList.add(status);
 							logger.info("Starting to kill operator");
-							commonServiceImpl.kill(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
-													, taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid()
-													, taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion()); 
+							for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
+								commonServiceImpl.kill(operatorInfo.getRef().getType()
+														, operatorInfo.getRef().getUuid()
+														, operatorInfo.getRef().getVersion());
+							}
 							logger.info("After operator is killed");
 							status = new Status(
 									com.inferyx.framework.domain.Status.Stage.Killed, new Date());
@@ -803,15 +805,23 @@ public class DagExecServiceImpl {
 						if (indvTaskExec.getTaskId().equals(taskId)) {
 							// Check the latest task status and decide
 							// Get operator statusList
-							operatorStatusList = commonServiceImpl.getAllStatusForExec(indvTaskExec.getOperators().get(0).getOperatorInfo().get(0).getRef());
+							operatorStatusList = new ArrayList<>();
+							for(MetaIdentifierHolder operatorInfo : indvTaskExec.getOperators().get(0).getOperatorInfo()) {
+								List<Status> tempOperatorStatusList = commonServiceImpl.getAllStatusForExec(operatorInfo.getRef());
+								Status operatorStatus = Helper.getLatestStatus(tempOperatorStatusList);
+								if(operatorStatus.getStage().equals(Status.Stage.Killed)) {
+									operatorStatusList.addAll(tempOperatorStatusList);
+									break;
+								} else {
+									operatorStatusList.addAll(tempOperatorStatusList);
+								}
+							}
 							Status operatorStatus = Helper.getLatestStatus(operatorStatusList);
 							com.inferyx.framework.domain.Status status = null;
 							if (operatorStatus.getStage().equals(Status.Stage.Killed)) {
-								status = new Status(
-										com.inferyx.framework.domain.Status.Stage.Killed, new Date());
+								status = new Status(com.inferyx.framework.domain.Status.Stage.Killed, new Date());
 							} else {
-								status = new Status(
-										com.inferyx.framework.domain.Status.Stage.Completed, new Date());
+								status = new Status(com.inferyx.framework.domain.Status.Stage.Completed, new Date());
 							}
 							/*com.inferyx.framework.domain.Status status = new Status(
 									com.inferyx.framework.domain.Status.Stage.Completed, new Date());*/

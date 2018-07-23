@@ -111,27 +111,28 @@ public class AsyncStageRunner {
 	
 				datapodKey = fetchDatapodKey(indvTask);
 				// Fetch datapod key
-				MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0).getOperatorInfo().get(0);
-				if (datapodKey == null) {
-					if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-						&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.rule) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.simulate) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
-							|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
-							/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
-							|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
-					continue;
+				for(MetaIdentifierHolder operationInfoHolder : indvTask.getOperators().get(0).getOperatorInfo()) {
+					if (datapodKey == null) {
+						if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+							&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.rule) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.simulate) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
+								|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
+								/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
+								|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
+						continue;
+						}
 					}
 				}
 				logger.info("Calling task id : " + indvTask.getTaskId());
 				// Set task and submit for execution
-				setTaskAndSubmit(indvTaskExec, datapodKey, indvTask, operationInfoHolder, taskList, runMode);
+				setTaskAndSubmit(indvTaskExec, datapodKey, indvTask, indvTask.getOperators().get(0).getOperatorInfo(), taskList, runMode);
 			
 			}	// For all taskExecs
 			
@@ -261,29 +262,29 @@ public class AsyncStageRunner {
 					// Start process for Task submission
 					datapodKey = fetchDatapodKey(indvTask);
 					// Fetch datapod key
-					MetaIdentifierHolder operationInfoHolder = indvTask.getOperators().get(0).getOperatorInfo().get(0);
-					if (datapodKey == null) {
-						if (operationInfoHolder != null && operationInfoHolder.getRef() != null
-							&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.rule)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.simulate)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
-								|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
-								/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
-								|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
-						continue;
+					for(MetaIdentifierHolder operationInfoHolder : indvTask.getOperators().get(0).getOperatorInfo()) {
+						if (datapodKey == null) {
+							if (operationInfoHolder != null && operationInfoHolder.getRef() != null
+								&& !(operationInfoHolder.getRef().getType().equals(MetaType.dag) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.dqgroup) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.profilegroup) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.rule)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.rulegroup)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.train) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.predict) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.simulate)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.recon) 
+									|| operationInfoHolder.getRef().getType().equals(MetaType.recongroup)
+									/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
+									|| operationInfoHolder.getRef().getType().equals(MetaType.operator))) {
+							continue;
+							}
 						}
 					}
-					
 					logger.info("Calling task id 2 : " + indvTask.getTaskId());
 					dependentTaskRunningLog.add(dagExec.getUuid() + "_" + stageId + "_" + indvTaskExec.getTaskId());
 					// Set task and submit for execution
-					setTaskAndSubmit(indvTaskExec, datapodKey, indvTask, operationInfoHolder, taskList, runMode);
+					setTaskAndSubmit(indvTaskExec, datapodKey, indvTask, indvTask.getOperators().get(0).getOperatorInfo(), taskList, runMode);
 				
 				}	// For all taskExecs
 			}
@@ -299,7 +300,7 @@ public class AsyncStageRunner {
 		return null;
 	}
 	
-	public void setTaskAndSubmit(TaskExec indvTaskExec, OrderKey datapodKey, Task indvTask, MetaIdentifierHolder operationInfoHolder, List<FutureTask> taskList, RunMode runMode) {
+	public void setTaskAndSubmit(TaskExec indvTaskExec, OrderKey datapodKey, Task indvTask, List<MetaIdentifierHolder> operationInfoHolderList, List<FutureTask> taskList, RunMode runMode) {
 		
 	}
 	

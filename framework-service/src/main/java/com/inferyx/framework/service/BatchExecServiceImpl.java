@@ -43,6 +43,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.RunStatusHolder;
@@ -258,8 +259,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					}
 					if (futureTask != null && !futureTask.isDone()) {
 					futureTask.cancel(true);
-					MetaIdentifier operatorRef = taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef();
-					commonServiceImpl.kill(operatorRef.getType(), operatorRef.getUuid(), operatorRef.getVersion());
+					for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
+						commonServiceImpl.kill(operatorInfo.getRef().getType(), operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion());
+					}
 					logger.info("Kill Signal sent to Task Thread");
 					status = "Kill Signal sent to Task Thread";
 					while(! (futureTask == null || futureTask.isCancelled() || futureTask.isDone())) {

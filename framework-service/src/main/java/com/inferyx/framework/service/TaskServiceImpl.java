@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.ml.param.ParamMap;
 import org.codehaus.jettison.json.JSONException;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
@@ -42,9 +41,9 @@ import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ProfileExec;
@@ -60,7 +59,6 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.TaskOperator;
-import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -89,7 +87,7 @@ public class TaskServiceImpl implements Callable<String> {
 	private String filePath;
 	private String dagExecVer;
 	private DataStoreServiceImpl iDataStore;
-	private MetaIdentifierHolder operatorInfo;
+	private List<MetaIdentifierHolder> operatorInfo;
 	private String operatorType;
 	private Task indvTask;
 	private boolean killThread = false;
@@ -311,11 +309,11 @@ public class TaskServiceImpl implements Callable<String> {
 		this.indvTask = indvTask;
 	}
 
-	public MetaIdentifierHolder getOperatorInfo() {
+	public List<MetaIdentifierHolder> getOperatorInfo() {
 		return operatorInfo;
 	}
 
-	public void setOperatorInfo(MetaIdentifierHolder operatorInfo) {
+	public void setOperatorInfo(List<MetaIdentifierHolder> operatorInfo) {
 		this.operatorInfo = operatorInfo;
 	}
 
@@ -573,7 +571,7 @@ public class TaskServiceImpl implements Callable<String> {
 			datapodTableName = "";
 		}
 		Status failedStatus = new Status(Status.Stage.Failed, new Date());
-		if(operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.load)){
+		if(operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.load)){
 			try {
 				Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(operator.getOperatorInfo().get(0).getRef().getUuid(), operator.getOperatorInfo().get(0).getRef().getVersion(), MetaType.load.toString());
 				LoadExec loadExec = (LoadExec) daoRegister.getRefObject(dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().get(0).getRef());
@@ -593,7 +591,7 @@ public class TaskServiceImpl implements Callable<String> {
 				throw e;
 			}
 
-		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.map)) {
+		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.map)) {
 			try {
 				MapExec mapExec = (MapExec) daoRegister.getRefObject(dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().get(0).getRef());
 				mapServiceImpl.executeSql(mapExec, datapodKey, runMode);
@@ -601,7 +599,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.dq)) {
+		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.dq)) {
 			try {
 				
 				//DataQualExec dataqualExec = dataqualExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
@@ -615,7 +613,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.dqgroup)) {
+		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.dqgroup)) {
 			try {
 				//DataQualGroupExec dataqualGroupExec = dataqualGroupExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				DataQualGroupExec dataqualGroupExec = (DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.dqgroupExec.toString());
@@ -627,31 +625,33 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.rule)) {
+		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.rule)) {
 			logger.info("Going to ruleServiceImpl.execute");
 			try {
-				for(TaskOperator taskOperator : taskExec.getOperators()) {
-					RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(taskOperator.getOperatorInfo().get(0).getRef().getUuid(), taskOperator.getOperatorInfo().get(0).getRef().getVersion(), MetaType.ruleExec.toString());
+				int i = 0;
+				for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
+					RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), MetaType.ruleExec.toString());
 					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
 					execParams.setInternalVarMap(internalVarMap);
-					ExecParams execParams = commonServiceImpl.getExecParams(taskOperator);
+					ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 					if(execParams != null && execParams.getParamInfo() != null) {
-						execParams.setParamSetHolder(execParams.getParamInfo().get(0));
+						execParams.setParamSetHolder(execParams.getParamInfo().get(i));
 					} else if(execParams != null && execParams.getParamListInfo() != null) {
-						execParams.setParamListHolder(execParams.getParamListInfo().get(0));
+						execParams.setParamListHolder(execParams.getParamListInfo().get(i));
 					}
 					ruleExec.setExecParams(execParams);
 					commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
-					ruleServiceImpl.prepareRule(taskOperator.getOperatorInfo().get(0).getRef().getUuid(), taskOperator.getOperatorInfo().get(0).getRef().getVersion(), execParams, ruleExec, runMode);
+					ruleServiceImpl.prepareRule(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), execParams, ruleExec, runMode);
 					if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 						throw new Exception();
 					}
+					i++;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;
 			}
-		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.rulegroup)) {
+		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.rulegroup)) {
 			try {
 				//RuleGroupExec ruleGroupExec = ruleGroupExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				RuleGroupExec ruleGroupExec = (RuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.rulegroupExec.toString());
@@ -665,7 +665,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.profile)) {
+		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.profile)) {
 			try {
 				//ProfileExec profileExec = profileExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.profileExec.toString());
@@ -675,7 +675,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.profilegroup)) {
+		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.profilegroup)) {
 			try {
 				//ProfileGroupExec profileGroupExec = profileGroupExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				ProfileGroupExec profileGroupExec = (ProfileGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.profilegroupExec.toString());
@@ -687,27 +687,31 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.train)) {
+		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.train)) {
 			try {
-				for(TaskOperator taskOperator : taskExec.getOperators()) {
-					TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(taskOperator.getOperatorInfo().get(0).getRef().getUuid(), taskOperator.getOperatorInfo().get(0).getRef().getVersion(), MetaType.trainExec.toString());
+				int i = 0;
+				for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
+					TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), MetaType.trainExec.toString());
 					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", trainExec.getVersion());
 					execParams.setInternalVarMap(internalVarMap);
-//					Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
-//					Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-//					ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, train.getUuid(), train.getVersion());
-					ExecParams execParams = commonServiceImpl.getExecParams(taskOperator);
-					//modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
-					modelServiceImpl.prepareTrain(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec, execParams, runMode);
+					ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
+					ExecParams execParamsTemp = null;
+					if(execParams != null && execParams.getParamInfo() != null) {
+						execParamsTemp = createNewExecParams(execParams, i);
+					} else {
+						execParamsTemp = execParams;
+					}
+					modelServiceImpl.prepareTrain(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec, execParamsTemp, runMode);
 					if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 						throw new Exception("Train execution failed.");
 					}
+					i++;
 				}				
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;
 			}
-		}else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.simulate)) {
+		}else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.simulate)) {
 			try {
 				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.simulateExec.toString());
@@ -722,7 +726,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.predict)) {
+		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.predict)) {
 			try {
 				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.predictExec.toString());
@@ -736,7 +740,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.recon)) {
+		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.recon)) {
 			logger.info("Going to reconServiceImpl.execute");
 			try {
 				ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.reconExec.toString());
@@ -750,7 +754,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.recongroup)) {
+		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.recongroup)) {
 			try {
 				ReconGroupExec reconGroupExec = (ReconGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.recongroupExec.toString());
 				reconGroupServiceImpl.execute(reconGroupExec.getDependsOn().getRef().getUuid(), reconGroupExec.getDependsOn().getRef().getVersion(), execParams, reconGroupExec, runMode);
@@ -761,7 +765,7 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} 	 else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.operator)) {
+		} 	 else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.operator)) {
 			logger.info("Going to operatorServiceImpl.execute");
 			try {
 				OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.operatorExec.toString());
@@ -781,6 +785,24 @@ public class TaskServiceImpl implements Callable<String> {
 		return datapodTableName;
 	}// End executeTask
 	
+	private ExecParams createNewExecParams(ExecParams execParams, int i) {
+		ExecParams execParamsTemp = new ExecParams();
+		execParamsTemp.setExecutionContext(execParams.getExecutionContext());
+		execParamsTemp.setFilterInfo(execParams.getFilterInfo());
+		execParamsTemp.setGraphFilter(execParams.getGraphFilter());
+		execParamsTemp.setInternalVarMap(execParams.getInternalVarMap());
+		execParamsTemp.setOtherParams(execParams.getOtherParams());
+		List<ParamSetHolder> paramInfoList = new ArrayList<>();
+		paramInfoList.add(execParams.getParamInfo().get(i));
+		execParamsTemp.setParamInfo(paramInfoList);
+		execParamsTemp.setParamListHolder(execParams.getParamListHolder());
+		execParamsTemp.setParamListInfo(execParams.getParamListInfo());
+		execParamsTemp.setParamSetHolder(execParams.getParamSetHolder());
+		execParamsTemp.setRefKeyList(execParams.getRefKeyList());
+		execParamsTemp.setStageInfo(execParams.getStageInfo());
+		return null;
+	}
+
 	/**
 	 * 
 	 * @param taskExec
@@ -840,7 +862,7 @@ public class TaskServiceImpl implements Callable<String> {
 			// DataFrame dfTask = null;
 			String datapodTableName  = null;
 			//Execute Task SQL
-			if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.dag)){
+			if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.dag)){
 				try {
 					resultRef = executeDagTask(resultRef);
 				} catch (Exception e) {
