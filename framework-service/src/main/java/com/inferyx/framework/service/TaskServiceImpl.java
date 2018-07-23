@@ -635,7 +635,11 @@ public class TaskServiceImpl implements Callable<String> {
 					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
 					execParams.setInternalVarMap(internalVarMap);
 					ExecParams execParams = commonServiceImpl.getExecParams(taskOperator);
-					execParams.setParamSetHolder(execParams.getParamInfo().get(0));
+					if(execParams != null && execParams.getParamInfo() != null) {
+						execParams.setParamSetHolder(execParams.getParamInfo().get(0));
+					} else if(execParams != null && execParams.getParamListInfo() != null) {
+						execParams.setParamListHolder(execParams.getParamListInfo().get(0));
+					}
 					ruleExec.setExecParams(execParams);
 					commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
 					ruleServiceImpl.prepareRule(taskOperator.getOperatorInfo().getRef().getUuid(), taskOperator.getOperatorInfo().getRef().getVersion(), execParams, ruleExec, runMode);
