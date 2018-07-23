@@ -16,6 +16,7 @@ import { AppConfig } from '../../app.config';
   
 })
 export class ResultDetailsComponent {
+  pmmlData: any;
   tableHeading: string;
   cols: any[];
   columnOptions: any[];
@@ -105,6 +106,16 @@ export class ResultDetailsComponent {
 
    showPMMLResult(){
     this.ppml=true;
+    var headers = new Headers();
+    headers.append('Accept', 'text/plain');
+    this.http.get(this.baseUrl+"model/download?modelExecUUID="+this.id+"&modelExecVersion="+this.version,
+    { headers: headers })
+  .subscribe(response => this.getPmmlResults(response))
+   }
+   getPmmlResults(response){
+     console.log(response["_body"])
+     this.pmmlData=response["_body"];
+     
    }
    getModelResults(){
     this._modelService.getModelResults(this.id,this.version)

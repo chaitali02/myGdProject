@@ -159,7 +159,7 @@ export class CommonListService {
     // .catch(this.handleError);
   }
 
-  restart(uuid, version, type, action): Observable<any> {
+  restart(uuid, version, type, action): Observable<any> {debugger
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
@@ -186,6 +186,15 @@ export class CommonListService {
     }
     if (type == "map") {
       this.url = this.baseUrl + 'map/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "trainexec") {
+      this.url = this.baseUrl + 'model/train/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "predictexec") {
+      this.url = this.baseUrl + 'model/predict/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "simulateexec") {
+      this.url = this.baseUrl + 'model/simulate/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     let body = JSON.stringify({});
     this.headers = null;
@@ -226,6 +235,15 @@ export class CommonListService {
     }
     if (type == "map") {
       this.url = this.baseUrl + 'map/setStatus?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "trainexec") {
+      this.url = this.baseUrl + 'model/train/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "predictexec") {
+      this.url = this.baseUrl + 'model/predict/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "simulateexec") {
+      this.url = this.baseUrl + 'model/simulate/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     let body = {};
     this.headers = null;

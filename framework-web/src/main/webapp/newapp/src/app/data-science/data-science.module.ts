@@ -43,7 +43,8 @@ import { DialogModule } from 'primeng/components/dialog/dialog'
 import { CommonListService } from '../common-list/common-list.service';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import {ResultDetailsComponent} from './results/resultDetails.component';
-;
+
+//import {PmmlDirective} from './results/pmml.directive';
 @NgModule({
     imports:[
         CommonModule,
@@ -65,7 +66,6 @@ import {ResultDetailsComponent} from './results/resultDetails.component';
         CalendarModule,
         MenuModule,
 
-       // PopupModule.forRoot()
 
     ],
     declarations :[
@@ -80,7 +80,8 @@ import {ResultDetailsComponent} from './results/resultDetails.component';
         PredictionComponent,
         SimulationComponent,
         OperatorComponent,
-        ResultDetailsComponent
+        ResultDetailsComponent,
+        //PmmlDirective
     ],
     providers:[
         CommonService,
@@ -92,7 +93,8 @@ import {ResultDetailsComponent} from './results/resultDetails.component';
         SimulationService,
         OperatorService,
         OperatorComponent,
-        CommonListService
+        CommonListService,
+
     ]
 })
  

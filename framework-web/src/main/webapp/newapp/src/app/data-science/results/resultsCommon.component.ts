@@ -4,7 +4,7 @@ import { DatePipe } from "@angular/common";
 import { Router, ActivatedRoute, Params } from "@angular/router";
 import { AppMetadata } from "../../app.metadata";
 import { CommonService } from "../../metadata/services/common.service";
-import { OnInit, Component } from "@angular/core";
+import { Component, ViewEncapsulation, ElementRef, Renderer, NgZone, ViewChild, Input, } from "@angular/core";
 import { CommonListService } from "../../common-list/common-list.service";
 import { AppHepler } from '../../app.helper';
 @Component({
@@ -12,7 +12,14 @@ import { AppHepler } from '../../app.helper';
     templateUrl: './resultsCommon.component.html'
     // styleUrls: ['./resultsCommon.component.css']
 })
-export class ResultsComponent implements OnInit {
+export class ResultsComponent {
+    msgs: any[];
+    restartVersion: any;
+    restartId: any;
+    isModel: string;
+    killStatus: any;
+    killVersion: any;
+    killId: any;
     rowStatus1: any;
     routerUrl: any;
     execType: string;
@@ -27,6 +34,8 @@ export class ResultsComponent implements OnInit {
     selectedType: any;
     columnDefs: any;
     isExec: string;
+    @ViewChild('ParamsModel') ParamsModel: ElementRef;
+    ModelDataFrom: { "caption": string; "message": any; "functionName": any };
     items: ({ label: string; icon: string; disabled: any; command: (onclick: any) => void; } | { label: string; icon: string; visible: boolean; command: (onclick: any) => void; } | any)[];
     arrayNames: any[];
     type: any;
@@ -82,6 +91,7 @@ export class ResultsComponent implements OnInit {
     ];
     constructor(public apphelper: AppHepler, private http: Http, public _sharedService: SharedService, public datePipe: DatePipe, public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, private _commonService: CommonService, private activeroute: ActivatedRoute, private _commonListService: CommonListService) {
         this.rowStatus = {}
+        this.isModel = "false"
         this.breadcrumbDataFrom = [{
             "caption": "Data Science ",
             "routeurl": "/app/dataScience/results"
@@ -198,12 +208,12 @@ export class ResultsComponent implements OnInit {
             },
             { //menuStatus != 'Inprogress'
                 label: 'Kill', icon: 'fa fa-times', disabled: (false), command: (onclick) => {
-                    //this.kill(this.rowUUid, this.rowVersion, this.rowStatus)
+                    this.kill(this.rowUUid, this.rowVersion, this.rowStatus)
                 }
             },
             {//menuStatus != 'Failed'
                 label: 'Restart', icon: 'fa fa-repeat', disabled: (false), command: (onclick) => {
-                    //this.restart(this.rowUUid, this.rowVersion)
+                    this.restart(this.rowUUid, this.rowVersion)
                 }
             },
         ]
@@ -232,6 +242,11 @@ export class ResultsComponent implements OnInit {
         this.rowID = data.id
         this.rowName = data.name
         this.rowStatus = data.status
+        if (data.status != null) {
+            this.items[0].disabled = ['Completed'].indexOf(data.status.stage) == -1
+            this.items[1].disabled = ['InProgress'].indexOf(data.status.stage) == -1
+            this.items[2].disabled = ['Completed', 'NotStarted', 'Terminating', 'InProgress'].indexOf(data.status.stage) != -1
+        }
         // this.rowStatus1 = data.status.stage
     }
     onSearchCriteria() {
@@ -258,5 +273,63 @@ export class ResultsComponent implements OnInit {
     }
     view(uuid, version, status) {
         this.router.navigate(["../resultDetails", uuid, version, this.type], { relativeTo: this.activeroute });
+    }
+    kill(uuid, version, status) {
+        this.killId = uuid
+        this.killVersion = version;
+        this.killStatus = status
+        this.isModel = "true"
+        this.ModelDataFrom = {
+            "caption": this.type,
+            "message": "Kill",
+            "functionName": "okKill()"
+        }
+    }
+    restart(uuid, version) {debugger
+        this.restartId = uuid
+        this.restartVersion = version;
+        this.isModel = "true"
+        this.ModelDataFrom = {
+            "caption": this.type,
+            "message": "Restart",
+            "functionName": "okRestart()"
+        }
+    }
+    okRestart() {
+        let type = this.type.split("exec")[0]
+        this._commonListService.restart(this.restartId, this.restartVersion, this.execType, "execute")
+            .subscribe(
+            response => {
+                // this.onSearchCriteria()
+                // this.isModel = "false";
+                // this.msgs = [];
+                // this.msgs.push({ severity: 'success', summary: 'Success Message', detail: this.gridTitle + ' Restarted Successfully' });
+            },
+            error => console.log("Error :: " + error)
+            )
+
+    }
+    okKill() {
+        let type = this.type.split("exec")[0]
+        this._commonListService.kill(this.killId, this.killVersion, this.execType, "Killed")
+            .subscribe(
+            response => {
+                // this.onSearchCriteria()
+                // this.isModel = "false";
+                // this.msgs = [];
+                // this.msgs.push({ severity: 'success', summary: 'Success Message', detail: this.gridTitle + ' Killed Successfully' });
+            },
+            error => console.log("Error :: " + error)
+            )
+
+    }
+    ok(data) {
+
+        if (data == "okKill()") {
+            this.okKill();
+        }
+        if (data == "okRestart()") {
+            this.okRestart();
+        }
     }
 }

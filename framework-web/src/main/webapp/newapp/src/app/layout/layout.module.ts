@@ -25,7 +25,7 @@ import { DataDiscoveryComponent} from '../data-discovery/datadiscovery.component
 import { CommonListComponent } from '../common-list/common-list.component';
 import { CommonListService } from '../common-list/common-list.service';
 
-import { ModelComponent} from '../shared/popUpModel/model.component';
+
 import { metadataNavigatorComponent} from '../metadata-navigator/metadataNavigator.component';
 import { jobMonitoringComponent} from '../job-monitoring/jobMonitoring.component';
 
@@ -85,7 +85,7 @@ import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
         FooterComponent,
         DataDiscoveryComponent,
         CommonListComponent,
-        ModelComponent,
+        //ModelComponent,
         metadataNavigatorComponent,
         jobMonitoringComponent,
         FilterPipeDD,
