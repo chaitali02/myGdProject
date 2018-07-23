@@ -45,12 +45,12 @@
 						{
 							"operatorId": "1c2da27a-e503-44bb-8b6f-afbafb076ff5",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "map",
 									"uuid": "6356a9f8-f5c5-454b-9cbe-0d6ecc452b1a"
 								}
-							},
+							}],
 							"filterInfo": []
 						}
 					]
@@ -65,12 +65,12 @@
 						{
 							"operatorId": "9f749052-7793-45ac-995b-0b29ecb878b6",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "map",
 									"uuid": "d2cc6181-9104-4f2d-b220-2cd29a69dabe"
 								}
-							},
+							}],
 							"filterInfo": []
 						}
 					]
@@ -85,12 +85,12 @@
 						{
 							"operatorId": "bff81265-e41a-46bd-9cc4-0f4d94b93fc4",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "map",
 									"uuid": "f06e9f5d-3b8b-4daf-9900-a9b641cbb5db"
 								}
-							},
+							}],
 							"filterInfo": []
 						}
 					]
@@ -105,12 +105,12 @@
 						{
 							"operatorId": "c4fe6ad2-4ba9-43f0-801a-771a2042f6db",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "map",
 									"uuid": "ec398401-8495-419f-bde7-76db137f3088"
 								}
-							},
+							}],
 							"filterInfo": []
 						}
 					]
@@ -125,12 +125,12 @@
 						{
 							"operatorId": "c5bf83f3-6a23-48cc-9339-e33852315073",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "map",
 									"uuid": "bfef7565-e873-42ba-9e60-482751a24003"
 								}
-							},
+							}],
 							"filterInfo": []
 						}
 					]
@@ -145,12 +145,12 @@
 						{
 							"operatorId": "2c405f90-5242-44c8-8cb9-b7ef36d635ef",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "map",
 									"uuid": "4f875b10-9534-4f9d-b9e5-b4cae8e7bf0d"
 								}
-							},
+							}],
 							"filterInfo": []
 						}
 					]
@@ -172,12 +172,12 @@
 						{
 							"operatorId": "4e25fce7-ca25-4df9-9461-a9d2e5de7ecf",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "map",
 									"uuid": "850eec61-2047-4d94-aab1-6117d7f84bd6"
 								}
-							},
+							}],
 							"filterInfo": []
 						}
 					]
@@ -194,12 +194,12 @@
 						{
 							"operatorId": "5a775295-b0aa-4d6f-914a-7aa875029243",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "map",
 									"uuid": "ada38baf-1be2-4579-94b4-4b7722c50622"
 								}
-							},
+							}],
 							"filterInfo": []
 						}
 					]
@@ -216,12 +216,12 @@
 						{
 							"operatorId": "6611cdf8-d1fc-4a9c-9211-4afd9b1f78b9",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "map",
 									"uuid": "a89f5339-0c89-43a2-8898-b279764f6a19"
 								}
-							},
+							}],
 							"filterInfo": []
 						}
 					]
