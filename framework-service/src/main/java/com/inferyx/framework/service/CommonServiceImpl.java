@@ -3117,12 +3117,10 @@ public class CommonServiceImpl <T> {
 				HSSFWorkbook workbook = WorkbookUtil.getWorkbook(results);
 				downloadPath = Helper.getPropertyValue("framework.file.download.path");
 				response.setHeader("filename", "" + uuid+"_"+version + ".xls");
-				
-				response.setContentType("application/xml charset=utf-16");
-				response.setCharacterEncoding( "," + uuid+"_"+version + ".xls");
 			
-				response.setHeader("Content-disposition", "attachment");
+				response.setContentType("application/xml charset=utf-16"+';'+ uuid+"_"+version + ".xls");
 				
+		        response.setHeader("Content-Disposition", "attachment; filename=" + uuid+"_"+version + ".xls");
 				ServletOutputStream os = response.getOutputStream();
 				workbook.write(os);
 
