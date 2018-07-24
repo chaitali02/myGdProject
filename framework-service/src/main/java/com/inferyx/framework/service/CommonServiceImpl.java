@@ -3535,27 +3535,30 @@ public class CommonServiceImpl <T> {
 			T execObject = (T)createExec(metaType, ref);
 			MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType, String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
 					String.class.cast(execObject.getClass().getMethod("getVersion", null).invoke(execObject, null)));
-			List<TaskOperator> taskOperatorList = taskExec.getOperators();
-			TaskOperator taskOperator = new TaskOperator();
-			taskOperator.setDependsOn(taskOperatorList.get(i).getDependsOn());
-			taskOperator.setOperatorId(taskOperatorList.get(i).getOperatorId());
-			taskOperator.setOperatorParams(taskOperatorList.get(i).getOperatorParams());
-			taskOperator.setOperatorType(taskOperatorList.get(i).getOperatorType());
-			MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
-			operatorInfo.setRef(metaExecIdentifier);
-			taskOperator.setOperatorInfo(operatorInfo);
 			
-			List<TaskOperator> taskOperatorList2 = new ArrayList<>();
+			List<MetaIdentifierHolder> operatorInfo = taskExec.getOperators().get(0).getOperatorInfo();
+			MetaIdentifierHolder operatorInfoHolder = new MetaIdentifierHolder(metaExecIdentifier);
+			operatorInfoHolder.setValue(taskExec.getOperators().get(0).getOperatorInfo().get(i).getValue());
+			
+			List<MetaIdentifierHolder> tempOperatorInfo = new ArrayList<>();
 			int j = 0;
-			for(TaskOperator taskOperator2 : taskOperatorList) {
+			for(MetaIdentifierHolder operatorInfoHolder2 : operatorInfo) {
 				if(j == i) {
-					taskOperatorList2.add(taskOperator);
+					tempOperatorInfo.add(operatorInfoHolder);
 				} else {
-					taskOperatorList2.add(taskOperator2);
+					tempOperatorInfo.add(operatorInfoHolder2);
 				}
 				j++;
-			}		
-			taskExec.setOperators(taskOperatorList2);
+			}	
+			TaskOperator taskOperator = new TaskOperator();
+			taskOperator.setDependsOn(taskExec.getOperators().get(0).getDependsOn());
+			taskOperator.setOperatorId(taskExec.getOperators().get(0).getOperatorId());
+			taskOperator.setOperatorInfo(tempOperatorInfo);
+			taskOperator.setOperatorParams(taskExec.getOperators().get(0).getOperatorParams());
+			taskOperator.setOperatorType(taskExec.getOperators().get(0).getOperatorType());
+			List<TaskOperator> taskOperators = new ArrayList<>();
+			taskOperators.add(taskOperator);
+			taskExec.setOperators(taskOperators);
 			return execObject;
 		}
 		

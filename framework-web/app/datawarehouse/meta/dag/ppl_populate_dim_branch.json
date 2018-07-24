@@ -20,12 +20,12 @@
 						{
 							"operatorId": "d56992ab-c4cb-4036-8db9-328a815978f4",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "map",
 									"uuid": "d2cc6181-9104-4f2d-b220-2cd29a69dabe"
 								}
-							},
+							}],
 							"operatorParams": {
 								
 							},
