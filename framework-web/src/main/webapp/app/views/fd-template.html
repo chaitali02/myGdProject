@@ -1,52 +1,21 @@
-<style>
-    .form-inline .select2-container--bootstrap {
-        display: block;
-    }
-</style>
 
 <div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
     <div class="col-md-1" style="height:100px">
         <a ng-click="changeSliderForward()">
             <i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i>
         </a>
-        <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:1,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
+        <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:5,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
         <a ng-click="changeSliderBack()">
             <i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i>
         </a>
+        <span class="fa-stack" style="margin-left:16px; margin-top:15px; z-index: 980;" ng-click="resize()">
+            <i class="fa fa-circle fa-stack-2x" style="color: #999;font-size: 21px;"></i>
+            <i class="fa fa-undo fa-stack-1x fa-inverse" style="margin:-4px 0px 0px 0px;font-size: 10px;"></i>
+        </span>
     </div>
 </div>
 
 <div class="row">
-    <!-- <div class="col-md-12" style="margin-top:2%;">
-        <form class="form-inline" novalidate="novalidate" name="myform" ng-submit="search()">
-            <div class="form-group" style="width:32%;">
-                <label class="col-md-4 control-label" style="margin-top:2%">Node Type</label>
-                <div class="col-md-8">
-                    <select select2 data-ng-model="nodeType" ng-options="r.nodeType as r.nodeType for r in graphpodData.nodeInfo" ng-change="selectType()"
-                        required disable-validation-message="">
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-4 control-label" style="margin-top:2%">Node Id</label>
-                <div class="col-md-5" style="padding-right:0px;padding-left: 0px;">
-                    <input type="text" class="form-control" ng-model="nodeId" required disable-validation-message="">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-1 col-sm-1 col-xs-1 col-md-offset-4" uib-tooltip="Aplly Filter" tooltip-placement="left" ng-click="applyFilter()">
-                    <span class="fa fa-filter"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-5 col-sm-5 col-xs-12">
-                    <button type="submit" class="btn btn-success">Search</button>
-                </div>
-            </div>
-        </form> 
-    </div>-->
-
-    <div class="clearfix"></div>
     <div class="col-md-12">
         <div class="form-body centercontent" ng-if="isFilterSelect" style="color:blue;min-height:500px;">Please Select Filter</div>
         <div class="form-body centercontent" ng-if="isError" style="color:red;">Some Error Occurred</div>
@@ -60,17 +29,15 @@
     </div>
 </div>
 
-<div class="tooltipcustom" id="divtoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;
+<div class="tooltipcustom" id="divtoshow" style="position:fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;
     font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
     <div style="margin-top: 5px;margin-right: 15px" ng-if="nodeDetail">
         <div class="row">
             <div class="col-md-1">
                 <div class="one" id="colorID" style="margin-left:5px;margin-bottom:10px;background-color:#0bb7ed;"></div>
-
             </div>
             <div class="col-md-5" id="elementTypeText">{{nodeDetail.caption}}</div>
         </div>
-
         <div class="row" style="margin-top: 5px">
             <span style="margin-left:20px;">Id</span>
             <span id="task_Id" style="margin-left:58px">{{nodeDetail.id}}</span>
@@ -118,43 +85,11 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title">{{nodeDetailModel.nodeType}}-{{nodeDetailModel.nodeName}}</h4>
-                <!-- <div class="row">
-                        <div class="col-md-1">
-                            <div class="one" id="colorID" style="margin-left:5px;margin-bottom:10px;background-color:#0bb7ed;"></div>
-                        </div>
-                        <div class="col-md-5 modal-title"> Node Details</div>
-                    </div> -->
             </div>
             <div class="modal-body">
                 <div class="slimScrollDiv" style="padding-top:10px;">
                     <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1" style="overflow-y: auto;max-height: 300px;">
                         <form class="form-horizontal" novalidate="novalidate" name="myform1">
-                            <!-- <div class="form-group">
-                                <label class="col-md-3 control-label" style="padding-top: 0px;">Id</label>
-                                <div class="col-md-8">
-                                    <span class="control-label">{{nodeDetailModel.id}}</span>
-                                </div>
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label class="col-md-3 control-label" style="padding-top: 0px;">Type</label>
-                                <div class="col-md-8">
-                                    <span class="control-label">{{nodeDetailModel.nodeType}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label" style="padding-top: 0px;">Name</label>
-                                <div class="col-md-8">
-                                    <span class="control-label">{{nodeDetailModel.nodeName}}</span>
-                                </div>
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label class="col-md-3 control-label" style="padding-top: 0px;">Properties</label>
-
-                            </div> -->
-                            <!-- <div class="x_title">
-                                <h4>
-                                    <strong>Properties</strong>
-                                </h4> -->
                             <table class="table table-bordered">
                                 <tr ng-repeat="tabledata in nodeDetailModel.nodeProperties">
                                     <td>
@@ -163,9 +98,6 @@
                                     <td>{{tabledata.value}}</td>
                                 </tr>
                             </table>
-                            <!-- </div>
-                            <br/> -->
-
                         </form>
                     </div>
                 </div>
@@ -188,26 +120,6 @@
                 <div class="slimScrollDiv" style="padding-top:10px;">
                     <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1" style="overflow-y: auto;max-height: 300px;">
                         <form class="form-horizontal" novalidate="novalidate" name="myform1">
-                            <!-- <div class="form-group">
-                                <label class="col-md-3 control-label" style="padding-top: 0px;">Type</label>
-                                <div class="col-md-8">
-                                    <span class="control-label">{{edgeDetailModel.edgeType}}</span>
-                                </div>
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label class="col-md-3 control-label" style="padding-top: 0px;">Name</label>
-                                <div class="col-md-8">
-                                    <span class="control-label">{{edgeDetailModel.edgeName}}</span>
-                                </div>
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label class="col-md-3 control-label" style="padding-top: 0px;">Properties</label>
-                               
-                            </div> -->
-                            <!-- <div class="x_title">
-                                <h4>
-                                    <strong>Properties</strong>
-                                </h4> -->
                             <table class="table table-bordered">
                                 <tr ng-repeat="tabledata in edgeDetailModel.edgeProperties">
                                     <td>
@@ -216,9 +128,6 @@
                                     <td>{{tabledata.value}}</td>
                                 </tr>
                             </table>
-                            <!-- </div>
-                            <br/> -->
-
                         </form>
                     </div>
                 </div>
