@@ -1124,7 +1124,7 @@ public class DagServiceImpl {
 						commonServiceImpl.save(helper.getExecType(ref.getType()).toString(), baseExec);
 					}
 				}	
-				operatorList.add(operator);
+				//operatorList.add(operator);
 				//indvExecTask.setOperators(operatorList);
 				// Set Stage and Task status
 				List<Status> statusList = new ArrayList<Status>();

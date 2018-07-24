@@ -876,21 +876,16 @@ public class RuleServiceImpl extends RuleTemplate {
 		MetaIdentifier ruleExecInfo = new MetaIdentifier(MetaType.rule, ruleUuid, ruleVersion);
 		ruleExecMeta.setRef(ruleExecInfo);
 		try {
-			System.out.println(new ObjectMapper().writeValueAsString(execParams));
-		} catch (org.apache.livy.shaded.jackson.core.JsonProcessingException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		try {
 			if (execParams != null) {
 				if(execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
 					for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-						MetaIdentifier ref = paramSetHolder.getRef();
-						ref.setType(MetaType.paramset);
-						paramSetHolder.setRef(ref);
-						execParams.setParamSetHolder(paramSetHolder);
-						if(ruleExec == null)
-							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+						if(ruleExec == null) {
+							MetaIdentifier ref = paramSetHolder.getRef();
+							ref.setType(MetaType.paramset);
+							paramSetHolder.setRef(ref);
+							execParams.setParamSetHolder(paramSetHolder);
+							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);		
+						}
 						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 						ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
@@ -899,9 +894,10 @@ public class RuleServiceImpl extends RuleTemplate {
 					}
 				} else if(execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
 					for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
-						execParams.setParamListHolder(paramListHolder);
-						if(ruleExec == null)
-							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+						if(ruleExec == null) {
+							execParams.setParamListHolder(paramListHolder);
+							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);
+						}
 						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 						ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());

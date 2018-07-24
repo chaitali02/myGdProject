@@ -43,6 +43,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
@@ -629,21 +630,32 @@ public class TaskServiceImpl implements Callable<String> {
 			logger.info("Going to ruleServiceImpl.execute");
 			try {
 				int i = 0;
+				ExecParams execParams2 = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
 					RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), MetaType.ruleExec.toString());
 					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
 					execParams.setInternalVarMap(internalVarMap);
-					ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
-					if(execParams != null && execParams.getParamInfo() != null) {
-						execParams.setParamSetHolder(execParams.getParamInfo().get(i));
-					} else if(execParams != null && execParams.getParamListInfo() != null) {
-						execParams.setParamListHolder(execParams.getParamListInfo().get(i));
+					ExecParams execParams3 = new ExecParams();
+					//execParams3.setInternalVarMap(execParams.getInternalVarMap());
+					execParams3.setOtherParams(execParams.getOtherParams());
+					execParams3.setRefKeyList(execParams.getRefKeyList());
+					
+					if(execParams2 != null && execParams2.getParamInfo() != null) {
+						List<ParamSetHolder> paramInfo = new ArrayList<>();
+						paramInfo.add(execParams2.getParamInfo().get(i));
+						execParams3.setParamInfo(paramInfo);
+						execParams3.setParamSetHolder(execParams2.getParamInfo().get(i));
+					} else if(execParams2 != null && execParams2.getParamListInfo() != null) {
+						List<ParamListHolder> paramListInfo = new ArrayList<>();
+						paramListInfo.add(execParams2.getParamListInfo().get(i));
+						execParams3.setParamListInfo(paramListInfo);
+						execParams3.setParamListHolder(execParams2.getParamListInfo().get(i));
 					}
-					ruleExec.setExecParams(execParams);
+					ruleExec.setExecParams(execParams3);
 					commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
-					ruleServiceImpl.prepareRule(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), execParams, ruleExec, runMode);
+					ruleServiceImpl.prepareRule(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), execParams3, ruleExec, runMode);
 					if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-						throw new Exception();
+						throw new Exception("Rule execution failed.");
 					}
 					i++;
 				}
@@ -690,16 +702,16 @@ public class TaskServiceImpl implements Callable<String> {
 		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.train)) {
 			try {
 				int i = 0;
+				ExecParams execParams2 = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
 					TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), MetaType.trainExec.toString());
 					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", trainExec.getVersion());
 					execParams.setInternalVarMap(internalVarMap);
-					ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 					ExecParams execParamsTemp = null;
-					if(execParams != null && execParams.getParamInfo() != null) {
-						execParamsTemp = createNewExecParams(execParams, i);
+					if(execParams2 != null && execParams2.getParamInfo() != null) {
+						execParamsTemp = createNewExecParams(execParams2, i);
 					} else {
-						execParamsTemp = execParams;
+						execParamsTemp = execParams2;
 					}
 					modelServiceImpl.prepareTrain(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec, execParamsTemp, runMode);
 					if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
@@ -800,7 +812,7 @@ public class TaskServiceImpl implements Callable<String> {
 		execParamsTemp.setParamSetHolder(execParams.getParamSetHolder());
 		execParamsTemp.setRefKeyList(execParams.getRefKeyList());
 		execParamsTemp.setStageInfo(execParams.getStageInfo());
-		return null;
+		return execParamsTemp;
 	}
 
 	/**
