@@ -6,9 +6,10 @@ import { Location } from '@angular/common';
 import { ModelService } from '../../metadata/services/model.service';
 import { CommonListService } from './../../common-list/common-list.service';
 import { saveAs } from 'file-saver';
-//import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/toPromise';
 import { Http, Headers} from '@angular/http';
 import { AppConfig } from '../../app.config';
+import { ResponseContentType } from '@angular/http';
 @Component({
   selector: 'app-results',
   templateUrl: './resultDetails.component.html',
@@ -16,6 +17,8 @@ import { AppConfig } from '../../app.config';
   
 })
 export class ResultDetailsComponent {
+  blob: Blob;
+  filename: string;
   tableHeading: string;
   cols: any[];
   columnOptions: any[];
@@ -77,31 +80,24 @@ export class ResultDetailsComponent {
    }
 
    savePng(){
-    var headers = new Headers();
+    const headers = new Headers();
     headers.append('Accept', 'text/plain');
-    if(this.type =="prediction"){
     this.http.get(this.baseUrl+'/model/predict/download?action=view&predictExecUUID='+this.id+'&predictExecVersion='+this.version+'&mode=BATCH',
-          { headers: headers })
-      .subscribe(response => this.saveToFileSystem(response))
+         { headers: headers , responseType: ResponseContentType.Blob})
+      .toPromise()
+      .then(response => this.saveToFileSystem(response));
     }
-    if(this.type =="simulation"){ 
-      this.http.get(this.baseUrl+'/model/simulate/download?action=view&simulateExecUUID='+this.id+'&simulateExecVersion='+this.version+'&mode=""',
-            { headers: headers })
-        .subscribe(response => this.saveToFileSystem(response))
-    }
-    if(this.type =="training"){
-      this.http.get(this.baseUrl+'model/train/download?action=view&trainExecUUID='+this.id+'&trainExecVersion='+this.version+'&mode=""',
-            { headers: headers })
-        .subscribe(response => this.saveToFileSystem(response))
-      }
-   }
-
-   saveToFileSystem(response){
-   const contentTypeParts: string[] = response.headers.get('Content-Type').split(','); 
-   const filename = contentTypeParts[1];
-   const blob = new Blob([response._body], { type:contentTypeParts[0].split(';')[0] });
-   saveAs(blob, filename);
-   }
+    
+    private saveToFileSystem(response) {debugger
+    //const gate= response.headers.get('Content-Disposition');
+    const contentDispositionHeader: string = response.headers.get('Content-Type');
+    const parts: string[] = contentDispositionHeader.split(';');
+    const filename = parts[1];
+    //const filename = "abx.xls";
+    const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
+    saveAs(blob, filename);
+  }
+  
 
    showPMMLResult(){
     this.ppml=true;
@@ -133,7 +129,6 @@ export class ResultDetailsComponent {
         this.IsTableShow=true; 
         console.log("Error :: " + error)
         this.IsError=true;    
-    
     }); 
    
    }
