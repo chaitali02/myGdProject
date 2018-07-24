@@ -127,7 +127,7 @@
 
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
-              <div class="col-md-9 col-sm-6 col-xs-12">{{status|json}}
+              <div class="col-md-9 col-sm-6 col-xs-12">
                   <p-dropdown [options]="allStatus"          
                   [(ngModel)]="status"
                   name="status"
@@ -193,8 +193,8 @@
     <br>
     <div class="row">
       <div class="col-md-12">
-        <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" (onRowSelect)="onRowSelect($event)"
-          selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
+        <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData"
+           [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
           [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
           <!-- <p-column field="uuid" header="UUID" [sortable]="true"></p-column> -->
           <p-column field="name" header="Name" [sortable]="true"></p-column>
@@ -219,4 +219,7 @@
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="isModel=='true'" class="model">
+  <app-model [ModelData]="ModelDataFrom" (parentFunction)="ok($event)"></app-model>
 </div>

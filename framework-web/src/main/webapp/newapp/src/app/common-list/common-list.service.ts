@@ -187,6 +187,15 @@ export class CommonListService {
     if (type == "map") {
       this.url = this.baseUrl + 'map/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "trainexec") {
+      this.url = this.baseUrl + 'model/train/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "predictexec") {
+      this.url = this.baseUrl + 'model/predict/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "simulateexec") {
+      this.url = this.baseUrl + 'model/simulate/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
     let body = JSON.stringify({});
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });
@@ -226,6 +235,15 @@ export class CommonListService {
     }
     if (type == "map") {
       this.url = this.baseUrl + 'map/setStatus?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "trainexec") {
+      this.url = this.baseUrl + 'model/train/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "predictexec") {
+      this.url = this.baseUrl + 'model/predict/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "simulateexec") {
+      this.url = this.baseUrl + 'model/simulate/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     let body = {};
     this.headers = null;

@@ -33,7 +33,7 @@ import { RuleExecComponent } from './ruleExec/ruleExec.component';
 import { RuleGroupExecComponent } from './ruleGroupExec/ruleGroupExec.component';
 import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
 import { DownloadExecComponent } from './downloadExec/downloadExec.component';
-
+import {UploadExecComponent } from './uploadExec/uploadExec.componet'
 
 
 @NgModule({
@@ -68,8 +68,8 @@ import { DownloadExecComponent } from './downloadExec/downloadExec.component';
         PipelineExecComponent,
         PredictExecComponent,
         SimulateExecComponent,
-        DownloadExecComponent
-
+        DownloadExecComponent,
+        UploadExecComponent
 
     ],
     providers: [

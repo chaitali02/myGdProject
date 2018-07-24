@@ -62,18 +62,18 @@
               </div>
 
               <div class="form-group" *ngIf="mode">
-                  <label class="col-md-3 control-label">Version </label>
-                  <div class="col-md-6" *ngIf="selectVersion.version">
-                      <p-dropdown [options]="versions"          
-                      [(ngModel)]="selectVersion"
-                      name="version"
-                      optionLabel="version"
-                      [disabled]="mode == 'false'"
-                      [style]="{'width':'100%','padding':'3px'}"
-                      [filter]="true">
-                    </p-dropdown>
-                  </div>
+                <label class="col-md-3 control-label">Version </label>
+                <div class="col-md-6">
+                  <p-dropdown [options]="VersionList"          
+                  [(ngModel)]="selectedVersion"
+                  name="selectedVersion"
+                  [style]="{'width':'100%','padding':'3px'}"
+                  [filter]="true"
+                  [disabled]="mode == 'false'"
+                  (onChange)="onVersionChange()">
+                  </p-dropdown>
                 </div>
+              </div>
 
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedBy</label>

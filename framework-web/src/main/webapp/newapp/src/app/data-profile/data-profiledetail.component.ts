@@ -192,7 +192,15 @@ import{ DependsOn } from './dependsOn'
         this.VersionList[i]=ver;
       }
     }  
-   
+    onVersionChange() {
+      
+      this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'profile')
+        .subscribe(
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
+    }
     public goBack() {
      // this._location.back();
       this.router.navigate(['app/list/profile']);

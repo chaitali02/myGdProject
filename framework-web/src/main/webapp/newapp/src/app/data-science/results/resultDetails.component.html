@@ -1,6 +1,6 @@
 <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
 <br>
-<!-- <div class="row" *ngIf="showDiv">
+<div class="row" *ngIf="showDiv">
     <div class="col-md-12">
         <div class="portlet box green" id="dag-exec-model">
             <div class="portlet-title">
@@ -12,7 +12,7 @@
                     
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
-                    <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
+                    <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" (click)="ppml = false">
                         <i class="glyphicon glyphicon-file" disabled="true" area-hidden="true"></i>
                     </a>
                     <a title="Show PMML" (click)="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
@@ -37,12 +37,16 @@
                     </form>
                 </div>
                 <div class="form-body" *ngIf="ppml">
-                    
+                        <!-- <div display-xml-tree="pmmlData"></div> -->
+                    <pre lang="xml">{{pmmlData}}
+                         <!-- <code class="html highlight">
+                        </code>  -->
+                    </pre>
                 </div>
             </div>
         </div>
     </div>   
-</div> -->
+</div>
 <div class="row" *ngIf="showDiv==false;else falsyTemplate">    
     <div class="col-md-12">
         <div class="portlet box green">

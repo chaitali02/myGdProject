@@ -153,7 +153,10 @@ export class BusinessRulesGroupDetailComponent {
     //this._location.back();
     this.router.navigate(['app/list/rulegroup']);
   }
-
+  
+  onVersionChange(){
+    this.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label);
+  }
   submit() {
     this.isSubmitEnable = true;
     this.IsProgerssShow = "true";

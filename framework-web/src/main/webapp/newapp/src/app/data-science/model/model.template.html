@@ -146,7 +146,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
                                             <div class="col-md-6">
                                                 <p-dropdown [options]="scriptTypes" [(ngModel)]="type" name="type" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
-                                                    [disabled]="mode == 'true'" placeholder="Select">
+                                                    [disabled]="mode == 'true'" placeholder="Select"  (onChange)="changeScript()"  >
                                                 </p-dropdown>
                                             </div>
                                         </div>
@@ -156,9 +156,22 @@
                                             <div class="col-md-6">
                                                 <!-- <input ng-disabled="{{mode}} || scriptType=='SPARK'" type="checkbox" ng-model="checkboxCustom">
                                                         <span ng-disabled="{{mode}} || scriptType=='SPARK'"></span> -->
-                                                <input type="checkbox" [disabled]="true" [(ngModel)]="customFlag" name="customFlag" [checked]=" model.type == 'R' ||  model.type == 'PYTHON'">
+                                                <input type="checkbox" [disabled]="true" [(ngModel)]="checkboxCustom" name="customFlag" [checked]=" model.type == 'R' ||  model.type == 'PYTHON'">
                                             </div>
                                         </div>
+
+
+                                        <!-- <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Custom Script</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                              <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                <label class="mt-checkbox mt-checkbox-outline">
+                                                  <input ng-disabled="{{mode}} || scriptType=='SPARK'" type="checkbox" ng-model="checkboxCustom">
+                                                  <span ng-disabled="{{mode}} || scriptType=='SPARK'"></span>
+                                                </label>
+                                              </div>
+                                            </div>
+                                          </div> -->
 
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>

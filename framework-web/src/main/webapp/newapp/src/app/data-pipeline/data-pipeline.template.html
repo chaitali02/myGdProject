@@ -90,6 +90,19 @@
                                                 </div>
                                             </div>
                                             <div class="form-group" *ngIf="mode">
+                                                <label class="col-md-3 control-label">Version </label>
+                                                <div class="col-md-6">
+                                                  <p-dropdown [options]="VersionList"          
+                                                  [(ngModel)]="selectedVersion"
+                                                  name="selectedVersion"
+                                                  [style]="{'width':'100%','padding':'3px'}"
+                                                  [filter]="true"
+                                                  [disabled]="mode == 'false'"
+                                                  (onChange)="onVersionChange()">
+                                                  </p-dropdown>
+                                                </div>
+                                              </div>
+                                            <div class="form-group" *ngIf="mode">
                                                 <label class="col-md-3 control-label">CreatedBy</label>
                                                 <div class="col-md-6" *ngIf="locations!=''">
                                                     <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
