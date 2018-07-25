@@ -1,15 +1,15 @@
 {
     "dependsOn" : {
         "ref" : {
-            "type" : "dataset",
-            "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            "type" : "rule",
+            "uuid" : "a5702404-2cea-47e8-9012-5ead45888386"
         }
     },
     "formulaInfo" : [ 
         {
             "ref" : {
                 "type" : "function",
-                "uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671"
+                "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
             }
         }, 
         {
@@ -20,9 +20,10 @@
         }, 
         {
             "ref" : {
-                "type" : "formula",
-                "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a5"
-            }
+                "type" : "rule",
+                "uuid" : "a5702404-2cea-47e8-9012-5ead45888386"
+            },
+            "attributeId" : 1
         }, 
         {
             "ref" : {
@@ -32,9 +33,9 @@
         }
     ],
     "formulaType" : "aggr",
-    "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a6",
-    "version" : "1526663901",
-    "name" : "fm_portfolio_loss",
+    "uuid" : "134be86b-1fad-4763-a323-a6ef37938667",
+    "version" : "1532467834",
+    "name" : "fm_expected_sum",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -43,7 +44,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-07-24T18:05:35.631Z"),
+    "createdOn" : ISODate("2018-07-24T21:30:34.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

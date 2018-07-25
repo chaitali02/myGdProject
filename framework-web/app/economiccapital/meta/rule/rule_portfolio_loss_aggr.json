@@ -1,7 +1,7 @@
 {
-  "uuid": "fe506c16-8991-439a-95d4-b83664b25008",
-  "version": "1526662622",
-  "name": "rule_portfolio_loss_simulation",
+  "uuid": "f3138374-99f5-4a4a-9214-123706d26038",
+  "version": "1532465869",
+  "name": "rule_portfolio_loss_aggr",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 24 14:05:41 EDT 2018",
+  "createdOn": "Tue Jul 24 16:57:49 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -32,39 +32,55 @@
   "debugMode": false,
   "source": {
     "ref": {
-      "type": "dataset",
-      "uuid": "dd2392c7-f68c-4933-bbc8-e69401f006rr",
+      "type": "rule",
+      "uuid": "fe506c16-8991-439a-95d4-b83664b25008",
       "version": null,
-      "name": "ds_customer_loss"
+      "name": "rule_portfolio_loss_simulation"
     },
     "value": null
   },
   "attributeInfo": [
     {
       "attrSourceId": "0",
-      "attrSourceName": "iterationid",
+      "attrSourceName": "fm_expected_loss",
       "sourceAttr": {
         "ref": {
-          "type": "dataset",
-          "uuid": "dd2392c7-f68c-4933-bbc8-e69401f006rr",
+          "type": "formula",
+          "uuid": "4508958d-15e2-4dd2-b9c1-82fbbaaee699",
           "version": null,
-          "name": "ds_customer_loss"
+          "name": "fm_expected_loss"
         },
         "value": null,
-        "attrId": "6",
-        "attrName": "iterationid",
+        "attrId": null,
+        "attrName": null,
         "attrType": null
       }
     },
     {
       "attrSourceId": "1",
-      "attrSourceName": "fm_portfolio_loss",
+      "attrSourceName": "fm_value_at_risk",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "0f8d33a6-b20b-4f2f-8d11-14696461f2a6",
+          "uuid": "7edcb6d6-2d0d-4c36-8ed5-6fef22f8442a",
           "version": null,
-          "name": "fm_portfolio_loss"
+          "name": "fm_value_at_risk"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrSourceName": "fm_economic_capital2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "a7e1c282-3b11-4988-bbeb-80effc84d0f6",
+          "version": null,
+          "name": "fm_economic_capital2"
         },
         "value": null,
         "attrId": null,

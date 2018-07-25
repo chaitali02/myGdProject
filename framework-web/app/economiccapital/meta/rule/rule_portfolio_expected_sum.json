@@ -1,7 +1,7 @@
 {
-  "uuid": "fe506c16-8991-439a-95d4-b83664b25008",
-  "version": "1526662622",
-  "name": "rule_portfolio_loss_simulation",
+  "uuid": "54809394-5e6e-4d28-8cfa-93f6dac5be31",
+  "version": "1532467928",
+  "name": "rule_portfolio_expected_sum",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 24 14:05:41 EDT 2018",
+  "createdOn": "Tue Jul 24 17:32:08 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -32,39 +32,23 @@
   "debugMode": false,
   "source": {
     "ref": {
-      "type": "dataset",
-      "uuid": "dd2392c7-f68c-4933-bbc8-e69401f006rr",
+      "type": "rule",
+      "uuid": "a5702404-2cea-47e8-9012-5ead45888386",
       "version": null,
-      "name": "ds_customer_loss"
+      "name": "rule_portfolio_loss_simulation_el"
     },
     "value": null
   },
   "attributeInfo": [
     {
       "attrSourceId": "0",
-      "attrSourceName": "iterationid",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "dd2392c7-f68c-4933-bbc8-e69401f006rr",
-          "version": null,
-          "name": "ds_customer_loss"
-        },
-        "value": null,
-        "attrId": "6",
-        "attrName": "iterationid",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrSourceName": "fm_portfolio_loss",
+      "attrSourceName": "fm_expected_sum",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "0f8d33a6-b20b-4f2f-8d11-14696461f2a6",
+          "uuid": "134be86b-1fad-4763-a323-a6ef37938667",
           "version": null,
-          "name": "fm_portfolio_loss"
+          "name": "fm_expected_sum"
         },
         "value": null,
         "attrId": null,

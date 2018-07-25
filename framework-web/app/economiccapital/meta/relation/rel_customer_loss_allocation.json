@@ -1,7 +1,7 @@
 {
-  "uuid": "91290798-b6a9-4883-bc58-664b66a08794",
-  "version": "1526388650",
-  "name": "rel_customer_loss",
+  "uuid": "f81570fe-4cc4-4969-b033-2d625c389224",
+  "version": "1532475826",
+  "name": "rel_customer_loss_allocation",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 24 14:05:40 EDT 2018",
+  "createdOn": "Tue Jul 24 19:43:46 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,9 +30,9 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+      "uuid": "b79e443b-536b-4bea-9497-2ff27b61e6b6",
       "version": null,
-      "name": "customer_portfolio"
+      "name": "customer_loss_simulation"
     },
     "value": null
   },
@@ -41,9 +41,9 @@
       "join": {
         "ref": {
           "type": "datapod",
-          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+          "uuid": "fc0eac38-77c9-403b-8157-02adc3b1eb6e",
           "version": null,
-          "name": "industry_factor_transpose"
+          "name": "portfolio_loss_simulation_el"
         },
         "value": null
       },
@@ -56,26 +56,26 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+                "uuid": "b79e443b-536b-4bea-9497-2ff27b61e6b6",
                 "version": null,
-                "name": "customer_portfolio"
+                "name": "customer_loss_simulation"
               },
               "attributeId": 1,
               "value": null,
-              "attributeName": "industry",
-              "attributeType": null
+              "attributeName": "iterationid",
+              "attributeType": "integer"
             },
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+                "uuid": "fc0eac38-77c9-403b-8157-02adc3b1eb6e",
                 "version": null,
-                "name": "industry_factor_transpose"
+                "name": "portfolio_loss_simulation_el"
               },
-              "attributeId": 1,
+              "attributeId": 0,
               "value": null,
-              "attributeName": "factor",
-              "attributeType": null
+              "attributeName": "iterationid",
+              "attributeType": "integer"
             }
           ]
         }
@@ -86,13 +86,13 @@
       "join": {
         "ref": {
           "type": "datapod",
-          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
+          "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
           "version": null,
-          "name": "customer_idiosyncratic_transpose"
+          "name": "portfolio_loss_aggr_es"
         },
         "value": null
       },
-      "joinType": "",
+      "joinType": "CROSS",
       "joinKey": [
         {
           "logicalOperator": "",
@@ -101,26 +101,26 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+                "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
                 "version": null,
-                "name": "customer_portfolio"
+                "name": "portfolio_loss_aggr_es"
               },
               "attributeId": 0,
               "value": null,
-              "attributeName": "cust_id",
-              "attributeType": null
+              "attributeName": "expected_loss",
+              "attributeType": "decimal"
             },
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
+                "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
                 "version": null,
-                "name": "customer_idiosyncratic_transpose"
+                "name": "portfolio_loss_aggr_es"
               },
-              "attributeId": 1,
+              "attributeId": 0,
               "value": null,
-              "attributeName": "customer",
-              "attributeType": null
+              "attributeName": "expected_loss",
+              "attributeType": "decimal"
             }
           ]
         }

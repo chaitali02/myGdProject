@@ -1,0 +1,131 @@
+{
+  "uuid": "1e2a5b29-5cc3-4773-935a-846105d2ffb7",
+  "version": "1532478068",
+  "name": "map_customer_es_allocation",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Jul 24 20:21:08 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "target": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
+      "version": null,
+      "name": "customer_es_allocation"
+    },
+    "value": null
+  },
+  "source": {
+    "ref": {
+      "type": "rule",
+      "uuid": "47ee028d-080b-4980-b0f3-7e83f5eb27d3",
+      "version": null,
+      "name": "rule_customer_es_allocation"
+    },
+    "value": null
+  },
+  "attributeMap": [
+    {
+      "attrMapId": "0",
+      "sourceAttr": {
+        "ref": {
+          "type": "rule",
+          "uuid": "47ee028d-080b-4980-b0f3-7e83f5eb27d3",
+          "version": null,
+          "name": "rule_customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "cust_id",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
+          "version": null,
+          "name": "customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "cust_id",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "1",
+      "sourceAttr": {
+        "ref": {
+          "type": "rule",
+          "uuid": "47ee028d-080b-4980-b0f3-7e83f5eb27d3",
+          "version": null,
+          "name": "rule_customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "es_contribution",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
+          "version": null,
+          "name": "customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "es_contribution",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "2",
+      "sourceAttr": {
+        "ref": {
+          "type": "rule",
+          "uuid": "47ee028d-080b-4980-b0f3-7e83f5eb27d3",
+          "version": null,
+          "name": "rule_customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "es_allocation",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
+          "version": null,
+          "name": "customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "es_allocation",
+        "attrType": null
+      }
+    }
+  ]
+}

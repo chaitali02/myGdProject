@@ -1,15 +1,15 @@
 {
     "dependsOn" : {
         "ref" : {
-            "type" : "dataset",
-            "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            "type" : "rule",
+            "uuid" : "fe506c16-8991-439a-95d4-b83664b25008"
         }
     },
     "formulaInfo" : [ 
         {
             "ref" : {
                 "type" : "function",
-                "uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671"
+                "uuid" : "e26970d6-999e-4ffa-9903-0f6e8ac39b99"
             }
         }, 
         {
@@ -20,9 +20,22 @@
         }, 
         {
             "ref" : {
-                "type" : "formula",
-                "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a5"
-            }
+                "type" : "rule",
+                "uuid" : "fe506c16-8991-439a-95d4-b83664b25008"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ","
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "0.999"
         }, 
         {
             "ref" : {
@@ -31,10 +44,10 @@
             "value" : ")"
         }
     ],
-    "formulaType" : "aggr",
-    "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a6",
-    "version" : "1526663901",
-    "name" : "fm_portfolio_loss",
+    "formulaType" : "simple",
+    "uuid" : "7edcb6d6-2d0d-4c36-8ed5-6fef22f8442a",
+    "version" : "1532459627",
+    "name" : "fm_value_at_risk",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -43,7 +56,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-07-24T18:05:35.631Z"),
+    "createdOn" : ISODate("2018-07-24T19:13:47.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
@@ -52,7 +65,8 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-                "version" : "1521430822"
+                "version" : "1521430822",
+                "name" : "Economic Capital"
             }
         }
     ]
