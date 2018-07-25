@@ -14,13 +14,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" : [{
                                 "ref" : {
                                     "type" : "operator",
                                     "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f9c",
                                     "name" : "matrix"
                                 }
-                            },
+                            }],
                             "operatorParams" : {
                                 "EXEC_PARAMS" : {
                                     "refKeyList" : null,

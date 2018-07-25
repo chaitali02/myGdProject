@@ -14,13 +14,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" :[ {
                                 "ref" : {
                                     "type" : "dqgroup",
                                     "uuid" : "be1ee064-1699-4ddc-bdf8-b1aa46a9bd7c",
                                     "name" : "dqg_bank"
                                 }
-                            },
+                            }],
                             "operatorParams" : {}
                         }
                     ],
@@ -35,13 +35,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" : [{
                                 "ref" : {
                                     "type" : "profile",
                                     "uuid" : "e8935d31-f5e5-467a-a634-276c82a766b4",
                                     "name" : "profile_bank"
                                 }
-                            },
+                            }],
                             "operatorParams" : {}
                         }
                     ],
@@ -59,13 +59,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" :[ {
                                 "ref" : {
                                     "type" : "map",
                                     "uuid" : "6356a9f8-f5c5-454b-9cbe-0d6ecc452b1a",
                                     "name" : "map_dim_bank"
                                 }
-                            },
+                            }],
                             "operatorParams" : {}
                         }
                     ],
@@ -82,13 +82,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" :[ {
                                 "ref" : {
                                     "type" : "dqgroup",
                                     "uuid" : "f2d79ecf-f357-444b-8e85-4221cd9ffe33",
                                     "name" : "dqg_dim_bank"
                                 }
-                            },
+                            }],
                             "operatorParams" : {}
                         }
                     ],
@@ -105,13 +105,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" :[ {
                                 "ref" : {
                                     "type" : "profile",
                                     "uuid" : "55a0f643-9b79-4a2f-bff6-1a0003a9c51e",
                                     "name" : "profile_dim_bank"
                                 }
-                            },
+                            }],
                             "operatorParams" : {}
                         }
                     ],

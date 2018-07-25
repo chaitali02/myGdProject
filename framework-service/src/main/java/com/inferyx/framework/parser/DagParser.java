@@ -173,10 +173,10 @@ public class DagParser {
 
 			// Traverse task & Populate RefKeys
 			if (indvTask.getOperators() != null && indvTask.getOperators().get(0).getOperatorInfo() != null
-					&& (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.map) 
-						|| indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.mapiter))) {
+					&& (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.map) 
+						|| indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.mapiter))) {
 
-				mapRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+				mapRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 				Map map = (Map) daoRegister.getRefObject(populateRefKeys(refKeys, mapRef, inputRefKeys));
 
 				//populateRefKeys(refKeys, mapRef, inputRefKeys);
@@ -222,12 +222,12 @@ public class DagParser {
 					//populateRefKeys(refKeys, miHolderRef, inputRefKeys);
 				}*/
 
-			} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.load)) {// MetaType load
-				loadRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+			} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.load)) {// MetaType load
+				loadRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 			//	Load load = (Load) daoRegister.getRefObject(populateRefKeys(refKeys, loadRef, inputRefKeys));
 				//populateRefKeys(refKeys, loadRef, inputRefKeys);
-			} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.dag)) {// MetaType dag
-				secondaryDagRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+			} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.dag)) {// MetaType dag
+				secondaryDagRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 				populateRefKeys(refKeys, secondaryDagRef, inputRefKeys);	// PopuPopulatelate refKeys
 			}
 			//taskExec.setRefKeyList(DagExecUtil.convertRefKeyMapToList(refKeys));

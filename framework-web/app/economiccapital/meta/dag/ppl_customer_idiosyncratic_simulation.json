@@ -14,13 +14,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" :[ {
                                 "ref" : {
                                     "type" : "operator",
                                     "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197e",
                                     "name" : "Generate Data for attribute"
                                 }
-                            },
+                            }],
                             "operatorParams" : {
                                 "EXEC_PARAMS" : {
                                     "paramListInfo" : [ 

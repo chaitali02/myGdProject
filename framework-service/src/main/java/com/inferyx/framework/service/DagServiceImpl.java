@@ -797,7 +797,7 @@ public class DagServiceImpl {
 		for (Task indvTask : dagTasks) {
 			TaskExec taskExec = null;
 			if(indvTask.getOperators() != null && indvTask.getOperators().get(0).getOperatorInfo() != null ) {
-				MetaIdentifier taskMI = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+				MetaIdentifier taskMI = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 				if(taskMI.getType().equals(MetaType.train)
 						|| taskMI.getType().equals(MetaType.rule)) {					
 					if(indvTask.getOperators().get(0).getOperatorParams() != null && !indvTask.getOperators().get(0).getOperatorParams().isEmpty()) {
@@ -805,21 +805,14 @@ public class DagServiceImpl {
 						ExecParams trainExecParams = new ObjectMapper().convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
 						if(trainExecParams.getParamInfo() != null) {
 							taskExec = new TaskExec(indvTask);
-							int i = 0;
-							for(ParamSetHolder paramSetHolder : trainExecParams.getParamInfo()) {	
-								if(i != 0) {
-									TaskExec tempTaskExec = new TaskExec(indvTask);
-									TaskOperator operator = new TaskOperator();
-									operator.setOperatorInfo(tempTaskExec.getOperators().get(0).getOperatorInfo());
-									List<TaskOperator> taskOperators = taskExec.getOperators();
-									taskOperators.add(operator);
-									taskExec.setOperators(taskOperators);
-								}
-								taskExec.getOperators().get(i).setOperatorParams(createOperatorParamsForPSHolder(paramSetHolder));
-								// Set Tasks status to Not Started
-								taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
-								i++;
+							List<MetaIdentifierHolder> operatorInfoTemp = new ArrayList<>();
+							for(int i =0; i<trainExecParams.getParamInfo().size(); i++) {	
+								operatorInfoTemp.add(indvTask.getOperators().get(0).getOperatorInfo().get(0));
 							}
+							taskExec.getOperators().get(0).setOperatorInfo(operatorInfoTemp);
+							taskExec.getOperators().get(0).setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
+							// Set Tasks status to Not Started
+							taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
 							taskExecs.add(taskExec);
 						} else {
 							taskExec = new TaskExec(indvTask);
@@ -864,10 +857,10 @@ public class DagServiceImpl {
 
 			// Traverse task & Populate RefKeys
 			if (indvTask.getOperators() != null && indvTask.getOperators().get(0).getOperatorInfo() != null) {
-				if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.map) || indvTask
-						.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.mapiter)) {
+				if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.map) || indvTask
+						.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.mapiter)) {
 
-					mapRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+					mapRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 					Map map = (Map) daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, mapRef, inputRefKeys));
 
 					// Setting the Version for Map Object
@@ -882,20 +875,20 @@ public class DagServiceImpl {
 						sourceAttrRef = attrMap.getSourceAttr().getRef();
 						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
 					}
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.load)) {// MetaType
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.load)) {// MetaType
 																														// load
-					loadRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+					loadRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.dag)) {// MetaType
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.dag)) {// MetaType
 																														// dag
-					secondaryDagRef = indvTask.getOperators().get(0).getOperatorInfo().getRef();
+					secondaryDagRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 					commonServiceImpl.populateRefKeys(refKeys, secondaryDagRef, inputRefKeys); // PopuPopulatelate
 																				// refKeys
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.dq)) {// MetaType
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.dq)) {// MetaType
 
 					DataQualExec dataqualExec = new DataQualExec();
 					dataqualExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType().equals(MetaType.rule)) {// MetaType
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.rule)) {// MetaType
 
 					RuleExec ruleExec = new RuleExec();
 					ruleExec.setBaseEntity();
@@ -904,7 +897,7 @@ public class DagServiceImpl {
 					 * ruleExec.getVersion());
 					 * taskExec.getOperators().get(0).getOperatorInfo().setRef(execIdentifier);
 					 */
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.rulegroup)) {// MetaType
 
 					RuleGroupExec ruleGroupExec = new RuleGroupExec();
@@ -914,23 +907,23 @@ public class DagServiceImpl {
 					 * ruleGroupExec.getUuid(), ruleGroupExec.getVersion());
 					 * taskExec.getOperators().get(0).getOperatorInfo().setRef(execIdentifier);
 					 */
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.train)) {
 					TrainExec trainExec = new TrainExec();
 					trainExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.predict)) {
 					PredictExec predictExec = new PredictExec();
 					predictExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.simulate)) {
 					SimulateExec simulateExec = new SimulateExec();
 					simulateExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.recon)) {
 					ReconExec reconExec = new ReconExec();
 					reconExec.setBaseEntity();
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().getRef().getType()
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.recongroup)) {
 					ReconGroupExec reconGroupExec = new ReconGroupExec();
 					reconGroupExec.setBaseEntity();
@@ -951,17 +944,6 @@ public class DagServiceImpl {
 		// For GC - END
 		return taskExecs;
 
-	}
-	
-	public HashMap<String, Object> createOperatorParamsForPSHolder(ParamSetHolder paramSetHolder){
-		HashMap<String, Object> operatorParamsForPSHolder = new HashMap<>();
-		ExecParams indvTskExecParams = new ExecParams();
-		List<ParamSetHolder> indvTskPSHolder = new ArrayList<>();
-		indvTskPSHolder.add(paramSetHolder); 
-		indvTskExecParams.setParamInfo(indvTskPSHolder);
-		operatorParamsForPSHolder.put("EXEC_PARAMS", indvTskExecParams);
-		
-		return operatorParamsForPSHolder;
 	}
 
 	@SuppressWarnings({ "unused", "unlikely-arg-type", "unchecked" })
@@ -1002,21 +984,22 @@ public class DagServiceImpl {
 			for (TaskExec indvExecTask : dagExecTasks) {
 				otherParams = execParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().getRef().getType());
+				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType());
 				logger.info(" OtherParams : " + otherParams);
 				
 				List<TaskOperator> operatorList = new ArrayList<>();
-				for(int i=0; i<indvTask.getOperators().size(); i++) {
-					MetaIdentifier ref = indvTask.getOperators().get(i).getOperatorInfo().getRef();
-					TaskOperator operator = new TaskOperator();
+				TaskOperator operator = new TaskOperator();
+				for(int i=0; i<indvTask.getOperators().get(0).getOperatorInfo().size(); i++) {
+					MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().get(i).getRef();
 					MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
-					operator.setOperatorInfo(operatorInfo);
-					operatorList.add(operator);
+					List<MetaIdentifierHolder> operatorInfoList = new ArrayList<>();
+					operatorInfoList.add(operatorInfo);
+					operator.setOperatorInfo(operatorInfoList);
 					StringBuilder builder = null;
-					if (indvTask.getOperators().get(i).getOperatorParams() != null
-							&& indvTask.getOperators().get(i).getOperatorParams().containsKey(MetaType.paramset.toString())
+					if (indvTask.getOperators().get(0).getOperatorParams() != null
+							&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramset.toString())
 							&& execParams.getParamSetHolder() == null) {
-						List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(i)
+						List<ParamSetHolder> paramSetHolderList = (List<ParamSetHolder>) indvTask.getOperators().get(0)
 								.getOperatorParams().get(MetaType.paramset.toString());
 						List<ParamSetHolder> paramSetHolders = new ArrayList<>();
 						ObjectMapper mapper = new ObjectMapper();
@@ -1028,10 +1011,10 @@ public class DagServiceImpl {
 							execParams.setParamSetHolder(paramSetHolders.get(0));
 						}
 					}
-					if (indvTask.getOperators().get(i).getOperatorParams() != null
-							&& indvTask.getOperators().get(i).getOperatorParams().containsKey(MetaType.paramlist.toString())
+					if (indvTask.getOperators().get(0).getOperatorParams() != null
+							&& indvTask.getOperators().get(0).getOperatorParams().containsKey(MetaType.paramlist.toString())
 							&& execParams.getParamListHolder() == null) {
-						List<ParamListHolder> paramListHolderList = (List<ParamListHolder>) indvTask.getOperators().get(i).getOperatorParams().get(MetaType.paramlist.toString());
+						List<ParamListHolder> paramListHolderList = (List<ParamListHolder>) indvTask.getOperators().get(0).getOperatorParams().get(MetaType.paramlist.toString());
 						List<ParamListHolder> paramListHolders = new ArrayList<>();
 						ObjectMapper mapper = new ObjectMapper();
 						for(Object obj : paramListHolderList) {
@@ -1042,7 +1025,7 @@ public class DagServiceImpl {
 							execParams.setParamListHolder(paramListHolders.get(0));
 						}
 					}
-					operator.setOperatorParams(indvTask.getOperators().get(i).getOperatorParams());
+					operator.setOperatorParams(indvTask.getOperators().get(0).getOperatorParams());
 					// Have few parts in common area
 					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
 							.convertRefKeyListToMap(execParams.getRefKeyList());
@@ -1067,7 +1050,7 @@ public class DagServiceImpl {
 						} else if (ref.getType().equals(MetaType.dqgroup)) {
 							baseExec = dataQualGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
 									datapodList, (DataQualGroupExec)baseExec, dagExec);
-							baseExec = dataQualGroupServiceImpl.parse(indvExecTask.getOperators().get(0).getOperatorInfo().getRef(),refKeyMap, datapodList, dagExec, runMode);
+							baseExec = dataQualGroupServiceImpl.parse(indvExecTask.getOperators().get(0).getOperatorInfo().get(0).getRef(),refKeyMap, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.profile)) {
 							baseExec = profileServiceImpl.create(ref.getUuid(),ref.getVersion(),(ProfileExec)baseExec,refKeyMap,datapodList,dagExec);
 							baseExec =  (ProfileExec)profileServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
@@ -1141,6 +1124,7 @@ public class DagServiceImpl {
 						commonServiceImpl.save(helper.getExecType(ref.getType()).toString(), baseExec);
 					}
 				}	
+				//operatorList.add(operator);
 				//indvExecTask.setOperators(operatorList);
 				// Set Stage and Task status
 				List<Status> statusList = new ArrayList<Status>();
