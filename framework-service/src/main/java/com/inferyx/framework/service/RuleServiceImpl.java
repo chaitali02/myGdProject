@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +26,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.livy.shaded.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -49,6 +52,8 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
+import com.inferyx.framework.domain.ParamListHolder;
+import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
@@ -93,6 +98,8 @@ public class RuleServiceImpl extends RuleTemplate {
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	HDFSInfo hdfsInfo;
+	@Autowired
+	ThreadPoolTaskExecutor metaExecutor;
 	/*
 	 * @Autowired private IRuleExecDao iRuleExecDao;
 	 */
@@ -355,17 +362,44 @@ public class RuleServiceImpl extends RuleTemplate {
 	 */
 
 	public void restart(String type, String uuid, String version, List<FutureTask<TaskHolder>> taskList,
-			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, RunMode runMode) throws JsonProcessingException {
+			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, RunMode runMode) throws Exception {
 		// RuleExec ruleExec= ruleExecServiceImpl.findOneByUuidAndVersion(uuid,
 		// version);
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
-				MetaType.ruleExec.toString());
+				MetaType.ruleExec.toString());		
 		try {
-			HashMap<String, String> otherParams = execParams.getOtherParams();
-			ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, otherParams, null, null, runMode);
+			HashMap<String, String> otherParams = null;
+			if(execParams != null) 
+				otherParams = execParams.getOtherParams();
+			
+			ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, otherParams, null, null, runMode);			
 			execute(metaExecutor, ruleExec, null, taskList, execParams, runMode);
+			
 		} catch (Exception e) {
+			synchronized (ruleExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.");
+					throw new Exception((message != null) ? message : "Can not parse Business Rule.");
+				}
+			}
 			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Business Rule.");
+			throw new Exception((message != null) ? message : "Can not parse Business Rule.");
 		}
 	}
 
@@ -833,5 +867,68 @@ public class RuleServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
+	}
+	
+	public List<MetaIdentifier> prepareRule(String ruleUuid, String ruleVersion, ExecParams execParams, RuleExec ruleExec, RunMode runMode) {
+		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
+		List<MetaIdentifier> ruleExecMetaList = new ArrayList<>();
+		MetaIdentifierHolder ruleExecMeta = new MetaIdentifierHolder();
+		MetaIdentifier ruleExecInfo = new MetaIdentifier(MetaType.rule, ruleUuid, ruleVersion);
+		ruleExecMeta.setRef(ruleExecInfo);
+		try {
+			System.out.println(new ObjectMapper().writeValueAsString(execParams));
+		} catch (org.apache.livy.shaded.jackson.core.JsonProcessingException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		try {
+			if (execParams != null) {
+				if(execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
+					for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
+						MetaIdentifier ref = paramSetHolder.getRef();
+						ref.setType(MetaType.paramset);
+						paramSetHolder.setRef(ref);
+						execParams.setParamSetHolder(paramSetHolder);
+						if(ruleExec == null)
+							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
+						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
+						ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
+						ruleExecMetaList.add(ruleExecInfo);
+						ruleExec = null;
+					}
+				} else if(execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
+					for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+						execParams.setParamListHolder(paramListHolder);
+						if(ruleExec == null)
+							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
+						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
+						ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
+						ruleExecMetaList.add(ruleExecInfo);
+						ruleExec = null;
+					}
+				}
+				
+			} else {
+				if(ruleExec == null)
+					ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+				ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
+				ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
+				ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
+				ruleExecMetaList.add(ruleExecInfo);
+				ruleExec = null;
+			}
+		} catch (Exception e) {
+			try {
+				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		
+		commonServiceImpl.completeTaskThread(taskList);
+		return ruleExecMetaList;
 	}
 }

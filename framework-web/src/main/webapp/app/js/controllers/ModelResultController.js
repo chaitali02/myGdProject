@@ -26,6 +26,12 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
         "caption":"Operator"
     } 
     ];
+    var notify = {
+        type: 'success',
+        title: 'Success',
+        content: '',
+        timeout: 3000 //time in ms
+      };
     $scope.searchForm.modelType=$scope.allModelType[0].name;
     $scope.searchForm.modelTypeObj=$scope.allModelType[0]
     $scope.getGridStyle = function() {
@@ -49,7 +55,7 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
     $scope.refreshData = function() {
         $scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
         
-      };
+    };
     $scope.refresh = function() {
         $scope.searchForm.execname = "";
         //$scope.searchForm.modelTypeObj=""
@@ -191,8 +197,66 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
          name: data.name
        });
      }
-
     }
+    $scope.setStatus = function (row, status) {
+        var api = false;
+        var type  =dagMetaDataService.elementDefs[ $scope.searchForm.modelType].execType;
+        var api = false;
+        switch (type) {
+            case 'trainExec':
+                api = 'model/train';
+                break;
+            case 'predictExec':
+                api = 'model/predict';
+                break;
+            case 'simulateExec':
+                api = 'model/simulate';
+                break;
+         
+        }
+        if (!api) {
+          return
+        }
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = dagMetaDataService.elementDefs[ $scope.searchForm.modelType].caption+" Killed Successfully"
+        $scope.$emit('notify', notify);
+    
+        var url = $location.absUrl().split("app")[0];
+        $http.put(url + '' + api + '/kill?uuid=' + row.uuid + '&version=' + row.version + '&type=' +type + '&status=' + status).then(function (response) {
+          console.log(response);
+        });
+      }
+    $scope.restartExec = function (row, status) {
+        var type  =dagMetaDataService.elementDefs[ $scope.searchForm.modelType].execType;
+        var api = false;
+        switch (type) {
+            case 'trainExec':
+                api = 'model/train';
+                break;
+            case 'predictExec':
+                api = 'model/predict';
+                break;
+            case 'simulateExec':
+                api = 'model/simulate';
+                break;
+         
+        }
+        if (!api) {
+          return
+        }
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content =dagMetaDataService.elementDefs[ $scope.searchForm.modelType].caption+" Restarted Successfully"
+        $scope.$emit('notify', notify);
+    
+        var url = $location.absUrl().split("app")[0];
+        $http.get(url + '' + api + '/restart?uuid=' + row.uuid + '&version=' + row.version + '&type=' + type + '&action=execute').then(function (response) {
+          //console.log(response);
+        });
+    }
+    
+
 });
 
 
@@ -270,7 +334,10 @@ DatascienceModule.controller('ResultModelController', function($filter, $state, 
         $scope.getModelByTrainExec();
         ModelService.getModelResult(uuid, version).then(function(response){ onSuccessGetModelResult(response.data)});
         var onSuccessGetModelResult = function(response) {
+            $scope.modelresult1={}
             $scope.modelresult = response;
+            $scope.modelresult1.data=response;
+           
             $scope.model = false;
             $scope.isMoldeSelect = false;
             $scope.selectedmodelExecdata = true;

@@ -1,8 +1,8 @@
 {
-  "uuid": "e3dd3eaf-4420-49c0-a36c-46f76b455a1a",
-  "version": "1519980278",
-  "name": "paramlist_naivebayes_classifier",
-  "desc": "NaiveBayesClassifier  Param List",
+  "uuid": "2b6f8552-f5ce-428b-b7eb-32b05a589729",
+  "version": "1519980881",
+  "name": "paramlist_randomforest_classifier_WoH",
+  "desc": "RandomForestClassifier Param LIst",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -16,8 +16,10 @@
   "active": "Y",
   "published": "N",
   "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
   "appInfo": [
-   	{
+    	{
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -46,46 +48,36 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "labelCol",
-      "paramType": "string",
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "label"
-    }
-    },
-    {
-      "paramId": "1",
-      "paramName": "predictionCol",
-      "paramType": "string",
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "Col1"
-    }
-    },
-    {
-      "paramId": "2",
-      "paramName": "featuresCol",
-      "paramType": "string",
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "Col2"
-    }
-    },
-    {
-      "paramId": "3",
-      "paramName": "smoothing",
+      "paramName": "maxBins",
       "paramType": "integer",
       "paramValue": {
         "ref" : {
             "type" : "simple"
         },
-	"value" : "1"
+	"value" : "10"
+    }
+    },
+    {
+      "paramId": "1",
+      "paramName": "maxDepth",
+      "paramType": "integer",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "10"
+    }
+    },
+    
+    {
+      "paramId": "4",
+      "paramName": "maxMemoryInMB",
+      "paramType": "integer",
+      "paramValue": {
+        "ref" : {
+            "type" : "simple"
+        },
+	"value" : "100"
     }
     }
   ]

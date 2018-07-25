@@ -2,64 +2,42 @@
 	"params": [
 		{
 			"paramId": 0,
-			"paramName": "k",
-			"paramType": "integer",
+			"paramName": "threshold",
+			"paramType": "double",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "10"
+				"value" : "2"
 			    }
 		},
 		{
 			"paramId": 1,
-			"paramName": "learningDecay",
-			"paramType": "double",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "10"
-			    }
-		},
-		{
-			"paramId": 2,
-			"paramName": "learningOffset",
-			"paramType": "double",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "12"
-			    }
-		},
-		{
-			"paramId": 3,
 			"paramName": "maxIter",
 			"paramType": "integer",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "4"
+				"value" : "10"
 			    }
 		},
 		{
 			"paramId": 4,
-			"paramName": "seed",
-			"paramType": "long",
+			"paramName": "tol",
+			"paramType": "double",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "13.14"
+				"value" : "10"
 			    }
 		}
 	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a85",
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80",
 	"version": "1495146809",
-	"name": "paramlist_lda",
-	"desc": "LDA Param List",
+	"name": "paramlist_logistic_regression_WoH",
+	"desc": "LogisticRegression Param List",
 	"createdBy": {
 		"ref": {
 			"type": "user",
@@ -72,8 +50,10 @@
 		"0.1.0"
 	],
 	"active": "Y",
-	"published": "N",	
+	"published": "N",
     "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
 	"appInfo": [
 			{
             "ref" : {

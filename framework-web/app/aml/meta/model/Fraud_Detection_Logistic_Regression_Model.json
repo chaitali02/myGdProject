@@ -1,16 +1,15 @@
 {
-  "id": "5b3e2472275052634b2893e3",
-  "uuid": "3dfc4042-00db-48f5-a075-572c5aead3ca",
-  "version": "1530799218",
-  "name": "Fraud Detection Linear Regression Model with Hyper Params",
-  "desc": "Model for detection fraudulent transactions with Hyper Params.",
+  "uuid": "8a3db9b7-f64c-4e9c-b595-dda723aa7545",
+  "version": "1530800685",
+  "name": "Fraud Detection Logistic Regression Model",
+  "desc": "Logistic Regression Model for detection fraudulent transactions with Hyper Params.",
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Thu Jul 05 19:30:18 IST 2018",
+  "createdOn": "Thu Jul 05 19:54:45 IST 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -26,7 +25,7 @@
   "dependsOn": {
     "ref": {
       "type": "algorithm",
-      "uuid": "901b9fce-1ced-475a-a83f-1a17e07a42dc"
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b72345"
     }
   },
   "label": "fraud_indicator",

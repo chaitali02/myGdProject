@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,12 +17,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.ml.param.DoubleParam;
-import org.apache.spark.ml.param.IntParam;
-import org.apache.spark.ml.param.LongParam;
-import org.apache.spark.ml.param.Param;
 import org.apache.spark.ml.param.ParamMap;
-import org.apache.spark.ml.param.ParamPair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -87,6 +81,8 @@ public class ParamSetServiceImpl {
 	RuleServiceImpl ruleServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(ParamSetServiceImpl.class);
 
@@ -297,10 +293,16 @@ public class ParamSetServiceImpl {
 		return baseEntityList;
 	}*/
 	
-   public List<ParamSet> getParamSetByAlgorithm (String algorithmUUID, String algorithmVersion) throws JsonProcessingException {		
+   public List<ParamSet> getParamSetByAlgorithm (String algorithmUUID, String algorithmVersion, String isHyperParam) throws JsonProcessingException {		
 		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(algorithmUUID, MetaType.algorithm.toString());
 		//ParamList paramList = paramListServiceImpl.findLatestByUuid(algo.getParamList().getRef().getUuid());
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
+		MetaIdentifier plMI = null;
+		if(isHyperParam.equalsIgnoreCase("Y")) {
+			plMI = algo.getParamListWH().getRef();
+		} else {
+			plMI = algo.getParamListWoH().getRef();
+		}
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(plMI.getUuid(), MetaType.paramlist.toString());
 		MetaIdentifier dependsOnRef = new MetaIdentifier();
 		dependsOnRef.setType(MetaType.paramlist);
 		dependsOnRef.setUuid(paramList.getUuid());
@@ -312,29 +314,35 @@ public class ParamSetServiceImpl {
 		return paramSetList;		
 	}
 
-	public List<ParamSet> getParamSetByModel (String modelUUID, String modelVersion) throws JsonProcessingException {		
-		//Model model = modelServiceImpl.findOneByUuidAndVersion(modelUUID,modelVersion);
-		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID,modelVersion, MetaType.model.toString());
-		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-		//ParamList paramList = paramListServiceImpl.findLatestByUuid(algo.getParamList().getRef().getUuid());
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
-		MetaIdentifier dependsOnRef = new MetaIdentifier();
-		dependsOnRef.setType(MetaType.paramlist);
-		dependsOnRef.setUuid(paramList.getUuid());
-		dependsOnRef.setVersion(paramList.getVersion());		
-		MetaIdentifierHolder dependsOnRefHolder = new MetaIdentifierHolder();
-		dependsOnRefHolder.setRef(dependsOnRef);
-		List<ParamSet> paramSetList = findLatestByDependsOn(dependsOnRefHolder);
-		paramSetList = resolveName(paramSetList);
-		return paramSetList;		
-	}
+	/********************** UNUSED **********************/
+//	public List<ParamSet> getParamSetByModel (String modelUUID, String modelVersion) throws JsonProcessingException {		
+//		//Model model = modelServiceImpl.findOneByUuidAndVersion(modelUUID,modelVersion);
+//		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID,modelVersion, MetaType.model.toString());
+//		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
+//		//ParamList paramList = paramListServiceImpl.findLatestByUuid(algo.getParamList().getRef().getUuid());
+//		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
+//		MetaIdentifier dependsOnRef = new MetaIdentifier();
+//		dependsOnRef.setType(MetaType.paramlist);
+//		dependsOnRef.setUuid(paramList.getUuid());
+//		dependsOnRef.setVersion(paramList.getVersion());		
+//		MetaIdentifierHolder dependsOnRefHolder = new MetaIdentifierHolder();
+//		dependsOnRefHolder.setRef(dependsOnRef);
+//		List<ParamSet> paramSetList = findLatestByDependsOn(dependsOnRefHolder);
+//		paramSetList = resolveName(paramSetList);
+//		return paramSetList;		
+//	}
 	
 	public List<ParamSet> getParamSetByTrain (String trainUUID, String trainVersion) throws JsonProcessingException {		
 		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUUID,trainVersion, MetaType.train.toString());
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(),train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-
 		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(algo.getParamList().getRef().getUuid(), MetaType.paramlist.toString());
+		MetaIdentifier plMI = null;
+		if(train.getUseHyperParams().equalsIgnoreCase("Y")) {
+			plMI = algo.getParamListWH().getRef();
+		} else {
+			plMI = algo.getParamListWoH().getRef();
+		}
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(plMI.getUuid(), MetaType.paramlist.toString());
 		MetaIdentifier dependsOnRef = new MetaIdentifier();
 		dependsOnRef.setType(MetaType.paramlist);
 		dependsOnRef.setUuid(paramList.getUuid());
@@ -381,130 +389,11 @@ public class ParamSetServiceImpl {
 			paramSetList = findOneByDependsOn(dependsOnRefHolder);
 		paramSetList = resolveName(paramSetList);
 		return paramSetList;		
-	}
+	}	
 	
-	public List<ParamListHolder> getParamListHolder(ParamSetHolder paramSetHolder) throws JsonProcessingException{
-		ParamSet paramSet= null; 
-		if(null != paramSetHolder.getRef() && null != paramSetHolder.getRef().getVersion()){
-			//paramSet= iParamSetDao.findOneByUuidAndVersion(paramSetHolder.getRef().getUuid(), paramSetHolder.getRef().getVersion());
-			paramSet = (ParamSet) commonServiceImpl.getOneByUuidAndVersion(paramSetHolder.getRef().getUuid(), paramSetHolder.getRef().getVersion(), MetaType.paramset.toString());
-		} else {
-			//paramSet = iParamSetDao.findLatestByUuid(paramSetHolder.getRef().getUuid(), new Sort(Sort.Direction.DESC, "version"));
-			paramSet = (ParamSet) commonServiceImpl.getLatestByUuid(paramSetHolder.getRef().getUuid(), MetaType.paramset.toString());
-		}
-		List<ParamListHolder> paramListHolderList = null;
-		if(null != paramSet){
-			for(ParamInfo paramInfo:paramSet.getParamInfo()){
-				if(paramSetHolder.getParamSetId().equalsIgnoreCase(paramInfo.getParamSetId())){
-					paramListHolderList = paramInfo.getParamSetVal();
-					break;
-				}
-			}
-		}
-		return paramListHolderList;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<ParamMap> getParamMap(ExecParams execParams, String modelUUID, String modelVersion) throws Exception{
-		Model model = null;
-		if (StringUtils.isBlank(modelVersion)) {
-			//model = iModelDao.findLatestByUuid(modelUUID, new Sort(Sort.Direction.DESC, "version"));
-			model = (Model) commonServiceImpl.getLatestByUuid(modelUUID, MetaType.model.toString());
-			modelVersion = model.getVersion();
-		} else {
-			//model = iModelDao.findOneByUuidAndVersion(modelUUID, modelVersion);
-			model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID, modelVersion, MetaType.model.toString());
-		}
-		Algorithm algo = null;
-		if (StringUtils.isBlank(model.getDependsOn().getRef().getVersion())) {
-			//algo = iAlgorithmDao.findLatestByUuid(model.getAlgorithm().getRef().getUuid(), new Sort(Sort.Direction.DESC, "version"));
-			algo = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
-		} else {
-			//algo = iAlgorithmDao.findOneByUuidAndVersion(model.getAlgorithm().getRef().getUuid(), model.getAlgorithm().getRef().getVersion());
-			algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
-		}
-		String className = algo.getTrainName();
-		
-		List<ParamMap> paramMapList = new ArrayList<>();
-		if(null!= execParams) {
-			try {
-				for(ParamSetHolder paramSetHolder :execParams.getParamInfo()){
-					List<ParamListHolder> paramListHolder = getParamListHolder(paramSetHolder);
-					ParamMap paramMap = new ParamMap();
-					List<ParamPair<Object>> objList = new ArrayList<>();
-					List<String> typeStr = new ArrayList<>();
-					for(ParamListHolder plh:paramListHolder){
-						ParamList paramList= null; 
-						if(null != plh.getRef() && null != plh.getRef().getVersion()){
-							//paramList= IParamListDao.findOneByUuidAndVersion(plh.getRef().getUuid(), plh.getRef().getVersion());
-							paramList= (ParamList) commonServiceImpl.getOneByUuidAndVersion(plh.getRef().getUuid(), plh.getRef().getVersion(), MetaType.paramlist.toString());
-						} else {
-							//paramList = IParamListDao.findLatestByUuid(plh.getRef().getUuid(), new Sort(Sort.Direction.DESC, "version"));
-							paramList= (ParamList) commonServiceImpl.getLatestByUuid(plh.getRef().getUuid(), MetaType.paramlist.toString());
-						}
-						
-						for(com.inferyx.framework.domain.Param param:paramList.getParams()){
-							if(param.getParamId().equals(plh.getParamId())){
-								plh.setParamType(param.getParamType());
-								plh.setParamName(param.getParamName());
-								break;
-							}
-						}
-						
-						Class<?> dynamicClass = Class.forName(className);						
-						Method method = dynamicClass.getMethod(plh.getParamName() );
-						Object obj = method.invoke(dynamicClass.newInstance());
-						
-						if(plh.getParamType().equalsIgnoreCase("integer")){
-							Class<?>[] param = new Class[1];
-							param[0] = int.class;
-							Method method1 = obj.getClass().getMethod("w", param);
-							objList.add((ParamPair<Object>)method1.invoke((IntParam)obj,Integer.parseInt(plh.getValue())));
-							typeStr.add("integer");
-							//paramMap.put((IntParam)obj,Integer.parseInt(plh.getValue()));
-						} 
-						else if(plh.getParamType().equalsIgnoreCase("String")) {
-							Class<?>[] param = new Class[1];
-							param[0] = String.class;
-							obj = (Param<String>)obj;
-							Method method1 = obj.getClass().getMethod("w", param);
-							objList.add((ParamPair<Object>)method1.invoke((Param<String>)obj,plh.getValue()));
-							typeStr.add("string");
-							//paramMap.put((Param<String>)obj,plh.getValue());
-						} 
-						else if(plh.getParamType().equalsIgnoreCase("long")) {
-							Class<?>[] param = new Class[1];
-							param[0] = long.class;
-							Method method1 = obj.getClass().getMethod("w", param);
-							objList.add((ParamPair<Object>)method1.invoke((LongParam)obj,Long.parseLong(plh.getValue())));
-							typeStr.add("string");
-							//paramMap.put((LongParam)obj,plh.getValue());
-						}
-						else if(plh.getParamType().equalsIgnoreCase("double")) {
-							Class<?>[] param = new Class[1];
-							param[0] = double.class;
-							Method method1 = obj.getClass().getMethod("w", param);
-							objList.add((ParamPair<Object>)method1.invoke((DoubleParam)obj,Double.parseDouble(plh.getValue())));
-							typeStr.add("double");
-							//paramMap.put((DoubleParam)obj,plh.getValue());
-						}
-					}
-					
-					for(ParamPair<Object> paramPair : objList) {
-						paramMap.put(paramPair);
-					}
-					paramMapList.add(paramMap);
-				}
-			}catch (NullPointerException e) {
-				//e.printStackTrace();
-			}			
-		}
-
-		return paramMapList;
-	}
-
-	public ParamMap getParamMapCombined(ExecParams execParams, String modelUUID, String modelVersion) throws Exception {
-		List<ParamMap> paramMapList = getParamMap(execParams, modelUUID, modelVersion);
+	public ParamMap getParamMapCombined(ExecParams execParams, String trainUuid, String trainVersion) throws Exception {
+		Object paramMapList1 = null;
+		List<ParamMap> paramMapList = metadataServiceImpl.getParamMap(execParams, trainUuid, trainVersion, paramMapList1);
 		ParamMap paramMapCombined = null;
 		int i=0;
 		if(null != paramMapList){
@@ -519,51 +408,6 @@ public class ParamSetServiceImpl {
 		}
 		return paramMapCombined;	
 	}
-	/**
-	 * 
-	 * @param execParams
-	 * @param attributeId
-	 * @param ref
-	 * @return
-	 * @throws JsonProcessingException
-	 */
-	public String getParamValue(ExecParams execParams,  
-									Integer attributeId, 
-									MetaIdentifier ref) throws JsonProcessingException {
-		ParamSetHolder paramSetHolder = null;
-		String value = null;
-		if (execParams != null) {
-			paramSetHolder = execParams.getParamSetHolder();
-		}
-		if (paramSetHolder == null) {
-			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
-			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
-				if (param.getParamId().equals(attributeId+"")) {
-					value = param.getParamValue().getValue();
-					return value;
-				}
-			}
-		}
-		ParamSet paramSet = (ParamSet) daoRegister.getRefObject(paramSetHolder.getRef());
-		ParamInfo paramInfo = paramSet.getParamInfo().get(Integer.parseInt(paramSetHolder.getParamSetId()));
-		for (ParamListHolder paramListHolder : paramInfo.getParamSetVal()) {
-			if (paramListHolder.getParamId().equals(attributeId.toString())) {
-				if (StringUtils.isNotBlank(paramListHolder.getValue())) {
-					value = paramListHolder.getValue();
-					return value;
-				} else {
-					ParamList paramList = (ParamList)daoRegister.getRefObject(paramListHolder.getRef());
-					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
-						if (param.getParamId().equals(attributeId+"")) {
-							value = param.getParamValue().getValue();
-							return value;
-						}
-					}
-				}
-			}
-		}
-		return "''";
-	}// End method	
 	
 	/**
 	 * 
@@ -600,5 +444,47 @@ public class ParamSetServiceImpl {
 		}
 		return null;
 	}
-
+	/**
+	 * 
+	 * @param execParams
+	 * @param attributeId
+	 * @param ref
+	 * @return value
+	 * @throws JsonProcessingException
+	 */
+	public String getParamValue(ExecParams execParams,  
+									Integer attributeId, 
+									MetaIdentifier ref) throws JsonProcessingException {		
+		ParamSetHolder paramSetHolder = null;
+		if (execParams != null) {
+			paramSetHolder = execParams.getParamSetHolder();
+		}
+		
+		if (paramSetHolder == null) {
+			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
+				if (param.getParamId().equals(attributeId+"")) {
+					return param.getParamValue().getValue();
+				}
+			}
+		}
+		
+		ParamSet paramSet = (ParamSet) daoRegister.getRefObject(paramSetHolder.getRef());
+		ParamInfo paramInfo = paramSet.getParamInfo().get(Integer.parseInt(paramSetHolder.getParamSetId()));
+		for (ParamListHolder paramListHolder : paramInfo.getParamSetVal()) {
+			if (paramListHolder.getParamId().equals(attributeId.toString())) {
+				if (StringUtils.isNotBlank(paramListHolder.getValue())) {
+					return paramListHolder.getValue();
+				} else {
+					ParamList paramList = (ParamList)daoRegister.getRefObject(paramListHolder.getRef());
+					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
+						if (param.getParamId().equals(attributeId+"")) {
+							return param.getParamValue().getValue();
+						}
+					}
+				}
+			}
+		}
+		return "''";
+	}// End method	
 }

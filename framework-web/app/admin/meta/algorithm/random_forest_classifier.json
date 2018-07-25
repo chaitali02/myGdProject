@@ -44,9 +44,9 @@
         }
   ],
   "type": "CLASSIFICATION",
-  "library": "SPARKML",
-  "trainName": "org.apache.spark.ml.classification.RandomForestClassifier",
-  "modelName": "org.apache.spark.ml.classification.RandomForestClassificationModel",
+  "libraryType": "SPARKML",
+  "trainClass": "org.apache.spark.ml.classification.RandomForestClassifier",
+  "modelClass": "org.apache.spark.ml.classification.RandomForestClassificationModel",
   "labelRequired": "Y",
   "returnType": null,
   "paramList": {
@@ -58,5 +58,34 @@
     },
     "value": null
   },
-  "savePmml" : "Y"
+	 "paramListWoH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "2b6f8552-f5ce-428b-b7eb-32b05a589729"
+        }
+    },
+    "paramListWH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "a82581f7-3818-40bb-a98d-3b518b755e0b"
+        }
+    },
+  "savePmml" : "Y",
+	"summaryMethods" : [  
+		"featureImportances",
+		"getCheckpointInterval",
+		"getMaxBins",
+		"getMaxDepth",
+		"getMaxMemoryInMB",
+		"getMinInfoGain",
+		"getMinInstancesPerNode",
+		"getNumTrees",
+		"getSeed",
+		"getSubsamplingRate",
+		"getThresholds",
+		"numClasses",
+		"numFeatures",
+		"totalNumNodes",
+		"treeWeights"
+	    ]
 }

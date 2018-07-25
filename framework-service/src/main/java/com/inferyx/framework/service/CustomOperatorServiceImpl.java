@@ -156,7 +156,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				MetaType.operator.toString());
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(helper.getOperatorType(operator.getOperatorType()));
-		Map<String, String> otherParams = newOperator.create(operatorExec, execParams, runMode);
+		Map<String, String> otherParams = newOperator.customCreate(operatorExec, execParams, runMode);
 		logger.info(" After Set not started status");
 		return operatorExec;
 	}
@@ -362,7 +362,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 
 		/** this if condition is handeled temporarily, it can be changed in future **/
 		if (type.equalsIgnoreCase(OperatorType.generateData.toString())) {
-			query.addCriteria(Criteria.where("operatorType").in("GenerateData", "GenDataAttr"));
+			query.addCriteria(Criteria.where("operatorType").in("GenerateData", "GenDataAttr","genDataValList"));
 		} else {
 			query.addCriteria(Criteria.where("operatorType").is(type));
 		}

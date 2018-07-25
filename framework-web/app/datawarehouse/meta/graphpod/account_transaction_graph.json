@@ -1,8 +1,10 @@
 {
+    
     "nodeInfo" : [ 
         {
             "nodeId" : {
                 "attrId" : "12",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -12,6 +14,7 @@
             "nodeIcon" : "bank",
             "nodeName" : {
                 "attrId" : "12",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -25,7 +28,16 @@
             },
             "nodeProperties" : [ 
                 {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
                     "attrId" : "13",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -33,16 +45,39 @@
                 }, 
                 {
                     "attrId" : "14",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                     }
                 }
             ],
+            "nodeBackgroundInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "18",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "Compound",
+                        "propertyValue" : "#ef9a9a"
+                    }, 
+                    {
+                        "propertyName" : "Simple",
+                        "propertyValue" : "#B39DDB"
+                    }
+                ]
+            },
             "highlightInfo" : {
                 "type" : "category",
                 "propertyId" : {
                     "attrId" : "6",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -51,19 +86,19 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "American",
-                        "propertyValue" : "#c9f2f2"
+                        "propertyValue" : "#b71c1c"
                     }, 
                     {
                         "propertyName" : "Canadian",
-                        "propertyValue" : "#6aadac"
+                        "propertyValue" : "#004D40"
                     }, 
                     {
                         "propertyName" : "British",
-                        "propertyValue" : "#f2162a"
+                        "propertyValue" : "#0D47A1"
                     }, 
                     {
                         "propertyName" : "German",
-                        "propertyValue" : "#7c787b"
+                        "propertyValue" : "#FF9800"
                     }
                 ]
             }
@@ -71,6 +106,7 @@
         {
             "nodeId" : {
                 "attrId" : "0",
+                "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -80,6 +116,7 @@
             "nodeIcon" : "user",
             "nodeName" : {
                 "attrId" : "4",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -94,6 +131,15 @@
             "nodeProperties" : [ 
                 {
                     "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -101,6 +147,7 @@
                 }, 
                 {
                     "attrId" : "4",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -108,16 +155,26 @@
                 }, 
                 {
                     "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
                     }
                 }
             ],
-            "highlightInfo" : {
+            "nodeBackgroundInfo" : {
                 "type" : "category",
                 "propertyId" : {
                     "attrId" : "3",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
@@ -126,15 +183,40 @@
                 "propertyInfo" : [ 
                     {
                         "propertyName" : "Mr",
-                        "propertyValue" : "#51b3ff"
+                        "propertyValue" : "#ef9a9a"
                     }, 
                     {
                         "propertyName" : "Ms",
-                        "propertyValue" : "#da00ff"
+                        "propertyValue" : "#80DEEA"
                     }, 
                     {
                         "propertyName" : "Mrs",
-                        "propertyValue" : "#814c83"
+                        "propertyValue" : "#B39DDB"
+                    }
+                ]
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "3",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "Mr",
+                        "propertyValue" : "#004D40"
+                    }, 
+                    {
+                        "propertyName" : "Ms",
+                        "propertyValue" : "#FF9800"
+                    }, 
+                    {
+                        "propertyName" : "Mrs",
+                        "propertyValue" : "#263238"
                     }
                 ]
             }
@@ -154,6 +236,7 @@
             "edgeProperties" : [ 
                 {
                     "attrId" : "0",
+                    "attrType" : "string",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
@@ -161,6 +244,15 @@
                 }, 
                 {
                     "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
@@ -169,6 +261,7 @@
             ],
             "sourceNodeId" : {
                 "attrId" : "4",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
@@ -177,12 +270,34 @@
             "sourceNodeType" : "account",
             "targetNodeId" : {
                 "attrId" : "5",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
                 }
             },
-            "targetNodeType" : "account"
+            "targetNodeType" : "account",
+            "highlightInfo" : {
+                "type" : "numerical",
+                "propertyId" : {
+                    "attrId" : "7",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "2000",
+                        "propertyValue" : "#004D40"
+                    }, 
+                    {
+                        "propertyName" : "500000",
+                        "propertyValue" : "#263238"
+                    }
+                ]
+            }
         }, 
         {
             "edgeId" : "1",
@@ -197,6 +312,7 @@
             "edgeProperties" : [ 
                 {
                     "attrId" : "0",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -204,6 +320,7 @@
                 }, 
                 {
                     "attrId" : "4",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -211,6 +328,7 @@
                 }, 
                 {
                     "attrId" : "14",
+                    "attrType" : "integer",
                     "ref" : {
                         "type" : "datapod",
                         "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -219,6 +337,7 @@
             ],
             "sourceNodeId" : {
                 "attrId" : "4",
+                "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -227,27 +346,49 @@
             "sourceNodeType" : "customer",
             "targetNodeId" : {
                 "attrId" : "12",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
                 }
             },
-            "targetNodeType" : "account"
+            "targetNodeType" : "account",
+            "highlightInfo" : {
+                "type" : "numerical",
+                "propertyId" : {
+                    "attrId" : "14",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "2000",
+                        "propertyValue" : "#263238"
+                    }, 
+                    {
+                        "propertyName" : "10000",
+                        "propertyValue" : "#FF9800"
+                    }
+                ]
+            }
         }
     ],
     "uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
-    "version" : "1530621986",
+    "version" : "1531737711",
     "name" : "account_transaction_graph",
     "desc" : "account_transaction_graph",
     "createdBy" : {
         "ref" : {
             "type" : "user",
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196"
-           
+            "version" : "1464977196",
+            "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-07-03T12:46:26.000Z"),
+    "createdOn" : ISODate("2018-07-16T10:41:51.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

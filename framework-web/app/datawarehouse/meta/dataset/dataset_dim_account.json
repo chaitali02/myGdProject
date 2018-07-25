@@ -22,6 +22,7 @@
             "attrSourceName" : "src_account_id",
             "sourceAttr" : {
                 "attrId" : "0",
+                "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -32,7 +33,8 @@
             "attrSourceId" : "2",
             "attrSourceName" : "account_type_code",
             "sourceAttr" : {
-                "attrId" : "1",
+                "attrId" : "1", 
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed7efa81-3a55-4edc-b849-3285ffe29542"
@@ -44,6 +46,7 @@
             "attrSourceName" : "account_status_code",
             "sourceAttr" : {
                 "attrId" : "1",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "2996b01d-cbc8-4ac7-8aff-1e887204101b"
@@ -55,6 +58,7 @@
             "attrSourceName" : "product_type_code",
             "sourceAttr" : {
                 "attrId" : "1",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
@@ -66,6 +70,7 @@
             "attrSourceName" : "pin_number",
             "sourceAttr" : {
                 "attrId" : "5",
+                 "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -77,6 +82,7 @@
             "attrSourceName" : "nationality",
             "sourceAttr" : {
                 "attrId" : "6",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -88,6 +94,7 @@
             "attrSourceName" : "primary_iden_doc",
             "sourceAttr" : {
                 "attrId" : "7",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -99,6 +106,7 @@
             "attrSourceName" : "primary_iden_doc_id",
             "sourceAttr" : {
                 "attrId" : "8",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -110,6 +118,7 @@
             "attrSourceName" : "secondary_iden_doc",
             "sourceAttr" : {
                 "attrId" : "9",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -121,6 +130,7 @@
             "attrSourceName" : "secondary_iden_doc_id",
             "sourceAttr" : {
                 "attrId" : "10",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -132,6 +142,7 @@
             "attrSourceName" : "account_open_date",
             "sourceAttr" : {
                 "attrId" : "11",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -143,6 +154,7 @@
             "attrSourceName" : "account_number",
             "sourceAttr" : {
                 "attrId" : "12",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -154,6 +166,7 @@
             "attrSourceName" : "opening_balance",
             "sourceAttr" : {
                 "attrId" : "13",
+                 "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -165,6 +178,7 @@
             "attrSourceName" : "current_balance",
             "sourceAttr" : {
                 "attrId" : "14",
+                 "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -176,6 +190,7 @@
             "attrSourceName" : "overdue_balance",
             "sourceAttr" : {
                 "attrId" : "15",
+                 "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -187,6 +202,7 @@
             "attrSourceName" : "overdue_date",
             "sourceAttr" : {
                 "attrId" : "16",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -198,6 +214,7 @@
             "attrSourceName" : "currency_code",
             "sourceAttr" : {
                 "attrId" : "17",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -209,6 +226,7 @@
             "attrSourceName" : "interest_type",
             "sourceAttr" : {
                 "attrId" : "18",
+                 "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
@@ -220,6 +238,7 @@
             "attrSourceName" : "interest_rate",
             "sourceAttr" : {
                 "attrId" : "19",
+                 "attrType" : "double",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"

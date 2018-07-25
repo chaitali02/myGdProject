@@ -84,17 +84,21 @@ InferyxApp.constant("CF_FILTER",{
 
 InferyxApp.constant("CF_GRAPHPOD",{
     allType:["datapod","dataset"],
-    nodeIcon:[{"caption":"home","value":"home","class":"fa fa-home"},
-    {"caption":"user","value":"user","class":"fa fa-user"},
-    {"caption":"bank","value":"bank","class":"fa fa-university"},
-    {"caption":"office","value":"office","class":"fa fa-building"},
-    {"caption":"dollar","value":"doller","class":"fa fa-usd"}], 
-    nodeIconMap:{"home":{"caption":"home","value":"home","class":"fa fa-home","code":"\uf015","color":"#5C9BD1"},
-    "user":{"caption":"user","value":"user","class":"fa fa-user","code":"\uf007","color":"#8877a9"},
-    "bank":{"caption":"bank","value":"bank","class":"fa fa-university","code":"\uf19c","color":"#2ab4c0"},
-    "office":{"caption":"office","value":"office","class":"fa fa-building","code":"\uf1ad","color":"#f36a5a"},
-    "dollar":{"caption":"dollar","value":"dollar","class":"fa fa-usd","code":"\f155","color":"#0db7ed"}},
-    nodeHighlightType:["category","numerical"],
-    nodeHighlightColor:[""]
+    nodeIcon:[{"caption":"Home","value":"home","class":"fa fa-home"},
+    {"caption":"User","value":"user","class":"fa fa-user"},
+    {"caption":"Bank","value":"bank","class":"fa fa-university"},
+    {"caption":"Office","value":"office","class":"fa fa-building"},
+    {"caption":"Dollar","value":"doller","class":"fa fa-usd"}], 
+    nodeIconMap:{"home":{"caption":"Home","value":"home","class":"fa fa-home","code":"\uf015","color":"#5C9BD1"},
+    "user":{"caption":"User","value":"user","class":"fa fa-user","code":"\uf007","color":"#8877a9"},
+    "bank":{"caption":"Bank","value":"bank","class":"fa fa-university","code":"\uf19c","color":"#2ab4c0"},
+    "office":{"caption":"Office","value":"office","class":"fa fa-building","code":"\uf1ad","color":"#f36a5a"},
+    "dollar":{"caption":"Dollar","value":"dollar","class":"fa fa-usd","code":"\f155","color":"#0db7ed"}},
+    nodeHighlightType:[
+        {"caption":"Category","value":"category"},
+        {"caption":"Numerical","value":"numerical"}],
+    nodeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
+    nodeBackGroundColor:["#ef9a9a","#B39DDB","#80DEEA","#BCAAA4","#B0BEC5"],
+    edgeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
   
 })

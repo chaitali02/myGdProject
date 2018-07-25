@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
@@ -629,15 +630,22 @@ public class TaskServiceImpl implements Callable<String> {
 		} else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.rule)) {
 			logger.info("Going to ruleServiceImpl.execute");
 			try {
-				//RuleExec ruleExec = ruleExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
-				RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.ruleExec.toString());
-				//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
-				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
-				execParams.setInternalVarMap(internalVarMap);
-				ruleServiceImpl.execute(null, ruleExec, null, null, execParams, runMode);
-				// ruleServiceImpl.execute(ruleExec.getDependsOn().getRef().getUuid(), ruleExec.getDependsOn().getRef().getVersion(), ruleExec, null, null, null);
-				if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-					throw new Exception();
+				for(TaskOperator taskOperator : taskExec.getOperators()) {
+					RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(taskOperator.getOperatorInfo().getRef().getUuid(), taskOperator.getOperatorInfo().getRef().getVersion(), MetaType.ruleExec.toString());
+					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
+					execParams.setInternalVarMap(internalVarMap);
+					ExecParams execParams = commonServiceImpl.getExecParams(taskOperator);
+					if(execParams != null && execParams.getParamInfo() != null) {
+						execParams.setParamSetHolder(execParams.getParamInfo().get(0));
+					} else if(execParams != null && execParams.getParamListInfo() != null) {
+						execParams.setParamListHolder(execParams.getParamListInfo().get(0));
+					}
+					ruleExec.setExecParams(execParams);
+					commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
+					ruleServiceImpl.prepareRule(taskOperator.getOperatorInfo().getRef().getUuid(), taskOperator.getOperatorInfo().getRef().getVersion(), execParams, ruleExec, runMode);
+					if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+						throw new Exception();
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -681,18 +689,20 @@ public class TaskServiceImpl implements Callable<String> {
 			}
 		}  else if (operatorInfo.getRef()!=null && operatorInfo.getRef().getType().equals(MetaType.train)) {
 			try {
-				//ModelExec modelExec = modelExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
-				TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion(), MetaType.trainExec.toString());
-				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", trainExec.getVersion());
-				execParams.setInternalVarMap(internalVarMap);
-				Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
-				Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-				ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, model.getUuid(), model.getVersion());
-				ExecParams execParams = commonServiceImpl.getExecParams(operator);
-				modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
-				if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-					throw new Exception();
-				}
+				for(TaskOperator taskOperator : taskExec.getOperators()) {
+					TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(taskOperator.getOperatorInfo().getRef().getUuid(), taskOperator.getOperatorInfo().getRef().getVersion(), MetaType.trainExec.toString());
+					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", trainExec.getVersion());
+					execParams.setInternalVarMap(internalVarMap);
+//					Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), MetaType.train.toString());
+//					Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
+//					ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, train.getUuid(), train.getVersion());
+					ExecParams execParams = commonServiceImpl.getExecParams(taskOperator);
+					//modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
+					modelServiceImpl.prepareTrain(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec, execParams, runMode);
+					if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+						throw new Exception("Train execution failed.");
+					}
+				}				
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;

@@ -307,7 +307,7 @@ public class ImpalaExecutor implements IExecutor {
 	}
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -445,6 +445,11 @@ public class ImpalaExecutor implements IExecutor {
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
 			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

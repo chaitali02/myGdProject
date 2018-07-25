@@ -31,7 +31,9 @@
 a, a:hover, a:active, a:visited, a:focus {
     text-decoration:none;
 }
-
+.has-error .form-control{
+  outline: 1px solid #e73d4a !important;
+}
 /* Start Loding*/
 .notification{
   position: fixed;
@@ -128,12 +130,7 @@ th, td{vertical-align: middle !important}
 
 /*Start Metadata*/
 
-/*Start DatapodDetailPage*/
-  .taginput {
-   /* margin-top: -8px;
-    margin-bottom: 6px; */
-  }
-/*End DatapodDEetailPage*/
+
 
 .theadborder{
 
@@ -469,7 +466,9 @@ a.tagit-close-dd{
    height: 16px;
    outline: none;
  }
-
+ .rzslider.rz-vertical .rz-bar-wrapper{
+  height:90% !important;
+ }
  /*#dag-exec-model .rzslider .rz-pointer, .portlet.box.green .rzslider .rz-pointer {
     background-color: #fff;
   }*/
@@ -731,6 +730,10 @@ vertical-align: middle;
     /*width:150px;*/
   }
   div[joint-graph-directive]:hover .joint-graph-zoom-slider, div[render-group-directive]:hover .joint-graph-zoom-slider {
+    opacity: 1;
+  }
+
+  div[fd-graph-directive]:hover .network-graph-zoom-slider{
     opacity: 1;
   }
 
@@ -1042,4 +1045,8 @@ transition: right 1m
   vertical-align: bottom;
   white-space: nowrap;
   max-width: 250px;
+}
+
+ .ui-select-bootstrap .ui-select-choices-row>span{
+  padding: 3px 4px !important;
 }

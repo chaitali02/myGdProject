@@ -20,12 +20,31 @@ public class ExecParams {
 	private List<AttributeRefHolder> filterInfo;
 	private List<String> stageInfo;
 	private ParamSetHolder paramSetHolder;
+	private ParamListHolder paramListHolder;
 	private List<ParamListHolder> paramListInfo;
 	private java.util.Map<String, String> internalVarMap;
 	private HashMap<String, String> otherParams;
 	private ExecutionContext executionContext;
 	private GraphFilter graphFilter;
 	
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the paramListHolder
+	 */
+	public ParamListHolder getParamListHolder() {
+		return paramListHolder;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param paramListHolder the paramListHolder to set
+	 */
+	public void setParamListHolder(ParamListHolder paramListHolder) {
+		this.paramListHolder = paramListHolder;
+	}
 
 	/**
 	 * @return the executionContext

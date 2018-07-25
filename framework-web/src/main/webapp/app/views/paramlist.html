@@ -108,19 +108,19 @@
                   <input type="text" ng-model="paramlistData.createdOn" ng-disabled="true" class="form-control">
                 </div>
               </div>
+
               <div class="form-group taginput">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input> -->
                   <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
                     <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                        max-results-to-show="10">
+                      max-results-to-show="10">
                     </auto-complete>
                   </tags-input>
                 </div>
               </div>
-
-
+            
+            
               <div class="form-group">
                 <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
@@ -150,6 +150,27 @@
                   </div>
                 </div>
               </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Is Template</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="paramlistData.templateFlg='Y'" >{{addMode}}
+                    <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'Y'" ng-change="onChangeIsTemplate()"  ng-disabled="isAdd == true ? false:true" uncheckable >Yes</label>
+                    <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'N'"  ng-change="onChangeIsTemplate()" ng-disabled="isAdd== true ? false:true" uncheckable >No</label>
+                  </div>
+                </div>
+              </div>
+          
+              <div class="form-group" >
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Use Template</label>
+                <div class="col-md-5 col-sm-5 col-xs-12">
+                  <select class="form-control" select2   name="templateInfo" ng-disabled="(isAdd ==true && !isUseTemlate == false) ? false:true" ng-change="onChangeTemplateInfo()" data-ng-model="selectedTemplate" ng-options="c as c.name for c in allParamList track by c.uuid" >    <!--||!isTemplate -->
+                    <option value="">-select-</option>
+                  </select>
+                  <input type="hidden" name="templateInfo" data-ng-model="selectedTemplate.uuid" ng-required="isTemplageInfoRequired">
+                </div>
+               
+              </div>
+  
               <div class="form-group" style="padding-top:10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a ng-click="close()" class="btn btn-primary">Cancel</a>
@@ -162,21 +183,22 @@
                 </div>
               </div>
               <div class="x_title">
-                <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeRow()"></button>
-                <button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addRow()"></button>
+                <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}} ||isTableDisable " ng-click="removeRow()"></button>
+                <button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}} || isTableDisable" ng-click="addRow()"></button>
                 <h4>
                   <strong>Parameter Details</strong>
                 </h4>
                 <hr>
               </div>
-              <br/>
+              <div class="pull-right" ng-if="isUseTemlateText" style="font-style: italic;color:blue;margin-bottom:10px;margin-top:-10px;">Note : Template in use</div>
+              <br>
               <div>
                 <table class=" row-border hover table  table-striped table-bordered">
                   <thead>
                     <tr>
                       <th style="text-align:center;Vertical-align: middle;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"/>
+                          <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}} || isTableDisable" ng-model="selectallattribute" ng-change="selectAllRow()"/>
                         </span>
                       </th>
                       <th style="width:6%;text-align:center">ID</th>
@@ -189,7 +211,7 @@
                     <tr ng-repeat="tabledata in paramtable">
                       <td style="text-align:center;Vertical-align:middle;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}"/>
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}} || isTableDisable"/>
                       </span>
                       </td>
                       <td>
@@ -199,13 +221,13 @@
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input type="text" ng-model="tabledata.paramName" title="{{tabledata.paramName}}" ng-disabled="{{mode}}"
+                          <input type="text" ng-model="tabledata.paramName" title="{{tabledata.paramName}}" ng-disabled="{{mode}} || isTableDisable"
                           class="form-control">
                         </span>
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select select2 ng-model="tabledata.paramType" ng-options="x.name as x.caption for x in type | orderBy:orderByValue" ng-disabled="{{mode}}"
+                          <select select2 ng-model="tabledata.paramType" ng-options="x.name as x.caption for x in type | orderBy:orderByValue" ng-disabled="{{mode}} || isTableDisable"
                           class="form-control" ng-change="onChangeParamType(tabledata.paramType,$index)"></select>
                         </span>
                       </td>
@@ -233,6 +255,8 @@
                   </tbody>
                 </table>
               </div>
+             
+              <br>
             </form>
           </div>
         </div>

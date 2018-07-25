@@ -22,6 +22,7 @@
             "attrSourceName" : "src_bank_id",
             "sourceAttr" : {
                 "attrId" : "0",
+                "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
@@ -33,6 +34,7 @@
             "attrSourceName" : "bank_code",
             "sourceAttr" : {
                 "attrId" : "1",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
@@ -44,6 +46,7 @@
             "attrSourceName" : "bank_name",
             "sourceAttr" : {
                 "attrId" : "2",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
@@ -55,6 +58,7 @@
             "attrSourceName" : "bank_account_number",
             "sourceAttr" : {
                 "attrId" : "3",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
@@ -66,6 +70,7 @@
             "attrSourceName" : "bank_currency_code",
             "sourceAttr" : {
                 "attrId" : "4",
+                "attrType" : "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
@@ -77,6 +82,7 @@
             "attrSourceName" : "bank_check_digits",
             "sourceAttr" : {
                 "attrId" : "5",
+                "attrType" : "integer",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "838251a0-bc55-42c2-96eb-327527512933"

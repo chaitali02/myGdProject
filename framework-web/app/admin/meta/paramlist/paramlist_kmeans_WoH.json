@@ -2,18 +2,18 @@
 	"params": [
 		{
 			"paramId": 0,
-			"paramName": "maxBins",
+			"paramName": "k",
 			"paramType": "integer",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "10"
+				"value" : "2"
 			    }
 		},
 		{
 			"paramId": 1,
-			"paramName": "maxDepth",
+			"paramName": "maxIter",
 			"paramType": "integer",
 			"paramValue": {
 				"ref" : {
@@ -23,43 +23,32 @@
 			    }
 		},
 		{
-			"paramId": 2,
-			"paramName": "predictionCol",
-			"paramType": "string",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "Col1"
-			    }
-		},
-		{
 			"paramId": 3,
-			"paramName": "featuresCol",
-			"paramType": "string",
+			"paramName": "seed",
+			"paramType": "long",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "Col2"
+				"value" : "10"
 			    }
 		},
 		{
 			"paramId": 4,
-			"paramName": "maxMemoryInMB",
-			"paramType": "integer",
+			"paramName": "tol",
+			"paramType": "double",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "100"
+				"value" : "10"
 			    }
 		}
 	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a79",
 	"version": "1495146809",
-	"name": "paramlist_decision_tree_classifier",
-	"desc": "DecisionTreeClassifier Param List",
+	"name": "paramlist_kmeans_WoH",
+	"desc": "K-Means Param List",
 	"createdBy": {
 		"ref": {
 			"type": "user",
@@ -72,8 +61,10 @@
 		"0.1.0"
 	],
 	"active": "Y",
-	"published": "N",
+	"published": "N",	
     "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
 	"appInfo": [
 			{
             "ref" : {

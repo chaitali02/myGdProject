@@ -688,7 +688,8 @@ public class MetadataController {
 		return privilegeServiceImpl.getRolePriv(roleUuid);
 	}
 
-	@RequestMapping(value = "/getParamSetByModel", method = RequestMethod.GET)
+	/********************** UNUSED **********************/
+	/*@RequestMapping(value = "/getParamSetByModel", method = RequestMethod.GET)
 	public @ResponseBody String getParamSetByModel(@RequestParam("modelUuid") String modelUuid,
 			@RequestParam("modelVersion") String modelVersion,
 			@RequestParam(value = "type", required = false) String type,
@@ -698,7 +699,7 @@ public class MetadataController {
 				return registerService.getParamSetByModel(modelUuid, modelVersion);
 			} else
 				return null;			
-	}
+	}*/
 	
 	@RequestMapping(value = "/getParamSetByTrain", method = RequestMethod.GET)
 	public @ResponseBody String getParamSetByTrain(@RequestParam("trainUuid") String trainUuid,
@@ -733,9 +734,10 @@ public class MetadataController {
 	@RequestMapping(value = "/getParamSetByAlgorithm", method = RequestMethod.GET)
 	public @ResponseBody String getParamSetByAlgorithm(@RequestParam("algorithmUuid") String algorithmUuid,
 			@RequestParam("algorithmVersion") String algorithmVersion,
+			@RequestParam(value = "isHyperParam", required = false) String isHyperParam,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return registerService.getParamSetByAlogrithm(algorithmUuid, algorithmVersion);
+		return registerService.getParamSetByAlogrithm(algorithmUuid, algorithmVersion, isHyperParam);
 	}
 
 	@RequestMapping(value = "/getMetaIdByExecId", method = RequestMethod.GET)
@@ -877,11 +879,12 @@ public class MetadataController {
 		return metadataServiceImpl.getParamListByOperator(operatorUuid);
 	}
 	
-	@RequestMapping(value = "/getParamListByOperatorType", method = RequestMethod.GET)
-	public @ResponseBody List<ParamListHolder> getParamListByOperatorType(
-			@RequestParam(value = "uuid") String operatorTypeUuid ,
-			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
-		return metadataServiceImpl.getParamListByOperatorType(operatorTypeUuid);
+	@RequestMapping(value = "/getParamListByTrain", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamListByTrain(
+			@RequestParam(value = "uuid") String trainUuid ,
+			@RequestParam(value = "version") String trainVersion,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
+		return metadataServiceImpl.getParamListByTrain(trainUuid, trainVersion);
 	}
 	
 	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET)
@@ -899,6 +902,16 @@ public class MetadataController {
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
 	}
+	
+	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET, params = {"uuid", "version"})
+	public @ResponseBody List<ParamListHolder> getParamListByRule(
+			@RequestParam(value = "uuid", required = false) String ruleUuid,
+			@RequestParam(value = "version", required = false) String ruleVersion,
+			@RequestParam(value = "paramListType", required = false) MetaType paramListType,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListByRule(ruleUuid, ruleVersion, null);
+	}
+		
 	@RequestMapping(value = "/getParamListByModel", method = RequestMethod.GET)
 	public @ResponseBody List<BaseEntity> getParamListByModel(
 			@RequestParam(value = "type", required = false) String type,
@@ -932,4 +945,20 @@ public class MetadataController {
 		return metadataServiceImpl.getLovByType(type);
 	}
 	
+	@RequestMapping(value = "/getParamListByAlgorithm", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamListByAlgorithm(
+			@RequestParam(value = "uuid", required = false) String algoUuid,
+			@RequestParam(value = "version", required = false) String algoVersion,
+			@RequestParam(value = "isHyperParam", required = false) String isHyperParam,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListByAlgorithm(algoUuid, algoVersion, isHyperParam);
+	}
+	
+	@RequestMapping(value = "/getParamListChilds", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamListChilds(
+			@RequestParam(value = "uuid", required = false) String plUuid,
+			@RequestParam(value = "version", required = false) String plVersion,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListChilds(plUuid, plVersion);
+	}
 }

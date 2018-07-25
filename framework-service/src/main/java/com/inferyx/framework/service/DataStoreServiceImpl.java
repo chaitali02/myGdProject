@@ -52,6 +52,7 @@ import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -61,11 +62,8 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
-import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.SimulateExec;
-import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -537,8 +535,9 @@ public class DataStoreServiceImpl {
 	
 	// generating table Name from dataSource
 	public String getTableNameByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+		String appUuid = null;
+		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
 		String tableName = null;
 		DataStore dataStore = null;
 		if (appUuid != null) {
@@ -946,8 +945,9 @@ public class DataStoreServiceImpl {
 	}
 
 	public DataStore findLatestByMeta(String dataStoreMetaUUID, String dataStoreMetaVer) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+		String appUuid = null;
+		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
 		Aggregation datastoreAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(dataStoreMetaUUID)),
 				match(Criteria.where("metaId.ref.version").is(dataStoreMetaVer)),
 				group("uuid").max("version").as("version"), sort(Sort.Direction.DESC, "version"), limit(1));
@@ -1066,8 +1066,9 @@ public class DataStoreServiceImpl {
 	}
 
 	public DataStore findDatastoreByExec(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+		String appUuid = null;
+		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
 		if (appUuid != null) {
 			return iDataStoreDao.findDataStoreByExecUuidVersion(appUuid, uuid, version);
 		} else {
@@ -1111,6 +1112,7 @@ public class DataStoreServiceImpl {
 	
 	public void create(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
 			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode) throws Exception{
+		BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(execId.getUuid(), execId.getVersion(), execId.getType().toString());
 		DataStore dataStore = new DataStore();
 		dataStore.setBaseEntity();
 		MetaIdentifierHolder metaDetails = new MetaIdentifierHolder();
@@ -1130,8 +1132,8 @@ public class DataStoreServiceImpl {
 		dataStore.setPersistMode(persistMode);
 		if (appInfo == null) {
 			List<MetaIdentifierHolder> appInfoList = new ArrayList<MetaIdentifierHolder>();
-			MetaIdentifierHolder appInfo1 = securityServiceImpl.getAppInfo();		
-			appInfoList.add(appInfo1);
+//			MetaIdentifierHolder appInfo1 = securityServiceImpl.getAppInfo();		
+			appInfoList.addAll(baseExec.getAppInfo());
 			dataStore.setAppInfo(appInfoList);
 
 		} else {

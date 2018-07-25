@@ -99,6 +99,7 @@
 	<bean id="taskThreadMap" name="taskThreadList" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="livyClientMap" name="livyClientMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="graphpodMap" name="graphpodMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="stateMachineMap" name="stateMachineMap" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />
@@ -343,7 +344,8 @@
 	<bean id="postGresRegister" class="com.inferyx.framework.register.PostGresRegister"/> 
 	<bean id="profilePostGresOperator" class="com.inferyx.framework.operator.ProfilePostGresOperator"/>
 	
-	<bean id="reconOperator" class="com.inferyx.framework.operator.ReconOperator"/>
+	<bean id="reconOperat
+		  or" class="com.inferyx.framework.operator.ReconOperator"/>
 	<bean id="reconExecServiceImpl" class="com.inferyx.framework.service.ReconExecServiceImpl"/>
 	<bean id="reconGroupServiceImpl" class="com.inferyx.framework.service.ReconGroupServiceImpl"/> 
 	<bean id="reconServiceImpl" class="com.inferyx.framework.service.ReconServiceImpl"/>

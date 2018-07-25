@@ -172,6 +172,7 @@ import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
+import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.StageExec;
@@ -1665,7 +1666,9 @@ public class CommonServiceImpl <T> {
 					
 					resolveName(invokedObj, type);
 				}
-			}catch (NullPointerException | NoSuchMethodException e) {
+			} catch (NullPointerException | NoSuchMethodException e) {
+				//e.printStackTrace();
+			} catch (Exception e) {
 				//e.printStackTrace();
 			}
 			return object;
@@ -1682,7 +1685,7 @@ public class CommonServiceImpl <T> {
 	 */
 	private ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
 				List<ParamListHolder> paramListInfo= execParams.getParamListInfo();
-				
+				List<ParamSetHolder> paramSetHolder= execParams.getParamInfo();
 				if(paramListInfo != null)
 					for(ParamListHolder holder : paramListInfo) {
 						MetaIdentifier ref = holder.getRef();
@@ -1732,7 +1735,17 @@ public class CommonServiceImpl <T> {
 								}
 							}
 						}
-					}				
+					}
+				if(paramSetHolder !=null) {
+					for(ParamSetHolder holder : paramSetHolder) {
+						MetaIdentifier ref = holder.getRef();
+						if(ref != null) {
+							ParamSet paramSet = (ParamSet) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							ref.setName(paramSet.getName());
+							holder.setRef(ref);
+						}
+					}
+				}
 		return execParams;
 	}
 
@@ -2084,18 +2097,18 @@ public class CommonServiceImpl <T> {
 	@SuppressWarnings("unchecked")
 	public T getOneById(String id, String type) throws JsonProcessingException {
 		String appUuid = null;
-		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
 			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-		}
+		}*/
 		MetaType metaType = Helper.getMetaType(type);
 		Object iDao = null;
 		try{
 			T object = null;
 			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			if (appUuid == null) 
+			if (appUuid != null) 
 				object = (T) iDao.getClass().getMethod("findOneById", String.class,String.class).invoke(iDao, appUuid,id);	
 			else
 				object = (T) iDao.getClass().getMethod("findOneById", String.class).invoke(iDao,id);
@@ -2112,12 +2125,12 @@ public class CommonServiceImpl <T> {
 	@SuppressWarnings("unchecked")
 	public T getOneByUuidAndVersion(String uuid, String version, String type) throws JsonProcessingException {
 		String appUuid = null;
-		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
 			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-		}
+		}*/
 		Object iDao = null;
 		MetaType metaType = Helper.getMetaType(type);
 		try{
@@ -2153,12 +2166,12 @@ public class CommonServiceImpl <T> {
 		public T getLatestByUuid(String uuid, String type) throws JsonProcessingException {
 			try {
 				String appUuid = null;						
-				if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+				/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
 					&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-				}
+				}*/
 				MetaType metaType = Helper.getMetaType(type);
 				Object object = null;
 				Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
@@ -2183,13 +2196,13 @@ public class CommonServiceImpl <T> {
 		public T getLatestByUuid(String uuid, String type, String resolveFlag) throws JsonProcessingException {
 			try {
 				String appUuid = null;
-				if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+				/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
 					&& !type.equalsIgnoreCase(MetaType.application.toString()))
 				{
 					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-				}
+				}*/
 
 				MetaType metaType = Helper.getMetaType(type);
 				Object object = null;
@@ -3516,13 +3529,38 @@ public class CommonServiceImpl <T> {
 	 * @throws InvocationTargetException
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
+	 * @throws InterruptedException 
 	 */
-	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		T execObject = (T)createExec(metaType, ref);
-		MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType, String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
-				String.class.cast(execObject.getClass().getMethod("getVersion", null).invoke(execObject, null)));
-		taskExec.getOperators().get(0).getOperatorInfo().setRef(metaExecIdentifier);
-		return execObject;
+	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec, int i) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InterruptedException {
+		synchronized (taskExec) {
+			Thread.sleep(2000);
+			T execObject = (T)createExec(metaType, ref);
+			MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType, String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
+					String.class.cast(execObject.getClass().getMethod("getVersion", null).invoke(execObject, null)));
+			List<TaskOperator> taskOperatorList = taskExec.getOperators();
+			TaskOperator taskOperator = new TaskOperator();
+			taskOperator.setDependsOn(taskOperatorList.get(i).getDependsOn());
+			taskOperator.setOperatorId(taskOperatorList.get(i).getOperatorId());
+			taskOperator.setOperatorParams(taskOperatorList.get(i).getOperatorParams());
+			taskOperator.setOperatorType(taskOperatorList.get(i).getOperatorType());
+			MetaIdentifierHolder operatorInfo = new MetaIdentifierHolder();
+			operatorInfo.setRef(metaExecIdentifier);
+			taskOperator.setOperatorInfo(operatorInfo);
+			
+			List<TaskOperator> taskOperatorList2 = new ArrayList<>();
+			int j = 0;
+			for(TaskOperator taskOperator2 : taskOperatorList) {
+				if(j == i) {
+					taskOperatorList2.add(taskOperator);
+				} else {
+					taskOperatorList2.add(taskOperator2);
+				}
+				j++;
+			}		
+			taskExec.setOperators(taskOperatorList2);
+			return execObject;
+		}
+		
 	}
 
 	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
@@ -3801,4 +3839,44 @@ public class CommonServiceImpl <T> {
 		}
 		
 	}
+
+	public List<ParamList> getAllLatestParamListByTemplate(String templateFlg, String parentPLUuid, String parentVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("actuve");
+		query.fields().include("name");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+		query.fields().include("createdOn");
+		query.fields().include("desc");
+		query.fields().include("tags");
+		query.fields().include("published");
+		query.fields().include("templateFlg");
+		query.fields().include("templateInfo");
+		query.fields().include("params");
+		query.fields().include("paramListType");
+		
+		if(parentPLUuid != null)
+			query.addCriteria(Criteria.where("templateInfo.ref.uuid").is(parentPLUuid));
+		if(templateFlg != null)
+			query.addCriteria(Criteria.where("templateFlg").is(templateFlg));
+		if(paramListType != null)
+			query.addCriteria(Criteria.where("paramListType").is(paramListType));
+		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(getApp().getUuid()));
+		
+		List<ParamList> paramLists = mongoTemplate.find(query, ParamList.class);
+		
+		List<ParamList> latestParamList = new ArrayList<>();
+		Set<String> uuidSet = new HashSet<>();
+		for(ParamList paramList : paramLists) {
+			if(!uuidSet.contains(paramList.getUuid())) {
+				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
+				latestParamList.add(latestPL);
+				uuidSet.add(paramList.getUuid());
+			}
+		}
+		return latestParamList;
+	}
+	
 }

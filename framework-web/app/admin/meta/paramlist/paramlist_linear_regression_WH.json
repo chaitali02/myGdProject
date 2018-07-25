@@ -1,0 +1,81 @@
+{
+  
+    "uuid" : "b8d2e676-bff6-4978-94be-1019e376a3c4",
+    "version" : "1530800472",
+    "name" : "paramlist_linear_regression_WH",
+    "desc" : null,
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+        }
+    },
+    "createdOn" : ISODate("2018-07-17T09:17:27.988Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
+    ],
+    "params" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "regParam",
+            "paramType" : "list",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "0.3, 0.1, 0.05, 0.01, 0.005"
+            }
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "elasticNetParam",
+            "paramType" : "list",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "0.1, 0.05, 0.01, 0.005, 0.001"
+            }
+        }, 
+        {
+            "paramId" : "2",
+            "paramName" : "numFolds",
+            "paramType" : "integer",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "3"
+            }
+        }
+    ],
+    "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null
+}

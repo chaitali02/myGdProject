@@ -1,0 +1,107 @@
+{
+  "uuid": "53b44d5b-6571-4c46-af08-549b1445d056",
+  "version": "1531146610",
+  "name": "paramlist_LDA_WH",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+  "createdOn": "Mon Jul 09 20:00:10 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+<<<<<<< HEAD:framework-web/app/admin/meta/paramlist/paramlist_LDA_WH.json
+			{
+=======
+		{
+>>>>>>> master:framework-web/app/admin/meta/paramlist/paramlist_LDA_with_Hyper_Params.json
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+       
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }
+	],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "k",
+      "paramType": "list",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "10, 15, 20"
+      }
+    },
+    {
+      "paramId": "1",
+      "paramName": "learningDecay",
+      "paramType": "list",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "0.5, 0.8, 1.0"
+      }
+    },
+    {
+      "paramId": "2",
+      "paramName": "learningOffset",
+      "paramType": "list",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "1024.0, 1500.0, 950.0"
+      }
+    },
+    {
+      "paramId": "3",
+      "paramName": "seed",
+      "paramType": "list",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "1435876747, 1000, 100000"
+      }
+    },
+    {
+      "paramId": "4",
+      "paramName": "numFolds",
+      "paramType": "integer",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "3"
+      }
+    }
+  ],
+  "paramListType": "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null
+}
