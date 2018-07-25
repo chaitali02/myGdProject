@@ -130,12 +130,7 @@ th, td{vertical-align: middle !important}
 
 /*Start Metadata*/
 
-/*Start DatapodDetailPage*/
-  .taginput {
-   /* margin-top: -8px;
-    margin-bottom: 6px; */
-  }
-/*End DatapodDEetailPage*/
+
 
 .theadborder{
 
@@ -471,7 +466,9 @@ a.tagit-close-dd{
    height: 16px;
    outline: none;
  }
-
+ .rzslider.rz-vertical .rz-bar-wrapper{
+  height:90% !important;
+ }
  /*#dag-exec-model .rzslider .rz-pointer, .portlet.box.green .rzslider .rz-pointer {
     background-color: #fff;
   }*/
@@ -733,6 +730,10 @@ vertical-align: middle;
     /*width:150px;*/
   }
   div[joint-graph-directive]:hover .joint-graph-zoom-slider, div[render-group-directive]:hover .joint-graph-zoom-slider {
+    opacity: 1;
+  }
+
+  div[fd-graph-directive]:hover .network-graph-zoom-slider{
     opacity: 1;
   }
 

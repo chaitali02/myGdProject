@@ -2972,6 +2972,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 attributeInfo.name=paramListInfo[i].attributeInfo[j].attrName;
                 attributeInfo.dname=paramListInfo[i].attributeInfo[j].ref.name+"."+paramListInfo[i].attributeInfo[j].attrName;
                 attributeInfo.attributeId=paramListInfo[i].attributeInfo[j].attrId;
+                attributeInfo.attrType=paramListInfo[i].attributeInfo[j].attrType;
                 attributeInfo.id=paramListInfo[i].attributeInfo[j].ref.uuid+"_"+paramListInfo[i].attributeInfo[j].attrId;
                 attributeInfoArray[j]=attributeInfo
                 }
