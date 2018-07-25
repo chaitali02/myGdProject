@@ -507,7 +507,7 @@
 		</dependency>
 		
 		<!-- H2O -->
-		<dependency>
+		<!-- <dependency>
 		    <groupId>ai.h2o</groupId>
 		    <artifactId>h2o-core</artifactId>
 		    <version>3.20.0.1</version>
@@ -526,7 +526,7 @@
 	            </exclusion>
         	</exclusions>
 		    <scope>runtime</scope>
-		</dependency>
+		</dependency> -->
 		<!-- <dependency>
 		    <groupId>ai.h2o</groupId>
 		    <artifactId>h2o-algos</artifactId>
