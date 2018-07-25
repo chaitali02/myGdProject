@@ -49,7 +49,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 	$scope.mapTableArray = [];
 	$scope.MapSourceTypes = ['datapod', 'dataset', 'relation', "rule"];
 	$scope.MapTargeTypes = ['datapod'];
-	$scope.targetype = $scope.MapTargeTypes[0];
+	//$scope.targetype = $scope.MapTargeTypes[0];
 	$scope.map.versions = [];
 	$scope.mapHasChanged = true;
 	$scope.isshowmodel = false;
@@ -158,12 +158,32 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 			$scope.allMapSourceAttribute = response
 
 		}
-
 	}
+	$scope.onChangeTargetType=function(){
+		MetadataMapSerivce.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatestByTarget(response.data) });
+		var onSuccessGetAllLatestByTarget = function (response) {
+			$scope.allMapTarget = response;
+			$scope.allMapTarget.defaultoption=null;
+		}
+	}
+
 	$scope.onChangeMapTarget = function () {
 		MetadataMapSerivce.getAttributesByDatapod($scope.allMapTarget.defaultoption.uuid, $scope.sourcetype).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 		var onSuccessGetAttributesByDatapod = function (response) {
-			$scope.allMapTargetAttribute = response
+			$scope.allMapTargetAttribute = response;
+			for (var i = 0; i < $scope.allMapTargetAttribute.length; i++) {
+				var mapinfo = {};
+				var obj = {}
+				obj.text = "datapod";
+				obj.caption = "attribute";
+				mapinfo.isSourceAtributeSimple = false;
+				mapinfo.isSourceAtributeDatapod = true;
+				mapinfo.isSourceAtributeFormula = false;
+				mapinfo.isSourceAtributeExpression = false;
+				mapinfo.sourceAttributeType = obj
+				$scope.mapTableArray[i] = mapinfo;
+			}
+			
 		}
 
 	}
@@ -235,7 +255,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		}
 
 	}
-
+    
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
 		var resultjoint = [];
@@ -270,6 +290,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 			defaultversion.uuid = response.mapdata.uuid;
 			$scope.map.defaultVersion = defaultversion;
 			$scope.sourcetype = response.mapdata.source.ref.type;
+			$scope.targetype = $scope.MapTargeTypes[0];
 			$scope.mapName = $scope.convertUppdercase($scope.mapdata.name)
 			MetadataMapSerivce.getAllLatest(response.mapdata.source.ref.type).then(function (response) { onSuccessGetAllLatestBySource(response.data) });
 			var onSuccessGetAllLatestBySource = function (response) {
@@ -322,27 +343,27 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 	}//End If
 	else {
 
-		MetadataMapSerivce.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatestByTarget(response.data) });
-		var onSuccessGetAllLatestByTarget = function (response) {
-			$scope.allMapTarget = response;
-			MetadataMapSerivce.getAttributesByDatapod($scope.allMapTarget.defaultoption.uuid, $scope.sourcetype).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
-			var onSuccessGetAttributesByDatapod = function (response) {
-				$scope.allMapTargetAttribute = response
+		// MetadataMapSerivce.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatestByTarget(response.data) });
+		// var onSuccessGetAllLatestByTarget = function (response) {
+		// 	$scope.allMapTarget = response;
+		// 	MetadataMapSerivce.getAttributesByDatapod($scope.allMapTarget.defaultoption.uuid, $scope.sourcetype).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
+		// 	var onSuccessGetAttributesByDatapod = function (response) {
+		// 		$scope.allMapTargetAttribute = response
 
-				for (var i = 0; i < $scope.allMapTargetAttribute.length; i++) {
-					var mapinfo = {};
-					var obj = {}
-					obj.text = "datapod";
-					obj.caption = "attribute";
-					mapinfo.isSourceAtributeSimple = false;
-					mapinfo.isSourceAtributeDatapod = true;
-					mapinfo.isSourceAtributeFormula = false;
-					mapinfo.isSourceAtributeExpression = false;
-					mapinfo.sourceAttributeType = obj
-					$scope.mapTableArray[i] = mapinfo;
-				}
-			}
-		}
+		// 		for (var i = 0; i < $scope.allMapTargetAttribute.length; i++) {
+		// 			var mapinfo = {};
+		// 			var obj = {}
+		// 			obj.text = "datapod";
+		// 			obj.caption = "attribute";
+		// 			mapinfo.isSourceAtributeSimple = false;
+		// 			mapinfo.isSourceAtributeDatapod = true;
+		// 			mapinfo.isSourceAtributeFormula = false;
+		// 			mapinfo.isSourceAtributeExpression = false;
+		// 			mapinfo.sourceAttributeType = obj
+		// 			$scope.mapTableArray[i] = mapinfo;
+		// 		}
+		// 	}
+		// }
 	}
 
 	$scope.selectVersion = function () {
@@ -356,6 +377,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 			defaultversion.uuid = response.mapdata.uuid;
 			$scope.map.defaultVersion = defaultversion;
 			$scope.sourcetype = response.mapdata.source.ref.type;
+			$scope.targetype = $scope.MapTargeTypes[0];
 			$scope.mapName = $scope.convertUppdercase($scope.mapdata.name)
 			MetadataMapSerivce.getAllLatest(response.mapdata.source.ref.type).then(function (response) { onSuccessGetAllLatestBySource(response.data) });
 			var onSuccessGetAllLatestBySource = function (response) {

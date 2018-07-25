@@ -704,14 +704,35 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },100);
       if($scope.select =='rule'){
         $scope.isParamListRquired=false;
-      }else{
-        $scope.isParamListRquired=true;
+        CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select,).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
+        var onSuccessGetOneByUuidAndVersion = function (response) {
+          if(response.paramList !=null){
+            $('#responsive').modal({
+              backdrop: 'static',
+              keyboard: false
+            });   
+          }else{
+            $scope.executionmsg = $scope.caption + " Submited Successfully"
+            notify.type = 'success',
+            notify.title = 'Success',
+            notify.content = $scope.executionmsg
+            $scope.$emit('notify', notify);
+            CommonService.execute($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version, null).then(function (response){ onSuccessExecute(response.data)});
+            var onSuccessExecute = function (response) {
+                console.log("RuleExec: " + JSON.stringify(response))
+            }
+          }
+        }
       }
-      $('#responsive').modal({
-        backdrop: 'static',
-        keyboard: false
-      });
+      else{
+        $scope.isParamListRquired=true;
+        $('#responsive').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+      }
     }
+
     else if($scope.select == 'simulate' || $scope.select == 'operator' ){
       $scope.getExecParamList();
     }

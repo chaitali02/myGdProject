@@ -161,7 +161,7 @@
 										<span class="required" aria-required="true"> * </span>
 									</label>
 									<div class="col-md-2 col-sm-2 col-xs-12">
-										<select title="Type" class="form-control" data-ng-disabled="{{mode}}" data-ng-model="targetype" data-ng-options="r for r in MapTargeTypes"
+										<select title="Type" class="form-control" data-ng-disabled="{{mode}}" ng-change="onChangeTargetType()" data-ng-model="targetype" data-ng-options="r for r in MapTargeTypes"
 										 required="">
 										</select>
 									</div>

@@ -227,7 +227,7 @@
                       </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select ng-model="data.relationJoinType" ng-options=" x  for x in joinType" ng-disabled="{{mode}}" class="form-control">
+                          <select ng-model="data.relationJoinType" ng-options=" x  for x in joinType" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeJoinType(data.relationJoinType,$index)">
                           </select>
                         </span>
                       </td>
@@ -240,8 +240,8 @@
                     <tr ng-repeat-end ng-show="expanded">
                       <td colspan="3" style="padding: 0px 17px;">
                         <div class="x_title" style="padding:10px;">
-                          <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeJoinSubRow($index)" ng-disabled="{{mode}}"></button>
-                          <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addJoinSubRow($index)" ng-disabled="{{mode}}"></button>
+                          <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeJoinSubRow($index)" ng-disabled="{{mode}} || data.isjoinDisable"></button>
+                          <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addJoinSubRow($index)" ng-disabled="{{mode}} || data.isjoinDisable"></button>
                         </div>
                         <br>
                         <br>
@@ -250,7 +250,7 @@
                             <tr>
                               <th style="text-align: center; Vertical-align: middle;width:5%;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="data.selectalljoinkey" ng-change="selectAllSubRow($index)"
+                                  <input style="width: 16px;height:16px;" type="checkbox"  ng-disabled="{{mode}} || data.isjoinDisable" ng-model="data.selectalljoinkey" ng-change="selectAllSubRow($index)"
                                   />
                                 </span>
                               </th>
@@ -265,29 +265,29 @@
 
                               <td style="text-align: center; Vertical-align: middle;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <input style="width: 16px;height:16px;" type="checkbox" ng-model="datajoinkye.selected" ng-disabled="{{mode}}">
+                                  <input style="width: 16px;height:16px;" type="checkbox" ng-model="datajoinkye.selected" ng-disabled="{{mode}} || data.isjoinDisable">
                                 </span>
                               </td>
                               <td>
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select ng-model="datajoinkye.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="$first || {{mode}}" class="form-control"></select>
+                                  <select ng-model="datajoinkye.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="$first || {{mode}} || data.isjoinDisable" class="form-control"></select>
                                 </span>
                               </td>
                               <td style="width:35%;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select select2 ng-model="datajoinkye.rhsoperand" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in rhsAllAttribute[$parent.$index] track by  c.uuid + c.attributeId">
+                                  <select select2 ng-model="datajoinkye.rhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in rhsAllAttribute[$parent.$index] track by  c.uuid + c.attributeId">
                                   </select>
                                 </span>
                               </td>
                               <td style="width:15%;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select ng-disabled="{{mode}}" ng-model="datajoinkye.relationOperator" ng-options="x for x in relationOperators" ng-disabled="{{mode}}"
+                                  <select ng-disabled="{{mode}} || data.isjoinDisable" ng-model="datajoinkye.relationOperator" ng-options="x for x in relationOperators" ng-disabled="{{mode}} || isjoinDisable"
                                     class="form-control"></select>
                                 </span>
                               </td>
                               <td style="width:35%;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select select2 ng-model="datajoinkye.lhsoperand" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in  lhsAllAttribute track by  c.uuid+c.attributeId">
+                                  <select select2 ng-model="datajoinkye.lhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in  lhsAllAttribute track by  c.uuid+c.attributeId">
                                   </select>
                                 </span>
                               </td>
