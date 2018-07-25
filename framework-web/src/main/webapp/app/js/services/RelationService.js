@@ -392,11 +392,11 @@ MetadataModule.service('MetadataRelationSerivce',function($q,sortFactory,Metadat
 							
 						}
 				    }else{
-						relationInfo.isjoinDisable=true;
-						var joinjson = {}
-						joinjson.logicalOperator =''
-						joinjson.relationOperator = ''
-						joinKeyArray.push(joinjson);
+					//	relationInfo.isjoinDisable=true;
+						// var joinjson = {}
+						// joinjson.logicalOperator =''
+						// joinjson.relationOperator = ''
+						// joinKeyArray.push(joinjson);
 					}
 					relationInfo.joinKey=joinKeyArray;
 				    relationInfoArray.push(relationInfo);

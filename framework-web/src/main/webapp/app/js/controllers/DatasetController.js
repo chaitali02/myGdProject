@@ -1166,7 +1166,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "datapod") {
 
-				ref.type = $scope.selectSourceType;
+				ref.type = $scope.selectSourceType == "relation"?"datapod": $scope.selectSourceType;
 				ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
 				sourceAttr.ref = ref;
 				sourceAttr.attrId = $scope.attributeTableArray[l].sourcedatapod.attributeId;

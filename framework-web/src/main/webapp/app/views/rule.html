@@ -398,7 +398,7 @@
                                   <div ng-if="tabledata.isrhsFormula">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       <select select2 class="form-control" name="rhsformula_{{$index}}" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula"
-                                        ng-options="r as r.name for r in expressionFormula track by r.uuid" ng-disabled="{{mode}}"
+                                        ng-options="r as r.name for r in ruleLodeFormula track by r.uuid" ng-disabled="{{mode}}"
                                         ng-show="tabledata.isrhsFormula" required disable-validation-message="" uib-tooltip="{{myform2['rhsformula'+$index].$valid ? '' : 'Please select formula'}}"
                                         tooltip-placement="top">
                                       </select>

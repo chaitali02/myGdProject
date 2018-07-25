@@ -275,9 +275,11 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 	}
     $scope.onChangeJoinType=function(joinType,index){
 		if(joinType == 'CROSS JOIN'){
-			$scope.relationTableArray[index].isjoinDisable=true;
+			$scope.relationTableArray[index].isjoinDisable=false;
+			$scope.relationTableArray[index].joinKey=[];
 		}else{
 			$scope.relationTableArray[index].isjoinDisable=false;
+			$scope.addJoinSubRow(index);
 		}
 	}
 
@@ -491,7 +493,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 					joinref.uuid = $scope.relationTableArray[j].join.uuid;
 					join.ref = joinref;
 					relationInfo.join = join;
-					if($scope.relationTableArray[j].isjoinDisable != true && $scope.relationTableArray[j].relationJoinType !='CROSS JOIN'){	
+					if($scope.relationTableArray[j].joinKey && $scope.relationTableArray[j].joinKey.length >0){	
 						for (var i = 0; i < $scope.relationTableArray[j].joinKey.length; i++) {
 							var operand = []
 							var JoinKeyDetail = {};
