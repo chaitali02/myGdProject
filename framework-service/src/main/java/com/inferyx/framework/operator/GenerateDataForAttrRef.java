@@ -66,7 +66,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	}
 
 	@Override
-	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public Map<String, String> customCreate(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		String execVersion = baseExec.getVersion();
 		HashMap<String, String> otherParams = execParams.getOtherParams();
 		if (otherParams == null) {

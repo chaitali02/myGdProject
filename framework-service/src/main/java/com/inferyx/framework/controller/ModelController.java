@@ -14,13 +14,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.spark.ml.param.ParamMap;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,22 +41,18 @@ import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
-import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
-import com.inferyx.framework.service.ParamSetServiceImpl;
 
 @RestController
 @RequestMapping(value = "/model")
 public class ModelController {
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
-	@Autowired
-	private ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	private ModelExecServiceImpl modelExecServiceImpl;
 	@Autowired
@@ -67,6 +61,8 @@ public class ModelController {
 	RExecutor rExecutor;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
 
 	/*@RequestMapping(value = "/train/execute", method = RequestMethod.POST)
 	public boolean train(@RequestParam("uuid") String modelUUID, @RequestParam("version") String modelVersion,
@@ -127,20 +123,20 @@ public class ModelController {
 	}*/
 
 	@RequestMapping(value = "/train/getResults", method = RequestMethod.GET)
-	public List<String> getModelResults(@RequestParam("uuid") String trainExecUUID,
+	public String getModelResults(@RequestParam("uuid") String trainExecUUID,
 			@RequestParam("version") String trainExecVersion,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
-		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
-		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), trainExecUUID,
-				trainExecVersion);
-		Model model =  (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
-		if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-				|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-			return modelServiceImpl.readLog(null, MetaType.trainExec.toString(), trainExecUUID, trainExecVersion);
-		} else
-			return modelExecServiceImpl.getModelResults(train, trainExecUUID, trainExecVersion, rowLimit);
+//		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+//		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), trainExecUUID,
+//				trainExecVersion);
+//		Model model =  (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+//		if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//				|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+			return modelServiceImpl.readLog2(null, MetaType.trainExec.toString(), trainExecUUID, trainExecVersion);
+//		} else
+//			return modelExecServiceImpl.getModelResults(train, trainExecUUID, trainExecVersion, rowLimit);
 	}
 
 	@RequestMapping(value = "/getModelScript", method = RequestMethod.GET)
@@ -271,29 +267,7 @@ public class ModelController {
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
-
-			TrainExec trainExec = null;
-			List<ParamMap> paramMapList = new ArrayList<>();
-
-			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion,
-					MetaType.train.toString());			
-			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(),
-					MetaType.model.toString());
-			if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion());
-			}
-			if (paramMapList.size() > 0) {
-				for (ParamMap paramMap : paramMapList) {
-					trainExec = modelServiceImpl.create(train, model, execParams, paramMap, trainExec);
-					Thread.sleep(1000); // Should be parameterized in a class
-					modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
-					trainExec = null;
-				}
-			} else {
-				trainExec = modelServiceImpl.create(train, model, execParams, null, trainExec);
-				modelServiceImpl.train(train, model, trainExec, execParams, null, runMode);
-			}
+			modelServiceImpl.prepareTrain(trainUuid, trainVersion, null, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -397,7 +371,7 @@ public class ModelController {
 		return modelServiceImpl.getTrainByModel(modelUuid, modelVersion);
 	}	
 	
-	@RequestMapping(value = "/train/kill",  method = RequestMethod.GET)
+	@RequestMapping(value = "/train/kill",  method = RequestMethod.PUT)
 	public void killTrain(@RequestParam(value = "uuid") String trainExecUuid,
 						  @RequestParam(value = "version") String trainExecVersion,
 						  @RequestParam(value = "type", required = false) String type,

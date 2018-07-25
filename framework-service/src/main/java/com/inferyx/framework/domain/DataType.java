@@ -12,6 +12,6 @@ package com.inferyx.framework.domain;
 
 public enum DataType {
 	
-	Integer;
+	INTEGER,STRING,DOUBLE,BOOLEAN,BYTE,CHAR,LONG,SHORT;
 
 }

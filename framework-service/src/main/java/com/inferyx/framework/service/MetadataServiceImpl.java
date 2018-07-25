@@ -15,32 +15,28 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.ml.param.DoubleParam;
+import org.apache.spark.ml.param.IntParam;
+import org.apache.spark.ml.param.LongParam;
+import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.ml.param.ParamPair;
 import org.codehaus.jettison.json.JSONException;
-import org.neo4j.cypher.internal.compiler.v2_3.planner.logical.steps.outerHashJoin;
-import org.python.antlr.ast.While;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Criteria;
 import static org.springframework.data.mongodb.core.query.Criteria.*; 
 import org.springframework.data.mongodb.core.query.Query;
@@ -53,15 +49,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMetaDao;
+import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
-import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.Distribution;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
@@ -74,23 +71,21 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.ModelExec;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.Param;
+import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
+import com.inferyx.framework.domain.ParamSet;
+import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
-import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
-import com.inferyx.framework.enums.ParamDataType;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
@@ -99,9 +94,9 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.StatusHolder;
+import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.UploadExec;
-import com.inferyx.framework.domain.User;
 
 
 @Service
@@ -124,10 +119,14 @@ public class MetadataServiceImpl {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	UploadExecServiceImpl uploadExecServiceImpl;
+	@Autowired
+	ParamSetServiceImpl paramSetServiceImpl;
+	@Autowired
+	ParamListServiceImpl paramListServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(MetadataServiceImpl.class);
-	private static final String GET = "get";
-	private static final String SET = "set";
+//	private static final String GET = "get";
+//	private static final String SET = "set";
 
 	 public BaseEntity resolveBaseEntity(BaseEntity baseEntity) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
 		 if (baseEntity == null)
@@ -1075,10 +1074,6 @@ public class MetadataServiceImpl {
 		return null;
 	}	
 	
-	
-	
-	
-	
 	public List<Function> getFunctionByType(String category){
 		Query query = new Query();
 		query.fields().include("uuid");
@@ -1389,8 +1384,7 @@ public class MetadataServiceImpl {
 
 		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 		Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
-		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.paramlist.toString(),
-				className);
+		AggregationResults<ParamList> ruleExecResults = (AggregationResults<ParamList>) mongoTemplate.aggregate(ruleExecAggr, MetaType.paramlist.toString(), className);
 		metaObjectList = ruleExecResults.getMappedResults();
 		// loop metaObjectList to get uuid,version list...
 		for (ParamList paramlist : metaObjectList) {
@@ -1425,7 +1419,7 @@ public class MetadataServiceImpl {
 		return commonServiceImpl.resolveBaseEntityList(baseEntities);
 	}
 
-	@SuppressWarnings({ "unchecked", "null" })
+	@SuppressWarnings({ "unchecked"})
 	public List<CommentView> getCommentByType(String uuid, String type)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
@@ -1441,8 +1435,7 @@ public class MetadataServiceImpl {
 		Criteria criteria = new Criteria();
 		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 		Aggregation ruleExecAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
-		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.comment.toString(),
-				className);
+		AggregationResults ruleExecResults = mongoTemplate.aggregate(ruleExecAggr, MetaType.comment.toString(), className);
 		result = ruleExecResults.getMappedResults();
 		for (BaseEntity baseEntity : result) {
 			uuidList.add(baseEntity.getId());
@@ -1523,5 +1516,257 @@ public class MetadataServiceImpl {
 		lov = (List<Lov>) mongoTemplate.find(query, Lov.class);
 		return lov;
 	}
+
+	public List<ParamListHolder> getParamListByTrain(String trainUuid, String trainVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+		Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), model.getDependsOn().getRef().getType().toString());
+		//ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(algorithm.getParamList().getRef().getUuid(), algorithm.getParamList().getRef().getVersion(), algorithm.getParamList().getRef().getType().toString());
+		
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		MetaIdentifier plMI = null;
+		if(train.getUseHyperParams().equalsIgnoreCase("Y")) {
+			plMI = algorithm.getParamListWH().getRef();
+		} else {
+			plMI = algorithm.getParamListWoH().getRef();			
+		}
+		
+		ParamListHolder plHolder = new ParamListHolder();
+		plHolder.setRef(plMI);
+		plHolderList.add(plHolder);
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+		if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), MetaType.model);
+			plHolderList.addAll(persistPLTemplateChilds(childs));
+		}
+		
+		return plHolderList;
+	}
+
+	public List<ParamListHolder> persistPLTemplateChilds(List<ParamList> childs){
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		for(ParamList paramList : childs) {
+			ParamListHolder childPLHolder = new ParamListHolder();
+			MetaIdentifier childIdentifier = new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion(), paramList.getName());
+			childPLHolder.setRef(childIdentifier);
+			plHolderList.add(childPLHolder);
+		}
+		return plHolderList;
+	}
 	
+	/********************** UNUSED 
+	 * @param algoClass **********************/
+//	private List<ParamList> getChilds(String parentPLUuid, String parentPLVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		Query query = new Query();
+//		query.fields().include("uuid");
+//		query.fields().include("version");
+//		query.fields().include("actuve");
+//		query.fields().include("name");
+//		query.fields().include("appInfo");
+//		query.fields().include("createdBy");
+//		query.fields().include("createdOn");
+//		query.fields().include("desc");
+//		query.fields().include("tags");
+//		query.fields().include("published");
+//		query.fields().include("templateFlg");
+//		query.fields().include("templateInfo");
+//		query.fields().include("params");
+//		query.fields().include("paramListType");
+//		
+//		query.addCriteria(Criteria.where("templateInfo.ref.uuid").is(parentPLUuid));
+//		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+//		
+//		List<ParamList> paramLists = mongoTemplate.find(query, ParamList.class);
+//		
+//		List<ParamList> latestParamList = new ArrayList<>();
+//		Set<String> uuidSet = new HashSet<>();
+//		for(ParamList paramList : paramLists) {
+//			if(!uuidSet.contains(paramList.getUuid())) {
+//				ParamList latestPL = (ParamList) commonServiceImpl.getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
+//				latestParamList.add(latestPL);
+//				uuidSet.add(paramList.getUuid());
+//			}
+//		}
+//		return latestParamList;
+//	}
+	
+
+	public List<ParamMap> getParamMap(ExecParams execParams, String trainUuid, String trainVersion, Object algoClass) throws Exception{
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());		
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+		Algorithm algo = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
+		
+		String algoClassName = algo.getTrainClass();
+		
+		List<ParamMap> paramMapList = new ArrayList<>();
+		if(null!= execParams) {
+			if(execParams.getParamInfo() != null) {
+				for(ParamSetHolder paramSetHolder : execParams.getParamInfo()){
+					List<ParamListHolder> paramListHolder = getParamListHolder(paramSetHolder);
+					ParamMap paramMap = getParamMapByPLHolder(paramListHolder, algoClass, true,algoClassName);					
+					paramMapList.add(paramMap);
+				}
+			} else if(execParams.getParamListInfo() != null) {
+				List<ParamListHolder> paramListHolderList = execParams.getParamListInfo();
+				ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClass, false,algoClassName);						
+				paramMapList.add(paramMap);
+			} 
+		} else {
+			List<ParamListHolder> paramListHolderList = new ArrayList<>();
+			ParamListHolder plHolder = new ParamListHolder();
+			plHolder.setRef(algo.getParamListWoH().getRef());
+			paramListHolderList.add(plHolder);
+			ParamMap paramMap = getParamMapByPLHolder(paramListHolderList, algoClass, false,algoClassName);						
+			paramMapList.add(paramMap);
+		}
+
+		return paramMapList;
+	}
+
+	public ParamMap getParamMapByPLHolder(List<ParamListHolder> paramListHolder, Object algoClass, boolean filterParams, String algoClassName) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, JsonProcessingException {
+		ParamMap paramMap = new ParamMap();
+		try {
+			for(ParamListHolder plh : paramListHolder) {
+				ParamList paramList= (ParamList) commonServiceImpl.getLatestByUuid(plh.getRef().getUuid(), MetaType.paramlist.toString());
+				if(filterParams) {						
+					for(com.inferyx.framework.domain.Param param : paramList.getParams()){
+						if(param.getParamId().equals(plh.getParamId())){
+							plh.setParamType(param.getParamType());
+							plh.setParamName(param.getParamName());
+							break;
+						}
+					}
+					paramMap.put(getParamPair(algoClassName,algoClass, plh.getParamName(), plh.getParamType(), plh.getValue()));
+				} else {
+					for(com.inferyx.framework.domain.Param param : paramList.getParams()){
+						paramMap.put(getParamPair(algoClassName,algoClass, param.getParamName(), param.getParamType(), param.getParamValue().getValue()));
+					}
+				}
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} 		
+		return paramMap;
+	}
+	
+	public ParamPair<?> getParamPair(String algoClassName, Object algoClass2, String paramName, String paramType, String paramValue) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+								
+		Method method = algoClass2.getClass().getMethod(paramName);
+		Object obj = method.invoke(algoClass2);
+		
+		if(paramType.equalsIgnoreCase("integer")){
+			Class<?>[] param = new Class[1];
+			param[0] = int.class;
+			Method method1 = obj.getClass().getMethod("w", param);
+			return (ParamPair<?>)method1.invoke((IntParam)obj,Integer.parseInt(paramValue));
+		}  else if(paramType.equalsIgnoreCase("long")) {
+			Class<?>[] param = new Class[1];
+			param[0] = long.class;
+			Method method1 = obj.getClass().getMethod("w", param);
+			return (ParamPair<?>)method1.invoke((LongParam)obj,Long.parseLong(paramValue));
+		} else if(paramType.equalsIgnoreCase("double")) {
+			Class<?>[] param = new Class[1];
+			param[0] = double.class;
+			Method method1 = obj.getClass().getMethod("w", param);
+			return (ParamPair<?>)method1.invoke((DoubleParam)obj,Double.parseDouble(paramValue));
+		} /*else if(paramType.equalsIgnoreCase("String")) {
+			Class<?>[] param = new Class[1];
+			param[0] = String.class;
+			obj = (Param<String>)obj;
+			Method method1 = obj.getClass().getMethod("w", param);
+			return (ParamPair<Object>)method1.invoke((Param<String>)obj, paramValue);
+		}*/
+		return null;
+	}
+	
+	public List<ParamListHolder> getParamListHolder(ParamSetHolder paramSetHolder) throws JsonProcessingException{
+		ParamSet paramSet = (ParamSet) commonServiceImpl.getOneByUuidAndVersion(paramSetHolder.getRef().getUuid(), paramSetHolder.getRef().getVersion(), MetaType.paramset.toString());
+				
+		List<ParamListHolder> paramListHolderList = null;
+		if(null != paramSet){
+			for(ParamInfo paramInfo : paramSet.getParamInfo()){
+				if(paramSetHolder.getParamSetId().equalsIgnoreCase(paramInfo.getParamSetId())){
+					paramListHolderList = paramInfo.getParamSetVal();
+					break;
+				}
+			}
+		}
+		return paramListHolderList;
+	}
+
+	public List<ParamListHolder> getParamListByRule(String ruleUuid, String ruleVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.rule.toString());
+
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		if(rule.getParamList() != null) {
+			MetaIdentifier plMI = rule.getParamList().getRef();
+			ParamListHolder plHolder = new ParamListHolder();
+			plHolder.setRef(plMI);
+			plHolderList.add(plHolder);
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+			if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), paramListType);
+				plHolderList.addAll(persistPLTemplateChilds(childs));
+			}
+		}
+		return plHolderList;
+	}
+
+	public List<ParamListHolder> getParamListByAlgorithm(String algoUuid, String algoVersion, String isHyperParam) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algoUuid, algoVersion, MetaType.algorithm.toString());
+		
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		MetaIdentifier plMI = null;
+		if(isHyperParam.equalsIgnoreCase("Y")) {
+			plMI = algorithm.getParamListWH().getRef();
+		} else {
+			plMI = algorithm.getParamListWoH().getRef();
+		}
+		
+		ParamListHolder plHolder = new ParamListHolder();
+		plHolder.setRef(plMI);
+		plHolderList.add(plHolder);
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+		if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+			List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), MetaType.model);
+			plHolderList.addAll(persistPLTemplateChilds(childs));
+		}
+		
+		return plHolderList;
+	}	
+
+	/**
+	 * 
+	 * @param execParams
+	 * @param attributeId
+	 * @param ref
+	 * @return value
+	 * @throws JsonProcessingException
+	 */
+	public String getParamValue(ExecParams execParams, Integer attributeId, MetaIdentifier ref) throws JsonProcessingException {
+		if(execParams != null) {
+			if(execParams.getParamSetHolder() != null) {
+				return paramSetServiceImpl.getParamValue(execParams, attributeId, ref);
+			} else if(execParams.getParamListHolder() != null) {
+				return paramListServiceImpl.getParamValue(execParams, attributeId, ref);
+			} else {
+					ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
+						if (param.getParamId().equals(attributeId+"")) {
+							return param.getParamValue().getValue();
+						}
+					}
+			}
+		}
+		return "''";
+	}// End method	
+
+	public List<ParamListHolder> getParamListChilds(String plUuid, String plVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		List<ParamListHolder> plHolderList = new ArrayList<>();				
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plUuid, plVersion, MetaType.paramlist.toString());
+		List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), null);
+		plHolderList.addAll(persistPLTemplateChilds(childs));
+				
+		return plHolderList;
+	}
 }

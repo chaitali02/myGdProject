@@ -344,7 +344,7 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass) throws IOException;
 	
 	/**
 	 * 
@@ -544,4 +544,17 @@ public interface IExecutor {
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext)
 			throws IOException;
+	
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param trndModel 
+	 * @param clientContext
+	 * @return Map<String, Object>
+	 * @throws IOException
+	 */
+	Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException;
 }

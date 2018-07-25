@@ -40,9 +40,9 @@
         }
 	],
 	"type": "REGRESSION",
-	"library": "SPARKML",
-	"trainName": "org.apache.spark.ml.clustering.KMeans",
-	"modelName": "org.apache.spark.ml.clustering.KMeansModel",
+	"libraryType": "SPARKML",
+	"trainClass": "org.apache.spark.ml.clustering.KMeans",
+	"modelClass": "org.apache.spark.ml.clustering.KMeansModel",
 	"labelRequired": "N",
 	"paramList": {
 		"ref": {
@@ -50,5 +50,27 @@
 			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a79"
 		}
 	},
-  	"savePmml" : "Y"
+	 "paramListWoH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a79"
+        }
+    },
+    "paramListWH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "67773bc7-6db5-4598-a288-c8d33d7e8c52"
+        }
+    },
+  	"savePmml" : "Y",
+	"summaryMethods" : [  
+		"summary",
+		"clusterCenters",
+		"getInitMode",
+		"getInitSteps",
+		"getK",
+		"getMaxIter",
+		"getSeed",
+		"getTol"
+	    ]
 }

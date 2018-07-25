@@ -119,6 +119,12 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	    }
 	}
 	
+	$scope.getAllLatestParamListByTemplate=function(){
+		CommonService.getAllLatestParamListByTemplate('Y', "paramlist","model").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
+		var onSuccessGetAllLatestParamListByTemplate = function (response) {
+			$scope.allParamList=response;
+		}//End getAllLatestParamListByTemplate
+	}
 
 	$scope.getAllVersion = function (uuid) {
 		AlgorithmService.getAllVersionByUuid(uuid, "algorithm").then(function (response) { onGetAllVersionByUuid(response.data) });
@@ -143,16 +149,25 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			defaultversion.uuid = response.uuid;
 			$scope.algorithm.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
-			$scope.selectlibrary = response.library
-			AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
-			var onSuccessGetAllLatestParamlist = function (response) {
-				$scope.allparamlist = response;
-				var paramlist = {};
-				paramlist.uuid = $scope.algorithmData.paramList.ref.uuid;
-				paramlist.name = ""
-				$scope.selectparamlist = paramlist;
+			$scope.selectlibrary = response.libraryType
+			// AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+			// var onSuccessGetAllLatestParamlist = function (response) {
+			// 	$scope.allparamlist = response;
+			// 	var paramlist = {};
+			// 	paramlist.uuid = $scope.algorithmData.paramList.ref.uuid;
+			// 	paramlist.name = ""
+			// 	$scope.selectparamlist = paramlist;
 
-			}
+			// }
+			$scope.getAllLatestParamListByTemplate();
+			var selectParamlistWithoutHype={};
+			selectParamlistWithoutHype.uuid=response.paramListWoH.ref.uuid;
+			selectParamlistWithoutHype.name=response.paramListWoH.ref.name;
+			$scope.selectParamlistWithoutHyper=selectParamlistWithoutHype;
+			var selectParamlistWithHype={};
+			selectParamlistWithHype.uuid=response.paramListWH.ref.uuid;
+			selectParamlistWithHype.name=response.paramListWH.ref.name;
+			$scope.selectParamlistWithHyper=selectParamlistWithHype;
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -162,14 +177,25 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 					$scope.tags = tags;
 				}
 			}
+			var summaryMethodsArray=[];
+			if(response.summaryMethods !=null){
+				for(var i=0;i<response.summaryMethods.length;i++){
+					var summaryMethods={};
+					summaryMethods.text=response.summaryMethods[i];
+					summaryMethodsArray[i]=summaryMethods;
+
+				}
+			}
+			$scope.summaryMethods=summaryMethodsArray;
 		}
 	}//End If
 	else {
-		AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
-		var onSuccessGetAllLatestParamlist = function (response) {
-			$scope.allparamlist = response;
-			$scope.selectparamlist = $scope.allparamlist[0];
-		}
+		// AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+		// var onSuccessGetAllLatestParamlist = function (response) {
+		// 	$scope.allparamlist = response;
+		// 	$scope.selectparamlist = $scope.allparamlist[0];
+		// }
+		$scope.getAllLatestParamListByTemplate();
 	}
 
 
@@ -187,16 +213,36 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			defaultversion.uuid = response.uuid;
 			$scope.algorithm.defaultVersion = defaultversion;
 			$scope.selecttype = response.type
-			$scope.selectlibrary = response.library
-			AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
-			var onSuccessGetAllLatestParamlist = function (response) {
-				$scope.allparamlist = response;
-				var paramlist = {};
-				paramlist.uuid = $scope.algorithmData.paramList.ref.uuid;
-				paramlist.name = ""
-				$scope.selectparamlist = paramlist;
+			$scope.selectlibrary = response.libraryType
+			// AlgorithmService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+			// var onSuccessGetAllLatestParamlist = function (response) {
+			// 	$scope.allparamlist = response;
+			// 	var paramlist = {};
+			// 	paramlist.uuid = $scope.algorithmData.paramList.ref.uuid;
+			// 	paramlist.name = ""
+			// 	$scope.selectparamlist = paramlist;
 
+			// }
+			$scope.getAllLatestParamListByTemplate();
+			var tags = [];
+			if (response.tags != null) {
+				for (var i = 0; i < response.tags.length; i++) {
+					var tag = {};
+					tag.text = response.tags[i];
+					tags[i] = tag
+					$scope.tags = tags;
+				}
 			}
+			var summaryMethodsArray=[];
+			if(response.summaryMethods !=null){
+				for(var i=0;i<response.summaryMethods.length;i++){
+					var summaryMethods={};
+					summaryMethods.text=response.summaryMethods[i];
+					summaryMethodsArray[i]=summaryMethods;
+
+				}
+			}
+			$scope.summaryMethods=summaryMethodsArray;
 		}
 
 	}
@@ -214,9 +260,9 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		algorithmJson.savePmml = $scope.algorithmData.savePmml;
 		algorithmJson.published = $scope.algorithmData.published;
 		algorithmJson.type = $scope.selecttype;
-		algorithmJson.library = $scope.selectlibrary;
-		algorithmJson.trainName = $scope.algorithmData.trainName;
-		algorithmJson.modelName = $scope.algorithmData.modelName;
+		algorithmJson.libraryType = $scope.selectlibrary;
+		algorithmJson.trainClass = $scope.algorithmData.trainClass;
+		algorithmJson.modelClass = $scope.algorithmData.modelClass;
 		algorithmJson.labelRequired = $scope.algorithmData.labelRequired;
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -228,13 +274,35 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 				upd_tag="Y"	
 			}
 		}
-		algorithmJson.tags = tagArray;
-		var paramlist = {};
-		var ref = {};
-		ref.type = "paramlist";
-		ref.uuid = $scope.selectparamlist.uuid;
-		paramlist.ref = ref;
-		algorithmJson.paramList = paramlist
+		var summaryMethodsArray = [];
+		if ($scope.summaryMethods != null) {
+			for (var counttag = 0; counttag < $scope.summaryMethods.length; counttag++) {
+				summaryMethodsArray[counttag] = $scope.summaryMethods[counttag].text;
+			}
+			
+		}
+		algorithmJson.summaryMethods = summaryMethodsArray;
+		// var paramlist = {};
+		// var ref = {};
+		// ref.type = "paramlist";
+		// ref.uuid = $scope.selectparamlist.uuid;
+		// paramlist.ref = ref;
+		// algorithmJson.paramList = paramlist
+
+		var paramListWHParam={}
+		var paramListWHParamRef={};
+		paramListWHParamRef.uuid=$scope.selectParamlistWithHyper.uuid;
+		paramListWHParamRef.type="paramlist";
+		paramListWHParam.ref=paramListWHParamRef;
+		algorithmJson.paramListWH=paramListWHParam;
+		
+		var paramListWOHParam={}
+		var paramListWOHParamRef={};
+		paramListWOHParamRef.uuid=$scope.selectParamlistWithoutHyper.uuid;
+		paramListWOHParamRef.type="paramlist";
+		paramListWOHParam.ref=paramListWOHParamRef;
+		algorithmJson.paramListWoH=paramListWOHParam;
+
 		console.log(JSON.stringify(algorithmJson));
 		AlgorithmService.submit(algorithmJson, 'algorithm',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {

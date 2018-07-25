@@ -22,7 +22,8 @@
             "attrSourceName" : "src_address_id",
             "sourceAttr" : {
                 "attrId" : "0",
-                "ref" : {
+                "attrType": "integer",
+                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
                 }
@@ -33,6 +34,7 @@
             "attrSourceName" : "address_line1",
             "sourceAttr" : {
                 "attrId" : "1",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -44,6 +46,7 @@
             "attrSourceName" : "address_line2",
             "sourceAttr" : {
                 "attrId" : "2",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -55,6 +58,7 @@
             "attrSourceName" : "address_line3",
             "sourceAttr" : {
                 "attrId" : "3",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -66,6 +70,7 @@
             "attrSourceName" : "city",
             "sourceAttr" : {
                 "attrId" : "4",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -77,6 +82,7 @@
             "attrSourceName" : "county",
             "sourceAttr" : {
                 "attrId" : "5",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -88,6 +94,7 @@
             "attrSourceName" : "state",
             "sourceAttr" : {
                 "attrId" : "6",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -99,6 +106,7 @@
             "attrSourceName" : "zipcode",
             "sourceAttr" : {
                 "attrId" : "7",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -110,6 +118,7 @@
             "attrSourceName" : "country",
             "sourceAttr" : {
                 "attrId" : "8",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -121,6 +130,7 @@
             "attrSourceName" : "latitude",
             "sourceAttr" : {
                 "attrId" : "9",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
@@ -132,6 +142,7 @@
             "attrSourceName" : "longitude",
             "sourceAttr" : {
                 "attrId" : "10",
+                "attrType": "string",
                 "ref" : {
                     "type" : "datapod",
                     "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"

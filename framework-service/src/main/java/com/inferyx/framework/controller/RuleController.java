@@ -10,9 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +21,6 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,11 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
@@ -49,7 +46,6 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.RegisterService;
-import com.inferyx.framework.service.RuleExecServiceImpl;
 import com.inferyx.framework.service.RuleGroupServiceImpl;
 import com.inferyx.framework.service.RuleServiceImpl;
 import com.inferyx.framework.service.TaskHolder;
@@ -94,9 +90,15 @@ public class RuleController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		RuleExec ruleExec = null;
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
-		if (execParams != null && execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
-			for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-				execParams.setParamSetHolder(paramSetHolder);
+		if (execParams != null) {
+			if (execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
+				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
+					execParams.setParamSetHolder(paramSetHolder);
+				}
+			} else if (execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
+				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+					execParams.setParamListHolder(paramListHolder);
+				}
 			}
 		} 
 		
@@ -124,41 +126,7 @@ public class RuleController {
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
-		RuleExec ruleExec = null;
-		List<MetaIdentifier> ruleExecMetaList = new ArrayList<>();
-		MetaIdentifierHolder ruleExecMeta = new MetaIdentifierHolder();
-		MetaIdentifier ruleExecInfo = new MetaIdentifier(MetaType.rule, ruleUUID, ruleVersion);
-		ruleExecMeta.setRef(ruleExecInfo);
-		try {
-			if (execParams != null && execParams.getParamInfo() != null && !execParams.getParamInfo().isEmpty()) {
-				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
-					MetaIdentifier ref = paramSetHolder.getRef();
-					ref.setType(MetaType.paramset);
-					paramSetHolder.setRef(ref);
-					execParams.setParamSetHolder(paramSetHolder);
-					ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
-					ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
-					ruleExec = ruleServiceImpl.execute(metaExecutor, ruleExec, taskList, execParams, runMode);
-				}
-			} else {
-				ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);			
-				ruleExec = ruleServiceImpl.parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
-				ruleExec = ruleServiceImpl.execute(metaExecutor, ruleExec, taskList, execParams, runMode);
-			}
-		} catch (Exception e) {
-			try {
-				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-		ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
-		ruleExecMetaList.add(ruleExecInfo);
-		
-		commonServiceImpl.completeTaskThread(taskList);
-		return ruleExecMetaList;
+		return ruleServiceImpl.prepareRule(ruleUUID, ruleVersion, execParams, null, runMode);
 	}
 			
 	@RequestMapping(value = "/executeGroup", method = RequestMethod.POST)

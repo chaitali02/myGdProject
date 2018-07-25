@@ -2,18 +2,7 @@
 	"params": [
 		{
 			"paramId": 0,
-			"paramName": "threshold",
-			"paramType": "double",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "2"
-			    }
-		},
-		{
-			"paramId": 1,
-			"paramName": "maxIter",
+			"paramName": "maxBins",
 			"paramType": "integer",
 			"paramValue": {
 				"ref" : {
@@ -23,43 +12,32 @@
 			    }
 		},
 		{
-			"paramId": 2,
-			"paramName": "predictionCol",
-			"paramType": "string",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "Col1"
-			    }
-		},
-		{
-			"paramId": 3,
-			"paramName": "featuresCol",
-			"paramType": "string",
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "Col2"
-			    }
-		},
-		{
-			"paramId": 4,
-			"paramName": "tol",
-			"paramType": "double",
+			"paramId": 1,
+			"paramName": "maxDepth",
+			"paramType": "integer",
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
 				"value" : "10"
 			    }
+		},
+		{
+			"paramId": 4,
+			"paramName": "maxMemoryInMB",
+			"paramType": "integer",
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "100"
+			    }
 		}
 	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80",
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",
 	"version": "1495146809",
-	"name": "paramlist_logistic_regression",
-	"desc": "LogisticRegression Param List",
+	"name": "paramlist_decision_tree_classifier_WoH",
+	"desc": "DecisionTreeClassifier Param List",
 	"createdBy": {
 		"ref": {
 			"type": "user",
@@ -74,6 +52,8 @@
 	"active": "Y",
 	"published": "N",
     "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
 	"appInfo": [
 			{
             "ref" : {

@@ -94,17 +94,23 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
                method: 'GET',
                url:url,
                  }).then(function (response,status,headers) {
-                 
-                   $('#resultsloader').hide();
+                   
+                  $('#resultsloader').hide();
+                  if(params.type == "train"){
+                    $scope.trainData=response.data;
+                    $('#resultswrapper').show();
+                    renderTable(response.data);
+                  }
+                  else{
                    if(response.data.length >0){
                        $('#resultswrapper').show();
-                       if(params.type == "train")
-                       $scope.trainData=response.data;
-                     renderTable(response.data);}
-                   else{  $('#resultswrapper').hide();
+                      renderTable(response.data);}
+                   else{  
+                      $('#resultswrapper').hide();
                       $('#errorMsg').show();
-                        $('#errorMsg').html('No data available.');
+                      $('#errorMsg').html('No data available.');
                    }
+                  }
                  },function onError(err) {
                    $('#resultsloader').hide();
                    $('#errorMsg').show();
@@ -313,8 +319,9 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
      },
      template: `
        <div class="row" ng-show="type =='train'">
-         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-           <pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>
+         <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 json-formatter" style="margin:10px;">
+          <!--<pre ng-bind="modelresult" style="min-height: 100px;white-space: pre-wrap"></pre>-->
+           <json-formatter open="1" key="'Result'" json ='modelresult'></json-formatter>
          </div>        
        </div>
        <div class="row" ng-show="type !='train'">
@@ -830,10 +837,12 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
             
          d3.selectAll('#showgrouppaper .joint-element .body')
            .on('contextmenu', function(){
+             
              d3.event.preventDefault();
              d3.event.stopPropagation();
              var vm = this;
              var id = vm.getAttribute("element-id");
+            
              var cell = graph.getCell(id);
              if(!cell){
                return false
@@ -1119,7 +1128,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      var taskDetail=null;
      $rootScope.showGrid=false;
      $rootScope.showGroupDowne=false;
+     $scope.selectallattribute=false;
      $scope.elementDefs = dagMetaDataService.elementDefs;
+     $scope.paramTypes=["paramlist","paramset"];
      $scope.changeSliderForward=function() {
        $scope.zoomSize=$scope.zoomSize+1;
      }
@@ -1146,9 +1157,47 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      $scope.closeResultDiv = function () {
        $scope.showResults = false;
      }
+     $scope.operatorResult=function(param){
+      $('#viewResultModel').modal("hide");
+      showResult(param)
+     }
      
+     $scope.onChangeOperator=function(index){
+      $scope.isExecParamsetTable=false;
+      CommonService.getOneByUuidAndVersion($scope.taskOnOperator[index].paramSetUuid,"","paramset").then(function(response){ 
+        var paramInfoArray=[];
+        $scope.isExecParamsetTable=true;
+        var result=response.data
+        if(response !=null) {
+          for (var i=0; i < result.paramInfo.length; i++) {
+            var paramInfo = {};
+            paramInfo.paramSetId=result.paramInfo[i].paramSetId;
+            if($scope.taskOnOperator[index].paramSetId == result.paramInfo[i].paramSetId){
+              paramInfo.selected=true;
+            }
+            var paramSetValarray = [];
+            for (var j = 0; j < result.paramInfo[i].paramSetVal.length; j++) {
+              var paramSetValjson = {};
+              paramSetValjson.paramId = result.paramInfo[i].paramSetVal[j].paramId;
+              paramSetValjson.paramName = result.paramInfo[i].paramSetVal[j].paramName;
+              paramSetValjson.value = result.paramInfo[i].paramSetVal[j].value;
+              paramSetValjson.ref = result.paramInfo[i].paramSetVal[j].ref;
+              paramSetValarray[j] = paramSetValjson;
+              paramInfo.paramSetVal = paramSetValarray;
+              paramInfo.value = result.paramInfo[i].paramSetVal[j].value;
+            }
+            paramInfoArray[i] = paramInfo;
+          }
+          $scope.execParamParamsetCol = paramInfoArray[0].paramSetVal;
+          $scope.execParamParamset = paramInfoArray;
+         
+        }
+      });
+     }
+
      window.showResult = function(params){
        $scope.lastParams = params;
+       $scope.isExecParamsetTable=false;
        App.scrollTop();
        if(params.type.slice(-5).toLowerCase() == 'group'){
          $scope.showGroupGraph = true;
@@ -1156,14 +1205,46 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $scope.lastGroupParams = params;
          $scope.$broadcast('generateGroupGraph',params);
        }
-       else {
-         $scope.lastResultsParams = params;
-         $scope.showResults = true;
-         setTimeout(function () {
-           $scope.$broadcast('generateResults',params);
-           $scope.$emit('resultExecChanged',params.name)
-         }, 100);
-       }
+       else{
+        console.log(params);
+        $scope.taskOnOperator=[];
+        if(params.operator && params.operator.length >1){
+          for(var i=0;i<params.operator.length;i++){
+            var taskOperators={};
+            var paramObj={};
+            paramObj.elementType=params.elementType;
+            paramObj.id=params.operator[i].operatorInfo.ref.uuid;
+            paramObj.name=params.name;
+            paramObj.parentStage=params.parentStage;
+            paramObj.ref=params.ref;
+            paramObj.taskId=params.taskId;
+            paramObj.type=params.type;
+            paramObj.typeLabel=params.typeLabel;
+            paramObj.version=params.operator[i].operatorInfo.ref.version;;
+            taskOperators.param=paramObj;
+         //   taskOperators.param.operator=null;
+            taskOperators.uuid=params.operator[i].operatorInfo.ref.uuid;
+            taskOperators.version=params.operator[i].operatorInfo.ref.version;
+            taskOperators.name=params.operator[i].operatorInfo.ref.name;
+            taskOperators.selected=false
+            taskOperators.paramSetId=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].paramSetId;
+            taskOperators.paramSetUuid=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.uuid;
+            taskOperators.paramSetName=params.operator[i].operatorParams.EXEC_PARAMS.paramInfo[0].ref.name;
+            $scope.taskOnOperator[i]=taskOperators;
+          }
+          $('#viewResultModel').modal({
+            backdrop: 'static',
+            keyboard: false
+          });
+        }else{
+          $scope.lastResultsParams = params;
+          $scope.showResults = true;
+          setTimeout(function () {
+            $scope.$broadcast('generateResults',params);
+            $scope.$emit('resultExecChanged',params.name)
+          }, 100);
+        }
+      }
      }
      
      window.setStatus = function(params,status){
@@ -1589,7 +1670,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $('#paper svg').addClass('view-mode');
          d3.selectAll('.joint-element .body')
          .on('contextmenu', function(){
-          
            d3.event.preventDefault();
            d3.event.stopPropagation();
            var vm = this;
@@ -1607,7 +1687,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var iconMenuItems = [];
              if($scope.execMode){
                var status = $(".status[element-id=" + id + "] .statusTitle")[0].innerHTML;
-               if(status && (status=='NotStarted' || status=='Resume')){
+               if(status && ( status=='Resume')){
                  iconMenuItems.push({title:'On Hold', type : 'onhold'});
                }
                else if(status && status=='InProgress'){
@@ -1638,6 +1718,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            } 
            var ref = cell.attributes['model-data'].operators[0].operatorInfo.ref;
            var type = ref.type;
+           var operator=cell.attributes['model-data'].operators;
            if(type.slice(-4) == 'Exec'){
              if(type.slice(-9) == 'groupExec'){
                var isGroupExec = true;
@@ -1693,8 +1774,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                recon : {name:'recon', label: 'Recon'},
                recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
              }
-
-             var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId};
+          
+             var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId,operator:operator};
              var url=$location.absUrl().split("app")[0];
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
@@ -1864,20 +1945,30 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           backdrop: 'static',
           keyboard: false
         });
-       
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
         var typeParamListArray=["simulate","operator"];
-        var typeParamSetArray=["train"];
+        var typeParamSetArray=["train","rule"];
         if(typeParamSetArray.indexOf(type) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
-          $scope.isExecParamSet=true;
-          var temp = $scope.popupModel.selectedType.split('|');
-          $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
-          $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
-          var objDetail={}
-          objDetail.uuid=temp[0];
-          objDetail.version="";
-          objDetail.type=type;
-          $scope.getExecParamsSet(objDetail,$scope.popupModel);
+          $scope.isExecParamSet=false;
+          $scope.isTabelShow=false;
+          $scope.allparamset=null;
+          $scope.allParamList=null;
+          $scope.isParamLsitTable=false;
+          $scope.selectParamList=null;
+          $scope.paramTypes=null;
+          $scope.selectParamType=null;
+          setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },100);
+          if($scope.popupModel.selectedType){
+            var temp = $scope.popupModel.selectedType.split('|');
+            $scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid = temp[0];
+            $scope.popupModel.modelData.operators[0].operatorInfo.ref.name = temp[1];
+          
+            var objDetail={}
+            objDetail.uuid=temp[0];
+            objDetail.version="";
+            objDetail.type=type;
+            $scope.getExecParamsSetAndParamList(objDetail,$scope.popupModel);
+          }
           
         }
         else if( typeParamListArray.indexOf(type) != -1 && ($scope.paramListHolder || $scope.popupModel.modelData.operators[0].operatorParams !=null)){
@@ -2565,7 +2656,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         objDetail.version="";
         var type = $scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
         objDetail.type=type;
-        var typeParamSetArray=["train"];
+        var typeParamSetArray=["train","rule"];
         var typeParamListArray=["simulate","operator"];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
@@ -2582,38 +2673,109 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
 
         
       }
-
       $scope.getExecParamsSet = function (data) {
-        $scope.paramtablecol = null
-        $scope.paramtable = null;
-        $scope.isTabelShow = false;
         CommonService.getParamSetByType(data.type,data.uuid,data.version).then(function (response) {
           onSuccessGetExecuteModel(response.data)
         });
         var onSuccessGetExecuteModel = function (response) {
-         
-          $('#responsive').modal({
-            backdrop: 'static',
-            keyboard: false
-          });
           $scope.allparamset = response;
           if($scope.popupModel.modelData.operators[0].operatorParams !=null){
+            $scope.isExecParamSet=true;
             for(var i=0;i< response.length;i++){
               if(response[i].uuid == $scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramInfo[0].ref.uuid){
                 $scope.paramsetdata=response[i];
                 $scope.onSelectparamSet($scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramInfo);    
                 break;
-              
-              }s
+              }
             }
           }
         }
       }
-
+      $scope.getParamListByTrainORRule=function(data){
+        $scope.paramlistdata=null;
+        CommonService.getParamListByTrainORRule(data.uuid,data.version,data.type).then(function (response){ onSuccesGetParamListByTrain(response.data)});
+        var onSuccesGetParamListByTrain = function (response) {
+          $scope.allParamList=response;
+          if($scope.popupModel.modelData.operators[0].operatorParams !=null){
+            $scope.isExecParamSet=true;
+            for(var i=0;i< response.length;i++){
+              if(response[i].uuid == $scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo[0].ref.uuid){
+                $scope.paramlistdata=response[i]; 
+                $scope.onChangeParamList();
+                break;
+              }
+            }
+          }
+        }
+      }
+      $scope.onChangeParamType=function(){
+        $scope.allparamset=null;
+        $scope.allParamList=null;
+        $scope.isParamLsitTable=false;
+        $scope.selectParamList=null;
+        $scope.popupModel.modelData.operators[0].operatorInfo;
+        var objDetail={};
+        objDetail.uuid=$scope.popupModel.modelData.operators[0].operatorInfo.ref.uuid;
+        objDetail.type=$scope.popupModel.modelData.operators[0].operatorInfo.ref.type;
+        objDetail.version= "";
+        if($scope.selectParamType =="paramlist"){
+          $scope.paramlistdata=null;
+          $scope.getParamListByTrainORRule(objDetail);
+        }
+        else if($scope.selectParamType =="paramset"){
+          $scope.getExecParamsSet(objDetail);
+        }
+      }
+      $scope.onChangeParamList=function(){
+        $scope.isParamLsitTable=false;
+        CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
+        var onSuccesGetParamListByTrain = function (response) {
+          $scope.isParamLsitTable=true;
+          $scope.selectParamList=response;
+          var paramArray=[];
+          for(var i=0;i<response.length;i++){
+            var paramInfo={}
+              paramInfo.paramId=response[i].paramId; 
+              paramInfo.paramName=response[i].paramName;
+              paramInfo.paramType=response[i].paramType.toLowerCase();
+              if(response[i].paramValue !=null && response[i].paramValue.ref.type == "simple"){
+                paramInfo.paramValue=response[i].paramValue.value;
+                paramInfo.paramValueType="simple"
+            }else if(response[i].paramValue !=null){
+              var paramValue={};
+              paramValue.uuid=response[i].paramValue.ref.uuid;
+              paramValue.type=response[i].paramValue.ref.type;
+              paramInfo.paramValue=paramValue;
+              paramInfo.paramValueType=response[i].paramValue.ref.type;
+            }else{
+              
+            }
+            paramArray[i]=paramInfo;
+          }
+          $scope.selectParamList.paramInfo=paramArray;
+        }
+      }
+      $scope.getExecParamsSetAndParamList = function (data) {
+        $scope.paramtablecol = null
+        $scope.paramtable = null;
+        $scope.isTabelShow = false;
+        if($scope.popupModel.modelData.operators[0].operatorParams !=null){
+          $scope.isExecParamSet=true;
+          if($scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramListInfo){
+            $scope.selectParamType="paramlist";
+            $scope.getParamListByTrainORRule(data);
+          }
+          else if($scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.paramInfo){
+            $scope.selectParamType="paramset";
+            $scope.getExecParamsSet(data);
+          }
+        }
+      }
+    
       $scope.onSelectparamSet = function (selectedParamInfo) {
         var paramSetjson = {};
         var paramInfoArray = [];
-        $scope.selectallattribute=false;
+     
         var selectedParamIdArray=[];
         if(selectedParamInfo !=null){
           for(var i=0;i<selectedParamInfo.length;i++){
@@ -2660,38 +2822,58 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       }
       
       $scope.executeWithExecParams = function () {
-       
         var cell = $scope.graph.getCell($scope.popupModel.id);
         cell.attr('text', { text: $scope.popupModel.modelData.name});
         $scope.isExecParamList=false;    
         $scope.isExecParamSet=false;
-        $scope.newDataList = [];
-        $scope.selectallattribute = false;
-        angular.forEach($scope.paramtable, function (selected) {
-          if (selected.selected) {
-            $scope.newDataList.push(selected);
+        if($scope.selectParamType =="paramlist"){
+          if($scope.paramlistdata){
+            var execParams = {};
+            var paramListInfo =[];
+            var paramInfo={};
+            var paramInfoRef={};
+            paramInfoRef.uuid=$scope.paramlistdata.uuid;
+            paramInfoRef.type="paramlist";
+            paramInfo.ref=paramInfoRef;
+            paramListInfo[0]=paramInfo;
+            var EXEC_PARAMS={};
+            EXEC_PARAMS.paramListInfo = paramListInfo;
+            execParams.EXEC_PARAMS=EXEC_PARAMS;
+          }else{
+            execParams=null;
           }
-        });
-        var paramInfoArray = [];
-        if ($scope.newDataList.length > 0) {
-          var execParams = {}
-          var ref = {}
-          ref.uuid = $scope.paramsetdata.uuid;
-          ref.version = $scope.paramsetdata.version;
-          ref.type = 'paramset';
-          for (var i = 0; i < $scope.newDataList.length; i++) {
-            var paraminfo = {};
-            paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
-            paraminfo.ref = ref;
-            paramInfoArray[i] = paraminfo;
-          }
+          $scope.paramlistdata=null;
+          $scope.selectParamType=null;
         }
-        if (paramInfoArray.length > 0) {
-          var EXEC_PARAMS={};
-          EXEC_PARAMS.paramInfo = paramInfoArray;
-          execParams.EXEC_PARAMS=EXEC_PARAMS;
-        } else {
-          execParams = null
+        else{
+          $scope.newDataList = [];
+          $scope.selectallattribute = false;
+          angular.forEach($scope.paramtable, function (selected) {
+            if (selected.selected) {
+              $scope.newDataList.push(selected);
+            }
+          });
+          var paramInfoArray = [];
+          if ($scope.newDataList.length > 0) {
+            var execParams = {}
+            var ref = {}
+            ref.uuid = $scope.paramsetdata.uuid;
+            ref.version = $scope.paramsetdata.version;
+            ref.type = 'paramset';
+            for (var i = 0; i < $scope.newDataList.length; i++) {
+              var paraminfo = {};
+              paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
+              paraminfo.ref = ref;
+              paramInfoArray[i] = paraminfo;
+            }
+          }
+          if (paramInfoArray.length > 0) {
+            var EXEC_PARAMS={};
+            EXEC_PARAMS.paramInfo = paramInfoArray;
+            execParams.EXEC_PARAMS=EXEC_PARAMS;
+          } else {
+            execParams = null
+          }
         }
         $('#responsive').modal('hide');
        // $('.modal-open').css('overflow-y', 'auto !important');
@@ -2790,6 +2972,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 attributeInfo.name=paramListInfo[i].attributeInfo[j].attrName;
                 attributeInfo.dname=paramListInfo[i].attributeInfo[j].ref.name+"."+paramListInfo[i].attributeInfo[j].attrName;
                 attributeInfo.attributeId=paramListInfo[i].attributeInfo[j].attrId;
+                attributeInfo.attrType=paramListInfo[i].attributeInfo[j].attrType;
                 attributeInfo.id=paramListInfo[i].attributeInfo[j].ref.uuid+"_"+paramListInfo[i].attributeInfo[j].attrId;
                 attributeInfoArray[j]=attributeInfo
                 }
@@ -2864,7 +3047,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         }
       }
       $scope.onChangeDistribution=function(data,index){
-        debugger 
+        
         CommonService.getParamListByType('distribution',data.uuid,data.version | "").then(function (response){ onSuccessGetParamListByType(response.data)});
         var onSuccessGetParamListByType = function (response) {
           if($scope.paramListHolder.length == $scope.opringinalparamListHolder.length){
@@ -2885,6 +3068,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           return $filter('filter')($scope.paramListHolder[index].allAttributeinto, query);
         });
        };
+       
       $scope.executeWithExecParamList=function(){
         $scope.isExecParamList=false;    
         $scope.isExecParamSet=false;

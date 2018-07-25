@@ -44,7 +44,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.DatasetServiceImpl;
-import com.inferyx.framework.service.ParamSetServiceImpl;
+import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RuleServiceImpl;
 
 @Component
@@ -66,7 +66,9 @@ public class AttributeMapOperator {
 	protected RuleServiceImpl ruleServiceImpl;
 	@Autowired
 	protected FunctionOperator functionOperator;
-	@Autowired protected ParamSetServiceImpl paramSetServiceImpl;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
+	
 	private RunMode runMode;
 	
 	static final Logger logger = Logger.getLogger(AttributeMapOperator.class);
@@ -149,7 +151,7 @@ public class AttributeMapOperator {
 				return builder.append("\"").append(attrMap.getSourceAttr().getValue()).append("\"").append(" as ").append(alias).append(" ").toString();
 			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.paramlist) {
 				String value = null;
-				value = paramSetServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
+				value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
 				return builder.append("\"").append(value).append("\"").append(" as ").append(alias).append(" ").toString();
 			} 
 			builder.append(sourceAttrSql(daoRegister, mapSource, attrMap.getSourceAttr(), refKeyMap, otherParams, execParams));

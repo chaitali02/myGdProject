@@ -1,8 +1,8 @@
 {
-  "uuid": "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
-  "version": "1520009572",
-  "name": "paramlist_linear_svm_classifier",
-  "desc": "LinearSupportVectorMachine Param List",
+  "uuid": "e3dd3eaf-4420-49c0-a36c-46f76b455a1a",
+  "version": "1519980278",
+  "name": "paramlist_naivebayes_classifier_WoH",
+  "desc": "NaiveBayesClassifier  Param List",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -16,8 +16,10 @@
   "active": "Y",
   "published": "N",
   "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
   "appInfo": [
-    	{
+   	{
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -44,48 +46,16 @@
         }
   ],
   "params": [
+    
     {
-      "paramId": "0",
-      "paramName": "maxIter",
+      "paramId": "3",
+      "paramName": "smoothing",
       "paramType": "integer",
       "paramValue": {
         "ref" : {
             "type" : "simple"
         },
-	"value" : "10"
-    }
-    },
-    {
-      "paramId": "1",
-      "paramName": "regParam",
-      "paramType": "double",
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "1.0"
-    }
-    },
-    {
-      "paramId": "2",
-      "paramName": "predictionCol",
-      "paramType": "string",
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "Col1"
-    }
-    },
-    {
-      "paramId": "3",
-      "paramName": "featuresCol",
-      "paramType": "string",
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "Col2"
+	"value" : "1"
     }
     }
   ]

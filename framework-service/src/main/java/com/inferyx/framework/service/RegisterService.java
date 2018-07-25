@@ -69,6 +69,7 @@ import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
@@ -2368,6 +2369,7 @@ public class RegisterService {
 								Attribute attr = datapodDet.getAttribute(AttrId);
 								if (attr != null) {
 									attributeRef.setAttrId(Integer.toString((AttrId)));
+									attributeRef.setAttrType(datapodDet.getAttribute(AttrId).getType());
 									if (datapodDet.getAttribute(AttrId).getDispName() != null) {
 										attributeRef.setAttrName(datapodDet.getAttribute(AttrId).getDispName());
 									} else
@@ -2846,6 +2848,12 @@ public class RegisterService {
 			finalDataRef.setName(dataset.getName());
 			attributeRef.setAttrId(sourceAttributes.get(i).getAttrSourceId());
 			attributeRef.setAttrName(dataset.getAttributeInfo().get(i).getAttrSourceName());
+			if(sourceAttributes.get(i).getSourceAttr().getAttrType()!=null) {
+				attributeRef.setAttrType(sourceAttributes.get(i).getSourceAttr().getAttrType());
+			}else {
+				attributeRef.setAttrType("string");
+			}
+		
 			// attributeRef.setAttrDesc(sourceAttributes.get(i).getName());
 			attributeRef.setRef(finalDataRef);
 			attrRefDetails.add(attributeRef);
@@ -2867,6 +2875,8 @@ public class RegisterService {
 			finalDataRef.setName(rule.getName());
 			attributeRef.setAttrId(sourceAttributes.get(i).getAttrSourceId());
 			attributeRef.setAttrName(rule.getAttributeInfo().get(i).getAttrSourceName());
+			//attributeRef.setAttrType(rule.getAttributeInfo().get(i).getSourceAttr().getAttrType());
+			//attributeRef.setAttrName(sourceAttributes.get(i).getSourceAttr().getAttrType());
 			// attributeRef.setAttrDesc(sourceAttributes.get(i).getName());
 			attributeRef.setRef(finalDataRef);
 			attrRefDetails.add(attributeRef);
@@ -2888,6 +2898,7 @@ public class RegisterService {
 			finalDataRef.setVersion(datapod.getVersion());
 			finalDataRef.setName(datapod.getName());
 			attributeRef.setAttrId(Integer.toString(datapod.getAttributes().get(i).getAttributeId()));
+			attributeRef.setAttrType(datapod.getAttributes().get(i).getType());
 			if (datapod.getAttributes().get(i).getDispName() != null) {
 				attributeRef.setAttrName(datapod.getAttributes().get(i).getDispName());
 			} else
@@ -3678,12 +3689,13 @@ public class RegisterService {
 		return dagExecServiceImpl.getStatusByDagExec(dagExecUuid);
 	}
 
-	public String getParamSetByModel(String modelUuid, String modelVersion) throws JsonProcessingException {
+	/********************** UNUSED **********************/
+	/*public String getParamSetByModel(String modelUuid, String modelVersion) throws JsonProcessingException {
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByModel(modelUuid, modelVersion));
 		return result;
-	}
+	}*/
 	
 	public String getParamSetByTrain(String trainUuid, String trainVersion) throws JsonProcessingException {
 		String result = null;
@@ -3706,10 +3718,10 @@ public class RegisterService {
 		return result;
 	}
 
-	public String getParamSetByAlogrithm(String algorithmUUID, String algorithmVersion) throws JsonProcessingException {
+	public String getParamSetByAlogrithm(String algorithmUUID, String algorithmVersion, String isHyperParam) throws JsonProcessingException {
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByAlgorithm(algorithmUUID, algorithmVersion));
+		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByAlgorithm(algorithmUUID, algorithmVersion, isHyperParam));
 		return result;
 	}
 
@@ -3903,7 +3915,13 @@ public class RegisterService {
 			countHolder.add(addToCount(MetaType.operatorExec.toString(), operatorExecCount,
 					operatorExec.getCreatedBy().getRef().getName(), operatorExec.getCreatedOn()));
 		}
-
+		int graphExecCount = commonServiceImpl.findAllLatest(MetaType.graphExec).size();
+		GraphExec graphExec = (GraphExec) commonServiceImpl.getLatest(MetaType.graphExec.toString());
+		
+		if (graphExec != null) {
+			countHolder.add(addToCount(MetaType.graphExec.toString(), graphExecCount,
+					graphExec.getCreatedBy().getRef().getName(), graphExec.getCreatedOn()));
+		}
 
 		return countHolder;
 		

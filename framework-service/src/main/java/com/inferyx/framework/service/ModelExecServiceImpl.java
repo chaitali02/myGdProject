@@ -78,7 +78,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	@Autowired
 	Helper helper;
 	@Autowired
-	ParamSetServiceImpl paramSetServiceImpl;
+	MetadataServiceImpl metadataServiceImpl;
 
 	static final Logger logger = Logger.getLogger(ModelExecServiceImpl.class);
 
@@ -824,19 +824,28 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		try {
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec.getDependsOn().getRef().getType().toString());
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+			Algorithm algorithm= null;
+			if (model.getDependsOn().getRef().getVersion() != null)
+				algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
+			else 
+				algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(model.getDependsOn().getRef().getUuid(), MetaType.algorithm.toString());
+				
+			
+			String algoClassName = algorithm.getTrainClass();
+			Object algoClass = Class.forName(algoClassName).newInstance();
 			List<ParamMap> paramMapList = null;
 			if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion());
+				paramMapList = metadataServiceImpl.getParamMap(execParams, model.getUuid(), model.getVersion(), paramMapList);
 			}
 			if (paramMapList.size() > 0) {
 				for (ParamMap paramMap : paramMapList) {
 					Thread.sleep(1000); // Should be parameterized in a class
-					modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode);
+					modelServiceImpl.train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
 					trainExec = null;
 				}
 			} else {
-				modelServiceImpl.train(train, model, trainExec, execParams, null, runMode);
+				modelServiceImpl.train(train, model, trainExec, execParams, null, runMode,algoClass);
 			}
 		} catch (Exception e) {
 			synchronized (trainExec.getUuid()) {

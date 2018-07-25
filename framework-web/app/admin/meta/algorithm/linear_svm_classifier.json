@@ -44,9 +44,9 @@
         }
   ],
   "type": "CLASSIFICATION",
-  "library": "SPARKML",
-  "trainName": "org.apache.spark.ml.classification.LinearSVC",
-  "modelName": "org.apache.spark.ml.classification.LinearSVCModel",
+  "libraryType": "SPARKML",
+  "trainClass": "org.apache.spark.ml.classification.LinearSVC",
+  "modelClass": "org.apache.spark.ml.classification.LinearSVCModel",
   "labelRequired": "Y",
   "returnType": null,
   "paramList": {
@@ -58,5 +58,28 @@
     },
     "value": null
   },
-  "savePmml" : "N"
+	 "paramListWoH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "daee0212-af6e-4b76-ae0b-73c78b0e9e38"
+        }
+    },
+    "paramListWH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "ed97e128-962f-4030-bdf5-6c1c35a53107"
+        }
+    },
+  "savePmml" : "N",
+	"summaryMethods" : [  
+		"coefficients",
+		"getAggregationDepth",
+		"getMaxIter",
+		"getRegParam",
+		"getThreshold",
+		"getTol",
+		"intercept",
+		"numClasses",
+		"numFeatures"
+	    ]
 }

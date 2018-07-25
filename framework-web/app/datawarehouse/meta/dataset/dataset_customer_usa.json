@@ -67,6 +67,7 @@
 				},
 				"value": null,
 				"attrId": "0",
+				"attrType": "integer",
 				"attrName": null
 			}
 		},
@@ -82,6 +83,7 @@
 				},
 				"value": null,
 				"attrId": "1",
+				"attrType": "integer",
 				"attrName": null
 			}
 		},
@@ -97,6 +99,7 @@
 				},
 				"value": null,
 				"attrId": "4",
+				"attrType": "string",
 				"attrName": null
 			}
 		},
@@ -112,6 +115,7 @@
 				},
 				"value": null,
 				"attrId": "6",
+				"attrType": "string",
 				"attrName": null
 			}
 		},
@@ -127,6 +131,7 @@
 				},
 				"value": null,
 				"attrId": "1",
+				"attrType": "string",
 				"attrName": null
 			}
 		},
@@ -142,6 +147,7 @@
 				},
 				"value": null,
 				"attrId": "2",
+				"attrType": "string",
 				"attrName": null
 			}
 		},
@@ -157,6 +163,7 @@
 				},
 				"value": null,
 				"attrId": "4",
+				"attrType": "",
 				"attrName": null
 			}
 		},
@@ -172,6 +179,7 @@
 				},
 				"value": null,
 				"attrId": "6",
+				"attrType": "string",
 				"attrName": null
 			}
 		},
@@ -187,6 +195,7 @@
 				},
 				"value": null,
 				"attrId": "8",
+				"attrType": "string",
 				"attrName": null
 			}
 		},
@@ -202,6 +211,7 @@
 				},
 				"value": null,
 				"attrId": null,
+				"attrType": "",
 				"attrName": null
 			}
 		}

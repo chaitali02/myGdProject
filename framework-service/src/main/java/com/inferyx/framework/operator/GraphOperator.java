@@ -3,9 +3,12 @@
  */
 package com.inferyx.framework.operator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +20,14 @@ import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.DataType;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.GraphEdge;
 import com.inferyx.framework.domain.GraphNode;
 import com.inferyx.framework.domain.Graphpod;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Property;
@@ -86,6 +91,7 @@ public class GraphOperator implements IOperator {
 		}
 		String nodeSql = null;
 		StringBuilder sb = new StringBuilder();
+		StringBuilder sb2 = new StringBuilder();
 		int count = 0;
 		for (GraphNode graphNode : nodeList) {
 			if (count > 0) {
@@ -93,84 +99,157 @@ public class GraphOperator implements IOperator {
 			}
 			sb.append(ConstantsUtil.SELECT);
 			sb.append(" ");
-			// Fetch id attribute 
+			// Fetch id attribute
 			AttributeRefHolder nodeIdRefHolder = graphNode.getNodeId();
-			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeIdRefHolder, nodeIdRefHolder, 
-												DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-												execParams.getOtherParams(), execParams));
+			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeIdRefHolder, nodeIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
 			sb.append(" AS id, ");
+			AttributeRefHolder nbpropID = graphNode.getNodeBackgroundInfo().getPropertyId();
+			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nbpropID, nbpropID,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
+			sb.append(" AS nBPropertyId, ");
 			
-			
-			AttributeRefHolder nodeNameRefHolder =  graphNode.getNodeName();
-			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeNameRefHolder, nodeNameRefHolder, 
-					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-					execParams.getOtherParams(), execParams));
-			sb.append(" AS nodeName, '");
-			
-			/*sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, nodeNameRefHolder, nodeNameRefHolder, 
-					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-					execParams.getOtherParams()));
-			sb.append(", ");*/
+			sb.append(count + " AS nodeIndex, ");
+
+			AttributeRefHolder nodeNameRefHolder = graphNode.getNodeName();
+			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeNameRefHolder, nodeNameRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
+			sb.append(" AS nodeName, ");
+
+			if(graphNode.getNodeSize() !=null) {
+				AttributeRefHolder nodeSizeRefHolder = graphNode.getNodeSize();
+				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, nodeSizeRefHolder, nodeSizeRefHolder,
+						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+						execParams));
+			}else {
+				sb.append(0);
+			}
+			sb.append(" AS nodeSize, '");
+			/*
+			 * sb.append(attributeMapOperator.sourceAttrAlias(daoRegister,
+			 * nodeNameRefHolder, nodeNameRefHolder,
+			 * DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+			 * execParams.getOtherParams())); sb.append(", ");
+			 */
+
 			sb.append(graphNode.getNodeType());
 			sb.append("' AS nodeType, '");
 
 			
-			
-			
+
 			sb.append(graphNode.getNodeIcon());
 			sb.append("' AS nodeIcon, ");
+
+		/*	@SuppressWarnings("unchecked")
+			List<AttributeRefHolder> setAttrRefHolder = graphNode.getNodeProperties();
 			
-			sb.append("concat('{', ");
-			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
-				sb.append("'''\"");
-				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
-						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-						execParams.getOtherParams()));
-				sb.append("\"'':', ");
-				
-				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
-						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-						execParams.getOtherParams(), execParams));
-//				sb.append(" AS ");
-				
-				sb.append(", ");
-				sb.append("',' ");
-			}
-			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'}')");     
-			sb.append(" AS nodeProperties ,");
-			// added propertyId
-			AttributeRefHolder propertyIdRefHolder = graphNode.getHighlightInfo().getPropertyId();
-			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
+			AttributeRefHolder attrRefHolder=	 graphNode.getNodeBackgroundInfo().getPropertyId();
+			
+			//setAttrRefHolder.add(attrRefHolder);
+			  for (AttributeRefHolder attrRefHolder1 : setAttrRefHolder)
+				  setAttrRefHolder.add(attrRefHolder.getAttrName().contains(attrRefHolder1.getAttrName()) ? : null);
+	          System.out.println(setAttrRefHolder);*/
+
+			// added propertyId into sb2
+			AttributeRefHolder propertyIdRefHolder = graphNode.getNodeBackgroundInfo().getPropertyId();
+			sb2.append("'''\"");
+			sb2.append(attributeMapOperator.sourceAttrAlias(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+					execParams.getOtherParams()));
+			sb2.append("\"'':\"', ");
+
+			sb2.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
-			sb.append(" AS propertyId,' ");
+
+			sb2.append(", ");
+			String propertyIdKey = attributeMapOperator.sourceAttrAlias(daoRegister, propertyIdRefHolder,
+					propertyIdRefHolder, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+					execParams.getOtherParams());
+			Boolean status = true;
+			Boolean flag = true;
+
+			sb.append("concat('{', ");
+			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
+
+				String type = propHolder.getAttrType();
+				if (type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString())) {
+					sb.append("'''\"");
+					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+							execParams.getOtherParams()));
+					sb.append("\"'':\"', ");
+
+					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder,
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+							execParams));
+					// sb.append(" AS ");
+
+					sb.append(", ");
+					sb.append("'\",' ");
+					status = true;
+				} else {
+					sb.append("'''\"");
+					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+							execParams.getOtherParams()));
+					sb.append("\"'':', ");
+
+					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder,
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+							execParams));
+					// sb.append(" AS ");
+
+					sb.append(", ");
+					sb.append("',' ");
+					status = false;
+				}
+				if (propertyIdKey.equalsIgnoreCase(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder,
+						propHolder, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+						execParams.getOtherParams()))) {
+					flag = false;
+				}
+			}
+			if (flag == true) {
+				// sb.delete(sb.length() - 5, sb.length());
+				sb.append(sb2);
+			} else {
+				sb.delete(sb.length() - 5, sb.length());
+			}
+
+			if (status == true) {
+				sb.append("'\"}')");
+			} else {
+				sb.append("'}')");
+			}
+
+			sb.append(" AS nodeProperties ,'");
+	
 			// added type
 			sb.append(graphNode.getHighlightInfo().getType());
 			sb.append("' AS type, ");
 			// added propertyInfo
 
-			sb.append("concat('{', ");
-			for (Property property : graphNode.getHighlightInfo().getPropertyInfo()) {
-				sb.append("'''");
-				sb.append(property.getPropertyName());
-				sb.append("'':', ");
-				sb.append("'");
-				sb.append(property.getPropertyValue());
-				sb.append("'");
-				sb.append(", ");
-				sb.append("',' ");
-			}
-			sb.delete(sb.length() - 5, sb.length());
-			sb.append("'}')");
-			sb.append(" AS propertyInfo ");
+			AttributeRefHolder propertyIdRefHolder1 = graphNode.getHighlightInfo().getPropertyId();
+			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder1, propertyIdRefHolder1,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
+			sb.append(" AS nHPropertyId");
+			
+			
+			
 
 			sb.append(ConstantsUtil.FROM);
 
-			Object source = commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(), graphNode.getNodeSource().getRef().getVersion(), graphNode.getNodeSource().getRef().getType().toString());
-			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(((BaseEntity) source).getName()).append(" ");
+			Object source = commonServiceImpl.getOneByUuidAndVersion(graphNode.getNodeSource().getRef().getUuid(),
+					graphNode.getNodeSource().getRef().getVersion(),
+					graphNode.getNodeSource().getRef().getType().toString());
+			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ")
+					.append(((BaseEntity) source).getName()).append(" ");
 
-				
 			count++;
 		}
 		nodeSql = sb.toString().replaceAll(",  FROM", " FROM");
@@ -207,12 +286,15 @@ public class GraphOperator implements IOperator {
 	 * @return
 	 * @throws Exception 
 	 */
+	@SuppressWarnings("unused")
 	private String createEdgeSql(List<GraphEdge> edgeList, ExecParams execParams, BaseExec baseExec, RunMode runMode) throws Exception {
 		if (edgeList == null || edgeList.isEmpty()) {
 			return null;
 		}
 		String edgeSql = null;
 		StringBuilder sb = new StringBuilder();
+		StringBuilder sb3 = new StringBuilder();
+
 		int count = 0;
 		for (GraphEdge graphEdge : edgeList) {
 			if (count > 0) {
@@ -221,6 +303,11 @@ public class GraphOperator implements IOperator {
 			sb.append(ConstantsUtil.SELECT);
 			sb.append(" ");
 			// Fetch id attribute 
+			
+
+			sb.append(count+" AS edgeIndex, ");
+			
+			
 			AttributeRefHolder sourceNodeIdRefHolder = graphEdge.getSourceNodeId();
 			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, sourceNodeIdRefHolder, sourceNodeIdRefHolder, 
 												DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
@@ -234,25 +321,117 @@ public class GraphOperator implements IOperator {
 			sb.append(graphEdge.getEdgeName());
 			sb.append("' AS edgeName, '");
 			sb.append(graphEdge.getEdgeType());
-			sb.append("' AS edgeType, ");
+			sb.append("' AS edgeType,'");
+			
+			
+			BaseEntity baseEntity = (BaseEntity) commonServiceImpl.getOneByUuidAndVersion(
+					graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(),
+					graphEdge.getEdgeSource().getRef().getType().toString());
+			String edgeSource = (baseEntity == null) ? "" : baseEntity.getName();
+
+			sb.append(edgeSource);
+			sb.append("' AS edgeSource, ");
+			
+			// added propertyId into sb2
+			AttributeRefHolder hIpropIdRefHolder = graphEdge.getHighlightInfo().getPropertyId();
+			sb3.append("\"");
+			sb3.append(attributeMapOperator.sourceAttrAlias(daoRegister, hIpropIdRefHolder, hIpropIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+					execParams.getOtherParams()));
+			sb3.append("\"':\"', ");
+
+
+			sb3.append(attributeMapOperator.sourceAttrSql(daoRegister, hIpropIdRefHolder, hIpropIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
+			
+			sb3.append(", ");
+			String propertyIdKey=attributeMapOperator.sourceAttrAlias(daoRegister, hIpropIdRefHolder, hIpropIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+					execParams.getOtherParams());
+
+			Boolean flag = true;
+			Boolean status = true;
 			sb.append("concat('{', ");
+			 //graphEdge.getEdgeProperties().set(graphEdge.getEdgeProperties().size()-1, graphEdge.getHighlightInfo().getPropertyId());
 			for (AttributeRefHolder propHolder : graphEdge.getEdgeProperties()) {
+				String type=propHolder.getAttrType();
+				if(type.toUpperCase().equalsIgnoreCase(DataType.STRING.toString())) {
 				sb.append("'''\"");
 				sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams()));
-				sb.append("\"'':', ");
+				sb.append("\"'':\"', ");
+				
 				sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams(), execParams));
 //				sb.append(" AS ");
 				
 				sb.append(", ");
+				sb.append("'\",' ");
+				status=true;
+				}else 
+				{
+					sb.append("'''\"");
+					sb.append(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder, 
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+							execParams.getOtherParams()));
+					sb.append("\"'':', ");
+					
+					sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propHolder, propHolder, 
+							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
+							execParams.getOtherParams(), execParams));
+//					sb.append(" AS ");
+					
+					sb.append(", ");
+					sb.append("',' ");
+					status=false;
+				}	
+				if( propertyIdKey.equalsIgnoreCase(attributeMapOperator.sourceAttrAlias(daoRegister, propHolder, propHolder,
+						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
+						execParams.getOtherParams()))) {
+					flag=false;
+				}
+			}
+			if(flag==true) {
+				//sb.delete(sb.length() - 5, sb.length());
+				sb.append(sb3);
+			}else {sb.delete(sb.length() - 5, sb.length());}
+			
+			if (status == true) {
+				sb.append("'\"}')");
+			} else {
+				sb.append("'}')");
+			}
+			sb.append(" AS edgeProperties, ");
+			//remove
+			AttributeRefHolder propertyIdRefHolder = graphEdge.getHighlightInfo().getPropertyId();
+			sb.append(attributeMapOperator.sourceAttrSql(daoRegister, propertyIdRefHolder, propertyIdRefHolder,
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					execParams));
+			sb.append(" AS eHpropertyId, ");
+			
+			//graphEdge.getEdgeSource().getRef().get
+		
+			
+			sb.append("concat('{', ");
+			for (Property property : graphEdge.getHighlightInfo().getPropertyInfo()) {
+				sb.append("'''");
+				sb.append(property.getPropertyName());
+				sb.append("'':', ");
+				sb.append("'");
+				sb.append(property.getPropertyValue());
+				sb.append("'");
+				sb.append(", ");
 				sb.append("',' ");
 			}
 			sb.delete(sb.length() - 5, sb.length());
 			sb.append("'}')");
-			sb.append(" AS edgeProperties ");
+			sb.append(" AS propertyInfo ");
+
+			
+			
 			sb.append(ConstantsUtil.FROM);
 			Object source = commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
 			sb.append(" ").append(commonServiceImpl.getSource(source, baseExec, execParams, runMode)).append(" ").append(((BaseEntity) source).getName()).append(" ");
@@ -271,12 +450,18 @@ public class GraphOperator implements IOperator {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.inferyx.framework.operator.Operator#create(com.inferyx.framework.domain.BaseExec, com.inferyx.framework.domain.ExecParams, com.inferyx.framework.enums.RunMode)
-	 */
 	@Override
-	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public BaseExec create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Map<String, String> customCreate(BaseExec baseExec, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

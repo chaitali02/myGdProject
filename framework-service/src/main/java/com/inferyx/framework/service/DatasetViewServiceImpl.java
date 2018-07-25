@@ -270,6 +270,7 @@ public class DatasetViewServiceImpl {
 					ref.setAttrSourceName(datasetSourceAttribute.get(i).getAttrSourceName());
 					ref.setSourceAttr(sourceAttr);
 					sourceAttr.setAttrId(Integer.toString(attrId));
+					sourceAttr.setAttrType(datasetSourceAttribute.get(i).getSourceAttr().getAttrType());
 				} else if (datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.simple)) {
 					sourceAttr.setValue(datasetSourceAttribute.get(i).getSourceAttr().getValue());
 					ref.setAttrSourceId(datasetSourceAttribute.get(i).getAttrSourceId());

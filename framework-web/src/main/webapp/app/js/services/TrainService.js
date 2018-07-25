@@ -111,20 +111,47 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
   }).then(function (response) { return response })
   }
 
-  factory.findParamSetByAlgorithm = function (uuid, version) {
+  factory.findParamSetByAlgorithm = function (uuid, version,isHyperParam) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      url: url + "metadata/getParamSetByAlgorithm?action=view&algorithmUuid=" + uuid + "&algorithmVersion=" + version,
+      url: url + "metadata/getParamSetByAlgorithm?action=view&algorithmUuid=" + uuid + "&algorithmVersion=" + version+"&isHyperParam="+isHyperParam,
       method: "GET"
     }).then(function (response) { return response })
   };
+  factory.findParamListByAlgorithm = function (uuid,version,type,isHyperParam) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "metadata/getParamListByAlgorithm?action=view&uuid=" + uuid + "&version=" + version+"&type="+type+"&isHyperParam="+isHyperParam,
+      method: "GET"
+    }).then(function (response) { return response })
+  }; 
   return factory;
 })
 
 DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sortFactory) {
-  this.getParamSetByAlgorithm = function (uuid, version) {
+  this.getParamListByAlgorithm = function (uuid,version,type,isHyperParam) {
     var deferred = $q.defer();
-    TrainFactory.findParamSetByAlgorithm(uuid, version).then(function (response) { onSuccess(response.data) });
+    TrainFactory.findParamListByAlgorithm(uuid,version,type,isHyperParam).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      var result=[];
+      if(response && response.length >0){
+      // response[0].ref.name=response[0].ref.name//+ " (default)"
+        for(var i=0;i<response.length;i++){
+          var res={};
+          res.uuid=response[i].ref.uuid;
+          res.name=response[i].ref.name;
+          result[i]=res;
+        }
+      }
+      deferred.resolve({
+        data: result
+      });
+    }
+    return deferred.promise;
+  }
+  this.getParamSetByAlgorithm = function (uuid, version,isHyperParam) {
+    var deferred = $q.defer();
+    TrainFactory.findParamSetByAlgorithm(uuid, version,isHyperParam).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response
