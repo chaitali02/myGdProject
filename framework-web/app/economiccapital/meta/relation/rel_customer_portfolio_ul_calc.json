@@ -1,0 +1,161 @@
+{
+  "uuid": "b8c6c2fe-688a-48e4-87a4-d0fae0287701",
+  "version": "1532551493",
+  "name": "rel_customer_portfolio_ul_calc",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Jul 25 16:44:53 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "c689dfcc-a5f0-42a7-883a-887f34c4282d",
+      "version": null,
+      "name": "customer_portfolio_ul_x"
+    },
+    "value": null
+  },
+  "relationInfo": [
+    {
+      "join": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "67be3534-5172-43a5-b7ed-f8f9dc34f2c8",
+          "version": null,
+          "name": "customer_portfolio_ul_y"
+        },
+        "value": null
+      },
+      "joinType": "CROSS",
+      "joinKey": [
+        {
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "simple",
+                "uuid": null,
+                "version": null,
+                "name": null
+              },
+              "attributeId": null,
+              "value": "1",
+              "attributeName": null,
+              "attributeType": null
+            },
+            {
+              "ref": {
+                "type": "simple",
+                "uuid": null,
+                "version": null,
+                "name": null
+              },
+              "attributeId": null,
+              "value": "1",
+              "attributeName": null,
+              "attributeType": null
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+          "version": null,
+          "name": "industry_factor_correlation_transpose"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+                "version": null,
+                "name": "industry_factor_correlation_transpose"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "factor_x",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "c689dfcc-a5f0-42a7-883a-887f34c4282d",
+                "version": null,
+                "name": "customer_portfolio_ul_x"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "industry",
+              "attributeType": null
+            }
+          ]
+        },
+        {
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+                "version": null,
+                "name": "industry_factor_correlation_transpose"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "factor_y",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "67be3534-5172-43a5-b7ed-f8f9dc34f2c8",
+                "version": null,
+                "name": "customer_portfolio_ul_y"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "industry",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    }
+  ]
+}

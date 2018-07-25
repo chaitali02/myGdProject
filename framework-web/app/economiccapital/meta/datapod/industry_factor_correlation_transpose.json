@@ -1,0 +1,97 @@
+{
+  "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+  "version": "1532550585",
+  "name": "industry_factor_correlation_transpose",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Jul 25 16:29:45 EDT 2018",
+  "tags": null,
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": "1464977196",
+      "name": "File"
+    },
+    "value": null
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "name": "factor_x",
+      "type": "string",
+      "desc": "factor_x",
+      "key": null,
+      "partition": null,
+      "dispName": "factor_x",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 1,
+      "name": "factor_y",
+      "type": "string",
+      "desc": "factor_y",
+      "key": null,
+      "partition": null,
+      "dispName": "factor_y",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 2,
+      "name": "factor_value",
+      "type": "double",
+      "desc": "factor_value",
+      "key": null,
+      "partition": null,
+      "dispName": "factor_value",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 3,
+      "name": "reporting_date",
+      "type": "string",
+      "desc": "reporting_date",
+      "key": null,
+      "partition": null,
+      "dispName": "reporting_date",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 4,
+      "name": "version",
+      "type": "Integer",
+      "desc": "version",
+      "key": null,
+      "partition": null,
+      "dispName": "version",
+      "active": "Y",
+      "expr": null
+    }
+  ]
+}
