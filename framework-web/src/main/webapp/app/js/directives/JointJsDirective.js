@@ -1916,6 +1916,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        if(thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid){
          $scope.popupModel.selectedType = thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.name;
        }
+       
        if(elementType =="operator" &&  !newCell){
         var uuid=$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid;
         CommonService.getOneByUuidAndVersion(uuid,"","operator").then(function(response){ 
