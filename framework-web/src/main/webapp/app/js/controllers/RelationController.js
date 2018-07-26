@@ -6,7 +6,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 	$scope.showFrom = true;
 	$scope.data = null;
 	$scope.showGraphDiv = false
-	$scope.joinType = ["EQUI JOIN", "LEFT OUTER", 'RIGHT OUTER', 'FULL OUTER', 'LEFT SEMI','CROSS JOIN'];
+	$scope.joinType = ["EQUI JOIN", "LEFT OUTER", 'RIGHT OUTER', 'FULL OUTER', 'LEFT SEMI','CROSS'];
 	$scope.operator = ["=", "<", ">", "<=", ">=", "IN", "BETWEEN"];
 	$scope.lshType = ["string", "datapod", 'formula'];
 	$scope.logicalOperator = ["", "OR", "AND"];
@@ -274,7 +274,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		}
 	}
     $scope.onChangeJoinType=function(joinType,index){
-		if(joinType == 'CROSS JOIN'){
+		if(joinType == 'CROSS'){
 			$scope.relationTableArray[index].isjoinDisable=false;
 			$scope.relationTableArray[index].joinKey=[];
 		}else{
@@ -487,8 +487,6 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 
 						relationInfo.joinType = $scope.relationTableArray[j].relationJoinType;
 					}
-
-
 					joinref.type = "datapod";
 					joinref.uuid = $scope.relationTableArray[j].join.uuid;
 					join.ref = joinref;
@@ -527,7 +525,9 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 							relationInfo.joinKey = joinKey;
 						}
 				    }
-
+                    else{
+						relationInfo.joinKey=[];
+					}
 					relationInfoArray[j] = relationInfo
 
 

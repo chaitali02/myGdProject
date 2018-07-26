@@ -369,7 +369,7 @@ MetadataModule.service('MetadataRelationSerivce',function($q,sortFactory,Metadat
 				   // joinarray.push(ref);
 					//relationInfo.joinarray=joinarray;
 					var joinKeyArray=[];
-					if(response.relationInfo[i].joinType !='CROSS JOIN'){	
+					if(response.relationInfo[i].joinKey && response.relationInfo[i].joinKey.length >0){	
 						for(var l=0;l<response.relationInfo[i].joinKey.length;l++){
 							var joinjson={};
 							var lhsoperand={};

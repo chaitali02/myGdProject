@@ -503,10 +503,14 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
            $scope.zoomSize=$scope.zoomSize+1;
          }
          
-         $scope.changeSliderBack=function() {
-           $scope.zoomSize=$scope.zoomSize-1;
-         }
-       
+        $scope.changeSliderBack=function() {
+          if($scope.zoomSize >=5)
+          $scope.zoomSize=$scope.zoomSize-1;
+        }
+        
+        $scope.resize=function(){
+          $scope.zoomSize =10;
+        }
          $scope.zoomSize = 7;
          setGrid(paper, 10, '#AAAAAA');
          var initialised = false;
@@ -1136,8 +1140,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
      
      $scope.changeSliderBack=function() {
-       $scope.zoomSize=$scope.zoomSize-1;
-     }
+      if($scope.zoomSize >=5)
+      $scope.zoomSize=$scope.zoomSize-1;
+    }
+    
+    $scope.resize=function(){
+      $scope.zoomSize =10;
+    }
      
      window.navigateTo = function(url){
        var state = JSON.parse(url);
