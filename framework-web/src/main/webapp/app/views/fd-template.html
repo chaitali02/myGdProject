@@ -1,14 +1,14 @@
 
 <div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
-    <div class="col-md-1" style="height:100px">
-        <a ng-click="changeSliderForward()">
-            <i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i>
+    <div class="col-md-2" style="height:100px;width:100px;">
+        <a ng-click="changeSliderForward()"  tooltip-placement="top" uib-tooltip="Zoom in">
+            <i  class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i>
         </a>
         <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:5,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
-        <a ng-click="changeSliderBack()">
+        <a ng-click="changeSliderBack()" tooltip-placement="top" uib-tooltip="Zoom out">
             <i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i>
         </a>
-        <span class="fa-stack" style="margin-left:16px; margin-top:15px; z-index: 980;" ng-click="resize()">
+        <span class="fa-stack" style="margin-left:16px; margin-top:15px; z-index: 980;" ng-click="resize()" tooltip-placement="top" uib-tooltip="Reset">
             <i class="fa fa-circle fa-stack-2x" style="color: #999;font-size: 21px;"></i>
             <i class="fa fa-undo fa-stack-1x fa-inverse" style="margin:-4px 0px 0px 0px;font-size: 10px;"></i>
         </span>

@@ -1,0 +1,1553 @@
+{
+  "uuid": "34e52aea-bdb3-412c-bbef-192d2738bd37",
+  "version": "1532555087",
+  "name": "ppl_e2e_economic_capital_wo_simulation_ul",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Jul 25 17:44:47 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "xPos": 20,
+  "yPos": 260,
+  "templateFlg": "N",
+  "templateInfo": null,
+  "stages": [
+    {
+      "stageId": "stage_0",
+      "dependsOn": [],
+      "tasks": [
+        {
+          "taskId": "de9b32cd-1815-46c7-b332-a1746d011383",
+          "dependsOn": [],
+          "name": "Transpose Industry Factors",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "operator",
+                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+                    "version": null,
+                    "name": "Transpose"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "paramSetHolder": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                        "version": "1525530897",
+                        "name": "paramlist_transpose"
+                      },
+                      "value": null,
+                      "paramId": "0",
+                      "paramName": "sourceDatapod",
+                      "paramType": "attributes",
+                      "paramValue": null,
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "version": null,
+                            "name": "industry_factor_simulation"
+                          },
+                          "value": null,
+                          "attrId": "1",
+                          "attrName": "factor1",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "version": null,
+                            "name": "industry_factor_simulation"
+                          },
+                          "value": null,
+                          "attrId": "2",
+                          "attrName": "factor2",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "version": null,
+                            "name": "industry_factor_simulation"
+                          },
+                          "value": null,
+                          "attrId": "3",
+                          "attrName": "factor3",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "version": null,
+                            "name": "industry_factor_simulation"
+                          },
+                          "value": null,
+                          "attrId": "4",
+                          "attrName": "factor4",
+                          "attrType": null
+                        }
+                      ]
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                        "version": "1525530897",
+                        "name": "paramlist_transpose"
+                      },
+                      "value": null,
+                      "paramId": "1",
+                      "paramName": "key",
+                      "paramType": "attributes",
+                      "paramValue": null,
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "version": null,
+                            "name": "industry_factor_simulation"
+                          },
+                          "value": null,
+                          "attrId": "0",
+                          "attrName": "iteration_id",
+                          "attrType": null
+                        }
+                      ]
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                        "version": "1525530897",
+                        "name": "paramlist_transpose"
+                      },
+                      "value": null,
+                      "paramId": "2",
+                      "paramName": "saveLocation",
+                      "paramType": "datapod",
+                      "paramValue": {
+                        "ref": {
+                          "type": "datapod",
+                          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+                          "version": null,
+                          "name": null
+                        },
+                        "value": null
+                      },
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 500,
+          "yPos": 150,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "f56bd172-6395-439b-a710-3793abd810ef",
+          "dependsOn": [],
+          "name": "Transpose Customer Risk",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "operator",
+                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+                    "version": null,
+                    "name": "Transpose"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "paramSetHolder": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                        "version": "1525530897",
+                        "name": "paramlist_transpose"
+                      },
+                      "value": null,
+                      "paramId": "0",
+                      "paramName": "sourceDatapod",
+                      "paramType": "attributes",
+                      "paramValue": null,
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "1",
+                          "attrName": "cust1",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "2",
+                          "attrName": "cust2",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "3",
+                          "attrName": "cust3",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "4",
+                          "attrName": "cust4",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "5",
+                          "attrName": "cust5",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "6",
+                          "attrName": "cust6",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "7",
+                          "attrName": "cust7",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "8",
+                          "attrName": "cust8",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "9",
+                          "attrName": "cust9",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "10",
+                          "attrName": "cust10",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "11",
+                          "attrName": "cust11",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "12",
+                          "attrName": "cust12",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "13",
+                          "attrName": "cust13",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "14",
+                          "attrName": "cust14",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "15",
+                          "attrName": "cust15",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "16",
+                          "attrName": "cust16",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "17",
+                          "attrName": "cust17",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "18",
+                          "attrName": "cust18",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "19",
+                          "attrName": "cust19",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "20",
+                          "attrName": "cust20",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "21",
+                          "attrName": "cust21",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "22",
+                          "attrName": "cust22",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "23",
+                          "attrName": "cust23",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "24",
+                          "attrName": "cust24",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "25",
+                          "attrName": "cust25",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "26",
+                          "attrName": "cust26",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "27",
+                          "attrName": "cust27",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "28",
+                          "attrName": "cust28",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "29",
+                          "attrName": "cust29",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "30",
+                          "attrName": "cust30",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "31",
+                          "attrName": "cust31",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "32",
+                          "attrName": "cust32",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "33",
+                          "attrName": "cust33",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "34",
+                          "attrName": "cust34",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "35",
+                          "attrName": "cust35",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "36",
+                          "attrName": "cust36",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "37",
+                          "attrName": "cust37",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "38",
+                          "attrName": "cust38",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "39",
+                          "attrName": "cust39",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "40",
+                          "attrName": "cust40",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "41",
+                          "attrName": "cust41",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "42",
+                          "attrName": "cust42",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "43",
+                          "attrName": "cust43",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "44",
+                          "attrName": "cust44",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "45",
+                          "attrName": "cust45",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "46",
+                          "attrName": "cust46",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "47",
+                          "attrName": "cust47",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "48",
+                          "attrName": "cust48",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "49",
+                          "attrName": "cust49",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "50",
+                          "attrName": "cust50",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "51",
+                          "attrName": "cust51",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "52",
+                          "attrName": "cust52",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "53",
+                          "attrName": "cust53",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "54",
+                          "attrName": "cust54",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "55",
+                          "attrName": "cust55",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "56",
+                          "attrName": "cust56",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "57",
+                          "attrName": "cust57",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "58",
+                          "attrName": "cust58",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "59",
+                          "attrName": "cust59",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "60",
+                          "attrName": "cust60",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "61",
+                          "attrName": "cust61",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "62",
+                          "attrName": "cust62",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "63",
+                          "attrName": "cust63",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "64",
+                          "attrName": "cust64",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "65",
+                          "attrName": "cust65",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "66",
+                          "attrName": "cust66",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "67",
+                          "attrName": "cust67",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "68",
+                          "attrName": "cust68",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "69",
+                          "attrName": "cust69",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "70",
+                          "attrName": "cust70",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "71",
+                          "attrName": "cust71",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "72",
+                          "attrName": "cust72",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "73",
+                          "attrName": "cust73",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "74",
+                          "attrName": "cust74",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "75",
+                          "attrName": "cust75",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "76",
+                          "attrName": "cust76",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "77",
+                          "attrName": "cust77",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "78",
+                          "attrName": "cust78",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "79",
+                          "attrName": "cust79",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "80",
+                          "attrName": "cust80",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "81",
+                          "attrName": "cust81",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "82",
+                          "attrName": "cust82",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "83",
+                          "attrName": "cust83",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "84",
+                          "attrName": "cust84",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "85",
+                          "attrName": "cust85",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "86",
+                          "attrName": "cust86",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "87",
+                          "attrName": "cust87",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "88",
+                          "attrName": "cust88",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "89",
+                          "attrName": "cust89",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "90",
+                          "attrName": "cust90",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "91",
+                          "attrName": "cust91",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "92",
+                          "attrName": "cust92",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "93",
+                          "attrName": "cust93",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "94",
+                          "attrName": "cust94",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "95",
+                          "attrName": "cust95",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "96",
+                          "attrName": "cust96",
+                          "attrType": null
+                        }
+                      ]
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                        "version": "1525530897",
+                        "name": "paramlist_transpose"
+                      },
+                      "value": null,
+                      "paramId": "1",
+                      "paramName": "key",
+                      "paramType": "attributes",
+                      "paramValue": null,
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "0",
+                          "attrName": "iteration_id",
+                          "attrType": null
+                        }
+                      ]
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                        "version": "1525530897",
+                        "name": "paramlist_transpose"
+                      },
+                      "value": null,
+                      "paramId": "2",
+                      "paramName": "saveLocation",
+                      "paramType": "datapod",
+                      "paramValue": {
+                        "ref": {
+                          "type": "datapod",
+                          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
+                          "version": null,
+                          "name": null
+                        },
+                        "value": null
+                      },
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 500,
+          "yPos": 370,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "3455ece6-2017-4445-9bc5-59f7430f2922",
+          "dependsOn": [
+            "de9b32cd-1815-46c7-b332-a1746d011383",
+            "f56bd172-6395-439b-a710-3793abd810ef"
+          ],
+          "name": "map_customer_portfolio_ul_x",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "04c6f22b-edc1-46e8-8741-dd20ecd06e85",
+                    "version": null,
+                    "name": "map_customer_portfolio_ul_x"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 670,
+          "yPos": 260,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "1830498b-5cfc-4e59-ad00-0fb5451df1f6",
+          "dependsOn": [
+            "3455ece6-2017-4445-9bc5-59f7430f2922"
+          ],
+          "name": "Map_customer_portfolio_ul_y",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "9487f0da-bca1-4b94-986b-d8e3e127032f",
+                    "version": null,
+                    "name": "map_customer_portfolio_ul_y"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 910,
+          "yPos": 260,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "a508867b-b1a1-4f65-89bb-e10f62df3ba4",
+          "dependsOn": [
+            "1830498b-5cfc-4e59-ad00-0fb5451df1f6"
+          ],
+          "name": "map_customer_portfolio_ul_calc",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "f1507916-23c5-4b44-8533-e968f9d2ff5e",
+                    "version": null,
+                    "name": "map_customer_portfolio_ul_calc"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 1130,
+          "yPos": 260,
+          "active": "Y",
+          "statusList": []
+        }
+      ],
+      "name": "new stage",
+      "xPos": 340,
+      "yPos": 260,
+      "active": "Y",
+      "statusList": []
+    }
+  ],
+  "statusList": []
+}

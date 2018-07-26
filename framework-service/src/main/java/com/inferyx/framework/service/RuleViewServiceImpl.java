@@ -187,7 +187,8 @@ public class RuleViewServiceImpl {
 					sourceAttr.setRef(SourceAttr);
 					if(ruleSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.datapod) 
 							|| ruleSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.dataset) 
-							|| ruleSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.paramlist)){
+							|| ruleSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.paramlist)
+							|| ruleSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.rule)){
 					int attrId=Integer.parseInt(ruleSourceAttribute.get(i).getSourceAttr().getAttrId());
 					
 					ref.setAttrSourceId(ruleSourceAttribute.get(i).getAttrSourceId());

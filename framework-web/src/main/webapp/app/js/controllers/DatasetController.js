@@ -460,7 +460,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}//End If
 	else {
 		$scope.showactive = "false"
-		if (typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListdataset") {
+		if ($sessionStorage.fromStateName && typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListdataset") {
 			$scope.dataset = $sessionStorage.datasetjosn;
 			$scope.tags = $sessionStorage.datasetjosn.tags
 			$scope.selectSourceType = $sessionStorage.datasetjosn.dependsOn.ref.type
@@ -1166,7 +1166,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "datapod") {
 
-				ref.type = $scope.selectSourceType;
+				ref.type = $scope.selectSourceType == "relation"?"datapod": $scope.selectSourceType;
 				ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
 				sourceAttr.ref = ref;
 				sourceAttr.attrId = $scope.attributeTableArray[l].sourcedatapod.attributeId;

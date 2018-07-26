@@ -45,12 +45,12 @@
 						{
 							"operatorId": "64f8cc78-42ac-4e6e-8d6c-93f0d154e9e7",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "ea2eb904-f4d1-4365-ab9e-a8b0825408de"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -64,12 +64,12 @@
 						{
 							"operatorId": "30c19833-cd33-4865-97c1-6f272ffac756",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "80c39cc7-f2a8-40ee-953f-b6586da5783b"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -83,12 +83,12 @@
 						{
 							"operatorId": "6b72c628-b38b-4149-ae52-9ea5ad4575be",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "0c9c2d41-26cf-4e7f-a884-eeffee82814d"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -102,12 +102,12 @@
 						{
 							"operatorId": "8d4fe6a9-18f3-4d91-b3de-72c6c29933e5",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "f1f7cee1-081e-44fa-8e44-fbb37c12ebdc"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -121,12 +121,12 @@
 						{
 							"operatorId": "cfde1b08-0606-4521-b158-31e6cca89acb",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "be1ee064-1699-4ddc-bdf8-b1aa46a9bd7c"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -140,12 +140,12 @@
 						{
 							"operatorId": "4b5b1ed8-c21a-4b93-9550-7193b24a447b",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "c18b766e-77fe-4319-b6c5-8cb61bd56d18"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -159,12 +159,12 @@
 						{
 							"operatorId": "72b5b373-868f-4a87-9a96-0e89634f1410",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "fc9bd7db-dad9-4bfd-8c8f-f178ecc6b261"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -178,12 +178,12 @@
 						{
 							"operatorId": "c23b42cc-378a-451c-bce7-611c1c784da3",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "853c0149-f51a-413e-9e5f-a0dd6860a296"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -197,12 +197,12 @@
 						{
 							"operatorId": "c8dec8c5-34f0-436e-8193-31c4783b7fee",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo":[ {
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "6eb56e2c-03e3-4434-8557-29b7cbeeb6aa"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -216,12 +216,12 @@
 						{
 							"operatorId": "bdd62be8-807b-4ef3-bfc6-5b5edb233757",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "72eeaf8e-da21-41dd-bb11-3381f15a526c"
 								}
-							}
+							}]
 						}
 					]
 				},
@@ -235,12 +235,12 @@
 						{
 							"operatorId": "449636c6-1e36-4b15-bd29-7f218092bfe0",
 							"dependsOn": [],
-							"operatorInfo": {
+							"operatorInfo": [{
 								"ref": {
 									"type": "dqgroup",
 									"uuid": "9028015c-049a-4845-8e0e-d245f5b6a1d0"
 								}
-							}
+							}]
 						}
 					]
 				}

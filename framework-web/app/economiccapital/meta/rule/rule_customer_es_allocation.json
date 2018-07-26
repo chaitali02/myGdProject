@@ -1,0 +1,95 @@
+{
+  "uuid": "47ee028d-080b-4980-b0f3-7e83f5eb27d3",
+  "version": "1532474952",
+  "name": "rule_customer_es_allocation",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Jul 24 19:29:12 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "expressionInfo": null,
+  "filterInfo": null,
+  "debugMode": false,
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "0a92dfef-d3e4-46ab-9393-81356823d8ce",
+      "version": null,
+      "name": "ds_customer_es_contribution"
+    },
+    "value": null
+  },
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrSourceName": "cust_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "0a92dfef-d3e4-46ab-9393-81356823d8ce",
+          "version": null,
+          "name": "ds_customer_es_contribution"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "cust_id",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrSourceName": "es_contribution",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "0a92dfef-d3e4-46ab-9393-81356823d8ce",
+          "version": null,
+          "name": "ds_customer_es_contribution"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "es_contribution",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrSourceName": "es_allocation",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "fa4a9f86-9e85-46af-86c7-fe67f4ac53be",
+          "version": null,
+          "name": "fm_es_allocation"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    }
+  ],
+  "persistFlag": null,
+  "datasource": null,
+  "paramList": null
+}

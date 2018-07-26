@@ -1188,12 +1188,12 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
             lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
           }
           else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
-            if ($scope.rulsourcetype == "dataset") {
-              lhsref.type = "dataset";
+            if ($scope.rulsourcetype == "relation") {
+              lhsref.type = "datapod";
 
             }
             else {
-              lhsref.type = "datapod";
+              lhsref.type = $scope.rulsourcetype;
             }
             lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
 
@@ -1214,15 +1214,14 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
             rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
           }
           else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
-            if ($scope.rulsourcetype == "dataset") {
-              rhsref.type = "dataset";
+            if ($scope.rulsourcetype == "relation") {
+              rhsref.type = "datapod";
 
             }
             else {
-              rhsref.type = "datapod";
+              rhsref.type = $scope.rulsourcetype;
             }
             rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
-
             rhsoperand.ref = rhsref;
             rhsoperand.attributeId = $scope.filterTableArray[i].rhsdatapodAttribute.attributeId;
           }

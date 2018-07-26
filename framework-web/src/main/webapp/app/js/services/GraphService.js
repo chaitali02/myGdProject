@@ -38,13 +38,13 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
               name : 'new stage',
               version:"N/a",
               operators : [ {
-                operatorInfo : {
+                operatorInfo :[ {
                   ref : {
                     name : 'new stage',
                     type : 'stage',
                     uuid:"stage_0",version:"N/a"
                   }
-                }
+                }]
                 
               }],
               isTemplate:true
@@ -56,13 +56,13 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
                 name : 'new stage',
                 version:"N/a",
                 operators : [ {
-                  operatorInfo : {
+                  operatorInfo : [{
                     ref : {
                       name : 'new stage',
                       type : 'stage',
                       uuid:"stage_0",version:"N/a"
                     }
-                  }
+                  }]
                 }],
                 isTemplate:true
               },
@@ -142,7 +142,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService){
           taskXPos = taskXPos + 80;
           angular.forEach(stage.tasks,function (task,taskKey) {
             var o = task.operators[0];
-            var type = o.operatorInfo.ref.type;
+            var type = o.operatorInfo[0].ref.type;
             taskXPos = taskXPos + 80
             taskYPos = taskYPos + 80;
             task.taskId = task.taskId.length > 3 ? task.taskId : stage.stageId+'_'+"task_"+task.taskId

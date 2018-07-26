@@ -1,0 +1,236 @@
+{
+  "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+  "version": "1532552500",
+  "name": "ds_customer_portfolio_ul_calc_final",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Jul 25 17:01:40 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+      "version": null,
+      "name": "ds_customer_portfolio_ul_calc_staging"
+    },
+    "value": null
+  },
+  "filterInfo": [],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrSourceName": "cust_id1",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "cust_id1",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrSourceName": "industry1",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "industry1",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrSourceName": "correlation1",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "correlation1",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrSourceName": "unexpected_loss1",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "unexpected_loss1",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrSourceName": "cust_id2",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "cust_id2",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrSourceName": "industry2",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "industry2",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrSourceName": "correlation2",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "correlation2",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "7",
+      "attrSourceName": "unexpected_loss2",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "7",
+        "attrName": "unexpected_loss2",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "8",
+      "attrSourceName": "factor_value",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "8",
+        "attrName": "factor_value",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "9",
+      "attrSourceName": "portfolio_ul_calc",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "0a33c134-9e1c-4812-8e92-3eb55f809fea",
+          "version": null,
+          "name": "fm_portfolio_ul_calc"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "10",
+      "attrSourceName": "reporting_date",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "reporting_date",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "11",
+      "attrSourceName": "version",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_staging"
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "version",
+        "attrType": "string"
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
+}

@@ -62,7 +62,7 @@
             "uuid" : "53b44d5b-6571-4c46-af08-549b1445d056"
         }
     },
-  	"savePmml" : "N",
+  	"savePmml" : "Y",
 	"summaryMethods" : [  
 		"estimatedDocConcentration",
 		"getDocConcentration",

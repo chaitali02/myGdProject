@@ -596,7 +596,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
 							obj.caption = "integer";
 						}
 					}
-					else if (response.filter.filterInfo[i].operand[0].ref.type == "datapod" ||response.filter.filterInfo[i].operand[0].ref.type == "dataset") {
+					else if (response.filter.filterInfo[i].operand[0].ref.type == "datapod" || response.filter.filterInfo[i].operand[0].ref.type == "dataset" || response.filter.filterInfo[i].operand[0].ref.type == "rule") {
 						var lhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"
@@ -650,7 +650,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
 						filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value//.replace(/["']/g, "");
 						}
 					}
-					else if (response.filter.filterInfo[i].operand[1].ref.type == "datapod") {
+					else if(response.filter.filterInfo[i].operand[1].ref.type == "datapod" || response.filter.filterInfo[i].operand[1].ref.type == "rule") {
 						var rhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"

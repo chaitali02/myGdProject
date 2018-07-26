@@ -44,7 +44,6 @@ import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
 import org.apache.spark.ml.clustering.KMeansSummary;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
-import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
 import org.apache.spark.ml.evaluation.RegressionEvaluator;
@@ -2136,7 +2135,7 @@ public class SparkExecutor<T> implements IExecutor {
 		} else if(trainName.contains("classification") || trainName.contains("Classifier")) {
 			return new BinaryClassificationEvaluator() ;
 		} else if(trainName.contains("clustering")) {
-			return new ClusteringEvaluator();
+			return null;//new ClusteringEvaluator();
 		}
 		return null;		
 	}
@@ -2389,9 +2388,10 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		double r2 = summary.r2();
 		outPutMap.put("r2", r2);		
-		
-		double r2adj = summary.r2adj();
-		outPutMap.put("r2adj", r2adj);		
+
+//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>
+//		double r2adj = summary.r2adj();
+//		outPutMap.put("r2adj", r2adj);		
 		
 		Dataset<Row> residuals = summary.residuals();		
 		residuals.show(false);
@@ -2417,45 +2417,56 @@ public class SparkExecutor<T> implements IExecutor {
 
 	private  Map<String, Object> logisticRegressionSummay(Map<String, Object> outPutMap, Object result) {
 		LogisticRegressionTrainingSummary summary = (LogisticRegressionTrainingSummary) result;
-		
-		double accuracy = summary.accuracy();
-		outPutMap.put("accuracy", accuracy);		
-		
-		double[] falsePositiveRateByLabel = summary.falsePositiveRateByLabel();
-		outPutMap.put("falsePositiveRateByLabel", falsePositiveRateByLabel);		
-		
-		double[] fMeasureByLabel = summary.fMeasureByLabel();
-		outPutMap.put("fMeasureByLabel", fMeasureByLabel);		
-		
-		double[] labels = summary.labels();
-		outPutMap.put("labels", Arrays.toString(labels));		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>		
+//		double accuracy = summary.accuracy();
+//		outPutMap.put("accuracy", accuracy);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>
+//		double[] falsePositiveRateByLabel = summary.falsePositiveRateByLabel();
+//		outPutMap.put("falsePositiveRateByLabel", falsePositiveRateByLabel);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>
+//		double[] fMeasureByLabel = summary.fMeasureByLabel();
+//		outPutMap.put("fMeasureByLabel", fMeasureByLabel);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>
+//		double[] labels = summary.labels();
+//		outPutMap.put("labels", Arrays.toString(labels));		
 		
 		double[] objectiveHistory = summary.objectiveHistory();
 		outPutMap.put("objectiveHistory", objectiveHistory);		
-		
-		double[] precisionByLabel = summary.precisionByLabel();
-		outPutMap.put("precisionByLabel", precisionByLabel);		
-		
-		double[] recallByLabel = summary.recallByLabel();
-		outPutMap.put("recallByLabel", recallByLabel);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>
+//		double[] precisionByLabel = summary.precisionByLabel();
+//		outPutMap.put("precisionByLabel", precisionByLabel);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>
+//		double[] recallByLabel = summary.recallByLabel();
+//		outPutMap.put("recallByLabel", recallByLabel);		
 		
 		int totalIterations = summary.totalIterations();
 		outPutMap.put("totalIterations", totalIterations);		
-		
-		double[] truePositiveRateByLabel = summary.truePositiveRateByLabel();
-		outPutMap.put("truePositiveRateByLabel",  truePositiveRateByLabel);		
-		
-		double weightedFMeasure = summary.weightedFMeasure();
-		outPutMap.put("weightedFMeasure", weightedFMeasure);		
-		
-		double weightedPrecision = summary.weightedPrecision();
-		outPutMap.put("weightedPrecision", weightedPrecision);		
-		
-		double weightedRecall = summary.weightedRecall();
-		outPutMap.put("weightedRecall", weightedRecall);		
-		
-		double weightedTruePositiveRate = summary.weightedTruePositiveRate();
-		outPutMap.put("weightedTruePositiveRate", weightedTruePositiveRate);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>
+//		double[] truePositiveRateByLabel = summary.truePositiveRateByLabel();
+//		outPutMap.put("truePositiveRateByLabel",  truePositiveRateByLabel);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>
+//		double weightedFMeasure = summary.weightedFMeasure();
+//		outPutMap.put("weightedFMeasure", weightedFMeasure);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>		
+//		double weightedPrecision = summary.weightedPrecision();
+//		outPutMap.put("weightedPrecision", weightedPrecision);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>		
+//		double weightedRecall = summary.weightedRecall();
+//		outPutMap.put("weightedRecall", weightedRecall);		
+
+		//<<<<<<<<<</*r2adj() method is from spark-2.3.0*/>>>>>>>>>>>>		
+//		double weightedTruePositiveRate = summary.weightedTruePositiveRate();
+//		outPutMap.put("weightedTruePositiveRate", weightedTruePositiveRate);		
 		
 		return outPutMap;
 	}

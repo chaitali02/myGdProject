@@ -6,7 +6,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 	$scope.showFrom = true;
 	$scope.data = null;
 	$scope.showGraphDiv = false
-	$scope.joinType = ["EQUI JOIN", "LEFT OUTER", 'RIGHT OUTER', 'FULL OUTER', 'LEFT SEMI'];
+	$scope.joinType = ["EQUI JOIN", "LEFT OUTER", 'RIGHT OUTER', 'FULL OUTER', 'LEFT SEMI','CROSS'];
 	$scope.operator = ["=", "<", ">", "<=", ">=", "IN", "BETWEEN"];
 	$scope.lshType = ["string", "datapod", 'formula'];
 	$scope.logicalOperator = ["", "OR", "AND"];
@@ -273,6 +273,15 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 			}
 		}
 	}
+    $scope.onChangeJoinType=function(joinType,index){
+		if(joinType == 'CROSS'){
+			$scope.relationTableArray[index].isjoinDisable=false;
+			$scope.relationTableArray[index].joinKey=[];
+		}else{
+			$scope.relationTableArray[index].isjoinDisable=false;
+			$scope.addJoinSubRow(index);
+		}
+	}
 
 	$scope.selectAllRow = function () {
 		angular.forEach($scope.relationTableArray, function (relation) {
@@ -478,47 +487,47 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 
 						relationInfo.joinType = $scope.relationTableArray[j].relationJoinType;
 					}
-
-
 					joinref.type = "datapod";
 					joinref.uuid = $scope.relationTableArray[j].join.uuid;
 					join.ref = joinref;
 					relationInfo.join = join;
-					for (var i = 0; i < $scope.relationTableArray[j].joinKey.length; i++) {
+					if($scope.relationTableArray[j].joinKey && $scope.relationTableArray[j].joinKey.length >0){	
+						for (var i = 0; i < $scope.relationTableArray[j].joinKey.length; i++) {
+							var operand = []
+							var JoinKeyDetail = {};
+							var firstoperad = {}
+							var scecondoperad = {}
+							var firstoperandref = {}
+							var scecondoperandref = {}
+							if (typeof $scope.relationTableArray[j].joinKey[i].logicalOperator == "undefined") {
+								JoinKeyDetail.logicalOperator = ""
+							}
+							else {
+								JoinKeyDetail.logicalOperator = $scope.relationTableArray[j].joinKey[i].logicalOperator
+							}
 
-						var operand = []
-						var JoinKeyDetail = {};
-						var firstoperad = {}
-						var scecondoperad = {}
-						var firstoperandref = {}
-						var scecondoperandref = {}
+							JoinKeyDetail.operator = $scope.relationTableArray[j].joinKey[i].relationOperator
+							firstoperandref.type = "datapod";
+							firstoperandref.uuid = $scope.relationTableArray[j].joinKey[i].lhsoperand.uuid
+							firstoperad.ref = firstoperandref;
+							firstoperad.attributeId = $scope.relationTableArray[j].joinKey[i].lhsoperand.attributeId;
+							firstoperad.attributeType = $scope.relationTableArray[j].joinKey[i].lhsoperand.attrType
+							scecondoperandref.type = "datapod";
+							scecondoperandref.uuid = $scope.relationTableArray[j].joinKey[i].rhsoperand.uuid
+							scecondoperad.attributeId = $scope.relationTableArray[j].joinKey[i].rhsoperand.attributeId;
+							scecondoperad.attributeType = $scope.relationTableArray[j].joinKey[i].rhsoperand.attrType;
+							scecondoperad.ref = scecondoperandref;
+							operand[0] = firstoperad;
 
-						if (typeof $scope.relationTableArray[j].joinKey[i].logicalOperator == "undefined") {
-							JoinKeyDetail.logicalOperator = ""
+							operand[1] = scecondoperad;
+							JoinKeyDetail.operand = operand
+							joinKey[i] = JoinKeyDetail;
+							relationInfo.joinKey = joinKey;
 						}
-						else {
-							JoinKeyDetail.logicalOperator = $scope.relationTableArray[j].joinKey[i].logicalOperator
-						}
-
-						JoinKeyDetail.operator = $scope.relationTableArray[j].joinKey[i].relationOperator
-						firstoperandref.type = "datapod";
-						firstoperandref.uuid = $scope.relationTableArray[j].joinKey[i].lhsoperand.uuid
-						firstoperad.ref = firstoperandref;
-						firstoperad.attributeId = $scope.relationTableArray[j].joinKey[i].lhsoperand.attributeId;
-						firstoperad.attributeType = $scope.relationTableArray[j].joinKey[i].lhsoperand.attrType
-						scecondoperandref.type = "datapod";
-						scecondoperandref.uuid = $scope.relationTableArray[j].joinKey[i].rhsoperand.uuid
-						scecondoperad.attributeId = $scope.relationTableArray[j].joinKey[i].rhsoperand.attributeId;
-						scecondoperad.attributeType = $scope.relationTableArray[j].joinKey[i].rhsoperand.attrType;
-						scecondoperad.ref = scecondoperandref;
-						operand[0] = firstoperad;
-
-						operand[1] = scecondoperad;
-						JoinKeyDetail.operand = operand
-						joinKey[i] = JoinKeyDetail;
-						relationInfo.joinKey = joinKey;
+				    }
+                    else{
+						relationInfo.joinKey=[];
 					}
-
 					relationInfoArray[j] = relationInfo
 
 

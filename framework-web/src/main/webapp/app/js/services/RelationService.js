@@ -364,31 +364,41 @@ MetadataModule.service('MetadataRelationSerivce',function($q,sortFactory,Metadat
 					var ref={};
 		            ref.name=response.relationInfo[i].join.ref.name;
 		            ref.uuid=response.relationInfo[i].join.ref.uuid;
-				    relationInfo.join=ref;
+					relationInfo.join=ref;
+					relationInfo.isjoinDisable=false;
 				   // joinarray.push(ref);
 					//relationInfo.joinarray=joinarray;
 					var joinKeyArray=[];
-					for(var l=0;l<response.relationInfo[i].joinKey.length;l++){
-						var joinjson={};
-						var lhsoperand={};
-					    var rhsoperand={};
-					    joinjson.logicalOperator=response.relationInfo[i].joinKey[l].logicalOperator
-					    joinjson.relationOperator=response.relationInfo[i].joinKey[l].operator
-						lhsoperand.uuid=response.relationInfo[i].joinKey[l].operand[0].ref.uuid;
-					    lhsoperand.name=response.relationInfo[i].joinKey[l].operand[0].ref.name;
-						lhsoperand.attributeId=response.relationInfo[i].joinKey[l].operand[0].attributeId;
-						lhsoperand.attrType=response.relationInfo[i].joinKey[l].operand[0].attributeType;
-						lhsoperand.attributeName=response.relationInfo[i].joinKey[l].operand[0].attributeName;
-						rhsoperand.uuid=response.relationInfo[i].joinKey[l].operand[1].ref.uuid;
-						rhsoperand.name=response.relationInfo[i].joinKey[l].operand[1].ref.name;
-						rhsoperand.attributeId=response.relationInfo[i].joinKey[l].operand[1].attributeId;
-						rhsoperand.attrType=response.relationInfo[i].joinKey[l].operand[1].attributeType;
-						rhsoperand.attributeName=response.relationInfo[i].joinKey[l].operand[1].attributeName;
-						joinjson.lhsoperand=lhsoperand
-						joinjson.rhsoperand=rhsoperand
-						joinKeyArray.push(joinjson);
-						relationInfo.joinKey=joinKeyArray;
+					if(response.relationInfo[i].joinKey && response.relationInfo[i].joinKey.length >0){	
+						for(var l=0;l<response.relationInfo[i].joinKey.length;l++){
+							var joinjson={};
+							var lhsoperand={};
+							var rhsoperand={};
+							joinjson.logicalOperator=response.relationInfo[i].joinKey[l].logicalOperator
+							joinjson.relationOperator=response.relationInfo[i].joinKey[l].operator
+							lhsoperand.uuid=response.relationInfo[i].joinKey[l].operand[0].ref.uuid;
+							lhsoperand.name=response.relationInfo[i].joinKey[l].operand[0].ref.name;
+							lhsoperand.attributeId=response.relationInfo[i].joinKey[l].operand[0].attributeId;
+							lhsoperand.attrType=response.relationInfo[i].joinKey[l].operand[0].attributeType;
+							lhsoperand.attributeName=response.relationInfo[i].joinKey[l].operand[0].attributeName;
+							rhsoperand.uuid=response.relationInfo[i].joinKey[l].operand[1].ref.uuid;
+							rhsoperand.name=response.relationInfo[i].joinKey[l].operand[1].ref.name;
+							rhsoperand.attributeId=response.relationInfo[i].joinKey[l].operand[1].attributeId;
+							rhsoperand.attrType=response.relationInfo[i].joinKey[l].operand[1].attributeType;
+							rhsoperand.attributeName=response.relationInfo[i].joinKey[l].operand[1].attributeName;
+							joinjson.lhsoperand=lhsoperand
+							joinjson.rhsoperand=rhsoperand
+							joinKeyArray.push(joinjson);
+							
+						}
+				    }else{
+					//	relationInfo.isjoinDisable=true;
+						// var joinjson = {}
+						// joinjson.logicalOperator =''
+						// joinjson.relationOperator = ''
+						// joinKeyArray.push(joinjson);
 					}
+					relationInfo.joinKey=joinKeyArray;
 				    relationInfoArray.push(relationInfo);
 
 				}

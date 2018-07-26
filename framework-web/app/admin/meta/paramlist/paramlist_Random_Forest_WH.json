@@ -13,13 +13,8 @@
   "tags": [],
   "active": "Y",
   "published": "N",
-<<<<<<< HEAD:framework-web/app/admin/meta/paramlist/paramlist_Random_Forest_WH.json
-  "appInfo": [
-			{
-=======
  "appInfo": [
 		{
->>>>>>> master:framework-web/app/admin/meta/paramlist/paramlist_Random_Forest_with_Hyper_params.json
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"

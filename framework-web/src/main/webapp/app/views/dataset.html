@@ -528,7 +528,7 @@
                           </div>
                           <div ng-if="data.isSourceAtributeFormula">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              <ui-select required disable-validation-message="" ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}">
+                              <ui-select required disable-validation-message="" ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}"  on-select="onChangeFormula(data.sourceformula,$index)">
                                 <!-- selectize -->
                                 <ui-select-match>
                                   <span title="{{data.sourceformula.name}}">{{data.sourceformula.name}}</span>

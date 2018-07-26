@@ -1,0 +1,60 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "rule",
+            "uuid" : "a5702404-2cea-47e8-9012-5ead45888386"
+        }
+    },
+    "formulaInfo" : [ 
+        {
+            "ref" : {
+                "type" : "function",
+                "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "rule",
+                "uuid" : "a5702404-2cea-47e8-9012-5ead45888386"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }
+    ],
+    "formulaType" : "aggr",
+    "uuid" : "134be86b-1fad-4763-a323-a6ef37938667",
+    "version" : "1532467834",
+    "name" : "fm_expected_sum",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-07-24T21:30:34.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+                "version" : "1521430822"
+            }
+        }
+    ]
+}
