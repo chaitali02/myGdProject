@@ -14,13 +14,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" : [{
                                 "ref" : {
                                     "type" : "train",
                                     "uuid" : "282f45f3-f080-4eb7-b3cb-e64d033af290",
                                     "name" : "Train Fraud Detection Model (Datapod)"
                                 }
-                            }
+                            }]
                         }
                     ],
                     "xPos" : 470.0,
@@ -37,13 +37,13 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : {
+                            "operatorInfo" : [{
                                 "ref" : {
                                     "type" : "predict",
                                     "uuid" : "32230ad8-775f-4eb7-a7ab-87bccfefd72e",
                                     "name" : "Predict Fraud Detection Model (Datapod)"
                                 }
-                            }
+                            }]
                         }
                     ],
                     "xPos" : 660.0,

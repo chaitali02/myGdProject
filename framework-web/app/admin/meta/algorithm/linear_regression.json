@@ -9,8 +9,6 @@
         "coefficients", 
         "getAggregationDepth", 
         "getElasticNetParam", 
-        "getEpsilon", 
-        "getLoss", 
         "getMaxIter", 
         "getRegParam", 
         "getSolver", 
