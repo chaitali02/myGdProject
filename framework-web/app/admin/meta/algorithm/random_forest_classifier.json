@@ -82,7 +82,6 @@
 		"getNumTrees",
 		"getSeed",
 		"getSubsamplingRate",
-		"getThresholds",
 		"numClasses",
 		"numFeatures",
 		"totalNumNodes",
