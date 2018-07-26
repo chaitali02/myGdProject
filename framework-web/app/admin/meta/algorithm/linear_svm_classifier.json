@@ -70,7 +70,7 @@
             "uuid" : "ed97e128-962f-4030-bdf5-6c1c35a53107"
         }
     },
-  "savePmml" : "N",
+  "savePmml" : "Y",
 	"summaryMethods" : [  
 		"coefficients",
 		"getAggregationDepth",

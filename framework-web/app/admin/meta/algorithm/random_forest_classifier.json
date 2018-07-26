@@ -70,7 +70,7 @@
             "uuid" : "a82581f7-3818-40bb-a98d-3b518b755e0b"
         }
     },
-  "savePmml" : "Y",
+  "savePmml" : "N",
 	"summaryMethods" : [  
 		"featureImportances",
 		"getCheckpointInterval",
