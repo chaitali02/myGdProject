@@ -118,6 +118,10 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 				}*/
 				builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
 			}
+			else if (dataset.getDependsOn().getRef().getType() == MetaType.dataset) {
+                DataSet innerDS = (DataSet) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
+                builder.append("(").append(generateSql(innerDS, refKeyMap, otherParams, usedRefKeySet, null, runMode)).append(") ").append(innerDS.getName()).append(" ");
+            }
 			return builder.toString();
 		}
 		
