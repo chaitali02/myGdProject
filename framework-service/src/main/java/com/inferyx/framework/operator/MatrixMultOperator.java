@@ -17,6 +17,7 @@ import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
@@ -176,8 +177,8 @@ public class MatrixMultOperator implements IOperator {
 			columns[count] = attr.getName();
 			count++;
 		}
-		List<String> tableColumns = Arrays.asList(columns);
-		StructType schema = createSchema(tableColumns);
+		List<Object> tableColumns = Arrays.asList(columns);
+		StructType schema = createSchema(locationDatapod.getAttributes());
 		
 		// Save result
 		String filePath = "/"+locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;
@@ -225,12 +226,12 @@ public class MatrixMultOperator implements IOperator {
 	 * @param tableColumns
 	 * @return
 	 */
-	public StructType createSchema(List<String> tableColumns){
+	public StructType createSchema(List<Attribute> attributes){
 
         List<StructField> fields  = new ArrayList<StructField>();
-        for(String column : tableColumns){         
+        for(Attribute attr  : attributes){         
 
-                fields.add(DataTypes.createStructField(column, DataTypes.StringType, true));            
+                fields.add(DataTypes.createStructField(attr.getName(),(DataType)sparkExecutor.getDataType(attr.getType()), true));            
 
         }
         return DataTypes.createStructType(fields);
