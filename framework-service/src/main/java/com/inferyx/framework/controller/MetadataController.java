@@ -965,8 +965,8 @@ public class MetadataController {
 	
 	@RequestMapping(value = "/getFunctionByCriteria", method = RequestMethod.GET)
 	public @ResponseBody List<Function> getFunctionByCriteria(
-			@RequestParam(value ="category" ,defaultValue="aggregate") String category,
-			@RequestParam(value ="inputReq" ) String inputReq,
+			@RequestParam(value ="category" , required = false) String category,
+			@RequestParam(value ="inputReq" , required = false ) String inputReq,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return metadataServiceImpl.getFunctionByCriteria(category,inputReq);
 	}
