@@ -62,7 +62,6 @@
 	
 	<bean id="stageExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="5" />
 		<!-- <property name="corePoolSize" value="5" />
 		<property name="maxPoolSize" value="10" /> -->
 		<property name="queueCapacity" value="3" />
@@ -72,7 +71,6 @@
 	
 	<bean id="dagExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="5" />
 		<!-- <property name="corePoolSize" value="5" />
 		<property name="maxPoolSize" value="10" /> -->
 		<property name="queueCapacity" value="3" />
