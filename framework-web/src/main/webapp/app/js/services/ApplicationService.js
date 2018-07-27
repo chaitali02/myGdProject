@@ -23,7 +23,7 @@ AdminModule.factory('MetadataApplicationFactory', function ($http, $location) {
 	factory.findOneByUuidAndVersion = function (uuid, version, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "metadata/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
+			url: url + "common/getOneByUuidAndVersion?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
 			method: "GET",
 
 		}).then(function (response) { return response })
