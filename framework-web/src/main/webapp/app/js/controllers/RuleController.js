@@ -22,7 +22,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 		{ "text": "string", "caption": "integer" ,"disabled":false },
 		{ "text": "datapod", "caption": "attribute","disabled":false },
 		{ "text": "formula", "caption": "formula","disabled":false },
-		{ "text": "dataset", "caption": "dataset" ,"disabled":false }]
+    { "text": "dataset", "caption": "dataset" ,"disabled":false },
+    { "text":  "paramlist", "caption": "paramlist" ,"disabled":false },
+		{ "text": "function", "caption": "function" ,"disabled":false }]
   $scope.matType = ["string", 'formula'];
   $scope.sourceTypes = ["datapod", "expression"]
   $scope.sourceAttributeTypes = [{
@@ -327,7 +329,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         onSuccessFunction(response.data)
       });
       var onSuccessFunction = function (response) {
-        $scope.ruleLodeFunction = response
+        $scope.ruleLodeFunction = response;
+        $scope.allFunction=response;
       }
       RuleService.getAllAttributeBySource(response.ruledata.source.ref.uuid, response.ruledata.source.ref.type).then(function (response) {
         onSuccess(response.data)
@@ -415,6 +418,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       });
       var onSuccessFunction = function (response) {
         $scope.ruleLodeFunction = response
+        $scope.allFunction=response;
       }
       RuleService.getFormulaByType(response.ruledata.source.ref.uuid, $scope.rulsourcetype).then(function (response) {
         onSuccessFormula(response.data)
@@ -719,53 +723,70 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       return $filter('filter')($scope.loadSourceAttribue, query);
     });
   };
-  $scope.SearchAttribute=function(index){
-		$scope.selectDatasetAttr=$scope.filterTableArray[index].rhsdataset
-		RuleService.getAllLatest("dataset").then(function (response) { onSuccessRelation(response.data) });
+  $scope.SearchAttribute=function(index,type,propertyType){
+		$scope.selectAttr=$scope.filterTableArray[index][propertyType]
+		$scope.searchAttr={};
+		$scope.searchAttr.type=type;
+		$scope.searchAttr.propertyType=propertyType;
+		$scope.searchAttr.index=index;
+		RuleService.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
 		$scope.searchAttrIndex=index;
-		var onSuccessRelation = function (response) {
-			$scope.allDataset = response;
-      var temp;
-			if($scope.rulsourcetype == "dataset"){
-				temp = $scope.allDataset.options.filter(function(el) {
-					return el.uuid !==$scope.ruleRelation.defaultoption.uuid;
+		var onSuccessGetAllLatest = function (response) {
+			$scope.allSearchType = response;
+			var temp;
+			if($scope.selectSourceType == "dataset"){
+				temp = $scope.allSearchType.options.filter(function(el) {
+					return el.uuid !== $scope.datasetRelation.defaultoption .uuid;
 				});
-				$scope.allDataset.options=temp;
-				$scope.allDataset.defaultoption=temp[0]
+				$scope.allSearchType.options=temp;
+				$scope.allSearchType.defaultoption=temp[0]
 			}
-		
+			if($scope.dataset){
+				temp = $scope.allSearchType.options.filter(function(el) {
+					return el.uuid !== $scope.dataset.uuid;
+				});
+				$scope.allSearchType.options=temp;
+				$scope.allSearchType.defaultoption=temp[0]
+			}
+			if(typeof $stateParams.id != "undefined" && $scope.selectAttr){
+				var defaultoption={};
+				defaultoption.uuid=$scope.selectAttr.uuid;
+				defaultoption.name="";
+				$scope.allSearchType.defaultoption=defaultoption;
+			}
 			$('#searchAttr').modal({
 				backdrop: 'static',
 				keyboard: false
 			  });
-			  RuleService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
-			  var onSuccessAttributeBySource = function (response) {
-				$scope.allDatasetAttr = response;
-				if (typeof $stateParams.id != "undefined" && $scope.selectDatasetAtt) {
+			RuleService.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid,type).then(function (response) { onSuccessAttributeBySource(response.data) });
+			var onSuccessAttributeBySource = function (response) {
+				$scope.allAttr = response;
+				if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
 					var defaultoption={};
-					defaultoption.uuid=$scope.selectDatasetAttr.uuid;
+					defaultoption.uuid=$scope.selectAttr.uuid;
 					defaultoption.name="";
-					$scope.allDataset.defaultoption=defaultoption;
+					$scope.allSearchType.defaultoption=defaultoption;
 				}else{
-					$scope.selectDatasetAtt=$scope.allDatasetAttr[0]
+					$scope.selectAttr=$scope.allAttr[0]
 				}
 
 			}
 		}
-		
 	}
-    $scope.onChangeDataset=function(){
-      RuleService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
-		  var onSuccessAttributeBySource = function (response) {
-			  $scope.allDatasetAttr = response;
+	
+	$scope.onChangeSearchAttr=function(){
+		RuleService.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid,$scope.searchAttr.type).then(function (response) { onSuccessAttributeBySource(response.data) });
+		var onSuccessAttributeBySource = function (response) {
+			$scope.allAttr = response;
 		}
 	}
 
 	$scope.SubmitSearchAttr=function(){
 		console.log($scope.selectDatasetAttr);
-		$scope.filterTableArray[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr;
+		$scope.filterTableArray[$scope.searchAttr.index][$scope.searchAttr.propertyType]=$scope.selectAttr;
 		$('#searchAttr').modal('hide')
 	}
+
   $scope.onChangeOperator=function(index){
 		if($scope.rulecompare != null) {
 			$scope.rulecompare.filterChg = "y"
@@ -869,6 +890,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsFormula = false;
       $scope.filterTableArray[index].rhsvalue;
       $scope.filterTableArray[index].isrhsDataset = false;
+      $scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
 		}
 		else if (type == "datapod") {
 
@@ -876,6 +899,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsDatapod = true;
       $scope.filterTableArray[index].isrhsFormula = false;
       $scope.filterTableArray[index].isrhsDataset = false;
+      $scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
 		}
 		else if (type == "formula") {
 
@@ -883,20 +908,46 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsSimple = false;
       $scope.filterTableArray[index].isrhsDatapod = false;
       $scope.filterTableArray[index].isrhsDataset = false;
+      $scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
 			RuleService.getFormulaByType($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				$scope.ruleLodeFormula = response.data;
 			}
     }
-    else if (type == "dataset") {
+    else if (type == "function") {
+
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist=false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = true;
+      RuleService.getAllLatestFunction("function", "N").then(function (response) {
+        onSuccressGetFunction(response.data)});		
+        var onSuccressGetFunction = function (response) {
+				console.log(response)
+				$scope.allFunction = response;
+			}
+		}
+		else if (type == "dataset") {
 			$scope.filterTableArray[index].isrhsFormula = false;
 			$scope.filterTableArray[index].isrhsSimple = false;
 			$scope.filterTableArray[index].isrhsDatapod = false;
 			$scope.filterTableArray[index].isrhsDataset = true;
-			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
-			var onSuccressGetAllLatestDataset = function (response) {
-				$scope.allDataset = response;
-			}
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+			
+		}
+		else if (type == "paramlist") {
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist=true;
+			$scope.filterTableArray[index].isrhsFunction = false;
+			
 		}
   }
   
@@ -1231,11 +1282,22 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
             rhsref.uuid = $scope.filterTableArray[i].rhsformula.uuid;
             rhsoperand.ref = rhsref;
           }
+          else if ($scope.filterTableArray[i].rhstype.text == "function") {
+            rhsref.type = "function";
+            rhsref.uuid = $scope.filterTableArray[i].rhsfunction.uuid;
+            rhsoperand.ref = rhsref;
+          }
           else if ($scope.filterTableArray[i].rhstype.text == "dataset") {
             rhsref.type = "dataset";
             rhsref.uuid = $scope.filterTableArray[i].rhsdataset.uuid;
             rhsoperand.ref = rhsref;
             rhsoperand.attributeId = $scope.filterTableArray[i].rhsdataset.attributeId;
+          }
+          else if ($scope.filterTableArray[i].rhstype.text == "paramlist") {
+            rhsref.type = "paramlist";
+            rhsref.uuid = $scope.filterTableArray[i].rhsparamlist.uuid;
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.filterTableArray[i].rhsparamlist.attributeId;
           }
 				  operand[1] = rhsoperand;
 			  	filterInfo .operand = operand;
