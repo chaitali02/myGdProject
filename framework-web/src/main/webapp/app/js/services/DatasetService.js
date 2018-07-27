@@ -700,7 +700,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 				sourceAttributesArray[n] = attributeInfo
 			}
 			datasetviewjson.sourceAttributes = sourceAttributesArray
-			//			  console.log("filertIfnfo"+JSON.stringify(datasetviewjson.filterInfo))
+			//console.log("filertIfnfo"+JSON.stringify(datasetviewjson.filterInfo))
 			deferred.resolve({
 				data: datasetviewjson
 			})
