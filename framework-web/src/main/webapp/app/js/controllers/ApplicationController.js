@@ -130,9 +130,15 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$scope.showGraphDiv = true;
 	}//End showGraph
 
+		
+	$scope.getAllLatestParamListByTemplate=function(){
+		CommonService.getAllLatestParamListByTemplate('Y', "paramlist","").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
+		var onSuccessGetAllLatestParamListByTemplate = function (response) {
+			$scope.allParamList=response;
+		}//End getAllLatestParamListByTemplate
+	}
 
-
-
+   
 
 	$scope.getAllVersion = function (uuid) {
 		MetadataApplicationSerivce.getAllVersionByUuid(uuid, "application").then(function (response) { onGetAllVersionByUuid(response.data) });
@@ -151,12 +157,32 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		}, 0)
 		MetadataApplicationSerivce.getOneByUuidAndVersion(uuid, version, 'application').then(function (response) { onGetByOneUuidandVersion(response.data) });
 		var onGetByOneUuidandVersion = function (response) {
-			alert("dsfs");
 			$scope.applicationdata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.application.defaultVersion = defaultversion;
+			MetadataApplicationSerivce.getLatestDataSourceByUuid($scope.applicationdata.dataSource.ref.uuid, "datasource").then(function (response) { onSuccessGetLatestDataSourceByUuid(response.data) });
+			var onSuccessGetLatestDataSourceByUuid = function (response) {
+				$scope.selectSourceType = response.type.toLowerCase();
+				MetadataApplicationSerivce.getDatasourceByType(response.type).then(function (response) { onSuccessGetDatasourceByType(response.data) })
+				var onSuccessGetDatasourceByType = function (response) {
+					$scope.alldatasource = response
+					var selectDataSource = {};
+					selectDataSource.uuid = $scope.applicationdata.dataSource.ref.uuid;
+					selectDataSource.name = "";
+					$scope.selectDataSource = selectDataSource
+				}
+			}
+		//	$scope.allParamList=null;
+			//$scope.getAllLatestParamListByTemplate();
+			$scope.selectedParamlsit=null;
+			setTimeout(function(){ 	var selectedParamlsit={};
+				selectedParamlsit.uuid=response.paramList.ref.uuid;
+				selectedParamlsit.name=response.paramList.ref.name;
+				$scope.selectedParamlsit=selectedParamlsit;
+		    }, 100);
+
 			
 		}
 
@@ -166,36 +192,17 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		/*if($sessionStorage.fromParams.type !="application" && $sessionStorage.showgraph !=true){
-			$scope.state=$sessionStorage.fromStateName;
-			$scope.stateparme=$sessionStorage.fromParams;
-			$sessionStorage.showgraph=true;
-			var data=$stateParams.id.split("_");
-			var uuid=data[0];
-		    var version=data[1];
-		    $scope.getAllVersion(uuid)//Call SelectAllVersion Function
-			$scope.selectVersion(uuid,version);//Call SelectVersion Function
-
-		}*/
-
-		//else{
-		/*	var id;
-			if($stateParams.id.indexOf("_") > -1){
-				id=$stateParams.id.split("_")[0]
-
-			}else{*/
 		var id;
 		id = $stateParams.id;
-		//}
 		$scope.getAllVersion(id)//Call SelectAllVersion Function
-		MetadataApplicationSerivce.getAllVersionByUuid(id, "application").then(function (response) { onGetAllVersionByUuid(response.data) });
-		var onGetAllVersionByUuid = function (response) {
-			for (var i = 0; i < response.length; i++) {
-				var applicationversion = {};
-				applicationversion.version = response[i].version;
-				$scope.application.versions[i] = applicationversion;
-			}
-		}//End getAllVersionByUui
+		// MetadataApplicationSerivce.getAllVersionByUuid(id, "application").then(function (response) { onGetAllVersionByUuid(response.data) });
+		// var onGetAllVersionByUuid = function (response) {
+		// 	for (var i = 0; i < response.length; i++) {
+		// 		var applicationversion = {};
+		// 		applicationversion.version = response[i].version;
+		// 		$scope.application.versions[i] = applicationversion;
+		// 	}
+		// }//End getAllVersionByUui
 		MetadataApplicationSerivce.getLatestByUuid(id, "application").then(function (response) { onGetLatestByUuid(response.data) });
 		var onGetLatestByUuid = function (response) {
 			$scope.applicationdata = response;
@@ -203,7 +210,6 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.application.defaultVersion = defaultversion;
-
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -226,8 +232,16 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 					$scope.selectDataSource = selectDataSource
 				}
 			}
+			$scope.getAllLatestParamListByTemplate();
+			var selectedParamlsit={};
+			selectedParamlsit.uuid=response.paramList.ref.uuid;
+			selectedParamlsit.name=response.paramList.ref.name;
+			$scope.selectedParamlsit=selectedParamlsit;
 		}
 	}//End IF
+	else{
+		$scope.getAllLatestParamListByTemplate();
+	}
 
 	/*Start SubmitAplication*/
 	$scope.submitApplication = function () {
@@ -244,7 +258,6 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		applicationJson.desc = $scope.applicationdata.desc
 		applicationJson.active = $scope.applicationdata.active;
 		applicationJson.published = $scope.applicationdata.published;
-		debugger
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -263,6 +276,13 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		ref.uuid = $scope.selectDataSource.uuid;
 		datasource.ref = ref;
 		applicationJson.dataSource = datasource;
+
+		var paramList = {};
+		var ref = {};
+		ref.type = "paramlist";
+		ref.uuid = $scope.selectedParamlsit.uuid;
+		paramList.ref = ref;
+		applicationJson.paramList = paramList;
 
 		MetadataApplicationSerivce.submit(applicationJson, 'application',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
