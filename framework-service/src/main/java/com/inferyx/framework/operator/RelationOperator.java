@@ -124,16 +124,18 @@ public class RelationOperator {
 					rightTable = populateVerUnion(tableArr);
 				}
 			}
-
-			if (joinKey.size() > 0) {
+			if (StringUtils.isNotBlank(rightTable)) {
 				builder.append(joinType + " JOIN ").append(" ").append(rightTable).append("  ");
 				if (datapodTracker.get(datapod.getUuid()) <= 1) {
 					builder.append(datapod.getName());
 				} else {
 					builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 				}
-				builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams));
+				if (joinKey != null && joinKey.size() > 0) {
+					builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams));
+				}
 			}
+			rightTable = null;
 		}
 		return builder.toString();
 	}
