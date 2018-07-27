@@ -436,6 +436,17 @@
                           </select>
                         </span>
                       </div>
+                      
+                      <div ng-if="tabledata.isrhsFunction">
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                            <select select2 class="form-control" name="rhsformula_{{$index}}"  data-ng-model="tabledata.rhsfunction"
+                            ng-options="c as  c.name for c in allFunction.options track by c.uuid"
+                                ng-disabled="{{mode}}" ng-show="tabledata.isrhsFunction" required
+                                disable-validation-message="" uib-tooltip="{{myform['rhsfunction'+$index].$valid ? '' : 'Please select function'}}"
+                                tooltip-placement="top">
+                            </select>
+                        </span>
+                    </div>
                       <div ng-if="tabledata.isrhsDataset">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
 
@@ -444,8 +455,20 @@
                               required disable-validation-message="">
                           </div>
                           <div class="col-md-1" style="padding:7px 0px 0px 5px;">
-                            <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index)"></span>
+                            <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsdataset')"></span>
                           </div>
+                        </span>
+                      </div>
+                      <div ng-if="tabledata.isrhsParamlist">
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+
+                            <div class="col-md-11" style="padding: 0px;">
+                                <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsparamlist.name" title="{{tabledata.rhsparamlist.dname}}"
+                                    required disable-validation-message="">
+                            </div>
+                            <div class="col-md-1" style="padding:7px 0px 0px 5px;">
+                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsparamlist')"></span>
+                            </div>
                         </span>
                       </div>
                     </td>
@@ -581,38 +604,38 @@
   <!-- End MAIN CONTENT -->
   <div id="searchAttr" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" style="width:35%;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-          <h4 class="modal-title">Search Attribute</h4>
-        </div>
-        <div class="modal-body">
-          <div class="slimScrollDiv" style="padding-top:10px;">
-            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-              <form class="form-horizontal" novalidate="novalidate" name="myform1">
-                <div class="form-group">
-                  <label class="col-md-3 control-label">Dataset</label>
-                  <div class="col-md-8">
-                    <select select2 class="form-control" ng-change="onChangeDataset()" data-ng-model="allDataset.defaultoption" ng-options="r as r.name for r in allDataset.options track by r.uuid">
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-md-3 control-label">Attribute</label>
-                  <div class="col-md-8">
-                    <select select2 class="form-control" data-ng-model="selectDatasetAttr" ng-options="r as r.name for r in allDatasetAttr track by r.uuid+r.attributeId">
-                    </select>
-                  </div>
-                </div>
-              </form>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Search Attribute</h4>
             </div>
-          </div>
+            <div class="modal-body">
+                <div class="slimScrollDiv" style="padding-top:10px;">
+                    <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                        <form class="form-horizontal" novalidate="novalidate" name="myform1">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Select</label>
+                                <div class="col-md-8">
+                                    <select select2 class="form-control" ng-change="onChangeSearchAttr()" data-ng-model="allSearchType.defaultoption" ng-options="r as r.name for r in allSearchType.options track by r.uuid">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Attribute</label>
+                                <div class="col-md-8">
+                                    <select select2 class="form-control" data-ng-model="selectAttr" ng-options="r as r.name for r in allAttr track by r.uuid+r.attributeId">
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                <button type="button" class="btn green" ng-click="SubmitSearchAttr()">Submit</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-          <button type="button" class="btn green" ng-click="SubmitSearchAttr()">Submit</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 </div>
