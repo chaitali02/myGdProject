@@ -1,6 +1,6 @@
 {
   "uuid": "34e52aea-bdb3-412c-bbef-192d2738bd37",
-  "version": "1532555087",
+  "version": "1532645653",
   "name": "ppl_e2e_economic_capital_wo_simulation_ul",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Jul 25 17:44:47 EDT 2018",
+  "createdOn": "Thu Jul 26 18:54:13 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -1456,7 +1456,37 @@
             "de9b32cd-1815-46c7-b332-a1746d011383",
             "f56bd172-6395-439b-a710-3793abd810ef"
           ],
-          "name": "map_customer_portfolio_ul_x",
+          "name": "map_customer_portfolio_ul",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "c02e79a3-3f41-479a-8d8f-1977d6946e20",
+                    "version": null,
+                    "name": "map_customer_portfolio_ul"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 670,
+          "yPos": 260,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "1830498b-5cfc-4e59-ad00-0fb5451df1f6",
+          "dependsOn": [
+            "3455ece6-2017-4445-9bc5-59f7430f2922"
+          ],
+          "name": "Map_customer_portfolio_ul_x",
           "operators": [
             {
               "operatorId": null,
@@ -1476,17 +1506,17 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 670,
-          "yPos": 260,
+          "xPos": 840,
+          "yPos": 180,
           "active": "Y",
           "statusList": []
         },
         {
-          "taskId": "1830498b-5cfc-4e59-ad00-0fb5451df1f6",
+          "taskId": "a508867b-b1a1-4f65-89bb-e10f62df3ba4",
           "dependsOn": [
-            "3455ece6-2017-4445-9bc5-59f7430f2922"
+            "1830498b-5cfc-4e59-ad00-0fb5451df1f6"
           ],
-          "name": "Map_customer_portfolio_ul_y",
+          "name": "map_customer_portfolio_ul_y",
           "operators": [
             {
               "operatorId": null,
@@ -1506,15 +1536,15 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 910,
+          "xPos": 1000,
           "yPos": 260,
           "active": "Y",
           "statusList": []
         },
         {
-          "taskId": "a508867b-b1a1-4f65-89bb-e10f62df3ba4",
+          "taskId": "9f4e434b-db6c-4943-b637-f2b6345907fa",
           "dependsOn": [
-            "1830498b-5cfc-4e59-ad00-0fb5451df1f6"
+            "a508867b-b1a1-4f65-89bb-e10f62df3ba4"
           ],
           "name": "map_customer_portfolio_ul_calc",
           "operators": [
@@ -1536,7 +1566,97 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 1130,
+          "xPos": 1150,
+          "yPos": 170,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "47a2dd6d-ad5f-4dab-94a0-a61c038baf57",
+          "dependsOn": [
+            "9f4e434b-db6c-4943-b637-f2b6345907fa"
+          ],
+          "name": "map_customer_portfolio_ul_calc_summary",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "1a131657-f055-401c-93bf-9c401fca7ce0",
+                    "version": null,
+                    "name": "map_customer_portfolio_ul_calc_summary"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 1300,
+          "yPos": 260,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "080041b7-c05a-468e-9c26-470c0bed82f4",
+          "dependsOn": [
+            "47a2dd6d-ad5f-4dab-94a0-a61c038baf57"
+          ],
+          "name": "map_customer_portfolio_ul_calc_cust_summary",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "485be8ae-c334-4b22-84fd-6ac714452161",
+                    "version": null,
+                    "name": "map_customer_portfolio_ul_calc_cust_summary"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 1460,
+          "yPos": 170,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "72c0aeaa-6018-4501-9b89-08e60ed1cdb1",
+          "dependsOn": [
+            "080041b7-c05a-468e-9c26-470c0bed82f4"
+          ],
+          "name": "map_customer_portfolio_ul_calc_allocation",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "a75f7594-71c8-4a71-8885-f474814988e6",
+                    "version": null,
+                    "name": "map_customer_portfolio_ul_calc_allocation"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 1630,
           "yPos": 260,
           "active": "Y",
           "statusList": []
