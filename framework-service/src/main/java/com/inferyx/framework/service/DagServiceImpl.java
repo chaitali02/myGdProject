@@ -1121,6 +1121,7 @@ public class DagServiceImpl {
 						}
 						statusList.remove(failedStatus);
 						statusList.add(failedStatus);
+						indvExecTask.setStatusList(statusList);
 						e.printStackTrace();
 						String message = null;
 						try {
@@ -1128,6 +1129,25 @@ public class DagServiceImpl {
 						}catch (Exception e2) {
 							// TODO: handle exception
 						}
+						// Set stageExec and DagExec to failed
+						indvDagExecStg.setTasks(DagExecUtil.convertToTaskList(dagExecTasks));
+						statusList = indvDagExecStg.getStatusList();
+						if (statusList == null) {
+							statusList = new ArrayList<Status>();
+						}
+						statusList.remove(failedStatus);
+						statusList.add(failedStatus);
+						indvDagExecStg.setStatusList(statusList);
+						dagExec.setStages(DagExecUtil.convertToStageList(dagExecStgs));
+						
+						statusList = dagExec.getStatusList();
+						if (statusList == null) {
+							statusList = new ArrayList<Status>();
+						}
+						statusList.remove(failedStatus);
+						statusList.add(failedStatus);
+						dagExec.setStatusList(statusList);
+						commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
 						throw new Exception((message != null) ? message : "Pipeline execution failed.");
 					} finally {
