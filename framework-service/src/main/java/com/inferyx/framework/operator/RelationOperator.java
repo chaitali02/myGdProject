@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
@@ -33,6 +34,7 @@ import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.RelationInfo;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
  
 @Component
@@ -41,9 +43,13 @@ public class RelationOperator {
 	@Autowired
 	protected MetadataUtil daoRegister;
 	@Autowired
+	protected CommonServiceImpl commonServiceImpl;
+	@Autowired
 	protected JoinKeyOperator joinKeyOperator;
 	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	protected DatasetOperator datasetOperator;
 	
 	static final Logger logger = Logger.getLogger(RelationOperator.class);
 	
@@ -60,13 +66,17 @@ public class RelationOperator {
 //		if (execParams != null && execParams.getDimInfo() != null && execParams.getDimInfo().size() > 0) {
 //			hasDimensions = true;
 //		}
-		
-		Datapod fromDatapod = (Datapod) daoRegister
-				.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
-		datapodTracker.put(fromDatapod.getUuid(), new Short((short) 1));
+		Datapod fromDatapod = null;
+		DataSet fromDataset = null;
 		String table = "";
-		MetaIdentifier fromDatapodRef = new MetaIdentifier(MetaType.datapod, fromDatapod.getUuid(), fromDatapod.getVersion());
-		usedRefKeySet.add(fromDatapodRef);
+		String dsVersion = null;
+		if (relation.getDependsOn().getRef().getType() == MetaType.datapod) {
+			fromDatapod = (Datapod) daoRegister
+					.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+			datapodTracker.put(fromDatapod.getUuid(), new Short((short) 1));
+			MetaIdentifier fromDatapodRef = new MetaIdentifier(MetaType.datapod, fromDatapod.getUuid(), fromDatapod.getVersion());
+			usedRefKeySet.add(fromDatapodRef);
+		} 
 		logger.info("OtherParams in relationOperator : " + otherParams);
 		
 /*		DataStore dataStore = getDatastoreByDim(fromDatapod.getUuid(), hasDimensions?execParams.getDimInfo():null); 
@@ -74,31 +84,48 @@ public class RelationOperator {
 			table = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 			dataStore = null;
 		} else */
-		if (otherParams != null && otherParams.containsKey("datapodUuid_"+fromDatapod.getUuid()+"_tableName")) {
+		if (relation.getDependsOn().getRef().getType() == MetaType.datapod 
+				&& otherParams != null && otherParams.containsKey("datapodUuid_"+fromDatapod.getUuid()+"_tableName")) {
 			table = otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName");
-		} else if (otherParams == null 
+		} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset 
+				&& otherParams != null && otherParams.containsKey("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_tableName")) {
+			dsVersion = otherParams.get("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_version");
+		} else if (relation.getDependsOn().getRef().getType() == MetaType.datapod 
+				&& otherParams == null 
 				|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()))) == null
 				&& otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName") == null)) {
 			table = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(fromDatapod.getUuid(), fromDatapod.getVersion()), runMode);
-		} else {
+		} else if (relation.getDependsOn().getRef().getType() == MetaType.datapod ){
 			String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()));
 			table = otherParams.get(tableKey);
 			if (StringUtils.isNotBlank(table) && table.contains(",")) {
 				String tableArr[] = table.split(",");
 				table = populateVerUnion(tableArr);
 			}
+		} 
+		if (relation.getDependsOn().getRef().getType() == MetaType.datapod){
+			builder.append(String.format(table, fromDatapod.getName())).append(" ").append(fromDatapod.getName()).append(" ");
+		} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset){
+			fromDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid()
+																				, dsVersion
+																				, relation.getDependsOn().getRef().getType().toString());
+			builder.append("(").append(datasetOperator.generateSql(fromDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(") ").append(fromDataset.getName()).append(" ");
 		}
-		builder.append(String.format(table, fromDatapod.getName())).append(" ").append(fromDatapod.getName()).append(" ");
 		for (int i = 0; i < relInfoList.size(); i++) {
-			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
-			if (!datapodTracker.containsKey(datapod.getUuid())) {
-				datapodTracker.put(datapod.getUuid(), new Short((short) 1));
-			} else {
-				datapodTracker.put(datapod.getUuid(), (short) (datapodTracker.get(datapod.getUuid()) + 1));
-			}
+			Datapod datapod = null;
+			DataSet rightDataset = null;
 			String rightTable = null;
-			MetaIdentifier datapodRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
-			usedRefKeySet.add(datapodRef);
+			String rightDsVersion = null;
+			if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.datapod) {
+				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+				if (!datapodTracker.containsKey(datapod.getUuid())) {
+					datapodTracker.put(datapod.getUuid(), new Short((short) 1));
+				} else {
+					datapodTracker.put(datapod.getUuid(), (short) (datapodTracker.get(datapod.getUuid()) + 1));
+				}
+				MetaIdentifier datapodRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
+				usedRefKeySet.add(datapodRef);
+			} 
 
 			String joinType = relInfoList.get(i).getJoinType();
 			List<FilterInfo> joinKey = relInfoList.get(i).getJoinKey();
@@ -107,15 +134,20 @@ public class RelationOperator {
 				rightTable = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 				dataStore = null;
 			} else */
-			if (otherParams != null && otherParams.containsKey("datapodUuid_".concat(datapod.getUuid()).concat("_tableName"))) {
+			if (relation.getDependsOn().getRef().getType() == MetaType.datapod 
+					&& otherParams != null && otherParams.containsKey("datapodUuid_".concat(datapod.getUuid()).concat("_tableName"))) {
 				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				String tableKey = "datapodUuid_".concat(datapod.getUuid()).concat("_tableName");
 				rightTable = otherParams.get(tableKey);
-			} else if (otherParams == null 
+			} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset 
+					&& otherParams != null && otherParams.containsKey("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_tableName")) {
+				rightDsVersion = otherParams.get("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_version");
+			} else if (relation.getDependsOn().getRef().getType() == MetaType.datapod 
+					&& otherParams == null 
 					|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()))) == null  
 					&& otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")) == null)) {
 				rightTable = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} else {
+			} else if (relation.getDependsOn().getRef().getType() == MetaType.datapod) {
 				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()));
 				rightTable = otherParams.get(tableKey);
@@ -124,7 +156,8 @@ public class RelationOperator {
 					rightTable = populateVerUnion(tableArr);
 				}
 			}
-			if (StringUtils.isNotBlank(rightTable)) {
+			if (relation.getDependsOn().getRef().getType() == MetaType.datapod  
+					&& StringUtils.isNotBlank(rightTable)) {
 				builder.append(joinType + " JOIN ").append(" ").append(rightTable).append("  ");
 				if (datapodTracker.get(datapod.getUuid()) <= 1) {
 					builder.append(datapod.getName());
@@ -134,8 +167,24 @@ public class RelationOperator {
 				if (joinKey != null && joinKey.size() > 0) {
 					builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams));
 				}
+			} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset) {
+				rightDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
+																		, rightDsVersion
+																		, relInfoList.get(i).getJoin().getRef().getType().toString());
+				builder.append(joinType + " JOIN ").append(" (").append(datasetOperator.generateSql(rightDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ");
+				if (datapodTracker.get(rightDataset.getUuid()) <= 1) {
+					builder.append(rightDataset.getName());
+				} else {
+					builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
+				}
+				if (joinKey != null && joinKey.size() > 0) {
+					builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams));
+				}
 			}
+			datapod = null;
+			rightDataset = null;
 			rightTable = null;
+			rightDsVersion = null;
 		}
 		return builder.toString();
 	}

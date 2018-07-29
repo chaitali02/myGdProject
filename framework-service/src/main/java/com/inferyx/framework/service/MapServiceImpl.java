@@ -493,7 +493,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	 * @throws Exception
 	 */
 	protected String getTableName(Datapod datapod, 
-			HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
+			HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
 		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		} else {
@@ -506,14 +506,14 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	}
 
 	// If Map is dependent on datapod
-	public void parseDatapodNames(Datapod datapod, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
-		String table = getTableName(datapod, otherParams, mapExec);
+	public void parseDatapodNames(Datapod datapod, HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
+		String table = getTableName(datapod, otherParams, mapExec, runMode);
 		otherParams.put("datapodUuid_" + datapod.getUuid() + "_tableName", table);
 	}
 
 	// If Map is dependent on relation
 	public void parseRelDatapodNames(Relation relation, 
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
 		// Get all relation tables
 		// Start with main table
 //		if (otherParams == null) {
@@ -522,7 +522,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		Datapod fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
 
 		// Derive table name on the basis of depends on value.
-		String table = getTableName(fromDatapod, otherParams, mapExec);
+		String table = getTableName(fromDatapod, otherParams, mapExec, runMode);
 		
 			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), table);
 		
@@ -531,7 +531,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		List<RelationInfo> relInfoList = relation.getRelationInfo();
 		for (int i = 0; i < relInfoList.size(); i++) {
 			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
-			String rightTable = getTableName(datapod, otherParams, mapExec);
+			String rightTable = getTableName(datapod, otherParams, mapExec, runMode);
 			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid())),
 					rightTable);
 		} // End for
@@ -539,52 +539,52 @@ public class MapServiceImpl implements IParsable, IExecutable {
 
 	
 	public void parseDPNames(Map map, List<String> datapodList,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
 		String datapodStr = map.getTarget().getRef().getUuid();
 		if (map.getSource().getRef().getType() == MetaType.datapod) {
 			Datapod datapod = mapOperator.getDatapodFromMap(map);
-			parseDatapodNames(datapod, otherParams, mapExec);
+			parseDatapodNames(datapod, otherParams, mapExec, runMode);
 		} else if (map.getSource().getRef().getType() == MetaType.relation) {
 			Relation relation = mapOperator.getRelationFromMap(map);
-			parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec);
+			parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec, runMode);
 		} else if (map.getSource().getRef().getType() == MetaType.dataset) {
 			DataSet dataset = mapOperator.getDatasetFromMap(map);
-			parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec);
+			parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec, runMode);
 		} else if (map.getSource().getRef().getType() == MetaType.rule) {
 			Rule rule =  mapOperator.getRuleFromMap(map);
-			parseRuleDatapodNames(rule, datapodList, refKeyMap, otherParams, mapExec);
+			parseRuleDatapodNames(rule, datapodList, refKeyMap, otherParams, mapExec, runMode);
 		}
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
 		logger.info("adding target datapod in parseDPNames : " + datapodStr);
-		otherParams.put("datapodUuid_" + datapodStr + "_tableName", getTableName(datapod, otherParams, mapExec));
+		otherParams.put("datapodUuid_" + datapodStr + "_tableName", getTableName(datapod, otherParams, mapExec, runMode));
 		datapodList.add(datapodStr);// Add target datapod in datapodlist
 	}
 	
 		// If Map is dependent on rule
 		public void parseRuleDatapodNames(Rule rule, List<String> datapodList,
-				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
+				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
 			if (rule.getSource().getRef().getType() == MetaType.relation) {
 				Relation relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef());
-				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec);
+				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec, runMode);
 			} else if (rule.getSource().getRef().getType() == MetaType.datapod) {
 				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
-				parseDatapodNames(datapod, otherParams, mapExec);
+				parseDatapodNames(datapod, otherParams, mapExec, runMode);
 			} else if (rule.getSource().getRef().getType() == MetaType.dataset) {
 				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
-				parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec);
+				parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec, runMode);
 			}
 		}
 
 		// If Map is dependent on rule
 		public void parseDSDatapodNames(DataSet dataset, 
-				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec) throws Exception {
+				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
 			if (dataset.getDependsOn().getRef().getType() == MetaType.relation) {
 				Relation relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef());
-				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec);
+				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec, runMode);
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {
 				Datapod datapod = (Datapod) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
-				parseDatapodNames(datapod, otherParams, mapExec);
+				parseDatapodNames(datapod, otherParams, mapExec, runMode);
 			}
 		}
 	
@@ -689,7 +689,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			mapExec.setAppInfo(map.getAppInfo());
 			
 			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - START ******/
-			parseDPNames(map, datapodList, refKeyMap, otherParams, mapExec);
+			parseDPNames(map, datapodList, refKeyMap, otherParams, mapExec, runMode);
 			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - END ******/
 			
 			Status status = new Status(Status.Stage.NotStarted, new Date());
@@ -700,6 +700,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			try {
 				mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
 			} catch (Exception e) {
+				e.printStackTrace();
 				Status failedStatus = new Status(Status.Stage.Failed, new Date());
 				if (statusList == null) {
 					statusList = new ArrayList<>();
