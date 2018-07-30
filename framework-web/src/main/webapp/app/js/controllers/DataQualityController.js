@@ -238,7 +238,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         refIntegrityCheckoption.name = response.dqdata.refIntegrityCheck.attrName
         refIntegrityCheckoption.attributeId = response.dqdata.refIntegrityCheck.attrId
       }
-      DataqulityService.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});	
+      // DataqulityService.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				console.log(response)
 				$scope.allFunction = response;
@@ -339,7 +341,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
           $scope.lhsdatapodattributefilter = response;
         }
       }
-      DataqulityService.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});	
+      // DataqulityService.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				console.log(response)
 				$scope.allFunction = response;
@@ -625,8 +629,10 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist=false;
 			$scope.filterTableArray[index].isrhsParamlist = false;
-			$scope.filterTableArray[index].isrhsFunction = true;
-			DataqulityService.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
+      $scope.filterTableArray[index].isrhsFunction = true;
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});	
+			// DataqulityService.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				console.log(response)
 				$scope.allFunction = response;

@@ -383,8 +383,8 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			$scope.filterTableArray[index].isrhsParamlist=false;
 			$scope.filterTableArray[index].isrhsParamlist = false;
 			$scope.filterTableArray[index].isrhsFunction = true;
-
-			MetadataFilterSerivce.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
+			CommonService.getFunctionByCriteria("", "N","function").then(function (response){ onSuccressGetFunction(response.data)});	
+			// MetadataFilterSerivce.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				$scope.allFunction = response;
 			}
@@ -451,8 +451,8 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			var onSuccressGetFormula = function (response) {
 				$scope.expressionFormula = response;
 			}
-			MetadataFilterSerivce.getAllLatest("function").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
-			var onSuccressGetAllLatestDataset = function (response) {
+			CommonService.getFunctionByCriteria("", "N","function").then(function (response){ onSuccressGetFunction(response.data)});
+			var onSuccressGetFunction = function (response) {
 				$scope.allFunction= response;
 			}
 			$scope.selectRelation = response.filter.dependsOn.ref.type
@@ -509,6 +509,10 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope,$stat
 			MetadataFilterSerivce.getFormulaByType($scope.filterdata.dependsOn.ref.uuid, $scope.filterdata.dependsOn.ref.type).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				$scope.expressionFormula = response;
+			}
+			CommonService.getFunctionByCriteria("", "N","function").then(function (response){ onSuccressGetFunction(response.data)});
+			var onSuccressGetFunction = function (response) {
+				$scope.allFunction= response;
 			}
 			// CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
 			// var onSuccressGetAllLatestDataset = function (response) {
