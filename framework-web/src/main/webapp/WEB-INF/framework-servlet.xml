@@ -55,7 +55,7 @@
 	<bean id="taskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="5" />
-		<property name="queueCapacity" value="20" />
+		<property name="queueCapacity" value="60" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
