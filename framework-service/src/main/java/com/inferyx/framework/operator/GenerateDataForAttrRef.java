@@ -30,6 +30,7 @@ import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -136,11 +137,13 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		logger.info("OtherParams : " + otherParams);
 		logger.info("attrDp.getUuid : " + ((Datapod)attrDp).getUuid());
 		String attrTableName = otherParams.get("datapodUuid_" + ((Datapod)attrDp).getUuid() + "_tableName");
-		
+		if(attrTableName.contains("framework.")) {
+			attrTableName = attrTableName.replaceAll("framework.", "");
+		}
 		List<Attribute> attributeList = locationDatapod.getAttributes();
-		
+		String randFunction = datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString()) ? "rand()" : "randn()";
 		String rangeSql = "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
-						+", (randn() * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
+						+", ("+randFunction+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
 						+" FROM "
 						+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 						+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
