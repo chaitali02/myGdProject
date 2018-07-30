@@ -942,6 +942,21 @@
     }
     return deferred.promise;
   }
+  this.getFunctionByCriteria = function(category,inputReq,type) {
+    var deferred = $q.defer();
+    var url;
+    url ="metadata/getFunctionByCriteria?action=view&category="+category+"&inputReq="+inputReq+"&type="+type;
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
+  
    
   });
   

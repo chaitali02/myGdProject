@@ -179,6 +179,57 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.restartExec = function (row, status) {
+    $scope.selectDetail=row;
+    $('#restartmodal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    // var api = false;
+    // switch ($scope.newType) {
+    //   case 'dqexec':
+    //     api = 'dataqual';
+    //     break;
+    //   case 'dqgroupExec':
+    //     api = 'dataqual';
+    //     break;
+    //   case 'profileExec':
+    //     api = 'profile';
+    //     break;
+    //   case 'profilegroupExec':
+    //     api = 'profile';
+    //     break;
+    //   case 'ruleExec':
+    //     api = 'rule';
+    //     break;
+    //   case 'rulegroupExec':
+    //     api = 'rule';
+    //     break;
+    //   case 'dagexec':
+    //     api = 'dag';
+    //     break;
+    //   case 'reconExec':
+    //     api = 'recon';
+    //     break;
+    //   case 'recongroupExec':
+    //     api = 'recon';
+    //     break;
+    // }
+    // if (!api) {
+    //   return
+    // }
+    // notify.type = 'success',
+    // notify.title = 'Success',
+    // notify.content = $scope.newType == "dagexec" ? "Pipeline Restarted Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Restarted Successfully" : "Rule Restarted Successfully"
+    // $scope.$emit('notify', notify);
+
+    // var url = $location.absUrl().split("app")[0];
+    // $http.post(url + '' + api + '/restart?uuid=' + row.uuid + '&version=' + row.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
+    //   //console.log(response);
+    // });
+  }
+
+
+   $scope.okRestart=function(){
     var api = false;
     switch ($scope.newType) {
       case 'dqexec':
@@ -212,17 +263,17 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     if (!api) {
       return
     }
+    $('#restartmodal').modal('hide');
     notify.type = 'success',
     notify.title = 'Success',
     notify.content = $scope.newType == "dagexec" ? "Pipeline Restarted Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Restarted Successfully" : "Rule Restarted Successfully"
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];
-    $http.post(url + '' + api + '/restart?uuid=' + row.uuid + '&version=' + row.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
+    $http.post(url + '' + api + '/restart?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
       //console.log(response);
     });
-  }
-
+   }
   
   $scope.selectData = function (data) {
     $scope.caption = dagMetaDataService.elementDefs[data.type.toLowerCase()].caption;
@@ -704,7 +755,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },100);
       if($scope.select =='rule'){
         $scope.isParamListRquired=false;
-        CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
+        CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select,).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
         var onSuccessGetOneByUuidAndVersion = function (response) {
           if(response.paramList !=null){
             $('#responsive').modal({

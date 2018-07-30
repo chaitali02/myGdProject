@@ -1787,16 +1787,18 @@ public class MetadataServiceImpl {
 		query.fields().include("functionInfo");
 		query.fields().include("category");
 		
-		if (inputReq != null && category == null) {
+		if (inputReq != null && !inputReq.isEmpty() ) {
 			query.addCriteria(Criteria.where("inputReq").is(inputReq));
-
-		} else if (category != null && inputReq == null) {
+		} 
+		
+		if (category != null && !category.isEmpty()) {
 			query.addCriteria(Criteria.where("category").is(category));
-
-		} else if (inputReq != null && category != null) {
-			query.addCriteria(
-					Criteria.where("inputReq").is(inputReq).andOperator(Criteria.where("category").is(category)));
-		}
+		}  
+		
+//		if (!inputReq.isEmpty() && !category.isEmpty()) {
+//			query.addCriteria(
+//					Criteria.where("inputReq").is(inputReq).andOperator(Criteria.where("category").is(category)));
+//		}
 		List<Function> function = new ArrayList<>();
 		function = (List<Function>) mongoTemplate.find(query, Function.class);
 		return function;

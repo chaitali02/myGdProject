@@ -254,6 +254,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.showSampleTable = function (data) {
 		$scope.isShowSimpleData = true
 		$scope.isDataInpogress = true
+		$scope.isDataError = false;
 		$scope.tableclass = "centercontent";
 		$scope.showForm = false;
 		$scope.showGraphDiv = false;
@@ -388,7 +389,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 			MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });
 			var onSuccessFuntion = function (response) {
-				$scope.ruleLodeFunction = response
+				$scope.ruleLodeFunction = response;
+				$scope.allFunction=response;
 			}
 			$scope.filterTableArray = $sessionStorage.datasetjosn.filterTableArray;
 			$scope.attributeTableArray = $sessionStorage.datasetjosn.attributeTableArray
@@ -452,8 +454,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });
 				var onSuccessFuntion = function (response) {
 					$scope.ruleLodeFunction = response;
-					$scope.allFunction={};
-					$scope.allFunction.options=response;
+					//$scope.allFunction={};
+					$scope.allFunction=response;
 				}
 				$scope.attributeTableArray = response.sourceAttributes
 				$scope.filterTableArray = response.filterInfo;
@@ -490,12 +492,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				$scope.allFormula = response;
 				$scope.allFormula.splice(0, 1);
 			}
-			MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });
+			CommonService.getFunctionByCriteria("", "N","function").then(function (response) { onSuccessFuntion(response.data) });
 			var onSuccessFuntion = function (response) {
 				
 				$scope.ruleLodeFunction = response
-				$scope.allFunction={};
-				$scope.allFunction.options=response;
+				//$scope.allFunction={};
+				$scope.allFunction=response;
 			}
 			$scope.filterTableArray = $sessionStorage.datasetjosn.filterTableArray;
 			$scope.attributeTableArray = $sessionStorage.datasetjosn.attributeTableArray
@@ -559,10 +561,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				$scope.sourcedatapodattribute = response;
 				$scope.lhsdatapodattributefilter = response;
 			}
-			MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });			var onSuccessFuntion = function (response) {
+			CommonService.getFunctionByCriteria("", "N","function").then(function (response) { onSuccessFuntion(response.data) });			var onSuccessFuntion = function (response) {
 				$scope.ruleLodeFunction = response
-				$scope.allFunction={};
-				$scope.allFunction.options=response;
+				//$scope.allFunction={};
+				$scope.allFunction=response;
 			}
 			$scope.attributeTableArray = response.sourceAttributes
 			$scope.filterTableArray = response.filterInfo;
@@ -789,7 +791,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.filterTableArray[index].isrhsParamlist = false;
 			$scope.filterTableArray[index].isrhsFunction = true;
 
-			MetadataDatasetSerivce.getAllLatest("function","N").then(function (response) { onSuccressGetFunction(response.data) });
+			CommonService.getFunctionByCriteria("", "N","function").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				console.log(response)
 				$scope.allFunction = response;
@@ -922,8 +924,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = true;
-			MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessExpression(response.data) });
-			var onSuccessExpression = function (response) {
+			//MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessExpression(response.data) });
+			CommonService.getFunctionByCriteria("", "N","function").then(function (response) { onSuccressGetFunction(response.data) });
+			var onSuccressGetFunction = function (response) {
 				$scope.ruleLodeFunction = response
 			}
 
