@@ -387,7 +387,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			var onSuccessFormula = function (response) {
 				$scope.datasetLodeFormula = response
 			}
-			MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });
+			CommonService.getFunctionByCriteria("", "N","function").then(function (response) { onSuccessFuntion(response.data) });
 			var onSuccessFuntion = function (response) {
 				$scope.ruleLodeFunction = response;
 				$scope.allFunction=response;
@@ -451,7 +451,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 					$scope.sourcedatapodattribute = response;
 					$scope.lhsdatapodattributefilter = response;
 				}
-				MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessFuntion(response.data) });
+				CommonService.getFunctionByCriteria("", "N","function").then(function (response) { onSuccessFuntion(response.data) });
 				var onSuccessFuntion = function (response) {
 					$scope.ruleLodeFunction = response;
 					//$scope.allFunction={};
