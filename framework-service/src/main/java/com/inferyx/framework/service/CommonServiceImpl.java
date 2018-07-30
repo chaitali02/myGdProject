@@ -2023,7 +2023,9 @@ public class CommonServiceImpl <T> {
 			BaseEntity objDet = null;
 
 			Object metaObj = mapper.convertValue(object,Helper.getDomainClass(metaType));
-			Helper.getDomainClass(metaType).getMethod("setAppInfo", List.class).invoke(metaObj, metaIdentifierHolderList);
+//			if (Helper.getDomainClass(metaType).getMethod("getAppInfo", List.class).invoke(metaObj) == null) {
+				Helper.getDomainClass(metaType).getMethod("setAppInfo", List.class).invoke(metaObj, metaIdentifierHolderList);
+//			}
 			Helper.getDomainClass(metaType).getSuperclass().getMethod("setBaseEntity").invoke(metaObj);
 				
 			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
@@ -3878,6 +3880,37 @@ public class CommonServiceImpl <T> {
 			}
 		}
 		return latestParamList;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	// Get paramList from appInfo and populate param
+	public List<ParamListHolder> getAppParamList() throws JsonProcessingException {
+		// Get app info from session
+		MetaIdentifierHolder appInfo = securityServiceImpl.getAppInfo();
+		if (appInfo == null) {
+			return null;
+		}
+		List<ParamListHolder> paramHolderList = null;
+		Application application = (Application) getOneByUuidAndVersion(appInfo.getRef().getUuid(), appInfo.getRef().getVersion(), appInfo.getRef().getType().toString());
+		ParamList paramList = (ParamList) getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString());
+		ParamListHolder paramListHolder = null;
+		if (paramList != null && paramList.getParams() != null && !paramList.getParams().isEmpty()) {
+			paramHolderList = new ArrayList<>();
+			for (Param param : paramList.getParams()) {
+				paramListHolder = new ParamListHolder();
+				paramListHolder.setParamId(param.getParamId());
+				paramListHolder.setParamName(param.getParamName());
+				paramListHolder.setParamType(param.getParamType());
+				paramListHolder.setParamValue(param.getParamValue());
+				paramListHolder.setRef(param.getParamRef());
+				paramHolderList.add(paramListHolder);
+			}
+		}
+		return paramHolderList;
 	}
 	
 }

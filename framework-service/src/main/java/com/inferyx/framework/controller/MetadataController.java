@@ -961,4 +961,13 @@ public class MetadataController {
 			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamListChilds(plUuid, plVersion);
 	}
+	
+	
+	@RequestMapping(value = "/getFunctionByCriteria", method = RequestMethod.GET)
+	public @ResponseBody List<Function> getFunctionByCriteria(
+			@RequestParam(value ="category" , required = false) String category,
+			@RequestParam(value ="inputReq" , required = false ) String inputReq,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return metadataServiceImpl.getFunctionByCriteria(category,inputReq);
+	}
 }

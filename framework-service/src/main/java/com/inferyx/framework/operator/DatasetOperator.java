@@ -74,11 +74,12 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			AttributeRefHolder sourceAttr = null;
 			for (AttributeSource sourceAttribute : dataset.getAttributeInfo()) {
 				sourceAttr = new AttributeRefHolder();
-				if (sourceAttribute.getSourceAttr().getRef().getType() == MetaType.datapod) {
-					sourceAttr.setAttrId(sourceAttribute.getSourceAttr().getAttrId());
-				} else {
-					sourceAttr.setAttrId(sourceAttribute.getAttrSourceId());
-				}
+//				if (sourceAttribute.getSourceAttr().getRef().getType() == MetaType.datapod) {
+//					sourceAttr.setAttrId(sourceAttribute.getSourceAttr().getAttrId());
+//				} else {
+//					sourceAttr.setAttrId(sourceAttribute.getAttrSourceId());
+//				}
+				sourceAttr.setAttrId(sourceAttribute.getSourceAttr().getAttrId());
 				sourceAttr.setValue(sourceAttribute.getSourceAttr().getValue());
 				sourceAttr.setAttrName(sourceAttribute.getAttrSourceName());
 				sourceAttr.setRef(sourceAttribute.getSourceAttr().getRef());
@@ -118,6 +119,10 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 				}*/
 				builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
 			}
+			else if (dataset.getDependsOn().getRef().getType() == MetaType.dataset) {
+                DataSet innerDS = (DataSet) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
+                builder.append("(").append(generateSql(innerDS, refKeyMap, otherParams, usedRefKeySet, null, runMode)).append(") ").append(innerDS.getName()).append(" ");
+            }
 			return builder.toString();
 		}
 		

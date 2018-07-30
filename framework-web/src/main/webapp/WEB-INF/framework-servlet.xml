@@ -97,6 +97,8 @@
 	</bean>
 	
 	<bean id="taskThreadMap" name="taskThreadList" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="taskThreadMap2" name="taskThreadList2" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="dagDependeeMap2" name="dagDependeeMap2" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="livyClientMap" name="livyClientMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="graphpodMap" name="graphpodMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="stateMachineMap" name="stateMachineMap" class="java.util.concurrent.ConcurrentHashMap" />

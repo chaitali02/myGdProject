@@ -1,96 +1,131 @@
 {
-    "dependsOn" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee"
-        }
+  "uuid": "91290798-b6a9-4883-bc58-664b66a08794",
+  "version": "1526388650",
+  "name": "rel_customer_loss",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
     },
-    "relationInfo" : [ 
-        {
-            "join" : {
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee"
-                }
-            },
-            "joinType" : "",
-            "joinKey" : [ 
-                {
-                    "logicalOperator" : "",
-                    "operator" : "=",
-                    "operand" : [ 
-                        {
-                            "ref" : {
-                                "type" : "datapod",
-                                "uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee"
-                            },
-                            "attributeId" : 1
-                        }, 
-                        {
-                            "ref" : {
-                                "type" : "datapod",
-                                "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee"
-                            },
-                            "attributeId" : 1
-                        }
-                    ]
-                }
-            ]
-        }, 
-        {
-            "join" : {
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq"
-                }
-            },
-            "joinType" : "",
-            "joinKey" : [ 
-                {
-                    "logicalOperator" : "",
-                    "operator" : "=",
-                    "operand" : [ 
-                        {
-                            "ref" : {
-                                "type" : "datapod",
-                                "uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee"
-                            },
-                            "attributeId" : 0
-                        }, 
-                        {
-                            "ref" : {
-                                "type" : "datapod",
-                                "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq"
-                            },
-                            "attributeId" : 1
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    "uuid" : "91290798-b6a9-4883-bc58-664b66a08794",
-    "version" : "1526388650",
-    "name" : "rel_customer_loss",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
+    "value": null
+  },
+  "createdOn": "Tue Jul 24 14:05:40 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+      "version": null,
+      "name": "customer_portfolio"
     },
-    "createdOn" : ISODate("2018-05-15T12:50:50.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "published" : "N",
-    "appInfo" : [ 
+    "value": null
+  },
+  "relationInfo": [
+    {
+      "join": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+          "version": null,
+          "name": "industry_factor_transpose"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
         {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-                "version" : "1521430822"
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+                "version": null,
+                "name": "customer_portfolio"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "industry",
+              "attributeType": null
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+                "version": null,
+                "name": "industry_factor_transpose"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "factor",
+              "attributeType": null
             }
+          ]
         }
-    ]
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
+          "version": null,
+          "name": "customer_idiosyncratic_transpose"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+                "version": null,
+                "name": "customer_portfolio"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "cust_id",
+              "attributeType": null
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
+                "version": null,
+                "name": "customer_idiosyncratic_transpose"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "customer",
+              "attributeType": null
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    }
+  ]
 }

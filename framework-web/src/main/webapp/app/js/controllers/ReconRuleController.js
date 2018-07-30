@@ -201,6 +201,16 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     }
     $scope.targetFilterTable = newDataList;
   }
+
+
+  $scope.getAllLatestFunction=function(typeST){
+    
+    ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
+		var onSuccressGetFunction = function (response) {
+			typeST =='source' ? $scope.allSourceFilterFunction = response.options:$scope.allTargetFilterFunction = response.options;
+
+    }
+  }
   $scope.selectSourcelhsType = function (type, index) {
 		if (type == "string") {
 			$scope.sourceFilterTable[index].islhsSimple = true;
@@ -233,6 +243,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.sourceFilterTable[index].isrhsFormula = false;
       $scope.sourceFilterTable[index].rhsvalue;
       $scope.sourceFilterTable[index].isrhsDataset = false;
+      $scope.sourceFilterTable[index].isrhsParamlist = false;
+			$scope.sourceFilterTable[index].isrhsFunction = false;
 		}
 		else if (type == "datapod") {
 
@@ -240,6 +252,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.sourceFilterTable[index].isrhsDatapod = true;
       $scope.sourceFilterTable[index].isrhsFormula = false;
       $scope.sourceFilterTable[index].isrhsDataset = false;
+      $scope.sourceFilterTable[index].isrhsParamlist = false;
+			$scope.sourceFilterTable[index].isrhsFunction = false;
 		}
 		else if (type == "formula") {
 
@@ -247,9 +261,24 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.sourceFilterTable[index].isrhsSimple = false;
       $scope.sourceFilterTable[index].isrhsDatapod = false;
       $scope.sourceFilterTable[index].isrhsDataset = false;
+      $scope.sourceFilterTable[index].isrhsParamlist = false;
+			$scope.sourceFilterTable[index].isrhsFunction = false;
 			ReconRuleService.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				$scope.sorceFormula = response;
+			}
+    }
+    else if (type == "function") {
+
+			$scope.sourceFilterTable[index].isrhsFormula = false;
+			$scope.sourceFilterTable[index].isrhsSimple = false;
+      $scope.sourceFilterTable[index].isrhsDatapod = false;
+      $scope.sourceFilterTable[index].isrhsDataset = false;
+      $scope.sourceFilterTable[index].isrhsParamlist = false;
+			$scope.sourceFilterTable[index].isrhsFunction = true;
+			ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
+			var onSuccressGetFunction = function (response) {
+				$scope.allSourceFilterFunction = response.options;
 			}
     }
     else if (type == "dataset") {
@@ -257,10 +286,18 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.sourceFilterTable[index].isrhsSimple = false;
 			$scope.sourceFilterTable[index].isrhsDatapod = false;
 			$scope.sourceFilterTable[index].isrhsDataset = true;
-			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
-			var onSuccressGetAllLatestDataset = function (response) {
-				$scope.allDataset = response;
-			}
+			$scope.sourceFilterTable[index].isrhsParamlist = false;
+			$scope.sourceFilterTable[index].isrhsFunction = false;
+			
+		}
+		else if (type == "paramlist") {
+			$scope.sourceFilterTable[index].isrhsFormula = false;
+			$scope.sourceFilterTable[index].isrhsSimple = false;
+			$scope.sourceFilterTable[index].isrhsDatapod = false;
+			$scope.sourceFilterTable[index].isrhsDataset = false;
+			$scope.sourceFilterTable[index].isrhsParamlist=true;
+			$scope.sourceFilterTable[index].isrhsFunction = false;
+			
 		}
   }
   $scope.selectTargetlhsType = function (type, index) {
@@ -289,27 +326,46 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   }
   
 	$scope.selectTargetrhsType = function (type, index) {
+    debugger
 		if (type == "string") {
 			$scope.targetFilterTable[index].isrhsSimple = true;
 			$scope.targetFilterTable[index].isrhsDatapod = false;
 			$scope.targetFilterTable[index].isrhsFormula = false;
       $scope.targetFilterTable[index].rhsvalue;
       $scope.targetFilterTable[index].isrhsDataset = false;
+      $scope.targetFilterTable[index].isrhsParamlist = false;
+			$scope.targetFilterTable[index].isrhsFunction = false;
 		}
 		else if (type == "datapod") {
 			$scope.targetFilterTable[index].isrhsSimple = false;
 			$scope.targetFilterTable[index].isrhsDatapod = true;
       $scope.targetFilterTable[index].isrhsFormula = false;
       $scope.targetFilterTable[index].isrhsDataset = false;
+      $scope.targetFilterTable[index].isrhsParamlist = false;
+			$scope.targetFilterTable[index].isrhsFunction = false;
 		}
 		else if (type == "formula") {
 			$scope.targetFilterTable[index].isrhsFormula = true;
 			$scope.targetFilterTable[index].isrhsSimple = false;
       $scope.targetFilterTable[index].isrhsDatapod = false;
       $scope.targetFilterTable[index].isrhsDataset = false;
+      $scope.targetFilterTable[index].isrhsParamlist = false;
+			$scope.targetFilterTable[index].isrhsFunction = false;
 			ReconRuleService.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				$scope.targetFormula = response;
+			}
+    }
+    else if (type == "function") {
+			$scope.targetFilterTable[index].isrhsFormula = false;
+			$scope.targetFilterTable[index].isrhsSimple = false;
+      $scope.targetFilterTable[index].isrhsDatapod = false;
+      $scope.targetFilterTable[index].isrhsDataset = false;
+      $scope.targetFilterTable[index].isrhsParamlist = false;
+			$scope.targetFilterTable[index].isrhsFunction = true;
+			ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
+			var onSuccressGetFunction = function (response) {
+				$scope.allTargetFilterFunction = response.options;
 			}
     }
     else if (type == "dataset") {
@@ -317,10 +373,18 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.targetFilterTable[index].isrhsSimple = false;
 			$scope.targetFilterTable[index].isrhsDatapod = false;
 			$scope.targetFilterTable[index].isrhsDataset = true;
-			CommonService.getAllLatest("dataset").then(function (response) { onSuccressGetAllLatestDataset(response.data) });
-			var onSuccressGetAllLatestDataset = function (response) {
-				$scope.allDataset = response;
-			}
+			$scope.targetFilterTable[index].isrhsParamlist = false;
+			$scope.targetFilterTable[index].isrhsFunction = false;
+			
+		}
+		else if (type == "paramlist") {
+			$scope.targetFilterTable[index].isrhsFormula = false;
+			$scope.targetFilterTable[index].isrhsSimple = false;
+			$scope.targetFilterTable[index].isrhsDatapod = false;
+			$scope.targetFilterTable[index].isrhsDataset = false;
+			$scope.targetFilterTable[index].isrhsParamlist=true;
+			$scope.targetFilterTable[index].isrhsFunction = false;
+			
 		}
   }
 
@@ -392,44 +456,53 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.selectSourcerhsType($scope.sourceFilterTable[index].rhstype.text,index);
 		}
   }
-  $scope.SearchAttribute=function(index,filterType){
-    filterType =='source' ?$scope.selectDatasetAttr=$scope.sourceFilterTable[index].rhsdataset:$scope.selectDatasetAttr=$scope.targetFilterTable[index].rhsdataset
+  $scope.SearchAttribute=function(index,filterType,type,propertyType){
+    filterType =='source' ?$scope.selectAttr=$scope.sourceFilterTable[index][propertyType]:$scope.selectAttr=$scope.targetFilterTable[index][propertyType]
 	
-	
-		ReconRuleService.getAllLatest("dataset").then(function (response) { onSuccessRelation(response.data) });
-    $scope.searchAttrIndex=index;
-    $scope.searchAttrFilterType=filterType;
-		var onSuccessRelation = function (response) {
-			$scope.allDataset = response;
+    $scope.searchAttr={};
+		$scope.searchAttr.type=type;
+		$scope.searchAttr.propertyType=propertyType;
+    $scope.searchAttr.index=index;
+    $scope.searchAttr.filterType=filterType;
+		ReconRuleService.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
+		var onSuccessGetAllLatest = function (response) {
+      $scope.allSearchType = response;
+      if(typeof $stateParams.id != "undefined" && $scope.selectAttr){
+				var defaultoption={};
+				defaultoption.uuid=$scope.selectAttr.uuid;
+				defaultoption.name="";
+				$scope.allSearchType.defaultoption=defaultoption;
+			}
 			$('#searchAttr').modal({
 				backdrop: 'static',
 				keyboard: false
 			});
-			ReconRuleService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
-			  var onSuccessAttributeBySource = function (response) {
-          $scope.allDatasetAttr = response;
-          if (typeof $stateParams.id != "undefined" && $scope.selectDatasetAtt) {
-            var defaultoption={};
-            defaultoption.uuid=$scope.selectDatasetAttr.uuid;
-            defaultoption.name="";
-            $scope.allDataset.defaultoption=defaultoption;
-          }else{
-            $scope.selectDatasetAtt=$scope.allDatasetAttr[0]
-          }
-			 }
+			ReconRuleService.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid,type).then(function (response) { onSuccessAttributeBySource(response.data) });
+      var onSuccessAttributeBySource = function (response) {
+				$scope.allAttr = response;
+				if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
+					var defaultoption={};
+					defaultoption.uuid=$scope.selectAttr.uuid;
+					defaultoption.name="";
+					$scope.allSearchType.defaultoption=defaultoption;
+				}else{
+					$scope.selectAttr=$scope.allAttr[0]
+				}
+
+			}
 		}
-		
-	}
-  $scope.onChangeDataset=function(){
-    ReconRuleService.getAllAttributeBySource($scope.allDataset.defaultoption.uuid,'dataset').then(function (response) { onSuccessAttributeBySource(response.data) });
+  }
+  
+  $scope.onChangeSearchAttr=function(){
+		ReconRuleService.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid,$scope.searchAttr.type).then(function (response) { onSuccessAttributeBySource(response.data) });
 		var onSuccessAttributeBySource = function (response) {
-			$scope.allDatasetAttr = response;
+			$scope.allAttr = response;
 		}
 	}
 
 	$scope.SubmitSearchAttr=function(){
     console.log($scope.selectDatasetAttr);
-    $scope.searchAttrFilterType== 'source'?$scope.sourceFilterTable[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr: $scope.targetFilterTable[$scope.searchAttrIndex].rhsdataset=$scope.selectDatasetAttr;		
+    $scope.searchAttr.filterType =='source'?$scope.sourceFilterTable[$scope.searchAttr.index][$scope.searchAttr.propertyType]=$scope.selectAttr: $scope.targetFilterTable[$scope.searchAttr.index][$scope.searchAttr.propertyType]=$scope.selectAttr;		
 		$('#searchAttr').modal('hide')
   }
   
@@ -555,7 +628,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
      selectSourceFunction.uuid=$scope.reconruledata.sourceFunc.ref.uuid
      selectSourceFunction.name=$scope.reconruledata.sourceFunc.ref.name
      $scope.selectSoueceFunction=selectSourceFunction;
-
+     
      var selectTargetFunction={};
      selectTargetFunction.uuid=$scope.reconruledata.targetFunc.ref.uuid
      selectTargetFunction.name=$scope.reconruledata.targetFunc.ref.name
@@ -563,7 +636,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
      $scope.sourceFilterTable=response.sourceFilterInfo
      $scope.targetFilterTable=response.targetFilterInfo
 
-
+     $scope.getAllLatestFunction('source');
+     $scope.getAllLatestFunction('target');
     }
   }else{
     $scope.getAllLatest("source",$scope.selectSourceType,true,{});
@@ -602,7 +676,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
      $scope.selectTargetFunction=selectTargetFunction;
      $scope.sourceFilterTable=response.sourceFilterInfo
      $scope.targetFilterTable=response.targetFilterInfo
-
+     $scope.getAllLatestFunction('source');
+     $scope.getAllLatestFunction('target');
 
     }
   }
@@ -754,11 +829,22 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
             rhsref.uuid = $scope.sourceFilterTable[i].rhsformula.uuid;
             rhsoperand.ref = rhsref;
           }
+          else if ($scope.sourceFilterTable[i].rhstype.text == "function") {
+            rhsref.type = "function";
+            rhsref.uuid = $scope.sourceFilterTable[i].rhsfunction.uuid;
+            rhsoperand.ref = rhsref;
+          }
           else if ($scope.sourceFilterTable[i].rhstype.text == "dataset") {
             rhsref.type = "dataset";
             rhsref.uuid = $scope.sourceFilterTable[i].rhsdataset.uuid;
             rhsoperand.ref = rhsref;
             rhsoperand.attributeId = $scope.sourceFilterTable[i].rhsdataset.attributeId;
+          }
+          else if ($scope.sourceFilterTable[i].rhstype.text == "paramlist") {
+            rhsref.type = "paramlist";
+            rhsref.uuid = $scope.sourceFilterTable[i].rhsparamlist.uuid;
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.sourceFilterTable[i].rhsparamlist.attributeId;
           }
 				  operand[1] = rhsoperand;
 			  	filterInfo .operand = operand;
@@ -856,11 +942,22 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
             rhsref.uuid = $scope.targetFilterTable[i].rhsformula.uuid;
             rhsoperand.ref = rhsref;
           }
+          else if ($scope.targetFilterTable[i].rhstype.text == "function") {
+            rhsref.type = "function";
+            rhsref.uuid = $scope.targetFilterTable[i].rhsfunction.uuid;
+            rhsoperand.ref = rhsref;
+          }
           else if ($scope.targetFilterTable[i].rhstype.text == "dataset") {
             rhsref.type = "dataset";
             rhsref.uuid = $scope.targetFilterTable[i].rhsdataset.uuid;
             rhsoperand.ref = rhsref;
             rhsoperand.attributeId = $scope.targetFilterTable[i].rhsdataset.attributeId;
+          }
+          else if ($scope.targetFilterTable[i].rhstype.text == "paramlist") {
+            rhsref.type = "paramlist";
+            rhsref.uuid = $scope.targetFilterTable[i].rhsparamlist.uuid;
+            rhsoperand.ref = rhsref;
+            rhsoperand.attributeId = $scope.targetFilterTable[i].rhsparamlist.attributeId;
           }
 				  operand[1] = rhsoperand;
 			  	filterInfo .operand = operand;

@@ -290,6 +290,17 @@ RuleModule.factory('RuleFactory', function ($http, $location) {
       data: JSON.stringify(data),
     }).then(function (response) { return response })
   };
+  factory.findParamByParamList = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getParamByParamList?action=view&uuid=" + uuid + "&type=" + type,
+
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
   factory.findRuleResults = function(url) {
     var baseurl = $location.absUrl().split("app")[0] + url;
     return $http({
@@ -596,7 +607,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
 							obj.caption = "integer";
 						}
 					}
-					else if (response.filter.filterInfo[i].operand[0].ref.type == "datapod" ||response.filter.filterInfo[i].operand[0].ref.type == "dataset") {
+					else if (response.filter.filterInfo[i].operand[0].ref.type == "datapod" || response.filter.filterInfo[i].operand[0].ref.type == "dataset" || response.filter.filterInfo[i].operand[0].ref.type == "rule") {
 						var lhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"
@@ -650,7 +661,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
 						filterInfo.rhsvalue = response.filter.filterInfo[i].operand[1].value//.replace(/["']/g, "");
 						}
 					}
-					else if (response.filter.filterInfo[i].operand[1].ref.type == "datapod") {
+					else if(response.filter.filterInfo[i].operand[1].ref.type == "datapod" || response.filter.filterInfo[i].operand[1].ref.type == "rule") {
 						var rhsdatapodAttribute = {}
 						var obj = {}
 						obj.text = "datapod"
@@ -698,6 +709,22 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
 						rhsformula.name =response.filter.filterInfo[i].operand[1].ref.name;
 						filterInfo.rhsformula = rhsformula;
           }
+          else if (response.filter.filterInfo[i].operand[1].ref.type == "function") {
+						var rhsfunction = {}
+						var obj = {}
+						obj.text = "function"
+						obj.caption = "function"
+						filterInfo.rhstype = obj;
+						filterInfo.isrhsFormula =   false;
+						filterInfo.isrhsSimple =    false;
+						filterInfo.isrhsDatapod =   false;
+						filterInfo.isrhsDataset =   false;
+						filterInfo.isrhsParamlist = false;
+					    filterInfo.isrhsFunction =  true;
+						rhsfunction.uuid =response.filter.filterInfo[i].operand[1].ref.uuid;
+						rhsfunction.name =response.filter.filterInfo[i].operand[1].ref.name;
+						filterInfo.rhsfunction = rhsfunction;
+					}
           else if (response.filter.filterInfo[i].operand[1].ref.type == "dataset") {
 						var rhsdataset = {}
 						var obj = {}
@@ -714,7 +741,27 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
 						rhsdataset.dname = response.filter.filterInfo[i].operand[1].ref.name + "." + response.filter.filterInfo[i].operand[1].attributeName;
 						rhsdataset.attributeId = response.filter.filterInfo[i].operand[1].attributeId;
 						filterInfo.rhsdataset = rhsdataset;
-					}
+          }
+          else if (response.filter.filterInfo[i].operand[1].ref.type == "paramlist") {
+            var rhsparamlist = {}
+            var obj = {}
+            obj.text = "paramlist"
+            obj.caption = "paramlist"
+            filterInfo.rhstype = obj;
+            filterInfo.isrhsFormula = false;
+            filterInfo.isrhsSimple = false;
+            filterInfo.isrhsDatapod = false;
+            filterInfo.isrhsDataset = false;
+            filterInfo.isrhsParamlist = true;
+            filterInfo.isrhsFunction = false;
+            rhsparamlist.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+            rhsparamlist.datapodname = response.filter.filterInfo[i].operand[1].ref.name;
+            rhsparamlist.name = response.filter.filterInfo[i].operand[1].attributeName;
+            rhsparamlist.dname = response.filter.filterInfo[i].operand[1].ref.name + "." + response.filter.filterInfo[i].operand[1].attributeName;
+            rhsparamlist.attributeId = response.filter.filterInfo[i].operand[1].attributeId;
+        
+            filterInfo.rhsparamlist = rhsparamlist;
+          }
 					filterInfoArray[i] = filterInfo
 				}
 		  }
@@ -1237,6 +1284,24 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
         })
       }
     }
+    if(type == "paramlist"){
+			RuleFactory.findParamByParamList(uuid, type).then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.datapodname = response[j].ref.name;
+					attributedetail.name = response[j].paramName ;
+					attributedetail.dname = response[j].paramName //response[j].ref.name + "." + response[j].paramName;
+					attributedetail.attributeId = response[j].paramId;
+					attributes.push(attributedetail);
+				}
+				deferred.resolve({
+					data: attributes
+				})
+			}		
+		}
     return deferred.promise;
   }
 

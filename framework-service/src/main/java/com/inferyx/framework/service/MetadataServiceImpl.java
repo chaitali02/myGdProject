@@ -1769,4 +1769,37 @@ public class MetadataServiceImpl {
 				
 		return plHolderList;
 	}
+	
+	
+	public List<Function> getFunctionByCriteria(String category,String inputReq){
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("createdOn");
+		query.fields().include("appInfo");
+		query.fields().include("active");
+		query.fields().include("desc");
+		query.fields().include("published");
+		query.fields().include("inputReq");
+		query.fields().include("funcType");
+		query.fields().include("functionInfo");
+		query.fields().include("category");
+		
+		if (inputReq != null && category == null) {
+			query.addCriteria(Criteria.where("inputReq").is(inputReq));
+
+		} else if (category != null && inputReq == null) {
+			query.addCriteria(Criteria.where("category").is(category));
+
+		} else if (inputReq != null && category != null) {
+			query.addCriteria(
+					Criteria.where("inputReq").is(inputReq).andOperator(Criteria.where("category").is(category)));
+		}
+		List<Function> function = new ArrayList<>();
+		function = (List<Function>) mongoTemplate.find(query, Function.class);
+		return function;
+		
+	}
 }

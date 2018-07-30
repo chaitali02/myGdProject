@@ -125,6 +125,17 @@ MetadataModule.factory('MetadataDatasetFactory', function ($http, $location) {
 			method: "GET",
 		}).then(function (response) { return response })
 	}
+	factory.findParamByParamList = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getParamByParamList?action=view&uuid=" + uuid + "&type=" + type,
+
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	return factory;
 });
 
@@ -214,6 +225,24 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 				})
 			}
 
+		}
+		if(type == "paramlist"){
+			MetadataDatasetFactory.findParamByParamList(uuid, type).then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.datapodname = response[j].ref.name;
+					attributedetail.name = response[j].paramName ;
+					attributedetail.dname = response[j].paramName //response[j].ref.name + "." + response[j].paramName;
+					attributedetail.attributeId = response[j].paramId;
+					attributes.push(attributedetail);
+				}
+				deferred.resolve({
+					data: attributes
+				})
+			}		
 		}
 
 		return deferred.promise;
@@ -455,6 +484,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						filterInfo.isrhsDatapod = false;
 						filterInfo.isrhsFormula = false;
 						filterInfo.isrhsDataset = false;
+						filterInfo.isrhsParamlist = false;
+					    filterInfo.isrhsFunction = false;
 						filterInfo.rhsvalue =response.filter.filterInfo[i].operand[1].value;
 						if(response.filter.filterInfo[i].operator =="BETWEEN"){
 							obj.caption = "integer";
@@ -481,6 +512,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						filterInfo.isrhsFormula = false
 						filterInfo.isrhsDatapod = true;
 						filterInfo.isrhsDataset = false;
+						filterInfo.isrhsParamlist = false;
+					    filterInfo.isrhsFunction = false;
 						rhsdatapodAttribute.uuid =response.filter.filterInfo[i].operand[1].ref.uuid;
 						rhsdatapodAttribute.datapodname =response.filter.filterInfo[i].operand[1].ref.name;
 						rhsdatapodAttribute.name =response.filter.filterInfo[i].operand[1].attributeName;
@@ -498,6 +531,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						filterInfo.isrhsFormula = false
 						filterInfo.isrhsDatapod = true;
 						filterInfo.isrhsDataset = false;
+						filterInfo.isrhsParamlist = false;
+					    filterInfo.isrhsFunction = false;
 						rhsdatapodAttribute.uuid =response.filter.filterInfo[i].operand[1].ref.uuid;
 						rhsdatapodAttribute.datapodname =response.filter.filterInfo[i].operand[1].ref.name;
 						rhsdatapodAttribute.name =response.filter.filterInfo[i].operand[1].attributeName;
@@ -515,9 +550,27 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						filterInfo.isrhsSimple = false;
 						filterInfo.isrhsDatapod = false;
 						filterInfo.isrhsDataset = false;
+						filterInfo.isrhsParamlist = false;
+					    filterInfo.isrhsFunction = false;
 						rhsformula.uuid =response.filter.filterInfo[i].operand[1].ref.uuid;
 						rhsformula.name =response.filter.filterInfo[i].operand[1].ref.name;
 						filterInfo.rhsformula = rhsformula;
+					}
+					else if (response.filter.filterInfo[i].operand[1].ref.type == "function") {
+						var rhsfunction = {}
+						var obj = {}
+						obj.text = "function"
+						obj.caption = "function"
+						filterInfo.rhstype = obj;
+						filterInfo.isrhsFormula =   false;
+						filterInfo.isrhsSimple =    false;
+						filterInfo.isrhsDatapod =   false;
+						filterInfo.isrhsDataset =   false;
+						filterInfo.isrhsParamlist = false;
+					    filterInfo.isrhsFunction =  true;
+						rhsfunction.uuid =response.filter.filterInfo[i].operand[1].ref.uuid;
+						rhsfunction.name =response.filter.filterInfo[i].operand[1].ref.name;
+						filterInfo.rhsfunction = rhsfunction;
 					}
 					else if (response.filter.filterInfo[i].operand[1].ref.type == "dataset") {
 						var rhsdataset = {}
@@ -529,6 +582,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 						filterInfo.isrhsSimple = false;
 						filterInfo.isrhsDatapod = false;
 						filterInfo.isrhsDataset = true;
+						filterInfo.isrhsParamlist = false;
+					    filterInfo.isrhsFunction = false;
 						rhsdataset.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
 						rhsdataset.datapodname = response.filter.filterInfo[i].operand[1].ref.name;
 						rhsdataset.name = response.filter.filterInfo[i].operand[1].attributeName;
@@ -537,6 +592,28 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 				
 						filterInfo.rhsdataset = rhsdataset;
 					}
+				
+				else if (response.filter.filterInfo[i].operand[1].ref.type == "paramlist") {
+					var rhsparamlist = {}
+					var obj = {}
+					obj.text = "paramlist"
+					obj.caption = "paramlist"
+					filterInfo.rhstype = obj;
+					filterInfo.isrhsFormula = false;
+					filterInfo.isrhsSimple = false;
+					filterInfo.isrhsDatapod = false;
+					filterInfo.isrhsDataset = false;
+					filterInfo.isrhsParamlist = true;
+					filterInfo.isrhsFunction = false;
+					rhsparamlist.uuid = response.filter.filterInfo[i].operand[1].ref.uuid;
+					rhsparamlist.datapodname = response.filter.filterInfo[i].operand[1].ref.name;
+					rhsparamlist.name = response.filter.filterInfo[i].operand[1].attributeName;
+					rhsparamlist.dname = response.filter.filterInfo[i].operand[1].ref.name + "." + response.filter.filterInfo[i].operand[1].attributeName;
+					rhsparamlist.attributeId = response.filter.filterInfo[i].operand[1].attributeId;
+			
+					filterInfo.rhsparamlist = rhsparamlist;
+				}
+					
 					filterInfoArray[i] = filterInfo
 				}
 		    }
@@ -623,7 +700,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 				sourceAttributesArray[n] = attributeInfo
 			}
 			datasetviewjson.sourceAttributes = sourceAttributesArray
-			//			  console.log("filertIfnfo"+JSON.stringify(datasetviewjson.filterInfo))
+			//console.log("filertIfnfo"+JSON.stringify(datasetviewjson.filterInfo))
 			deferred.resolve({
 				data: datasetviewjson
 			})

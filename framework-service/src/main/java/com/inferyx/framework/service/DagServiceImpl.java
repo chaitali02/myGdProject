@@ -37,7 +37,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IDagDao;
-import com.inferyx.framework.domain.Algorithm;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
@@ -54,6 +54,8 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OperatorExec;
+import com.inferyx.framework.domain.Param;
+import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Predict;
@@ -530,6 +532,14 @@ public class DagServiceImpl {
 			execParams = new ExecParams();
 			execParams.setRefKeyList(new ArrayList<>());
 		}
+		// Get ParamList Holder if available
+		List<ParamListHolder> paramListHolder = commonServiceImpl.getAppParamList();
+		if (paramListHolder != null && !paramListHolder.isEmpty()) { 
+				if (execParams.getParamListInfo() == null) { 
+					execParams.setParamListInfo(new ArrayList<>());
+				}
+			execParams.getParamListInfo().addAll(paramListHolder);
+		}
 
 		if (dagExec == null) {
 			// Create object
@@ -584,7 +594,7 @@ public class DagServiceImpl {
 		mHolder.setRef(mIdentifier);
 		return mHolder;
 	}
-
+	
 	/********************** UNUSED 
 	 * @throws JsonProcessingException **********************/
 	/*public Dag resolveName(Dag dag) throws JsonProcessingException {
@@ -1111,6 +1121,7 @@ public class DagServiceImpl {
 						}
 						statusList.remove(failedStatus);
 						statusList.add(failedStatus);
+						indvExecTask.setStatusList(statusList);
 						e.printStackTrace();
 						String message = null;
 						try {
@@ -1118,6 +1129,25 @@ public class DagServiceImpl {
 						}catch (Exception e2) {
 							// TODO: handle exception
 						}
+						// Set stageExec and DagExec to failed
+						indvDagExecStg.setTasks(DagExecUtil.convertToTaskList(dagExecTasks));
+						statusList = indvDagExecStg.getStatusList();
+						if (statusList == null) {
+							statusList = new ArrayList<Status>();
+						}
+						statusList.remove(failedStatus);
+						statusList.add(failedStatus);
+						indvDagExecStg.setStatusList(statusList);
+						dagExec.setStages(DagExecUtil.convertToStageList(dagExecStgs));
+						
+						statusList = dagExec.getStatusList();
+						if (statusList == null) {
+							statusList = new ArrayList<Status>();
+						}
+						statusList.remove(failedStatus);
+						statusList.add(failedStatus);
+						dagExec.setStatusList(statusList);
+						commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.");
 						throw new Exception((message != null) ? message : "Pipeline execution failed.");
 					} finally {

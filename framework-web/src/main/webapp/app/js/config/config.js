@@ -79,7 +79,9 @@ InferyxApp.constant("CF_FILTER",{
 	{ "text": "string", "caption": "integer" ,"disabled":false },
 	{ "text": "datapod", "caption": "attribute","disabled":false },
 	{ "text": "formula", "caption": "formula","disabled":false },
-	{ "text": "dataset", "caption": "dataset" ,"disabled":false }]
+    { "text": "dataset", "caption": "dataset" ,"disabled":false },
+    { "text":  "paramlist", "caption": "paramlist" ,"disabled":false },
+    { "text": "function", "caption": "function" ,"disabled":false }]
 });
 
 InferyxApp.constant("CF_GRAPHPOD",{

@@ -503,10 +503,14 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$compil
            $scope.zoomSize=$scope.zoomSize+1;
          }
          
-         $scope.changeSliderBack=function() {
-           $scope.zoomSize=$scope.zoomSize-1;
-         }
-       
+        $scope.changeSliderBack=function() {
+          if($scope.zoomSize >=5)
+          $scope.zoomSize=$scope.zoomSize-1;
+        }
+        
+        $scope.resize=function(){
+          $scope.zoomSize =10;
+        }
          $scope.zoomSize = 7;
          setGrid(paper, 10, '#AAAAAA');
          var initialised = false;
@@ -1136,8 +1140,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
      
      $scope.changeSliderBack=function() {
-       $scope.zoomSize=$scope.zoomSize-1;
-     }
+      if($scope.zoomSize >=5)
+      $scope.zoomSize=$scope.zoomSize-1;
+    }
+    
+    $scope.resize=function(){
+      $scope.zoomSize =10;
+    }
      
      window.navigateTo = function(url){
        var state = JSON.parse(url);
@@ -1159,12 +1168,77 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
      $scope.operatorResult=function(param){
       $('#viewResultModel').modal("hide");
-      showResult(param)
+      showResult($scope.selectedResult)
      }
-     
      $scope.onChangeOperator=function(index){
-      $scope.isExecParamsetTable=false;
-      CommonService.getOneByUuidAndVersion($scope.taskOnOperator[index].paramSetUuid,"","paramset").then(function(response){ 
+       $scope.selectedResult=$scope.execParamParamset[index].param;
+       $scope.isSelectedResDis=false;
+     }
+    //  $scope.onChangeOperator=function(index){
+    //   $scope.isExecParamsetTable=false;
+    //   CommonService.getOneByUuidAndVersion($scope.taskOnOperator[index].paramSetUuid,"","paramset").then(function(response){ 
+    //     var paramInfoArray=[];
+    //     $scope.isExecParamsetTable=true;
+    //     var result=response.data
+    //     if(response !=null) {
+    //       for (var i=0; i < result.paramInfo.length; i++) {
+    //         var paramInfo = {};
+    //         paramInfo.paramSetId=result.paramInfo[i].paramSetId;
+    //         if($scope.taskOnOperator[index].paramSetId == result.paramInfo[i].paramSetId){
+    //           paramInfo.selected=true;
+    //         }
+    //         var paramSetValarray = [];
+    //         for (var j = 0; j < result.paramInfo[i].paramSetVal.length; j++) {
+    //           var paramSetValjson = {};
+    //           paramSetValjson.paramId = result.paramInfo[i].paramSetVal[j].paramId;
+    //           paramSetValjson.paramName = result.paramInfo[i].paramSetVal[j].paramName;
+    //           paramSetValjson.value = result.paramInfo[i].paramSetVal[j].value;
+    //           paramSetValjson.ref = result.paramInfo[i].paramSetVal[j].ref;
+    //           paramSetValarray[j] = paramSetValjson;
+    //           paramInfo.paramSetVal = paramSetValarray;
+    //           paramInfo.value = result.paramInfo[i].paramSetVal[j].value;
+    //         }
+    //         paramInfoArray[i] = paramInfo;
+    //       }
+    //       $scope.execParamParamsetCol = paramInfoArray[0].paramSetVal;
+    //       $scope.execParamParamset = paramInfoArray;
+         
+    //     }
+    //   });
+    //  }
+
+
+     $scope.getOperatorDetail=function(params){
+      $scope.taskOnOperator=[];
+      for(var i=0;i<params.operator[0].operatorInfo.length;i++){
+        var taskOperators={};
+        var paramObj={};
+        paramObj.elementType=params.elementType;
+        paramObj.id=params.operator[0].operatorInfo[i].ref.uuid;
+        paramObj.name=params.name;
+        paramObj.parentStage=params.parentStage;
+        paramObj.ref=params.ref;
+        paramObj.taskId=params.taskId;
+        paramObj.type=params.type;
+        paramObj.typeLabel=params.typeLabel;
+        paramObj.version=params.operator[0].operatorInfo[i].ref.version;;
+        taskOperators.param=paramObj;
+     //   taskOperators.param.operator=null;
+        taskOperators.uuid=params.operator[0].operatorInfo[i].ref.uuid;
+        taskOperators.version=params.operator[0].operatorInfo[i].ref.version;
+        taskOperators.name=params.operator[0].operatorInfo[i].ref.name;
+        taskOperators.selected=false
+        taskOperators.paramSetId=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].paramSetId;
+        taskOperators.paramSetUuid=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.uuid;
+        taskOperators.paramSetName=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.name;
+        $scope.taskOnOperator[i]=taskOperators;
+      }
+      CommonService.getOneByUuidAndVersion($scope.taskOnOperator[0].paramSetUuid,"","paramset").then(function(response){ 
+        $('#viewResultModel').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        $scope.isSelectedResDis=true;
         var paramInfoArray=[];
         $scope.isExecParamsetTable=true;
         var result=response.data
@@ -1172,12 +1246,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           for (var i=0; i < result.paramInfo.length; i++) {
             var paramInfo = {};
             paramInfo.paramSetId=result.paramInfo[i].paramSetId;
-            if($scope.taskOnOperator[index].paramSetId == result.paramInfo[i].paramSetId){
-              paramInfo.selected=true;
-            }
+            paramInfo.param=$scope.taskOnOperator[i].param;
+            paramInfo.paramSetUuid=$scope.taskOnOperator[i].paramSetUuid;
+            paramInfo.paramSetName=$scope.taskOnOperator[i].paramSetName;
+            paramInfo.selected =false;
             var paramSetValarray = [];
             for (var j = 0; j < result.paramInfo[i].paramSetVal.length; j++) {
               var paramSetValjson = {};
+            
               paramSetValjson.paramId = result.paramInfo[i].paramSetVal[j].paramId;
               paramSetValjson.paramName = result.paramInfo[i].paramSetVal[j].paramName;
               paramSetValjson.value = result.paramInfo[i].paramSetVal[j].value;
@@ -1190,10 +1266,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           }
           $scope.execParamParamsetCol = paramInfoArray[0].paramSetVal;
           $scope.execParamParamset = paramInfoArray;
-         
         }
       });
+
      }
+
 
      window.showResult = function(params){
        $scope.lastParams = params;
@@ -1209,33 +1286,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         console.log(params);
         $scope.taskOnOperator=[];
         if(params.operator && params.operator[0].operatorInfo.length >1){
-          for(var i=0;i<params.operator[0].operatorInfo.length;i++){
-            var taskOperators={};
-            var paramObj={};
-            paramObj.elementType=params.elementType;
-            paramObj.id=params.operator[0].operatorInfo[i].ref.uuid;
-            paramObj.name=params.name;
-            paramObj.parentStage=params.parentStage;
-            paramObj.ref=params.ref;
-            paramObj.taskId=params.taskId;
-            paramObj.type=params.type;
-            paramObj.typeLabel=params.typeLabel;
-            paramObj.version=params.operator[0].operatorInfo[i].ref.version;;
-            taskOperators.param=paramObj;
-         //   taskOperators.param.operator=null;
-            taskOperators.uuid=params.operator[0].operatorInfo[i].ref.uuid;
-            taskOperators.version=params.operator[0].operatorInfo[i].ref.version;
-            taskOperators.name=params.operator[0].operatorInfo[i].ref.name;
-            taskOperators.selected=false
-            taskOperators.paramSetId=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].paramSetId;
-            taskOperators.paramSetUuid=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.uuid;
-            taskOperators.paramSetName=params.operator[0].operatorParams.EXEC_PARAMS.paramInfo[i].ref.name;
-            $scope.taskOnOperator[i]=taskOperators;
-          }
-          $('#viewResultModel').modal({
-            backdrop: 'static',
-            keyboard: false
-          });
+          $scope.getOperatorDetail(params);
         }else{
           $scope.lastResultsParams = params;
           $scope.showResults = true;
@@ -1865,6 +1916,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        if(thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid){
          $scope.popupModel.selectedType = thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.name;
        }
+       
        if(elementType =="operator" &&  !newCell){
         var uuid=$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid;
         CommonService.getOneByUuidAndVersion(uuid,"","operator").then(function(response){ 
@@ -2651,6 +2703,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var temp = $scope.popupModel.selectedType.split('|');
         $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
         $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
+        if($scope.popupModel.modelData.name.indexOf("New") !=-1){
+          $scope.popupModel.modelData.name=temp[1];
+        }
+
         var objDetail={}
         objDetail.uuid=temp[0];
         objDetail.version="";
