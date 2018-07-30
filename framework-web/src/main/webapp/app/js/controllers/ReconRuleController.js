@@ -204,10 +204,11 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 
 
   $scope.getAllLatestFunction=function(typeST){
-    
-    ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
+    CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+      onSuccressGetFunction(response.data)});	
+    // ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
 		var onSuccressGetFunction = function (response) {
-			typeST =='source' ? $scope.allSourceFilterFunction = response.options:$scope.allTargetFilterFunction = response.options;
+			typeST =='source' ? $scope.allSourceFilterFunction = response:$scope.allTargetFilterFunction = response;
 
     }
   }
@@ -275,10 +276,12 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.sourceFilterTable[index].isrhsDatapod = false;
       $scope.sourceFilterTable[index].isrhsDataset = false;
       $scope.sourceFilterTable[index].isrhsParamlist = false;
-			$scope.sourceFilterTable[index].isrhsFunction = true;
-			ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
+      $scope.sourceFilterTable[index].isrhsFunction = true;
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});	
+			// ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
-				$scope.allSourceFilterFunction = response.options;
+				$scope.allSourceFilterFunction = response;
 			}
     }
     else if (type == "dataset") {
@@ -326,7 +329,6 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   }
   
 	$scope.selectTargetrhsType = function (type, index) {
-    debugger
 		if (type == "string") {
 			$scope.targetFilterTable[index].isrhsSimple = true;
 			$scope.targetFilterTable[index].isrhsDatapod = false;
@@ -362,10 +364,12 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.targetFilterTable[index].isrhsDatapod = false;
       $scope.targetFilterTable[index].isrhsDataset = false;
       $scope.targetFilterTable[index].isrhsParamlist = false;
-			$scope.targetFilterTable[index].isrhsFunction = true;
-			ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
+      $scope.targetFilterTable[index].isrhsFunction = true;
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});	
+			// ReconRuleService.getAllLatest("function").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
-				$scope.allTargetFilterFunction = response.options;
+				$scope.allTargetFilterFunction = response;
 			}
     }
     else if (type == "dataset") {

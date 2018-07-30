@@ -1771,7 +1771,7 @@ public class MetadataServiceImpl {
 	}
 	
 	
-	public List<Function> getFunctionByCriteria(String category,String inputReq){
+	public List<Function> getFunctionByCriteria(String category, String inputReq) throws JsonProcessingException {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -1786,20 +1786,30 @@ public class MetadataServiceImpl {
 		query.fields().include("funcType");
 		query.fields().include("functionInfo");
 		query.fields().include("category");
-		
-		if (inputReq != null && category == null) {
+
+		if (inputReq != null && !inputReq.isEmpty()) {
 			query.addCriteria(Criteria.where("inputReq").is(inputReq));
-
-		} else if (category != null && inputReq == null) {
-			query.addCriteria(Criteria.where("category").is(category));
-
-		} else if (inputReq != null && category != null) {
-			query.addCriteria(
-					Criteria.where("inputReq").is(inputReq).andOperator(Criteria.where("category").is(category)));
 		}
-		List<Function> function = new ArrayList<>();
-		function = (List<Function>) mongoTemplate.find(query, Function.class);
-		return function;
+
+		if (category != null && !category.isEmpty()) {
+			query.addCriteria(Criteria.where("category").is(category));
+		}
+
+		// if (!inputReq.isEmpty() && !category.isEmpty()) {
+		// query.addCriteria(
+		// Criteria.where("inputReq").is(inputReq).andOperator(Criteria.where("category").is(category)));
+		// }
+		List<Function> result = new ArrayList<>();
+		List<Function> functions = new ArrayList<>();
+		functions = (List<Function>) mongoTemplate.find(query, Function.class);
 		
+		for (Function function : functions) {
+			Function latestFunction = (Function) commonServiceImpl.getLatestByUuid(function.getUuid(),
+					MetaType.function.toString(), "N");
+			result.add(latestFunction);
+		}
+
+		return result;
+
 	}
 }

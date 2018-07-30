@@ -325,10 +325,12 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       var onSuccessFormula = function (response) {
         $scope.ruleLodeFormula = response.data
       }
-      RuleService.getAllLatestFunction("function", "N").then(function (response) {
-        onSuccessFunction(response.data)
-      });
-      var onSuccessFunction = function (response) {
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});	
+      // RuleService.getAllLatestFunction("function", "N").then(function (response) {
+      //   onSuccessFunction(response.data)
+      // });
+      var onSuccressGetFunction = function (response) {
         $scope.ruleLodeFunction = response;
         $scope.allFunction=response;
       }
@@ -413,10 +415,12 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         $scope.ruleLodeExpression = response
       }
       $scope.expressionTableArray = response.expressionlist
-      RuleService.getAllLatestFunction("function", "N").then(function (response) {
-        onSuccessFunction(response.data)
-      });
-      var onSuccessFunction = function (response) {
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});	
+      // RuleService.getAllLatestFunction("function", "N").then(function (response) {
+      //   onSuccessFunction(response.data)
+      // });
+      var onSuccressGetFunction = function (response) {
         $scope.ruleLodeFunction = response
         $scope.allFunction=response;
       }
@@ -923,9 +927,11 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist=false;
 			$scope.filterTableArray[index].isrhsParamlist = false;
-			$scope.filterTableArray[index].isrhsFunction = true;
-      RuleService.getAllLatestFunction("function", "N").then(function (response) {
+      $scope.filterTableArray[index].isrhsFunction = true;
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
         onSuccressGetFunction(response.data)});		
+      // RuleService.getAllLatestFunction("function", "N").then(function (response) {
+      //   onSuccressGetFunction(response.data)});		
         var onSuccressGetFunction = function (response) {
 				console.log(response)
 				$scope.allFunction = response;
@@ -1024,9 +1030,11 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.attributeTableArray[index].isSourceAtributeExpression = false;
       $scope.attributeTableArray[index].isSourceAtributeFunction = true;
       $scope.attributeTableArray[index].isSourceAtributeParamList = false;
-      RuleService.getAllLatestFunction("function", "N").then(function (response) {
-        onSuccessExpression(response.data)
-      });
+      CommonService.getFunctionByCriteria("", "N","function").then(function (response) {
+        onSuccressGetFunction(response.data)});	
+      // RuleService.getAllLatestFunction("function", "N").then(function (response) {
+      //   onSuccessExpression(response.data)
+      // });
       var onSuccessExpression = function (response) {
         $scope.ruleLodeFunction = response
       }
