@@ -638,7 +638,7 @@
     "statusList" : [],
     "uuid" : "d807674e-4cd2-483b-a836-sf1b0fc8e38c",
     "version" : "1532676022",
-    "name" : "Ppl_Dag_Test_Thread_2",
+    "name" : "ppl_dag_test_thread_2",
     "createdBy" : {
         "ref" : {
             "type" : "user",
