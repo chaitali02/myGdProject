@@ -30,11 +30,13 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.service.CommonServiceImpl;
  
 @Component
 public class FilterOperator {
 	
 	@Autowired protected MetadataUtil daoRegister;
+	@Autowired protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired protected JoinKeyOperator joinKeyOperator;
 	private final String COMMA = ", ";
 	
@@ -62,29 +64,17 @@ public class FilterOperator {
 			case filter : 
 				OrderKey filterKey = filterIdentifier.getRef().getKey();
 				Filter filter = null;
-				if (null == filterKey.getVersion()) {
-					filter = daoRegister.getFilterDao().findLatestByUuid(filterKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				} else {
-					filter = daoRegister.getFilterDao().findOneByUuidAndVersion(filterKey.getUUID(),
-							filterKey.getVersion());
-				}
+				filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 
-
-					MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
-					usedRefKeySet.add(filterRef);
-					builder.append(" AND (").append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams)).append(")");
-					break;
+				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
+				usedRefKeySet.add(filterRef);
+				builder.append(" AND (").append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams)).append(")");
+				break;
 			case datapod:
 				OrderKey datapodKey = filterIdentifier.getRef().getKey();
 				Datapod datapod = null;
-				if (null == datapodKey.getVersion()) {
-					datapod = daoRegister.getDatapodDao().findLatestByUuid(datapodKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				}else {
-					datapod = daoRegister.getDatapodDao().findOneByUuidAndVersion(datapodKey.getUUID(),
-							datapodKey.getVersion());
-				}
+				datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
+				
 				builder.append(" AND (").append(generateDatapodFilterSql(datapod, filterIdentifier.getAttrId(), filterIdentifier.getValue())).append(")");
 				MetaIdentifier datapodRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 				usedRefKeySet.add(datapodRef);
