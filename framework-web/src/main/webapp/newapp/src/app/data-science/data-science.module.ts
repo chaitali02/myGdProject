@@ -43,12 +43,9 @@ import { DialogModule } from 'primeng/components/dialog/dialog'
 import { CommonListService } from '../common-list/common-list.service';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import {ResultDetailsComponent} from './results/resultDetails.component';
-<<<<<<< HEAD
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { DataScienceResultService } from '../metadata/services/dataScienceResult.service';
-=======
 import { AlgorithmService } from '../metadata/services/algorithm.service';
->>>>>>> 4b9cb652ecf9c9f55c4d8eadfaf55cfe635bfe71
 
 //import {PmmlDirective} from './results/pmml.directive';
 @NgModule({
@@ -100,12 +97,9 @@ import { AlgorithmService } from '../metadata/services/algorithm.service';
         OperatorService,
         OperatorComponent,
         CommonListService,
-<<<<<<< HEAD
-        DataScienceResultService
-=======
+        DataScienceResultService,
         AlgorithmService,
 
->>>>>>> 4b9cb652ecf9c9f55c4d8eadfaf55cfe635bfe71
     ]
 })
  
