@@ -319,7 +319,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			  var paramsjson = {};
 			  paramsjson.uuid = response[i].ref.uuid;
 			  paramsjson.name = response[i].ref.name + "." + response[i].paramName;
-			  paramsjson.attrId = response[i].paramId;
+			  paramsjson.attributeId = response[i].paramId;
 			  paramsjson.attrType = response[i].paramType;
 			  paramsjson.paramName = response[i].paramName;
 			  paramsjson.caption = "app_"+paramsjson.name

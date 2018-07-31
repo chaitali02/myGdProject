@@ -232,6 +232,7 @@
                         </span>
                       </td>
                       <td>
+                      
                         <div ng-if="tabledata.paramValueType =='distribution'" ng-init="getAllLatest('distribution',$index)">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <select select2 class="form-control" name="tabledata{{$index}}" ng-disabled="{{mode}}"
@@ -247,10 +248,12 @@
                             class="form-control">
                           </span>
                         </div>
+                        
                         <div  ng-show="tabledata.paramValueType =='date'">
                           <div class="col-md-12" style="margin-top:0px;margin-bottom: -20px;">
+                        
                             <p class="input-group">
-                              <input type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="tabledata.paramValue" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                              <input type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="tabledata.paramValue" is-open="popup2.opened" ng-disabled="!isEdit" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
                               <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
                               </span>

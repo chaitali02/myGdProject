@@ -21,7 +21,7 @@ DatascienceModule.directive('lowercase', function () {
 });
 DatascienceModule.controller('CreateParamListController', function (CommonService, $state, $stateParams, $rootScope, $scope, $sessionStorage, ParamListService, privilegeSvc,$timeout,$filter) {
 
-	$scope.mode="";
+	$scope.mode=false;
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -53,6 +53,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	}
 	else {
 		$scope.isAdd = true;
+		$scope.isEdit = true;
 	}
 	$scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -100,8 +101,8 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.dateOptions = {
 		dateDisabled: disabled,
 		formatYear: 'yy',
-		maxDate: new Date(2020, 5, 22),
-		minDate: new Date(),
+	//	maxDate: new Date(2020, 5, 22),
+	//	minDate: new Date(),
 		startingDay: 1
 	};
 	function disabled(data) {
@@ -439,6 +440,15 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					paramValue.ref=paramRef;
 					paraminfo.paramValue =paramValue
 					paramInfoArray[i] = paraminfo; 
+				}
+				else if($scope.paramtable[i].paramType =='date'){
+					var paramRef={}	 
+					paramRef.type="simple";
+					paramValue.ref=paramRef;
+					paramValue.value="'"+$filter('date')($scope.paramtable[i].paramValue, "MM/dd/yyyy")+"'";
+					paraminfo.paramValue=paramValue
+					paramInfoArray[i] = paraminfo; 
+
 				}
 				else {
 					paramValue=null;

@@ -452,7 +452,7 @@
                                                                                 <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,'source',tabledata.rhstype.text,'rhsparamlist')"></span>
                                                                             </div> -->
                                                                             <select select2 class="form-control"  data-ng-model="tabledata.rhsparamlist"
-                                                                            ng-options="r as r.caption for r in allSourceparamlistParams track by r.uuid" ng-disabled="{{mode}}"
+                                                                            ng-options="r as r.caption for r in allSourceparamlistParams track by r.uuid+attributeId" ng-disabled="{{mode}}"
                                                                              required disable-validation-message="" ng-change="onChangeRhsParamList('source')"></select>
                                                                         </span>
                                                                     </div>
@@ -719,7 +719,7 @@
                                                                                 <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,'trarget',tabledata.rhstype.text,'rhsparamlist')"></span>
                                                                             </div> -->
                                                                             <select select2 class="form-control"  data-ng-model="tabledata.rhsparamlist"
-                                                                            ng-options="r as r.caption for r in allTargetparamlistParams track by r.uuid" ng-disabled="{{mode}}"
+                                                                            ng-options="r as r.caption for r in allTargetparamlistParams track by r.uuid+attributeId" ng-disabled="{{mode}}"
                                                                              required disable-validation-message="" ng-change="onChangeRhsParamList('source')"></select>
                                                                         </span>
                                                                     </div>

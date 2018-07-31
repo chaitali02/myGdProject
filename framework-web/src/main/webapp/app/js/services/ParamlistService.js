@@ -119,10 +119,16 @@ DatascienceModule.service("ParamListService", function ($http, ParamListFactory,
           paramInfo.paramId=response.params[i].paramId; 
           paramInfo.paramName=response.params[i].paramName;
           paramInfo.paramType=response.params[i].paramType.toLowerCase();
-          if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple"){
+          if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple" && ["string", "double", "integer", "list"].indexOf(response.params[i].paramType) != -1){
             paramInfo.paramValue=response.params[i].paramValue.value;
             paramInfo.paramValueType="simple"
-        }else if(response.params[i].paramValue !=null){
+        }
+        else if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple" && ["date"].indexOf(response.params[i].paramType) !=-1){
+          var temp=response.params[i].paramValue.value.replace(/["']/g, "")
+          paramInfo.paramValue=new Date(temp);
+          paramInfo.paramValueType="date"
+        }
+        else if(response.params[i].paramValue !=null){
           var paramValue={};
           paramValue.uuid=response.params[i].paramValue.ref.uuid;
           paramValue.type=response.params[i].paramValue.ref.type;
