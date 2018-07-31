@@ -30,9 +30,14 @@
                 <div class="form-body" *ngIf="!ppml">
                     <form  class="form-horizontal" name="myform">
                         <div class="form-group" >
+<<<<<<< HEAD
                             <div class="col-md-12" style="padding: 3px 12px;background-color: #f5f5f5;border: 1px solid #ccc;
                             border-radius: 4px; margin: -10px 10px 0px 10px; width: 98%;max-height: 400px; overflow-y: scroll">
                             <ngx-json-viewer [json]="modelResult" [expanded]="false"></ngx-json-viewer>                            
+=======
+                            <div class="col-md-12" >{{modelResult | json }}
+                                <textarea  [value]="modelResult" placeholder=""  [disabled]="true"  style="min-height:150px; width:100%;"></textarea>
+>>>>>>> 4b9cb652ecf9c9f55c4d8eadfaf55cfe635bfe71
                             </div>
                         </div>
                     </form>

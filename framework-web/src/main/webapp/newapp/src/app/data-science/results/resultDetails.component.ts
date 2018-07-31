@@ -105,6 +105,7 @@ export class ResultDetailsComponent {
         .toPromise()
         .then(response => this.saveToFileSystem(response));
     }
+<<<<<<< HEAD
     else if (this.type == "simulate") {
       this.http.get(this.baseUrl + '/model/simulate/download?action=view&simulateExecUUID=' + this.id + '&simulateExecVersion=' + this.version + '&mode=" "',
         { headers: headers, responseType: ResponseContentType.Blob })
@@ -124,6 +125,11 @@ export class ResultDetailsComponent {
   }
 
   private saveToFileSystem(response) {  
+=======
+    
+    private saveToFileSystem(response) {  
+    //const gate= response.headers.get('Content-Disposition');
+>>>>>>> 4b9cb652ecf9c9f55c4d8eadfaf55cfe635bfe71
     const contentDispositionHeader: string = response.headers.get('Content-Type');
     const parts: string[] = contentDispositionHeader.split(';');
     const filename = parts[1];

@@ -1108,7 +1108,7 @@ export class CommonListComponent {
                 }
             },
             {
-                label: 'Edit', icon: 'fa fa-pencil-square-o', visible: (this.Exec), disabled: (this.type == "session"), command: (onclick) => {
+                label: 'Edit', icon: 'fa fa-pencil-square-o', visible: (this.Exec), disabled: (this.type == "session" || this.type =="load"), command: (onclick) => {
                     this.edit(this.rowUUid, this.rowVersion)
                 }
             },

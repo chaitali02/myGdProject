@@ -43,7 +43,7 @@ export class OperatorComponent implements OnInit {
   operatortypesOption:{ 'value': String, 'label': String }[];
   operatorType :any;
 
-  constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: OperatorService) {
+  constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _OperatorService: OperatorService) {
     this.operator = true;
     this.operator = {};
     //this.paramList ={'label':"","uuid":""}
