@@ -1,7 +1,7 @@
 {
-  "uuid": "abea74b4-32bd-4d02-96db-3a55b4a7c18c",
-  "version": "1532915835",
-  "name": "ds_portfolio_loss_simulation",
+  "uuid": "3a975109-c1b8-448f-bbd9-c7e81bdf565f",
+  "version": "1532915921",
+  "name": "ds_portfolio_loss_simulation_aggr",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Jul 29 21:57:15 EDT 2018",
+  "createdOn": "Sun Jul 29 21:58:41 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,9 +30,9 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "b79e443b-536b-4bea-9497-2ff27b61e6b6",
+      "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
       "version": null,
-      "name": "customer_loss_simulation"
+      "name": "portfolio_loss_simulation"
     },
     "value": null
   },
@@ -40,29 +40,29 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
-      "attrSourceName": "iterationid",
+      "attrSourceName": "fm_expected_loss",
       "sourceAttr": {
         "ref": {
-          "type": "datapod",
-          "uuid": "b79e443b-536b-4bea-9497-2ff27b61e6b6",
+          "type": "formula",
+          "uuid": "4508958d-15e2-4dd2-b9c1-82fbbaaee699",
           "version": null,
-          "name": "customer_loss_simulation"
+          "name": "fm_expected_loss"
         },
         "value": null,
-        "attrId": "1",
-        "attrName": "iterationid",
-        "attrType": "integer"
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
       }
     },
     {
       "attrSourceId": "1",
-      "attrSourceName": "fm_portfolio_loss",
+      "attrSourceName": "fm_value_at_risk",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "0f8d33a6-b20b-4f2f-8d11-14696461f2a6",
+          "uuid": "7edcb6d6-2d0d-4c36-8ed5-6fef22f8442a",
           "version": null,
-          "name": "fm_portfolio_loss"
+          "name": "fm_value_at_risk"
         },
         "value": null,
         "attrId": null,
@@ -72,32 +72,48 @@
     },
     {
       "attrSourceId": "2",
+      "attrSourceName": "fm_economic_capital",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "a7e1c282-3b11-4988-bbeb-80effc84d0f6",
+          "version": null,
+          "name": "fm_economic_capital"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "3",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "b79e443b-536b-4bea-9497-2ff27b61e6b6",
+          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
           "version": null,
-          "name": "customer_loss_simulation"
+          "name": "portfolio_loss_simulation"
         },
         "value": null,
-        "attrId": "3",
+        "attrId": "2",
         "attrName": "reporting_date",
         "attrType": "string"
       }
     },
     {
-      "attrSourceId": "3",
+      "attrSourceId": "4",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "b79e443b-536b-4bea-9497-2ff27b61e6b6",
+          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
           "version": null,
-          "name": "customer_loss_simulation"
+          "name": "portfolio_loss_simulation"
         },
         "value": null,
-        "attrId": "4",
+        "attrId": "3",
         "attrName": "version",
         "attrType": "integer"
       }
