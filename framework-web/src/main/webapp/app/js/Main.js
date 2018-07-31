@@ -546,6 +546,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
 
 InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService) {
     $rootScope.reOpen=localStorage.reOpen;
+    
     if (localStorage.isAppRoleExists && $rootScope.reOpen ==false) {
         $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
         $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID

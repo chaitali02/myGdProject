@@ -216,6 +216,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.dq.defaultVersion = defaultversion;
       $scope.dataqualitydata.upperBound = response.dqdata.rangeCheck.upperBound;
       $scope.dataqualitydata.lowerBound = response.dqdata.rangeCheck.lowerBound;
+      $scope.getParamByApp();
       if (response.dqdata.dataTypeCheck != null) {
         $scope.selectDataType = response.dqdata.dataTypeCheck;
       }
@@ -307,6 +308,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.dq.defaultVersion = defaultversion;
       $scope.dataqualitydata.upperBound = response.dqdata.rangeCheck.upperBound;
       $scope.dataqualitydata.lowerBound = response.dqdata.rangeCheck.lowerBound;
+      $scope.getParamByApp();
       if (response.dqdata.dataTypeCheck != null) {
         $scope.selectDataType = response.dqdata.dataTypeCheck;
       }
@@ -653,10 +655,40 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 			$scope.filterTableArray[index].isrhsDatapod = false;
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist=true;
-			$scope.filterTableArray[index].isrhsFunction = false;
+      $scope.filterTableArray[index].isrhsFunction = false;
+      $scope.getParamByApp();
 			
 		}
   }
+
+  $scope.getParamByApp=function(){
+		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
+		then(function (response) { onSuccessGetParamByApp(response.data)});
+		var onSuccessGetParamByApp=function(response){
+		  $scope.allparamlistParams=[];
+		  if(response.length >0){
+			var paramsArray = [];
+			for(var i=0;i<response.length;i++){
+			  var paramjson={}
+			  var paramsjson = {};
+			  paramsjson.uuid = response[i].ref.uuid;
+			  paramsjson.name = response[i].ref.name + "." + response[i].paramName;
+			  paramsjson.attrId = response[i].paramId;
+			  paramsjson.attrType = response[i].paramType;
+			  paramsjson.paramName = response[i].paramName;
+			  paramsjson.caption = "app_"+paramsjson.name
+			  paramsArray[i] = paramsjson
+			}
+			$scope.allparamlistParams=paramsArray;
+		  }
+		}
+  }
+  $scope.onChangeRhsParamList=function(){
+    if ($scope.dataqualitycompare != null) {
+			$scope.dataqualitycompare.filterChg = "y"
+		}
+  }
+  
   $scope.onChangeSimple = function () {
 		if ($scope.dataqualitycompare != null) {
 			$scope.dataqualitycompare.filterChg = "y"

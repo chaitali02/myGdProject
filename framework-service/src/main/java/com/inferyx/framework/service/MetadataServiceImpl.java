@@ -1813,12 +1813,12 @@ public class MetadataServiceImpl {
 
 	}
 	
-	public List<ParamListHolder> getParamByAppId(String appId) throws JsonProcessingException {	
+	public List<ParamListHolder> getParamByApp(String uuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 		ParamList paramList=new ParamList();
 		Application application=new Application();
-		if (!appId.isEmpty() && appId != null) {
-			application = (Application) commonServiceImpl.getLatestByUuid(appId,
+		if (!uuid.isEmpty() && uuid != null) {
+			application = (Application) commonServiceImpl.getLatestByUuid(uuid,
 					MetaType.application.toString(), "N");
 			
 
@@ -1835,13 +1835,7 @@ public class MetadataServiceImpl {
 			paramListHolder.setParamId(param.getParamId());
 			paramListHolder.setParamName(param.getParamName());
 			paramListHolder.setParamType(param.getParamType());
-//			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
-//					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) {
-				paramListHolder.setParamValue(param.getParamValue());	
-//			} else { 
-//				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
-//			}
-			
+			paramListHolder.setParamValue(param.getParamValue());		
 			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());
 			holderList.add(paramListHolder);

@@ -402,7 +402,7 @@
                                   </div>
                                   <div ng-if="tabledata.isrhsFormula">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select select2 class="form-control" name="rhsformula_{{$index}}" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula"
+                                      <select select2 class="form-control" name="rhsformula_{{$index}}" ng-change="onChangeFromula()" data-ng-model="tabledata.rhsformula"
                                         ng-options="r as r.name for r in ruleLodeFormula track by r.uuid" ng-disabled="{{mode}}"
                                         ng-show="tabledata.isrhsFormula" required disable-validation-message="" uib-tooltip="{{myform2['rhsformula'+$index].$valid ? '' : 'Please select formula'}}"
                                         tooltip-placement="top">
@@ -410,12 +410,12 @@
                                     </span>
                                   </div>
                                   <div ng-if="tabledata.isrhsFunction">
-                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                    <span class="form-group"  style="margin-left:0px;margin-right: 0px;">
                                         <select select2 class="form-control" name="rhsformula_{{$index}}"  data-ng-model="tabledata.rhsfunction"
                                         ng-options="c as  c.name for c in allFunction track by c.uuid"
                                             ng-disabled="{{mode}}" ng-show="tabledata.isrhsFunction" required
-                                            disable-validation-message="" uib-tooltip="{{myform['rhsfunction'+$index].$valid ? '' : 'Please select function'}}"
-                                            tooltip-placement="top">
+                                            disable-validation-message="" ng-change="onChangeFunction()" 
+                                          >
                                         </select>
                                     </span>
                                   </div>
@@ -434,13 +434,16 @@
                                   <div ng-if="tabledata.isrhsParamlist">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
             
-                                        <div class="col-md-11" style="padding: 0px;">
+                                        <!-- <div class="col-md-11" style="padding: 0px;">
                                             <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsparamlist.name" title="{{tabledata.rhsparamlist.dname}}"
                                                 required disable-validation-message="">
                                         </div>
                                         <div class="col-md-1" style="padding:7px 0px 0px 5px;">
                                             <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsparamlist')"></span>
-                                        </div>
+                                        </div> -->
+                                        <select select2 class="form-control"  data-ng-model="tabledata.rhsparamlist"
+                                        ng-options="r as r.caption for r in allparamlistParams track by r.uuid" ng-disabled="{{mode}}"
+                                         required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                                     </span>
                                   </div>
                                 </td>

@@ -294,6 +294,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         defaultoption.name = $scope.ruleData.source.ref.name;
         $scope.ruleRelation.defaultoption = defaultoption;
       }
+      $scope.getParamByApp();
       CommonService.getAllLatestParamListByTemplate('Y', "paramlist","rule").then(function (response) {
         onSuccessGetAllLatestParamListByTemplate(response.data)
       });
@@ -392,6 +393,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         defaultoption.name = $scope.ruleData.source.ref.name;
         $scope.ruleRelation.defaultoption = defaultoption;
       }
+      $scope.getParamByApp();
       CommonService.getAllLatestParamListByTemplate('Y', "paramlist","rule").then(function (response) {
         onSuccessGetAllLatestParamListByTemplate(response.data)
       });
@@ -661,6 +663,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.selectParamType=null;
     setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },1);
     $scope.checkboxModelexecution="NO";
+    $scope.ruleLodeParamList=null;
+    $scope.getParamByApp();
   }
   $scope.changeCheckboxExecution = function () {
     $scope.allparamset=null;
@@ -952,7 +956,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			$scope.filterTableArray[index].isrhsDatapod = false;
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist=true;
-			$scope.filterTableArray[index].isrhsFunction = false;
+      $scope.filterTableArray[index].isrhsFunction = false;
+      $scope.getParamByApp();
 			
 		}
   }
@@ -978,7 +983,18 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 		if ($scope.rulecompare != null) {
 			$scope.rulecompare.filterChg = "y"
 		}
-	}
+  }
+  $scope.onChangeFunction=function(){
+    if ($scope.rulecompare != null) {
+			$scope.rulecompare.filterChg = "y"
+		}
+  }
+  
+  $scope.onChangeRhsParamList=function(){
+    if ($scope.rulecompare != null) {
+			$scope.rulecompare.filterChg = "y"
+		}
+  }
 
   $scope.onChangeSourceAttribute = function (type, index) {
     if (type == "string") {
@@ -1050,12 +1066,10 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
 
   $scope.getOneByUuidParamList = function () {
-
+    $scope.ruleLodeParamList=null;
     if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
-      RuleService.getOneByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").then(function (response) {
-        onSuccessParamList(response.data)
-      });
-
+      RuleService.getOneByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").
+      then(function (response) { onSuccessParamList(response.data)});
       var onSuccessParamList = function (response) {
         var paramsArray = [];
         for (var i = 0; i < response.params.length; i++) {
@@ -1063,12 +1077,41 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           paramsjson.uuid = response.uuid;
           paramsjson.name = response.name + "." + response.params[i].paramName;
           paramsjson.attrId = response.params[i].paramId;
-          paramsjson.attrType = response.params[i].paramType
-          paramsjson.paramName = response.params[i].paramName
-          paramsArray[i] = paramsjson
+          paramsjson.attrType = response.params[i].paramType;
+          paramsjson.paramName = response.params[i].paramName;
+          paramsArray[i] = paramsjson;
+          paramsjson.caption = "rule_"+paramsjson.name
         }
         $scope.ruleLodeParamList = paramsArray
+        if($scope.allparamlistParams &&  $scope.allparamlistParams.length >0)
+        $scope.allparamlistParams=$scope.allparamlistParams.concat( $scope.ruleLodeParamList);
       }
+    }
+  }
+   
+  $scope.getParamByApp=function(){
+    $scope.getOneByUuidParamList();
+    CommonService.getParamByApp($rootScope.appUuidd || "", "application").
+    then(function (response) { onSuccessGetParamByApp(response.data)});
+    var onSuccessGetParamByApp=function(response){
+      $scope.allparamlistParams=[];
+      if(response.length >0){
+        var paramsArray = [];
+        for(var i=0;i<response.length;i++){
+          var paramjson={}
+          var paramsjson = {};
+          paramsjson.uuid = response[i].ref.uuid;
+          paramsjson.name = response[i].ref.name + "." + response[i].paramName;
+          paramsjson.attrId = response[i].paramId;
+          paramsjson.attrType = response[i].paramType;
+          paramsjson.paramName = response[i].paramName;
+          paramsjson.caption = "app_"+paramsjson.name
+          paramsArray[i] = paramsjson
+        }
+        $scope.allparamlistParams=paramsArray;
+      }
+      if($scope.ruleLodeParamList &&  $scope.ruleLodeParamList.length >0)
+      $scope.allparamlistParams=$scope.allparamlistParams.concat( $scope.ruleLodeParamList);
     }
   }
 

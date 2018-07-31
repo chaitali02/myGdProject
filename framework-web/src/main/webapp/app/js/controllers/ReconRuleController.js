@@ -67,7 +67,9 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+  
+  $scope.getLovByType();
+  
   $scope.close = function() {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
@@ -299,8 +301,33 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.sourceFilterTable[index].isrhsDatapod = false;
 			$scope.sourceFilterTable[index].isrhsDataset = false;
 			$scope.sourceFilterTable[index].isrhsParamlist=true;
-			$scope.sourceFilterTable[index].isrhsFunction = false;
+      $scope.sourceFilterTable[index].isrhsFunction = false;
+      $scope.getParamByApp("source");
 			
+		}
+  }
+
+  $scope.getParamByApp=function(filterType){
+		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
+		then(function (response) { onSuccessGetParamByApp(response.data)});
+		var onSuccessGetParamByApp=function(response){
+		  $scope.allparamlistParams=[];
+		  if(response.length >0){
+			var paramsArray = [];
+			for(var i=0;i<response.length;i++){
+			  var paramjson={}
+			  var paramsjson = {};
+			  paramsjson.uuid = response[i].ref.uuid;
+			  paramsjson.name = response[i].ref.name + "." + response[i].paramName;
+			  paramsjson.attrId = response[i].paramId;
+			  paramsjson.attrType = response[i].paramType;
+			  paramsjson.paramName = response[i].paramName;
+			  paramsjson.caption = "app_"+paramsjson.name
+			  paramsArray[i] = paramsjson
+      }
+      
+			filterType =='source' ? $scope.allSourceparamlistParams=paramsArray: $scope.allTargetparamlistParams=paramsArray;
+		  }
 		}
   }
   $scope.selectTargetlhsType = function (type, index) {
@@ -387,11 +414,20 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 			$scope.targetFilterTable[index].isrhsDatapod = false;
 			$scope.targetFilterTable[index].isrhsDataset = false;
 			$scope.targetFilterTable[index].isrhsParamlist=true;
-			$scope.targetFilterTable[index].isrhsFunction = false;
+      $scope.targetFilterTable[index].isrhsFunction = false;
+      $scope.getParamByApp("target")
 			
 		}
   }
-
+  
+  $scope.onChangeRhsParamList=function(filterType){
+    if ($scope.originalCompare != null && filterType =="source") {
+			$scope.originalCompare.sourcefilterChg = "y"
+    }
+    else if($scope.originalCompare != null && filterType =="target"){
+      $scope.originalCompare.targetfilterChg = "y"
+    }
+  }
   $scope.onChangeSimple = function (filterType) {
 		if ($scope.originalCompare != null && filterType =="source") {
 			$scope.originalCompare.sourcefilterChg = "y"
@@ -618,8 +654,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
      var source={};
      source.uuid=$scope.reconruledata.sourceAttr.ref.uuid
      source.name=$scope.reconruledata.sourceAttr.ref.name;
-   
-     
+     $scope.getParamByApp("source");
+     $scope.getParamByApp("target");
      $scope.getAllLatest("source",$scope.reconruledata.sourceAttr.ref.type,false,source);
      var target={};
      target.uuid=$scope.reconruledata.targetAttr.ref.uuid
@@ -661,6 +697,8 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
      var source={};
      source.uuid=$scope.reconruledata.sourceAttr.ref.uuid
      source.name=$scope.reconruledata.sourceAttr.ref.name;
+     $scope.getParamByApp("source");
+     $scope.getParamByApp("target");
      $scope.getAllLatest("source",$scope.reconruledata.sourceAttr.ref.type,false,source);
      var target={};
      target.uuid=$scope.reconruledata.targetAttr.ref.uuid
