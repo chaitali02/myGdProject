@@ -1812,4 +1812,40 @@ public class MetadataServiceImpl {
 		return result;
 
 	}
+	
+	public List<ParamListHolder> getParamByAppId(String appId) throws JsonProcessingException {	
+		List<ParamListHolder> holderList = new ArrayList<>();
+		ParamList paramList=new ParamList();
+		Application application=new Application();
+		if (!appId.isEmpty() && appId != null) {
+			application = (Application) commonServiceImpl.getLatestByUuid(appId,
+					MetaType.application.toString(), "N");
+			
+
+		} else {
+			MetaIdentifierHolder appdetails=securityServiceImpl.getAppInfo();
+			 application = (Application) commonServiceImpl.getLatestByUuid(appdetails.getRef().getUuid(),
+					MetaType.application.toString(), "N");
+
+		}
+		 paramList = (ParamList) commonServiceImpl
+				.getLatestByUuid(application.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
+		for(Param param : paramList.getParams()) {
+			ParamListHolder paramListHolder = new ParamListHolder();
+			paramListHolder.setParamId(param.getParamId());
+			paramListHolder.setParamName(param.getParamName());
+			paramListHolder.setParamType(param.getParamType());
+//			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+//					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) {
+				paramListHolder.setParamValue(param.getParamValue());	
+//			} else { 
+//				paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), param.getParamValue()));
+//			}
+			
+			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+			paramListHolder.getRef().setName(paramList.getName());
+			holderList.add(paramListHolder);
+		}
+		return holderList;
+		}	
 }
