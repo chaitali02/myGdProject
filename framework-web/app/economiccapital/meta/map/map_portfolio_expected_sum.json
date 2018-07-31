@@ -1,6 +1,6 @@
 {
   "uuid": "92504135-fd67-4841-ae24-b474a2e6ac7c",
-  "version": "1532470736",
+  "version": "1532916057",
   "name": "map_portfolio_expected_sum",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 24 18:18:56 EDT 2018",
+  "createdOn": "Sun Jul 29 22:00:57 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -38,10 +38,10 @@
   },
   "source": {
     "ref": {
-      "type": "rule",
-      "uuid": "54809394-5e6e-4d28-8cfa-93f6dac5be31",
+      "type": "dataset",
+      "uuid": "f9b8bf79-c613-46e9-86e8-dcd4c3376929",
       "version": null,
-      "name": "rule_portfolio_expected_sum"
+      "name": "ds_portfolio_expected_sum"
     },
     "value": null
   },
@@ -50,10 +50,10 @@
       "attrMapId": "0",
       "sourceAttr": {
         "ref": {
-          "type": "rule",
-          "uuid": "54809394-5e6e-4d28-8cfa-93f6dac5be31",
+          "type": "dataset",
+          "uuid": "f9b8bf79-c613-46e9-86e8-dcd4c3376929",
           "version": null,
-          "name": "rule_portfolio_expected_sum"
+          "name": "ds_portfolio_expected_sum"
         },
         "value": null,
         "attrId": "0",
@@ -70,6 +70,60 @@
         "value": null,
         "attrId": "0",
         "attrName": "expected_sum",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "1",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "f9b8bf79-c613-46e9-86e8-dcd4c3376929",
+          "version": null,
+          "name": "ds_portfolio_expected_sum"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "reporting_date",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "6fc505c6-9eb5-4899-bfa9-f6e74e70ef2d",
+          "version": null,
+          "name": "portfolio_expected_sum"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "reporting_date",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "2",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "f9b8bf79-c613-46e9-86e8-dcd4c3376929",
+          "version": null,
+          "name": "ds_portfolio_expected_sum"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "version",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "6fc505c6-9eb5-4899-bfa9-f6e74e70ef2d",
+          "version": null,
+          "name": "portfolio_expected_sum"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "version",
         "attrType": null
       }
     }

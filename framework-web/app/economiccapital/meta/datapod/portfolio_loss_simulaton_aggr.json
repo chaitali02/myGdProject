@@ -1,7 +1,8 @@
 {
-  "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-  "version": "1532886470",
-  "name": "portfolio_loss_simulation",
+  "id": "5b5e70b4fb6411476d342f65",
+  "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+  "version": "1532915892",
+  "name": "portfolio_loss_simulaton_aggr",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Jul 29 13:47:50 EDT 2018",
+  "createdOn": "Sun Jul 29 21:58:12 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -40,28 +41,39 @@
   "attributes": [
     {
       "attributeId": 0,
-      "name": "iterationid",
-      "type": "integer",
-      "desc": "iterationid",
+      "name": "expected_loss",
+      "type": "decimal",
+      "desc": "expected_loss",
       "key": "",
       "partition": "N",
-      "dispName": "iterationid",
+      "dispName": "expected_loss",
       "active": "Y",
       "expr": null
     },
     {
       "attributeId": 1,
-      "name": "portfolio_loss",
+      "name": "value_at_risk",
       "type": "decimal",
-      "desc": "portfolio_loss",
+      "desc": "value_at_risk",
       "key": "",
       "partition": "N",
-      "dispName": "portfolio_loss",
+      "dispName": "value_at_risk",
       "active": "Y",
       "expr": null
     },
     {
       "attributeId": 2,
+      "name": "economic_capital",
+      "type": "decimal",
+      "desc": "economic_capital",
+      "key": "",
+      "partition": "N",
+      "dispName": "economic_capital",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 3,
       "name": "reporting_date",
       "type": "string",
       "desc": "reporting_date",
@@ -72,7 +84,7 @@
       "expr": null
     },
     {
-      "attributeId": 3,
+      "attributeId": 4,
       "name": "version",
       "type": "integer",
       "desc": "version",

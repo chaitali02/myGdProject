@@ -1,6 +1,6 @@
 {
   "uuid": "eb92b0cd-5fd6-4b45-aa64-35e8eb8d9684",
-  "version": "1532644709",
+  "version": "1533004697",
   "name": "ppl_e2e_economic_capital_wo_simulation_es",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Jul 26 18:38:29 EDT 2018",
+  "createdOn": "Mon Jul 30 22:38:17 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -1451,10 +1451,40 @@
           "statusList": []
         },
         {
+          "taskId": "a531e960-323c-418d-933c-a478a6420b96",
+          "dependsOn": [
+            "f56bd172-6395-439b-a710-3793abd810ef",
+            "de9b32cd-1815-46c7-b332-a1746d011383"
+          ],
+          "name": "map_customer_loss_simulation",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "ef14274c-efd5-4e59-8da9-12bf8381820c",
+                    "version": null,
+                    "name": "map_customer_loss_simulation"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 680,
+          "yPos": 260,
+          "active": "Y",
+          "statusList": []
+        },
+        {
           "taskId": "3455ece6-2017-4445-9bc5-59f7430f2922",
           "dependsOn": [
-            "de9b32cd-1815-46c7-b332-a1746d011383",
-            "f56bd172-6395-439b-a710-3793abd810ef"
+            "a531e960-323c-418d-933c-a478a6420b96"
           ],
           "name": "map_portfolio_loss_simulation",
           "operators": [
@@ -1476,8 +1506,8 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 670,
-          "yPos": 260,
+          "xPos": 820,
+          "yPos": 160,
           "active": "Y",
           "statusList": []
         },
@@ -1498,7 +1528,7 @@
                     "type": "map",
                     "uuid": "123458cb-8e6e-4046-8b1a-5716f8136c20",
                     "version": null,
-                    "name": "map_portfolio_loss_aggr"
+                    "name": "map_portfolio_loss_simulation_aggr"
                   },
                   "value": null
                 }
@@ -1506,8 +1536,8 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 830,
-          "yPos": 160,
+          "xPos": 970,
+          "yPos": 260,
           "active": "Y",
           "statusList": []
         },
@@ -1536,8 +1566,8 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 950,
-          "yPos": 260,
+          "xPos": 1090,
+          "yPos": 160,
           "active": "Y",
           "statusList": []
         },
@@ -1566,8 +1596,8 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 1100,
-          "yPos": 170,
+          "xPos": 1240,
+          "yPos": 260,
           "active": "Y",
           "statusList": []
         },
@@ -1596,45 +1626,15 @@
               "operatorParams": {}
             }
           ],
-          "xPos": 1220,
-          "yPos": 260,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "a531e960-323c-418d-933c-a478a6420b96",
-          "dependsOn": [
-            "8b2ca746-3580-48d5-bd2c-98e249a23592"
-          ],
-          "name": "map_customer_loss_simulation",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "ef14274c-efd5-4e59-8da9-12bf8381820c",
-                    "version": null,
-                    "name": "map_customer_loss_simulation"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1380,
-          "yPos": 170,
+          "xPos": 1370,
+          "yPos": 160,
           "active": "Y",
           "statusList": []
         },
         {
           "taskId": "95214093-5a77-4159-b6d9-51430eac1470",
           "dependsOn": [
-            "a531e960-323c-418d-933c-a478a6420b96"
+            "8b2ca746-3580-48d5-bd2c-98e249a23592"
           ],
           "name": "map_customer_es_allocation",
           "operators": [

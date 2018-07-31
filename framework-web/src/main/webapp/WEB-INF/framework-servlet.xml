@@ -55,25 +55,27 @@
 	<bean id="taskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="5" />
-		<property name="queueCapacity" value="5" />
+		<property name="queueCapacity" value="60" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
 	
 	<bean id="stageExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
 		<!-- <property name="corePoolSize" value="5" />
 		<property name="maxPoolSize" value="10" /> -->
-		<property name="queueCapacity" value="3" />
+		<property name="queueCapacity" value="5" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
 	
 	<bean id="dagExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
 		<!-- <property name="corePoolSize" value="5" />
 		<property name="maxPoolSize" value="10" /> -->
-		<property name="queueCapacity" value="3" />
+		<property name="queueCapacity" value="5" />
 		<property name="maxPoolSize" value="100" />
 		<property name="waitForTasksToCompleteOnShutdown" value="true"/>
 	</bean>
