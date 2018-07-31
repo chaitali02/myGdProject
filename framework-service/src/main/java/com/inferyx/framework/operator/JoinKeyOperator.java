@@ -30,6 +30,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -45,8 +46,9 @@ public class JoinKeyOperator {
 	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected FormulaOperator formulaOperator;
 	@Autowired protected RegisterService registerService;
-	@Autowired
+	@Autowired 
 	MetadataServiceImpl metadataServiceImpl;
+	@Autowired protected FunctionOperator functionOperator;
 	
 	public String generateSql(List<FilterInfo> filters, MetaIdentifierHolder filterSource
 			, java.util.Map<String, MetaIdentifier> refKeyMap
@@ -112,7 +114,13 @@ public class JoinKeyOperator {
 				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams));
 				MetaIdentifier formulaRef1 = new MetaIdentifier(MetaType.formula, formulaRef.getUuid(), formulaRef.getVersion());
 				usedRefKeySet.add(formulaRef1);
-			}			
+			}	
+			 else if (sourceAttr.getRef().getType() == MetaType.function) {
+					Function functionRef = (Function) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+					operandValue.add(functionOperator.generateSql(functionRef, refKeyMap, otherParams));
+					MetaIdentifier functionRef1 = new MetaIdentifier(MetaType.function, functionRef.getUuid(), functionRef.getVersion());
+					usedRefKeySet.add(functionRef1);
+				}	
 		}
 
 		return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), operandValue.get(1));
