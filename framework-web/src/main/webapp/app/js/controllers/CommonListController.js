@@ -755,7 +755,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },100);
       if($scope.select =='rule'){
         $scope.isParamListRquired=false;
-        CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select,).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
+        CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
         var onSuccessGetOneByUuidAndVersion = function (response) {
           if(response.paramList !=null){
             $('#responsive').modal({
