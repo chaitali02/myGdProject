@@ -52,7 +52,6 @@ export class AlgorithmComponent implements OnInit {
   isSubmitEnable: any;
   text: any;
   labelRequired :any
-  removableTags: Array<Object> = [];
 
 
 
@@ -62,6 +61,7 @@ export class AlgorithmComponent implements OnInit {
     this.algorithm["active"] = true;
     this.algorithm["labelRequired"] = true;
     this.isSubmitEnable = true;
+   // this.algorithm['summaryMethods'] =null
     //  this.selectParamlistWithoutHype = {};
     this.breadcrumbDataFrom = [{
       "caption": "Data Science",
@@ -97,6 +97,7 @@ export class AlgorithmComponent implements OnInit {
       this.id = params['id'];
       this.version = params['version'];
       this.mode = params['mode'];
+      this.summaryMethods =[]
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion();
         this.getAllVersionByUuid();
@@ -155,15 +156,18 @@ export class AlgorithmComponent implements OnInit {
     }
 
     var summaryMethodsArray = [];
-    if (response.summaryMethods != null) {
+    if (response.summaryMethods !== null) {{
       for (var i = 0; i < response.summaryMethods.length; i++) {
         var summaryMethods = {};
-        summaryMethods = response.summaryMethods[i];
+        summaryMethods['text'] = response.summaryMethods[i];
         summaryMethodsArray[i] = summaryMethods;
 
       }
     }
     this.summaryMethods = summaryMethodsArray;
+    }
+
+    
     this.breadcrumbDataFrom[2].caption = this.algorithm.name;
 
     console.log('Data is' + response);
