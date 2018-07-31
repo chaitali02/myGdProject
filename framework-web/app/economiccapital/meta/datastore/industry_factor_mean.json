@@ -9,18 +9,18 @@
     "execId" : {
         "ref" : {
             "type" : "loadExec",
-            "uuid" : "4e0b5d35-a7ee-4430-8abb-6dbc50af98eb",
-            "version" : "1526227033"
+            "uuid" : "a2828d80-c671-4f8f-95fc-085f9e7c0702",
+            "version" : "1533069560"
         }
     },
-    "location" : "/ec1958cf-98ec-4269-b821-9fbb81a85835/1526227033/1526227033",
+    "location" : "/ec1958cf-98ec-4269-b821-9fbb81a85835/1526227033/1533069560",
     "persistMode" : "DISK_ONLY",
-    "numRows" : NumberLong(4),
+    "numRows" : NumberLong(16),
     "runMode" : "BATCH",
-    "uuid" : "672fbbc8-4a9d-4fea-a06f-4e832b46c899",
-    "version" : "1526227034",
-    "name" : "industry_factor_mean",
-    "desc" : "Creating datastore for industry_factor_mean",
+    "uuid" : "54433765-1249-490a-81ce-d20f9a2aff38",
+    "version" : "1533069560",
+    "name" : "industry_factor_mean_2018",
+    "desc" : "Creating datastore for industry_factor_mean_2018",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -29,7 +29,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-13T15:57:14.000Z"),
+    "createdOn" : ISODate("2018-07-31T20:39:20.000Z"),
     "active" : "Y",
     "published" : "N",
     "appInfo" : [ 

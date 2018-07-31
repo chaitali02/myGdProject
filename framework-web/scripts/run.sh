@@ -21,6 +21,7 @@
 ./update_createdOn.sh localhost
 
 rm -r /user/hive/warehouse/framework/*
+mkdir -p /user/hive/warehouse/framework/
 cp -r ../app/*/data/parquet/* /user/hive/warehouse/framework
 
 mkdir /user/hive/warehouse/framework/train
