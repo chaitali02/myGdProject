@@ -25,7 +25,7 @@
               style="height:14px;" *ngIf="mode">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a title="Refresh" data-toggle="tooltip" data-placement="top" disabled ="" tooltip>
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" disabled="" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
@@ -68,13 +68,8 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">Version </label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="VersionList"          
-                  [(ngModel)]="selectedVersion"
-                  name="selectedVersion"
-                  [style]="{'width':'100%','padding':'3px'}"
-                  [filter]="true"
-                  [disabled]="mode == 'false'"
-                  (onChange)="onVersionChange()">
+                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
                   </p-dropdown>
                 </div>
               </div>
@@ -116,6 +111,15 @@
                   </div>
                 </div>
               </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Save PMML</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="algorithm.savePmml" name="savePmml" [checked]="savePmml"
+                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
@@ -143,27 +147,27 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="librarytypesOption" [(ngModel)]="algorithm.library" name="library" [style]="{'width':'100%','padding':'3px','z-index':'99'}"
+                  <p-dropdown [options]="librarytypesOption" [(ngModel)]="libraryType" name="libraryType" [style]="{'width':'100%','padding':'3px','z-index':'99'}"
                     [disabled]="mode == 'true'">
                   </p-dropdown>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">Train Name
+                <label class="col-md-3 control-label">Train Class
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="algorithm.trainName" name="trainName" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="trainClass " name="trainClass " placeholder="" [disabled]="mode == 'true'">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">Model Name
+                <label class="col-md-3 control-label">Model Class
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="algorithm.modelName" name="modelName" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="modelClass " name="modelClass " placeholder="" [disabled]="mode == 'true'">
                 </div>
               </div>
 
@@ -177,14 +181,38 @@
                 </div>
               </div>
 
+
               <div class="form-group">
-                <label class="col-md-3 control-label">Parameter List</label>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Summary Methods</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tag-input  [(ngModel)]="summaryMethods" 
+                    [disable]="mode == 'true'" name="summaryMethods" 
+                    theme='bootstrap' 
+                   
+                    
+                    style=" max-height: 65px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
+                  </div>
+                </div>
+
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">Default Param List</label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="arrayParamList" [(ngModel)]="paramList" name="paramList" dataKey="label" placeholder="Select" [style]="{'width':'100%','padding':'3px','z-index':'100'}"
-                    [disabled]="mode == 'true'">
+                  <p-dropdown [options]="allParamlist" [(ngModel)]="paramListWoH" name="paramListWoH" dataKey="uuid"
+                    placeholder="Select" [style]="{'width':'100%','padding':'3px','z-index':'100'}" [disabled]="mode == 'true'">
                   </p-dropdown>
                 </div>
               </div>
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">Param List (Hyper Param)</label> 
+                <div class="col-md-6">
+                  <p-dropdown [options]="allParamlist" [(ngModel)]="paramListWH" name="paramListWH" dataKey="uuid"
+                    placeholder="Select" [style]="{'width':'100%','padding':'3px','z-index':'100'}" [disabled]="mode == 'true'">
+                  </p-dropdown>
+                </div>
+              </div>
+
 
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">

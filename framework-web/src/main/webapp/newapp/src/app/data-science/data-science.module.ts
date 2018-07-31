@@ -43,6 +43,7 @@ import { DialogModule } from 'primeng/components/dialog/dialog'
 import { CommonListService } from '../common-list/common-list.service';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import {ResultDetailsComponent} from './results/resultDetails.component';
+import { AlgorithmService } from '../metadata/services/algorithm.service';
 
 //import {PmmlDirective} from './results/pmml.directive';
 @NgModule({
@@ -94,6 +95,7 @@ import {ResultDetailsComponent} from './results/resultDetails.component';
         OperatorService,
         OperatorComponent,
         CommonListService,
+        AlgorithmService,
 
     ]
 })

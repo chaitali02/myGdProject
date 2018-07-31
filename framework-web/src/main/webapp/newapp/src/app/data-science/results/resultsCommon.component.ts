@@ -332,4 +332,20 @@ export class ResultsComponent {
             this.okRestart();
         }
     }
+
+    refershGrid() {
+        this.getBaseEntityStatusByCriteria();
+        this.name = "";
+        this.status = "";
+        this.rowData1 = null;
+        this.startDate = "";
+        this.tags = "";
+        this.endDate = "";
+    }
+    refreshSearchResults() {
+        this.getBaseEntityStatusByCriteria();
+
+    }
+
+
 }

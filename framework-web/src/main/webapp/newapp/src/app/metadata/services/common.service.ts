@@ -231,8 +231,15 @@ getRuleExecByRule(uuid:Number): Observable<any[]> {
 })
  .catch(this.handleError);
 }
+getAllLatestParamListByTemplate(templateFlg:any,type:String,paramListType:any):Observable<any[]>{
 
-
+  let url ='common/getAllLatestParamListByTemplate?action=view&templateFlg=' + templateFlg + "&type=" + type  +"&paramListType="+paramListType;
+  return this._sharedService.getCall(url)
+  .map((response: Response) => {
+    return <any[]>response.json();
+})
+ .catch(this.handleError);
+}
 
 
 saveAs(uuid:Number,version:String,type:String): Observable<any[]> {

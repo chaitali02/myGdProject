@@ -30,7 +30,7 @@
                 <div class="form-body" *ngIf="!ppml">
                     <form  class="form-horizontal" name="myform">
                         <div class="form-group" >
-                            <div class="col-md-12" >
+                            <div class="col-md-12" >{{modelResult | json }}
                                 <textarea  [value]="modelResult" placeholder=""  [disabled]="true"  style="min-height:150px; width:100%;"></textarea>
                             </div>
                         </div>

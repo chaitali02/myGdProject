@@ -89,7 +89,7 @@ export class ResultDetailsComponent {
       .then(response => this.saveToFileSystem(response));
     }
     
-    private saveToFileSystem(response) {debugger
+    private saveToFileSystem(response) {  
     //const gate= response.headers.get('Content-Disposition');
     const contentDispositionHeader: string = response.headers.get('Content-Type');
     const parts: string[] = contentDispositionHeader.split(';');
