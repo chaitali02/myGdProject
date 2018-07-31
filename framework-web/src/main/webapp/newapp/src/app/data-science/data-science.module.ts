@@ -14,7 +14,7 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
 
 import { CommonService } from '../metadata/services/common.service';
-import {MenuModule,MenuItem} from 'primeng/primeng';
+import { MenuModule,MenuItem} from 'primeng/primeng';
 import { ModelComponent } from './model/model.component';
 import { ParamlistComponent } from './paramlist/paramlist.component';
 import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
@@ -43,6 +43,8 @@ import { DialogModule } from 'primeng/components/dialog/dialog'
 import { CommonListService } from '../common-list/common-list.service';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import {ResultDetailsComponent} from './results/resultDetails.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { DataScienceResultService } from '../metadata/services/dataScienceResult.service';
 
 //import {PmmlDirective} from './results/pmml.directive';
 @NgModule({
@@ -65,7 +67,7 @@ import {ResultDetailsComponent} from './results/resultDetails.component';
         DialogModule,
         CalendarModule,
         MenuModule,
-
+        NgxJsonViewerModule
 
     ],
     declarations :[
@@ -94,7 +96,7 @@ import {ResultDetailsComponent} from './results/resultDetails.component';
         OperatorService,
         OperatorComponent,
         CommonListService,
-
+        DataScienceResultService
     ]
 })
  

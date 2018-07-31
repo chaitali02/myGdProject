@@ -25,8 +25,7 @@ const APP_PROVIDERS = [ AppConfig, AppMetadata, AppHepler];
 @NgModule({
   declarations: [
     AppComponent,
-  LoginComponent,
-    
+  LoginComponent,    
   ],
  // entryComponents: [DropdownComponent],
   imports: [
@@ -35,7 +34,10 @@ const APP_PROVIDERS = [ AppConfig, AppMetadata, AppHepler];
     FormsModule,
     HttpModule,
     BrowserAnimationsModule,
-    ProjectSharedModule.forRoot()  ],
+    ProjectSharedModule.forRoot()
+
+  ],
+    
 
   providers: [
     APP_PROVIDERS,
