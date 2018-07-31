@@ -2331,22 +2331,83 @@ public class RegisterService {
 
 	public List<AttributeRefHolder> getAttributesByRelation(String relationUuid, String type) throws JSONException, JsonProcessingException {
 		List<AttributeRefHolder> attrRefDetails = null;
-		List<String> datapodUuid = new ArrayList<String>();
+		List<String> objectUuidList = new ArrayList<String>();
 
 		if (type.equalsIgnoreCase("relation")) {
 			//Relation relationDetails = relationServiceImpl.findLatestByUuid(relationUuid);
 			Relation relationDetails = (Relation) commonServiceImpl.getLatestByUuid(relationUuid, MetaType.relation.toString());
 			String sourceUUId = relationDetails.getDependsOn().getRef().getUuid();
-			datapodUuid.add(sourceUUId);
+			MetaType sourceType = relationDetails.getDependsOn().getRef().getType();
+			
+			objectUuidList.add(sourceUUId);
 			if (relationDetails.getRelationInfo().size() > 0) {
 				for (int i = 0; i < relationDetails.getRelationInfo().size(); i++) {
 					String joinInfoUUId = relationDetails.getRelationInfo().get(i).getJoin().getRef().getUuid();
-					datapodUuid.add(joinInfoUUId);
+					objectUuidList.add(joinInfoUUId);
 				}
 			}
-			logger.info("datapoduuid : " + datapodUuid);
+			logger.info("datapoduuid : " + objectUuidList);
 
 			attrRefDetails = new ArrayList<AttributeRefHolder>();
+			if (objectUuidList.size() > 0) {
+
+				for (String uuid : objectUuidList) {
+					if (sourceType.equals(MetaType.datapod)) {
+						Datapod datapodDet = (Datapod) commonServiceImpl.getLatestByUuid(uuid,
+								MetaType.datapod.toString());
+						List<Attribute> listAttributes = datapodDet.getAttributes();
+
+						MetaIdentifier ref = new MetaIdentifier();
+						ref.setType(MetaType.datapod);
+						ref.setUuid(datapodDet.getUuid());
+						ref.setVersion(datapodDet.getVersion());
+						ref.setName(datapodDet.getName());
+						for (Attribute attr : listAttributes) {
+
+							AttributeRefHolder attributeRef = new AttributeRefHolder();
+							attributeRef.setAttrId(Integer.toString((attr.getAttributeId())));
+							attributeRef.setAttrType(datapodDet.getAttribute(attr.getAttributeId()).getType());
+							if (datapodDet.getAttribute(attr.getAttributeId()).getDispName() != null) {
+								attributeRef.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getDispName());
+							} else
+								attributeRef.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getName());
+							attributeRef.setRef(ref);
+							attrRefDetails.add(attributeRef);
+						}
+					}
+					if (sourceType.equals(MetaType.dataset)) {
+						DataSet datasetDet = (DataSet) commonServiceImpl.getLatestByUuid(uuid,
+								MetaType.dataset.toString());
+						List<AttributeSource> listAttributes = datasetDet.getAttributeInfo();
+
+						MetaIdentifier ref = new MetaIdentifier();
+						ref.setType(MetaType.dataset);
+						ref.setUuid(datasetDet.getUuid());
+						ref.setVersion(datasetDet.getVersion());
+						ref.setName(datasetDet.getName());
+						for (AttributeSource attr : listAttributes) {
+
+							AttributeRefHolder attributeRef = new AttributeRefHolder();
+							attributeRef.setAttrId((attr.getAttrSourceId()));
+							attributeRef.setAttrType(attr.getSourceAttr().getAttrType());
+							attributeRef.setAttrName(attr.getAttrSourceName());
+							attributeRef.setRef(ref);
+							attrRefDetails.add(attributeRef);
+						}
+					}
+				}
+
+			}			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+	/*		attrRefDetails = new ArrayList<AttributeRefHolder>();
 			if (relationDetails.getRelationInfo().size() > 0) {
 				for (int i = 0; i < relationDetails.getRelationInfo().size(); i++) {
 					for (int j = 0; j < relationDetails.getRelationInfo().get(i).getJoinKey().size(); j++) {
@@ -2361,7 +2422,7 @@ public class RegisterService {
 							Datapod datapodDet = (Datapod) commonServiceImpl.getLatestByUuid(datapodUUID, MetaType.datapod.toString());
 							Integer AttrId = relationDetails.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
 									.get(k).getAttributeId();
-							if (datapodUuid.contains(datapodUUID)) {
+							if (objectUuidList.contains(datapodUUID)) {
 								ref.setType(MetaType.datapod);
 								ref.setUuid(datapodDet.getUuid());
 								ref.setVersion(datapodDet.getVersion());
@@ -2382,7 +2443,7 @@ public class RegisterService {
 						}
 					}
 				}
-			}
+			}*/
 		}
 		logger.info("finalMap is " + attrRefDetails);
 		return attrRefDetails;
