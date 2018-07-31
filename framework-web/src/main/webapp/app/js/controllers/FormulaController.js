@@ -472,6 +472,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			MetadataFormulaSerivce.getLatestByUuidForFunction(data.uuid, 'function').then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
 				$scope.formulainfoarray[index].value = response.functionInfo[0].name.toUpperCase();
+				$scope.formulainfoarray[index].category=response.category;
 			}
 		}
 	}
@@ -651,7 +652,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id, 'version': $scope.stageParams.version, 'mode': $scope.stageParams.mode }); }, 2000);
 			}
 			else {
-				setTimeout(function () { $state.go($scope.stageName, { 'type': $scope.stageParams.type }); }, 2000);
+				setTimeout(function () { $state.go('metadata', { 'type': 'formula' }); }, 2000);
 			}
 		}
 	}
