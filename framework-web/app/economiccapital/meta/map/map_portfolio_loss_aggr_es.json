@@ -1,6 +1,6 @@
 {
   "uuid": "7df318d0-e435-4c9b-94fb-2cfff0d7141f",
-  "version": "1532470617",
+  "version": "1532916357",
   "name": "map_portfolio_loss_aggr_es",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 24 18:16:57 EDT 2018",
+  "createdOn": "Sun Jul 29 22:05:57 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -38,10 +38,10 @@
   },
   "source": {
     "ref": {
-      "type": "relation",
-      "uuid": "2236424b-915b-4ba8-825b-6c3b0ba0163f",
+      "type": "dataset",
+      "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
       "version": null,
-      "name": "rel_portfolio_loss_aggr_es"
+      "name": "ds_portfolio_loss_aggr_es"
     },
     "value": null
   },
@@ -50,10 +50,10 @@
       "attrMapId": "0",
       "sourceAttr": {
         "ref": {
-          "type": "datapod",
-          "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+          "type": "dataset",
+          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
           "version": null,
-          "name": "portfolio_loss_aggr"
+          "name": "ds_portfolio_loss_aggr_es"
         },
         "value": null,
         "attrId": "0",
@@ -77,10 +77,10 @@
       "attrMapId": "1",
       "sourceAttr": {
         "ref": {
-          "type": "datapod",
-          "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+          "type": "dataset",
+          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
           "version": null,
-          "name": "portfolio_loss_aggr"
+          "name": "ds_portfolio_loss_aggr_es"
         },
         "value": null,
         "attrId": "1",
@@ -104,10 +104,10 @@
       "attrMapId": "2",
       "sourceAttr": {
         "ref": {
-          "type": "datapod",
-          "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+          "type": "dataset",
+          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
           "version": null,
-          "name": "portfolio_loss_aggr"
+          "name": "ds_portfolio_loss_aggr_es"
         },
         "value": null,
         "attrId": "2",
@@ -131,13 +131,13 @@
       "attrMapId": "3",
       "sourceAttr": {
         "ref": {
-          "type": "datapod",
-          "uuid": "6fc505c6-9eb5-4899-bfa9-f6e74e70ef2d",
+          "type": "dataset",
+          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
           "version": null,
-          "name": "portfolio_expected_sum"
+          "name": "ds_portfolio_loss_aggr_es"
         },
         "value": null,
-        "attrId": "0",
+        "attrId": "3",
         "attrName": "expected_sum",
         "attrType": null
       },
@@ -151,6 +151,60 @@
         "value": null,
         "attrId": "3",
         "attrName": "expected_sum",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "4",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
+          "version": null,
+          "name": "ds_portfolio_loss_aggr_es"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "reporting_date",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
+          "version": null,
+          "name": "portfolio_loss_aggr_es"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "reporting_date",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "5",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
+          "version": null,
+          "name": "ds_portfolio_loss_aggr_es"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "version",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
+          "version": null,
+          "name": "portfolio_loss_aggr_es"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "version",
         "attrType": null
       }
     }

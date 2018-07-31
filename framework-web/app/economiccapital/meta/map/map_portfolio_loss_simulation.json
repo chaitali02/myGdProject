@@ -1,6 +1,6 @@
 {
   "uuid": "2b4427c3-85fd-4729-ab30-7692589c15ea",
-  "version": "1532465665",
+  "version": "1532886543",
   "name": "map_portfolio_loss_simulation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 24 16:54:25 EDT 2018",
+  "createdOn": "Sun Jul 29 13:49:03 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -38,10 +38,10 @@
   },
   "source": {
     "ref": {
-      "type": "rule",
-      "uuid": "fe506c16-8991-439a-95d4-b83664b25008",
+      "type": "dataset",
+      "uuid": "abea74b4-32bd-4d02-96db-3a55b4a7c18c",
       "version": null,
-      "name": "rule_portfolio_loss_simulation"
+      "name": "ds_portfolio_loss_simulation"
     },
     "value": null
   },
@@ -50,10 +50,10 @@
       "attrMapId": "0",
       "sourceAttr": {
         "ref": {
-          "type": "rule",
-          "uuid": "fe506c16-8991-439a-95d4-b83664b25008",
+          "type": "dataset",
+          "uuid": "abea74b4-32bd-4d02-96db-3a55b4a7c18c",
           "version": null,
-          "name": "rule_portfolio_loss_simulation"
+          "name": "ds_portfolio_loss_simulation"
         },
         "value": null,
         "attrId": "0",
@@ -77,10 +77,10 @@
       "attrMapId": "1",
       "sourceAttr": {
         "ref": {
-          "type": "rule",
-          "uuid": "fe506c16-8991-439a-95d4-b83664b25008",
+          "type": "dataset",
+          "uuid": "abea74b4-32bd-4d02-96db-3a55b4a7c18c",
           "version": null,
-          "name": "rule_portfolio_loss_simulation"
+          "name": "ds_portfolio_loss_simulation"
         },
         "value": null,
         "attrId": "1",
@@ -97,6 +97,60 @@
         "value": null,
         "attrId": "1",
         "attrName": "portfolio_loss",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "2",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "abea74b4-32bd-4d02-96db-3a55b4a7c18c",
+          "version": null,
+          "name": "ds_portfolio_loss_simulation"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "reporting_date",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+          "version": null,
+          "name": "portfolio_loss_simulation"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "reporting_date",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "3",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "abea74b4-32bd-4d02-96db-3a55b4a7c18c",
+          "version": null,
+          "name": "ds_portfolio_loss_simulation"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "version",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+          "version": null,
+          "name": "portfolio_loss_simulation"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "version",
         "attrType": null
       }
     }

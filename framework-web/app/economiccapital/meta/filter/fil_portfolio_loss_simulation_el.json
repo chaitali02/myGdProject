@@ -1,6 +1,6 @@
 {
-  "uuid": "ec0c55b0-31d9-42e9-8fbf-5e3caed3fb5f",
-  "version": "1532467746",
+  "uuid": "27e14f58-4b47-4187-a674-f957b7aee5ea",
+  "version": "1533001517",
   "name": "fil_portfolio_loss_simulation_el",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 24 17:29:06 EDT 2018",
+  "createdOn": "Mon Jul 30 21:45:17 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,24 +29,24 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "dataset",
-      "uuid": "d64a94eb-805d-4987-b4ac-8b88bcaa72b7",
+      "type": "relation",
+      "uuid": "7714b8bb-b1ea-4575-bc35-38cc375f21f3",
       "version": null,
-      "name": "ds_portfolio_loss_simulation"
+      "name": "rel_portfolio_loss_simulation"
     },
     "value": null
   },
   "filterInfo": [
     {
-      "logicalOperator": "",
+      "logicalOperator": " ",
       "operator": ">",
       "operand": [
         {
           "ref": {
-            "type": "dataset",
-            "uuid": "d64a94eb-805d-4987-b4ac-8b88bcaa72b7",
+            "type": "datapod",
+            "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
             "version": null,
-            "name": "ds_portfolio_loss_simulation"
+            "name": "portfolio_loss_simulation"
           },
           "attributeId": 1,
           "value": null,
@@ -55,12 +55,12 @@
         },
         {
           "ref": {
-            "type": "dataset",
-            "uuid": "d64a94eb-805d-4987-b4ac-8b88bcaa72b7",
+            "type": "datapod",
+            "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
             "version": null,
-            "name": "ds_portfolio_loss_simulation"
+            "name": "portfolio_loss_simulaton_aggr"
           },
-          "attributeId": 3,
+          "attributeId": 1,
           "value": null,
           "attributeName": "value_at_risk",
           "attributeType": null
