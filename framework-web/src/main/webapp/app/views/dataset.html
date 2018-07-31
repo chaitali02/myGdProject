@@ -462,7 +462,7 @@
                       <div ng-if="tabledata.isrhsParamlist">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 class="form-control"  data-ng-model="tabledata.rhsparamlist"
-                          ng-options="r as r.caption for r in allparamlistParams track by r.uuid" ng-disabled="{{mode}}"
+                          ng-options="r as r.caption for r in allparamlistParams track by r.uuid+attributeId" ng-disabled="{{mode}}"
                            required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                             <!-- <div class="col-md-11" style="padding: 0px;">
                                 <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsparamlist.name" title="{{tabledata.rhsparamlist.dname}}"

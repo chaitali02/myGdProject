@@ -202,7 +202,7 @@
                         </span>
                       </th>
                       <th style="width:6%;text-align:center">ID</th>
-                      <th class="text-center">Name</th>
+                      <th class="text-center" style="width:36%;">Name</th>
                       <th class="text-center" style="width:20%;">Type</th>
                       <th class="text-center">Default Value</th>
                     </tr>
@@ -247,7 +247,19 @@
                             class="form-control">
                           </span>
                         </div>
-                        <div  class="text-center" ng-if="['simple','distribution'].indexOf(tabledata.paramValueType) == -1">
+                        <div  ng-show="tabledata.paramValueType =='date'">
+                          <div class="col-md-12" style="margin-top:0px;margin-bottom: -20px;">
+                            <p class="input-group">
+                              <input type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="tabledata.paramValue" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                              <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                        </div>
+
+                        <div  class="text-center" ng-if="['simple','distribution','date'].indexOf(tabledata.paramValueType) == -1">
                             NA
                           </div>
                       </td>

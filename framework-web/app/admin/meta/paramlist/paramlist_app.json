@@ -8,7 +8,8 @@
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
-                }
+                },
+                "value" : "03/31/2018"
             }
         }
     ],

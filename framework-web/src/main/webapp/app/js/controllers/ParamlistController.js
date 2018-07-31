@@ -69,7 +69,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.paramtable = null;
 	$scope.isUseTemlate=false;
 	$scope.isTemplageInfoRequired=false;
-	$scope.typeSimple = ["string", "double", "date", "integer", "list"];
+	$scope.typeSimple = ["string", "double", "integer", "list"];
 	$scope.type = [
 		{"name":"string","caption":"string"},
 		{"name":"double","caption":"double"},
@@ -93,7 +93,26 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		content: '',
 		timeout: 3000 //time in ms
 	};
+    
+    $scope.popup2 = {
+    	opened: false
+    };
+	$scope.dateOptions = {
+		dateDisabled: disabled,
+		formatYear: 'yy',
+		maxDate: new Date(2020, 5, 22),
+		minDate: new Date(),
+		startingDay: 1
+	};
+	function disabled(data) {
+		var date = data.date,
+		  mode = data.mode;
+		return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+	}
 	
+	$scope.open2 = function() {
+		$scope.popup2.opened = true;
+	};
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['paramlist'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -348,7 +367,11 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.onChangeParamType=function(type,index){
 		if($scope.typeSimple.indexOf(type) !=-1){
 			$scope.paramtable[index].paramValueType='simple';
-		}else{
+		}
+		else if(type =='date'){
+			$scope.paramtable[index].paramValueType='date';
+		}
+		else{
 			$scope.paramtable[index].paramValueType=type;
 		}
 	}

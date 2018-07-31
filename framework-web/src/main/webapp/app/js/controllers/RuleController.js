@@ -1076,7 +1076,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           var paramsjson = {};
           paramsjson.uuid = response.uuid;
           paramsjson.name = response.name + "." + response.params[i].paramName;
-          paramsjson.attrId = response.params[i].paramId;
+          paramsjson.attributeId = response.params[i].paramId;
           paramsjson.attrType = response.params[i].paramType;
           paramsjson.paramName = response.params[i].paramName;
           paramsArray[i] = paramsjson;
@@ -1102,7 +1102,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           var paramsjson = {};
           paramsjson.uuid = response[i].ref.uuid;
           paramsjson.name = response[i].ref.name + "." + response[i].paramName;
-          paramsjson.attrId = response[i].paramId;
+          paramsjson.attributeId = response[i].paramId;
           paramsjson.attrType = response[i].paramType;
           paramsjson.paramName = response[i].paramName;
           paramsjson.caption = "app_"+paramsjson.name
