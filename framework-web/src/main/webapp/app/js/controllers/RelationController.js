@@ -1,19 +1,19 @@
 
 MetadataModule = angular.module('MetadataModule');
-MetadataModule.controller('MetadataRelationController', function ($state,$rootScope,$scope, $stateParams, $cookieStore, MetadataRelationSerivce, privilegeSvc,CommonService,$timeout,$filter) {
+MetadataModule.controller('MetadataRelationController', function ($state, $rootScope, $scope, $stateParams, $cookieStore, MetadataRelationSerivce, privilegeSvc, CommonService, $timeout, $filter) {
 	$scope.mode = "false";
 	$scope.relationdata;
 	$scope.showFrom = true;
 	$scope.data = null;
 	$scope.showGraphDiv = false
-	$scope.joinType = ["EQUI JOIN", "LEFT OUTER", 'RIGHT OUTER', 'FULL OUTER', 'LEFT SEMI','CROSS'];
+	$scope.joinType = ["EQUI JOIN", "LEFT OUTER", 'RIGHT OUTER', 'FULL OUTER', 'LEFT SEMI', 'CROSS'];
 	$scope.operator = ["=", "<", ">", "<=", ">=", "IN", "BETWEEN"];
 	$scope.lshType = ["string", "datapod", 'formula'];
 	$scope.logicalOperator = ["", "OR", "AND"];
 	$scope.relationOperators = ["=", "IN", "NOT IN"]
 	$scope.relation = {};
 	$scope.relation.versions = [];
-	$scope.SourceTypes = ["datapod"]
+	$scope.SourceTypes = ["datapod","dataset"]
 	$scope.rhsAllAttribute = [];
 	$scope.selectSourceType = $scope.SourceTypes[0];
 	$scope.relationTableArray = null;
@@ -25,36 +25,36 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
 		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
-		});  
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
+		});
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
-		$scope.isPanelActiveOpen=true;
+		$scope.isPanelActiveOpen = true;
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
 		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
-	$scope.userDetail={}
-	$scope.userDetail.uuid= $rootScope.setUseruuid;
-	$scope.userDetail.name= $rootScope.setUserName;
+	$scope.userDetail = {}
+	$scope.userDetail.uuid = $rootScope.setUseruuid;
+	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['relation'] || [];
@@ -64,11 +64,11 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
 
-	$scope.getLovByType = function() {
+	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
 			console.log(response)
-			$scope.lobTag=response[0].value
+			$scope.lobTag = response[0].value
 		}
 	}
 	$scope.loadTag = function (query) {
@@ -76,7 +76,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
@@ -91,19 +91,19 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		});
 	}
 	$scope.showView = function (uuid, version) {
-		if(!$scope.isEdit){
+		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('metaListrelation', {
 				id: uuid,
 				version: version,
 				mode: 'true'
 			});
-	    }
+		}
 	}
 	var notify = {
 		type: 'success',
 		title: 'Success',
-		content:'',
+		content: '',
 		timeout: 3000 //time in ms
 	};
 
@@ -138,7 +138,6 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode
-
 		$scope.isDependencyShow = true;
 		MetadataRelationSerivce.getAllVersionByUuid($stateParams.id, "relation").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
@@ -152,7 +151,6 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 
 		MetadataRelationSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'relation').then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
-			//console.log(JSON.stringify(response.relationInfo))
 			var defaultversion = {};
 			var defaultoption = {};
 			defaultversion.version = response.relationdata.version;
@@ -161,6 +159,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 			$scope.relationdata = response.relationdata
 			$scope.relationTableArray = response.relationInfo;
 			$scope.relationName = $scope.relationdata.name
+			$scope.selectSourceType=$scope.relationdata.dependsOn.ref.type;
 			var tags = [];
 			for (var i = 0; i < response.relationdata.tags.length; i++) {
 				var tag = {};
@@ -170,44 +169,20 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 			}
 
 			$scope.rhsAllAttribute = [];
-			/*var count=0;
-			for(var j=0;j<$scope.relationTableArray.length;j++){
-					MetadataRelationSerivce.getAllAttributesByDatapod($scope.relationTableArray[j].join.uuid).then(function(response){onSuccessGetAttributesByDatapodRhs(response.data)});
-					var onSuccessGetAttributesByDatapodRhs=function(response){
-						var attributes=[];
-					   	for(var j=0;j<response.length;j++){
-							  var attributedetail={};
-							  attributedetail.uuid=response[j].ref.uuid;
-							  attributedetail.datapodname=response[j].ref.name;
-							  attributedetail.name=response[j].attrName;
-							  attributedetail.dname=response[j].ref.name+"."+response[j].attrName;
-							  attributedetail.attributeId=response[j].attrId;
-							  attributes.push(attributedetail)
-							}
-						$scope.rhsAllAttribute[count]=attributes;
-					    count=count+1;
-
-
-				}
-
-			}*/
 			MetadataRelationSerivce.getAllAttributeBySource($scope.relationdata.uuid, "relation", $scope.relationdata.version).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
 				$scope.rhsAllAttribute = [];
 				$scope.lhsAllAttribute = response.allattributes;
-				//console.log(JSON.stringify(response.attributes))
-				var count = 0;
-				for (var i = 0; i < response.attributes.length; i++) {
-					if (i != 0) {
-
-						$scope.rhsAllAttribute[count] = response.attributes[i];
-						count = count + 1;
-					}
-
+			    var count = 0;
+			  	for (var i = 0; i < response.attributes.length; i++) {
+			 	//	if (i != 0) {
+			 			$scope.rhsAllAttribute[count] = response.attributes[i];
+			 			count = count + 1;
+			 	//	}
 				}
 			}
 
-			MetadataRelationSerivce.getAllLatest("datapod").then(function (response) { onSuccessrelation(response.data) });
+			MetadataRelationSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccessrelation(response.data) });
 			var onSuccessrelation = function (response) {
 				$scope.alldatapod = response
 				$scope.alljoindatapod = response
@@ -224,14 +199,28 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		MetadataRelationSerivce.getAllLatest("datapod").then(function (response) { onSuccessrelation(response.data) });
 		var onSuccessrelation = function (response) {
 			$scope.alldatapod = response
-			//$scope.alljoindatapod=response
 			$scope.allJoinDatapod();
-			MetadataRelationSerivce.getAttributesByDatapod($scope.alldatapod.defaultoption.uuid, "datapod").then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
+			MetadataRelationSerivce.getAllAttributeBySource($scope.alldatapod.defaultoption.uuid, "datapod").then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
 				$scope.lhsAllAttribute = response;
+				$scope.rhsAllAttribute[0]=response;
 			}
 		}
 
+	}
+	
+	$scope.onChangeType=function(){
+		$scope.showactive = "false"
+		MetadataRelationSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccessrelation(response.data) });
+		var onSuccessrelation = function (response) {
+			$scope.alldatapod = response
+			$scope.allJoinDatapod();
+			MetadataRelationSerivce.getAllAttributeBySource($scope.alldatapod.defaultoption.uuid,$scope.selectSourceType).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
+			var onSuccessGetAttributesByDatapod = function (response) {
+				$scope.lhsAllAttribute = response;
+				$scope.rhsAllAttribute[0]=response;
+			}
+		}
 	}
 
 	$scope.allJoinDatapod = function () {
@@ -245,10 +234,10 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 
 	}
 	$scope.selectOption = function () {
-		//$scope.lhsAllAttribute=null
-		MetadataRelationSerivce.getAttributesByDatapod($scope.alldatapod.defaultoption.uuid, "datapod").then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
+		MetadataRelationSerivce.getAllAttributeBySource($scope.alldatapod.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 		var onSuccessGetAttributesByDatapod = function (response) {
 			$scope.lhsAllAttribute = response;
+			$scope.rhsAllAttribute[0]=response;
 			$scope.allJoinDatapod();
 			$scope.joinRHS();
 		}
@@ -256,29 +245,34 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 	}
 
 	$scope.joinRHS = function () {
+		$scope.lhsAllAttribute=[];
 		for (var i = 0; i < $scope.rhsAllAttribute.length; i++) {
 			for (var obj in $scope.rhsAllAttribute[i]) {
-				// console.log(JSON.stringify($scope.rhsAllAttribute[i][obj]))
 				$scope.lhsAllAttribute.push($scope.rhsAllAttribute[i][obj])
 			}
 		}
+	
 	}
 
 	$scope.joinChange = function (data, index) {
-		if (typeof data != "undefined") {
-			MetadataRelationSerivce.getAttributesByDatapod(data.uuid, "datapod").then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
+		var temp=$scope.rhsAllAttribute.splice(index+1,1);
+		//$scope.lhsAllAttribute = _.without($scope.lhsAllAttribute, _.findWhere($scope.lhsAllAttribute, {uuid:temp.uuid}));
+		if (data !=null && typeof data != "undefined") {
+			MetadataRelationSerivce.getAllAttributeBySource(data.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
-				$scope.rhsAllAttribute[index] = response;
+			    $scope.rhsAllAttribute.splice([index+1],0,response);
 				$scope.joinRHS();
-			}
+			}	
 		}
 	}
-    $scope.onChangeJoinType=function(joinType,index){
-		if(joinType == 'CROSS'){
-			$scope.relationTableArray[index].isjoinDisable=false;
-			$scope.relationTableArray[index].joinKey=[];
-		}else{
-			$scope.relationTableArray[index].isjoinDisable=false;
+
+	$scope.onChangeJoinType = function (joinType, index) {
+		if (joinType == 'CROSS') {
+			$scope.relationTableArray[index].isjoinDisable = false;
+			$scope.relationTableArray[index].joinKey = [];
+		} else {
+			$scope.relationTableArray[index].isjoinDisable = false;
+			if($scope.relationTableArray[index].joinKey.length == 0)
 			$scope.addJoinSubRow(index);
 		}
 	}
@@ -288,8 +282,8 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 			relation.selected = $scope.selectalljoin;
 		});
 	}
-	$scope.addrow = function () {
 
+	$scope.addrow = function () {
 		if ($scope.relationTableArray == null) {
 			$scope.relationTableArray = [];
 		}
@@ -300,7 +294,6 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		var joinkey = {};
 		joinKey.push(joinkey)
 		relationtable.joinKey = joinKey
-		//relationtable.lhsFilter=$scope.lhsdatapodattributefilter[0]
 		$scope.relationTableArray.splice($scope.relationTableArray.length, 0, relationtable);
 
 	}
@@ -319,7 +312,6 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		$scope.relationTableArray = newDataList;
 		if (index != null) {
 			$scope.rhsAllAttribute.splice(index, 1);
-			console.log(JSON.stringify($scope.rhsAllAttribute))
 			$scope.selectOption();
 		}
 		if ($scope.selectalljoin == true) {
@@ -335,6 +327,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 			joinkey.selected = $scope.relationTableArray[index].selectalljoinkey;
 		});
 	}
+
 	$scope.removeJoinSubRow = function (index) {
 		$scope.relationTableArray[index].selectalljoinkey = false
 		var newDataList = [];
@@ -350,6 +343,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		}
 		$scope.relationTableArray[index].joinKey = newDataList;
 	}
+	
 	$scope.addJoinSubRow = function (index) {
 		var joinKey = {}
 		joinKey.logicalOperator = $scope.logicalOperator[0];
@@ -357,6 +351,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 
 		$scope.relationTableArray[index].joinKey.splice($scope.relationTableArray[index].joinKey.length, 0, joinKey);
 	}
+
 	$scope.selectVersion = function () {
 		$scope.alldatapod = null;
 		$scope.myform.$dirty = false;
@@ -369,7 +364,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 			$scope.relation.defaultVersion = defaultversion;
 			$scope.relationdata = response.relationdata
 			$scope.relationTableArray = response.relationInfo;
-			$scope.relationName = $scope.relationdata.name
+			$scope.relationName = $scope.relationdata.name;
 			var tags = [];
 			for (var i = 0; i < response.relationdata.tags.length; i++) {
 				var tag = {};
@@ -377,34 +372,11 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 				tags[i] = tag
 				$scope.tags = tags;
 			}
-
 			$scope.rhsAllAttribute = [];
-			/*var count=0;
-			for(var j=0;j<$scope.relationTableArray.length;j++){
-					MetadataRelationSerivce.getAllAttributesByDatapod($scope.relationTableArray[j].join.uuid).then(function(response){onSuccessGetAttributesByDatapodRhs(response.data)});
-					var onSuccessGetAttributesByDatapodRhs=function(response){
-						var attributes=[];
-					   	for(var j=0;j<response.length;j++){
-							  var attributedetail={};
-							  attributedetail.uuid=response[j].ref.uuid;
-							  attributedetail.datapodname=response[j].ref.name;
-							  attributedetail.name=response[j].attrName;
-							  attributedetail.dname=response[j].ref.name+"."+response[j].attrName;
-							  attributedetail.attributeId=response[j].attrId;
-							  attributes.push(attributedetail)
-							}
-						$scope.rhsAllAttribute[count]=attributes;
-					    count=count+1;
-
-
-				}
-
-			}*/
 			MetadataRelationSerivce.getAllAttributeBySource($scope.relationdata.uuid, "relation", $scope.relationdata.version).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
 				$scope.rhsAllAttribute = [];
 				$scope.lhsAllAttribute = response.allattributes;
-				//console.log(JSON.stringify(response.attributes))
 				var count = 0;
 				for (var i = 0; i < response.attributes.length; i++) {
 					if (i != 0) {
@@ -418,7 +390,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 
 
 			}
-			MetadataRelationSerivce.getAllLatest("datapod").then(function (response) { onSuccessrelation(response.data) });
+			MetadataRelationSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccessrelation(response.data) });
 			var onSuccessrelation = function (response) {
 				$scope.alldatapod = response
 				$scope.alljoindatapod = response
@@ -432,7 +404,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 	}
 
 	$scope.submitRelation = function () {
-		var upd_tag="N"
+		var upd_tag = "N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -450,14 +422,14 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
 			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
-			if(result ==false){
-				upd_tag="Y"	
+			if (result == false) {
+				upd_tag = "Y"
 			}
 		}
 		relationjson.tags = tagArray;
 		var dependsOn = {};
 		var ref = {};
-		ref.type = "datapod";
+		ref.type = $scope.selectSourceType;
 		ref.uuid = $scope.alldatapod.defaultoption.uuid;
 		dependsOn.ref = ref;
 		relationjson.dependsOn = dependsOn
@@ -487,11 +459,11 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 
 						relationInfo.joinType = $scope.relationTableArray[j].relationJoinType;
 					}
-					joinref.type = "datapod";
+					joinref.type = $scope.selectSourceType;
 					joinref.uuid = $scope.relationTableArray[j].join.uuid;
 					join.ref = joinref;
 					relationInfo.join = join;
-					if($scope.relationTableArray[j].joinKey && $scope.relationTableArray[j].joinKey.length >0){	
+					if ($scope.relationTableArray[j].joinKey && $scope.relationTableArray[j].joinKey.length > 0) {
 						for (var i = 0; i < $scope.relationTableArray[j].joinKey.length; i++) {
 							var operand = []
 							var JoinKeyDetail = {};
@@ -507,12 +479,12 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 							}
 
 							JoinKeyDetail.operator = $scope.relationTableArray[j].joinKey[i].relationOperator
-							firstoperandref.type = "datapod";
+							firstoperandref.type = $scope.selectSourceType;
 							firstoperandref.uuid = $scope.relationTableArray[j].joinKey[i].lhsoperand.uuid
 							firstoperad.ref = firstoperandref;
 							firstoperad.attributeId = $scope.relationTableArray[j].joinKey[i].lhsoperand.attributeId;
 							firstoperad.attributeType = $scope.relationTableArray[j].joinKey[i].lhsoperand.attrType
-							scecondoperandref.type = "datapod";
+							scecondoperandref.type = $scope.selectSourceType;
 							scecondoperandref.uuid = $scope.relationTableArray[j].joinKey[i].rhsoperand.uuid
 							scecondoperad.attributeId = $scope.relationTableArray[j].joinKey[i].rhsoperand.attributeId;
 							scecondoperad.attributeType = $scope.relationTableArray[j].joinKey[i].rhsoperand.attrType;
@@ -524,9 +496,9 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 							joinKey[i] = JoinKeyDetail;
 							relationInfo.joinKey = joinKey;
 						}
-				    }
-                    else{
-						relationInfo.joinKey=[];
+					}
+					else {
+						relationInfo.joinKey = [];
 					}
 					relationInfoArray[j] = relationInfo
 
@@ -539,7 +511,7 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 		}
 		relationjson.relationInfo = relationInfoArray
 		console.log(JSON.stringify(relationjson))
-		MetadataRelationSerivce.submit(relationjson,'relation',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataRelationSerivce.submit(relationjson, 'relation', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
@@ -556,8 +528,8 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 			$scope.$emit('notify', notify);
 		}
 	}
-	
-	
+
+
 	$scope.okRelationSave = function () {
 		$('#relationsave').css("dispaly", "none");
 		var hidemode = "yes";
@@ -565,8 +537,6 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 			setTimeout(function () { $state.go('metadata', { 'type': 'relation' }); }, 2000);
 
 		}
-
-
 	}
 
 
@@ -578,13 +548,4 @@ MetadataModule.controller('MetadataRelationController', function ($state,$rootSc
 
 
 
-/*MetadataModule.directive('expand', function () {
-    return {
-        restrict: 'A',
-        controller: ['$scope', function ($scope) {
-            $scope.$on('onExpandAll', function (event, args) {
-                $scope.expanded = args.expanded;
-            });
-        }]
-    };
-});*/
+

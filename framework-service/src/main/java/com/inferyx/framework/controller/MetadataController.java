@@ -970,4 +970,11 @@ public class MetadataController {
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return metadataServiceImpl.getFunctionByCriteria(category,inputReq);
 	}
+	@RequestMapping(value = "/getParamByAppId", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamByAppId(
+			@RequestParam(value = "uuid", required = false) String appId ,
+			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
+		return metadataServiceImpl.getParamByAppId(appId);
+	}
+	
 }

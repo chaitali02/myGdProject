@@ -140,17 +140,19 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-2 col-sm-2 col-xs-12">
-                  <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"
+                  <select class="form-control" ng-disabled="{{mode}}" ng-change="onChangeType()" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"
                     required=""></select>
                 </div>
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-3 col-sm-3 col-xs-12">
-                  <select class="form-control" select2 ng-change="selectOption()" data-ng-model="alldatapod.defaultoption" ng-options="r as r.name for r in alldatapod.options track by r.uuid"
+                  <select class="form-control" select2 name="dependson" ng-change="selectOption()" data-ng-model="alldatapod.defaultoption" ng-options="r as r.name for r in alldatapod.options track by r.uuid"
                     ng-disabled="{{mode}}">
                   </select>
+                  <input type="hidden" name="dependson" ng-model="alldatapod.defaultoption.uuid" required>
                 </div>
+                
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
@@ -202,7 +204,7 @@
                           />
                         </span>
                       </th>
-                      <th style="text-align: center;width:50%;">Join Datapod</th>
+                      <th style="text-align: center;width:50%;">Join</th>
                       <th style="text-align: center;">Join Type</th>
                       <th style="width:5%;">
                         <div ng-click="expandAll(allExpanded = !allExpanded)" style="display:flex;justify-content:center;margin:3px auto;">
@@ -221,8 +223,9 @@
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 ng-model="data.join" ng-options=" x  as x.name for x in alljoindatapod    track by x.uuid" ng-disabled="{{mode}}"
-                            class="form-control" ng-change="joinChange(data.join,$index)">
+                            class="form-control" ng-change="joinChange(data.join,$index)"  required disable-validation-message="">
                           </select>
+                          <!-- <input type="hidden" name="join" ng-model="alldatapod.defaultoption.uuid" required> -->
                         </span>
                       </td>
                       <td>
@@ -245,7 +248,7 @@
                         </div>
                         <br>
                         <br>
-                        <table class=" row-border hover table  table-striped table-bordered">
+                        <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed">
                           <thead class="theadborder">
                             <tr>
                               <th style="text-align: center; Vertical-align: middle;width:5%;">
@@ -257,7 +260,7 @@
                               <th style="text-align: center;width:17%;">Logical Operator</th>
                               <th style="text-align: center;width:30%;">LHS Attributes</th>
                               <th style="text-align: center;width:15%;">Operator</th>
-                              <th style="text-align: center;width:33%;">RHS Attributes</th>
+                              <th style="text-align: center;width:25%;">RHS Attributes</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -277,19 +280,19 @@
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                   <!-- <select select2 ng-model="datajoinkye.rhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in rhsAllAttribute[$parent.$index] track by  c.uuid + c.attributeId">
                                   </select> -->
-                                  <select select2 ng-model="datajoinkye.rhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsAllAttribute track by  c.uuid + c.attributeId">
+                                  <select select2 ng-model="datajoinkye.rhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsAllAttribute track by  c.uuid + c.attributeId"   required disable-validation-message="" >
                                   </select>
                                 </span>
                               </td>
                               <td style="width:15%;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                   <select ng-disabled="{{mode}} || data.isjoinDisable" ng-model="datajoinkye.relationOperator" ng-options="x for x in relationOperators" ng-disabled="{{mode}} || isjoinDisable"
-                                    class="form-control"></select>
+                                    class="form-control" required disable-validation-message=""></select>
                                 </span>
                               </td>
-                              <td style="width:35%;">
+                              <td style="width:25%;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select select2 ng-model="datajoinkye.lhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in  lhsAllAttribute track by  c.uuid+c.attributeId">
+                                  <select select2 ng-model="datajoinkye.lhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in  lhsAllAttribute track by  c.uuid+c.attributeId" required disable-validation-message="">
                                   </select>
                                 </span>
                               </td>
