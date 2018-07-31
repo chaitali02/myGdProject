@@ -3,13 +3,14 @@
     height: 35px !important;
     overflow-y: scroll !important;
   }
+
   .input-group-addon {
     padding: 6px 6px !important;
   }
-  .input-group-addon > i {
-    color: #666;
-}
 
+  .input-group-addon>i {
+    color: #666;
+  }
 </style>
 <div class="portlet box green">
   <div class="portlet-title">
@@ -17,8 +18,8 @@
       <i class="icon-magnifier"></i>Search Criteria
     </div>
     <div class="tools">
-       <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refresh()" data-original-title=""  title="">
-         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refresh()" data-original-title="" title="">
+        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
       </a>
       <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
     </div>
@@ -27,45 +28,44 @@
     <form class="form-horizontal">
       <div class="row" ng-if="handleGroup">
         <div class="col-md-12">
-          <div class="col-md-4 col-sm-6 col-xs-12 custpadding" >
+          <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6">Type</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-              <label class="control-label" style="padding-right: 5%;">
-                <input type="radio" data-ng-model="searchForm.newType" ng-change="onChangeType(searchForm.newType)" value="{{types[0].text}}">
-                {{types[0].caption}}
-              </label>
-              <label class="control-label">
-                <input type="radio" data-ng-model="searchForm.newType" ng-change="onChangeType(searchForm.newType)" value="{{types[1].text}}">
-                {{types[1].caption}}
-              </label>
-            </div>
-            <!-- <label class="control-label col-md-3 col-sm-3 col-xs-6">Type</label>
+                <label class="control-label" style="padding-right: 5%;">
+                  <input type="radio" data-ng-model="searchForm.newType" ng-change="onChangeType(searchForm.newType)" value="{{types[0].text}}"> {{types[0].caption}}
+                </label>
+                <label class="control-label">
+                  <input type="radio" data-ng-model="searchForm.newType" ng-change="onChangeType(searchForm.newType)" value="{{types[1].text}}"> {{types[1].caption}}
+                </label>
+              </div>
+              <!-- <label class="control-label col-md-3 col-sm-3 col-xs-6">Type</label>
             <div class="col-md-9 col-sm-9 col-xs-6">
               <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.newType" ng-options=" r.text as r.caption for r in types" ng-change="onChangeType(searchForm.newType)">
               </select>
             </div> -->
+            </div>
           </div>
-        </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="col-md-4 col-sm-6 col-xs-12 custpadding" >
+          <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6">Name</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.execname" ng-options="r.name as r.name for r in allExecName" select2>
+                <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.execname"
+                  ng-options="r.name as r.name for r in allExecName" select2>
                   <option value="">-Select-</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="col-md-5 col-sm-6 col-xs-12">
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
-            <div class="col-md-8 col-sm-9 col-xs-9">
-              <!-- <div class="input-group date form_meridian_datetime" id="start_date" datetimez flag="'Start'" ng-model="searchForm.startdate">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+              <div class="col-md-8 col-sm-9 col-xs-9">
+                <!-- <div class="input-group date form_meridian_datetime" id="start_date" datetimez flag="'Start'" ng-model="searchForm.startdate">
                 <input type="text" size="16" class="form-control" readonly="readonly">
                   <span class="input-group-btn">
                     <button class="btn default date-set" type="button">
@@ -73,61 +73,59 @@
                     </button>
                 </span>
               </div> -->
-              <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#"
-       href="#">
-        <div class="input-group date">
-            <!-- <input type="text" class="form-control" data-ng-model="searchForm.startdate " readonly> -->
-            <span style="padding-right: 5px; text-align: right;" class="form-control">{{searchForm.startdate | date :'EEE MMM dd HH:mm:ss yyyy'}} {{timezone}}</span>
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-        </div>
-    </a>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-        <datetimepicker
-        data-ng-model="searchForm.startdate"
-        data-datetimepicker-config="{ dropdownSelector: '#start_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
-        data-on-set-time="startDateOnSetTime()"
-        data-before-render="startDateBeforeRender($dates)"></datetimepicker>
-    </ul>
-            </div>
-           <!--  <span style="float:left;margin-top:8px;cursor: pointer;" ng-click="clear">
+                <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#" href="#">
+                  <div class="input-group date">
+                    <!-- <input type="text" class="form-control" data-ng-model="searchForm.startdate " readonly> -->
+                    <span style="padding-right: 5px; text-align: right;" class="form-control">{{searchForm.startdate | date :'EEE MMM dd HH:mm:ss yyyy'}} {{timezone}}</span>
+                    <span class="input-group-addon">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                  <datetimepicker data-ng-model="searchForm.startdate" data-datetimepicker-config="{ dropdownSelector: '#start_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
+                    data-on-set-time="startDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                </ul>
+              </div>
+              <!--  <span style="float:left;margin-top:8px;cursor: pointer;" ng-click="clear">
               <i class="fa fa-times"></i>
             </span -->
+            </div>
           </div>
-        </div>
-        <div class="col-md-3 col-sm-6 col-xs-12 custpadding" >
+          <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Tags</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-              <!-- <tags-input data-ng-model="searchForm.tags"
+                <!-- <tags-input data-ng-model="searchForm.tags"
                   min-length="0"></tags-input> -->
-                <tags-input class="tag-scroll-height" ng-model="searchForm.tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="true" add-on-enter="true" add-on-space="true">
-                  <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                      max-results-to-show="10">
+                <tags-input class="tag-scroll-height" ng-model="searchForm.tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="true"
+                  add-on-enter="true" add-on-space="true">
+                  <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
                   </auto-complete>
-              </tags-input>
+                </tags-input>
               </div>
             </div>
           </div>
 
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select" >User</label>
-            <div class="col-md-9 col-sm-9 col-xs-6">
-              <select class="form-control" select2 data-ng-model="searchForm.username" ng-options="r.name as r.name for r in allUSerName">
-                <option value="">-Select-</option>
-              </select >
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select">User</label>
+              <div class="col-md-9 col-sm-9 col-xs-6">
+                <select class="form-control" select2 data-ng-model="searchForm.username" ng-options="r.name as r.name for r in allUSerName">
+                  <option value="">-Select-</option>
+                </select>
+              </div>
             </div>
           </div>
-       </div>
           <div class="col-md-5 col-sm-6 col-xs-12">
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-6">End Date </label>
-            <div class="col-md-8 col-sm-9 col-xs-6">
-              <!-- <div class="input-group date form_meridian_datetime" id="end_date" datetimez flag="'End'" ng-model="searchForm.enddate">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-6">End Date </label>
+              <div class="col-md-8 col-sm-9 col-xs-6">
+                <!-- <div class="input-group date form_meridian_datetime" id="end_date" datetimez flag="'End'" ng-model="searchForm.enddate">
                 <input  type="text" size="16" readonly="readonly" class="form-control">
                 <span class="input-group-btn">
 
@@ -136,60 +134,60 @@
                   </button>
                 </span>
               </div> -->
-              <a class="dropdown-toggle" id="end_date" role="button" data-toggle="dropdown" data-target="#"
-       href="#">
-        <div class="input-group date">
-            <!-- <input type="text" class="form-control" data-ng-model="searchForm.enddate" readonly> -->
-            <span class="form-control" style="padding-right: 5px; text-align: right;">{{searchForm.enddate | date :'EEE MMM dd HH:mm:ss yyyy'}} {{timezone}} </span>
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-        </div>
-    </a>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-        <datetimepicker data-ng-model="searchForm.enddate"
-                        data-datetimepicker-config="{ dropdownSelector: '#end_date', renderOn: 'start-date-changed' }"
-                        data-on-set-time="endDateOnSetTime()"
-                        data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
-    </ul>
+                <a class="dropdown-toggle" id="end_date" role="button" data-toggle="dropdown" data-target="#" href="#">
+                  <div class="input-group date">
+                    <!-- <input type="text" class="form-control" data-ng-model="searchForm.enddate" readonly> -->
+                    <span class="form-control" style="padding-right: 5px; text-align: right;">{{searchForm.enddate | date :'EEE MMM dd HH:mm:ss yyyy'}} {{timezone}} </span>
+                    <span class="input-group-addon">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                  <datetimepicker data-ng-model="searchForm.enddate" data-datetimepicker-config="{ dropdownSelector: '#end_date', renderOn: 'start-date-changed' }"
+                    data-on-set-time="endDateOnSetTime()" data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+                </ul>
+              </div>
             </div>
-          </div><!--ng-show="showErrorMessage"-->
-          <div ng-show="showEndErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">End date is lesser than start date.</div>
-          <div ng-show="showStartErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">Start date is greater than end date.</div>
-        </div>
-        <div class="col-md-3 col-sm-6 col-xs-12 custpadding" >
-          <div class="form-group" ng-hide="noExec">
-            <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Status</label>
-            <div class="col-md-9 col-sm-6 col-xs-12">
-               <select class="form-control" select2 data-ng-model="searchForm.status" ng-options="r.name as r.caption for r in allStatus">
-                <option value="">-Select-</option>
-            </select >
-            </div>
+            <!--ng-show="showErrorMessage"-->
+            <div ng-show="showEndErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">End date is lesser than start date.</div>
+            <div ng-show="showStartErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">Start date is greater than end date.</div>
           </div>
-          <div class="form-group" ng-show="noExec">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
-            <div class="col-md-9 col-sm-6 col-xs-12">
+          <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
+            <div class="form-group" ng-hide="noExec">
+              <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Status</label>
+              <div class="col-md-9 col-sm-6 col-xs-12">
+                <select class="form-control" select2 data-ng-model="searchForm.status" ng-options="r.name as r.caption for r in allStatus">
+                  <option value="">-Select-</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" ng-show="noExec">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
+              <div class="col-md-9 col-sm-6 col-xs-12">
                 <!-- <label class="btn btn-default" ng-model="searchForm.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
                 <label class="btn btn-default" ng-model="searchForm.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label> -->
                 <select class="form-control" select2 data-ng-model="searchForm.active" ng-options="r.name as r.caption for r in allActive">
-                 <option value="">All</option>
-             </select >
+                  <option value="">All</option>
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <div class="col-md-4 col-sm-6 col-xs-12 custpadding" >
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
-            <div class="col-md-9 col-sm-9 col-xs-6">
-              <input type="submit" class="btn btn-success" value="Search" name="submit" ng-click="searchCriteria()">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
+              <div class="col-md-9 col-sm-9 col-xs-6">
+                <input type="submit" class="btn btn-success" value="Search" name="submit" ng-click="searchCriteria()">
+              </div>
             </div>
           </div>
-        </div>
-        <!-- <div class="col-md-5 col-sm-6 col-xs-12">
+          <!-- <div class="col-md-5 col-sm-6 col-xs-12">
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-left:0px">Published</label>
             <div class="col-md-8 col-sm-6 col-xs-12">
@@ -199,11 +197,11 @@
             </div>
           </div>
       </div> -->
-      <div class="col-md-3 col-sm-6 col-xs-12 custpadding" >
-        <!-- <i>Timezone is {{currentTimezone}}</i> -->
-      </div>
+          <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
+            <!-- <i>Timezone is {{currentTimezone}}</i> -->
+          </div>
+        </div>
+        <!--<span style="float:right;padding-right: 3%;color: blue;"><i>Timezone is {{currentTimezone}}</i></span>-->
+    </form>
     </div>
-    <!--<span style="float:right;padding-right: 3%;color: blue;"><i>Timezone is {{currentTimezone}}</i></span>-->
-  </form>
-</div>
-</div>
+  </div>

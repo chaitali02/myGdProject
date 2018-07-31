@@ -248,7 +248,7 @@
                         </div>
                         <br>
                         <br>
-                        <table class=" row-border hover table  table-striped table-bordered">
+                        <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed">
                           <thead class="theadborder">
                             <tr>
                               <th style="text-align: center; Vertical-align: middle;width:5%;">
@@ -260,7 +260,7 @@
                               <th style="text-align: center;width:17%;">Logical Operator</th>
                               <th style="text-align: center;width:30%;">LHS Attributes</th>
                               <th style="text-align: center;width:15%;">Operator</th>
-                              <th style="text-align: center;width:33%;">RHS Attributes</th>
+                              <th style="text-align: center;width:25%;">RHS Attributes</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -290,7 +290,7 @@
                                     class="form-control" required disable-validation-message=""></select>
                                 </span>
                               </td>
-                              <td style="width:35%;">
+                              <td style="width:25%;">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                   <select select2 ng-model="datajoinkye.lhsoperand" ng-disabled="{{mode}} || data.isjoinDisable" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in  lhsAllAttribute track by  c.uuid+c.attributeId" required disable-validation-message="">
                                   </select>
