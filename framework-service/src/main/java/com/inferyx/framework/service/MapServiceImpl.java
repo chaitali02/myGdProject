@@ -810,7 +810,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		RunMapServiceImpl runMapServiceImpl = new RunMapServiceImpl();
 		runMapServiceImpl.setMapExecServiceImpl(mapExecServiceImpl);
 		runMapServiceImpl.setDaoRegister(daoRegister);
-		runMapServiceImpl.setSqlContext(sqlContext);
 		runMapServiceImpl.setiMapExecDao(iMapExecDao);
 		runMapServiceImpl.setData(data);
 		runMapServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);

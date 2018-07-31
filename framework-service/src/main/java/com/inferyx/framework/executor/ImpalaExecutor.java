@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
@@ -260,20 +261,50 @@ public class ImpalaExecutor implements IExecutor {
 	@Override
 	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String targetTable, String clientContext)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT * FROM "+targetTable;
+		return executeAndFetch(sql, clientContext);
 	}
 	@Override
 	public List<double[]> twoDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
-		// TODO Auto-generated method stub
-		return null;
+		ResultSet resultSet = executeSql(sql, clientContext).getResultSet();		
+//		ResultSetMetaData rsmd = resultSet.getMetaData();
+//		int numOfCols = rsmd.getColumnCount();
+		
+		List<String> columnIndexList = new ArrayList<>();
+		for(AttributeRefHolder attributeRefHolder : attributeInfo) {
+				columnIndexList.add(attributeRefHolder.getAttrName());
+		}	
+		
+		List<double[]> valueList = new ArrayList<>();
+		while(resultSet.next()) {
+			List<Double> covarsValList = new ArrayList<>();
+			for(String col : columnIndexList) {
+				covarsValList.add((Double)resultSet.getObject(col));
+			}
+			valueList.add(ArrayUtils.toPrimitive(covarsValList.toArray(new Double[covarsValList.size()])));
+		}	
+		return valueList;
 	}
 	@Override
 	public List<Double> oneDArray(String sql, List<AttributeRefHolder> attributeInfo, String clientContext)
 			throws InterruptedException, ExecutionException, Exception {
-		// TODO Auto-generated method stub
-		return null;
+		ResultSet resultSet = executeSql(sql, clientContext).getResultSet();		
+//		ResultSetMetaData rsmd = resultSet.getMetaData();
+//		int numOfCols = rsmd.getColumnCount();
+		
+		List<String> columnIndexList = new ArrayList<>();
+		for(AttributeRefHolder attributeRefHolder : attributeInfo) {
+				columnIndexList.add(attributeRefHolder.getAttrName());
+		}	
+		
+		List<Double> valueList = new ArrayList<>();
+		while(resultSet.next()) {
+			for(String col : columnIndexList) {
+				valueList.add((Double)resultSet.getObject(col));
+			}
+		}		
+		return valueList;
 	}
 	@Override
 	public String generateFeatureData(List<Feature> features, int numIterations, String[] fieldArray, String tableName) {

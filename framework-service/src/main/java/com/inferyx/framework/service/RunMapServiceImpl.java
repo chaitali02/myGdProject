@@ -49,7 +49,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	@Autowired
 	ConnectionFactory connFactory;
 	
-	protected SQLContext sqlContext;
 	protected MapExec mapExec;
 	protected MetadataUtil daoRegister;
 	protected IMapExecDao iMapExecDao;
@@ -188,15 +187,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 
 	public void setiMapExecDao(IMapExecDao iMapExecDao) {
 		this.iMapExecDao = iMapExecDao;
-	}
-	
-	public SQLContext getSqlContext() {
-		return sqlContext;
-	}
-
-
-	public void setSqlContext(SQLContext sqlContext) {
-		this.sqlContext = sqlContext;
 	}
 
 	public MetadataUtil getDaoRegister() {
