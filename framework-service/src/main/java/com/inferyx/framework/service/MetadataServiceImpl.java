@@ -1757,7 +1757,14 @@ public class MetadataServiceImpl {
 						}
 					}
 			}
-		}
+		} else {
+			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
+				if (param.getParamId().equals(attributeId+"")) {
+					return param.getParamValue().getValue();
+				}
+			}
+	}
 		return "''";
 	}// End method	
 
