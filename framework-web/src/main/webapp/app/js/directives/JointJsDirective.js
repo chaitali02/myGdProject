@@ -1150,6 +1150,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      
      window.navigateTo = function(url){
        var state = JSON.parse(url);
+       console.log(state)
        $rootScope.previousState = {name : $state.current.name, params : $state.params};
        $rootScope.previousState.params.tab = '1';
        var ispresent=false;
@@ -1271,8 +1272,23 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
 
      }
 
+    window.showLogs  =function(execUrl ){
+      var state = execUrl;
+      $rootScope.previousState = {name : $state.current.name, params : $state.params};
+      $rootScope.previousState.params.tab = '1';
+      var ispresent=false;
+      if(ispresent !=true){
+        var stateTab={};
+        stateTab.route=state.state;
+        stateTab.param=state.params;
+        stateTab.active=false;
+        $rootScope.$broadcast('onAddTab',stateTab);
+      }
+      $state.go(state.state,state.params);
+      
+    }
 
-     window.showResult = function(params){
+    window.showResult = function(params){
        $scope.lastParams = params;
        $scope.isExecParamsetTable=false;
        App.scrollTop();
@@ -1785,6 +1801,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            pt.x = d3.event.clientX; pt.y = d3.event.clientY;
            var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
            var state;
+           var  execStates;
            if(isExec || isGroupExec){
              var iconMenuItems = [{title:'Show Details', type : 'element'}];
              if($scope.execMode){
@@ -1792,9 +1809,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                if(status && (status=='Completed') ||(status== 'Failed')|| (status== 'InProgress')){
                  if(isExec && (status=='Completed')){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
+                   iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                  if(isGroupExec){
-                   iconMenuItems.push({title:'Show Results', type : 'results'})
+                   iconMenuItems.push({title:'Show Results', type : 'results'});
+                   iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                }
                else if(status && (status=='NotStarted' || status=='Resume')){
@@ -1828,16 +1847,18 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           
              var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId,operator:operator};
              var url=$location.absUrl().split("app")[0];
+             execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
-               iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
+               iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
              });
            }//End If if(isExec || isGroupExec)
            else {
              var url=$location.absUrl().split("app")[0];
-             $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
-             state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
-             iconMenu(localPoint.x, localPoint.y, JSON.stringify(state));
+              $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
+              execStates= {state : dagMetaDataService.elementDefs[type].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
+              state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
+             iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates));
              });
            }//End Else
          });
@@ -2579,7 +2600,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             }
           };
 
-          function menu(x, y, url,resultParams) {
+          function menu(x, y, url,execUrl,resultParams) {
             d3.select('.context-menu').remove();
             scaleItems();
             // Draw the menu
@@ -2600,6 +2621,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               .attr('onclick', function(d){
                 if(d.type == 'results'){
                   return 'showResult('+resultParams+')'
+                }
+                else if(d.type =='logs'){
+                  return 'showLogs('+execUrl+')'
                 }
                 else if(d.type == 'element'){
                   return "navigateTo('"+url+"');"
@@ -2624,6 +2648,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               .attr('onclick', function(d){
                 if(d.type == 'results'){
                   return 'showResult('+resultParams+')'
+                }
+                else if(d.type =='logs'){
+                  return 'showLogs('+execUrl+')'
                 }
                 else if(d.type == 'element'){
                   return "navigateTo('"+url+"');"
