@@ -369,7 +369,7 @@ public class ExportServiceImpl implements Serializable {
 	                    mimeType = "application/octet-stream";
 	                }
 	 
-	                response.setContentType(mimeType);
+	                response.setContentType(mimeType+';'+ uuid+"_" + ".zip");
 	                response.addHeader("Content-Disposition", "attachment; filename=" + uuid+".zip");
 	                response.setContentLength((int) file.length());
 	 
