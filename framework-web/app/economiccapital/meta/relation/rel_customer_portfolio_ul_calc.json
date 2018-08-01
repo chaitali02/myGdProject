@@ -1,6 +1,7 @@
 {
+  "id": "5b610971fb64118f7669be1a",
   "uuid": "b8c6c2fe-688a-48e4-87a4-d0fae0287701",
-  "version": "1533082289",
+  "version": "1533086065",
   "name": "rel_customer_portfolio_ul_calc",
   "desc": null,
   "createdBy": {
@@ -12,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 31 20:11:29 EDT 2018",
+  "createdOn": "Tue Jul 31 21:14:25 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -135,9 +136,9 @@
                 "version": null,
                 "name": "industry_factor_correlation_transpose"
               },
-              "attributeId": 3,
+              "attributeId": 1,
               "value": null,
-              "attributeName": "factor_value",
+              "attributeName": "reporting_date",
               "attributeType": "string"
             },
             {
@@ -165,9 +166,9 @@
                 "version": null,
                 "name": "industry_factor_correlation_transpose"
               },
-              "attributeId": 1,
+              "attributeId": 2,
               "value": null,
-              "attributeName": "reporting_date",
+              "attributeName": "factor_y",
               "attributeType": "string"
             },
             {
@@ -195,9 +196,9 @@
                 "version": null,
                 "name": "industry_factor_correlation_transpose"
               },
-              "attributeId": 3,
+              "attributeId": 1,
               "value": null,
-              "attributeName": "factor_value",
+              "attributeName": "reporting_date",
               "attributeType": "string"
             },
             {
