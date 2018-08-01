@@ -49,14 +49,14 @@ export class CommonService{
   .catch(this.handleError);
   }
 
-  downloadExport(uuid:Number): Observable<any> {
-    let url ='admin/export/download?uuid='+uuid;
-    return this._sharedService.getCall(url)
-    .map((response: Response) => {
-    return <any>response.json();
-    })
-    .catch(this.handleError);
-    }
+  // downloadExport(uuid:Number): Observable<any> {debugger
+  //   let url ='admin/export/download?uuid='+uuid;
+  //   return this._sharedService.getCall(url)
+  //   .map((response: Response) => {
+  //   return <any>response.json();
+  //   })
+  //   .catch(this.handleError);
+  //   }
   
 
   getLatestByUuid(uuid:Number,type:String): Observable<any> {

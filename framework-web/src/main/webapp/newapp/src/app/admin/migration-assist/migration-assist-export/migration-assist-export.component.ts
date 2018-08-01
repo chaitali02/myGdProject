@@ -135,7 +135,6 @@ export class MigrationAssistExportComponent implements OnInit {
   }
 
   onSuccessGetAllByMetaList(response) {
-    console.log(JSON.stringify(response))
     this.allMataList = []
     var count = 0;
     for (var i = 0; i < this.type.length; i++) {
@@ -213,7 +212,6 @@ export class MigrationAssistExportComponent implements OnInit {
         metaInfoArray[i] = metaInfo;
       }
       this.metaInfo = metaInfoArray;
-      console.log(JSON.stringify(this.metaInfo));
       this.location = response.location;
       this.includeDep = response.includeDep;
     }

@@ -8,7 +8,7 @@ import { CommonListComponent } from '../../common-list/common-list.component';
 import { AppMetadata } from '../../app.metadata';
 import { saveAs } from 'file-saver/FileSaver';
 import { AppConfig } from '../../app.config';
-import { Http } from '@angular/http';
+import { Http, Headers, ResponseContentType } from '@angular/http';
 
 @Component({
   selector: 'app-migration-assist',
@@ -29,7 +29,7 @@ export class MigrationAssistComponent implements OnInit {
   rowData1: any;
   cols: any;
   itemsExport: any;
-  itemsImport : any;
+  itemsImport: any;
   gridTitle: any;
   username: any;
   endDate: any;
@@ -47,32 +47,7 @@ export class MigrationAssistComponent implements OnInit {
   isModel: any;
   row: any;
   uuidAPI: any;
-  headers:Headers;
-
-  //     var filename = headers['x-filename'];
-  //     var contentType = headers['content-type'];
-  //     var linkElement = document.createElement('a');
-  //     try {
-  //       var blob = new Blob([data], {
-  //         type: contentType
-  //       });
-  //       var url = window.URL.createObjectURL(blob);
-
-  //       linkElement.setAttribute('href', url);
-  //       linkElement.setAttribute("download", uuid+".zip");
-
-  //       var clickEvent = new MouseEvent("click", {
-  //         "view": window,
-  //         "bubbles": true,
-  //         "cancelable": false
-  //       });
-  //       linkElement.dispatchEvent(clickEvent);
-  //     } catch (ex) {
-  //       console.log(ex);
-  //     }
-  //   }).error(function(data) {
-  //     console.log(data);  //   });   // };   // })
-
+  baseUrl: any;
   ModelDataFrom: { "caption": string; "message": any; "functionName": any };
   msgs: any;
   tabs = [
@@ -119,7 +94,8 @@ export class MigrationAssistComponent implements OnInit {
     }
   ];
 
-  constructor(private activatedRoute: ActivatedRoute, private config: AppConfig, public router: Router, private _commonService: CommonService, private _location: Location, private _commonListService: CommonListService, public metaconfig: AppMetadata, private activeroute: ActivatedRoute) {
+  constructor(private activatedRoute: ActivatedRoute, private config: AppConfig, public router: Router, private _commonService: CommonService, private _location: Location, private _commonListService: CommonListService, public metaconfig: AppMetadata, private activeroute: ActivatedRoute, private http: Http) {
+    this.baseUrl = config.getBaseUrl();
     this.rowData1 = null;
     this.breadcrumbDataFrom = [
       {
@@ -130,7 +106,6 @@ export class MigrationAssistComponent implements OnInit {
         "caption": "Migration Assist",
         "routeurl": "/app/admin/migration-assist"
       }
-      
     ]
     this.cols = [
       //  {field: 'uuid', header: 'UUID'},
@@ -167,7 +142,7 @@ export class MigrationAssistComponent implements OnInit {
         label: 'Export', icon: 'fa fa-file-pdf-o', command: (onclick) => {
           this.export(this.rowUUid, this.rowName)
         }
-      }          
+      }
     ]
   }
 
@@ -188,7 +163,7 @@ export class MigrationAssistComponent implements OnInit {
     this.getAllLatestUser();
     this.getBaseEntityByCriteria("export");
     this.gridTitle = "Export Details"
-   // this.breadcrumbDataFrom[2].caption = this.moduleType;
+    // this.breadcrumbDataFrom[2].caption = this.moduleType;
   }
 
   onClickMenu(data) {
@@ -197,7 +172,6 @@ export class MigrationAssistComponent implements OnInit {
     this.rowVersion = data.version
     this.rowID = data.id
     this.rowName = data.name
-
   }
 
   view(uuid, version) {
@@ -209,15 +183,13 @@ export class MigrationAssistComponent implements OnInit {
   export(uuid, name) {
     this.exportId = uuid
     this.exportname = name;
-
     this.okExport()
   }
 
   okExport() {
     this._commonListService.export(this.exportId, this.moduleType)
       .subscribe(
-      response => 
-      {
+      response => {
         var jsonobj = JSON.stringify(response);
         const filename = this.exportname + '.json';
         const blob = new Blob([jsonobj], { type: 'application/json;charset=utf-8' });
@@ -228,47 +200,23 @@ export class MigrationAssistComponent implements OnInit {
       error => console.log("Error :: " + error)
       )
   }
- 
+
   download(rowDownload) {
-    
+    const headers = new Headers();
     this.uuidAPI = rowDownload.uuid;
-    this._commonService.downloadExport(this.uuidAPI)
-    .subscribe(
-    response => { this.onSucessdownloadExport(response)   
-    },
-      
-    error => console.log("Error :: error found" + error)
-    )
+    this.http.get(this.baseUrl + "/admin/export/download?uuid=" + this.uuidAPI,
+      { headers: headers, responseType: ResponseContentType.Blob })
+      .toPromise()
+      .then(response => this.onSucessdownloadExport(response));
   }
- 
+
   onSucessdownloadExport(response) {
-    let headersLocal = new Headers();
-    let filename = headersLocal['filename'];
-    let contentType = 'application/zip'//headersLocal['content-type'];
-    let linkElement = document.createElement('a');
-    try {
-    //  let jsonobj = JSON.stringify(response["_body"]);
-      const blob = new Blob([response], {
-        type: contentType
-      });
-      console.log(blob)
-      //saveAs(blob, filename);
-      let url = window.URL.createObjectURL(blob);
-
-      linkElement.setAttribute('href', url);
-      linkElement.setAttribute('download', this.uuidAPI+'.zip');
-
-      let clickEvent = new MouseEvent("click", {
-        "view": window,
-        "bubbles": true,
-        "cancelable": false
-      });
-      linkElement.dispatchEvent(clickEvent);
-    }catch (ex) {
-      console.log(ex);
-    }
+    const contentDispositionHeader: string = response.headers.get('Content-Type');
+    const parts: string[] = contentDispositionHeader.split(';');
+    const filename = parts[1];
+    const blob = new Blob([response._body], { type: parts[0] });
+    saveAs(blob, filename);
   }
-
 
   add() {
     this.router.navigate(["./", this.moduleType], { relativeTo: this.activeroute });
@@ -346,7 +294,7 @@ export class MigrationAssistComponent implements OnInit {
 
   onTabChange(event) {
     if (event.index == "0") {
-      
+
       this.clear();
       this.moduleType = "export"
       this.cols = [
@@ -363,7 +311,7 @@ export class MigrationAssistComponent implements OnInit {
       console.log('hello1')
     }
     else if (event.index == "1") {
-      
+
       this.clear()
       this.moduleType = "import"
       this.cols = [
@@ -385,7 +333,6 @@ export class MigrationAssistComponent implements OnInit {
   }
 
   getBaseEntityByCriteria(tabtype): void {
-    
     this._commonListService.getBaseEntityByCriteria(((tabtype).toLowerCase()), this.app, this.startDate, this.tags, this.username, this.endDate, this.active, this.status)
       .subscribe(
       response => {
@@ -396,9 +343,8 @@ export class MigrationAssistComponent implements OnInit {
       )
   }
 
-  onSuccessgetBaseEntityByCriteria(response){
-    
+  onSuccessgetBaseEntityByCriteria(response) {
     this.rowData1 = response;
-   // console.log(JSON.stringify(this.rowData1));
+    // console.log(JSON.stringify(this.rowData1));
   }
 }
