@@ -1,6 +1,6 @@
 {
   "uuid": "069d219a-25d9-4695-ac65-98eb0c587cc3",
-  "version": "1533070321",
+  "version": "1533085011",
   "name": "ppl_industry_factor_correlation_transpose",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 31 16:52:01 EDT 2018",
+  "createdOn": "Tue Jul 31 20:56:51 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -163,18 +163,6 @@
                           "value": null,
                           "attrId": "5",
                           "attrName": "reporting_date",
-                          "attrType": null
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "de8818d8-1eed-4c6f-963e-bbd2a14f6e64",
-                            "version": null,
-                            "name": "industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "6",
-                          "attrName": "version",
                           "attrType": null
                         }
                       ]

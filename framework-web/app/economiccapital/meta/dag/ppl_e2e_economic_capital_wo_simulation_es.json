@@ -1,6 +1,6 @@
 {
   "uuid": "eb92b0cd-5fd6-4b45-aa64-35e8eb8d9684",
-  "version": "1533004697",
+  "version": "1533082830",
   "name": "ppl_e2e_economic_capital_wo_simulation_es",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Jul 30 22:38:17 EDT 2018",
+  "createdOn": "Tue Jul 31 20:20:30 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -151,6 +151,18 @@
                           "value": null,
                           "attrId": "0",
                           "attrName": "iteration_id",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "version": null,
+                            "name": "industry_factor_simulation"
+                          },
+                          "value": null,
+                          "attrId": "5",
+                          "attrName": "reporting_date",
                           "attrType": null
                         }
                       ]
@@ -1410,6 +1422,18 @@
                           "value": null,
                           "attrId": "0",
                           "attrName": "iteration_id",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "97",
+                          "attrName": "reporting_date",
                           "attrType": null
                         }
                       ]

@@ -1,6 +1,6 @@
 {
   "uuid": "34e52aea-bdb3-412c-bbef-192d2738bd37",
-  "version": "1532645653",
+  "version": "1533085351",
   "name": "ppl_e2e_economic_capital_wo_simulation_ul",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Jul 26 18:54:13 EDT 2018",
+  "createdOn": "Tue Jul 31 21:02:31 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -151,6 +151,18 @@
                           "value": null,
                           "attrId": "0",
                           "attrName": "iteration_id",
+                          "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "version": null,
+                            "name": "industry_factor_simulation"
+                          },
+                          "value": null,
+                          "attrId": "5",
+                          "attrName": "reporting_date",
                           "attrType": null
                         }
                       ]
@@ -1411,6 +1423,18 @@
                           "attrId": "0",
                           "attrName": "iteration_id",
                           "attrType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+                            "version": null,
+                            "name": "customer_idiosyncratic_risk"
+                          },
+                          "value": null,
+                          "attrId": "97",
+                          "attrName": "reporting_date",
+                          "attrType": null
                         }
                       ]
                     },
@@ -1486,7 +1510,7 @@
           "dependsOn": [
             "3455ece6-2017-4445-9bc5-59f7430f2922"
           ],
-          "name": "Map_customer_portfolio_ul_x",
+          "name": "map_customer_portfolio_ul_x",
           "operators": [
             {
               "operatorId": null,

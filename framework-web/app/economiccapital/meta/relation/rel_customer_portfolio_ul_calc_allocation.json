@@ -1,6 +1,6 @@
 {
   "uuid": "6a24e4dd-d556-4617-bbee-5a25938cb456",
-  "version": "1532644355",
+  "version": "1533082583",
   "name": "rel_customer_portfolio_ul_calc_allocation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Jul 26 18:32:35 EDT 2018",
+  "createdOn": "Tue Jul 31 20:16:23 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -43,7 +43,7 @@
           "type": "datapod",
           "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
           "version": null,
-          "name": "portfolio_loss_aggr"
+          "name": "portfolio_loss_simulaton_aggr"
         },
         "value": null
       },
@@ -58,24 +58,24 @@
                 "type": "datapod",
                 "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
                 "version": null,
-                "name": "portfolio_loss_aggr"
+                "name": "portfolio_loss_simulaton_aggr"
               },
-              "attributeId": 0,
+              "attributeId": 3,
               "value": null,
-              "attributeName": "expected_loss",
-              "attributeType": null
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             },
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+                "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
                 "version": null,
-                "name": "portfolio_loss_aggr"
+                "name": "customer_portfolio_ul_calc_final_cust_summary"
               },
-              "attributeId": 0,
+              "attributeId": 2,
               "value": null,
-              "attributeName": "expected_loss",
-              "attributeType": null
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             }
           ]
         }
@@ -101,14 +101,14 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+                "uuid": "1e6dde7d-d766-4a96-9d80-9186edc378c2",
                 "version": null,
-                "name": "customer_portfolio_ul_calc_final_cust_summary"
+                "name": "customer_portfolio_ul_calc_summary"
               },
-              "attributeId": 0,
+              "attributeId": 1,
               "value": null,
-              "attributeName": "cust_id",
-              "attributeType": null
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             },
             {
               "ref": {
@@ -117,10 +117,10 @@
                 "version": null,
                 "name": "customer_portfolio_ul_calc_final_cust_summary"
               },
-              "attributeId": 0,
+              "attributeId": 2,
               "value": null,
-              "attributeName": "cust_id",
-              "attributeType": null
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             }
           ]
         }

@@ -1,6 +1,6 @@
 {
   "uuid": "f81570fe-4cc4-4969-b033-2d625c389224",
-  "version": "1532475826",
+  "version": "1533084688",
   "name": "rel_customer_loss_allocation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 24 19:43:46 EDT 2018",
+  "createdOn": "Tue Jul 31 20:51:28 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -78,6 +78,36 @@
               "attributeType": "integer"
             }
           ]
+        },
+        {
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b79e443b-536b-4bea-9497-2ff27b61e6b6",
+                "version": null,
+                "name": "customer_loss_simulation"
+              },
+              "attributeId": 3,
+              "value": null,
+              "attributeName": "reporting_date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "fc0eac38-77c9-403b-8157-02adc3b1eb6e",
+                "version": null,
+                "name": "portfolio_loss_simulation_el"
+              },
+              "attributeId": 5,
+              "value": null,
+              "attributeName": "reporting_date",
+              "attributeType": "string"
+            }
+          ]
         }
       ],
       "logicaloperand": null
@@ -101,14 +131,14 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
+                "uuid": "b79e443b-536b-4bea-9497-2ff27b61e6b6",
                 "version": null,
-                "name": "portfolio_loss_aggr_es"
+                "name": "customer_loss_simulation"
               },
-              "attributeId": 0,
+              "attributeId": 3,
               "value": null,
-              "attributeName": "expected_loss",
-              "attributeType": "decimal"
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             },
             {
               "ref": {
@@ -117,10 +147,10 @@
                 "version": null,
                 "name": "portfolio_loss_aggr_es"
               },
-              "attributeId": 0,
+              "attributeId": 4,
               "value": null,
-              "attributeName": "expected_loss",
-              "attributeType": "decimal"
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             }
           ]
         }

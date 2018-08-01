@@ -1,6 +1,6 @@
 {
   "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
-  "version": "1532550585",
+  "version": "1533085256",
   "name": "industry_factor_correlation_transpose",
   "desc": null,
   "createdBy": {
@@ -12,8 +12,8 @@
     },
     "value": null
   },
-  "createdOn": "Wed Jul 25 16:29:45 EDT 2018",
-  "tags": null,
+  "createdOn": "Tue Jul 31 21:00:56 EDT 2018",
+  "tags": [],
   "active": "Y",
   "published": "N",
   "appInfo": [
@@ -31,7 +31,7 @@
     "ref": {
       "type": "datasource",
       "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": "1464977196",
+      "version": null,
       "name": "File"
     },
     "value": null
@@ -43,52 +43,52 @@
       "name": "factor_x",
       "type": "string",
       "desc": "factor_x",
-      "key": null,
-      "partition": null,
+      "key": "",
+      "partition": "N",
       "dispName": "factor_x",
       "active": "Y",
       "expr": null
     },
     {
       "attributeId": 1,
-      "name": "factor_y",
+      "name": "reporting_date",
       "type": "string",
-      "desc": "factor_y",
-      "key": null,
-      "partition": null,
-      "dispName": "factor_y",
+      "desc": "reporting_date",
+      "key": "",
+      "partition": "N",
+      "dispName": "reporting_date",
       "active": "Y",
       "expr": null
     },
     {
       "attributeId": 2,
-      "name": "factor_value",
-      "type": "double",
-      "desc": "factor_value",
-      "key": null,
-      "partition": null,
-      "dispName": "factor_value",
+      "name": "factor_y",
+      "type": "string",
+      "desc": "factor_y",
+      "key": "",
+      "partition": "N",
+      "dispName": "factor_y",
       "active": "Y",
       "expr": null
     },
     {
       "attributeId": 3,
-      "name": "reporting_date",
-      "type": "string",
-      "desc": "reporting_date",
-      "key": null,
-      "partition": null,
-      "dispName": "reporting_date",
+      "name": "factor_value",
+      "type": "double",
+      "desc": "factor_value",
+      "key": "",
+      "partition": "N",
+      "dispName": "factor_value",
       "active": "Y",
       "expr": null
     },
     {
       "attributeId": 4,
       "name": "version",
-      "type": "Integer",
+      "type": "integer",
       "desc": "version",
-      "key": null,
-      "partition": null,
+      "key": "",
+      "partition": "N",
       "dispName": "version",
       "active": "Y",
       "expr": null

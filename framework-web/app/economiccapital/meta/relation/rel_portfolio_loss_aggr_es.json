@@ -1,6 +1,6 @@
 {
   "uuid": "2236424b-915b-4ba8-825b-6c3b0ba0163f",
-  "version": "1532470571",
+  "version": "1533082955",
   "name": "rel_portfolio_loss_aggr_es",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 24 18:16:11 EDT 2018",
+  "createdOn": "Tue Jul 31 20:22:35 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -32,7 +32,7 @@
       "type": "datapod",
       "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
       "version": null,
-      "name": "portfolio_loss_aggr"
+      "name": "portfolio_loss_simulaton_aggr"
     },
     "value": null
   },
@@ -60,22 +60,22 @@
                 "version": null,
                 "name": "portfolio_expected_sum"
               },
-              "attributeId": 0,
+              "attributeId": 1,
               "value": null,
-              "attributeName": "expected_sum",
-              "attributeType": "decimal"
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             },
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "6fc505c6-9eb5-4899-bfa9-f6e74e70ef2d",
+                "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
                 "version": null,
-                "name": "portfolio_expected_sum"
+                "name": "portfolio_loss_simulaton_aggr"
               },
-              "attributeId": 0,
+              "attributeId": 3,
               "value": null,
-              "attributeName": "expected_sum",
-              "attributeType": "decimal"
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             }
           ]
         }

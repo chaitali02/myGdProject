@@ -1,6 +1,6 @@
 {
   "uuid": "91290798-b6a9-4883-bc58-664b66a08794",
-  "version": "1532916465",
+  "version": "1533084145",
   "name": "rel_customer_loss_simulation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Jul 29 22:07:45 EDT 2018",
+  "createdOn": "Tue Jul 31 20:42:25 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -72,10 +72,40 @@
                 "version": null,
                 "name": "industry_factor_transpose"
               },
-              "attributeId": 1,
+              "attributeId": 2,
               "value": null,
               "attributeName": "factor",
-              "attributeType": null
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+                "version": null,
+                "name": "customer_portfolio"
+              },
+              "attributeId": 9,
+              "value": null,
+              "attributeName": "reporting_date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+                "version": null,
+                "name": "industry_factor_transpose"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             }
           ]
         }
@@ -117,10 +147,40 @@
                 "version": null,
                 "name": "customer_idiosyncratic_transpose"
               },
-              "attributeId": 1,
+              "attributeId": 2,
               "value": null,
               "attributeName": "customer",
-              "attributeType": null
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+                "version": null,
+                "name": "customer_portfolio"
+              },
+              "attributeId": 9,
+              "value": null,
+              "attributeName": "reporting_date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
+                "version": null,
+                "name": "customer_idiosyncratic_transpose"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "reporting_date",
+              "attributeType": "string"
             }
           ]
         }
