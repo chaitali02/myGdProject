@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -56,6 +57,8 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
+	@Autowired
+	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(GenerateDataForAttrRef.class);
 
@@ -147,7 +150,15 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 						+" FROM "
 						+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 						+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
-		ResultSetHolder resultSetHolder = exec.executeAndRegister(rangeSql, tableName, datasource.getType());
+		ResultSetHolder resultSetHolder = null;
+		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
+			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, datasource.getType());
+		} else {
+			String sql = helper.buildInsertQuery(datasource.getType(), tableName, locationDatapod, rangeSql);
+			resultSetHolder = exec.executeAndPersist(sql, null, locationDatapod, null, null);
+		}
 		
 		// save result
 		save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(MetaType.operatorExec), runMode);

@@ -170,8 +170,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> getOperatorResults(String operatorExecUuid, String operatorExecVersion,
-			int rowLimit) throws Exception {
+	public List<Map<String, Object>> getOperatorResults(String operatorExecUuid, String operatorExecVersion, int rowLimit) throws Exception {
 		List<Map<String, Object>> data = null;
 		try {
 			OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExecUuid,
@@ -182,7 +181,8 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 					MetaType.datastore.toString());
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			data = exec.fetchResults(datastore, null, rowLimit, null, commonServiceImpl.getApp().getUuid());
+			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), RunMode.BATCH);
+			data = exec.fetchResults(datastore, null, rowLimit, tableName, commonServiceImpl.getApp().getUuid());
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
