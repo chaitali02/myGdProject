@@ -208,11 +208,13 @@ public class SecurityServiceImpl  implements Serializable{
 				//logger.info("Setting appInfo using class  FrameworkThreadLocal !");
 				appInfo = sessionContext.getAppInfo();
 			} else {
-				throw new RuntimeException("No application information available.");
+				logger.info("Null Session context. Unable to get appInfo.");
+				MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1464977196");
+				appInfo.setRef(appMeta);
 			}
 			//e.printStackTrace();
 		}
-		return appInfo;		
+		return appInfo;
 	}
 
 	public MetaIdentifierHolder getRoleInfo() {
