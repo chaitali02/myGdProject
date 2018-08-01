@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +55,8 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		FilterOperator filterOperator;
 		@Autowired
 		DataStoreServiceImpl datastoreServiceImpl;
+		
+		static final Logger logger = Logger.getLogger(DatasetOperator.class);
 		
 		public String generateSql(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
@@ -126,6 +129,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 					String tableKey = "datapod_".concat(datapod.getUuid());
 					table = otherParams.get(tableKey);
 				}*/
+				logger.info("Source table in dataset " + dataset.getName() + " : " + table);
 				builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
 			}
 			else if (dataset.getDependsOn().getRef().getType() == MetaType.dataset) {

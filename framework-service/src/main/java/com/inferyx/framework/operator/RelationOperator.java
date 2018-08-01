@@ -90,7 +90,7 @@ public class RelationOperator {
 				&& otherParams != null && otherParams.containsKey("datapodUuid_"+fromDatapod.getUuid()+"_tableName")) {
 			table = otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName");
 		} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset 
-				&& otherParams != null && otherParams.containsKey("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_tableName")) {
+				&& otherParams != null && otherParams.containsKey("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_version")) {
 			dsVersion = otherParams.get("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_version");
 		} else if (relation.getDependsOn().getRef().getType() == MetaType.datapod 
 				&& (otherParams == null 
@@ -148,7 +148,7 @@ public class RelationOperator {
 				String tableKey = "datapodUuid_".concat(datapod.getUuid()).concat("_tableName");
 				rightTable = otherParams.get(tableKey);
 			} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset 
-					&& otherParams != null && otherParams.containsKey("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_tableName")) {
+					&& otherParams != null && otherParams.containsKey("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_version")) {
 				rightDsVersion = otherParams.get("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_version");
 			} else if (relation.getDependsOn().getRef().getType() == MetaType.datapod 
 					&& (otherParams == null 

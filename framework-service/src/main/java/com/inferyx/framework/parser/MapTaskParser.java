@@ -130,6 +130,7 @@ public class MapTaskParser extends TaskParser {
 		otherParams.put($DAGEXEC_VERSION, dagExec.getVersion());
 		
 		if (operatorType == null || operatorType.equals(MetaType.map.toString()) || operatorType.equals(MetaType.matrixmult.toString())) {
+			
 			builder.append(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
 		} else {
 			otherParams.put("operatorType", operatorType);

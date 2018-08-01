@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,6 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Map;
-import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -37,7 +36,6 @@ import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -70,6 +68,8 @@ public class MapOperator implements IParsable {
 	private final String WHERE_1_1 = " WHERE (1=1) ";
 	
 	private final String $DAGEXEC_VERSION = "$DAGEXEC_VERSION";
+	
+	static final Logger logger = Logger.getLogger(MapOperator.class);
 
 	public Relation getRelationFromMap(Map map) {
 		String uuid = map.getSource().getRef().getKey().getUUID();
@@ -123,6 +123,7 @@ public class MapOperator implements IParsable {
 		builder.append(attributeMapOperator.generateSql(map.getAttributeMap(),mapSource, refKeyMap, otherParams, execParams));
 		// FROM
 		builder.append(FROM);
+		logger.info("OtherParams in MapOperator : " + otherParams);
 		// If iterator step then ignore FROM and WHERE
 		if (otherParams == null || !new Boolean(otherParams.get("iterStep"))) {
 			// Append From
@@ -143,6 +144,7 @@ public class MapOperator implements IParsable {
 					String tableKey = "datapod_".concat(datapod.getUuid());
 					table = otherParams.get(tableKey);
 				}
+				logger.info("Source table in map " + map.getName() + " : " + table);
 				builder.append(String.format(table, datapod.getName())).append(" ").append(datapod.getName()).append(" ");
 			} else if (map.getSource().getRef().getType() == MetaType.dataset) {
 				DataSet dataset = (DataSet) daoRegister.getRefObject(map.getSource().getRef());
@@ -156,10 +158,14 @@ public class MapOperator implements IParsable {
 		} // End skip for iterator check
 		// GROUP BY
 	//	builder.append(groupOperator.generateSql(map, refKeyMap, otherParams));
-		
-		// Replace $DAGEXEC_VERSION if that exists
-		if (otherParams!= null && otherParams.containsKey($DAGEXEC_VERSION)) { 
-			return builder.toString().replaceAll("\"\\$DAGEXEC_VERSION\"", otherParams.get($DAGEXEC_VERSION));
+		// Fetch target datapod
+		OrderKey datapodKey = map.getTarget().getRef().getKey();
+		if (DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
+			datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
+		} else {
+			Datapod targetDatapod = (Datapod) commonServiceImpl
+					.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+			datapodKey.setVersion(targetDatapod.getVersion());
 		}
 		return builder.toString();
 	}

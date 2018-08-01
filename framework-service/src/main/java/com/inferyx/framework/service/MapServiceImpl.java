@@ -699,6 +699,19 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			mapExec.setStatusList(statusList);		
 			try {
 				mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
+				// Fetch target datapod
+				OrderKey datapodKey = map.getTarget().getRef().getKey();
+				// Set target version
+				if (DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
+					datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
+				} else {
+					Datapod targetDatapod = (Datapod) commonServiceImpl
+							.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+					datapodKey.setVersion(targetDatapod.getVersion());
+				}
+				String mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
+				execParams.getOtherParams().put("datapodUuid_" + datapodKey.getUUID() + "_tableName", mapTableName);
+				logger.info("Target table in map " + mapExec.getName() + " : " + mapTableName);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Status failedStatus = new Status(Status.Stage.Failed, new Date());
