@@ -1079,8 +1079,9 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           paramsjson.attributeId = response.params[i].paramId;
           paramsjson.attrType = response.params[i].paramType;
           paramsjson.paramName = response.params[i].paramName;
+          paramsjson.caption = "rule."+paramsjson.paramName;
           paramsArray[i] = paramsjson;
-          paramsjson.caption = "rule_"+paramsjson.name
+          
         }
         $scope.ruleLodeParamList = paramsArray
         if($scope.allparamlistParams &&  $scope.allparamlistParams.length >0)
@@ -1105,7 +1106,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           paramsjson.attributeId = response[i].paramId;
           paramsjson.attrType = response[i].paramType;
           paramsjson.paramName = response[i].paramName;
-          paramsjson.caption = "app_"+paramsjson.name
+          paramsjson.caption = "app."+paramsjson.paramName;
           paramsArray[i] = paramsjson
         }
         $scope.allparamlistParams=paramsArray;

@@ -676,7 +676,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 			  paramsjson.attributeId = response[i].paramId;
 			  paramsjson.attrType = response[i].paramType;
 			  paramsjson.paramName = response[i].paramName;
-			  paramsjson.caption = "app_"+paramsjson.name
+			  paramsjson.caption = "app."+paramsjson.paramName;
 			  paramsArray[i] = paramsjson
 			}
 			$scope.allparamlistParams=paramsArray;
