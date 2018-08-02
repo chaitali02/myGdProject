@@ -160,7 +160,7 @@ public class MapOperator implements IParsable {
 	//	builder.append(groupOperator.generateSql(map, refKeyMap, otherParams));
 		// Fetch target datapod
 		OrderKey datapodKey = map.getTarget().getRef().getKey();
-		if (DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
+		if (execParams != null && DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
 			datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
 		} else {
 			Datapod targetDatapod = (Datapod) commonServiceImpl
