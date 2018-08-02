@@ -1,25 +1,25 @@
 JobMonitoringModule = angular.module('JobMonitoringModule');
 
-JobMonitoringModule.controller('DetailReconExecController', function($state, $filter, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
+JobMonitoringModule.controller('DetailReconExecController', function ($state, $filter, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService, privilegeSvc) {
 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
   $scope.showExec = true;
   $scope.selectTitle = dagMetaDataService.elementDefs['reconexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['reconexec'].listState + "({type:'" + dagMetaDataService.elementDefs['reconexec'].execType + "'})"
-  $rootScope.isCommentVeiwPrivlage=true;
+  $rootScope.isCommentVeiwPrivlage = true;
   var privileges = privilegeSvc.privileges['comment'] || [];
-  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
-  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
   $scope.$on('privilegesUpdated', function (e, data) {
     var privileges = privilegeSvc.privileges['comment'] || [];
     $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;	
+    $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
   });
-  $scope.userDetail={}
-  $scope.userDetail.uuid= $rootScope.setUseruuid;
-  $scope.userDetail.name= $rootScope.setUserName;
-  $scope.close = function() {
+  $scope.userDetail = {}
+  $scope.userDetail.uuid = $rootScope.setUseruuid;
+  $scope.userDetail.name = $rootScope.setUserName;
+  $scope.close = function () {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -32,8 +32,8 @@ JobMonitoringModule.controller('DetailReconExecController', function($state, $fi
     }
   }
 
-  JobMonitoringService.getLatestByUuid($scope.uuid, "reconexec").then(function(response) {onSuccess(response.data)});
-  var onSuccess = function(response) {
+  JobMonitoringService.getLatestByUuid($scope.uuid, "reconexec").then(function (response) { onSuccess(response.data) });
+  var onSuccess = function (response) {
     $scope.execData = response;
     var statusList = [];
     for (i = 0; i < response.statusList.length; i++) {
@@ -49,14 +49,21 @@ JobMonitoringModule.controller('DetailReconExecController', function($state, $fi
     $scope.refkeylist = refkeylist
   }
 
-  $scope.showGraph = function(uuid, version) {
+  $scope.showGraph = function (uuid, version) {
     $scope.showExec = false;
     $scope.showGraphDiv = true;
 
   }
 
-  $scope.showExecPage = function() {
+  $scope.showExecPage = function () {
     $scope.showExec = true
     $scope.showGraphDiv = false;
+  }
+  $scope.showSqlFormater=function(){
+    $('#sqlFormaterModel').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    $scope.formateSql=sqlFormatter.format($scope.execData.exec);
   }
 });
