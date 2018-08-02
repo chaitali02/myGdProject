@@ -702,7 +702,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				// Fetch target datapod
 				OrderKey datapodKey = map.getTarget().getRef().getKey();
 				// Set target version
-				if (DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
+				if (execParams != null && DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
 					datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
 				} else {
 					Datapod targetDatapod = (Datapod) commonServiceImpl
