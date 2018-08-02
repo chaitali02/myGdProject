@@ -1,4 +1,5 @@
 {
+    
     "xPos" : 30.0,
     "yPos" : 250.0,
     "templateFlg" : "N",
@@ -14,13 +15,15 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" :[ {
-                                "ref" : {
-                                    "type" : "operator",
-                                    "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                                    "name" : "Transpose"
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "operator",
+                                        "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+                                        "name" : "Transpose"
+                                    }
                                 }
-                            }],
+                            ],
                             "operatorParams" : {
                                 "EXEC_PARAMS" : {
                                     "paramListInfo" : [ 
@@ -38,28 +41,32 @@
                                                         "type" : "datapod",
                                                         "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "attrId" : "1"
+                                                    "attrId" : "1",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "attrId" : "2"
+                                                    "attrId" : "2",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "attrId" : "3"
+                                                    "attrId" : "3",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "attrId" : "4"
+                                                    "attrId" : "4",
+                                                    "attrType" : "double"
                                                 }
                                             ]
                                         }, 
@@ -77,7 +84,8 @@
                                                         "type" : "datapod",
                                                         "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "attrId" : "0"
+                                                    "attrId" : "0",
+                                                    "attrType" : "integer"
                                                 }
                                             ]
                                         }, 
@@ -126,7 +134,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-11T23:39:56.000Z"),
+    "createdOn" : ISODate("2018-08-01T18:55:02.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

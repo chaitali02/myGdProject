@@ -1,4 +1,5 @@
 {
+  
     "xPos" : 30.0,
     "yPos" : 250.0,
     "templateFlg" : "N",
@@ -14,13 +15,15 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : [{
-                                "ref" : {
-                                    "type" : "operator",
-                                    "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
-                                    "name" : "Generate Data"
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "operator",
+                                        "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                                        "name" : "Generate Data"
+                                    }
                                 }
-                            }],
+                            ],
                             "operatorParams" : {
                                 "EXEC_PARAMS" : {
                                     "paramListInfo" : [ 
@@ -101,28 +104,32 @@
                                                         "type" : "datapod",
                                                         "uuid" : "de8818d8-1eed-4c6f-963e-bbd2a14f6e64"
                                                     },
-                                                    "attrId" : "1"
+                                                    "attrId" : "1",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "de8818d8-1eed-4c6f-963e-bbd2a14f6e64"
                                                     },
-                                                    "attrId" : "2"
+                                                    "attrId" : "2",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "de8818d8-1eed-4c6f-963e-bbd2a14f6e64"
                                                     },
-                                                    "attrId" : "3"
+                                                    "attrId" : "3",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "de8818d8-1eed-4c6f-963e-bbd2a14f6e64"
                                                     },
-                                                    "attrId" : "4"
+                                                    "attrId" : "4",
+                                                    "attrType" : "double"
                                                 }
                                             ]
                                         }
@@ -157,7 +164,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-13T15:10:06.000Z"),
+    "createdOn" : ISODate("2018-08-01T18:53:43.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

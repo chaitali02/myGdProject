@@ -1,5 +1,6 @@
 {
-    "xPos" : 0.0,
+    
+    "xPos" : 30.0,
     "yPos" : 260.0,
     "templateFlg" : "N",
     "stages" : [ 
@@ -14,138 +15,102 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : [{
-                                "ref" : {
-                                    "type" : "operator",
-                                    "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                                    "name" : "Transpose"
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "operator",
+                                        "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+                                        "name" : "Transpose"
+                                    }
                                 }
-                            }],
+                            ],
                             "operatorParams" : {
                                 "EXEC_PARAMS" : {
-                                    "refKeyList" : null,
-                                    "paramInfo" : null,
-                                    "filterInfo" : null,
-                                    "stageInfo" : null,
-                                    "paramSetHolder" : null,
                                     "paramListInfo" : [ 
                                         {
-                                            "ref" : {
-                                                "type" : "paramlist",
-                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                                                "version" : "1525530897",
-                                                "name" : "paramlist_transpose"
-                                            },
-                                            "value" : null,
                                             "paramId" : "0",
-                                            "paramName" : "sourceDatapod",
-                                            "paramType" : "attributes",
-                                            "paramValue" : null,
+                                            "ref" : {
+                                                "type" : "paramlist",
+                                                "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+                                                "version" : "1525530897",
+                                                "name" : "paramlist_transpose"
+                                            },
                                             "attributeInfo" : [ 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                                                        "version" : null,
-                                                        "name" : "industry_factor_simulation"
+                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "value" : null,
                                                     "attrId" : "1",
-                                                    "attrName" : "factor1"
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                                                        "version" : null,
-                                                        "name" : "industry_factor_simulation"
+                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "value" : null,
                                                     "attrId" : "2",
-                                                    "attrName" : "factor2"
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                                                        "version" : null,
-                                                        "name" : "industry_factor_simulation"
+                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "value" : null,
                                                     "attrId" : "3",
-                                                    "attrName" : "factor3"
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                                                        "version" : null,
-                                                        "name" : "industry_factor_simulation"
+                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "value" : null,
                                                     "attrId" : "4",
-                                                    "attrName" : "factor4"
+                                                    "attrType" : "double"
                                                 }
                                             ]
                                         }, 
                                         {
+                                            "paramId" : "1",
                                             "ref" : {
                                                 "type" : "paramlist",
                                                 "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
                                                 "version" : "1525530897",
                                                 "name" : "paramlist_transpose"
                                             },
-                                            "value" : null,
-                                            "paramId" : "1",
-                                            "paramName" : "key",
-                                            "paramType" : "attributes",
-                                            "paramValue" : null,
                                             "attributeInfo" : [ 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
-                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                                                        "version" : null,
-                                                        "name" : "industry_factor_simulation"
+                                                        "uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf"
                                                     },
-                                                    "value" : null,
                                                     "attrId" : "0",
-                                                    "attrName" : "iteration_id"
+                                                    "attrType" : "integer"
                                                 }
                                             ]
                                         }, 
                                         {
+                                            "paramId" : "2",
                                             "ref" : {
                                                 "type" : "paramlist",
                                                 "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
                                                 "version" : "1525530897",
                                                 "name" : "paramlist_transpose"
                                             },
-                                            "value" : null,
-                                            "paramId" : "2",
-                                            "paramName" : "saveLocation",
-                                            "paramType" : "datapod",
                                             "paramValue" : {
                                                 "ref" : {
                                                     "type" : "datapod",
-                                                    "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
-                                                    "version" : null,
-                                                    "name" : null
-                                                },
-                                                "value" : null
-                                            },
-                                            "attributeInfo" : null
+                                                    "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee"
+                                                }
+                                            }
                                         }
-                                    ],
-                                    "internalVarMap" : null,
-                                    "otherParams" : null
+                                    ]
                                 }
                             }
                         }
                     ],
                     "xPos" : 600.0,
                     "yPos" : 140.0,
-                    "active" : "Y",
                     "active" : "Y",
                     "statusList" : []
                 }, 
@@ -156,13 +121,15 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : [{
-                                "ref" : {
-                                    "type" : "operator",
-                                    "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                                    "name" : "Transpose"
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "operator",
+                                        "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+                                        "name" : "Transpose"
+                                    }
                                 }
-                            }],
+                            ],
                             "operatorParams" : {
                                 "EXEC_PARAMS" : {
                                     "paramListInfo" : [ 
@@ -180,672 +147,768 @@
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "1"
+                                                    "attrId" : "1",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "2"
+                                                    "attrId" : "2",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "3"
+                                                    "attrId" : "3",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "4"
+                                                    "attrId" : "4",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "5"
+                                                    "attrId" : "5",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "6"
+                                                    "attrId" : "6",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "7"
+                                                    "attrId" : "7",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "8"
+                                                    "attrId" : "8",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "9"
+                                                    "attrId" : "9",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "10"
+                                                    "attrId" : "10",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "11"
+                                                    "attrId" : "11",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "12"
+                                                    "attrId" : "12",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "13"
+                                                    "attrId" : "13",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "14"
+                                                    "attrId" : "14",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "15"
+                                                    "attrId" : "15",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "16"
+                                                    "attrId" : "16",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "17"
+                                                    "attrId" : "17",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "18"
+                                                    "attrId" : "18",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "19"
+                                                    "attrId" : "19",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "20"
+                                                    "attrId" : "20",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "21"
+                                                    "attrId" : "21",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "22"
+                                                    "attrId" : "22",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "23"
+                                                    "attrId" : "23",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "24"
+                                                    "attrId" : "24",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "25"
+                                                    "attrId" : "25",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "26"
+                                                    "attrId" : "26",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "27"
+                                                    "attrId" : "27",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "28"
+                                                    "attrId" : "28",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "29"
+                                                    "attrId" : "29",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "30"
+                                                    "attrId" : "30",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "31"
+                                                    "attrId" : "31",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "32"
+                                                    "attrId" : "32",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "33"
+                                                    "attrId" : "33",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "34"
+                                                    "attrId" : "34",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "35"
+                                                    "attrId" : "35",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "36"
+                                                    "attrId" : "36",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "37"
+                                                    "attrId" : "37",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "38"
+                                                    "attrId" : "38",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "39"
+                                                    "attrId" : "39",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "40"
+                                                    "attrId" : "40",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "41"
+                                                    "attrId" : "41",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "42"
+                                                    "attrId" : "42",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "43"
+                                                    "attrId" : "43",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "44"
+                                                    "attrId" : "44",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "45"
+                                                    "attrId" : "45",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "46"
+                                                    "attrId" : "46",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "47"
+                                                    "attrId" : "47",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "48"
+                                                    "attrId" : "48",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "49"
+                                                    "attrId" : "49",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "50"
+                                                    "attrId" : "50",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "51"
+                                                    "attrId" : "51",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "52"
+                                                    "attrId" : "52",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "53"
+                                                    "attrId" : "53",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "54"
+                                                    "attrId" : "54",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "55"
+                                                    "attrId" : "55",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "56"
+                                                    "attrId" : "56",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "57"
+                                                    "attrId" : "57",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "58"
+                                                    "attrId" : "58",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "59"
+                                                    "attrId" : "59",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "60"
+                                                    "attrId" : "60",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "61"
+                                                    "attrId" : "61",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "62"
+                                                    "attrId" : "62",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "63"
+                                                    "attrId" : "63",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "64"
+                                                    "attrId" : "64",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "65"
+                                                    "attrId" : "65",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "66"
+                                                    "attrId" : "66",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "67"
+                                                    "attrId" : "67",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "68"
+                                                    "attrId" : "68",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "69"
+                                                    "attrId" : "69",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "70"
+                                                    "attrId" : "70",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "71"
+                                                    "attrId" : "71",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "72"
+                                                    "attrId" : "72",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "73"
+                                                    "attrId" : "73",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "74"
+                                                    "attrId" : "74",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "75"
+                                                    "attrId" : "75",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "76"
+                                                    "attrId" : "76",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "77"
+                                                    "attrId" : "77",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "78"
+                                                    "attrId" : "78",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "79"
+                                                    "attrId" : "79",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "80"
+                                                    "attrId" : "80",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "81"
+                                                    "attrId" : "81",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "82"
+                                                    "attrId" : "82",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "83"
+                                                    "attrId" : "83",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "84"
+                                                    "attrId" : "84",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "85"
+                                                    "attrId" : "85",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "86"
+                                                    "attrId" : "86",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "87"
+                                                    "attrId" : "87",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "88"
+                                                    "attrId" : "88",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "89"
+                                                    "attrId" : "89",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "90"
+                                                    "attrId" : "90",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "91"
+                                                    "attrId" : "91",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "92"
+                                                    "attrId" : "92",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "93"
+                                                    "attrId" : "93",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "94"
+                                                    "attrId" : "94",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "95"
+                                                    "attrId" : "95",
+                                                    "attrType" : "double"
                                                 }, 
                                                 {
                                                     "ref" : {
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "96"
+                                                    "attrId" : "96",
+                                                    "attrType" : "double"
                                                 }
                                             ]
                                         }, 
@@ -863,7 +926,8 @@
                                                         "type" : "datapod",
                                                         "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9"
                                                     },
-                                                    "attrId" : "0"
+                                                    "attrId" : "0",
+                                                    "attrType" : "integer"
                                                 }
                                             ]
                                         }, 
@@ -902,13 +966,15 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : [{
-                                "ref" : {
-                                    "type" : "rule",
-                                    "uuid" : "fe506c16-8991-439a-95d4-b83664b25008",
-                                    "name" : "rule_portfolio_loss_simulation"
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "rule",
+                                        "uuid" : "fe506c16-8991-439a-95d4-b83664b25008",
+                                        "name" : "rule_portfolio_loss_simulation"
+                                    }
                                 }
-                            }],
+                            ],
                             "operatorParams" : {}
                         }
                     ],
@@ -926,13 +992,15 @@
                     "operators" : [ 
                         {
                             "dependsOn" : [],
-                            "operatorInfo" : [{
-                                "ref" : {
-                                    "type" : "rule",
-                                    "uuid" : "8d00dae5-70c2-4fa8-b29e-600c971de83c",
-                                    "name" : "rule_economic_capital"
+                            "operatorInfo" : [ 
+                                {
+                                    "ref" : {
+                                        "type" : "rule",
+                                        "uuid" : "8d00dae5-70c2-4fa8-b29e-600c971de83c",
+                                        "name" : "rule_economic_capital"
+                                    }
                                 }
-                            }],
+                            ],
                             "operatorParams" : {}
                         }
                     ],
@@ -961,7 +1029,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-05-24T00:48:05.000Z"),
+    "createdOn" : ISODate("2018-08-01T18:46:02.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",
@@ -970,8 +1038,7 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-                "version" : "1521430822",
-                "name" : "Economic Capital"
+                "version" : "1521430822"
             }
         }
     ]

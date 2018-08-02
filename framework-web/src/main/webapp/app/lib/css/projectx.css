@@ -12,7 +12,10 @@
     color: #FFF;
     font-size: 14px;
 }
+.popover.left{
+  z-index: 100001;
 
+}
 .fa-edit:before{
    content: "\f044";
 }
