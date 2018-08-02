@@ -542,7 +542,7 @@
       return deferred.promise;
     }
     this.getParamListByType = function(type, uuid, version) {
-      debugger;
+      
       var deferred = $q.defer();
       var url;
       if (type == "simulate") {

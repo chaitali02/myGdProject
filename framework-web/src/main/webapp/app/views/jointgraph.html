@@ -185,6 +185,7 @@
           <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
             <div class="scroller" style="max-height:400px;min-height:100px; overflow-y: auto !important; width: auto;" data-always-visible="1"
               data-rail-visible1="1" data-initialized="1">
+              
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group row">
@@ -456,7 +457,7 @@
                                     />
                                   </span>
                                 </div>
-
+                               
                                 <div ng-if="listHolder.paramType=='attributes'" ng-init="getAllAttributeBySource(listHolder.attributeInfoTag[0],listHolder.selectedParamValueType,$index)">
                                   <span ng-if="listHolder.allAttributeinto.length >1" class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <!-- <select  select2 class="form-control"  name ="paramattributeinfo{{$index}}" data-ng-model="listHolder.attributeInfoTag" multiple="multiple" ng-options="r as r.dname for r in listHolder.allAttributeinto track by r.uuid+r.attributeId"  required  disable-validation-message="">

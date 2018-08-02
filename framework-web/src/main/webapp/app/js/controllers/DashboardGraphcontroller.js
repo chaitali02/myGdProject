@@ -700,6 +700,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
     d3.select('body').on('click.context-menu', function() {
         d3.selectAll('.context-menu').style('display', 'none');
     });
+   
   
     var elm = this;
     d3.selectAll('.context-menu')

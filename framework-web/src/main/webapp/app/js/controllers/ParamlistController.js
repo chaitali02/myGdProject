@@ -76,12 +76,11 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"double","caption":"double"},
 	 	{"name":"date","caption":"date"}, 
 		{"name":"integer","caption":"integer"},
-		// {"name":"ONEDARRAY","caption":"double [ ]"},
-		// {"name":"TWODARRAY","caption":"double [ ][ ]"},
 		{"name":"attribute","caption":"attribute"},
 		{"name":"attributes","caption":"attribute[s]"},
 		{"name":"distribution","caption":"distribution"},
 		{"name":"datapod","caption":"datapod"},
+		{"name":"function","caption":"function"},
 	    {"name":"list","caption":"list"}, ];
 	$scope.isDependencyShow = false;
 	$scope.isTableDisable=false;
@@ -361,8 +360,32 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		ParamListService.getAllLatest(type).then(function (response) { onGetAllLatest(response.data) });
 		var onGetAllLatest = function (response) {
 			$scope.allDistribution=response;
+			if($scope.paramtable[index].paramValue ==null)
 			$scope.paramtable[index].selectedParamValue=response[0];
+			else{
+				$scope.paramtable[index].selectedParamValue=$scope.paramtable[index].paramValue
+			}
+
 		}
+	}
+	
+	$scope.getFunctionByCriteria=function(type,index){
+		CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccressGetFunction(response.data) });
+		var onSuccressGetFunction = function (response) {
+			$scope.allFunction = response;
+			if($scope.paramtable[index].paramValue ==null)
+			$scope.paramtable[index].selectedParamValue=response[0];
+			else{
+				$scope.paramtable[index].selectedParamValue=$scope.paramtable[index].paramValue
+			}
+		}
+	}
+    $scope.onNgInit=function(type,index){
+		if(type =='distribution')
+			$scope.getAllLatest(type,index);
+		else
+		$scope.getFunctionByCriteria(type,index)
+		  
 	}
 
 	$scope.onChangeParamType=function(type,index){
@@ -432,7 +455,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 				 paraminfo.paramValue =paramValue
 				 paramInfoArray[i] = paraminfo; 
 				}
-				else if($scope.paramtable[i].paramType =='distribution'){
+				else if($scope.paramtable[i].paramType =='distribution' || $scope.paramtable[i].paramType =='function'){
 					var paramRef={};
 					paramRef.type=$scope.paramtable[i].paramType;
 					if($scope.paramtable[i].selectedParamValue !=null)
@@ -485,7 +508,6 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$('#paramlistsave').css("dispaly", "none");
 		var hidemode = "yes";
 		if (hidemode == 'yes') {
-			
 			setTimeout(function () { $scope.close(); }, 2000);
 		}
 	}

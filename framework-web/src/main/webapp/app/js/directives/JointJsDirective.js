@@ -2741,6 +2741,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         objDetail.type=type;
         var typeParamSetArray=["train","rule"];
         var typeParamListArray=["simulate","operator"];
+        debugger
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;
@@ -2966,7 +2967,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
 
      
       $scope.getExecParamList=function(data){
-       
+      
         $scope.attributeTypes=['datapod','dataset','rule'];
         CommonService.getParamListByType(data.type,data.uuid,data.version).then(function (response) {
           onSuccessGetExecuteModel(response.data)
@@ -3029,6 +3030,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                else if(paramListInfo[i].paramType == "attribute"){
                 var selectedParamValue={}
                 var attributeInfo={}
+              
                 paramList.selectedParamValueType=paramListInfo[i].attributeInfo[0].ref.type;
                 selectedParamValue.uuid=paramListInfo[i].attributeInfo[0].ref.uuid;
                 selectedParamValue.type=paramListInfo[i].attributeInfo[0].ref.type;
@@ -3036,6 +3038,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 attributeInfo.uuid=paramListInfo[i].attributeInfo[0].ref.uuid;
                 attributeInfo.type=paramListInfo[i].attributeInfo[0].ref.type;
                 attributeInfo.attributeId=paramListInfo[i].attributeInfo[0].attrId;
+                attributeInfo.attrType=paramListInfo[i].attributeInfo[0].attrType;
                 paramList.attributeInfo=attributeInfo
                 paramListHolder[i]=paramList
                }
@@ -3052,6 +3055,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                
                // attributeInfo.type=paramListInfo[i].attributeInfo[j].ref.type;
                 attributeInfo.datapodname=paramListInfo[i].attributeInfo[j].ref.name;
+                attributeInfo.type=paramListInfo[i].attributeInfo[j].ref.type;
                 attributeInfo.name=paramListInfo[i].attributeInfo[j].attrName;
                 attributeInfo.dname=paramListInfo[i].attributeInfo[j].ref.name+"."+paramListInfo[i].attributeInfo[j].attrName;
                 attributeInfo.attributeId=paramListInfo[i].attributeInfo[j].attrId;
@@ -3124,6 +3128,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         if(data !=null){ 
           CommonService.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
           var onSuccessGetAllAttributeBySource = function (response) {
+            //console.log(response)
             $scope.paramListHolder[index].allAttributeinto=response
           
           }
@@ -3191,6 +3196,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                // attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
                 attributeInfo.ref=attributeInfoRef;
                 attributeInfo.attrId=$scope.paramListHolder[i].attributeInfoTag[j].attributeId;
+                attributeInfo.attrType=$scope.paramListHolder[i].attributeInfoTag[j].attrType;
+
              ///   attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
                 attributeInfoArray[j]=attributeInfo
               }
