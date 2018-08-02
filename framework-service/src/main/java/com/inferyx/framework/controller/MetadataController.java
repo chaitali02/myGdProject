@@ -42,6 +42,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.CommentView;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Lov;
@@ -975,6 +976,14 @@ public class MetadataController {
 			@RequestParam(value = "uuid", required = false) String uuid ,
 			@RequestParam(value = "type", required = false) String type ) throws JsonProcessingException {
 		return metadataServiceImpl.getParamByApp(uuid);
+	}
+	
+	@RequestMapping(value = "/getDatastoreByDatapod", method = RequestMethod.GET)
+	public @ResponseBody List<DataStore> getDatastoreByDatapod(
+			@RequestParam(value ="uuid") String uuid,
+			@RequestParam(value ="version" , required = false ) String version,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return metadataServiceImpl.getDatastoreByDatapod(uuid,version);
 	}
 	
 }

@@ -57,6 +57,7 @@ import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Formula;
@@ -1849,4 +1850,35 @@ public class MetadataServiceImpl {
 		}
 		return holderList;
 		}	
+	
+	
+	public List<DataStore> getDatastoreByDatapod(String uuid, String version) throws JsonProcessingException {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("type");
+		query.fields().include("createdOn");
+		query.fields().include("createdBy");
+		query.fields().include("appInfo");
+		query.fields().include("active");
+		query.fields().include("desc");
+		query.fields().include("published");
+		query.fields().include("location");
+		query.fields().include("numRows");
+		query.fields().include("runMode");
+		query.fields().include("metaId");
+		query.fields().include("execId");
+		query.fields().include("persistMode");
+
+		if (uuid != null && !uuid.isEmpty()) {
+			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid));
+		}
+		List<DataStore> datastoreList = new ArrayList<>();
+		datastoreList = (List<DataStore>) mongoTemplate.find(query, DataStore.class);
+		
+		
+		return datastoreList;
+
+	}
 }
