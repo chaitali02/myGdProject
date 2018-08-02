@@ -1966,7 +1966,7 @@ public class ModelServiceImpl {
 						&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
 						&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 					tableName = getTableNameByMetaObject(target);
-					sql = helper.buildInsertQuery(appUuid, tableName, target, predictQuery);
+					sql = helper.buildInsertQuery(datasource.getType(), tableName, target, predictQuery);
 				} else {
 					sql = predictQuery;
 				}				
@@ -2288,7 +2288,7 @@ public class ModelServiceImpl {
 								targetTable = String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), simulateExec.getVersion());
 							} else {
 								targetTable = datasource.getDbname() + "." + datapod.getName();
-								sql = helper.buildInsertQuery(appUuid, targetTable, datapod, sql);
+								sql = helper.buildInsertQuery(datasource.getType(), targetTable, datapod, sql);
 							}
 							ResultSetHolder rsHolder = exec.executeRegisterAndPersist(sql, targetTable, filePath, targetDp, SaveMode.Append.toString(), appUuid);	
 							result = rsHolder;

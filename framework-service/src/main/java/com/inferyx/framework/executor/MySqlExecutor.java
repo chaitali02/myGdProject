@@ -582,7 +582,7 @@ public class MySqlExecutor implements IExecutor {
 	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		String sourceTableName = load.getSource().getValue();
 		String sql = "SELECT * FROM " + sourceTableName;
-		sql = helper.buildInsertQuery(clientContext, targetTableName, datapod, sql);
+		sql = helper.buildInsertQuery(datasource.getType(), targetTableName, datapod, sql);
 		ResultSetHolder rsHolder = executeSql(sql, clientContext);
 		return rsHolder.getCountRows();
 	}
