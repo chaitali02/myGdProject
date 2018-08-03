@@ -218,6 +218,7 @@ public class LoadServiceImpl {
 
 	/**********************
 	 * UNUSED
+	 * @param desc 
 	 * 
 	 * @throws ParseException
 	 * @throws JSONException
@@ -235,7 +236,7 @@ public class LoadServiceImpl {
 	 * refMeta.setRef(ref); return refMeta; }
 	 */
 
-	public void executeSql(LoadExec loadExec, String dagExecVer, String targetTableName, OrderKey datapodKey, RunMode runMode)
+	public void executeSql(LoadExec loadExec, String dagExecVer, String targetTableName, OrderKey datapodKey, RunMode runMode, String desc)
 			throws JsonProcessingException, JSONException, ParseException {
 		List<Status> statusList = new ArrayList<>();
 		Status status = new Status(Status.Stage.NotStarted, new Date());
@@ -282,7 +283,7 @@ public class LoadServiceImpl {
 					new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()),
 					new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()), load.getAppInfo(),
 					load.getCreatedBy(), SaveMode.Overwrite.toString(), resultRef, count,
-					Helper.getPersistModeFromRunMode(runMode.toString()));				
+					Helper.getPersistModeFromRunMode(runMode.toString()), desc);				
 
 			status = new Status(Status.Stage.Completed, new Date());
 			statusList.add(status);
@@ -535,7 +536,7 @@ public class LoadServiceImpl {
 			MetaIdentifier targetMI = load.getTarget().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
 			String targetDpTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), runMode);
-			executeSql(loadExec, null, targetDpTableName, new OrderKey(targetDp.getUuid(), targetDp.getVersion()), runMode);
+			executeSql(loadExec, null, targetDpTableName, new OrderKey(targetDp.getUuid(), targetDp.getVersion()), runMode, null);
 			return loadExec;
 		} catch (Exception e) {
 			e.printStackTrace();

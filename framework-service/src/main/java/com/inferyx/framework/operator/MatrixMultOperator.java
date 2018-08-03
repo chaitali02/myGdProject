@@ -198,7 +198,7 @@ public class MatrixMultOperator implements IOperator {
 		dataStoreServiceImpl.create(filePath, fileName, 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, baseExec.getUuid(), execVersion) ,
-				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null, null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
