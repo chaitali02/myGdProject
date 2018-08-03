@@ -73,11 +73,25 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-
+	factory.findResultByDatastore = function (uuid, version) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "datastore/getResult?action=view&uuid=" + uuid + "&version=" + version + "&limit=100",
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+    
 	factory.findDownloadSample = function (uuid, version) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
 			url: url + "datapod/download?action=view&datapodUUID=" + uuid + "&datapodVersion=" + version + "&row=100",
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+	factory.findDatastoreByDatapod = function (uuid,version,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "metadata/getDatastoreByDatapod?action=view&uuid=" + uuid + "&version=" + version+"&type"+type,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
@@ -86,6 +100,38 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 });
 
 MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, MetadataDatapodFactory) {
+	this.getResultByDatastore = function (uuid,version) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findResultByDatastore(uuid,version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
+	this.getDatastoreByDatapod = function (data,type) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findDatastoreByDatapod(data.uuid,data.version,type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
 	this.getDatapodSample = function (data) {
 		var deferred = $q.defer();
 		MetadataDatapodFactory.findDatapodSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
