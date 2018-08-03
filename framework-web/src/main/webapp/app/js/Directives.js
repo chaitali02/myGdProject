@@ -1320,6 +1320,9 @@ InferyxApp.directive('searchCriteria', function (cacheService, CommonService, $f
         } else if ($scope.parantType == 'model') {
           url = 'getParamListByModel'
         }
+        else if ($scope.parantType == 'dag') {
+          url = 'getParamListByDag'
+        }
         else if ($scope.noExec) {
           url = 'getBaseEntityByCriteria'
         }

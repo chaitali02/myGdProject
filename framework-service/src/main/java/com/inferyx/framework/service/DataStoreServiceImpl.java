@@ -1107,18 +1107,21 @@ public class DataStoreServiceImpl {
 	
 	public void create(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
 			String saveMode, MetaIdentifierHolder resultRef) throws Exception{
-		create( filePath, fileName, metaId, execId, appInfo, createdBy, saveMode, resultRef, -1L, null);
+		create( filePath, fileName, metaId, execId, appInfo, createdBy, saveMode, resultRef, -1L, null, null);
 	}
 	
 	public void create(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
-			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode) throws Exception{
+			String saveMode, MetaIdentifierHolder resultRef, long count, String persistMode, String desc) throws Exception{
 		BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(execId.getUuid(), execId.getVersion(), execId.getType().toString());
 		DataStore dataStore = new DataStore();
 		dataStore.setBaseEntity();
 		MetaIdentifierHolder metaDetails = new MetaIdentifierHolder();
 		MetaIdentifierHolder execDetails = new MetaIdentifierHolder();
 		MetaIdentifier resultDetails = new MetaIdentifier();
-		dataStore.setDesc("Creating datastore for " + fileName);
+		if(desc == null || desc.isEmpty())
+			dataStore.setDesc("Creating datastore for "+fileName);
+		else
+			dataStore.setDesc(desc);
 		dataStore.setName(fileName);
 		metaDetails.setRef(metaId);
 		dataStore.setMetaId(metaDetails);

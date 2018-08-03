@@ -514,7 +514,7 @@ public class DatapodServiceImpl {
 		//Create Load exec and datastore
 		LoadExec loadExec = null;
 		loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), RunMode.BATCH);
+		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), RunMode.BATCH, null);
 		
 		return new MetaIdentifierHolder(loadExec.getRef(MetaType.loadExec));
 	}
@@ -993,7 +993,7 @@ public class DatapodServiceImpl {
 			return result;
 	}
 	
-	public void upload(MultipartFile csvFile, String datapodUuid) {		
+	public void upload(MultipartFile csvFile, String datapodUuid, String desc) {		
 		String csvFileName = csvFile.getOriginalFilename();
 		try {
 			//patern matching for csv filename
@@ -1094,7 +1094,7 @@ public class DatapodServiceImpl {
 			LoadExec loadExec = null;
 			loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
 			
-			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH, desc);
 		
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException

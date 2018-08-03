@@ -422,8 +422,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
         "class": "fa fa-random",
         "submenu": [
             { "name": "createwf", "type": "createwf", "uuid": "null", "caption": "Create New" },
-            { "name": "listwf", "type": "dag", "uuid": "null", "caption": "List" },
-            { "name": "resultwf", "type": "dagexec", "uuid": "null", "caption": "Results" }
+            { "name": "listwf", "type": "dag", "uuid": "null", "caption": "List" ,"typeCount": "dag", },
+            { "name": "paramlistdag", "type": "paramlist", "typeCount": "paramlistdag", "uuid": "null", "caption": "Parameter List" },
+            { "name": "resultwf", "type": "dagexec", "uuid": "null", "caption": "Results","typeCount": "dagexec", }
         ]
     };
     $scope.GraphAnalysis = {
@@ -1429,7 +1430,32 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             params: { type: 'paramlist', parantType: 'rule' }
 
         })
+        .state('paramlistdag', {
+            url: "/Data Pipeline/ParamList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Pipeline' },
+            params: { type: 'paramlist', parantType: 'dag' }
 
+        })
+        .state('createparamlistdag', {
+            url: "/BusinessRules/CreateParamList?id&mode&returnBack&version",
+            templateUrl: "views/paramlist.html",
+            data: { pageTitle: 'Data Pipeline' },
+            params: { type: 'paramlist', parantType: 'dag' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'DataPod',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ParamlistController.js',
+                            'js/services/ParamlistService.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('createparamlistrule', {
             url: "/BusinessRules/CreateParamList?id&mode&returnBack&version",
             templateUrl: "views/paramlist.html",

@@ -295,6 +295,10 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
              url=baseurl+"/model/simulate/download?action=view&simulateExecUUID="+uuid+"&simulateExecVersion="+version+"&mode="+mode;
              $scope.downloaddata(url,uuid)
            }
+           else if($scope.downloadDetail.type =="operator"){
+            url=baseurl+"/operator/download?action=view&uuid="+uuid+"&version="+version+"&mode="+mode;
+            $scope.downloaddata(url,uuid)
+          }
            else if($scope.downloadDetail.type =="train"){
              url=baseurl+"model/getModelByTrainExec?action=view&uuid="+uuid+"&version="+version;
              $http({
@@ -2019,9 +2023,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           keyboard: false
         });
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
-        var typeParamListArray=["simulate","operator"];
-        var typeParamSetArray=["train","rule"];
-        if(typeParamSetArray.indexOf(type) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
+        var typeParamListArray=["simulate","operator","operatorexec","simulateexec"];
+        var typeParamSetArray=["train","rule","ruleexec",'trainexec'];
+        if(typeParamSetArray.indexOf(type.toLowerCase()) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=false;
           $scope.isTabelShow=false;
           $scope.allparamset=null;
@@ -2035,25 +2039,46 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             var temp = $scope.popupModel.selectedType.split('|');
             $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
             $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
-          
-            var objDetail={}
-            objDetail.uuid=temp[0];
-            objDetail.version="";
-            objDetail.type=type;
-            $scope.getExecParamsSetAndParamList(objDetail,$scope.popupModel);
+            if(type.toLowerCase().indexOf("exec") !=-1){
+              var url=$location.absUrl().split("app")[0];
+              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid+'&execVersion='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.version+'&type='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type).then(function (res) {
+                var objDetail={}
+                objDetail.uuid=res.data.uuid;
+                objDetail.version="";
+                objDetail.type=res.data.type;
+                $scope.getExecParamsSetAndParamList(objDetail,$scope.popupModel)   
+              });
+            }else{
+              var objDetail={}
+              objDetail.uuid=temp[0];
+              objDetail.version="";
+              objDetail.type=type;
+              $scope.getExecParamsSetAndParamList(objDetail,$scope.popupModel);
+            }
           }
           
         }
-        else if( typeParamListArray.indexOf(type) != -1 && ($scope.paramListHolder || $scope.popupModel.modelData.operators[0].operatorParams !=null)){
+        else if( typeParamListArray.indexOf(type.toLowerCase()) != -1 && ($scope.paramListHolder || $scope.popupModel.modelData.operators[0].operatorParams !=null)){
           $scope.isExecParamList=true;
           var temp = $scope.popupModel.selectedType.split('|');
           $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
           $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
-          var objDetail={}
-          objDetail.uuid=temp[0];
-          objDetail.version="";
-          objDetail.type=type;
-          $scope.getExecParamList(objDetail,$scope.popupModel);
+          if(type.toLowerCase().indexOf("exec") !=-1){
+            var url=$location.absUrl().split("app")[0];
+            $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid+'&execVersion='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.version+'&type='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type).then(function (res) {
+              var objDetail={}
+              objDetail.uuid=res.data.uuid;
+              objDetail.version="";
+              objDetail.type=res.data.type;
+              $scope.getExecParamList(objDetail,$scope.popupModel)   
+            });
+          }else{
+            var objDetail={}
+            objDetail.uuid=temp[0];
+            objDetail.version="";
+            objDetail.type=type;
+            $scope.getExecParamList(objDetail,$scope.popupModel);
+          }
         }
       };
        
@@ -3120,6 +3145,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       }
       
       $scope.onChangeForAttributeInfo=function(data,type,index){
+        $scope.paramListHolder[index].attributeInfoTag=null;
         $scope.getAllAttributeBySource(data,type,index);
 
       }

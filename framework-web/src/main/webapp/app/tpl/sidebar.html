@@ -206,7 +206,7 @@
                 <li ng-disabled="dagdatasubmenu.caption == 'Create New' && (!privileges['dag'] || privileges['dag'].indexOf('Add') == -1)" class="nav-item" data-ng-repeat="dagdatasubmenu in Dagworkflow.submenu | orderBy:'caption'  | filter:searchtext" ng-click="deInitTabs()">
                     <a ui-sref="{{dagdatasubmenu.name}}({type:dagdatasubmenu.type})" class="nav-link">
                         <span class="title">{{dagdatasubmenu.caption}}</span>
-                         <span class="badge badge-success">{{metaStats[dagdatasubmenu.type].count}}</span>
+                         <span class="badge badge-success">{{metaStats[dagdatasubmenu.typeCount].count}}</span>
                     </a>
                 </li>
             </ul>

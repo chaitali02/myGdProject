@@ -2,7 +2,7 @@
   <button type="button" uib-popover-template="'assets/multiselect/myPopoverTemplate.html'" popover-title="{{header[0].datapodname}}" popover-placement="left-bottom" popover-append-to-body="true" popover-trigger="'mouseenter'"  class="btn"  ng-disabled="{{isDisable}}" style="width:100% !important;background: white;
       border: 1px solid #c2cad8;" ng-click="toggleSelect()" ng-disabled="disabled">
       <!-- ng-class="{'border-error': !valid()} -->
-    <div class="pull-left" style="text-overflow: ellipsis;width:75px;overflow:hidden;" title="{{header[0].dname}}">
+    <div class="pull-left" style="text-overflow: ellipsis;width:75px;overflow:hidden;">
 
       <span ng-repeat="headerobj in header">{{headerobj.name}},</span>
     </div>

@@ -191,7 +191,7 @@ public class GenerateDataOperator implements IOperator {
 		dataStoreServiceImpl.create(getFilePath(locationDatapod, execVersion), getFileName(locationDatapod, execVersion), 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
-				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null, null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
@@ -230,7 +230,7 @@ public class GenerateDataOperator implements IOperator {
 		dataStoreServiceImpl.create(getFilePath(locationDatapod, execVersion), getFileName(locationDatapod, execVersion), 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
-				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null);
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null, null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		logger.info("After setResult : " + ((OperatorExec)metaExec).getResult().getRef().getUuid());

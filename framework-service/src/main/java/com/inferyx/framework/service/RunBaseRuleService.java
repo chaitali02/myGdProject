@@ -441,7 +441,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		/*DataStore ds = new DataStore();
 		ds.setCreatedBy(baseRuleExec.getCreatedBy());*/
 		dataStoreServiceImpl.setRunMode(runMode);
-		dataStoreServiceImpl.create(filePath, tableName, datapodKey, baseRuleExec.getRef(ruleExecType), baseRuleExec.getAppInfo(), baseRuleExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()));
+		dataStoreServiceImpl.create(filePath, tableName, datapodKey, baseRuleExec.getRef(ruleExecType), baseRuleExec.getAppInfo(), baseRuleExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()), null);
 		/*dataStoreServiceImpl.persistDataStore(df, tableName, null, filePath,datapodKey, baseRuleExec.getRef(ruleExecType),
 				null,baseRuleExec.getAppInfo(),SaveMode.Append.toString(), resultRef,ds);*/
 	}

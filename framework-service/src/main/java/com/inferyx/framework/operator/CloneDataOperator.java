@@ -142,7 +142,7 @@ public class CloneDataOperator implements IOperator {
 				getFileName(locationDatapod, execVersion),
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()),
 				new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion), appInfo, createdBy,
-				SaveMode.Append.toString(), resultRef, count, null);
+				SaveMode.Append.toString(), resultRef, count, null, null);
 
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
