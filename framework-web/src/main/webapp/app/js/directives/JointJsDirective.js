@@ -295,6 +295,10 @@ DataPipelineModule.directive('gridResultsDirective',function ($rootScope,$compil
              url=baseurl+"/model/simulate/download?action=view&simulateExecUUID="+uuid+"&simulateExecVersion="+version+"&mode="+mode;
              $scope.downloaddata(url,uuid)
            }
+           else if($scope.downloadDetail.type =="operator"){
+            url=baseurl+"/operator/download?action=view&uuid="+uuid+"&version="+version+"&mode="+mode;
+            $scope.downloaddata(url,uuid)
+          }
            else if($scope.downloadDetail.type =="train"){
              url=baseurl+"model/getModelByTrainExec?action=view&uuid="+uuid+"&version="+version;
              $http({

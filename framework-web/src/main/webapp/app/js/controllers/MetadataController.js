@@ -752,7 +752,42 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 			$scope.gridOptionsDatapod.data.splice($scope.gridOptionsDatapod.data.lastIndexOf(data), 1);
 		});
 	}
+    $scope.downloadFileByDatastore = function (data) {
+		var uuid = data.uuid;
+		var version = data.version;
+		var url = $location.absUrl().split("app")[0]
+		$http({
+			method: 'GET',
+			url: url + "datastore/download?action=view&uuid=" + uuid + "&version=" + version + "&limit=100",
+			responseType: 'arraybuffer'
+		}).success(function (data, status, headers) {
+			headers = headers();
+			var filename = headers['x-filename'];
+			var contentType = headers['content-type'];
 
+			var linkElement = document.createElement('a');
+			try {
+				var blob = new Blob([data], {
+					type: contentType
+				});
+				var url = window.URL.createObjectURL(blob);
+
+				linkElement.setAttribute('href', url);
+				linkElement.setAttribute("download", uuid + ".xls");
+
+				var clickEvent = new MouseEvent("click", {
+					"view": window,
+					"bubbles": true,
+					"cancelable": false
+				});
+				linkElement.dispatchEvent(clickEvent);
+			} catch (ex) {
+				console.log(ex);
+			}
+		}).error(function (data) {
+			console.log(data);
+		});
+	};
 	$scope.downloadFile = function (data) {
 		var uuid = data.uuid;
 		var version = data.version;
