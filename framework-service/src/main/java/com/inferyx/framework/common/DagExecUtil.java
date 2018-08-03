@@ -301,6 +301,24 @@ public class DagExecUtil {
 		return taskExecParams;
 	}
 	
+	/**
+	 * 
+	 * @param execParams
+	 * @param sql
+	 * @return
+	 */
+	public static String replaceInternalVarMap(ExecParams execParams, String sql) {
+		if (execParams != null 
+				&& execParams.getInternalVarMap() != null 
+				&& !execParams.getInternalVarMap().isEmpty() 
+				&& StringUtils.isNotBlank(sql)) {
+			for (String key : execParams.getInternalVarMap().keySet()) {
+				sql = sql.replaceAll(key, execParams.getInternalVarMap().get(key));
+			}
+		}
+		return sql;
+	}
+	
 	/*public static fetchRefKeyList (TaskExec taskExec) {
 		
 	}*/

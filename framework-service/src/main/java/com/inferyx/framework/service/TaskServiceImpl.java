@@ -62,6 +62,7 @@ import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SysVarType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -836,6 +837,7 @@ public class TaskServiceImpl implements Callable<String> {
 		internalVarMap.put("$CURRENT_TASK_ID", taskId);
 		internalVarMap.put("$CURRENT_TASK_TYPE", taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().toString());
 		internalVarMap.put("$CURRENT_TASK_OBJ_UUID", taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid());
+		internalVarMap.put("$".concat(SysVarType.exec_version.toString()), dagExecVer);
 		/*internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", taskId);*/
 		return internalVarMap;
 	}
