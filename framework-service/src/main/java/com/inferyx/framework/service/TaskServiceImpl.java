@@ -585,7 +585,7 @@ public class TaskServiceImpl implements Callable<String> {
 					datapodTableName = datasource.getDbname()+"."+datapod.getName();
 				}
 				
-				loadServiceImpl.executeSql(loadExec, dagExecVer, datapodTableName, datapodKey, runMode);
+				loadServiceImpl.executeSql(loadExec, dagExecVer, datapodTableName, datapodKey, runMode, null);
 				taskExec.getOperators().get(0).getOperatorInfo().get(0).setRef(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
 				commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 			} catch (Exception e) {

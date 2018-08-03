@@ -136,11 +136,12 @@ public class DatapodController {
 	@RequestMapping(value = "/upload", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
 	public boolean upload(@RequestParam("csvFileName") MultipartFile csvFile,
 			@RequestParam(value = "datapodUuid") String datapodUuid,
+			@RequestParam(value = "desc") String desc,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		datapodServiceImpl.setDataStoreServiceImpl(datastoreServiceImpl);
 		try{
-			datapodServiceImpl.upload(csvFile,datapodUuid);
+			datapodServiceImpl.upload(csvFile,datapodUuid,desc);
 		}catch (Exception e) {
 			e.printStackTrace();
 			return false;

@@ -388,7 +388,7 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 					, new MetaIdentifier(MetaType.datapod, map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion())
 					, new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion())
 					, map.getAppInfo(), map.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows
-					, Helper.getPersistModeFromRunMode(runMode.toString()));
+					, Helper.getPersistModeFromRunMode(runMode.toString()), null);
 			logger.info("After map persist ");
 			mapExec.setResult(resultRef);
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Completed);			
