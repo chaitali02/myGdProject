@@ -2338,6 +2338,8 @@ public class CommonServiceImpl <T> {
 						countHolder.add(new MetaStatsHolder("paramlistrule", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
 						count= metadataServiceImpl.getParamList(MetaType.model.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
 						countHolder.add(new MetaStatsHolder("paramlistmodel", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
+						count= metadataServiceImpl.getParamList(MetaType.dag.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistdag", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
 			
 					}	
 				}				
