@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
@@ -409,5 +411,17 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				.getOperator(helper.getOperatorType(operator.getOperatorType()));
 		return newOperator.parse(baseExec, execParams, runMode);
 	}
+	
+	public HttpServletResponse download(String uuid, String version, String format, int offset,
+			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
+			RunMode runMode) throws Exception {
+
+		List<Map<String, Object>> results =getOperatorResults(uuid,version,rowLimit);
+		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
+	
+		return response;
+
+	}
+	
 
 }
