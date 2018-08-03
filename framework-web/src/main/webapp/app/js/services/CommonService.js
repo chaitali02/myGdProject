@@ -284,8 +284,8 @@
          return deferred.promise;
     }
     //for dataod 
-    this.uploadFile=function(dataUuid,data,type){
-      var url="datapod/upload?action=edit&datapodUuid="+dataUuid+"&type="+type
+    this.uploadFile=function(dataUuid,data,type,desc){
+      var url="datapod/upload?action=edit&datapodUuid="+dataUuid+"&type="+type+"&desc="+desc
   		var deferred = $q.defer();
   	    CommonFactory.uploadFile(url,data).then(function(response){onSuccess(response.data)},function(response){onError(response)});
     	    var onSuccess=function(response){

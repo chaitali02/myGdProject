@@ -22,7 +22,7 @@ InferyxApp.factory('dagValidationSvc',function(dagMetaDataService){
     if(inboundLinks.length > 0){
       var firstLinkedCell = g.getCell(inboundLinks[0].attributes.source.id);
       console.log(firstLinkedCell)
-      notLinkedWithStage = false//firstLinkedCell.attributes.elementType == 'stage' ? false : true;
+      notLinkedWithStage =firstLinkedCell.attributes.elementType == 'stage' ? false : true;
     }
     if(cellViewS.model.attributes.parentStage && cellViewT.model.attributes.parentStage && cellViewS.model.attributes.parentStage != cellViewT.model.attributes.parentStage){
       return false;
