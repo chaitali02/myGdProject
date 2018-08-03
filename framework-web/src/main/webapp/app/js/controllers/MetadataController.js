@@ -163,17 +163,22 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 			name: 'uuid',
 			width: '30%',
 			enableCellEdit: false,
-			visible: true,
+			visible: false,
 			displayName: 'Uuid',
 			headerCellClass: 'text-center'
 		},
 		{
+			name: 'name',
+			minWidth: 220,
+			displayName: 'Name',
+			headerCellClass: 'text-center'
+		},
+		{
 			name: 'version',
-			width: '20%',
-			enableCellEdit: false,
+			maxWidth:110,
+			cellClass: 'text-center',
 			visible: true,
 			displayName: 'version',
-			cellClass: 'text-center',
 			headerCellClass: 'text-center',
 			sort: {
 				direction: uiGridConstants.DESC,
@@ -181,13 +186,21 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 			  },
 		},
 		{
-			name: 'name',
-			width: '30%',
-			enableCellEdit: false,
-			displayName: 'Name',
+			displayName: 'Created By',
+			name: 'createdBy.ref.name',
 			cellClass: 'text-center',
+			maxWidth:100,
 			headerCellClass: 'text-center'
-		},
+		  },
+		  {
+			displayName: 'Created On',
+			name: 'createdOn',
+			minWidth: 220,
+			cellClass: 'text-center',
+			headerCellClass: 'text-center',
+	
+		  },
+		
 		{
 			name: 'numRows',
 			width: '10%',
