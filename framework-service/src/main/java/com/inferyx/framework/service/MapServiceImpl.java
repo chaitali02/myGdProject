@@ -710,6 +710,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 					datapodKey.setVersion(targetDatapod.getVersion());
 				}
 				String mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
+				if(execParams != null)
 				execParams.getOtherParams().put("datapodUuid_" + datapodKey.getUUID() + "_tableName", mapTableName);
 				logger.info("Target table in map " + mapExec.getName() + " : " + mapTableName);
 			} catch (Exception e) {
