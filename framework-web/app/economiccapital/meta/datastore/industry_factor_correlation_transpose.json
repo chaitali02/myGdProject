@@ -3,22 +3,22 @@
         "ref" : {
             "type" : "datapod",
             "uuid" : "51c5418b-d49b-44bc-b077-cc057e77f4b0",
-            "version" : "1532550585"
+            "version" : "1533085256"
         }
     },
     "execId" : {
         "ref" : {
             "type" : "loadExec",
-            "uuid" : "a942abf3-7fbe-4d89-ae76-5b0dbd2e0c92",
-            "version" : "1533071218"
+            "uuid" : "adad7768-4c68-4cdc-a4b6-ab5a95abbfd9",
+            "version" : "1533330759"
         }
     },
-    "location" : "/51c5418b-d49b-44bc-b077-cc057e77f4b0/1532550585/1533071218",
+    "location" : "/51c5418b-d49b-44bc-b077-cc057e77f4b0/1533085256/1533330759",
     "persistMode" : "DISK_ONLY",
     "numRows" : NumberLong(64),
     "runMode" : "BATCH",
-    "uuid" : "cb776392-4d14-4c91-87fa-21565b78012b",
-    "version" : "1533071218",
+    "uuid" : "f9edf3a9-ffd2-410e-bcb2-e195bd718772",
+    "version" : "1533330760",
     "name" : "industry_factor_correlation_transpose_2018",
     "desc" : "Creating datastore for industry_factor_correlation_transpose_2018",
     "createdBy" : {
@@ -29,7 +29,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-07-31T21:06:58.000Z"),
+    "createdOn" : ISODate("2018-08-03T21:12:40.000Z"),
     "active" : "Y",
     "published" : "N",
     "appInfo" : [ 
