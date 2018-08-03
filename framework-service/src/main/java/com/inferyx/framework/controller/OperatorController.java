@@ -3,6 +3,8 @@ package com.inferyx.framework.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
@@ -75,4 +78,25 @@ public class OperatorController {
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		return operatorServiceImpl.getOperatorByOperatorType(type);
 	}
+	
+	
+	@RequestMapping(value="/download",method=RequestMethod.GET)
+	public HttpServletResponse  download(@RequestParam(value= "uuid") String operatorExecuuid, 
+	    		@RequestParam(value= "version") String operatorExecVersion,
+	    		@RequestParam(value = "format", defaultValue="excel")String format,
+				@RequestParam(value ="rows",defaultValue="1000") int rows,
+				@RequestParam(value="offset", defaultValue="0") int offset, 
+				@RequestParam(value="limit", defaultValue="200") int limit,
+				@RequestParam(value="sortBy", required=false) String sortBy,
+				@RequestParam(value="order", required=false) String order,
+				@RequestParam(value = "type", required = false) String type,
+				@RequestParam(value = "action", required = false) String action,
+				@RequestParam(value="requestId",required = false) String requestId, 
+				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
+	    		{
+		    RunMode runMode = Helper.getExecutionMode(mode);
+    	    response = operatorServiceImpl.download(operatorExecuuid, operatorExecVersion, format, offset, limit, response, rows,sortBy, order, requestId, runMode);
+    	    return null;
+		
+	   }
 }

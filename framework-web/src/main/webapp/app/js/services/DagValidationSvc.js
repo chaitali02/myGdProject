@@ -21,7 +21,7 @@ InferyxApp.factory('dagValidationSvc',function(dagMetaDataService){
     var notLinkedWithStage = true;
     if(inboundLinks.length > 0){
       var firstLinkedCell = g.getCell(inboundLinks[0].attributes.source.id);
-      //console.log(g)
+      console.log(firstLinkedCell)
       notLinkedWithStage = false//firstLinkedCell.attributes.elementType == 'stage' ? false : true;
     }
     if(cellViewS.model.attributes.parentStage && cellViewT.model.attributes.parentStage && cellViewS.model.attributes.parentStage != cellViewT.model.attributes.parentStage){
@@ -42,7 +42,7 @@ InferyxApp.factory('dagValidationSvc',function(dagMetaDataService){
       var cellT = graph.getCell(cellViewT.model.id)
       inboundLinks = graph.getConnectedLinks(cellT,{inbound : true});
       outboundLinks=graph.getConnectedLinks(cellT,{outbound : true});
-      console.log(outboundLinks)
+      //console.log(outboundLinks)
     }
     catch(e){
       var inboundLinks = [];

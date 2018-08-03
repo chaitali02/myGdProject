@@ -20,11 +20,7 @@ DatascienceModule.controller("ModelResultSearchController",function($state,$filt
     {   "index":"2",
         "name":"simulate",
         "caption":"Simulation"
-    },
-    {  "index":"3",
-        "name":"operator",
-        "caption":"Operator"
-    } 
+    }
     ];
     var notify = {
         type: 'success',
