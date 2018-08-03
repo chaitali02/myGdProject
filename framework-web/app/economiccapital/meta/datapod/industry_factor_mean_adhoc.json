@@ -1,0 +1,75 @@
+{
+  "uuid": "525e4859-0fad-4adf-aaa1-2c1ef3bbc4a6",
+  "version": "1533253538",
+  "name": "industry_factor_mean_adhoc",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Aug 02 19:45:38 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "File"
+    },
+    "value": null
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "name": "id",
+      "type": "string",
+      "desc": "id",
+      "key": "",
+      "partition": "N",
+      "dispName": "id",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 1,
+      "name": "mean",
+      "type": "double",
+      "desc": "mean",
+      "key": "",
+      "partition": "N",
+      "dispName": "mean",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 2,
+      "name": "version",
+      "type": "integer",
+      "desc": "version",
+      "key": "",
+      "partition": "N",
+      "dispName": "version",
+      "active": "Y",
+      "expr": null
+    }
+  ]
+}

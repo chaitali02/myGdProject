@@ -20,6 +20,7 @@ import org.apache.spark.sql.SaveMode;
 import org.springframework.security.core.Authentication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
@@ -498,6 +499,9 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			Datapod datapod = null;
 			ResultSetHolder rsHolder = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
+			/***** Replace internalVarMap - START *****/
+			baseRuleExec.setExec(DagExecUtil.replaceInternalVarMap(execParams, baseRuleExec.getExec()));
+			/***** Replace internalVarMap - END *****/
 			if (runMode!= null && runMode.equals(RunMode.BATCH)) {
 				datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
 				if(execContext.equals(ExecContext.FILE)

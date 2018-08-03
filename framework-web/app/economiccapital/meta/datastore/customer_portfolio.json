@@ -9,16 +9,16 @@
     "execId" : {
         "ref" : {
             "type" : "loadExec",
-            "uuid" : "ee27a9a2-7cea-4f0c-83b9-36f505f62cf0",
-            "version" : "1533069608"
+            "uuid" : "8ea70ebe-8712-40f2-956b-b998a54af785",
+            "version" : "1533258042"
         }
     },
-    "location" : "/7640609c-db5e-42fd-a814-f2d2f0d75fee/1526085077/1533069608",
+    "location" : "/7640609c-db5e-42fd-a814-f2d2f0d75fee/1526085077/1533258042",
     "persistMode" : "DISK_ONLY",
     "numRows" : NumberLong(384),
     "runMode" : "BATCH",
-    "uuid" : "84325249-5db8-4a3a-b067-f31d73c919f7",
-    "version" : "1533069608",
+    "uuid" : "c22d7911-06d6-4d84-b708-fa8d668240bc",
+    "version" : "1533258042",
     "name" : "customer_portfolio_2018",
     "desc" : "Creating datastore for customer_portfolio_2018",
     "createdBy" : {
@@ -29,7 +29,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-07-31T20:40:08.000Z"),
+    "createdOn" : ISODate("2018-08-03T01:00:42.000Z"),
     "active" : "Y",
     "published" : "N",
     "appInfo" : [ 

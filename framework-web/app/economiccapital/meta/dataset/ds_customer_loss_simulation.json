@@ -1,6 +1,6 @@
 {
   "uuid": "dd2392c7-f68c-4933-bbc8-e69401f006rr",
-  "version": "1532916428",
+  "version": "1533250125",
   "name": "ds_customer_loss_simulation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Jul 29 22:07:08 EDT 2018",
+  "createdOn": "Thu Aug 02 18:48:45 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -174,7 +174,7 @@
           "name": "customer_idiosyncratic_transpose"
         },
         "value": null,
-        "attrId": "1",
+        "attrId": "2",
         "attrName": "customer",
         "attrType": null
       }
@@ -190,7 +190,7 @@
           "name": "customer_idiosyncratic_transpose"
         },
         "value": null,
-        "attrId": "2",
+        "attrId": "3",
         "attrName": "pd",
         "attrType": null
       }
@@ -222,7 +222,7 @@
           "name": "industry_factor_transpose"
         },
         "value": null,
-        "attrId": "1",
+        "attrId": "2",
         "attrName": "factor",
         "attrType": null
       }
@@ -238,7 +238,7 @@
           "name": "industry_factor_transpose"
         },
         "value": null,
-        "attrId": "2",
+        "attrId": "3",
         "attrName": "factor_value",
         "attrType": null
       }

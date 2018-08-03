@@ -1484,4 +1484,21 @@ public class DataStoreServiceImpl {
 		
 		return data;
 	}
+	
+	public HttpServletResponse download(String uuid, String version, String format, int offset,
+			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
+			RunMode runMode) throws Exception {
+		setRunMode(runMode);
+		DataStore ds = (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
+		if (ds == null) {
+			logger.error("Datastore is not available for this datapod");
+			throw new Exception();
+		}
+		List<Map<String, Object>> results = getDatapodResults(ds.getUuid(), ds.getVersion(), null,
+				0, limit, response, rowLimit, null, null, null, runMode);
+		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
+	
+		return response;
+
+	}
 }
