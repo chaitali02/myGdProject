@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -38,6 +39,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SysVarType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -449,7 +451,30 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected String getSaveMode() {
 		return SaveMode.Append.toString();
 	}
+
+	/**
+	 * 
+	 * @param execParams
+	 * @param baseRuleExec
+	 */
+	protected void checkInternalVarMap(ExecParams execParams, BaseRuleExec baseRuleExec) {
+		if (execParams == null) {
+			return;
+		}
+		if ( execParams.getInternalVarMap() == null ) {
+			execParams.setInternalVarMap(new HashMap<>());
+		}
+		
+		if (!execParams.getInternalVarMap().containsKey("\\$".concat(SysVarType.exec_version.toString()))) {
+			execParams.getInternalVarMap().put("\\$".concat(SysVarType.exec_version.toString()), baseRuleExec.getVersion());
+		}
+	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public TaskHolder execute() throws Exception {
 		// Set status to In Progress
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
@@ -500,6 +525,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			ResultSetHolder rsHolder = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
 			/***** Replace internalVarMap - START *****/
+			checkInternalVarMap(execParams, baseRuleExec);
 			baseRuleExec.setExec(DagExecUtil.replaceInternalVarMap(execParams, baseRuleExec.getExec()));
 			/***** Replace internalVarMap - END *****/
 			if (runMode!= null && runMode.equals(RunMode.BATCH)) {

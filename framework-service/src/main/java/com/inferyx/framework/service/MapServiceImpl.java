@@ -41,6 +41,7 @@ import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
@@ -58,6 +59,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SysVarType;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.IExecutable;
@@ -639,6 +641,25 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return map.getSource().getRef().getType();
 	}*/
 	
+		
+	/**
+	 * 
+	 * @param execParams
+	 * @param baseRuleExec
+	 */
+	protected void checkInternalVarMap(ExecParams execParams, MapExec mapExec) {
+		if (execParams == null) {
+			return;
+		}
+		if ( execParams.getInternalVarMap() == null ) {
+			execParams.setInternalVarMap(new HashMap<>());
+		}
+		
+		if (!execParams.getInternalVarMap().containsKey("\\$".concat(SysVarType.exec_version.toString()))) {
+			execParams.getInternalVarMap().put("\\$".concat(SysVarType.exec_version.toString()), mapExec.getVersion());
+		}
+	}
+		
 	/**
 	 * Generate SQL for Map and populate in MapExec
 	 * @param uuid
@@ -734,7 +755,10 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not generate query.");
 			throw new Exception((message != null) ? message : "Can not generate query.");
 		}
-		
+		/***** Replace internalVarMap - START *****/
+		checkInternalVarMap(execParams, mapExec);
+		mapExec.setExec(DagExecUtil.replaceInternalVarMap(execParams, mapExec.getExec()));
+		/***** Replace internalVarMap - END *****/
 		return mapExec;
 	}
 
