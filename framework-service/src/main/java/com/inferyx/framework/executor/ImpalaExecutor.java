@@ -436,8 +436,15 @@ public class ImpalaExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes,
 			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(" Inside method generateData.");
+		ResultSetHolder rsHolder = null;
+		try {
+			rsHolder =  sparkExecutor.generateData(distribution, distributionObject, methodName, args, paramtypes, attributes, numIterations, execVersion, tableName);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		return rsHolder;
 	}
 	@Override
 	public List<String> getCustomDirsFromTrainedModel(Object trngModel) {
@@ -487,7 +494,7 @@ public class ImpalaExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
 			String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(" Inside method create.");
+		return sparkExecutor.create(rowObjList, attributes, tableName, clientContext);
 	}
 }
