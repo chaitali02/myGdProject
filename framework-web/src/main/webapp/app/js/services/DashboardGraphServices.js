@@ -200,11 +200,13 @@ DatavisualizationModule.service('DahsboardSerivce',function($q,sortFactory,Dahsb
 			   DahsboardFactory.findVizpodResultsWithData(uuid,version,data).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
 			   var onSuccess=function(response){
 			      deferred.resolve({
+							success: true,
 			                  data:response
 			              })
 			    }
 			    var onError=function(response){
 			        deferred.reject({
+						success: false,
 				        data:response
 			        });
 		        }

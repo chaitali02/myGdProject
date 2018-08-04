@@ -747,9 +747,12 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
         $scope.inprogressdata=false
       }
     }
-    console.log(JSON.stringify($scope.vizpodtrack));
+    console.log($scope.vizpodResutsArray);
+   
     $q.all($scope.vizpodResutsArray).then(function(result){
+
       for(var k=0;k<$scope.vizpodtrack.length;k++){
+       
         if($scope.vizpodtrack[k] !="network-graph"){
         $scope.inprogressdata=false
         $scope.isUserNotification=false;
@@ -763,6 +766,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       }
       $scope.preparColumnDataFromResult();
     },function(response){
+    
         for(var k=0;k<$scope.vizpodtrack.length;k++){
           $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].isDataError=true;
           $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].errormsg="Some Error Occurred";
