@@ -542,6 +542,7 @@
       return deferred.promise;
     }
     this.getParamListByType = function(type, uuid, version) {
+      debugger;
       var deferred = $q.defer();
       var url;
       if (type == "simulate") {
@@ -554,10 +555,11 @@
       else if(type == "operatortype"){
         url = "metadata/getParamListByOperatorType?uuid=" + uuid+"&type="+type;
       }
-    
+  
       else if(type =='distribution'){
         url="metadata/getParamListByDistribution?uuid=" + uuid+"&type="+type;
       }
+     
       url += '&action=view'
       CommonFactory.httpGet(url).then(function(response) {
         onSuccess(response.data)
@@ -685,6 +687,8 @@
         case 'dagexec':
           api = 'dag';
           break;
+        case 'trainExec':
+          api= 'model/train';
       }
       if(!api){
         return
@@ -719,6 +723,7 @@
               attributedetail.name = response[j].attributes[i].name;
               attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
               attributedetail.attributeId = response[j].attributes[i].attributeId;
+              attributedetail.attrType = response[j].attributes[i].attrType;
               attributes.push(attributedetail)
             }
           }
@@ -741,6 +746,7 @@
             attributedetail.datapodname = response[j].ref.name;
             attributedetail.name = response[j].attrName;
             attributedetail.attributeId = response[j].attrId;
+            attributedetail.attrType = response[j].attrType;
             attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
             attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
             attributes.push(attributedetail)
@@ -765,6 +771,7 @@
             attributedetail.name = response[j].attrName;
             attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
             attributedetail.attributeId = response[j].attrId;
+            attributedetail.attrType = response[j].attrType;
             attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
             attributes.push(attributedetail)
           }
@@ -854,7 +861,88 @@
     }
     return deferred.promise;
   }
-    
+  this.getAllLatestParamListByTemplate = function(templateFlg,type,paramListType) {
+    var deferred = $q.defer();
+    var url;
+    url ="common/getAllLatestParamListByTemplate?action=view&templateFlg=" + templateFlg + "&type=" + type+"&paramListType="+paramListType;
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
+
+  this.getParamListByTrainORRule = function(uuid,version,type) {
+    var deferred = $q.defer();
+    var url;
+    if(type=="train")
+    url ="metadata/getParamListByTrain?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
+    else if(type=="rule")
+    url ="metadata/getParamListByRule?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      var result=[];
+      if(response && response.length >0){
+      // response[0].ref.name=response[0].ref.name//+ " (default)"
+        for(var i=0;i<response.length;i++){
+          var res={};
+          res.uuid=response[i].ref.uuid;
+          res.name=response[i].ref.name;
+          result[i]=res;
+        }
+      }
+
+      deferred.resolve({
+        data: result
+      });
+    }
+    return deferred.promise;
+  }
+  
+  this.getParamByParamList = function(uuid,version,type) {
+    var deferred = $q.defer();
+    var url;
+    url ="metadata/getParamByParamList?action=view&uuid=" +uuid+"&type=" + type;
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  };
+  this.getParamListChilds = function(uuid,version,type) {
+    var deferred = $q.defer();
+    var url;
+    url ="metadata/getParamListChilds?action=view&uuid=" +uuid+"&version="+version+"&type="+type;
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      var result=[];
+      if(response && response.length >0){
+        for(var i=0;i<response.length;i++){
+          var res={};
+          res.uuid=response[i].ref.uuid;
+          res.name=response[i].ref.name;
+          result[i]=res;
+        }
+      }
+      deferred.resolve({
+        data: result
+      });
+    }
+    return deferred.promise;
+  }
+   
   });
   
   

@@ -159,7 +159,7 @@ export class CommonListService {
     // .catch(this.handleError);
   }
 
-  restart(uuid, version, type, action): Observable<any> {debugger
+  restart(uuid, version, type, action): Observable<any> {
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }

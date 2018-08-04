@@ -64,6 +64,17 @@ public class GraphFilter {
 		
 		private String logicalOperator;
 		private String operator;
+		private String source;
+		
+
+		public String getSource() {
+			return this.source;
+		}
+
+		public void setSource(String source) {
+			this.source = source;
+		}
+
 		private Property operand;
 
 		public String getLogicalOperator() {
@@ -93,13 +104,14 @@ public class GraphFilter {
 		public NodeFilter() {
 			super();
 		}
-		
-		public NodeFilter(String logicalOperator, String operator, Property operand) {
+		public NodeFilter(String logicalOperator, String operator, String source, Property operand) {
 			super();
 			this.logicalOperator = logicalOperator;
 			this.operator = operator;
+			this.source = source;
 			this.operand = operand;
 		}
+	
 
 	}
 
@@ -110,10 +122,19 @@ public class GraphFilter {
 
 		private String logicalOperator;
 		private String operator;
+		private String source;
 		private Property operand;
 
 		public String getLogicalOperator() {
 			return logicalOperator;
+		}
+
+		public EdgeFilter(String logicalOperator, String operator, String source, Property operand) {
+			super();
+			this.logicalOperator = logicalOperator;
+			this.operator = operator;
+			this.source = source;
+			this.operand = operand;
 		}
 
 		public void setLogicalOperator(String logicalOperator) {
@@ -140,12 +161,15 @@ public class GraphFilter {
 			super();
 		}
 
-		public EdgeFilter(String logicalOperator, String operator, Property operand) {
-			super();
-			this.logicalOperator = logicalOperator;
-			this.operator = operator;
-			this.operand = operand;
+		public String getSource() {
+			return this.source;
 		}
+
+		public void setSource(String source) {
+			this.source = source;
+		}
+
+		
 	}
 	
 }

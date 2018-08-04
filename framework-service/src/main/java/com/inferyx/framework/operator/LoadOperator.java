@@ -160,8 +160,16 @@ public class LoadOperator implements IOperator {
 	}
 
 	@Override
-	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public BaseExec create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Map<String, String> customCreate(BaseExec baseExec, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -86,7 +86,7 @@ export class ModelService{
   
   uploadFile(extension, data, fileType) {
     let baseUrl = 'http://localhost:8080'
-    var url = baseUrl + '/common/upload?action=edit&extension=' + extension + '&fileType=' + fileType;
+    var url = baseUrl + '/model/upload?action=edit&extension=' + extension + '&fileType=' + fileType;
     let body = data;
     return this.http
       .post(url, body, { headers: this.headers })

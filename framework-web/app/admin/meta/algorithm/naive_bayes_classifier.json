@@ -17,7 +17,7 @@
   "active": "Y",
   "published": "N",
   "appInfo": [
-    {
+		{
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -42,11 +42,11 @@
                 "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
             }
         }
-  ],
+	],
   "type": "CLASSIFICATION",
-  "library": "SPARKML",
-  "trainName": "org.apache.spark.ml.classification.NaiveBayes",
-  "modelName": "org.apache.spark.ml.classification.NaiveBayesModel",
+  "libraryType": "SPARKML",
+  "trainClass": "org.apache.spark.ml.classification.NaiveBayes",
+  "modelClass": "org.apache.spark.ml.classification.NaiveBayesModel",
   "labelRequired": "Y",
   "returnType": null,
   "paramList": {
@@ -58,5 +58,29 @@
     },
     "value": null
   },
-  "savePmml" : "N"
+	 "paramListWoH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "e3dd3eaf-4420-49c0-a36c-46f76b455a1a"
+        }
+    },
+    "paramListWH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "45f293c8-ea4b-482c-838e-69ed4b19bc9a"
+        }
+    },
+  "savePmml" : "N",
+	"summaryMethods" : [  
+		"getSmoothing",
+		"getThresholds",
+		"numClasses",
+		"numFeatures",
+		"pi",
+		"getWeightCol",
+		"getRawPredictionCol",
+		"getProbabilityCol",
+		"getPredictionCol",
+		"getModelType"
+	    ]
 }

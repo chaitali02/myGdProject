@@ -61,7 +61,7 @@ export class DatapodComponent {
   active : any;
   iseditable : boolean;
   datasource_name : any;
-  breadcrumbDataFrom:any;
+  breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   isSubmitEnable:any;
 
   constructor(private _commonService:CommonService,private _datapodService:DatapodService,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService,private route: ActivatedRoute) {
@@ -134,6 +134,9 @@ export class DatapodComponent {
       this.VersionList[i]=ver;
     }
   }  
+  onVersionChange(){
+    this.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label);
+  }
   getOneByUuidAndVersion(id,version){
     this._datapodService.getOneByUuidAndVersion(id,version,'datapod')
     .subscribe(
@@ -286,7 +289,7 @@ export class DatapodComponent {
        }, 1000);
   } 
   
-  
+
   enableEdit(uuid, version) {
     this.showDatapodPage();
     this.router.navigate(['app/dataPreparation/datapod',uuid,version, 'false']);
@@ -312,6 +315,7 @@ export class DatapodComponent {
     this.graphDataStatus=true;
     this.showgraphdiv=true;
   }
+
   
   addRow(){
     if(this.attributes == null){

@@ -36,7 +36,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.parser.TaskParser;
-import com.inferyx.framework.service.ParamSetServiceImpl;
+import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 
 @Component
@@ -45,7 +45,8 @@ public class JoinKeyOperator {
 	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected FormulaOperator formulaOperator;
 	@Autowired protected RegisterService registerService;
-	@Autowired protected ParamSetServiceImpl paramSetServiceImpl;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
 	
 	public String generateSql(List<FilterInfo> filters, MetaIdentifierHolder filterSource
 			, java.util.Map<String, MetaIdentifier> refKeyMap
@@ -85,7 +86,7 @@ public class JoinKeyOperator {
 					operandValue.add(sourceAttr.getValue());
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist) {
 				String value = null;
-				value = paramSetServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				operandValue.add(value);
 			} else if (sourceAttr.getRef().getType() == MetaType.dataset) {
 				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));

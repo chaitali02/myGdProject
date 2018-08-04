@@ -49,14 +49,14 @@ export class CommonService{
   .catch(this.handleError);
   }
 
-  downloadExport(uuid:Number): Observable<any> {
-    let url ='admin/export/download?uuid='+uuid;
-    return this._sharedService.getCall(url)
-    .map((response: Response) => {
-    return <any>response.json();
-    })
-    .catch(this.handleError);
-    }
+  // downloadExport(uuid:Number): Observable<any> {debugger
+  //   let url ='admin/export/download?uuid='+uuid;
+  //   return this._sharedService.getCall(url)
+  //   .map((response: Response) => {
+  //   return <any>response.json();
+  //   })
+  //   .catch(this.handleError);
+  //   }
   
 
   getLatestByUuid(uuid:Number,type:String): Observable<any> {
@@ -231,8 +231,15 @@ getRuleExecByRule(uuid:Number): Observable<any[]> {
 })
  .catch(this.handleError);
 }
+getAllLatestParamListByTemplate(templateFlg:any,type:String,paramListType:any):Observable<any[]>{
 
-
+  let url ='common/getAllLatestParamListByTemplate?action=view&templateFlg=' + templateFlg + "&type=" + type  +"&paramListType="+paramListType;
+  return this._sharedService.getCall(url)
+  .map((response: Response) => {
+    return <any[]>response.json();
+})
+ .catch(this.handleError);
+}
 
 
 saveAs(uuid:Number,version:String,type:String): Observable<any[]> {

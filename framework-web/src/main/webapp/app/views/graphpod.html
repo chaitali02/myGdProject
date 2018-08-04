@@ -1,4 +1,4 @@
-<div data-ng-controller="GraphpodDetailController">
+nodeHighlightColor:["f44336","4CAF50","2196F3","FF9800","9E9E9E"],<div data-ng-controller="GraphpodDetailController">
   <!-- BEGIN PAGE HEADER-->
   <div class="page-bar">
     <ul class="page-breadcrumb">
@@ -200,12 +200,14 @@
                           </span>
                         </th>
                         <th style="text-align:center;">Source</th>
-                        <th style="text-align:center;">Node Id</th>
-                        <th style="text-align:center;">Node Type</th>
-                        <th style="text-align:center;">Node Display</th>
-                        <th style="text-align:center;">Node Name</th>
-                        <th style="text-align:center;">Node Properties</th>
-                        <th style="text-align:center;">Highlight Info</th>
+                        <th style="text-align:center;">Id</th>
+                        <th style="text-align:center;">Type</th>
+                        <th style="text-align:center;">Name</th>
+                        <th style="text-align:center;">Properties</th>
+                        <th style="text-align:center;">Icon</th>
+                        <th style="text-align:center;">Background</th>
+                        <th style="text-align:center;">Highlight</th>
+                        <th style="text-align:center;">Size</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -246,28 +248,7 @@
                             </div>
                           </span>
                         </td>
-                        <td>
-                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                            <div style="min-width:150px;">
-                              <ui-select  name ="nodeIcon" ng-model="tabledata.nodeIcon"  theme="" ng-disabled="{{mode}}"  append-to-body="true">
-                                  <!-- selectize -->
-                                  <ui-select-match  required disable-validation-message="">
-                                   
-                                    <span title="{{tabledata.nodeIcon.caption}}"> {{tabledata.nodeIcon.caption}} </span>
-                                  </ui-select-match>
-                                  <ui-select-choices repeat="x in (nodeIcons | filter: $select.search) track by x.value " position='down'  required disable-validation-message="">
-                                    <div>
-                                        <span class="{{x.class}}" style="color:gray"></span>
-                                      <span  ng-bind-html="x.caption | highlight: $select.search"></span>
-                                    </div>
-                                  </ui-select-choices>
-                                </ui-select>
-                              <!-- <select select2 ng-disabled="{{mode}}" ng-model="tabledata.nodeIcon" ng-options="x.value as x.caption for x in nodeIcons"
-                                ng-disabled="{{mode}}" class="form-control"></select> -->
-                                <input type="hidden" name="nodeIcon" ng-model="tabledata.nodeIcon" required disable-validation-message="" >
-                            </div>
-                          </span>
-                        </td>
+                       
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right:0px;">
                             <div style="width:200px;">
@@ -290,6 +271,41 @@
                           </div>
                         </td>
                         <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div class="custom-ui-select" style="min-width:150px;">
+                              <ui-select  name ="nodeIcon" ng-model="tabledata.nodeIcon"  theme="" ng-disabled="{{mode}}"  append-to-body="true">
+                                  <!-- selectize -->
+                                  <ui-select-match  required disable-validation-message="">
+                                   
+                                    <span title="{{tabledata.nodeIcon.caption}}"> {{tabledata.nodeIcon.caption}} </span>
+                                  </ui-select-match>
+                                  <ui-select-choices repeat="x in (nodeIcons | filter: $select.search) track by x.value " position='down'  required disable-validation-message="">
+                                    <div>
+                                        <span class="{{x.class}}" style="color:gray"></span>
+                                      <span  ng-bind-html="x.caption | highlight: $select.search"></span>
+                                    </div>
+                                  </ui-select-choices>
+                                </ui-select>
+                                <input type="hidden" name="nodeIcon" ng-model="tabledata.nodeIcon" required disable-validation-message="" >
+                            </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;" >
+                            <div style="width:200px;">
+                            <div style="width:200px;">
+                              <div class="col-md-11" style="padding:0px;">
+                                
+                                <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.nodeBackgroundInfo.value"
+                                  required disable-validation-message="" name="nodeBackgroundInfo{{$index}}" >
+                              </div>
+                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="addHighlightInfo($index,'node','nodeBackgroundInfo')"></span>
+                              </div>
+                            </div>
+                          </span>
+                        </td>
+                        <td>
                           <span class="form-group" style="margin-left:0px;margin-right:0px;" >
                             <div style="width:200px;">
                             <div style="width:200px;">
@@ -299,9 +315,21 @@
                                   required disable-validation-message="" name="highlightinto{{$index}}" >
                               </div>
                               <div class="col-md-1" style="padding:7px 0px 0px 4px;">
-                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="addHighlightInfo($index)"></span>
+                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="addHighlightInfo($index,'node','highlightInfo')"></span>
                               </div>
                             </div>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                            <div style="width:200px;">
+                             
+                              <select select2 ng-disabled="{{mode}}" ng-model="tabledata.nodeSize" ng-options="x as x.name for x in tabledata.allAttributeInto |filter:filterByAttrType() track by x.uuid+x.attributeId"
+                                ng-disabled="{{mode}}" class="form-control">
+                               <option value="">-Select-</option>
+                              </select>
+                            </div>
+
                           </span>
                         </td>
                       </tr>
@@ -334,12 +362,12 @@
                   <br>
                   <table class=" row-border hover table  table-striped table-bordered" style="max-width:1100px;">
                     <thead>
-                      <tr>
+                      <!-- <tr>
                         <th class="text-center" colspan="5">Edge</th>
                         <th class="text-center" colspan="2">Source</th>
                         <th class="text-center" colspan="2">Target </th>
                       </tr>
-                      <tr>
+                      <tr> -->
                         <th style="width:5%;text-align: center; Vertical-align: middle;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllEdgeRow" ng-click="allEdgeRow()"
@@ -351,10 +379,11 @@
                         <th style="text-align:center;">Type</th>
                         <th style="text-align:center;">Name</th>
                         <th style="text-align:center;">Properties</th>
-                        <th style="text-align:center;">Node Id</th>
-                        <th style="text-align:center;">Node Type</th>
-                        <th style="text-align:center;">Node Id</th>
-                        <th style="text-align:center;">Node Type</th>
+                        <th style="text-align:center;">Source Node Id</th>
+                        <!-- <th style="text-align:center;">Node Type</th> -->
+                        <th style="text-align:center;">Target Node Id</th>
+                        <!-- <th style="text-align:center;">Node Type</th> -->
+                        <th style="text-align:center;">Highlight</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -406,6 +435,7 @@
                             NA
                           </div>
                         </td>
+                       
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right:0px;">
                             <div style="width:140px;">
@@ -415,7 +445,7 @@
                             </div>
                           </span>
                         </td>
-                        <td>
+                        <!-- <td>
                           <span class="form-group" style="margin-left:0px;margin-right:0px;">
                             <div style="width:120px">
                               <input type="text" class="form-control" ng-disabled="{{mode}}" name="sourceNodeType{{$index}}" ng-model="tabledata.sourceNodeType"  ng-pattern="/^[a-zA-Z]{1,15}$/" required disable-validation-message=""
@@ -423,7 +453,7 @@
                               tooltip-placement="left">
                             </div>
                           </span>
-                        </td>
+                        </td> -->
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right:0px;">
                             <div style="width:140px;">
@@ -434,6 +464,21 @@
                           </span>
                         </td>
                         <td>
+                          <span class="form-group" style="margin-left:0px;margin-right:0px;" >
+                            <div style="width:200px;">
+                            <div style="width:200px;">
+                              <div class="col-md-11" style="padding:0px;">
+                                
+                                <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.highlightInfo.value"
+                                  required disable-validation-message="" name="highlightinto{{$index}}" >
+                              </div>
+                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="addHighlightInfo($index,'edge','highlightInfo')"></span>
+                              </div>
+                            </div>
+                          </span>
+                        </td>
+                        <!-- <td>
                           <span class="form-group" style="margin-left:0px;margin-right:0px;">
                             <div style="width:120px">
                               <input type="text" class="form-control" ng-disabled="{{mode}}" name="targetNodeType{{$index}}" ng-model="tabledata.targetNodeType" ng-pattern="/^[a-zA-Z]{1,15}$/" required disable-validation-message=""
@@ -441,7 +486,7 @@
                               tooltip-placement="top">
                             </div>
                           </span>
-                        </td>
+                        </td> -->
                       </tr>
                     </tbody>
                   </table>
@@ -491,11 +536,13 @@
     </div>
   </div>
   <div id="addHiglightInfo" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog" style="width:35%;">
+    <div class="modal-dialog" style="width:50%;">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-          <h4 class="modal-title">Add Highlight Info</h4>
+          <!-- <h4 class="modal-title">Highlight Info</h4> -->
+          <h4 class="modal-title">{{highlightInfo.caption}}</h4>
+          
         </div>
         <form class="form-horizontal" novalidate="novalidate" name="myHighlightForm" ng-submit="SubmitHighlightInfo()">
           <div class="modal-body">
@@ -504,15 +551,15 @@
             
                   <div class="form-group">
                     <label class="col-md-3 control-label">Type</label>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                       <select  class="form-control" data-ng-model="highlightInfo.selectType" 
-                        ng-options="r for r in allNodeHighlightType" required disable-validation-message="" ng-disabled="{{mode}}">
+                        ng-options="r.value as r.caption for r in allNodeHighlightType" required disable-validation-message="" ng-disabled="{{mode}}">
                       </select>
                     </div>
                   </div>
                   <div class="form-group">
                     <label class="col-md-3 control-label">Select</label>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                       <select select2 ng-disabled="{{mode}}" ng-model="highlightInfo.propertyId" ng-options="x as x.name for x in allAttr track by x.uuid+x.attributeId"
                       ng-disabled="{{mode}}" class="form-control" required disable-validation-message=""></select>
                     </div>
@@ -560,9 +607,28 @@
                           </td>
                           <td>
                             <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                <div class="custom-ui-select" style="min-width:150px;">
+                                  <ui-select  name ="nodeIcon" ng-model="tabledata.propertyValue"  theme="" ng-disabled="{{mode}}"  append-to-body="false">
+                                      
+                                      <ui-select-match  required disable-validation-message="">
+                                        
+                                        <div style="background-color:{{tabledata.propertyValue}};text-align:center;border:1px solid black;" title="{{tabledata.propertyValue}}"> {{tabledata.propertyValue}} </div>
+                                      </ui-select-match>
+                                      <ui-select-choices repeat="x in (nodeColorInfo | filter: $select.search) track by $index " position='up'  required disable-validation-message="">
+                                        <div>
+                                          
+                                          <div style='background-color:{{x}};text-align:center;border:1px solid black;' ng-bind-html="x| highlight: $select.search"></div>
+                                        </div>
+                                      </ui-select-choices>
+                                    </ui-select>
+                                    <input type="hidden" name="nodeIcon" ng-model="tabledata.propertyValue" required disable-validation-message="" >
+                                </div>
+                              </span>
+                            <span class="form-group" style="margin-left:0px;margin-right:0px;">
+<!--                               
                               <div>
                                 <input type="color" class="form-control" ng-disabled="{{mode}}" name="propertyValue{{$index}}" ng-model="tabledata.propertyValue" required disable-validation-message="" style="height:36px;padding: 0px;">
-                              </div>
+                              </div> -->
                             </span>
                           </td>
                         </tr>

@@ -479,7 +479,9 @@ export class FormulaComponent {
       error => console.log('Error :: ' + error)
     )
   }
-
+  onVersionChange(){
+    this.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label);
+  }
   submitFormula() {
     this.isSubmitEnable=true;
     let formulaSubmitJson = {};

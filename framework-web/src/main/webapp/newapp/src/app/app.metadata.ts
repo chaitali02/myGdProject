@@ -465,21 +465,21 @@ export class AppMetadata {
         caption: 'Download Exec',
         execType: 'downloadexec',
         metaType: 'downloadexec',
-        color: '#33691E',
+        color: '#5C9BD1',
         allowInMenu: false,
         listState: 'jobmonitoringlist',
         detailState: 'downloadExec',
         resultState: 'downloadexec',
         moduleState: 'dataScience',
         moduleCaption: 'Data Science',
-        class: 'fa fa-flask'
+        class: 'fa fa-download'
  },
  'downloadExec': {
   name: 'download',
   caption: 'download Exec',
   execType: 'downloadExec',
   metaType: 'downloadExec',
-  color: '#8E44AD',
+  color: '#5C9BD1',
   iconCaption: '',
   allowInMenu: false,
   listState: 'jobmonitoringlist',
@@ -487,24 +487,42 @@ export class AppMetadata {
   moduleState: 'JobMonitoring',
   resultState: 'downloadExec',
   moduleCaption: 'Job Monitoring',
-  class: 'fa fa-flask'
+  class: 'fa fa-download'
 
 
 },
       'uploadexec': {
-        name: 'download',
-        caption: 'upload Exec',
-        execType: 'uploadExec',
-        metaType: 'uploadExec',
-        color: '#33691E',
+        name: 'upload',
+        caption: 'Upload Exec',
+        execType: 'uploadexec',
+        metaType: 'uploadexec',
+        color: '#2AB4C0',
         allowInMenu: false,
         listState: 'jobmonitoringlist',
-        detailState: 'jobexecutorlistuploadexec',
-        resultState: 'resultgraphwf',
-        moduleState: 'JobMonitoring',
-        moduleCaption: 'Job Monitoring',
-        class: 'fa fa-flask'
-      },
+        detailState: 'uploadExec',
+        resultState: 'uploadexec',
+        moduleState: 'dataPreparation',
+        moduleCaption: 'Data Preparation',
+        class: 'fa fa-upload'
+
+  },
+  'uploadExec': {
+    name: 'upload',
+    caption: 'upload Exec',
+    execType: 'uploadExec',
+    metaType: 'uploadExec',
+    color: '#2AB4C0',
+    iconCaption: '',
+    allowInMenu: false,
+    listState: 'jobmonitoringlist',
+    detailState: 'uploadExec',
+    moduleState: 'JobMonitoring',
+    resultState: 'uploadExec',
+    moduleCaption: 'Job Monitoring',
+    class: 'fa fa-upload'
+  
+  
+  },
       'pipelineexec': {
         name: 'pipeline',
         caption: 'Pipeline',

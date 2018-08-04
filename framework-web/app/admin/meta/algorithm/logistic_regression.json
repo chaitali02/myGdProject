@@ -40,9 +40,9 @@
         }
 	],
     "type": "CLASSIFICATION",
-    "library": "SPARKML",
-	"trainName": "org.apache.spark.ml.classification.LogisticRegression",
-	"modelName": "org.apache.spark.ml.classification.LogisticRegressionModel",
+    "libraryType": "SPARKML",
+	"trainClass": "org.apache.spark.ml.classification.LogisticRegression",
+	"modelClass": "org.apache.spark.ml.classification.LogisticRegressionModel",
 	"labelRequired": "Y",
 	"paramList": {
 		"ref": {
@@ -50,5 +50,31 @@
 			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80"
 		}
 	},
-  	"savePmml" : "Y"
+	 "paramListWoH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a80"
+        }
+    },
+    "paramListWH" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "ffc49c07-e7cb-40ee-8050-fc69121a189b"
+        }
+    },
+  	"savePmml" : "Y",
+	"summaryMethods" : [  
+		"summary",
+		"coefficients",
+		"getAggregationDepth",
+		"getElasticNetParam",
+		"getFamily",
+		"getMaxIter",
+		"getRegParam",
+		"getTol",
+		"intercept",
+		"interceptVector",
+		"numClasses",
+		"numFeatures"
+	    ]
 }

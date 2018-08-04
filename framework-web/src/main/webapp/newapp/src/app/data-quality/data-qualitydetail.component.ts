@@ -358,7 +358,10 @@ import {AttributeHolder} from './../metadata/domain/domain.attributeHolder'
         ver["value"]["uuid"]=response[i]['uuid']; 
         this.VersionList[i]=ver;
       }
-    }  
+    } 
+    onVersionChange(){
+      this.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label);
+    } 
     
     dagSubmit(){
       this.isSubmit="true"

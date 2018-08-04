@@ -85,6 +85,8 @@ export class ModelComponent implements OnInit {
   param: any;
   paramListInfo: any;
   modelJson: any;
+  checkboxCustom: boolean
+  scriptType: any
   // featureInterface = new FeatureInterface();
   // featureObj: FeatureInterface[];
   // newCar: any;
@@ -109,6 +111,7 @@ export class ModelComponent implements OnInit {
       { "label": "PYTHON", "value": "PYTHON" },
       { "label": "R", "value": "R" }
     ]
+    this.scriptType = "SPARK"
     this.dependsOnTypes = [
       // { 'label': 'formula', 'value': 'formula' },
       // { 'label': 'algorithm', 'value': 'algorithm' }
@@ -181,7 +184,11 @@ export class ModelComponent implements OnInit {
   public goBack() {
     this._location.back();
   }
+  changeScript() {
+    
+    this.checkboxCustom = this.type == "SPARK" ? false : true
 
+  }
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('model', this.id)
       .subscribe(
@@ -234,10 +241,8 @@ export class ModelComponent implements OnInit {
     console.log(response.customFlag);
     this.customFlag = response["customFlag"] == 'Y' ? true : false;
 
-    if (this.customFlag == true) {
-      this.getModelScript();
-    }
-    else {
+
+    if (this.model.type == "SPARK") {
       if (response.dependsOn != null) {
         let dependOnTemp: DependsOn = new DependsOn();
         dependOnTemp.label = response.dependsOn.ref.name;
@@ -247,18 +252,20 @@ export class ModelComponent implements OnInit {
 
         this.dependsType = response.dependsOn.ref.type;
         console.log(JSON.stringify(this.dependsOn));
-      
+
         if (this.dependsType == "algorithm") {
           this.getAllLatest();
         }
         else {
+          this.checkboxCustom = false
+
           this.featuresArray = response.features;
-          for(const i in response.features){
+          for (const i in response.features) {
             let value1Temp: DependsOn = new DependsOn();
             value1Temp.label = this.featuresArray[i].paramListInfo.paramName;
-            value1Temp.id =  this.featuresArray[i].paramListInfo.paramId;
-            value1Temp.uuid =  this.featuresArray[i].paramListInfo.ref.uuid;
-          this.featuresArray[i]["newCol"] = value1Temp
+            value1Temp.id = this.featuresArray[i].paramListInfo.paramId;
+            value1Temp.uuid = this.featuresArray[i].paramListInfo.ref.uuid;
+            this.featuresArray[i]["newCol"] = value1Temp
           }
 
           this.getFormulaByType2();
@@ -267,8 +274,12 @@ export class ModelComponent implements OnInit {
       }
       this.label = response.label;
       this.featuresArray = response.features;
-     
+
       console.log(JSON.stringify(response.features));
+    }
+    else {
+      this.checkboxCustom = true;
+      this.getModelScript();
     }
     console.log(response.customFlag);
   }
@@ -354,19 +365,19 @@ export class ModelComponent implements OnInit {
     for (const i in response) {
       let getParamObj = {};
       getParamObj["label"] = response[i].paramName;
-      
+
       //getParamObj["list"]["label"] = response[i].paramName;
       getParamObj["value"] = {};
       getParamObj["value"]["label"] = response[i].paramName;
       getParamObj["value"]["id"] = response[i].paramId;
       getParamObj["value"]["uuid"] = response[i].ref.uuid;
-     // getParamObj["list"]["value"]["paramId"] = response[i].paramId;
+      // getParamObj["list"]["value"]["paramId"] = response[i].paramId;
       // getParamObj["value"]["type"] = response[i].paramType;
 
       this.getParamArray[i] = getParamObj;
     }
     console.log(JSON.stringify(this.getParamArray));
-    
+
     // let value1Temp: DependsOn = new DependsOn();
     // value1Temp.label = this.featuresArray[0].paramListInfo.paramName;
     // value1Temp.uuid = this.featuresArray[0].paramListInfo.paramId;
@@ -420,7 +431,13 @@ export class ModelComponent implements OnInit {
     console.log(JSON.stringify(response));
     console.log(JSON.stringify(this.scriptCode));
   }
-
+  onVersionChange(){ 
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'model')
+    .subscribe(
+    response =>{//console.log(response)},
+      this.onSuccessgetOneByUuidAndVersion(response)},
+    error => console.log("Error :: " + error)); 
+  }
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataScience/model', uuid, version, 'false']);
   }
@@ -443,14 +460,20 @@ export class ModelComponent implements OnInit {
     this.modelJson["tags"] = tagArray;
     this.modelJson["active"] = this.model.active == true ? "Y" : "N"
     this.modelJson["published"] = this.model.published == true ? "Y" : "N"
-    
+
     this.modelJson["type"] = this.type;
     if (this.model.type == "SPARK") {
       this.customFlag = false
     }
     this.modelJson["customFlag"] = this.customFlag == true ? "Y" : "N";
-    if (this.customFlag == false) {
-     
+
+
+    if (!this.checkboxCustom) {
+      this.modelJson.type = "SPARK"
+      this.modelJson.customFlag = false
+
+
+
       let dependsOn1 = {};
       let ref = {};
       ref["type"] = this.dependsType;
@@ -495,11 +518,12 @@ export class ModelComponent implements OnInit {
       )
     }
 
-    else if (this.customFlag == true) {
+    else {
+      this.modelJson.customFlag = true
       var blob = new Blob([this.scriptCode], { type: "text/xml" });
       var fd = new FormData();
       fd.append('file', blob);
-      var filetype = this.model.type == "PYTHON" ? "py" : "R"
+      var filetype = this.scriptType == "PYTHON" ? "py" : "R"
       this._modelService.uploadFile(filetype, fd, "script").subscribe(
         response => { this.onSuccessUpload(response) },
         error => console.log("Error ::" + error)

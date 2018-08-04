@@ -71,7 +71,7 @@ public class CloneDataOperator implements IOperator {
 	}
 
 	@Override
-	public Map<String, String> create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public Map<String, String> customCreate(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		String execVersion = baseExec.getVersion();
 		Map<String, String> otherParams = execParams.getOtherParams();
 		// Set destination
@@ -296,6 +296,12 @@ public class CloneDataOperator implements IOperator {
 				SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 
 		createDataStore(exec, rsHolder.getCountRows(), tableName, locationDatapod, baseExec.getRef(MetaType.operatorExec), runMode);
+		return null;
+	}
+
+	@Override
+	public BaseExec create(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

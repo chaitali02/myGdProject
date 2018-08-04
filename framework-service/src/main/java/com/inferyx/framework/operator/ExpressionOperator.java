@@ -38,7 +38,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.parser.TaskParser;
-import com.inferyx.framework.service.ParamSetServiceImpl;
+import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 
 @Component
@@ -52,7 +52,9 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 	protected RegisterService registerService;
 	@Autowired
 	protected FormulaOperator formulaOperator;
-	@Autowired protected ParamSetServiceImpl paramSetServiceImpl;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
+	
 	private final String COMMA = ", ";
 
 	public String generateSql(List<AttributeRefHolder> filterIdentifierList,
@@ -226,9 +228,9 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
 			if (sourceAttr.getRef().getType() == MetaType.simple) {
 				operandValue.add(sourceAttr.getValue());
-			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && execParams.getParamSetHolder() != null) {
+			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getParamSetHolder() != null || execParams.getParamListHolder() != null)) {
 				String value = null;
-				value = paramSetServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				operandValue.add(value);
 			} else if (filterSource.getRef().getType() == MetaType.dataset
 					&& sourceAttr.getRef().getType() == MetaType.dataset) {
@@ -266,7 +268,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 			operandValue = metInfo.getValue();
 		} else if (metInfo.getRef().getType() == MetaType.paramlist) {
 			String value = null;
-			value = paramSetServiceImpl.getParamValue(execParams, Integer.parseInt(metInfo.getAttrId()), metInfo.getRef());
+			value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(metInfo.getAttrId()), metInfo.getRef());
 			operandValue = value;
 		} else if (metInfo.getRef().getType() == MetaType.formula) {
 			Formula formulaRef = (Formula) daoRegister
@@ -283,7 +285,7 @@ Logger logger=Logger.getLogger(ExpressionOperator.class);
 			operandValue = notMetInfo.getValue();
 		} else if (notMetInfo.getRef().getType() == MetaType.paramlist) {
 			String value = null;
-			value = paramSetServiceImpl.getParamValue(execParams, Integer.parseInt(notMetInfo.getAttrId()), notMetInfo.getRef());
+			value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(notMetInfo.getAttrId()), notMetInfo.getRef());
 			operandValue = value;
 		} else if (notMetInfo.getRef().getType() == MetaType.formula) {
 			Formula formulaRef = (Formula) daoRegister

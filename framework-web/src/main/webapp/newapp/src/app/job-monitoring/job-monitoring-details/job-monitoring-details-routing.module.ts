@@ -16,6 +16,7 @@ import { RuleExecComponent } from './ruleExec/ruleExec.component';
 import { RuleGroupExecComponent } from './ruleGroupExec/ruleGroupExec.component';
 import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
 import { DownloadExecComponent } from './downloadExec/downloadExec.component';
+import { UploadExecComponent } from './uploadExec/uploadExec.componet';
 
 DownloadExecComponent
 
@@ -37,7 +38,8 @@ const routes: Routes = [
             { path: 'ruleExec/:id/:version/:mode', component: RuleExecComponent, pathMatch: 'full' },
             { path: 'rulegroupExec/:id/:version/:mode', component: RuleGroupExecComponent, pathMatch: 'full' },
             { path: 'dagExec/:id/:version/:mode', component: PipelineExecComponent, pathMatch: 'full' },
-            { path: 'downloadExec/:id/:version/:mode', component: DownloadExecComponent, pathMatch: 'full' }
+            { path: 'downloadExec/:id/:version/:mode', component: DownloadExecComponent, pathMatch: 'full' },
+            { path: 'uploadExec/:id/:version/:mode', component: UploadExecComponent, pathMatch: 'full' }
 
             
         ]

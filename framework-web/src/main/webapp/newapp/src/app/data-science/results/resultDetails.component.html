@@ -8,7 +8,7 @@
                     <i class="fa fa-cogs"></i>{{tableHeading}}
                 </div>
                 <div class="tools">
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip ng-click="savePng($index,dagExecName)">
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="savePng()">
                     
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
@@ -30,8 +30,9 @@
                 <div class="form-body" *ngIf="!ppml">
                     <form  class="form-horizontal" name="myform">
                         <div class="form-group" >
-                            <div class="col-md-12" >
-                                <textarea  [value]="modelResult" placeholder=""  [disabled]="true"  style="min-height:150px; width:100%;"></textarea>
+                            <div class="col-md-12" style="padding: 3px 12px;background-color: #f5f5f5;border: 1px solid #ccc;
+                            border-radius: 4px; margin: -10px 10px 0px 10px; width: 98%;max-height: 400px; overflow-y: scroll">
+                            <ngx-json-viewer [json]="modelResult" [expanded]="false"></ngx-json-viewer>                            
                             </div>
                         </div>
                     </form>

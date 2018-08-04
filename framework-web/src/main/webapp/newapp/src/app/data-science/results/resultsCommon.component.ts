@@ -285,7 +285,7 @@ export class ResultsComponent {
             "functionName": "okKill()"
         }
     }
-    restart(uuid, version) {debugger
+    restart(uuid, version) {
         this.restartId = uuid
         this.restartVersion = version;
         this.isModel = "true"
@@ -332,4 +332,20 @@ export class ResultsComponent {
             this.okRestart();
         }
     }
+
+    refershGrid() {
+        this.getBaseEntityStatusByCriteria();
+        this.name = "";
+        this.status = "";
+        this.rowData1 = null;
+        this.startDate = "";
+        this.tags = "";
+        this.endDate = "";
+    }
+    refreshSearchResults() {
+        this.getBaseEntityStatusByCriteria();
+
+    }
+
+
 }
