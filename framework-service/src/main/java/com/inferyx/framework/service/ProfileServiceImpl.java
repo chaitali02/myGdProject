@@ -484,14 +484,17 @@ public class ProfileServiceImpl extends RuleTemplate {
 		// } catch (Exception e) {
 		// e.printStackTrace();
 		// }
-		try {
+		try {	
 			HashMap<String, String> otherParams = null;
-			if(execParams.getOtherParams() != null)
+			if(execParams != null) 
+			//if(execParams.getOtherParams() != null)
 				otherParams = execParams.getOtherParams();
+			
 			profileExec = (ProfileExec) parse(profileExec.getUuid(), profileExec.getVersion(), null, otherParams, null, null,
 					runMode);
 			execute(profileExec.getDependsOn().getRef().getUuid(), profileExec.getDependsOn().getRef().getVersion(),
 					profileExec, null, null, execParams, runMode);
+			
 		} catch (Exception e) {
 			synchronized (profileExec.getUuid()) {
 				try {
