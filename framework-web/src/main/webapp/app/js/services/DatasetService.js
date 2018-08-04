@@ -190,7 +190,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 			// 		data: attributes
 			// 	})
 			// }
-			MetadataDatasetFactory.findAttributesByRelation(uuid, "relation", "").then(function (response) { onSuccess(response.data) });
+			MetadataDatasetFactory.findAttributesByRelation(uuid, "dataset", "").then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
 
 

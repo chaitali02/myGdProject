@@ -4,6 +4,7 @@
 package com.inferyx.framework.operator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class MatrixMultOperator implements IOperator {
 	@Autowired
 	private MatrixToRddConverter matrixToRddConverter;
 	@Autowired
-	private SparkExecutor<?> sparkExecutor;
+	private SparkExecutor sparkExecutor;
 	
 	protected final String ADD = "ADD";
 	protected final String SUB = "SUB";
@@ -112,8 +113,8 @@ public class MatrixMultOperator implements IOperator {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		Map<String, String> otherParams = execParams.getOtherParams();
-//		ParamListHolder lhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "lhsData");
-//		ParamListHolder rhsDataInfo = paramSetServiceImpl.getParamByName(execParams, "rhsData");
+		ParamListHolder lhsKeyAttrInfo = paramSetServiceImpl.getParamByName(execParams, "lhsKeyAttr");
+		ParamListHolder rhsKeyAttrInfo = paramSetServiceImpl.getParamByName(execParams, "rhsKeyAttr");
 		ParamListHolder lhsAttrInfo = paramSetServiceImpl.getParamByName(execParams, "lhsAttrs");
 		ParamListHolder rhsAttrInfo = paramSetServiceImpl.getParamByName(execParams, "rhsAttrs");
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
@@ -135,15 +136,13 @@ public class MatrixMultOperator implements IOperator {
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locationInfo.getParamValue().getRef().getUuid(), 
 																			locationInfo.getParamValue().getRef().getVersion(), 
 																			locationInfo.getParamValue().getRef().getType().toString());
+		List<AttributeRefHolder> lhsKeyAttrList = lhsKeyAttrInfo.getAttributeInfo();
+		List<AttributeRefHolder> rhsKeyAttrList = rhsKeyAttrInfo.getAttributeInfo();
 		List<AttributeRefHolder> lhsAttrList = lhsAttrInfo.getAttributeInfo();
 		List<AttributeRefHolder> rhsAttrList = rhsAttrInfo.getAttributeInfo();
 
-		Dataset<Row> lhsDf = sparkExecutor.executeSql(generateSql(lhsTableName, lhsAttrList)).getDataFrame();
-//		lhsDf = lhsDf.filter("val is not null");
-//		lhsDf.show(false);
-		Dataset<Row> rhsDf = sparkExecutor.executeSql(generateSql(rhsTableName, rhsAttrList)).getDataFrame();
-//		rhsDf = rhsDf.filter("val is not null");
-//		rhsDf.show(false);
+		Dataset<Row> lhsDf = exec.executeSql(generateSql(lhsTableName, lhsKeyAttrList, lhsAttrList)).getDataFrame();
+		Dataset<Row> rhsDf = exec.executeSql(generateSql(rhsTableName, rhsKeyAttrList, rhsAttrList)).getDataFrame();
 		JavaRDD<MatrixEntry> lhsMatrixEntry = lhsDf.toJavaRDD().map(data -> {
 			return new MatrixEntry(new Long(data.get(0) + ""), new Long(data.get(1) + ""), data.getDouble(2));
 		});
@@ -243,11 +242,20 @@ public class MatrixMultOperator implements IOperator {
 	 * @param attrList
 	 * @return
 	 */
-	private String generateSql(String tableName, List<AttributeRefHolder> attrList) {
+	private String generateSql(String tableName, List<AttributeRefHolder> keyAttrList, List<AttributeRefHolder> attrList) {
+		String keyAttrs = "";
+		for (int count = 0; count < keyAttrList.size(); count++) {
+			keyAttrs = keyAttrs.concat(keyAttrList.get(count).getAttrName());
+			if (count < (keyAttrList.size() - 1)) {
+				keyAttrs = keyAttrs.concat(ConstantsUtil.COMMA);
+			}
+		}
 		StringBuilder sb = new StringBuilder(
-				" select floor((row_number() over (PARTITION BY 1 ORDER BY 1))/3-0.000000001) as rn, ((row_number() over (PARTITION BY 1 ORDER BY 1))%3) as colnum, exp.val from ")
-						.append(tableName).append(" matatab lateral view explode(ARRAY(");
-//		AttributeRefHolder attrRefHolder = null;
+				" select floor((row_number() over (PARTITION BY 1 ORDER BY ");
+				sb.append(keyAttrs).append(ConstantsUtil.COMMA).append("seq))/3-0.000000001) as rn, seq, val ")
+				  		.append(keyAttrs).append(" from ")
+						.append(tableName).append(" SELECT ")
+						.append(keyAttrs).append(" ARRAY(");
 		for (int count = 0; count < attrList.size(); count++) {
 			sb.append("cast(matatab").append(ConstantsUtil.DOT).append(attrList.get(count).getAttrName())
 					.append(" as double)");
@@ -255,7 +263,10 @@ public class MatrixMultOperator implements IOperator {
 				sb.append(ConstantsUtil.COMMA);
 			}
 		}
-		sb.append(")) exp as val order by rn, colnum");
+		sb.append(") as arr_r from ")
+		.append(tableName)
+		.append(" matatab order by 1) exp lateral view posexplode(exp.arr_r) rec as seq, val order by ")
+		.append(keyAttrs).append(", seq");
 		return sb.toString();
 	}
 
