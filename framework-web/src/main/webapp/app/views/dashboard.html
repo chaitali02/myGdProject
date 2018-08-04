@@ -1,65 +1,72 @@
-
 <div ng-controller="MetadataDashboardController2">
   <!-- BEGIN PAGE HEADER-->
   <div class="page-bar">
-      <ul class="page-breadcrumb">
-          <li>
-              <a ui-sref="home">Home</a>
-              <i class="fa fa-circle"></i>
-          </li>
-          <li>
-              <a  ui-sref="metadata({type:'dashboard'})">{{$state.current.data.pageTitle}}</a>
-               <i class="fa fa-circle"></i>
-          </li>
+    <ul class="page-breadcrumb">
+      <li>
+        <a ui-sref="home">Home</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a ui-sref="metadata({type:'dashboard'})">{{$state.current.data.pageTitle}}</a>
+        <i class="fa fa-circle"></i>
+      </li>
 
-          <li>
-          <a  ui-sref="metadata({type:'dashboard'})">Dashboard</a>
-               <i class="fa fa-circle"></i>
-          </li>
-          <li>
-           <span>{{dashboarddata.name | strReplace:'_':' '|capitalize}}</span>
-          </li>
-      </ul>
-      <div class="page-toolbar">
-        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
-          <i class="icon-calendar"></i>&nbsp;
-          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
-        </div>
+      <li>
+        <a ui-sref="metadata({type:'dashboard'})">Dashboard</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <span>{{dashboarddata.name | strReplace:'_':' '|capitalize}}</span>
+      </li>
+    </ul>
+    <div class="page-toolbar">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <i class="icon-calendar"></i>&nbsp;
+        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
       </div>
-  </div><!-- END PAGE HEADER-->
+    </div>
+  </div>
+  <!-- END PAGE HEADER-->
   <br>
-   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-   <div  options="dirOptions" type="'dashboard'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dashboarddata" comment-panel-directive></div>
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <div options="dirOptions" type="'dashboard'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dashboarddata"
+    comment-panel-directive></div>
 
   <!-- BEGIN MAIN CONTENT -->
-  <div class="row" >
+  <div class="row">
     <div class="col-md-12">
       <!-- BEGIN: ACCORDION DEMO -->
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{dashboarddata.name  | strReplace:'_':' '|capitalize}}
+            <i class="fa fa-gift"></i>{{dashboarddata.name | strReplace:'_':' '|capitalize}}
           </div>
 
           <div class="tools">
-            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showdashboard==true && isEdit==true)? 'currentpage':'notcurrentpage'"  data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(dashboarddata.uuid,dashboarddata.version)" ng-hide="isAdd" style="height:16px;">
+            <a title="Edit" ng-disabled="isPrivlage" ng-class="(showdashboard==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(dashboarddata.uuid,dashboarddata.version)"
+              ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-               <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-click="showview(dashboarddata.uuid,dashboarddata.version)" ng-hide="isAdd" style="height:16px;">
-                   <span class="glyphicon glyphicon-file" style="color:white;"></span>
-               </a>
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==false)? 'currentpage':'notcurrentpage'" data-ng-click="showDashboardGraph(dashboarddata.uuid,dashboarddata.version)" style="height:14px;">
+            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==true && isEdit==false)? 'currentpage':'notcurrentpage'"
+              ng-click="showview(dashboarddata.uuid,dashboarddata.version)" ng-hide="isAdd" style="height:16px;">
+              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            </a>
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==false)? 'currentpage':'notcurrentpage'"
+              data-ng-click="showDashboardGraph(dashboarddata.uuid,dashboarddata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
 
-            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" class="" ng-click="broadcastRefreshData()" style="height:14px;"> 
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" class="" ng-click="broadcastRefreshData()"
+              style="height:14px;">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
 
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="dashboard"  class="" style="height:14px;">
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="dashboard" class="" style="height:14px;">
               <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
-          
-            </a><!-- metadata({type:'dashboard'}) -->
+
+            </a>
+            <!-- metadata({type:'dashboard'}) -->
           </div>
         </div>
 
@@ -77,28 +84,29 @@
           </div>
 
           <div class="form-body" data-ng-show="showdashboard" style="{{pageNo==1 ?'padding-top:50px;':''}}">
-            <!-- <form class="form-horizontal" name="myform" ng-submit="submitDashboard()"> -->
-              <div ng-show="!pageNo || pageNo==1">
-                <form class="form-horizontal" name="myform1" ng-submit="nextPage()" novalidate="novalidate" prevent-enter-submit>
+             <div ng-show="!pageNo || pageNo==1">
+              <form class="form-horizontal" name="myform1" ng-submit="nextPage()" novalidate="novalidate" prevent-enter-submit>
                 <div class="form-group" ng-show="dashboarddata.uuid">
                   <label class="col-md-3 control-label">UUID</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" data-ng-disabled="true"ng-model="dashboarddata.uuid">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="dashboarddata.uuid">
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-md-3 control-label">Name
-                   <span class="required" aria-required="true"> * </span></label>
+                    <span class="required" aria-required="true"> * </span>
                   </label>
-                    <div class="col-md-6">
-                      <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="dashboarddata.name" required>
-                    </div>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="dashboarddata.name" required>
+                  </div>
                 </div>
 
                 <div class="form-group" ng-show="dashboarddata.uuid">
                   <label class="col-md-3 control-label">Version</label>
                   <div class="col-md-6">
-                    <select class="form-control" select2 ng-disabled="{{isversionEnable}}" ng-change="selectVersion()" data-ng-model="dashboard.defaultVersion.version" ng-options="c.version as c.version for c in dashboard.versions">
+                    <select class="form-control" select2 ng-disabled="{{isversionEnable}}" ng-change="selectVersion()" data-ng-model="dashboard.defaultVersion.version"
+                      ng-options="c.version as c.version for c in dashboard.versions">
                     </select>
                   </div>
                 </div>
@@ -117,73 +125,77 @@
                   </div>
                 </div>
                 <div class="form-group taginput">
-                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <!-- <tags-input  ng-model="tags"  ng-disabled="{{mode}}" min-length="0"></tags-input> -->
-                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                          max-results-to-show="10">
+                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                      add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
                       </auto-complete>
-                  </tags-input>
+                    </tags-input>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                   <div class="col-md-6">
-                    <!-- <input type="text" ng-model="dashboarddata.desc" class="form-control" ng-disabled="{{mode}}"> -->
-                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="dashboarddata.desc" rows="2"  style="resize:none;"></textarea>
-
+                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="dashboarddata.desc" rows="2" style="resize:none;"></textarea>
                   </div>
                 </div>
                 <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Depends On
-                        <span class="required" aria-required="true"> * </span>
-                      </label>
-                    <div class="col-md-2 col-sm-2 col-xs-12">
-                        <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectDependsOnType" ng-options="r for r in dependsOnTypes" ng-change="selectType()" required>
-                        </select>
-                    </div>
-                         <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
-                            <span class="required" aria-required="true"> * </span>
-                        </label>
-                    <div class="col-md-3 col-sm-3 col-xs-12">
-                        <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="selectDependsOnOption()" data-ng-model="alldependsOn.defaultoption"
-                        ng-options="r as r.name for r in alldependsOn.options  track by r.uuid ">
-                        </select>
-                    </div>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Depends On
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectDependsOnType" ng-options="r for r in dependsOnTypes"
+                      ng-change="selectType()" required>
+                    </select>
+                  </div>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-3 col-sm-3 col-xs-12">
+                    <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="selectDependsOnOption()" data-ng-model="alldependsOn.defaultoption"
+                      ng-options="r as r.name for r in alldependsOn.options  track by r.uuid ">
+                    </select>
+                  </div>
                 </div>
                 <div class="form-group">
-                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Filter
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Filter
 
-                          </label>
-                    <div class="col-md-6">
-                      <tags-input  class="tag-scroll" ng-model="filterAttributeTags"  ng-disabled="{{mode}}"  display-property="dname"  key-property="id"add-from-autocomplete-only="true" ng-focus="onTagFocuse()" >
-                          <auto-complete source="loadProfiles($query)" min-length="1"
-                          debounce-delay="0" highlight-matched-text="true" load-on-focus="true" load-on-empty="true">
-                          </auto-complete>
-                      </tags-input>
-                    </div>
-
-                                  <div class="col-md-1">
-                      <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                  </label>
+                  <div class="col-md-6">
+                    <tags-input class="tag-scroll" ng-model="filterAttributeTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
+                      add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
+                      <auto-complete source="loadProfiles($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
+                        load-on-empty="true">
+                      </auto-complete>
+                    </tags-input>
                   </div>
 
-                              </div>
+                  <div class="col-md-1">
+                    <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
+                      aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                  </div>
+
+                </div>
                 <div class="form-group">
-  			   			  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-  			   			  <div class="col-md-6 col-sm-6 col-xs-12">
-  			   			    <div class="btn-group" ng-init="dashboarddata.active='Y'">
-  			        		  <label class="btn btn-default" ng-model="dashboarddata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>Yes</label>
-  			        		  <label class="btn btn-default" ng-model="dashboarddata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>No</label>
-  						      </div>
-  			    		  </div>
-  			        </div>
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="dashboarddata.active='Y'">
+                      <label class="btn btn-default" ng-model="dashboarddata.active" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="dashboarddata.active" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="dashboarddata.published='N'">
-                      <label class="btn btn-default" ng-model="dashboarddata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="dashboarddata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false" uncheckable>No</label>
+                      <label class="btn btn-default" ng-model="dashboarddata.published" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="dashboarddata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                        uncheckable>No</label>
                     </div>
                   </div>
                 </div>
@@ -191,19 +203,21 @@
                 <div class="row" ng-if="pageNo==1">
                   <label class="control-label col-xs-3"></label>
                   <div class="col-xs-4">
-                <button class="btn btn-outline green button-next" type="submit"> Continue
-                <i class="fa fa-angle-right"></i>
-                </button>
+                    <button class="btn btn-outline green button-next" type="submit"> Continue
+                      <i class="fa fa-angle-right"></i>
+                    </button>
+                  </div>
                 </div>
-              </div>
               </form>
-              </div>
+            </div>
 
-              <form class="form-horizontal" name="myform2" ng-submit="submitDashboard()">
+            <form class="form-horizontal" name="myform2" ng-submit="submitDashboard()">
               <div ng-show="false">
                 <div class="row">
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <h4><strong>Section Details</strong></h4>
+                    <h4>
+                      <strong>Section Details</strong>
+                    </h4>
                   </div>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="x_title">
@@ -216,10 +230,13 @@
                 <br/>
 
                 <div>
-                  <table  class=" row-border hover table  table-striped table-bordered">
+                  <table class=" row-border hover table  table-striped table-bordered">
                     <thead>
                       <tr>
-                        <th style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallsection" ng-change="selectAllRow()"/></th>
+                        <th style="text-align: center; Vertical-align: middle;width:5%;">
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallsection"
+                            ng-change="selectAllRow()" />
+                        </th>
                         <!-- <th style="width:6%;text-align:center">Id</th> -->
                         <th style="width:45%;" class="text-center">Name</th>
                         <th style="width:45%;" class="text-center">Vizpod</th>
@@ -234,17 +251,18 @@
                     </thead>
                     <tbody ui-sortable="sortableOptions" ng-model="sectiontable">
                       <tr ng-repeat="tabledata in sectiontable">
-                        <td style="text-align: center; Vertical-align: middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}"/>
+                        <td style="text-align: center; Vertical-align: middle;width:5%;">
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}"
+                          />
                         </td>
                         <!-- <td >
                           <input type="text" ng-model="tabledata.sectionId" ng-disabled="true"class="form-control">
                         </td> -->
                         <td style="width:45%;" class="text-center">
-                          <input type="text" ng-model="tabledata.name" ng-disabled="{{mode}}"class="form-control">
+                          <input type="text" ng-model="tabledata.name" ng-disabled="{{mode}}" class="form-control">
                         </td>
                         <td style="width:45%;" class="text-center">
-                          <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="tabledata.vizpod"
-                            ng-options="r as r.name for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid ">
+                          <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="tabledata.vizpod" ng-options="r as r.name for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid ">
                           </select>
                         </td>
                         <!-- <td>
@@ -264,91 +282,117 @@
 
 
               <div class="row" ng-show="false" style="background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');padding:10px 0 10px 0;">
-                <div class="col-xs-12 sectionRow" style="padding: 10px;" ng-repeat="row in sectionRows" ui-sortable="sortableOptions" ng-model="row.columns" jqyoui-droppable="{'onDrop':'onDropKey($index)'}" data-drop="true">
+                <div class="col-xs-12 sectionRow" style="padding: 10px;" ng-repeat="row in sectionRows" ui-sortable="sortableOptions" ng-model="row.columns"
+                  jqyoui-droppable="{'onDrop':'onDropKey($index)'}" data-drop="true">
                   <div class="col-xs-12 text-center" ng-if="row.columns.length == 0" style="{{row.columns.length == 0 ? 'min-height:150px;background-color:pink;opacity:0.6;': ''}}">
                     <span>Empty Row</span>
                   </div>
-                  <div  class="col-xs-{{row.columns.length < 3 ? 12/(row.columns.length) : '4'}} sectionColumn" ng-repeat="column in row.columns" ng-model="row.columns" data-drag="true" jqyoui-draggable="{index:$index,animate:false}" data-jqyoui-options="{revert: 'invalid'}">
+                  <div class="col-xs-{{row.columns.length < 3 ? 12/(row.columns.length) : '4'}} sectionColumn" ng-repeat="column in row.columns"
+                    ng-model="row.columns" data-drag="true" jqyoui-draggable="{index:$index,animate:false}" data-jqyoui-options="{revert: 'invalid'}">
                     <!-- <div style="background-color:#EEE;height:150px;border:1px solid #000;padding:5px;" > -->
                     <div class="cardshadow" style="background-color:#fcfcfc;padding:5px;margin-bottom:0px;">
                       <!-- {{column.name}} -->
-                        <div>
-                          <a style="margin-left:5px;" ng-click="removeSectionColumn(row.columns,$index)" class="pull-right btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
-                          <a ng-if="!column.edit" ng-click="column.edit = true;" class="pull-right btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
-                          <a ng-if="column.edit" ng-click="column.edit = false;" class="pull-right btn btn-xs btn-success"><i class="fa fa-check"></i></a>
+                      <div>
+                        <a style="margin-left:5px;" ng-click="removeSectionColumn(row.columns,$index)" class="pull-right btn btn-xs btn-danger">
+                          <i class="fa fa-trash"></i>
+                        </a>
+                        <a ng-if="!column.edit" ng-click="column.edit = true;" class="pull-right btn btn-xs btn-warning">
+                          <i class="fa fa-edit"></i>
+                        </a>
+                        <a ng-if="column.edit" ng-click="column.edit = false;" class="pull-right btn btn-xs btn-success">
+                          <i class="fa fa-check"></i>
+                        </a>
+                      </div>
+                      <div class="row" style="margin-top:28px;">
+                        <div class="col-md-12" ng-if="column.edit">
+                          <input type="text" ng-model="column.name" ng-disabled="{{mode}}" class="form-control" placeholder="Name">
+                          <br>
+                          <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="column.vizpod" ng-options="r as r.name for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid ">
+                            <option value="">--Select Vizpod--</option>
+                          </select>
                         </div>
-                        <div class="row" style="margin-top:28px;" >
-                          <div class="col-md-12" ng-if="column.edit">
-                            <input type="text" ng-model="column.name" ng-disabled="{{mode}}"class="form-control" placeholder="Name"><br>
-                            <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="column.vizpod"
-                              ng-options="r as r.name for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid ">
-                              <option value="">--Select Vizpod--</option>
-                            </select>
+                        <div class="col-md-12 text-center" ng-if="!column.edit" style="height:100%">
+                          <div class="">
+                            <img ng-src="assets/layouts/layout/img/{{icons[column.vizpod.uuid] || 'area-chart'}}.svg" alt="" style="width: 100%;height: 100%;max-width: 75px;max-height: 75px;">
                           </div>
-                          <div class="col-md-12 text-center" ng-if="!column.edit" style="height:100%">
-                            <div class="">
-                              <img ng-src="assets/layouts/layout/img/{{icons[column.vizpod.uuid] || 'area-chart'}}.svg" alt="" style="width: 100%;height: 100%;max-width: 75px;max-height: 75px;">
-                            </div>
-                            <div class="">
-                              <label>{{column.name}}</label>
-                            </div>
+                          <div class="">
+                            <label>{{column.name}}</label>
                           </div>
                         </div>
+                      </div>
                     </div>
                   </div>
 
-                  <a ng-if="row.columns.length < 3" ng-click="addSectionColumn(row)" class="pull-right addSectionColumn"><i class="fa fa-plus-circle"></i></a>
+                  <a ng-if="row.columns.length < 3" ng-click="addSectionColumn(row)" class="pull-right addSectionColumn">
+                    <i class="fa fa-plus-circle"></i>
+                  </a>
 
                   <div class="col-md-12 addSectionRow" style="left: calc(50% - 20px);">
-                    <a ng-click="addSectionRow($index)" style="color:gray;"><i class="fa fa-plus-circle"></i></a>
+                    <a ng-click="addSectionRow($index)" style="color:gray;">
+                      <i class="fa fa-plus-circle"></i>
+                    </a>
                   </div>
                 </div>
               </div>
 
               <div class="row" ng-show="pageNo==2" style="background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');padding:10px 0 10px 0;">
                 <!-- <div class="col-xs-12 sectionRow" style="padding: 10px;" ng-repeat="row in sectionRows" dnd-list="row.columns" dnd-horizontal-list="true"> -->
-                <div class="col-xs-12 sectionRow" id="sectionRowNo_{{$index}}" style="padding: 10px;" ng-repeat="row in sectionRows" dnd-list="row.columns" dnd-horizontal-list="true" dnd-dragover="dragoverCallback(index, external, type, $index, row)">
+                <div class="col-xs-12 sectionRow" id="sectionRowNo_{{$index}}" style="padding: 10px;" ng-repeat="row in sectionRows" dnd-list="row.columns"
+                  dnd-horizontal-list="true" dnd-dragover="dragoverCallback(index, external, type, $index, row)">
                   <div class="" ng-if="row.columns.length == 0" style="{{row.columns.length == 0 ? 'min-height:150px;background-color:pink;opacity:0.6;': ''}}">
                     <div class="text-center" style="padding: 20px;">
                       <div>
-                        <a style="margin-left:5px;" ng-click="sectionRows.splice($index,1)" class="pull-right btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
+                        <a style="margin-left:5px;" ng-click="sectionRows.splice($index,1)" class="pull-right btn btn-xs btn-danger">
+                          <i class="fa fa-trash"></i>
+                        </a>
                       </div>
                       <span>Empty Row</span>
                     </div>
                   </div>
-                  <div class="col-xs-{{getColWidth(row)}} sectionColumn" ng-repeat="column in row.columns" dnd-draggable="column" dnd-moved="row.columns.splice($index, 1)" dnd-effect-allowed="['move']" dnd-dragstart="onDragStart(column)" dnd-dragend="onDragStop(column,row)">
+                  <div class="col-xs-{{getColWidth(row)}} sectionColumn" ng-repeat="column in row.columns" dnd-draggable="column" dnd-moved="row.columns.splice($index, 1)"
+                    dnd-effect-allowed="['move']" dnd-dragstart="onDragStart(column)" dnd-dragend="onDragStop(column,row)">
                     <!-- <div style="background-color:#EEE;height:150px;border:1px solid #000;padding:5px;" > -->
                     <div class="cardshadow" style="background-color:#fcfcfc;padding:5px;margin-bottom:0px;">
                       <!-- {{column.name}} -->
-                        <div>
-                          <a style="margin-left:5px;" ng-click="removeSectionColumn(row.columns,$index)" class="pull-right btn btn-xs btn-danger"><i class="fa fa-trash"></i></a>
-                          <a ng-if="!column.edit" ng-click="column.edit = true;" class="pull-right btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
-                          <a ng-if="column.edit" ng-click="column.edit = false;" class="pull-right btn btn-xs btn-success"><i class="fa fa-check"></i></a>
+                      <div>
+                        <a style="margin-left:5px;" ng-click="removeSectionColumn(row.columns,$index)" class="pull-right btn btn-xs btn-danger">
+                          <i class="fa fa-trash"></i>
+                        </a>
+                        <a ng-if="!column.edit" ng-click="column.edit = true;" class="pull-right btn btn-xs btn-warning">
+                          <i class="fa fa-edit"></i>
+                        </a>
+                        <a ng-if="column.edit" ng-click="column.edit = false;" class="pull-right btn btn-xs btn-success">
+                          <i class="fa fa-check"></i>
+                        </a>
+                      </div>
+                      <div class="row" style="margin-top:28px;">
+                        <div class="col-md-12" ng-if="column.edit">
+                          <input type="text" ng-model="column.name" ng-disabled="{{mode}}" class="form-control" placeholder="Name">
+                          <br>
+                          <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="column.vizpod" ng-options="r as r.name for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid ">
+                            <option value="">--Select Vizpod--</option>
+                          </select>
                         </div>
-                        <div class="row" style="margin-top:28px;" >
-                          <div class="col-md-12" ng-if="column.edit">
-                            <input type="text" ng-model="column.name" ng-disabled="{{mode}}"class="form-control" placeholder="Name"><br>
-                            <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="column.vizpod"
-                              ng-options="r as r.name for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid ">
-                              <option value="">--Select Vizpod--</option>
-                            </select>
+                        <div class="col-md-12 text-center" ng-if="!column.edit" style="height:100%">
+                          <div class="">
+                            <img ng-src="assets/layouts/layout/img/{{icons[column.vizpod.uuid] || 'area-chart'}}.svg" alt="" style="width: 100%;height: 100%;max-width: 75px;max-height: 75px;">
                           </div>
-                          <div class="col-md-12 text-center" ng-if="!column.edit" style="height:100%">
-                            <div class="">
-                              <img ng-src="assets/layouts/layout/img/{{icons[column.vizpod.uuid] || 'area-chart'}}.svg" alt="" style="width: 100%;height: 100%;max-width: 75px;max-height: 75px;">
-                            </div>
-                            <div class="">
-                              <label>{{column.name}}</label>
-                            </div>
+                          <div class="">
+                            <label>{{column.name}}</label>
                           </div>
                         </div>
+                      </div>
                     </div>
                   </div>
 
-                  <a ng-if="row.columns.length < 3" ng-click="addSectionColumn(row)" class="pull-right addSectionColumn"><i class="fa fa-plus-circle"></i></a>
+                  <a ng-if="row.columns.length < 3" ng-click="addSectionColumn(row)" class="pull-right addSectionColumn">
+                    <i class="fa fa-plus-circle"></i>
+                  </a>
 
                   <div class="col-md-12 addSectionRow" style="left: calc(50% - 20px);">
-                    <a ng-click="addSectionRow($index)" style="color:gray;"><i class="fa fa-plus-circle"></i></a>
+                    <a ng-click="addSectionRow($index)" style="color:gray;">
+                      <i class="fa fa-plus-circle"></i>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -365,20 +409,20 @@
               <div class="form-group">
                 <hr>
                 <div class="row" ng-if="pageNo==2">
-                    <label class="control-label col-xs-3"></label>
-                    <div class="col-xs-4">
-                        <a href="javascript:;" class="btn default button-previous" ng-click="prevPage()" ng-disabled="pageNo < 2">
-                            <i class="fa fa-angle-left"></i> Back </a>
+                  <label class="control-label col-xs-3"></label>
+                  <div class="col-xs-4">
+                    <a href="javascript:;" class="btn default button-previous" ng-click="prevPage()" ng-disabled="pageNo < 2">
+                      <i class="fa fa-angle-left"></i> Back </a>
 
-                        <!-- <a  ng-show="pageNo==2" ui-sref="dashboard2" class="btn btn-primary">Cancel</a> -->
-                          <input  type="submit" class="btn btn-success" value="Submit"  name="submit">
-                         <span  ng-show="pageNo==2" class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;"  ng-if="dataLoading">
-                            <div class="bounce1"></div>
-                            <div class="bounce2"></div>
-                            <div class="bounce3"></div>
-                            <!-- <img src="lib/images/lodingsquare.gif"  style="padding-left:15px;font-size:23px;vertical-align:middle;"></img> -->
-                          </span>
-                    </div>
+                    <!-- <a  ng-show="pageNo==2" ui-sref="dashboard2" class="btn btn-primary">Cancel</a> -->
+                    <input type="submit" class="btn btn-success" value="Submit" name="submit">
+                    <span ng-show="pageNo==2" class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                      <!-- <img src="lib/images/lodingsquare.gif"  style="padding-left:15px;font-size:23px;vertical-align:middle;"></img> -->
+                    </span>
+                  </div>
                 </div>
 
               </div>
@@ -401,5 +445,6 @@
         </div>
       </div>
     </div>
-  </div><!-- END MAIN CONTENT -->
+  </div>
+  <!-- END MAIN CONTENT -->
 </div>
