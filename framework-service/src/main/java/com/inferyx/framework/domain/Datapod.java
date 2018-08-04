@@ -70,6 +70,7 @@ public class Datapod extends BaseEntity {
 
 	public String sql(Integer attributeId) {
 		Attribute attr = getAttribute(attributeId);
-		return String.format("%s.%s", getName(), attr.getName());
+		return  attr.getName();
+		//return String.format("%s.%s", getName(), attr.getName());
 	}
 }

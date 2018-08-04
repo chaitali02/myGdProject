@@ -204,6 +204,7 @@
                           />
                         </span>
                       </th>
+                      <th style="text-align: center;width:20%;">Type</th>
                       <th style="text-align: center;width:50%;">Join</th>
                       <th style="text-align: center;">Join Type</th>
                       <th style="width:5%;">
@@ -220,11 +221,24 @@
                           <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
                         </span>
                       </td>
+                      <td style="text-align: center; Vertical-align: middle;width:5%;">
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <select class="form-control" ng-disabled="{{mode}}" ng-change="onChangeJoinMetaType(data.joinMetaType,$index)" data-ng-model="data.joinMetaType" ng-options="r for r in SourceTypes"
+                          required=""></select>
+                        </span>
+                      </td>
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select select2 ng-model="data.join" ng-options=" x  as x.name for x in alljoindatapod    track by x.uuid" ng-disabled="{{mode}}"
-                            class="form-control" ng-change="joinChange(data.join,$index)"  required disable-validation-message="">
-                          </select>
+                          <div ng-if="data.joinMetaType =='datapod'" ng-init="onChangeJoinMetaType(data.joinMetaType,$index)">
+                            <select select2 ng-model="data.join" ng-options=" x  as x.name for x in alljoindatapod    track by x.uuid" ng-disabled="{{mode}}"
+                              class="form-control" ng-change="joinChange(data.join,$index,data.joinMetaType)"  required disable-validation-message="">
+                            </select>
+                          </div>
+                          <div ng-if="data.joinMetaType =='dataset'" ng-init="onChangeJoinMetaType(data.joinMetaType,$index)">
+                            <select select2 ng-model="data.join" ng-options=" x  as x.name for x in alljoindataset   track by x.uuid" ng-disabled="{{mode}}"
+                              class="form-control" ng-change="joinChange(data.join,$index,data.joinMetaType)"  required disable-validation-message="">
+                            </select>
+                          </div>
                           <!-- <input type="hidden" name="join" ng-model="alldatapod.defaultoption.uuid" required> -->
                         </span>
                       </td>
@@ -241,7 +255,7 @@
                       </td>
                     </tr>
                     <tr ng-repeat-end ng-show="expanded">
-                      <td colspan="3" style="padding: 0px 17px;">
+                      <td colspan="4" style="padding: 0px 17px;">
                         <div class="x_title" style="padding:10px;">
                           <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeJoinSubRow($index)" ng-disabled="{{mode}} || data.isjoinDisable"></button>
                           <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addJoinSubRow($index)" ng-disabled="{{mode}} || data.isjoinDisable"></button>

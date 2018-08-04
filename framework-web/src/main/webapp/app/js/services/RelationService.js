@@ -165,6 +165,7 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 					
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
@@ -208,6 +209,7 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
@@ -230,6 +232,7 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
@@ -412,8 +415,10 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 				var ref = {};
 				ref.name = response.relationInfo[i].join.ref.name;
 				ref.uuid = response.relationInfo[i].join.ref.uuid;
+				ref.type = response.relationInfo[i].join.ref.type;
 				relationInfo.join = ref;
 				relationInfo.isjoinDisable = false;
+				relationInfo.joinMetaType=response.relationInfo[i].join.ref.type;
 				// joinarray.push(ref);
 				//relationInfo.joinarray=joinarray;
 				var joinKeyArray = [];
@@ -425,11 +430,13 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 						joinjson.logicalOperator = response.relationInfo[i].joinKey[l].logicalOperator
 						joinjson.relationOperator = response.relationInfo[i].joinKey[l].operator
 						lhsoperand.uuid = response.relationInfo[i].joinKey[l].operand[0].ref.uuid;
+						lhsoperand.type = response.relationInfo[i].joinKey[l].operand[0].ref.type;
 						lhsoperand.name = response.relationInfo[i].joinKey[l].operand[0].ref.name;
 						lhsoperand.attributeId = response.relationInfo[i].joinKey[l].operand[0].attributeId;
 						lhsoperand.attrType = response.relationInfo[i].joinKey[l].operand[0].attributeType;
 						lhsoperand.attributeName = response.relationInfo[i].joinKey[l].operand[0].attributeName;
 						rhsoperand.uuid = response.relationInfo[i].joinKey[l].operand[1].ref.uuid;
+						rhsoperand.type = response.relationInfo[i].joinKey[l].operand[1].ref.type;
 						rhsoperand.name = response.relationInfo[i].joinKey[l].operand[1].ref.name;
 						rhsoperand.attributeId = response.relationInfo[i].joinKey[l].operand[1].attributeId;
 						rhsoperand.attrType = response.relationInfo[i].joinKey[l].operand[1].attributeType;
