@@ -9,6 +9,7 @@ import { Sidebar } from './sidebar';
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {
+  
   toggle: boolean;
   _MetaArray: Sidebar[];
   selectedItemId:any;
@@ -19,6 +20,10 @@ export class SidebarComponent {
     id:any;
     subMenu: any[];
   }
+  DataReconMenu:{
+    id:any;
+    subMenu: any[];
+  } 
   DataScienceMenu: {
     id:any;
     subMenu: any[];
@@ -80,6 +85,7 @@ export class SidebarComponent {
       }
       ]
     };
+    
     this.DataQualityMenu = {
       id:2,
       subMenu: [{
@@ -169,7 +175,22 @@ export class SidebarComponent {
       }
       ]
     };
-    
+    this.DataReconMenu={
+      id:11,
+      subMenu: [{
+        name: "Rule",
+        type: "recon"
+      },
+      {
+        name: "Rule Group",
+        type: "recongroup"
+      },
+      {
+        name: "Rule Results",
+        type: "reconexec"
+      }
+      ]
+    }
   }
   ngOnInit(): void {
     this.getAll();
