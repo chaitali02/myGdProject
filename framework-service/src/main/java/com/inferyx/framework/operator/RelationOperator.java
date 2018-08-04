@@ -176,17 +176,42 @@ public class RelationOperator {
 					builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams));
 				}
 			} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset) {
-				rightDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
-																		, rightDsVersion
-																		, relInfoList.get(i).getJoin().getRef().getType().toString());
-				builder.append(joinType + " JOIN ").append(" (").append(datasetOperator.generateSql(rightDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ");
-				if (datapodTracker.get(rightDataset.getUuid()) <= 1) {
-					builder.append(rightDataset.getName());
-				} else {
-					builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
-				}
-				if (joinKey != null && joinKey.size() > 0) {
-					builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams));
+				MetaIdentifier joinMI = relInfoList.get(i).getJoin().getRef();
+				if(joinMI.getType().equals(MetaType.dataset)) {
+					rightDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
+																			, rightDsVersion
+																			, relInfoList.get(i).getJoin().getRef().getType().toString());
+					builder.append(joinType + " JOIN ").append(" (").append(datasetOperator.generateSql(rightDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ");
+					if (datapodTracker.get(rightDataset.getUuid()) <= 1) {
+						builder.append(rightDataset.getName());
+					} else {
+						builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
+					}
+					if (joinKey != null && joinKey.size() > 0) {
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams));
+					}
+				} else if(joinMI.getType().equals(MetaType.datapod)) {
+					datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
+							, rightDsVersion
+							, relInfoList.get(i).getJoin().getRef().getType().toString());
+					if(StringUtils.isNotBlank(rightTable)) {
+						builder.append(joinType + " JOIN ").append(" ").append(rightTable).append("  ");
+						if (datapodTracker.get(datapod.getUuid()) <= 1) {
+							builder.append(datapod.getName());
+						} else {
+							builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
+						}
+						if (joinKey != null && joinKey.size() > 0) {
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams));
+						}
+					} else {
+						builder.append(joinType + " JOIN ").append(" ");
+						builder.append(dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode)).append(" ").append(datapod.getName()).append(" ");
+
+						if (joinKey != null && joinKey.size() > 0) {
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams));
+						}
+					}
 				}
 			}
 			datapod = null;
