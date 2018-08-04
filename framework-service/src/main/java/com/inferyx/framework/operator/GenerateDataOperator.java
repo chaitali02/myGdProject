@@ -33,7 +33,9 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -59,6 +61,8 @@ public class GenerateDataOperator implements IOperator {
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	private RandomDistributionFactory randomDistributionFactory;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 	
 	static final Logger logger = Logger.getLogger(GenerateDataOperator.class);
 
@@ -178,7 +182,16 @@ public class GenerateDataOperator implements IOperator {
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		
 		List<Attribute> attributes = locationDatapod.getAttributes();
-		ResultSetHolder resultSetHolder = exec.createRegisterAndPersist(rowObjList, attributes, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		//ResultSetHolder resultSetHolder = exec.createRegisterAndPersist(rowObjList, attributes, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		ResultSetHolder rsHolder = exec.create(rowObjList, attributes, tableName, commonServiceImpl.getApp().getUuid());
+		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
+			rsHolder = exec.registerAndPersist(rsHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+		} else {
+			rsHolder = sparkExecutor.persistDataframe(rsHolder, datasource, locationDatapod);
+		}
 		rowObjList = null;
 //		exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
 		
@@ -191,7 +204,7 @@ public class GenerateDataOperator implements IOperator {
 		dataStoreServiceImpl.create(getFilePath(locationDatapod, execVersion), getFileName(locationDatapod, execVersion), 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
-				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null, null);
+				appInfo, createdBy, SaveMode.Append.toString(), resultRef, rsHolder.getCountRows(), null, null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		commonServiceImpl.save(execIdentifier.getType().toString(), metaExec);
@@ -285,7 +298,12 @@ public class GenerateDataOperator implements IOperator {
 		} else {
 			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo());
 			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo());
-			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);			
+			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
+			if(!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					&& !datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
+				sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod);
+			} 
 			// Save result
 			save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(execType), runMode);
 		}

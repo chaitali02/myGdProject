@@ -1129,13 +1129,14 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
 				}
 				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
-					if ($scope.selectSourceType == "dataset") {
-						lhsref.type = "dataset";
+					// if ($scope.selectSourceType == "dataset") {
+					// 	lhsref.type = "dataset";
 
-					}
-					else {
-						lhsref.type = "datapod";
-					}
+					// }
+					// else {
+					// 	lhsref.type = "datapod";
+					// }
+					lhsref.type=$scope.filterTableArray[i].lhsdatapodAttribute.type
 					lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
 
 					lhsoperand.ref = lhsref;
@@ -1155,13 +1156,14 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
 				}
 				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
-					if ($scope.selectSourceType == "dataset") {
-						rhsref.type = "dataset";
+					// if ($scope.selectSourceType == "dataset") {
+					// 	rhsref.type = "dataset";
 
-					}
-					else {
-						rhsref.type = "datapod";
-					}
+					// }
+					// else {
+					// 	rhsref.type = "datapod";
+					// }
+					rhsref.type =$scope.filterTableArray[i].rhsdatapodAttribute
 					rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
 
 					rhsoperand.ref = rhsref;
@@ -1219,7 +1221,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "datapod") {
 
-				ref.type = $scope.selectSourceType == "relation" ? "datapod" : $scope.selectSourceType;
+				ref.type = $scope.attributeTableArray[l].sourcedatapod.type//$scope.selectSourceType == "relation" ? "datapod" : $scope.selectSourceType;
 				ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
 				sourceAttr.ref = ref;
 				sourceAttr.attrId = $scope.attributeTableArray[l].sourcedatapod.attributeId;

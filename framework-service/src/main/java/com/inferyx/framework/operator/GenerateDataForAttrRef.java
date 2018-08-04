@@ -7,14 +7,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.datascience.distribution.RandomDistribution;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -25,7 +23,6 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
@@ -49,8 +46,6 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
-	@Autowired
-	private RandomDistribution randomDistribution;
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
@@ -108,9 +103,9 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		Map<String, String> otherParams = execParams.getOtherParams();
-		String execUuid = baseExec.getUuid();
+//		String execUuid = baseExec.getUuid();
 		String execVersion = baseExec.getVersion();
-		int numRepetitions = 0;
+//		int numRepetitions = 0;
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		
