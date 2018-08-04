@@ -106,9 +106,10 @@ public class DatapodController {
 	    public List<Map<String, Object>>  getAttributeValues(@RequestParam(value= "datapodUUID") String datapodUUID,
 	    		@RequestParam(value= "attributeId") int attributeID,
 				@RequestParam(value = "type", required = false) String type,
-				@RequestParam(value = "action", required = false) String action) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException
-	    		{
-	    	return datastoreServiceImpl.getAttributeValues(datapodUUID,attributeID);	   	
+				@RequestParam(value = "action", required = false) String action,	    
+				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception{
+		 	RunMode runMode = Helper.getExecutionMode(mode);		 
+	    	return datastoreServiceImpl.getAttributeValues(datapodUUID,attributeID,runMode);   	
 	   }
 	 
 	 @RequestMapping(value="/getAttributeName", method=RequestMethod.GET)
