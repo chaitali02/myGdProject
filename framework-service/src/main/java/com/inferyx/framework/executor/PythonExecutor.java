@@ -475,4 +475,11 @@ public class PythonExecutor implements IExecutor {
 		return null;
 	}
 
+	@Override
+	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

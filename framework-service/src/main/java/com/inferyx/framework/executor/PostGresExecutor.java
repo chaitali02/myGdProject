@@ -26,7 +26,6 @@ import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -63,8 +62,6 @@ public class PostGresExecutor implements IExecutor {
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private Helper helper;
 	
 	static Logger logger = Logger.getLogger(PostGresExecutor.class); 
 	
@@ -258,7 +255,7 @@ public class PostGresExecutor implements IExecutor {
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
+		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName, datapod);
 		return rsHolder.getCountRows();
 	}
 
@@ -548,7 +545,7 @@ public class PostGresExecutor implements IExecutor {
 //		ResultSetHolder rsHolder = executeSql(sql, clientContext);
 		ResultSetHolder rsHolder = null;
 		try {
-			rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName);
+			rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName, datapod);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | NullPointerException | ParseException e) {
 			// TODO Auto-generated catch block
@@ -573,6 +570,13 @@ public class PostGresExecutor implements IExecutor {
 
 	@Override
 	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
+			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

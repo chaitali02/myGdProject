@@ -4,7 +4,6 @@
 package com.inferyx.framework.operator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.datascience.distribution.RandomDistributionFactory;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
@@ -68,11 +66,9 @@ public class MatrixMultOperator implements IOperator {
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
-	private RandomDistributionFactory randomDistributionFactory;
-	@Autowired
 	private MatrixToRddConverter matrixToRddConverter;
 	@Autowired
-	private SparkExecutor sparkExecutor;
+	private SparkExecutor<?> sparkExecutor;
 	
 	protected final String ADD = "ADD";
 	protected final String SUB = "SUB";
@@ -142,8 +138,12 @@ public class MatrixMultOperator implements IOperator {
 		List<AttributeRefHolder> lhsAttrList = lhsAttrInfo.getAttributeInfo();
 		List<AttributeRefHolder> rhsAttrList = rhsAttrInfo.getAttributeInfo();
 
-		Dataset<Row> lhsDf = exec.executeSql(generateSql(lhsTableName, lhsAttrList)).getDataFrame();
-		Dataset<Row> rhsDf = exec.executeSql(generateSql(rhsTableName, rhsAttrList)).getDataFrame();
+		Dataset<Row> lhsDf = sparkExecutor.executeSql(generateSql(lhsTableName, lhsAttrList)).getDataFrame();
+//		lhsDf = lhsDf.filter("val is not null");
+//		lhsDf.show(false);
+		Dataset<Row> rhsDf = sparkExecutor.executeSql(generateSql(rhsTableName, rhsAttrList)).getDataFrame();
+//		rhsDf = rhsDf.filter("val is not null");
+//		rhsDf.show(false);
 		JavaRDD<MatrixEntry> lhsMatrixEntry = lhsDf.toJavaRDD().map(data -> {
 			return new MatrixEntry(new Long(data.get(0) + ""), new Long(data.get(1) + ""), data.getDouble(2));
 		});
@@ -177,7 +177,7 @@ public class MatrixMultOperator implements IOperator {
 			columns[count] = attr.getName();
 			count++;
 		}
-		List<Object> tableColumns = Arrays.asList(columns);
+//		List<Object> tableColumns = Arrays.asList(columns);
 		StructType schema = createSchema(locationDatapod.getAttributes());
 		
 		// Save result
@@ -247,7 +247,7 @@ public class MatrixMultOperator implements IOperator {
 		StringBuilder sb = new StringBuilder(
 				" select floor((row_number() over (PARTITION BY 1 ORDER BY 1))/3-0.000000001) as rn, ((row_number() over (PARTITION BY 1 ORDER BY 1))%3) as colnum, exp.val from ")
 						.append(tableName).append(" matatab lateral view explode(ARRAY(");
-		AttributeRefHolder attrRefHolder = null;
+//		AttributeRefHolder attrRefHolder = null;
 		for (int count = 0; count < attrList.size(); count++) {
 			sb.append("cast(matatab").append(ConstantsUtil.DOT).append(attrList.get(count).getAttrName())
 					.append(" as double)");

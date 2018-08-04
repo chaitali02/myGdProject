@@ -156,19 +156,6 @@ public class HiveExecutor implements IExecutor{
 				}
 				data.add(object);
 			}
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-			if(requestAttributes != null) {
-				HttpServletRequest request = requestAttributes.getRequest();
-				if(request != null) {
-					HttpSession session = request.getSession();
-					if(session != null) {
-						session.setAttribute("rsHolder", rsHolder);
-					}else
-						logger.info("HttpSession is \""+null+"\"");
-				}else
-					logger.info("HttpServletResponse is \""+null+"\"");
-			}else
-				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw new IOException("Failed to execute SQL query.");
@@ -233,7 +220,7 @@ public class HiveExecutor implements IExecutor{
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName);
+		ResultSetHolder rsHolder = sparkExecutor.uploadCsvToDatabase(load, datasource, datapodTableName, datapod);
 		return rsHolder.getCountRows();
 	}
 
@@ -275,7 +262,7 @@ public class HiveExecutor implements IExecutor{
 	@Override
 	public List<Map<String, Object>> fetchResults(DataStore datastore, Datapod datapod, int rowLimit, String targetTable, String clientContext)
 			throws Exception {
-		String sql = "SELECT * FROM "+targetTable;
+		String sql = "SELECT * FROM "+targetTable + " LIMIT " + rowLimit;
 		return executeAndFetch(sql, clientContext);
 	}
 
@@ -459,15 +446,41 @@ public class HiveExecutor implements IExecutor{
 	public ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes,
 			String tableName, String filePath, Datapod datapod, String saveMode, String clientContext)
 			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(" Inside method createRegisterAndPersist.");
+		ResultSetHolder rsHolder = null;
+		StringBuilder sql = new StringBuilder("INSERT INTO TABLE " + tableName + " VALUES");
+		for(RowObj rowObj : rowObjList) {
+			Object[] rowData = rowObj.getRowData();
+			StringBuilder rowBuilder = new StringBuilder(" (");
+			for(int i=0; i<rowData.length; i++) {
+				rowBuilder.append(rowData[i]);
+				if(i<rowData.length-1) {
+					rowBuilder.append(", ");
+				}
+			}
+			rowBuilder.append(")");
+			sql.append(rowBuilder);
+			sql.append(",");
+		}	
+		String query = sql.substring(0, sql.lastIndexOf(","));
+		logger.info("Query: "+query);
+		rsHolder = executeSql(query);
+		
+		return rsHolder;
 	}
 
 	@Override
 	public ResultSetHolder generateData(Distribution distribution, Object distributionObject, String methodName, Object[] args, Class<?>[] paramtypes,
 			List<Attribute> attributes, int numIterations, String execVersion, String tableName) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(" Inside method generateData.");
+		ResultSetHolder rsHolder = null;
+		try {
+			rsHolder =  sparkExecutor.generateData(distribution, distributionObject, methodName, args, paramtypes, attributes, numIterations, execVersion, tableName);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		return rsHolder;
 	}
 
 	@Override
@@ -520,5 +533,12 @@ public class HiveExecutor implements IExecutor{
 	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
+			String clientContext) throws IOException {
+		logger.info(" Inside method create.");
+		return sparkExecutor.create(rowObjList, attributes, tableName, clientContext);
 	}
 }
