@@ -5,16 +5,14 @@ package com.inferyx.framework.operator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.inferyx.framework.datascience.distribution.RandomDistribution;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -26,15 +24,14 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.GenVal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
@@ -52,9 +49,9 @@ public class GenerateDataForValList extends GenerateDataOperator {
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
-	private DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
+	@Autowired
+	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(GenerateDataForValList.class);
 
@@ -103,10 +100,10 @@ public class GenerateDataForValList extends GenerateDataOperator {
 	
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		String execUuid = baseExec.getUuid();
+//		String execUuid = baseExec.getUuid();
 		String execVersion = baseExec.getVersion();
 		Map<String, String> otherParams = execParams.getOtherParams();
-		int numRepetitions = 0;
+//		int numRepetitions = 0;
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		
@@ -141,7 +138,15 @@ public class GenerateDataForValList extends GenerateDataOperator {
 				+" FROM "
 				+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 				+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
-		ResultSetHolder resultSetHolder = exec.executeAndRegister(rangeSql, tableName, datasource.getType());
+		ResultSetHolder resultSetHolder = null;
+		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
+			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, datasource.getType());
+		}  else {
+			String sql = helper.buildInsertQuery(datasource.getType(), tableName, locationDatapod, rangeSql);
+			resultSetHolder = exec.executeAndPersist(sql, null, locationDatapod, null, null);
+		}
 		
 		// save result
 		save(exec, resultSetHolder, tableName, locationDatapod, baseExec.getRef(MetaType.operatorExec), runMode);

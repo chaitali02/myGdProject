@@ -48,7 +48,6 @@ import org.apache.spark.ml.evaluation.Evaluator;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
 import org.apache.spark.ml.evaluation.RegressionEvaluator;
 import org.apache.spark.ml.feature.RFormula;
-import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
@@ -221,13 +220,18 @@ public class SparkExecutor<T> implements IExecutor {
 				df = sparkSession.createDataset(obj, Encoders.DOUBLE()).toDF(attributes.get(1).getName());
 			}
 			df.show();
-			df.createOrReplaceTempView(tableName+"_vw");
-			df = sparkSession.sql("select row_number() over(ORDER BY 1) as "+attributes.get(0).getDispName()+", "+attributes.get(1).getDispName()+", " + execVersion + " as "+attributes.get(2).getDispName()+" from " + tableName+"_vw");
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			String tempTableName = tableName;
+			if(tempTableName.contains(datasource.getDbname()+"."))
+				tempTableName = tempTableName.replaceAll(datasource.getDbname()+".", "");
+			df.createOrReplaceTempView(tempTableName+"_vw");
+			df = sparkSession.sql("select row_number() over(ORDER BY 1) as "+attributes.get(0).getDispName()+", "+attributes.get(1).getDispName()+", " + execVersion + " as "+attributes.get(2).getDispName()+" from " + tempTableName+"_vw");
 			resultSetHolder.setCountRows(df.count());
 			resultSetHolder.setType(ResultType.dataframe);
 			resultSetHolder.setDataFrame(df);
+			resultSetHolder.setTableName(tableName);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
+				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -521,7 +525,9 @@ public class SparkExecutor<T> implements IExecutor {
 			fieldArray[count] = field;
 			count ++;
 		}
-		StructType schema = new StructType(fieldArray);		
+		StructType schema = new StructType(fieldArray);	
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(createRowList(rowObjList), schema);
 		df.printSchema();
 		df.show(true);
@@ -1667,18 +1673,37 @@ public class SparkExecutor<T> implements IExecutor {
 			return rsHolder;
 	}
 	
-	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		//Datasource datasource = commonServiceImpl.getDatasourceByApp();
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Dataset<Row> df = rsHolder.getDataFrame();
 		df.show(false);
-		String url = Helper.genUrlByDatasource(datasource);
-		Properties connectionProperties = new Properties();
-		connectionProperties.put("driver", datasource.getDriver());
-		connectionProperties.put("user", datasource.getUsername());
-		connectionProperties.put("password", datasource.getPassword());
-		if(Arrays.asList(df.columns()).contains("features"))
-			df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));
-		df.write().mode(SaveMode.Append).jdbc(url, rsHolder.getTableName(), connectionProperties);
+		List<String> partitionColList = new ArrayList<>();
+		if(datapod != null) {
+			for(Attribute attribute : datapod.getAttributes()) {
+				if (attribute.getPartition().equalsIgnoreCase("y"))
+					partitionColList.add(attribute.getName());
+			}
+		}
+		if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+			if(partitionColList.size() > 0) {
+				df.write().mode(SaveMode.Append).partitionBy(partitionColList.toArray(new String[partitionColList.size()])).insertInto(rsHolder.getTableName());
+			} else {
+				df.write().mode(SaveMode.Append).insertInto(rsHolder.getTableName());
+			}
+		} else {
+			String url = Helper.genUrlByDatasource(datasource);
+			Properties connectionProperties = new Properties();
+			connectionProperties.put("driver", datasource.getDriver());
+			connectionProperties.put("user", datasource.getUsername());
+			connectionProperties.put("password", datasource.getPassword());
+			if(Arrays.asList(df.columns()).contains("features"))
+				df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));
+			if(partitionColList.size() > 0) {
+				df.write().mode(SaveMode.Append).partitionBy(partitionColList.toArray(new String[partitionColList.size()])).jdbc(url, rsHolder.getTableName(), connectionProperties);
+			} else {
+				df.write().mode(SaveMode.Append).jdbc(url, rsHolder.getTableName(), connectionProperties);
+			}
+		}		
 		return rsHolder;
 	}
 
@@ -1697,11 +1722,6 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
-
-			@SuppressWarnings("unused")
-			StringIndexer labelIndexer = null;
-			@SuppressWarnings("unused")
-			String labelColName = (trainName.contains("classification")) ? "indexedLabel" : "label";
 			
 			/*Class<?> dynamicClass = Class.forName(trainName);
 			Object obj = dynamicClass.newInstance();*/
@@ -1956,17 +1976,18 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setCountRows(predictedDf.count());
 		rsHolder.setTableName(targetTableName);
 		String dsType = datasource.getType();
-		if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+		if ((!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+				|| !engine.getExecEngine().equalsIgnoreCase(ExecContext.livy_spark.toString()))
 				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
 				&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
-			persistDataframe(rsHolder, datasource);	
+			persistDataframe(rsHolder, datasource, targetDp);	
 		}
 		
 		rsHolder.setTableName("tempPredictResult");
 		return rsHolder;
 	}
 	
-	public ResultSetHolder uploadCsvToDatabase(Load load, Datasource datasource, String targetTableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+	public ResultSetHolder uploadCsvToDatabase(Load load, Datasource datasource, String targetTableName, Datapod datapod) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		Dataset<Row> df = sparkSession.read()
 									  .format("com.databricks.spark.csv")
@@ -1981,7 +2002,7 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setTableName(targetTableName);
 //		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
 //		createTable(schema, datasource);
-		rsHolder = persistDataframe(rsHolder, datasource);
+		rsHolder = persistDataframe(rsHolder, datasource, datapod);
 		rsHolder.setCountRows(df.count());
 		return rsHolder;
 	}
@@ -2499,5 +2520,39 @@ public class SparkExecutor<T> implements IExecutor {
 			outPutMap = linearRegressionSummay(outPutMap, result);
 		}
 		return outPutMap;
+	}
+	
+
+	/**
+	 * 
+	 * @param rowObjList
+	 * @param attributes
+	 * @param tableName
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IOException 
+	 */
+	@Override
+	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName, String clientContext) throws IOException {
+		logger.info(" Inside method create.");
+		int count = 0;
+		StructField[] fieldArray = new StructField[attributes.size()];
+		for(Attribute attribute : attributes){	
+			StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
+			fieldArray[count] = field;
+			count ++;
+		}
+		StructType schema = new StructType(fieldArray);	
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(createRowList(rowObjList), schema);
+		df.printSchema();
+		df.show(true);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setDataFrame(df);
+		rsHolder.setType(ResultType.dataframe);	
+		rsHolder.setCountRows(df.count());
+		rsHolder.setTableName(tableName);
+		return rsHolder;
 	}
 }

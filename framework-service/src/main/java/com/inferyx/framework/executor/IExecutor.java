@@ -557,4 +557,17 @@ public interface IExecutor {
 	Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException;
+	/**
+	 * 
+	 * @Ganesh
+	 *
+	 * @param rowObjList
+	 * @param attributes
+	 * @param tableName
+	 * @param clientContext
+	 * @return ResultSetHolder
+	 * @throws IOException 
+	 */
+	ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
+			String clientContext) throws IOException;
 }

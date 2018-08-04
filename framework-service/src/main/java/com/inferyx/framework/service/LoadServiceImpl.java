@@ -273,7 +273,7 @@ public class LoadServiceImpl {
 				rsHolder.getResultSet().next();
 				count = rsHolder.getResultSet().getLong(1);
 			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {				
-				ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName);				
+				ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datasource, targetTableName, datapod);				
 				count = rsHolder.getCountRows();
 			}
 			
