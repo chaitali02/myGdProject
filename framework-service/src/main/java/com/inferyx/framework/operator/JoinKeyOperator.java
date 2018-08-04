@@ -91,12 +91,13 @@ public class JoinKeyOperator {
 				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				operandValue.add(value);
 			} else if (sourceAttr.getRef().getType() == MetaType.dataset) {
-				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));
+				MetaIdentifier filterSourceMI = sourceAttr.getRef();				
+				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSourceMI, refKeyMap));
 				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByDataset(dataset.getUuid());
 				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
 				operandValue.add(dataset.sql(attrName));
 				MetaIdentifier datasetRef = new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion());
-				usedRefKeySet.add(datasetRef);
+				usedRefKeySet.add(datasetRef);				
 			} else if (sourceAttr.getRef().getType() == MetaType.rule) {
 				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));
 				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByRule(rule.getUuid());

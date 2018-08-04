@@ -40,6 +40,6 @@ public class DatasetController {
 				@RequestParam(value = "action", required = false) String action, 
 				@RequestParam(value = "mode", required = false, defaultValue="BATCH") String mode) throws Exception{
 		 	RunMode runMode = Helper.getExecutionMode(mode);
-	    	return datasetServiceImpl.getDatasetSample(datasetUUID,datasetVersion,rows, execParams, runMode);	   	
+	    	return datasetServiceImpl.getDatasetSample(datasetUUID, datasetVersion, rows, execParams, runMode);	   	
 	   }
 }

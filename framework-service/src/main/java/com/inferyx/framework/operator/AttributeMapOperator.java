@@ -209,6 +209,10 @@ public class AttributeMapOperator {
 					&& (object instanceof Datapod)) {
 				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				return builder.append(datapod.sql(Integer.parseInt(sourceAttr.getAttrId()))).append(" ").toString();
+			} else if ((mapSource.getRef().getType() == MetaType.relation || mapSource.getRef().getType() == MetaType.dataset)  
+					&& (object instanceof DataSet)) {
+				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				return builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttrId())).append(" ").toString();
 			}
 			if (mapSource.getRef().getType() == MetaType.dataset && (object instanceof DataSet)) {
 				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap));
