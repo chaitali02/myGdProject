@@ -1,7 +1,7 @@
 {
-  "uuid": "6a24e4dd-d556-4617-bbee-5a25938cb456",
-  "version": "1533437444",
-  "name": "rel_customer_portfolio_ul_calc_allocation",
+  "uuid": "b0b392e6-75aa-4f2b-8de4-71e701a6127e",
+  "version": "1533436773",
+  "name": "rel_customer_portfolio_ul_calc_summary",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 04 22:50:44 EDT 2018",
+  "createdOn": "Sat Aug 04 22:39:33 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,10 +29,10 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "datapod",
-      "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+      "type": "dataset",
+      "uuid": "b3d94b60-9481-48db-8082-2b7bd1a7ca96",
       "version": null,
-      "name": "customer_portfolio_ul_calc_summary"
+      "name": "ds_customer_portfolio_ul_cust_summary"
     },
     "value": null
   },
@@ -40,14 +40,14 @@
     {
       "join": {
         "ref": {
-          "type": "datapod",
-          "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+          "type": "dataset",
+          "uuid": "8f2c341f-62f3-41c8-97dc-29d91846049b",
           "version": null,
-          "name": "portfolio_loss_simulaton_aggr"
+          "name": "ds_customer_portfolio_ul_total_summary"
         },
         "value": null
       },
-      "joinType": "",
+      "joinType": "CROSS",
       "joinKey": [
         {
           "logicalOperator": "",
@@ -55,24 +55,24 @@
           "operand": [
             {
               "ref": {
-                "type": "datapod",
-                "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+                "type": "dataset",
+                "uuid": "b3d94b60-9481-48db-8082-2b7bd1a7ca96",
                 "version": null,
-                "name": "customer_portfolio_ul_calc_summary"
+                "name": "ds_customer_portfolio_ul_cust_summary"
               },
-              "attributeId": 3,
+              "attributeId": 2,
               "value": null,
               "attributeName": "reporting_date",
               "attributeType": "string"
             },
             {
               "ref": {
-                "type": "datapod",
-                "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+                "type": "dataset",
+                "uuid": "8f2c341f-62f3-41c8-97dc-29d91846049b",
                 "version": null,
-                "name": "portfolio_loss_simulaton_aggr"
+                "name": "ds_customer_portfolio_ul_total_summary"
               },
-              "attributeId": 3,
+              "attributeId": 1,
               "value": null,
               "attributeName": "reporting_date",
               "attributeType": "string"

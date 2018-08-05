@@ -1,7 +1,7 @@
 {
-  "uuid": "6a24e4dd-d556-4617-bbee-5a25938cb456",
-  "version": "1533437444",
-  "name": "rel_customer_portfolio_ul_calc_allocation",
+  "uuid": "b26f5a45-0d22-4148-984b-eb5e6f3245aa",
+  "version": "1533488098",
+  "name": "rel_portfolio_loss_simulation2",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 04 22:50:44 EDT 2018",
+  "createdOn": "Sun Aug 05 00:54:58 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,9 +30,9 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+      "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
       "version": null,
-      "name": "customer_portfolio_ul_calc_summary"
+      "name": "portfolio_loss_simulation"
     },
     "value": null
   },
@@ -40,14 +40,14 @@
     {
       "join": {
         "ref": {
-          "type": "datapod",
-          "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+          "type": "dataset",
+          "uuid": "3a975109-c1b8-448f-bbd9-c7e81bdf565f",
           "version": null,
-          "name": "portfolio_loss_simulaton_aggr"
+          "name": "ds_portfolio_loss_simulation_aggr"
         },
         "value": null
       },
-      "joinType": "",
+      "joinType": "CROSS",
       "joinKey": [
         {
           "logicalOperator": "",
@@ -56,21 +56,21 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+                "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
                 "version": null,
-                "name": "customer_portfolio_ul_calc_summary"
+                "name": "portfolio_loss_simulation"
               },
-              "attributeId": 3,
+              "attributeId": 2,
               "value": null,
               "attributeName": "reporting_date",
               "attributeType": "string"
             },
             {
               "ref": {
-                "type": "datapod",
-                "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+                "type": "dataset",
+                "uuid": "3a975109-c1b8-448f-bbd9-c7e81bdf565f",
                 "version": null,
-                "name": "portfolio_loss_simulaton_aggr"
+                "name": "ds_portfolio_loss_simulation_aggr"
               },
               "attributeId": 3,
               "value": null,

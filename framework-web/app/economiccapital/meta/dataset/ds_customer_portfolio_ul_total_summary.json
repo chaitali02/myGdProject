@@ -1,7 +1,7 @@
 {
-  "uuid": "504917c5-5541-4a43-b6c0-a0ce00c15e0b",
-  "version": "1533437486",
-  "name": "ds_customer_portfolio_ul_calc_allocation",
+  "uuid": "8f2c341f-62f3-41c8-97dc-29d91846049b",
+  "version": "1533436258",
+  "name": "ds_customer_portfolio_ul_total_summary",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 04 22:51:26 EDT 2018",
+  "createdOn": "Sat Aug 04 22:30:58 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,10 +29,10 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "relation",
-      "uuid": "6a24e4dd-d556-4617-bbee-5a25938cb456",
+      "type": "datapod",
+      "uuid": "83306551-d38d-4d56-aafd-7e65c2a9a01e",
       "version": null,
-      "name": "rel_customer_portfolio_ul_calc_allocation"
+      "name": "customer_portfolio_ul_calc"
     },
     "value": null
   },
@@ -40,29 +40,13 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
-      "attrSourceName": "cust_id",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
-          "version": null,
-          "name": "customer_portfolio_ul_calc_summary"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "cust_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrSourceName": "portfolio_ul_calc_allocation",
+      "attrSourceName": "portfolio_ul_total_sum",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "e15f6aae-1475-4754-8a62-87bc95dad843",
+          "uuid": "77697e41-552a-4cd3-a5f2-6ec8620312c2",
           "version": null,
-          "name": "fm_portfolio_ul_calc_allocation"
+          "name": "fm_portfolio_ul_total_sum"
         },
         "value": null,
         "attrId": null,
@@ -71,33 +55,33 @@
       }
     },
     {
-      "attrSourceId": "2",
+      "attrSourceId": "1",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+          "uuid": "83306551-d38d-4d56-aafd-7e65c2a9a01e",
           "version": null,
-          "name": "customer_portfolio_ul_calc_summary"
+          "name": "customer_portfolio_ul_calc"
         },
         "value": null,
-        "attrId": "3",
+        "attrId": "10",
         "attrName": "reporting_date",
         "attrType": "string"
       }
     },
     {
-      "attrSourceId": "3",
+      "attrSourceId": "2",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+          "uuid": "83306551-d38d-4d56-aafd-7e65c2a9a01e",
           "version": null,
-          "name": "customer_portfolio_ul_calc_summary"
+          "name": "customer_portfolio_ul_calc"
         },
         "value": null,
-        "attrId": "4",
+        "attrId": "11",
         "attrName": "version",
         "attrType": "integer"
       }

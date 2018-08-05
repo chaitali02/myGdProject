@@ -1,6 +1,6 @@
 {
-  "uuid": "1e6dde7d-d766-4a96-9d80-9186edc378c2",
-  "version": "1532637954",
+  "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+  "version": "1533436084",
   "name": "customer_portfolio_ul_calc_summary",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Jul 26 16:45:54 EDT 2018",
+  "createdOn": "Sat Aug 04 22:28:04 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -40,17 +40,39 @@
   "attributes": [
     {
       "attributeId": 0,
-      "name": "portfolio_ul_calc_sum",
-      "type": "double",
-      "desc": "portfolio_ul_calc_sum",
+      "name": "cust_id",
+      "type": "string",
+      "desc": "cust_id",
       "key": "",
       "partition": "N",
-      "dispName": "portfolio_ul_calc_sum",
+      "dispName": "cust_id",
       "active": "Y",
       "expr": null
     },
     {
       "attributeId": 1,
+      "name": "portfolio_ul_cust_sum",
+      "type": "double",
+      "desc": "portfolio_ul_cust_sum",
+      "key": "",
+      "partition": "N",
+      "dispName": "portfolio_ul_cust_sum",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 2,
+      "name": "portfolio_ul_total_sum",
+      "type": "double",
+      "desc": "portfolio_ul_total_sum",
+      "key": "",
+      "partition": "N",
+      "dispName": "portfolio_ul_total_sum",
+      "active": "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 3,
       "name": "reporting_date",
       "type": "string",
       "desc": "reporting_date",
@@ -61,7 +83,7 @@
       "expr": null
     },
     {
-      "attributeId": 2,
+      "attributeId": 4,
       "name": "version",
       "type": "integer",
       "desc": "version",

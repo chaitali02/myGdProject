@@ -1,6 +1,6 @@
 {
-  "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
-  "version": "1532552500",
+  "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
+  "version": "1533485730",
   "name": "ds_customer_portfolio_ul_calc_final",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Jul 25 17:01:40 EDT 2018",
+  "createdOn": "Sun Aug 05 00:15:30 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,7 +30,7 @@
   "dependsOn": {
     "ref": {
       "type": "dataset",
-      "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+      "uuid": "193566da-efc1-4727-9505-14d14085334d",
       "version": null,
       "name": "ds_customer_portfolio_ul_calc_staging"
     },
@@ -44,7 +44,7 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
@@ -60,7 +60,7 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
@@ -76,14 +76,14 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
         "value": null,
         "attrId": "2",
         "attrName": "correlation1",
-        "attrType": "string"
+        "attrType": "double"
       }
     },
     {
@@ -92,14 +92,14 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
         "value": null,
         "attrId": "3",
         "attrName": "unexpected_loss1",
-        "attrType": "string"
+        "attrType": "double"
       }
     },
     {
@@ -108,7 +108,7 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
@@ -124,7 +124,7 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
@@ -140,14 +140,14 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
         "value": null,
         "attrId": "6",
         "attrName": "correlation2",
-        "attrType": "string"
+        "attrType": "double"
       }
     },
     {
@@ -156,14 +156,14 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
         "value": null,
         "attrId": "7",
         "attrName": "unexpected_loss2",
-        "attrType": "string"
+        "attrType": "double"
       }
     },
     {
@@ -172,23 +172,23 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
         "value": null,
         "attrId": "8",
         "attrName": "factor_value",
-        "attrType": "string"
+        "attrType": "double"
       }
     },
     {
       "attrSourceId": "9",
-      "attrSourceName": "portfolio_ul_calc",
+      "attrSourceName": "fm_portfolio_ul_calc_copy",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "0a33c134-9e1c-4812-8e92-3eb55f809fea",
+          "uuid": "317195b7-5bb2-438a-9362-76203a3a1335",
           "version": null,
           "name": "fm_portfolio_ul_calc"
         },
@@ -204,7 +204,7 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
@@ -220,14 +220,14 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "3569e3c2-87c4-409f-af85-c426ec5f7cee",
+          "uuid": "193566da-efc1-4727-9505-14d14085334d",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_staging"
         },
         "value": null,
         "attrId": "10",
         "attrName": "version",
-        "attrType": "string"
+        "attrType": "integer"
       }
     }
   ],

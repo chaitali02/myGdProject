@@ -1,6 +1,6 @@
 {
-  "uuid": "b8c6c2fe-688a-48e4-87a4-d0fae0287701",
-  "version": "1533086065",
+  "uuid": "5b3cf600-7c43-44d2-8583-41da248a74ac",
+  "version": "1533485534",
   "name": "rel_customer_portfolio_ul_calc",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jul 31 21:14:25 EDT 2018",
+  "createdOn": "Sun Aug 05 00:12:14 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,10 +29,10 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "datapod",
-      "uuid": "c689dfcc-a5f0-42a7-883a-887f34c4282d",
+      "type": "dataset",
+      "uuid": "097deb91-5687-4b5f-84c3-36ec0c636a07",
       "version": null,
-      "name": "customer_portfolio_ul_x"
+      "name": "ds_customer_portfolio_ul_x"
     },
     "value": null
   },
@@ -40,10 +40,10 @@
     {
       "join": {
         "ref": {
-          "type": "datapod",
-          "uuid": "67be3534-5172-43a5-b7ed-f8f9dc34f2c8",
+          "type": "dataset",
+          "uuid": "4976bcf0-5e63-40fd-becd-455164d19d3c",
           "version": null,
-          "name": "customer_portfolio_ul_y"
+          "name": "ds_customer_portfolio_ul_y"
         },
         "value": null
       },
@@ -55,24 +55,24 @@
           "operand": [
             {
               "ref": {
-                "type": "datapod",
-                "uuid": "67be3534-5172-43a5-b7ed-f8f9dc34f2c8",
+                "type": "dataset",
+                "uuid": "097deb91-5687-4b5f-84c3-36ec0c636a07",
                 "version": null,
-                "name": "customer_portfolio_ul_y"
+                "name": "ds_customer_portfolio_ul_x"
               },
-              "attributeId": 10,
+              "attributeId": 4,
               "value": null,
               "attributeName": "reporting_date",
               "attributeType": "string"
             },
             {
               "ref": {
-                "type": "datapod",
-                "uuid": "c689dfcc-a5f0-42a7-883a-887f34c4282d",
+                "type": "dataset",
+                "uuid": "4976bcf0-5e63-40fd-becd-455164d19d3c",
                 "version": null,
-                "name": "customer_portfolio_ul_x"
+                "name": "ds_customer_portfolio_ul_y"
               },
-              "attributeId": 10,
+              "attributeId": 4,
               "value": null,
               "attributeName": "reporting_date",
               "attributeType": "string"
@@ -100,6 +100,18 @@
           "operand": [
             {
               "ref": {
+                "type": "dataset",
+                "uuid": "097deb91-5687-4b5f-84c3-36ec0c636a07",
+                "version": null,
+                "name": "ds_customer_portfolio_ul_x"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "industry",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
                 "type": "datapod",
                 "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
                 "version": null,
@@ -109,18 +121,6 @@
               "value": null,
               "attributeName": "factor_x",
               "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "c689dfcc-a5f0-42a7-883a-887f34c4282d",
-                "version": null,
-                "name": "customer_portfolio_ul_x"
-              },
-              "attributeId": 1,
-              "value": null,
-              "attributeName": "industry",
-              "attributeType": null
             }
           ]
         },
@@ -128,6 +128,18 @@
           "logicalOperator": "AND",
           "operator": "=",
           "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "097deb91-5687-4b5f-84c3-36ec0c636a07",
+                "version": null,
+                "name": "ds_customer_portfolio_ul_x"
+              },
+              "attributeId": 4,
+              "value": null,
+              "attributeName": "reporting_date",
+              "attributeType": "string"
+            },
             {
               "ref": {
                 "type": "datapod",
@@ -139,18 +151,6 @@
               "value": null,
               "attributeName": "reporting_date",
               "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "c689dfcc-a5f0-42a7-883a-887f34c4282d",
-                "version": null,
-                "name": "customer_portfolio_ul_x"
-              },
-              "attributeId": 10,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
             }
           ]
         },
@@ -158,6 +158,18 @@
           "logicalOperator": "AND",
           "operator": "=",
           "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "4976bcf0-5e63-40fd-becd-455164d19d3c",
+                "version": null,
+                "name": "ds_customer_portfolio_ul_y"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "industry",
+              "attributeType": "string"
+            },
             {
               "ref": {
                 "type": "datapod",
@@ -169,18 +181,6 @@
               "value": null,
               "attributeName": "factor_y",
               "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "67be3534-5172-43a5-b7ed-f8f9dc34f2c8",
-                "version": null,
-                "name": "customer_portfolio_ul_y"
-              },
-              "attributeId": 1,
-              "value": null,
-              "attributeName": "industry",
-              "attributeType": "string"
             }
           ]
         },
@@ -190,12 +190,12 @@
           "operand": [
             {
               "ref": {
-                "type": "datapod",
-                "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+                "type": "dataset",
+                "uuid": "4976bcf0-5e63-40fd-becd-455164d19d3c",
                 "version": null,
-                "name": "industry_factor_correlation_transpose"
+                "name": "ds_customer_portfolio_ul_y"
               },
-              "attributeId": 1,
+              "attributeId": 4,
               "value": null,
               "attributeName": "reporting_date",
               "attributeType": "string"
@@ -203,11 +203,11 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "67be3534-5172-43a5-b7ed-f8f9dc34f2c8",
+                "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
                 "version": null,
-                "name": "customer_portfolio_ul_y"
+                "name": "industry_factor_correlation_transpose"
               },
-              "attributeId": 10,
+              "attributeId": 1,
               "value": null,
               "attributeName": "reporting_date",
               "attributeType": "string"

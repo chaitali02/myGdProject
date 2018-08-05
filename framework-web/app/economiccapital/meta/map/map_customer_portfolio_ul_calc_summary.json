@@ -1,6 +1,6 @@
 {
-  "uuid": "1a131657-f055-401c-93bf-9c401fca7ce0",
-  "version": "1532638088",
+  "uuid": "b3696a8c-07ea-4d6d-8ded-7c9354d42c3e",
+  "version": "1533485486",
   "name": "map_customer_portfolio_ul_calc_summary",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Jul 26 16:48:08 EDT 2018",
+  "createdOn": "Sun Aug 05 00:11:26 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,7 +30,7 @@
   "target": {
     "ref": {
       "type": "datapod",
-      "uuid": "1e6dde7d-d766-4a96-9d80-9186edc378c2",
+      "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
       "version": null,
       "name": "customer_portfolio_ul_calc_summary"
     },
@@ -39,7 +39,7 @@
   "source": {
     "ref": {
       "type": "dataset",
-      "uuid": "8f2c341f-62f3-41c8-97dc-29d91846049b",
+      "uuid": "64d1bca9-3ac9-45a3-9b17-514e967b710c",
       "version": null,
       "name": "ds_customer_portfolio_ul_calc_summary"
     },
@@ -51,25 +51,25 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "8f2c341f-62f3-41c8-97dc-29d91846049b",
+          "uuid": "64d1bca9-3ac9-45a3-9b17-514e967b710c",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_summary"
         },
         "value": null,
         "attrId": "0",
-        "attrName": "portfolio_ul_calc_sum",
+        "attrName": "cust_id",
         "attrType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1e6dde7d-d766-4a96-9d80-9186edc378c2",
+          "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
           "version": null,
           "name": "customer_portfolio_ul_calc_summary"
         },
         "value": null,
         "attrId": "0",
-        "attrName": "portfolio_ul_calc_sum",
+        "attrName": "cust_id",
         "attrType": null
       }
     },
@@ -78,25 +78,25 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "8f2c341f-62f3-41c8-97dc-29d91846049b",
+          "uuid": "64d1bca9-3ac9-45a3-9b17-514e967b710c",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_summary"
         },
         "value": null,
         "attrId": "1",
-        "attrName": "reporting_date",
+        "attrName": "portfolio_ul_cust_sum",
         "attrType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1e6dde7d-d766-4a96-9d80-9186edc378c2",
+          "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
           "version": null,
           "name": "customer_portfolio_ul_calc_summary"
         },
         "value": null,
         "attrId": "1",
-        "attrName": "reporting_date",
+        "attrName": "portfolio_ul_cust_sum",
         "attrType": null
       }
     },
@@ -105,24 +105,78 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "8f2c341f-62f3-41c8-97dc-29d91846049b",
+          "uuid": "64d1bca9-3ac9-45a3-9b17-514e967b710c",
           "version": null,
           "name": "ds_customer_portfolio_ul_calc_summary"
         },
         "value": null,
         "attrId": "2",
+        "attrName": "portfolio_ul_total_sum",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+          "version": null,
+          "name": "customer_portfolio_ul_calc_summary"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "portfolio_ul_total_sum",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "3",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "64d1bca9-3ac9-45a3-9b17-514e967b710c",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_summary"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "reporting_date",
+        "attrType": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+          "version": null,
+          "name": "customer_portfolio_ul_calc_summary"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "reporting_date",
+        "attrType": null
+      }
+    },
+    {
+      "attrMapId": "4",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "64d1bca9-3ac9-45a3-9b17-514e967b710c",
+          "version": null,
+          "name": "ds_customer_portfolio_ul_calc_summary"
+        },
+        "value": null,
+        "attrId": "4",
         "attrName": "version",
         "attrType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1e6dde7d-d766-4a96-9d80-9186edc378c2",
+          "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
           "version": null,
           "name": "customer_portfolio_ul_calc_summary"
         },
         "value": null,
-        "attrId": "2",
+        "attrId": "4",
         "attrName": "version",
         "attrType": null
       }

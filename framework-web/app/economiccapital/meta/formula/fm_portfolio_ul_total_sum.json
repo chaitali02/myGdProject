@@ -1,7 +1,7 @@
 {
-  "uuid": "e15f6aae-1475-4754-8a62-87bc95dad843",
-  "version": "1533484626",
-  "name": "fm_portfolio_ul_calc_allocation",
+  "uuid": "77697e41-552a-4cd3-a5f2-6ec8620312c2",
+  "version": "1533436216",
+  "name": "fm_portfolio_ul_total_sum",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 05 11:57:06 EDT 2018",
+  "createdOn": "Sat Aug 04 22:30:16 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,24 +29,24 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "relation",
-      "uuid": "6a24e4dd-d556-4617-bbee-5a25938cb456",
+      "type": "datapod",
+      "uuid": "83306551-d38d-4d56-aafd-7e65c2a9a01e",
       "version": null,
-      "name": "rel_customer_portfolio_ul_calc_allocation"
+      "name": "customer_portfolio_ul_calc"
     },
     "value": null
   },
   "formulaInfo": [
     {
       "ref": {
-        "type": "datapod",
-        "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+        "type": "function",
+        "uuid": "9e3e314c-02fb-11e7-93ae-92361f002671",
         "version": null,
-        "name": "customer_portfolio_ul_calc_summary"
+        "name": "sum(col)"
       },
-      "attributeId": 1,
+      "attributeId": null,
       "value": null,
-      "attributeName": "portfolio_ul_cust_sum",
+      "attributeName": null,
       "attributeType": null
     },
     {
@@ -57,20 +57,20 @@
         "name": null
       },
       "attributeId": null,
-      "value": "/",
+      "value": "(",
       "attributeName": null,
       "attributeType": null
     },
     {
       "ref": {
         "type": "datapod",
-        "uuid": "46d40a37-3dde-451e-9ec7-5ba711a64554",
+        "uuid": "83306551-d38d-4d56-aafd-7e65c2a9a01e",
         "version": null,
-        "name": "customer_portfolio_ul_calc_summary"
+        "name": "customer_portfolio_ul_calc"
       },
-      "attributeId": 2,
+      "attributeId": 9,
       "value": null,
-      "attributeName": "portfolio_ul_total_sum",
+      "attributeName": "portfolio_ul_calc",
       "attributeType": null
     },
     {
@@ -81,22 +81,10 @@
         "name": null
       },
       "attributeId": null,
-      "value": "*",
+      "value": ")",
       "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
-        "version": null,
-        "name": "portfolio_loss_simulaton_aggr"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "economic_capital",
       "attributeType": null
     }
   ],
-  "formulaType": "simple"
+  "formulaType": "aggr"
 }

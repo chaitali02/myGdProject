@@ -1,6 +1,6 @@
 {
   "uuid": "f1507916-23c5-4b44-8533-e968f9d2ff5e",
-  "version": "1532554958",
+  "version": "1533435024",
   "name": "map_customer_portfolio_ul_calc",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Jul 25 17:42:38 EDT 2018",
+  "createdOn": "Sat Aug 04 22:10:24 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -39,9 +39,9 @@
   "source": {
     "ref": {
       "type": "dataset",
-      "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+      "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
       "version": null,
-      "name": "ds_customer_portfolio_ul_calc_final"
+      "name": "ds_customer_portfolio_ul_calc_final2"
     },
     "value": null
   },
@@ -51,9 +51,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "0",
@@ -78,9 +78,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "1",
@@ -105,9 +105,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "2",
@@ -132,9 +132,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "3",
@@ -159,9 +159,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "4",
@@ -186,9 +186,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "5",
@@ -213,9 +213,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "6",
@@ -240,9 +240,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "7",
@@ -267,9 +267,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "8",
@@ -294,13 +294,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "9",
-        "attrName": "portfolio_ul_calc",
+        "attrName": "fm_portfolio_ul_calc_copy",
         "attrType": null
       },
       "targetAttr": {
@@ -321,9 +321,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "10",
@@ -348,9 +348,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+          "uuid": "792f6ebe-e216-4521-88b4-cafac5318d11",
           "version": null,
-          "name": "ds_customer_portfolio_ul_calc_final"
+          "name": "ds_customer_portfolio_ul_calc_final2"
         },
         "value": null,
         "attrId": "11",
