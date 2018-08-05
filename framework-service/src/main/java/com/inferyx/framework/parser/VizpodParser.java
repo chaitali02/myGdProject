@@ -218,7 +218,7 @@ public class VizpodParser {
 
 			}
 			whereBuilder.append(blankSpace);
-			finalBuilder.append(whereBuilder);
+			finalBuilder.append(whereBuilder.toString().replaceAll("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)", ""));
 
 			if ((!vizpod.getKeys().isEmpty() && hasFuncInVal) || !vizpod.getGroups().isEmpty()) {
 				finalBuilder.append("GROUP BY");
@@ -414,7 +414,8 @@ public class VizpodParser {
 			
 			result = selectBuilder.length() > 0 ? selectBuilder.substring(0, selectBuilder.length() - 1) : "";
 			result += fromBuilder.length() > 0 ? fromBuilder.substring(0, fromBuilder.length() - 1) : "";
-			result += whereBuilder.length() > 0 ? whereBuilder.substring(0, whereBuilder.length() - 1) : "";
+			result += (whereBuilder.length() > 0 ? whereBuilder.substring(0, whereBuilder.length() - 1) : "")
+					.replaceAll("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)", "");
 			result += groupByBuilder.length() > 0 ? groupByBuilder.substring(0, groupByBuilder.length() - 1) : "";
 			result += limitBuilder.length() > 0 ? limitBuilder.substring(0, limitBuilder.length() - 1) : "";
 			logger.info(String.format("Final Vizpod filter %s", result));
