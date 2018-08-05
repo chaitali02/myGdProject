@@ -521,21 +521,36 @@ public class MapServiceImpl implements IParsable, IExecutable {
 //		if (otherParams == null) {
 //			otherParams = new HashMap<>();
 //		}
-		Datapod fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
-
-		// Derive table name on the basis of depends on value.
-		String table = getTableName(fromDatapod, otherParams, mapExec, runMode);
 		
+		Datapod fromDatapod = null;
+		DataSet fromDataset = null;
+		if (relation.getDependsOn().getRef().getType() == MetaType.datapod) {
+			fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+			parseDatapodNames(fromDatapod, otherParams, mapExec, runMode);
+			// Derive table name on the basis of depends on value.
+			String table = getTableName(fromDatapod, otherParams, mapExec, runMode);
 			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), table);
+		} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset) {
+			fromDataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+			parseDSDatapodNames(fromDataset, refKeyMap, otherParams, mapExec, runMode);
+		}
+
 		
 		// Do the same for other relation tables
 
 		List<RelationInfo> relInfoList = relation.getRelationInfo();
+		Datapod datapod = null;
+		DataSet dataset = null;
 		for (int i = 0; i < relInfoList.size(); i++) {
-			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
-			String rightTable = getTableName(datapod, otherParams, mapExec, runMode);
-			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid())),
-					rightTable);
+			if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.datapod) {
+				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+				String rightTable = getTableName(datapod, otherParams, mapExec, runMode);
+				otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid())),
+						rightTable);
+			} else if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.dataset) {
+				dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+				parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec, runMode);
+			}
 		} // End for
 	}
 
