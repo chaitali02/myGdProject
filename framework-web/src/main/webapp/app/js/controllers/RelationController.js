@@ -6,10 +6,10 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	$scope.showFrom = true;
 	$scope.data = null;
 	$scope.showGraphDiv = false
-	$scope.joinType = ["EQUI JOIN", "LEFT OUTER", 'RIGHT OUTER', 'FULL OUTER', 'LEFT SEMI', 'CROSS'];
+	$scope.joinType = ["EQUI JOIN", "LEFT OUTER", 'RIGHT OUTER', 'FULL OUTER', 'LEFT SEMI', 'CROSS JOIN'];
 	$scope.operator = ["=", "<", ">", "<=", ">=", "IN", "BETWEEN"];
 	$scope.lshType = ["string", "datapod", 'formula'];
-	$scope.logicalOperator = ["", "OR", "AND"];
+	$scope.logicalOperator = ["AND","OR"];
 	$scope.relationOperators = ["=", "IN", "NOT IN"]
 	$scope.relation = {};
 	$scope.relation.versions = [];
@@ -181,7 +181,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 			 	//	}
 				}
 			}
-            debugger
+            
 			MetadataRelationSerivce.getAllLatest($scope.selectSourceType).then(function (response1) { onSuccessrelationWithSourceType(response1.data) });
 			var onSuccessrelationWithSourceType = function (response1) {
 				$scope.alldatapod = response1
@@ -221,6 +221,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	}
 	
 	$scope.onChangeType=function(){
+		$scope.relationTableArray=[];
 		$scope.showactive = "false"
 		MetadataRelationSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccessrelation(response.data) });
 		var onSuccessrelation = function (response) {
@@ -295,7 +296,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	}
 
 	$scope.onChangeJoinType = function (joinType, index) {
-		if (joinType == 'CROSS') {
+		if (joinType == 'CROSS JOIN') {
 			$scope.relationTableArray[index].isjoinDisable = false;
 			$scope.relationTableArray[index].joinKey = [];
 		} else {
@@ -322,9 +323,11 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		
 		relationtable.relationJoinType = $scope.joinType[0];
 		var joinkey = {};
+		joinkey.relationOperator = $scope.relationOperators[0];
 		joinKey.push(joinkey)
 		relationtable.joinKey = joinKey;
 		relationtable.joinMetaType=$scope.selectSourceType;
+	
 		$scope.relationTableArray.splice($scope.relationTableArray.length, 0, relationtable);
 
 	}
@@ -377,8 +380,8 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	
 	$scope.addJoinSubRow = function (index) {
 		var joinKey = {}
-		joinKey.logicalOperator = $scope.logicalOperator[0];
-		joinKey.relationOperator = $scope.relationOperator;
+		joinKey.logicalOperator = $scope.relationTableArray[index].joinKey.length >0 ? $scope.logicalOperator[0]:"";
+		joinKey.relationOperator = $scope.relationOperators[0];
        
 		$scope.relationTableArray[index].joinKey.splice($scope.relationTableArray[index].joinKey.length, 0, joinKey);
 	}
@@ -483,8 +486,10 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 					var firstoperandref = {}
 					var scecondoperandref = {}
 					if ($scope.relationTableArray[j].relationJoinType == "EQUI JOIN") {
-
 						relationInfo.joinType = ""
+					}
+					else if ($scope.relationTableArray[j].relationJoinType == "CROSS JOIN"){
+						relationInfo.joinType = "CROSS";
 					}
 					else {
 

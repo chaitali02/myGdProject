@@ -214,7 +214,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.filterTableArray = null;
 	$scope.dashboardCompare = null;
 	$scope.filterAttributeTags = null;
-	$scope.stageName = "metadata"
+	$scope.stageName = "dashboard"
 	$scope.stageParams = { "type": "dashboard" }
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
@@ -605,7 +605,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		delete $sessionStorage.fromStateName;
 		$('#dashboardsave').css("display", "none");
 		var hidemode = "yes";
-		debugger
+	
 		if (hidemode == 'yes') {
 			if ($scope.stageName == "metadata") {
 				setTimeout(function () { $state.go('metadata', { 'type': 'dashboard' }); }, 2000);
@@ -615,7 +615,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 				setTimeout(function () { $state.go($scope.stageName, { 'id': $scope.stageParams.id }); }, 2000);
 			}
 			else {
-				setTimeout(function () { $state.go($scope.stageName); }, 2000);
+				setTimeout(function () { $state.go("dashboard"); }, 2000);
 			}
 		}
 	}

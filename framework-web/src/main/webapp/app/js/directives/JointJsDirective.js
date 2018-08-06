@@ -1826,6 +1826,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                else if(status && status=='OnHold'){
                  iconMenuItems.push({title:'Resume', type : 'resume'});
                }
+               
+               if(status && status=='Failed'){
+                iconMenuItems.push({title:'Show Logs', type : 'logs'});
+               }
                if(status && status=='InProgress'){
                  iconMenuItems.push({title:'Kill', type : 'killexecution'});
                }
