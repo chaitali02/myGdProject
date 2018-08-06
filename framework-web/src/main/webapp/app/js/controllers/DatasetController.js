@@ -1163,7 +1163,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 					// else {
 					// 	rhsref.type = "datapod";
 					// }
-					rhsref.type =$scope.filterTableArray[i].rhsdatapodAttribute
+					rhsref.type =$scope.filterTableArray[i].rhsdatapodAttribute.type;
 					rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
 
 					rhsoperand.ref = rhsref;
