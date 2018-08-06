@@ -1,7 +1,7 @@
 {
-  "uuid": "19507389-765b-4df3-a717-ab514337192a",
-  "version": "1533594674",
-  "name": "ppl_e2e_economic_capital_wi_simulation",
+  "uuid": "1fa51b87-946f-424b-abb5-4f4f3236b2cb",
+  "version": "1533589888",
+  "name": "ppl_customer_loss_simulation",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Aug 06 18:31:14 EDT 2018",
+  "createdOn": "Mon Aug 06 17:11:28 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -27,7 +27,7 @@
       "value": null
     }
   ],
-  "xPos": 10,
+  "xPos": 30,
   "yPos": 330,
   "templateFlg": "N",
   "templateInfo": null,
@@ -37,9 +37,9 @@
       "dependsOn": [],
       "tasks": [
         {
-          "taskId": "8a8808ae-3c54-4faa-bb87-375c43bcea40",
+          "taskId": "1353043c-1820-431b-98b2-727f5a8b1875",
           "dependsOn": [],
-          "name": "Industry Factor SImulation",
+          "name": "Customer Loss SImulation",
           "operators": [
             {
               "operatorId": null,
@@ -49,9 +49,9 @@
                 {
                   "ref": {
                     "type": "operator",
-                    "uuid": "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                    "uuid": "9f0063af-86b4-4610-bf6e-047d74fc197e",
                     "version": null,
-                    "name": "Generate Data"
+                    "name": "Generate Data for attribute"
                   },
                   "value": null
                 }
@@ -68,9 +68,9 @@
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
                         "version": "1525519035",
-                        "name": "paramlist_generate_data"
+                        "name": "paramlist_generate_data_for_attribute"
                       },
                       "value": null,
                       "paramId": "0",
@@ -79,7 +79,7 @@
                       "paramValue": {
                         "ref": {
                           "type": "distribution",
-                          "uuid": "aea101dd-fb99-45c8-a4af-c753e457f050",
+                          "uuid": "c5bfcdab-6435-4848-9214-6a878a865319",
                           "version": null,
                           "name": null
                         },
@@ -90,9 +90,9 @@
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
                         "version": "1525519035",
-                        "name": "paramlist_generate_data"
+                        "name": "paramlist_generate_data_for_attribute"
                       },
                       "value": null,
                       "paramId": "1",
@@ -112,9 +112,9 @@
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
                         "version": "1525519035",
-                        "name": "paramlist_generate_data"
+                        "name": "paramlist_generate_data_for_attribute"
                       },
                       "value": null,
                       "paramId": "2",
@@ -123,7 +123,7 @@
                       "paramValue": {
                         "ref": {
                           "type": "datapod",
-                          "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
+                          "uuid": "6f300854-46f3-4e72-9976-38cdc8b91ff9",
                           "version": null,
                           "name": null
                         },
@@ -134,26 +134,26 @@
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                        "version": "1523604347",
-                        "name": "paramlist_multivariate_normal_distribution"
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
+                        "version": "1525519035",
+                        "name": "paramlist_generate_data_for_attribute"
                       },
                       "value": null,
-                      "paramId": "1",
-                      "paramName": "factorMeans",
+                      "paramId": "3",
+                      "paramName": "attrRef",
                       "paramType": "attribute",
                       "paramValue": null,
                       "attributeInfo": [
                         {
                           "ref": {
                             "type": "dataset",
-                            "uuid": "feb19724-f34b-4819-a4da-fa5c66cdb39c",
+                            "uuid": "7c85e971-bb92-4d71-9c8e-9b5c6633aa69",
                             "version": null,
-                            "name": "ds_industry_factor_mean"
+                            "name": "ds_customer_portfolio"
                           },
                           "value": null,
-                          "attrId": "1",
-                          "attrName": "mean",
+                          "attrId": "0",
+                          "attrName": "cust_id",
                           "attrType": null
                         }
                       ]
@@ -161,65 +161,46 @@
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                        "version": "1523604347",
-                        "name": "paramlist_multivariate_normal_distribution"
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
+                        "version": "1525519035",
+                        "name": "paramlist_generate_data_for_attribute"
                       },
                       "value": null,
-                      "paramId": "2",
-                      "paramName": "factorCovariance",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "factor1",
-                          "attrType": "double"
+                      "paramId": "4",
+                      "paramName": "min",
+                      "paramType": "integer",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
                         },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "2",
-                          "attrName": "factor2",
-                          "attrType": "double"
+                        "value": "0"
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
+                        "version": "1525519035",
+                        "name": "paramlist_generate_data_for_attribute"
+                      },
+                      "value": null,
+                      "paramId": "5",
+                      "paramName": "max",
+                      "paramType": "integer",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
                         },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "3",
-                          "attrName": "factor3",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "4",
-                          "attrName": "factor4",
-                          "attrType": "double"
-                        }
-                      ]
+                        "value": "1"
+                      },
+                      "attributeInfo": null
                     }
                   ],
                   "internalVarMap": null,
@@ -230,14 +211,16 @@
               }
             }
           ],
-          "xPos": 210,
-          "yPos": 180,
+          "xPos": 390,
+          "yPos": 330,
           "active": "Y",
           "statusList": []
         },
         {
           "taskId": "f56bd172-6395-439b-a710-3793abd810ef",
-          "dependsOn": [],
+          "dependsOn": [
+            "1353043c-1820-431b-98b2-727f5a8b1875"
+          ],
           "name": "Transpose Customer Risk",
           "operators": [
             {
@@ -1501,544 +1484,14 @@
               }
             }
           ],
-          "xPos": 410,
-          "yPos": 460,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "04c78b6f-32dd-4a8d-9f59-8c2ea7808941",
-          "dependsOn": [
-            "8a8808ae-3c54-4faa-bb87-375c43bcea40"
-          ],
-          "name": "map_industry_factor_simulation",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "29799c2b-f7bf-4a6f-b97c-9d1842d8fa73",
-                    "version": null,
-                    "name": "map_industry_factor_simulation"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 410,
-          "yPos": 100,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "a531e960-323c-418d-933c-a478a6420b96",
-          "dependsOn": [
-            "f56bd172-6395-439b-a710-3793abd810ef",
-            "de9b32cd-1815-46c7-b332-a1746d011383"
-          ],
-          "name": "map_customer_loss_simulation",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "ef14274c-efd5-4e59-8da9-12bf8381820c",
-                    "version": null,
-                    "name": "map_customer_loss_simulation"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 680,
-          "yPos": 320,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "de9b32cd-1815-46c7-b332-a1746d011383",
-          "dependsOn": [
-            "04c78b6f-32dd-4a8d-9f59-8c2ea7808941"
-          ],
-          "name": "Transpose Industry Factors",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "operator",
-                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                    "version": null,
-                    "name": "Transpose"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "paramSetHolder": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "0",
-                      "paramName": "sourceDatapod",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "factor1",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "2",
-                          "attrName": "factor2",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "3",
-                          "attrName": "factor3",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "4",
-                          "attrName": "factor4",
-                          "attrType": "double"
-                        }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "key",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "0",
-                          "attrName": "iteration_id",
-                          "attrType": "integer"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "5",
-                          "attrName": "reporting_date",
-                          "attrType": "string"
-                        }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "2",
-                      "paramName": "saveLocation",
-                      "paramType": "datapod",
-                      "paramValue": {
-                        "ref": {
-                          "type": "datapod",
-                          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
-                          "version": null,
-                          "name": null
-                        },
-                        "value": null
-                      },
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 620,
-          "yPos": 180,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "3455ece6-2017-4445-9bc5-59f7430f2922",
-          "dependsOn": [
-            "a531e960-323c-418d-933c-a478a6420b96"
-          ],
-          "name": "map_portfolio_loss_simulation",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "2b4427c3-85fd-4729-ab30-7692589c15ea",
-                    "version": null,
-                    "name": "map_portfolio_loss_simulation"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 890,
-          "yPos": 320,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "1830498b-5cfc-4e59-ad00-0fb5451df1f6",
-          "dependsOn": [
-            "3455ece6-2017-4445-9bc5-59f7430f2922"
-          ],
-          "name": "map_portfolio_loss_aggr",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "123458cb-8e6e-4046-8b1a-5716f8136c20",
-                    "version": null,
-                    "name": "map_portfolio_loss_simulation_aggr"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1080,
-          "yPos": 320,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "a508867b-b1a1-4f65-89bb-e10f62df3ba4",
-          "dependsOn": [
-            "1830498b-5cfc-4e59-ad00-0fb5451df1f6"
-          ],
-          "name": "map_portfolio_loss_simulation_el",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "1aea5a52-8738-4f9e-931a-b5b794bd1c15",
-                    "version": null,
-                    "name": "map_portfolio_loss_simulation_el"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1210,
-          "yPos": 220,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "45da5adb-d209-4cbb-aa34-11f914cb4a90",
-          "dependsOn": [
-            "1830498b-5cfc-4e59-ad00-0fb5451df1f6"
-          ],
-          "name": "map_customer_portfolio_ul",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "c02e79a3-3f41-479a-8d8f-1977d6946e20",
-                    "version": null,
-                    "name": "map_customer_portfolio_ul"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1210,
-          "yPos": 420,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "c45caaa0-5021-4ae4-b888-9f253822d207",
-          "dependsOn": [
-            "a508867b-b1a1-4f65-89bb-e10f62df3ba4"
-          ],
-          "name": "Map_portfolio_expected_sum",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "92504135-fd67-4841-ae24-b474a2e6ac7c",
-                    "version": null,
-                    "name": "map_portfolio_expected_sum"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1330,
-          "yPos": 100,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "728f94c1-1773-47f2-a284-33a02c0aa6b8",
-          "dependsOn": [
-            "45da5adb-d209-4cbb-aa34-11f914cb4a90"
-          ],
-          "name": "map_customer_portfolio_ul_calc",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "f1507916-23c5-4b44-8533-e968f9d2ff5e",
-                    "version": null,
-                    "name": "map_customer_portfolio_ul_calc"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1340,
-          "yPos": 530,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "8b2ca746-3580-48d5-bd2c-98e249a23592",
-          "dependsOn": [
-            "c45caaa0-5021-4ae4-b888-9f253822d207"
-          ],
-          "name": "map_portfolio_loss_aggr_es",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "7df318d0-e435-4c9b-94fb-2cfff0d7141f",
-                    "version": null,
-                    "name": "map_portfolio_loss_aggr_es"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1470,
-          "yPos": 230,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "f3f43c61-8896-4624-b7d6-932604c865fd",
-          "dependsOn": [
-            "728f94c1-1773-47f2-a284-33a02c0aa6b8"
-          ],
-          "name": "map_customer_portfolio_ul_calc_summary",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "b3696a8c-07ea-4d6d-8ded-7c9354d42c3e",
-                    "version": null,
-                    "name": "map_customer_portfolio_ul_calc_summary"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1470,
-          "yPos": 430,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "95214093-5a77-4159-b6d9-51430eac1470",
-          "dependsOn": [
-            "8b2ca746-3580-48d5-bd2c-98e249a23592"
-          ],
-          "name": "map_customer_es_allocation",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "1e2a5b29-5cc3-4773-935a-846105d2ffb7",
-                    "version": null,
-                    "name": "map_customer_es_allocation"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1640,
-          "yPos": 110,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "6776b696-62f0-4a45-af17-055319cde951",
-          "dependsOn": [
-            "f3f43c61-8896-4624-b7d6-932604c865fd"
-          ],
-          "name": "map_customer_portfolio_ul_calc_allocation",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "a75f7594-71c8-4a71-8885-f474814988e6",
-                    "version": null,
-                    "name": "map_customer_portfolio_ul_calc_allocation"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1620,
-          "yPos": 530,
+          "xPos": 580,
+          "yPos": 330,
           "active": "Y",
           "statusList": []
         }
       ],
       "name": "new stage",
-      "xPos": 140,
+      "xPos": 210,
       "yPos": 330,
       "active": "Y",
       "statusList": []

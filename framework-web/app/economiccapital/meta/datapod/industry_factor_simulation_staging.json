@@ -1,7 +1,7 @@
 {
-  "uuid": "21675822-7de6-45db-b1b7-05061da04770",
-  "version": "1533253164",
-  "name": "industry_factor_correlation_adhoc",
+  "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
+  "version": "1533587235",
+  "name": "industry_factor_simulation_staging",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Aug 02 19:39:24 EDT 2018",
+  "createdOn": "Mon Aug 06 16:27:15 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -40,12 +40,12 @@
   "attributes": [
     {
       "attributeId": 0,
-      "name": "factor",
-      "type": "string",
-      "desc": "factor",
+      "name": "iteration_id",
+      "type": "integer",
+      "desc": "iteration_id",
       "key": "",
       "partition": "N",
-      "dispName": "factor",
+      "dispName": "iteration_id",
       "active": "Y",
       "expr": null
     },
