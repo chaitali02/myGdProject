@@ -430,9 +430,7 @@
                       <div ng-if="tabledata.isrhsFormula">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                           <select select2 class="form-control" name="rhsformula_{{$index}}" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula"
-                            ng-options="r as r.name for r in expressionFormula track by r.uuid" ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula"
-                            required disable-validation-message="" uib-tooltip="{{myform['rhsformula'+$index].$valid ? '' : 'Please select formula'}}"
-                            tooltip-placement="top">
+                            ng-options="r as r.name for r in allFormula track by r.uuid" ng-disabled="{{mode}}">
                           </select>
                         </span>
                       </div>
@@ -547,7 +545,7 @@
                           <div ng-if="data.isSourceAtributeDatapod">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                               <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}" class="form-control"
-                                ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute track by c.uuid+c.attributeId"
+                                ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute  | orderBy:'datapodname' track by c.uuid+c.attributeId"
                                 ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)" required disable-validation-message=""></select>
                             </span>
                           </div>
