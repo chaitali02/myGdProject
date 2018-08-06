@@ -8,7 +8,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   $scope.showFrom = true;
   $scope.showGraphDiv=false;
   $scope.ruleSourceTypes = ["datapod", "relation", "dataset", "rule"];
-  $scope.logicalOperator = ["OR", "AND"];
+  $scope.logicalOperator = ["AND","OR"];
   $scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
   $scope.paramTypes=["paramlist","paramset"];
   $scope.operator = CF_FILTER.operator;//["=", "<", ">", "<=", ">=", "BETWEEN"];

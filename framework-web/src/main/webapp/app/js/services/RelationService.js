@@ -408,6 +408,10 @@ MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, Met
 				if (response.relationInfo[i].joinType == "") {
 					relationInfo.relationJoinType = "EQUI JOIN"
 				}
+				else if(response.relationInfo[i].joinType =="CROSS"){
+					relationInfo.relationJoinType = "CROSS JOIN"
+				}
+				
 				else {
 					relationInfo.relationJoinType = response.relationInfo[i].joinType;
 				}

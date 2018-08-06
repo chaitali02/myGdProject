@@ -297,6 +297,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
@@ -317,6 +318,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
@@ -337,6 +339,7 @@ MetadataModule.service('MetadataFormulaSerivce', function ($q, sortFactory, Meta
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;

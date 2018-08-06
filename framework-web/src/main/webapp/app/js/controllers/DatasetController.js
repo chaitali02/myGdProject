@@ -52,7 +52,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.showgraph = false
 	$scope.showGraphDiv = false
 	$scope.graphDataStatus = false
-	$scope.logicalOperator = [" ", "OR", "AND"];
+	$scope.logicalOperator = ["AND","OR"];
 	$scope.SourceTypes = ["datapod", "relation", 'dataset']
 	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
 	$scope.operator = CF_FILTER.operator;
@@ -694,7 +694,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		filertable.isrhsFormula = false;
 		filertable.isrhsSimple = true;
 		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
-		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? $scope.logicalOperator[0] : $scope.logicalOperator[1]
+		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[0]
 		filertable.rhstype = $scope.rhsType[0]
@@ -964,14 +964,52 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 
 	}
 
+	$scope.isDublication = function(arr,field,index,name){
+		
+		var res=-1;
+		for(var i=0;i<arr.length-1;i++){
+			if(arr[i][field] == arr[index][field] && i !=index){
+				$scope.myform[name].$invalid=true;
+				res=i;
+				break
+			}else{
+				$scope.myform[name].$invalid=false;
+			}
+		}
+		return res;
+	}
+
 	$scope.onChangeSourceName = function (index) {
+	    
 		$scope.attributeTableArray[index].isSourceName = true;
+		if($scope.attributeTableArray[index].name){
+			var res=$scope.isDublication($scope.attributeTableArray,"name",index,"sourceName"+index);
+			if(res != -1){
+				$scope.isDuplication=true;
+			}else{
+				$scope.isDuplication=false;
+			}
+	    }
+
 	}
 
 	$scope.onChangeAttributeDatapod = function (data, index) {
 		if (data != null && !$scope.attributeTableArray[index].isSourceName) {
 			$scope.attributeTableArray[index].name = data.name
+		//	console.log($filter('unique')($scope.attributeTableArray,"name"));
 		}
+		setTimeout(function(){
+			debugger
+			if($scope.attributeTableArray[index].name){
+				var res=$scope.isDublication($scope.attributeTableArray,"name",index,"sourceName"+index);
+				if(res != -1){
+					$scope.isDuplication=true;
+				}else{
+					$scope.isDuplication=false;
+				}
+			}
+		},1)
+	
 	}
 	$scope.onChangeFormula = function (data, index) {
 		if (!$scope.attributeTableArray[index].isSourceName)

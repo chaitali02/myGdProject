@@ -170,7 +170,9 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 	 	    type.text="datapod";
 		    $scope.attributeType= type;
 			var attributeInfo={}
-		 	attributeInfo.uuid=$scope.formulainfoarray[index].uuid
+			 attributeInfo.uuid=$scope.formulainfoarray[index].uuid
+			 attributeInfo.type=$scope.formulainfoarray[index].type
+
 			attributeInfo.attributeId=$scope.formulainfoarray[index].attrId;
 			attributeInfo.dname= $scope.formulainfoarray[index].value;
 			setTimeout(function(){ $scope.attributeinfo=attributeInfo; },10);
@@ -343,7 +345,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		var data = {};
 		if ($scope.attributeType.text == "datapod") {
 			if ($scope.attributeinfo != null) {
-				data.type = "datapod"
+				data.type =$scope.attributeinfo.type
 				data.value = $scope.attributeinfo.dname
 				data.uuid = $scope.attributeinfo.uuid;
 				data.attrId = $scope.attributeinfo.attributeId;
