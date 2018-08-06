@@ -282,7 +282,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 
 	else {
 
-		if (typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListformula") {
+		if ($sessionStorage.fromStateName  && typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListformula") {
 			$scope.showactive = "false"
 			$scope.selectedDependsOnType = $sessionStorage.dependon.type
 			$scope.isDependonDisabled = true;
