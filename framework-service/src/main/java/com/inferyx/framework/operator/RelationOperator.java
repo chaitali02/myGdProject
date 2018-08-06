@@ -142,20 +142,20 @@ public class RelationOperator {
 				rightTable = dataStoreServiceImpl.getTableName(dataStore.getUuid(), dataStore.getVersion());
 				dataStore = null;
 			} else */
-			if (relation.getDependsOn().getRef().getType() == MetaType.datapod 
+			if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.datapod 
 					&& otherParams != null && otherParams.containsKey("datapodUuid_".concat(datapod.getUuid()).concat("_tableName"))) {
 				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				String tableKey = "datapodUuid_".concat(datapod.getUuid()).concat("_tableName");
 				rightTable = otherParams.get(tableKey);
-			} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset 
+			} else if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.dataset 
 					&& otherParams != null && otherParams.containsKey("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_version")) {
 				rightDsVersion = otherParams.get("datasetUuid_"+relation.getDependsOn().getRef().getUuid()+"_version");
-			} else if (relation.getDependsOn().getRef().getType() == MetaType.datapod 
+			} else if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.datapod 
 					&& (otherParams == null 
 					|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()))) == null  
 					&& otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")) == null))) {
 				rightTable = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} else if (relation.getDependsOn().getRef().getType() == MetaType.datapod) {
+			} else if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.datapod) {
 				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()));
 				rightTable = otherParams.get(tableKey);
