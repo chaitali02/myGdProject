@@ -15,7 +15,8 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `customer_portfolio`(
   `version` int)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_portfolio_1000.csv'
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_portfolio_1000.csv' OVERWRITE INTO TABLE framework.customer_portfolio;
+
 
 
 

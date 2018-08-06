@@ -11,7 +11,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `industry_factor_simulation`(
   `version` int)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/industry_factor_simulation.csv' 
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/industry_factor_simulation.csv' OVERWRITE INTO TABLE framework.industry_factor_simulation;
 
 
 
