@@ -955,7 +955,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 	
 	
-	public List<Map<String, Object>> getDataQualSummary(String dataQualExecUUID, String dataQualExecVersion, RunMode runMode) {
+	public List<Map<String, Object>> getDataQualSummary(String dataQualExecUUID, String dataQualExecVersion, RunMode runMode) throws JsonProcessingException {
 		
 		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(dataQualExecUUID, dataQualExecVersion);
 		dataStoreServiceImpl.setRunMode(runMode);
