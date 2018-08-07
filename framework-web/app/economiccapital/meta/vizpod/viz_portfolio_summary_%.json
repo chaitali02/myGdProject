@@ -1,8 +1,8 @@
 {
-  "id": "5b68e30efb6411ef1723e36d",
-  "uuid": "d9d5f031-9f02-4b98-88bd-3962dba4e5dd",
-  "version": "1533600526",
-  "name": "Portfolio Summary",
+  "id": "5b68e2f8fb6411ef1723e321",
+  "uuid": "333ca69a-6fb7-4d57-9412-cd72aedc7eee",
+  "version": "1533600504",
+  "name": "Portfolio Loss Summary %",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Aug 06 20:08:46 EDT 2018",
+  "createdOn": "Mon Aug 06 20:08:24 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -66,10 +66,10 @@
         "version": null,
         "name": "portfolio_loss_summary"
       },
-      "attributeId": 0,
+      "attributeId": 7,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_avg_pd"
+      "attributeName": "portfolio_es_percentage"
     },
     {
       "ref": {
@@ -78,10 +78,10 @@
         "version": null,
         "name": "portfolio_loss_summary"
       },
-      "attributeId": 1,
+      "attributeId": 8,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_avg_lgd"
+      "attributeName": "portfolio_val_percentage"
     },
     {
       "ref": {
@@ -90,10 +90,10 @@
         "version": null,
         "name": "portfolio_loss_summary"
       },
-      "attributeId": 2,
+      "attributeId": 9,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_total_ead"
+      "attributeName": "portfolio_el_percentage"
     }
   ]
 }

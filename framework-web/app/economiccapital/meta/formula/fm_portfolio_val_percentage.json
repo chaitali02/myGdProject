@@ -1,6 +1,6 @@
 {
   "uuid": "cbda23ba-0060-4ffc-a1b1-9e1d83fc053a",
-  "version": "1533491698",
+  "version": "1533600577",
   "name": "fm_portfolio_val_percentage",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 05 13:54:58 EDT 2018",
+  "createdOn": "Mon Aug 06 20:09:37 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -71,6 +71,30 @@
       "attributeId": 2,
       "value": null,
       "attributeName": "total_ead",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "*",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "100",
+      "attributeName": null,
       "attributeType": null
     }
   ],
