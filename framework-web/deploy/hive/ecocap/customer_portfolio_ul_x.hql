@@ -13,6 +13,6 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `customer_portfolio_ul_x`(
   `def_point` double, 
   `unexpected_loss` double, 
   `reporting_date` string, 
-  `version` int;
+  `version` int);
 
 
