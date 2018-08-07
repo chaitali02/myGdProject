@@ -57,10 +57,33 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 		name: 'action',
 		cellClass: 'text-center',
 		headerCellClass: 'text-center',
-		maxWidth: 100,
+    maxWidth: 150,
+    // cellTemplate: [
+      
+    //   '<div class="ui-grid-cell-contents"><a class="btn btn-xs btn-primary" name="execbutton"  ng-click="grid.appScope.show_dashboard(row.entity)">View</a></div>',
+    
+    // ].join(''),
 		cellTemplate: [
-			'<div class="ui-grid-cell-contents"><a class="btn btn-xs btn-primary" name="execbutton"  ng-click="grid.appScope.show_dashboard(row.entity)">View</a></div>',
-		].join('')
+      
+      '<div class="ui-grid-cell-contents">',
+      '<div class="col-md-12" style="display:inline-flex;">',   
+      '  <div class="col-md-10 dropdown" uib-dropdown dropdown-append-to-body>',
+      '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
+      '    <i class="fa fa-angle-down"></i></button>',
+      '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'View\') == -1"><a ng-click="grid.appScope.show_dashboard(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Edit\') == -1" ><a ng-click="grid.appScope.editDashboard(row.entity)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Delete\') == -1" ng-if="row.entity.active == \'Y\'"><a ng-click="grid.appScope.delete(row.entity)"><i class="fa fa-times" aria-hidden="true"></i>  Delete</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Restore\') == -1" ng-if="row.entity.active == \'N\'"><a ng-click="grid.appScope.delete(row.entity,true)"><i class="fa fa-retweet" aria-hidden="true"></i>  Restore</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Publish\') == -1" ng-if="row.entity.published == \'N\'"><a ng-click="grid.appScope.publish(row.entity)"><i class="fa fa-share-alt" aria-hidden="true"></i>  Publish</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Unpublish\') == -1 || row.entity.createdBy.ref.name != grid.appScope.loginUser" ng-if="row.entity.published == \'Y\'"><a ng-click="grid.appScope.publish(row.entity,true)"><i class="fa fa-shield" aria-hidden="true"></i>  Unpublish</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Clone\') == -1"><a ng-click="grid.appScope.createCopy(row.entity)"><i class="fa fa-clone" aria-hidden="true"></i>  Clone</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Export\') == -1"><a ng-click="grid.appScope.getDetail(row.entity)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Export</a></li>',
+      '    </ul>',
+      '  </div>',
+      '</div>'
+    
+    ].join('')
 	});
 	$scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.gridApi = gridApi;
@@ -68,48 +91,21 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
   };
 
   $scope.refreshData = function(searchtext) {
-    //var data
     $scope.gridOptions.data = $filter('filter')($scope.originalData,searchtext, undefined);
-  //  $scope.getResults(data);
-  };
+  }
+
   $scope.$watchCollection('switchStatus', function() {
      $scope.isListCard=!$scope.isListCard;
   });
-  // $scope.listAndCardShow=function (data) {
-  // 	$scope.isListCard=!$scope.isListCard;
-  // }
-	$scope.selectdashboard = function(response) {
+
+ 	$scope.selectdashboard = function(response) {
     $scope.selectedmodeldata = true;
-      $scope.gridOptions.data=null;
+    $scope.gridOptions.data=null;
     $scope.gridOptions.data = response.data;
     $scope.originalData = response.data;
-		// if($scope.originalData.length >0){
-		// 	$scope.getResults($scope.originalData);
-		// }
   }
 
-	// $scope.selectPage = function(pageNo) {
-	// 	$scope.pagination.currentPage = pageNo;
-	// };
-	// $scope.onPerPageChange = function() {
-	// 		$scope.pagination.currentPage = 1;
-	// 	$scope.getResults($scope.originalData)
-	// }
-	// $scope.pageChanged = function() {
-	// 	$scope.getResults($scope.originalData)
-	// };
-	// $scope.getResults = function(params) {
-	// 	$scope.pagination.totalItems=params.length;
-	// 	$scope.pagination.to = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize);
-	// 	if ($scope.pagination.totalItems < ($scope.pagination.pageSize*$scope.pagination.currentPage)) {
-	// 		$scope.pagination.from = $scope.pagination.totalItems;
-	// 	} else {
-	// 		$scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
-	// 	}
-	// 	var limit = ($scope.pagination.pageSize*$scope.pagination.currentPage);
-	// 	var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
-	// 	 $scope.gridOptions.data=params.slice(offset,limit);
-	// }
+	
   $scope.showIcon=function(index){
     $scope.alldashboard[index].isIconShow=true;
   }
@@ -128,9 +124,39 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
   		notify.title= 'Info',
 			$scope.$emit('notify', notify);
 		}
-	}
-  $scope.okDelete=function () {
+  }
+  $scope.editDashboard=function(data){
+    setTimeout(function(){  $state.go("metaListdashboard",{'id':data.uuid,'mode':'false'});},100);
+  }
+  
+  $scope.createCopy = function (data) {
+   
+    var uuid = data.uuid;
+    var version = data.version;
+    $scope.clone = {};
+    $scope.clone.uuid = uuid;
+    $scope.clone.version = version;
+    $scope.msg="Clone"
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
 
+  $scope.okClone = function () {
+    $('#confModal').modal('hide');
+    CommonService.getSaveAS($scope.clone.uuid, $scope.clone.version,"dashboard").then(function (response) {onSuccessSaveAs(response.data)});
+    var onSuccessSaveAs = function (response) {
+      $scope.originalData.splice(0, 0, response);
+      $scope.message ="Dashboard Cloned Successfully"
+      notify.type = 'success',
+      notify.title = 'Success',
+      notify.content = $scope.message
+      $scope.$emit('notify', notify);
+    }
+  
+
+  $scope.okDelete=function () {
     $('#DeleteConfModal').modal('hide');
     if($scope.dashboarddatadelete.active=='Y'){
 			CommonService.delete($scope.dashboarddatadelete.id,'dashboard').then(function(response){OnSuccessDelete(response.data)});
@@ -157,7 +183,6 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
   $scope.metadashboard = function($event,index,data){
     $event.stopPropagation();
     $scope.dashboarddatadelete=data;
-    //$scope.dashboarddatadelete.index=index
     if(data.active=='Y'){
       $scope.deletemsg="Delete Dashboard"
     }
@@ -168,8 +193,6 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
       backdrop: 'static',
       keyboard: false
     });
-
-    //setTimeout(function(){  $state.go("metaListdashboard",{'id':uuid,'mode':'false'});},100);
 
   }
 
@@ -212,11 +235,9 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 				dashbardjson.createdOn=new Date(response[i].createdOn.split("IST")[0]).toLocaleDateString('en-US')//response[i].createdOn
 				dashbardjson.sectionInfo=response[i].sectionInfo;
 				dashbardarray[i]=dashbardjson;
-
 			}//End For
 		}//End If
 		$scope.alldashboard=dashbardarray
-		//$scope.alldashboard=response;
 	}//End  onSuccessGetAllLatest
 
 });//End DashboradMenuController
