@@ -43,7 +43,7 @@ public class RelationOperator {
 	@Autowired
 	protected MetadataUtil daoRegister;
 	@Autowired
-	protected CommonServiceImpl commonServiceImpl;
+	protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	protected JoinKeyOperator joinKeyOperator;
 	@Autowired
