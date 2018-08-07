@@ -38,6 +38,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.AttributeMapOperator;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DatasetView;
@@ -76,6 +77,8 @@ public class DatasetServiceImpl {
 	ExecutorFactory execFactory;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	AttributeMapOperator attributeMapOperator;
 
 	/********************** UNUSED **********************/
 	/*public Dataset findLatest() {
@@ -90,7 +93,7 @@ public class DatasetServiceImpl {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		//ResultSetHolder rsHolder = null;
-		data = exec.executeAndFetch(sql, null);
+		data = exec.executeAndFetch(sql, commonServiceImpl.getApp().getUuid());
 		/*DataFrame df = rsHolder.getDataFrame();		
 			Row[] dfRows = df.limit(rows).collect();
 			String[] columns = df.columns();
@@ -504,5 +507,33 @@ public class DatasetServiceImpl {
 	public String generateSql (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		return datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+	}
+
+	public List<Map<String, Object>> getAttributeValues(String datasetUuid, int attributeID, RunMode runMode) throws Exception {
+		DataSet dataSet = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString());
+		List<AttributeSource> attributeSources = dataSet.getAttributeInfo();
+		List<AttributeSource> tempAttributeSources = new ArrayList<>();
+		for(AttributeSource attributeSource : attributeSources) {
+			if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeID)) {
+				tempAttributeSources.add(attributeSource);
+				break;
+			}
+		}
+		dataSet.setAttributeInfo(tempAttributeSources);
+		dataSet.setFilterInfo(null);
+		String selectQuery = datasetOperator.generateSelectDistinct(dataSet, null, null, null, runMode);
+		if(selectQuery.contains(" AS "+tempAttributeSources.get(0))){
+			selectQuery = selectQuery.replaceAll(" AS "+tempAttributeSources.get(0), "");
+		}
+		if(selectQuery.contains(" as "+tempAttributeSources.get(0).getAttrSourceName())){
+			selectQuery = selectQuery.replaceAll(" as "+tempAttributeSources.get(0).getAttrSourceName(), "");
+		}
+		StringBuilder builder = new StringBuilder(selectQuery);
+		builder.append(" AS value ");
+		builder.append(" FROM ");
+		builder.append(datasetOperator.generateFrom(dataSet, null, null, new HashSet<>(), runMode));
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
 	}
 }

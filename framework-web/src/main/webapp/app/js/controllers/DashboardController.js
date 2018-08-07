@@ -207,7 +207,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.dashboard = {};
 	$scope.dashboard.versions = [];
 	$scope.isshowmodel = false;
-	$scope.dependsOnTypes = ["datapod", "relation"]
+	$scope.dependsOnTypes = ["datapod","dataset","relation"]
 	$scope.sectiontable = null
 	$scope.logicalOperator = [" ", "OR", "AND"];
 	$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN"];
@@ -565,7 +565,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			for (var i = 0; i < $scope.filterAttributeTags.length; i++) {
 				var filterInfo = {}
 				var ref = {};
-				ref.type = "datapod";
+				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
 				// ref.version=$scope.profileTags[i].version;
 				filterInfo.ref = ref;
