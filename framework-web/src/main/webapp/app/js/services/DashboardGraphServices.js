@@ -171,6 +171,16 @@ DatavisualizationModule.factory('DahsboardFactory', function ($http, $location) 
 			method: "GET",
 		}).then(function (response) { return response })
 	}
+	factory.findAttributesByRelation = function (uuid,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	return factory;
 });
 
@@ -239,22 +249,42 @@ DatavisualizationModule.service('DahsboardSerivce', function ($q, sortFactory, D
 	this.getAllAttributeBySource = function (uuid, type) {
 		var deferred = $q.defer();
 		if (type == "relation") {
-			DahsboardFactory.findDatapodByRelation(uuid, "datapod").then(function (response) { onSuccess(response.data) });
+			// DahsboardFactory.findDatapodByRelation(uuid, "datapod").then(function (response) { onSuccess(response.data) });
+			// var onSuccess = function (response) {
+			// 	var attributes = [];
+			// 	for (var j = 0; j < response.length; j++) {
+			// 		for (var i = 0; i < response[j].attributes.length; i++) {
+			// 			var attributedetail = {};
+			// 			attributedetail.uuid = response[j].uuid;
+			// 			attributedetail.uuid = response[j].type;
+			// 			attributedetail.datapodname = response[j].name;
+			// 			attributedetail.name = response[j].attributes[i].name;
+			// 			attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
+			// 			attributedetail.attributeId = response[j].attributes[i].attributeId;
+			// 			attributes.push(attributedetail)
+			// 		}
+			// 	}
+			// 	//console.log(JSON.stringify(attributes))
+			// 	deferred.resolve({
+			// 		data: attributes
+			// 	})
+			// }
+			DahsboardFactory.findAttributesByRelation(uuid, type, "").then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
 				var attributes = [];
 				for (var j = 0; j < response.length; j++) {
-					for (var i = 0; i < response[j].attributes.length; i++) {
-						var attributedetail = {};
-						attributedetail.uuid = response[j].uuid;
-						attributedetail.uuid = response[j].type;
-						attributedetail.datapodname = response[j].name;
-						attributedetail.name = response[j].attributes[i].name;
-						attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
-						attributedetail.attributeId = response[j].attributes[i].attributeId;
-						attributes.push(attributedetail)
-					}
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
+					attributedetail.datapodname = response[j].ref.name;
+					attributedetail.name = response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
+					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributes.push(attributedetail)
 				}
-				//console.log(JSON.stringify(attributes))
+
 				deferred.resolve({
 					data: attributes
 				})
@@ -269,9 +299,11 @@ DatavisualizationModule.service('DahsboardSerivce', function ($q, sortFactory, D
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
+					attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
 					attributes.push(attributedetail)
 				}
@@ -294,6 +326,7 @@ DatavisualizationModule.service('DahsboardSerivce', function ($q, sortFactory, D
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
 					attributedetail.attributeId = response[j].attrId;
 					attributes.push(attributedetail)
 				}

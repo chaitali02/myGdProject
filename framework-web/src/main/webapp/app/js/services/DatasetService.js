@@ -192,8 +192,6 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 			// }
 			MetadataDatasetFactory.findAttributesByRelation(uuid, "relation", "").then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-
-
 				var attributes = [];
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};

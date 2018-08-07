@@ -163,7 +163,7 @@
 
                   </label>
                   <div class="col-md-6">
-                   
+                    {{filterAttributeTags}}
                     <tags-input class="tag-scroll" ng-model="filterAttributeTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
                       add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
                       <auto-complete source="loadProfiles($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"

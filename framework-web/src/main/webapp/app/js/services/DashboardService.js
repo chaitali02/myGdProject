@@ -245,6 +245,7 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 	};
 
 	this.getLatestByUuidView = function (id, type) {
+		
 		var deferred = $q.defer();
 		MetadataDahsboardFactory.findLatestByUuid(id, type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
@@ -272,6 +273,7 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 			for (var i = 0; i < response.filterInfo.length; i++) {
 				var filterinfo = {};
 				filterinfo.uuid = response.filterInfo[i].ref.uuid;
+				filterinfo.type = response.filterInfo[i].ref.type;
 				filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
 				//profileinfo.version=response.filterInfo[i].ref.version;
 				filterinfo.attributeId = response.filterInfo[i].attrId;
