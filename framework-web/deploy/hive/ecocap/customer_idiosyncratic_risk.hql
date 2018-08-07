@@ -101,13 +101,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `customer_idiosyncratic_risk`(
 `cust96` double,
 `reporting_date` string, 
 `version` int)
-PARTITIONED BY ( 
-`load_date` string,
-`load_id` int)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-ALTER TABLE framework.customer_idiosyncratic_risk ADD PARTITION(load_date='2017-07-01', load_id='00');
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_idiosyncratic_risk.csv' OVERWRITE INTO TABLE customer_idiosyncratic_risk PARTITION (load_date='2017-07-01', load_id='00');
-
-
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_idiosyncratic_risk.csv' OVERWRITE INTO TABLE customer_idiosyncratic_risk;
 

@@ -9,7 +9,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
   $scope.SourceTypes = ["datapod"];
   $scope.selectSourceType=$scope.SourceTypes[0];
   $scope.selectTargetType=$scope.SourceTypes[0];
-  $scope.logicalOperator = ["OR", "AND"];
+  $scope.logicalOperator = ["AND","OR"];
   $scope.operator = CF_FILTER.operator;
   $scope.lshType  = CF_FILTER.lhsType;
   $scope.rhsType  = CF_FILTER.rhsType;

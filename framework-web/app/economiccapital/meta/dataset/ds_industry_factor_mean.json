@@ -1,0 +1,121 @@
+{
+  "uuid": "feb19724-f34b-4819-a4da-fa5c66cdb39c",
+  "version": "1533500468",
+  "name": "ds_industry_factor_mean",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Aug 05 16:21:08 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
+      "version": null,
+      "name": "industry_factor_mean"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "ref": {
+        "type": "filter",
+        "uuid": "e370c6f2-aca4-4f01-9f1a-d53e95371214",
+        "version": null,
+        "name": "ds_industry_factor_mean"
+      },
+      "value": null,
+      "attrId": null,
+      "attrName": null,
+      "attrType": null
+    }
+  ],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrSourceName": "id",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
+          "version": null,
+          "name": "industry_factor_mean"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "id",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrSourceName": "mean",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
+          "version": null,
+          "name": "industry_factor_mean"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "mean",
+        "attrType": "double"
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrSourceName": "reporting_date",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
+          "version": null,
+          "name": "industry_factor_mean"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "reporting_date",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrSourceName": "version",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
+          "version": null,
+          "name": "industry_factor_mean"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "version",
+        "attrType": "Integer"
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
+}

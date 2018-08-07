@@ -86,7 +86,7 @@ public class GenerateDataForValList extends GenerateDataOperator {
 //		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
-		otherParams.put("datapodUuid_" + "valList" + "_tableName", valTableName);
+		otherParams.put("datapodUuid_" + "valList" +execUuid+"_"+execVersion+ "_tableName", valTableName);
 			
 		return otherParams;
 	}
@@ -100,7 +100,7 @@ public class GenerateDataForValList extends GenerateDataOperator {
 	
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-//		String execUuid = baseExec.getUuid();
+		String execUuid = baseExec.getUuid();
 		String execVersion = baseExec.getVersion();
 		Map<String, String> otherParams = execParams.getOtherParams();
 //		int numRepetitions = 0;
@@ -128,7 +128,7 @@ public class GenerateDataForValList extends GenerateDataOperator {
 
 		// Get the attribute 
 		String attributeName = "id";
-		String attrTableName = otherParams.get("datapodUuid_" + "valList" + "_tableName");
+		String attrTableName = otherParams.get("datapodUuid_" + "valList" +execUuid+"_"+execVersion+ "_tableName");
 		
 		List<Attribute> attributeList = locationDatapod.getAttributes();
 		

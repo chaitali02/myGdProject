@@ -7,14 +7,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -37,6 +40,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
+import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 /**
@@ -55,6 +59,8 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
+	@Autowired
+	private DatasetServiceImpl datasetServiceImpl;
 	@Autowired
 	private Helper helper;
 	
@@ -84,15 +90,17 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		
 		MetaIdentifier attrDpIdentifier = attrInfo.getAttributeInfo().get(0).getRef();
-		Datapod attrDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrDpIdentifier.getUuid(), attrDpIdentifier.getVersion(), attrDpIdentifier.getType().toString());
+		Datapod attrDatapod = null; 
+		DataSet attrDataset = null;
+		if (attrDpIdentifier.getType() == MetaType.datapod) {
+			attrDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrDpIdentifier.getUuid(), attrDpIdentifier.getVersion(), attrDpIdentifier.getType().toString());
+			String attrDpTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(attrDatapod.getUuid(), attrDatapod.getVersion()), runMode);
+			otherParams.put("datapodUuid_" + attrDatapod.getUuid() + "_tableName", attrDpTableName);
+		} 
 		
 //		String newVersion = Helper.getVersion();
-//		locationDatapod.setVersion(newVersion);
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
-		String attrDpTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(attrDatapod.getUuid(), attrDatapod.getVersion()), runMode);
-//		String attrDpTableName = datapodServiceImpl.genTableNameByDatapod(attrDatapod, execVersion, runMode);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
-		otherParams.put("datapodUuid_" + attrDatapod.getUuid() + "_tableName", attrDpTableName);
 		logger.info(" Filled up otherParams : " + otherParams);	
 		return otherParams;
 	}
@@ -105,7 +113,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		Map<String, String> otherParams = execParams.getOtherParams();
+		HashMap<String, String> otherParams = execParams.getOtherParams();
 //		String execUuid = baseExec.getUuid();
 		String execVersion = baseExec.getVersion();
 //		int numRepetitions = 0;
@@ -136,8 +144,19 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		// Get the attribute 
 		String attributeName = attrList.get(0);
 		logger.info("OtherParams : " + otherParams);
-		logger.info("attrDp.getUuid : " + ((Datapod)attrDp).getUuid());
-		String attrTableName = otherParams.get("datapodUuid_" + ((Datapod)attrDp).getUuid() + "_tableName");
+		logger.info("attrIdentifier.getUuid : " + attrIdentifier.getUuid());
+
+		String attrTableName = otherParams.get("datapodUuid_" + attrIdentifier.getUuid() + "_tableName");
+		String attrTableNameSql = attrTableName;
+		// handle dataSet - Start
+		DataSet attrDataset = null;
+		if (StringUtils.isBlank(attrTableName) && attrIdentifier.getType() == MetaType.dataset) {
+			attrDataset = (DataSet)attrDp;
+			attrTableNameSql = "(" + datasetServiceImpl.generateSql(attrDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode) + ") "
+						+ attrDataset.getName();
+			attrTableName = attrDataset.getName();
+		}
+		// handle dataSet - End
 		if(attrTableName.contains("framework.")) {
 			attrTableName = attrTableName.replaceAll("framework.", "");
 		}
@@ -148,7 +167,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 //						+" FROM "
 //						+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 //						+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
-		String rangeSql = generateRangeSql(attributeList, attrTableName, attributeName, execVersion, numIterations, maxRand, minRand);
+		String rangeSql = generateRangeSql(attributeList, attrTableName, attrTableNameSql, attributeName, execVersion, numIterations, maxRand, minRand);
 		ResultSetHolder resultSetHolder = null;
 		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
@@ -223,25 +242,25 @@ public List<String> getColumnNameList(Object source, ParamListHolder holder ){
 		return sql;
 	}
 
-	public String generateRangeSql(List<Attribute> attributeList, String attrTableName, String attributeName, String execVersion, int numIterations, int maxRand, int minRand) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String generateRangeSql(List<Attribute> attributeList, String attrTableName, String attrTableNameSql,String attributeName, String execVersion, int numIterations, int maxRand, int minRand) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			return "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
 					+", ("+"randn()"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
 					+" FROM "
-					+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
+					+attrTableNameSql+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 					+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 			return "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
 					+", ("+"rand()"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
 					+" FROM "
-					+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
+					+attrTableNameSql+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 					+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			return "select ranges.iteration_id as "+attributeList.get(0).getDispName()+","+attrTableName+"."+attributeName+" as "+attributeList.get(1).getDispName()
 					+", ("+"randn()"+" * ("+maxRand+" - "+minRand+") + "+minRand+") as "+attributeList.get(2).getDispName()+", "+execVersion+" as "+attributeList.get(3).getDispName()
 					+" FROM "
-					+attrTableName+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
+					+attrTableNameSql+ " CROSS JOIN (select t.start_r + pe.i as iteration_id FROM (select 1 as start_r,"+numIterations+" as end_r) t lateral view "
 					+ " posexplode(split(space(end_r - start_r),'')) pe as i,s) ranges ON (1=1)";
 		}
 		return null;

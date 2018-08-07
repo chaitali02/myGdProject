@@ -1,6 +1,6 @@
 {
   "uuid": "c058381b-5d83-48aa-8f3c-b5d209ffbd38",
-  "version": "1533499293",
+  "version": "1533600810",
   "name": "ppl_e2e_economic_capital_wo_simulation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 05 16:01:33 EDT 2018",
+  "createdOn": "Mon Aug 06 20:13:30 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -1772,6 +1772,36 @@
           ],
           "xPos": 1640,
           "yPos": 110,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "dfa4268f-f804-4d90-b03b-f307efb52d07",
+          "dependsOn": [
+            "8b2ca746-3580-48d5-bd2c-98e249a23592"
+          ],
+          "name": "map_portfolio_loss_summary",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "11a1cd7e-8368-4a77-afa9-81fd63902cdd",
+                    "version": null,
+                    "name": "map_portfolio_loss_summary"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 1640,
+          "yPos": 320,
           "active": "Y",
           "statusList": []
         },

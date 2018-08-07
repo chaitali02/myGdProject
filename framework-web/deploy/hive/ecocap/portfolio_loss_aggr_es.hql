@@ -5,12 +5,9 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `portfolio_loss_aggr_es`(
   `expected_loss` decimal, 
   `value_at_risk` decimal, 
   `economic_capital` decimal,
-  `expected_sum` decimal)
-   PARTITIONED BY ( 
-  `load_date` string,
-  `load_id` int)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-TBLPROPERTIES ("skip.header.line.count"="1");
-ALTER TABLE framework.portfolio_loss_aggr_es ADD PARTITION(load_date='2017-07-01', load_id='00');
+  `expected_sum` decimal,
+  `reporting_date` string,
+  `version` int);
+  
 
 

@@ -490,12 +490,13 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 			}
 			else if ($scope.mapTableArray[i].sourceAttributeType.text == "datapod") {
 				sourceref.uuid = $scope.mapTableArray[i].sourceattribute.uuid;
-				if ($scope.sourcetype == "relation") {
-					sourceref.type = "datapod";
-				}
-				else {
-					sourceref.type = $scope.sourcetype;
-				}
+				// if ($scope.sourcetype == "relation") {
+				// 	sourceref.type = "datapod";
+				// }
+				// else {
+				// 	sourceref.type = $scope.sourcetype;
+				// }
+				sourceref.type=$scope.mapTableArray[i].sourceattribute.type;
 				sourceAttr.ref = sourceref;
 				sourceAttr.attrId = $scope.mapTableArray[i].sourceattribute.attributeId;
 				attributemap.sourceAttr = sourceAttr;

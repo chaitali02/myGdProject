@@ -1,7 +1,8 @@
 {
+  "id": "5b68e30efb6411ef1723e36d",
   "uuid": "d9d5f031-9f02-4b98-88bd-3962dba4e5dd",
-  "version": "1533333491",
-  "name": "viz_portfolio_summary",
+  "version": "1533600526",
+  "name": "Portfolio Summary",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Aug 03 17:58:11 EDT 2018",
+  "createdOn": "Mon Aug 06 20:08:46 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -31,23 +32,23 @@
   "source": {
     "ref": {
       "type": "datapod",
-      "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+      "uuid": "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
       "version": null,
-      "name": "customer_portfolio"
+      "name": "portfolio_loss_summary"
     },
     "value": null
   },
-  "type": "data-grid",
+  "type": "bar-chart",
   "limit": null,
   "keys": [
     {
       "ref": {
         "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+        "uuid": "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
         "version": null,
-        "name": "customer_portfolio"
+        "name": "portfolio_loss_summary"
       },
-      "attributeId": 9,
+      "attributeId": 10,
       "function": null,
       "value": null,
       "attributeName": "reporting_date"
@@ -60,39 +61,39 @@
   "values": [
     {
       "ref": {
-        "type": "formula",
-        "uuid": "fcd48f83-9a31-4991-adfe-0ca178b08348",
+        "type": "datapod",
+        "uuid": "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
         "version": null,
-        "name": "fm_avg_pd"
+        "name": "portfolio_loss_summary"
       },
-      "attributeId": null,
+      "attributeId": 0,
       "function": null,
       "value": null,
-      "attributeName": null
+      "attributeName": "portfolio_avg_pd"
     },
     {
       "ref": {
-        "type": "formula",
-        "uuid": "2d9da11e-4ab2-4da5-bee4-86f25e68db72",
+        "type": "datapod",
+        "uuid": "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
         "version": null,
-        "name": "fm_avg_lgd"
+        "name": "portfolio_loss_summary"
       },
-      "attributeId": null,
+      "attributeId": 1,
       "function": null,
       "value": null,
-      "attributeName": null
+      "attributeName": "portfolio_avg_lgd"
     },
     {
       "ref": {
-        "type": "formula",
-        "uuid": "dd15f645-e8e4-4f9d-8822-7b8f74e2a4cc",
+        "type": "datapod",
+        "uuid": "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
         "version": null,
-        "name": "fm_total_ead"
+        "name": "portfolio_loss_summary"
       },
-      "attributeId": null,
+      "attributeId": 2,
       "function": null,
       "value": null,
-      "attributeName": null
+      "attributeName": "portfolio_total_ead"
     }
   ]
 }
