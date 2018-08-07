@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.AttributeMapOperator;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DatasetView;
@@ -74,6 +75,8 @@ public class DatasetServiceImpl {
 	ExecutorFactory execFactory;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	AttributeMapOperator attributeMapOperator;
 
 	/********************** UNUSED **********************/
 	/*public Dataset findLatest() {
@@ -88,7 +91,7 @@ public class DatasetServiceImpl {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		//ResultSetHolder rsHolder = null;
-		data = exec.executeAndFetch(sql, null);
+		data = exec.executeAndFetch(sql, commonServiceImpl.getApp().getUuid());
 		/*DataFrame df = rsHolder.getDataFrame();		
 			Row[] dfRows = df.limit(rows).collect();
 			String[] columns = df.columns();
