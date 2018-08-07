@@ -9,7 +9,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `industry_factor_correlation_transpose`(
   `version` int)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/industry_factor_correlation_transpose.csv' OVERWRITE INTO TABLE framework.industry_factor_correlation_transpose;
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/industry_factor_correlation_transpose_2018.csv' OVERWRITE INTO TABLE framework.industry_factor_correlation_transpose;
 
 
 

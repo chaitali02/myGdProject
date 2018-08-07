@@ -103,5 +103,5 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `customer_idiosyncratic_risk`(
 `version` int)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_idiosyncratic_risk.csv' OVERWRITE INTO TABLE customer_idiosyncratic_risk;
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_idiosyncratic_risk_2018.csv' OVERWRITE INTO TABLE customer_idiosyncratic_risk;
 
