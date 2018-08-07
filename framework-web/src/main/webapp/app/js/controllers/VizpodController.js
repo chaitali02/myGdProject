@@ -533,7 +533,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			ref.uuid = $scope.valuelist[i].uuid
 			ref.type = $scope.valuelist[i].type;
 			valuejson.ref = ref;
-			if ($scope.valuelist[i].type == "datapod") {
+			if ($scope.valuelist[i].type == "datapod" || $scope.valuelist[i].type == "dataset" ) {
 				valuejson.attributeId = $scope.valuelist[i].attributeId;
 			}
 

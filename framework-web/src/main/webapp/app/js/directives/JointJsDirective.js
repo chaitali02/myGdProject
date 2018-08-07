@@ -1922,9 +1922,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        }
        var thisModel = newCell || $scope.graph.getCell(id);
        var elementType = thisModel.attributes.elementType;
-       if( elementType == "stage" || elementType == "dag"){
+       if(elementType == "dag"){
          return false;
        }
+    
 
        var name = thisModel.attributes['model-data'].name || '';
        var text = '';
@@ -1941,7 +1942,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          id:id,modelData :thisModel.attributes['model-data'],elementTypeText: text,
          headers : {color:color,title:text}
        };
-          
+       if(elementType == "stage" ){
+        $('#StageModel').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        return false;
+      }
+       
        if(thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid){
          $scope.popupModel.selectedType = thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.uuid+'|'+thisModel.attributes['model-data'].operators[0].operatorInfo[0].ref.name;
        }
@@ -2087,7 +2095,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       };
        
        
-
+      $scope.OnSubmitStage=function(popupModel){
+        var cell = $scope.graph.getCell(popupModel.id);
+        cell.attr('text', { text: popupModel.modelData.name});
+        $('#StageModel').modal("hide");
+      }
       $scope.savePop = function (popupModel) {
         $scope.isExecParamList=false;    
         $scope.isExecParamSet=false;
