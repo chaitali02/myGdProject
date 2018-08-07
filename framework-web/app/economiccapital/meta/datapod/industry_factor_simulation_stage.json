@@ -1,7 +1,7 @@
 {
   "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
-  "version": "1533587235",
-  "name": "industry_factor_simulation_staging",
+  "version": "1533609813",
+  "name": "industry_factor_simulation_stage",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Aug 06 16:27:15 EDT 2018",
+  "createdOn": "Mon Aug 06 22:43:33 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
