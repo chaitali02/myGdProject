@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS framework;
-use framework;
+CREATE DATABASE IF NOT EXISTS ecocap;
+use ecocap;
 DROP TABLE IF EXISTS industry_factor_simulation;
 CREATE EXTERNAL TABLE IF NOT EXISTS `industry_factor_simulation`(
   `iteration_id` int, 
@@ -11,7 +11,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `industry_factor_simulation`(
   `version` int)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/industry_factor_simulation.csv' OVERWRITE INTO TABLE framework.industry_factor_simulation;
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/industry_factor_simulation.csv' OVERWRITE INTO TABLE ecocap.industry_factor_simulation;
 
 
 
