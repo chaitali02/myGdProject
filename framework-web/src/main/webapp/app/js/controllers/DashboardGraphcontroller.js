@@ -465,7 +465,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       var filterList={};
       var ref={};
       if($scope.selectedAttributeValue[i].value !="-select-"){
-        ref.type="datapod";
+        ref.type=$scope.filterAttribureIdValues[i].type;
         ref.uuid=$scope.filterAttribureIdValues[i].datapoduuid
         filterList.ref=ref;
         filterList.attrId=$scope.filterAttribureIdValues[i].datapodattrId
@@ -484,6 +484,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
     
     $scope.filterAttribureIdValues=[]
     $scope.selectedAttributeValue=[]
+  
     if(data.filterInfo && data.filterInfo.length >0){
       var filterAttribureIdValue=[];
       for(var n=0;n<data.filterInfo.length;n++){
@@ -500,6 +501,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
           filterAttribureIdvalueJSON.vizpodversion=data.filterInfo[i].ref.uuid;
           filterAttribureIdvalueJSON.datapoduuid=data.filterInfo[i].ref.uuid;
           filterAttribureIdvalueJSON.datapodattrId=data.filterInfo[i].attrId;
+          filterAttribureIdvalueJSON.type=data.filterInfo[i].ref.type;
           filterAttribureIdvalueJSON.dname=data.filterInfo[i].ref.name+"."+data.filterInfo[i].attrName;
           filterAttribureIdvalueJSON.values=result[i].data
           filterAttribureIdvalueJSON.values.splice(0,0,defaultvalue)
@@ -534,7 +536,9 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       var datacolumnsarray=[];
       for(var k=0;k<$scope.sectionRows[i].columns[j].vizpodInfo.values.length;k++){
         var datacolumnsjson={};
-        if($scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.type =="datapod"){
+        if($scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.type =="datapod" 
+        || $scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.type =="dataset"){
+          
           datacolumnsjson.id=$scope.sectionRows[i].columns[j].vizpodInfo.values[k].attributeName;
           datacolumnsjson.name=$scope.sectionRows[i].columns[j].vizpodInfo.values[k].attributeName;
         }//End If Inside For
@@ -569,7 +573,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
           console.log(JSON.stringify(keyvalueData))
           for(var c=0;c<keyvalueData.length;c++){
             var attribute={};
-            if(keyvalueData[c].ref.type =="datapod"){
+            if(keyvalueData[c].ref.type =="datapod" || keyvalueData[c].ref.type =="dataset"){
               attribute.name=keyvalueData[c].attributeName;
               attribute.displayName=keyvalueData[c].attributeName;
             //attribute.width =$scope.keyvalueData[c].attributeName.split('').length + 2 + "%"
@@ -786,7 +790,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       for(var j=0;j<$scope.sectionRows[i].columns.length;j++){
         if($scope.sectionRows[i].columns[j].vizpodInfo.type =='pie-chart' ||$scope.sectionRows[i].columns[j].vizpodInfo.type =='donut-chart'){
           var columnname=$scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName
-          if($scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "datapod"){
+          if($scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "datapod" || $scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "dataset"){
             columnnamevalue=$scope.sectionRows[i].columns[j].vizpodInfo.values[0].attributeName
           }
           else{

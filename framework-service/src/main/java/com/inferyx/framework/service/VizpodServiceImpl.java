@@ -797,30 +797,23 @@ public class VizpodServiceImpl {
 	@SuppressWarnings("finally")
 	public VizpodResultHolder getVizpodResults(String vizpodUUID, String vizpodVersion, ExecParams execParams, VizExec vizExec, 
 			 									int rowLimit, int offset, int limit, String sortBy, String order, String requestId, 
-												RunMode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException 
-	{
-
+												RunMode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
-			/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/
-			//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
-			//Vizpod vizpod = iVizpodDao.findOneByUuidAndVersion(appUuid,vizpodUUID, vizpodVersion);
 			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUUID, vizpodVersion, MetaType.vizpod.toString());
 			List<String> orderList = new ArrayList<>();
 			List<String> sortList = new ArrayList<>();
-			if(StringUtils.isNotBlank(order))
-			{	
+			if(StringUtils.isNotBlank(order)) {	
 			 orderList = Arrays.asList(order.split("\\s*,\\s*"));
 			}
-			if(StringUtils.isNotBlank(sortBy))
-			{
+			if(StringUtils.isNotBlank(sortBy)) {
 			 sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
 			}
 			
 			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 			StringBuilder orderBy = new StringBuilder();
 			boolean requestIdExistFlag = false;
-			boolean flag = true;
+//			boolean flag = true;
 			if(execParams!=null && execParams.getFilterInfo() != null){
 				for (AttributeRefHolder filterInfo : execParams.getFilterInfo()) {
 					vizpod.getFilterInfo().add(filterInfo);
@@ -838,16 +831,14 @@ public class VizpodServiceImpl {
 			}
 			vizExec.setExecParams(execParams);
 			try {
-				vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, runMode,false));
+				vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, runMode, false));
 				logger.info(vizExec.getSql());
 				vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			/**** Get sql and update in vizpodexec - END ****/
-			//DataFrame df = sqlContext.sql(vizExec.getSql());
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			limit = offset + limit;
@@ -905,11 +896,9 @@ public class VizpodServiceImpl {
 						data = exec.executeAndFetch("SELECT * FROM ("+vizExec.getSql() + ") vizpod LIMIT " + limit, null);
 			}
 			/**** Get sql and update in vizpodexec - START ****/
-			/*df.cache();*/
 			MetaIdentifierHolder vizpodRef = new MetaIdentifierHolder();
 			vizpodRef.setRef(new MetaIdentifier(MetaType.vizpod,vizpodUUID,vizpodVersion));
 			vizExec.setDependsOn(vizpodRef);
-			//vizExecServiceImpl.save(vizExec);
 			commonServiceImpl.save(MetaType.vizExec.toString(), vizExec);
 			/**** Get sql and update in vizpodexec - END ****/
 		} catch (Exception e) {
