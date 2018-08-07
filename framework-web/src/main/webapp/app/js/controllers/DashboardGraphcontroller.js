@@ -769,6 +769,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
     
         for(var k=0;k<$scope.vizpodtrack.length;k++){
           $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].isDataError=true;
+          $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].vizpodDetails.datapoints=[];
           $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].errormsg="Some Error Occurred";
         }
        $scope.inprogressdata=false;

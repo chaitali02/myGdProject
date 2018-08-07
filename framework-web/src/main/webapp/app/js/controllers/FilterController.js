@@ -44,7 +44,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 	$scope.showForm = true;
 	$scope.data = null;
 	$scope.showGraphDiv = false
-	$scope.logicalOperator = ["OR", "AND"];
+	$scope.logicalOperator = ["AND","OR"];
 	$scope.relation = ["relation", "dataset", "datapod"];
 	//$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN","LIKE","Not LIKE","RLIKE","EXISTS","NOT EXISTS"];
 	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
@@ -274,7 +274,7 @@ MetadataModule.controller('MetadataFilterController', function ($rootScope, $sta
 		filertable.isrhsFormula = false;
 		filertable.isrhsSimple = true;
 		if (filertable.id != 0)
-			filertable.logicalOperator = $scope.logicalOperator[1];
+			filertable.logicalOperator = $scope.logicalOperator[0];
 		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0]
 		filertable.operator = $scope.operator[0].value;
 		filertable.lhstype = $scope.lshType[0]

@@ -748,6 +748,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location, $tim
 		});
 	}
 	$scope.removeRow = function () {
+		$scope.iSSubmitEnable = true;
 		angular.forEach($scope.gridApi.selection.getSelectedRows(), function (data, index) {
 			$scope.gridOptionsDatapod.data.splice($scope.gridOptionsDatapod.data.lastIndexOf(data), 1);
 		});

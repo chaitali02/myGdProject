@@ -489,7 +489,13 @@
             </div>
           </div>
           <div class="portlet-body form">
+              
             <div class="x_title" style="padding:10px;">
+              <div id="hideshow" class="alert alert-danger pull-left "  ng-if="isDuplication" style="margin-left:10px;width:33%;margin-bottom:0px;
+              ">
+                  <button class="close" data-close="alert"></button>
+                  <span>Duplication not allowed.</span>
+              </div>
               <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeAttribute()" ng-disabled="{{mode}}"></button>
               <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addAttribute()" ng-disabled="{{mode}}"></button>
             </div>
@@ -526,8 +532,8 @@
                           </span>
                         </td>
                         <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" class="form-control" ng-model="data.name" required disable-validation-message="" title="{{data.name}}"
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;"  ng-class="{ 'has-error' : myform['sourceName'+$index].$invalid}">
+                            <input type="text" class="form-control" ng-model="data.name"  name="sourceName{{$index}}"required disable-validation-message="" title="{{data.name}}"
                               ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
                           </span>
                         </td>

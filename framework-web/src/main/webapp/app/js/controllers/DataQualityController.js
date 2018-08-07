@@ -46,7 +46,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   $scope.selectDataType = $scope.datatype[0];
   $scope.sourceType = ["datapod"]
   $scope.dataqualitysourceType = $scope.sourceType[0];
-  $scope.logicalOperator = ["OR", "AND"];
+  $scope.logicalOperator = ["AND","OR"];
   $scope.spacialOperator=['<','>','<=','>=','=','LIKE','NOT LIKE','RLIKE'];
   $scope.operator =CF_FILTER.operator; 
   $scope.lhsType = [

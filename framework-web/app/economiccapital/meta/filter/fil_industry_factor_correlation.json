@@ -1,0 +1,71 @@
+{
+  "uuid": "0ced647d-19cc-4190-b046-146e7bb4cb2e",
+  "version": "1533500528",
+  "name": "fil_industry_factor_correlation",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Aug 05 16:22:08 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "de8818d8-1eed-4c6f-963e-bbd2a14f6e64",
+      "version": null,
+      "name": "industry_factor_correlation"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "logicalOperator": " ",
+      "operator": "=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "de8818d8-1eed-4c6f-963e-bbd2a14f6e64",
+            "version": null,
+            "name": "industry_factor_correlation"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "reporting_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
+            "version": null,
+            "name": "paramlist_app"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "reporting_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ]
+}
