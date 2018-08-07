@@ -1,18 +1,7 @@
 {
     "sectionInfo" : [ 
         {
-            "name" : "Loss Summary",
-            "vizpodInfo" : {
-                "ref" : {
-                    "type" : "vizpod",
-                    "uuid" : "42aa994e-6bff-460a-8046-b88f5c0525ea"
-                }
-            },
-            "rowNo" : 1,
-            "colNo" : 1
-        }, 
-        {
-            "name" : "Summary",
+            "name" : "Portfolio Summary",
             "vizpodInfo" : {
                 "ref" : {
                     "type" : "vizpod",
@@ -20,7 +9,29 @@
                 }
             },
             "rowNo" : 1,
+            "colNo" : 1
+        }, 
+        {
+            "name" : "Portfolio Loss Summary",
+            "vizpodInfo" : {
+                "ref" : {
+                    "type" : "vizpod",
+                    "uuid" : "42aa994e-6bff-460a-8046-b88f5c0525ea"
+                }
+            },
+            "rowNo" : 1,
             "colNo" : 2
+        }, 
+        {
+            "name" : "Portfolio Loss Summary %",
+            "vizpodInfo" : {
+                "ref" : {
+                    "type" : "vizpod",
+                    "uuid" : "333ca69a-6fb7-4d57-9412-cd72aedc7eee"
+                }
+            },
+            "rowNo" : 1,
+            "colNo" : 3
         }
     ],
     "dependsOn" : {
@@ -39,7 +50,7 @@
         }
     ],
     "uuid" : "e44b33be-8cef-468e-8faa-1d5e61c0173a",
-    "version" : "1533485632",
+    "version" : "1533600698",
     "name" : "Economic Capital Dashboard",
     "createdBy" : {
         "ref" : {
@@ -49,7 +60,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-08-05T04:13:52.000Z"),
+    "createdOn" : ISODate("2018-08-07T00:11:38.000Z"),
     "tags" : [],
     "active" : "Y",
     "published" : "N",

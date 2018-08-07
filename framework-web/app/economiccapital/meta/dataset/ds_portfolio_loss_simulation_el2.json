@@ -1,6 +1,6 @@
 {
   "uuid": "21a47cc9-d8ec-47ea-838a-e8c610ae3612",
-  "version": "1533488217",
+  "version": "1533585990",
   "name": "ds_portfolio_loss_simulation_el2",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 05 00:56:57 EDT 2018",
+  "createdOn": "Mon Aug 06 16:06:30 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -36,7 +36,20 @@
     },
     "value": null
   },
-  "filterInfo": [],
+  "filterInfo": [
+    {
+      "ref": {
+        "type": "filter",
+        "uuid": "f74b1c53-ec9c-4e9d-a958-1738196e6204",
+        "version": null,
+        "name": "ds_portfolio_loss_simulation_el2"
+      },
+      "value": null,
+      "attrId": null,
+      "attrName": null,
+      "attrType": null
+    }
+  ],
   "attributeInfo": [
     {
       "attrSourceId": "0",

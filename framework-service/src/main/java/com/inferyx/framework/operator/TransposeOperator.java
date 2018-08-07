@@ -5,9 +5,9 @@ package com.inferyx.framework.operator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -27,7 +28,6 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
@@ -40,6 +40,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
+import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 /**
@@ -59,6 +60,8 @@ public class TransposeOperator implements IOperator {
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
+	@Autowired
+	private DatasetServiceImpl datasetServiceImpl;
 	@Autowired
 	private Helper helper;
 	
@@ -115,14 +118,24 @@ public class TransposeOperator implements IOperator {
 			otherParams = new HashMap<>();
 		}
 		
+		Datapod sourceData = null;
+		DataSet sourceDataset = null;
 		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
-		Datapod sourceData = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
+		if (sourceDataIdentifier.getType() == MetaType.datapod) {
+			sourceData = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
+		} else if (sourceDataIdentifier.getType() == MetaType.dataset) {
+			sourceDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
+		}
 
-		if (otherParams.containsKey("datapodUuid_" + sourceData.getUuid() + "_tableName")) {
-			sourceTableName = otherParams.get("datapodUuid_" + sourceData.getUuid() + "_tableName");
+		if (otherParams.containsKey("datapodUuid_" + sourceDataIdentifier.getUuid() + "_tableName")) {
+			sourceTableName = otherParams.get("datapodUuid_" + sourceDataIdentifier.getUuid() + "_tableName");
 		} else {
-			sourceTableName = getTableNameBySource(sourceData, runMode);
-			otherParams.put("datapodUuid_" + sourceData.getUuid() + "_tableName", sourceTableName);
+			if (sourceDataIdentifier.getType() == MetaType.datapod) {
+				sourceTableName = getTableNameBySource(sourceData, runMode);
+			} else if (sourceDataIdentifier.getType() == MetaType.dataset) {
+				sourceTableName = sourceDataset.getName();
+			}
+			otherParams.put("datapodUuid_" + sourceDataIdentifier.getUuid() + "_tableName", sourceTableName);
 		}
 		
 		// Set destination
@@ -156,7 +169,7 @@ public class TransposeOperator implements IOperator {
 		
 		String execUuid = baseExec.getUuid();
 		String execVersion = baseExec.getVersion();
-		Map<String, String> otherParams = execParams.getOtherParams();
+		HashMap<String, String> otherParams = execParams.getOtherParams();
 		
 		//OperatorExec operatorExec = (OperatorExec) execIdentifier;
 		
@@ -189,10 +202,23 @@ public class TransposeOperator implements IOperator {
 		}*/
 		
 		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
-		Datapod sourceData = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
-		List<String> attrList = getColumnNameList(sourceData, sourceDatapodInfo);
+		Datapod sourceData = null;
+		DataSet sourceDataset = null;
+		List<String> attrList = null;
+		String sourceTableSql = null;
+		sourceTableName = otherParams.get("datapodUuid_" + sourceDataIdentifier.getUuid() + "_tableName");
+		if (sourceDataIdentifier.getType() == MetaType.datapod) {
+			sourceData = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
+			attrList = getColumnNameList(sourceData, sourceDatapodInfo);
+			sourceTableSql = sourceTableName;
+		} else if (sourceDataIdentifier.getType() == MetaType.dataset) {
+			sourceDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
+			attrList = getColumnNameList(sourceDataset, sourceDatapodInfo);
+			sourceTableSql = "(" + datasetServiceImpl.generateSql(sourceDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode) + ") "
+					+ sourceDataset.getName();
+		}
 //		sourceTableName = getTableNameBySource(sourceData, runMode);
-		sourceTableName = otherParams.get("datapodUuid_" + sourceData.getUuid() + "_tableName");
+		
 		
 		MetaIdentifier keyIdentifier = keyInfo.getAttributeInfo().get(0).getRef();
 		Object key = commonServiceImpl.getOneByUuidAndVersion(keyIdentifier.getUuid(), keyIdentifier.getVersion(), keyIdentifier.getType().toString());
@@ -248,7 +274,7 @@ public class TransposeOperator implements IOperator {
 		}
 		
 		sb.append(") AS tmp_column FROM ");
-		sb.append(sourceTableName);
+		sb.append(sourceTableSql);
 		sb.append("  ) x LATERAL VIEW EXPLODE(tmp_column) exptbl AS tranpose_column, transpose_value ");
 		String sql = sb.toString();
 		logger.info("my sql: "+sql);
