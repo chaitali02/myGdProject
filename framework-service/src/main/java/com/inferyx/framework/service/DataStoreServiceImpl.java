@@ -70,7 +70,6 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.register.DatapodRegister;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -97,14 +96,6 @@ public class DataStoreServiceImpl {
 	DatasourceServiceImpl datasourceServiceImpl;
 	@Autowired
 	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	private DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	private DatasetOperator datasetOperator;
-	@Autowired
-	private DagExecServiceImpl dagexecServiceImpl;
-	@Autowired
-	private UserServiceImpl userServiceImpl;
 	@Autowired
 	private HDFSInfo hdfsInfo;
 	@Autowired
@@ -535,16 +526,9 @@ public class DataStoreServiceImpl {
 	
 	// generating table Name from dataSource
 	public String getTableNameByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String appUuid = null;
-		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
 		String tableName = null;
 		DataStore dataStore = null;
-		if (appUuid != null) {
-			dataStore = iDataStoreDao.findOneByUuidAndVersion(appUuid, dataStoreUUID, dataStoreVersion);
-		} else {
-			dataStore = iDataStoreDao.findOneByUuidAndVersion(dataStoreUUID, dataStoreVersion);
-		}
+		dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreUUID, dataStoreVersion, MetaType.datastore.toString());
 		String filePath = dataStore.getLocation();
 		String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
 		String metaid = dataStore.getMetaId().getRef().getUuid();
@@ -553,16 +537,10 @@ public class DataStoreServiceImpl {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		String dsType = datasource.getType();
 		if (metaType == MetaType.datapod) {
-			//Datapod dp = datapodServiceImpl.findOneByUuidAndVersion(metaid, metaV);
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.datapod.toString());
 			if (dp == null) {
-				//dp = datapodServiceImpl.findLatestByUuid(metaid);
 				dp = (Datapod) commonServiceImpl.getLatestByUuid(metaid, MetaType.datapod.toString());
 			}
-//			String datasource = dp.getDatasource().getRef().getUuid();
-//			//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
-//			Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
-//			dsType = ds.getType();
 			if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				filePath = String.format("%s%s", hdfsLocation, filePath);
 				tableName = Helper.genTableName(filePath);
@@ -996,6 +974,7 @@ public class DataStoreServiceImpl {
 		return dataStoreList;
 	}*/
 
+	@SuppressWarnings("static-access")
 	public List<DataStore> getDataStoreByDim(String uuid, List<AttributeRefHolder> dimensionList) {
 		String META_TYPE = "metaId.ref.type";
 		String META_UUID = "metaId.ref.uuid";
@@ -1004,7 +983,6 @@ public class DataStoreServiceImpl {
 		String REF_UUID = "ref.uuid";
 		String VALUE = "value";
 		String ATTRIBUTE_ID = "attributeId";
-		String CREATED_ON = "createdOn";
 		String DATAPOD = "datapod";
 		String VERSION = "version";
 
@@ -1034,7 +1012,7 @@ public class DataStoreServiceImpl {
 		List<Map<String, Object>> data = new ArrayList<>();
 		//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(datapodUUID);
 		Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(datapodUUID, MetaType.datapod.toString());
-		String id = datapodDO.getAttributes().get(0).getName();
+//		String id = datapodDO.getAttributes().get(0).getName();
 		String attributeName = datapodDO.getAttributes().get(attributeID).getName();
 		DataStore datastore = findLatestByMeta(datapodDO.getUuid(), datapodDO.getVersion());
 		String tableName = getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
@@ -1042,7 +1020,7 @@ public class DataStoreServiceImpl {
 		// attributeName + " AS value from " + tableName);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		data = exec.executeAndFetch("SELECT DISTINCT " + attributeName + " AS value FROM " + tableName, null);
+		data = exec.executeAndFetch("SELECT DISTINCT " + attributeName + " AS value FROM " + tableName, commonServiceImpl.getApp().getUuid());
 //				.executeSql("select distinct " + id + " AS id," + attributeName + " AS value from " + tableName);
 		/*DataFrame df = rsHolder.getDataFrame();
 		Row[] rows = df.head(100);
@@ -1066,15 +1044,8 @@ public class DataStoreServiceImpl {
 			return iDataStoreDao.findAllVersion(uuid);
 	}
 
-	public DataStore findDatastoreByExec(String uuid, String version) {
-		String appUuid = null;
-		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
-		if (appUuid != null) {
-			return iDataStoreDao.findDataStoreByExecUuidVersion(appUuid, uuid, version);
-		} else {
-			return iDataStoreDao.findDataStoreByExecUuidVersion(uuid, version);
-		}
+	public DataStore findDatastoreByExec(String uuid, String version) throws JsonProcessingException {
+		return (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
 	}
 
 	public DataStore getAsOf(String uuid, String asOf) {

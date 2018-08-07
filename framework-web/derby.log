@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Mon Aug 06 22:38:20 EDT 2018:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0165-123f-de5f-000038781978 
-on database directory /Users/ypalrecha/git/inferyx/framework-web/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@61936b98 
-Loaded from file:/Users/ypalrecha/.m2/repository/org/apache/derby/derby/10.12.1.1/derby-10.12.1.1.jar
+Tue Aug 07 14:50:52 IST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0165-13b0-6426-0000297454d8 
+on database directory /home/gridedge2/inferyx/framework-web/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@33f4844b 
+Loaded from file:/home/gridedge2/.m2/repository/org/apache/derby/derby/10.11.1.1/derby-10.11.1.1.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_74-b02
-user.dir=/Users/ypalrecha/git/inferyx/framework-web
-os.name=Mac OS X
-os.arch=x86_64
-os.version=10.13.4
+java.runtime.version=1.8.0_141-8u141-b15-3~14.04-b15
+user.dir=/home/gridedge2/inferyx/framework-web
+os.name=Linux
+os.arch=amd64
+os.version=4.4.0-104-generic
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

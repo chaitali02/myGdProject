@@ -10,19 +10,21 @@
  *******************************************************************************/
 package com.inferyx.framework.parser;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.python.antlr.PythonParser.attr_return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Expression;
@@ -34,6 +36,7 @@ import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.domain.Vizpod.AttributeDetails;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.ExpressionOperator;
 import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.FormulaOperator;
@@ -41,9 +44,6 @@ import com.inferyx.framework.operator.RelationOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
-import com.inferyx.framework.service.FormulaServiceImpl;
-import com.inferyx.framework.service.FunctionServiceImpl;
-import com.inferyx.framework.service.RegisterService;
 
 @Component
 public class VizpodParser {
@@ -64,11 +64,9 @@ public class VizpodParser {
 	@Autowired
 	private FilterOperator filterOperator;	
 	@Autowired
-	private FormulaServiceImpl formulaServiceImpl;
-	@Autowired
-	private FunctionServiceImpl functionServiceImpl;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private DatasetOperator datasetOperator;
 	
 	
 	private final String WHERE_1_1 = " WHERE (1=1) ";
@@ -99,8 +97,7 @@ public class VizpodParser {
 			selectBuilder.append(comma);*/
 			/** Add rownumber column - END **/
 			
-			if(flag)
-			{
+			if(flag) {
 				if (vizpod.getDetailAttr().size() > 0) {
 					for (AttributeDetails detailattrRefHolder : vizpod.getDetailAttr()) {
 						String keyAttrName = datapodServiceImpl.getAttributeName(detailattrRefHolder.getRef().getUuid(),
@@ -202,7 +199,7 @@ public class VizpodParser {
 				DataStore dataStore = dataStoreServiceImpl.findDataStoreByDatapod(vizpod.getSource().getRef().getUuid()).get(0);
 				tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore.getUuid(), dataStore.getVersion(), runMode);
 			}
-			//Datapod datapod = datapodServiceImpl.findLatestByUuid(vizpod.getSource().getRef().getUuid());
+
 			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(vizpod.getSource().getRef().getUuid(), MetaType.datapod.toString());
 			finalBuilder.append("FROM");
 			finalBuilder.append(blankSpace);
@@ -211,7 +208,6 @@ public class VizpodParser {
 			// append Where
 			if (vizpod.getFilterInfo().size() > 0) {
 				whereBuilder.append(blankSpace);
-				//whereBuilder.append("WHERE");
 				whereBuilder.append(WHERE_1_1);
 				whereBuilder.append(blankSpace);
 				whereBuilder.append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet));
@@ -251,7 +247,6 @@ public class VizpodParser {
 						}
 						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
 								attrDet.getAttributeId());
-						//String datapodName = (datapodServiceImpl.findLatestByUuid(attrDet.getRef().getUuid())).getName();
 						String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString())).getName();
 						logger.info("datapodName : " + datapodName);
 						finalBuilder.append(datapodName + "." + keyAttrName).append(comma);
@@ -260,7 +255,6 @@ public class VizpodParser {
 			}
 			result = finalBuilder.length() > 0 ? finalBuilder.substring(0, finalBuilder.length() - 1) : "";
 			logger.info(String.format("Final Vizpod filter %s", result));
-			// logger.debug(String.format("Final Vizpod filter %s", result));
 
 		} else if ((MetaType.relation).equals(vizpod.getSource().getRef().getType())) {
 			Relation relation = daoRegister.getRelationDao().findLatestByUuid(vizpod.getSource().getRef().getUuid(),
@@ -294,7 +288,6 @@ public class VizpodParser {
 				if ((MetaType.datapod).equals(attrDet.getRef().getType())) {
 					String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
 							attrDet.getAttributeId());
-					//String datapodName = (datapodServiceImpl.findLatestByUuid(attrDet.getRef().getUuid())).getName();
 					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString())).getName();
 					logger.info("datapodName : " + datapodName);
 					if (attrDet.getFunction() != null && !attrDet.getFunction().isEmpty()) {
@@ -302,7 +295,6 @@ public class VizpodParser {
 						keyAttrName = attrDet.getFunction() + "_" + keyAttrName;
 					} else {
 						selectBuilder.append(datapodName + "." + keyAttrName);
-						//groupByBuilder.append(datapodName + "." + keyAttrName).append(comma);
 					}
 					selectBuilder.append(" as ").append(keyAttrName).append(" ");
 					selectBuilder.append(comma);
@@ -419,6 +411,45 @@ public class VizpodParser {
 			result += groupByBuilder.length() > 0 ? groupByBuilder.substring(0, groupByBuilder.length() - 1) : "";
 			result += limitBuilder.length() > 0 ? limitBuilder.substring(0, limitBuilder.length() - 1) : "";
 			logger.info(String.format("Final Vizpod filter %s", result));
+		} else if ((MetaType.dataset).equals(vizpod.getSource().getRef().getType())) {
+			DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(vizpod.getSource().getRef().getUuid(), vizpod.getSource().getRef().getVersion(), vizpod.getSource().getRef().getType().toString());
+			List<AttributeDetails> attrDetList = new LinkedList<>();
+			if ( flag && vizpod.getDetailAttr().size() > 0 ) 
+				for (AttributeDetails attrDet : vizpod.getDetailAttr()) 
+					attrDetList.add(attrDet);
+			
+			if (vizpod.getKeys().size() > 0 ) 
+				for (AttributeDetails attrDet : vizpod.getKeys()) 
+					attrDetList.add(attrDet);
+			if (vizpod.getGroups().size() > 0) 
+				for (AttributeDetails attrDet : vizpod.getGroups()) 
+					attrDetList.add(attrDet);			
+			if (vizpod.getValues().size() > 0 && flag == false) 
+				for (AttributeDetails attrDet : vizpod.getValues()) 
+					attrDetList.add(attrDet);
+			List<AttributeSource> attributeInfo = new ArrayList<>();
+			for (AttributeDetails attrDet : attrDetList) {
+				for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
+					if(attributeSource.getAttrSourceId().equalsIgnoreCase(attrDet.getAttributeId()+"")) {
+						attributeInfo.add(attributeSource);
+					}
+				}
+			}
+			List<AttributeRefHolder> filterInfo = new ArrayList<>();
+			for(AttributeRefHolder filterHolder : vizpod.getFilterInfo()) {
+				for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
+					if(attributeSource.getAttrSourceId().equalsIgnoreCase(filterHolder.getAttrId())) {
+						filterHolder.setAttrName(attributeSource.getAttrSourceName());						
+						filterHolder.setRef(attributeSource.getSourceAttr().getRef());
+						filterInfo.add(filterHolder);
+					}
+				}
+			}
+
+			dataSet.setAttributeInfo(attributeInfo);
+			dataSet.setFilterInfo(filterInfo);
+			
+			result = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
 		}
 		return result;
 	}

@@ -11,12 +11,11 @@
 package com.inferyx.framework.operator;
 
 
-	import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -33,7 +32,6 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
@@ -110,8 +108,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 				relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
 				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {
-				Datapod datapod = (Datapod) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
+				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
 				String table = null;
 				/*if (otherParams == null 
 						|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {*/
@@ -131,8 +128,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 				}*/
 				logger.info("Source table in dataset " + dataset.getName() + " : " + table);
 				builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
-			}
-			else if (dataset.getDependsOn().getRef().getType() == MetaType.dataset) {
+			} else if (dataset.getDependsOn().getRef().getType() == MetaType.dataset) {
                 DataSet innerDS = (DataSet) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
                 builder.append("(").append(generateSql(innerDS, refKeyMap, otherParams, usedRefKeySet, null, runMode)).append(") ").append(innerDS.getName()).append(" ");
             }
@@ -157,7 +153,30 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		private String generateLimit(DataSet dataset) {
 			return (dataset.getLimit() > 0) ? (ConstantsUtil.LIMIT + dataset.getLimit() + " ") : "";
 		}
-
+		
+		public String generateSelectDistinct(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams
+				, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			List<AttributeMap> attrMapList = new ArrayList<>();
+			AttributeMap attrMap = null; 
+			AttributeRefHolder sourceAttr = null;
+			for (AttributeSource sourceAttribute : dataset.getAttributeInfo()) {
+				sourceAttr = new AttributeRefHolder();
+				sourceAttr.setAttrId(sourceAttribute.getSourceAttr().getAttrId());
+				sourceAttr.setValue(sourceAttribute.getSourceAttr().getValue());
+				sourceAttr.setAttrName(sourceAttribute.getAttrSourceName());
+				sourceAttr.setRef(sourceAttribute.getSourceAttr().getRef());
+				attrMap = new AttributeMap();
+				attrMap.setSourceAttr(sourceAttr);
+				attrMap.setAttrMapId(sourceAttribute.getAttrSourceId());
+				attrMapList.add(attrMap);
+			}
+			attributeMapOperator.setRunMode(runMode);
+			return ConstantsUtil.SELECT
+					.concat(" DISTINCT ")
+					.concat("(")
+					.concat(attributeMapOperator.generateSql(attrMapList, dataset.getDependsOn(), refKeyMap, otherParams, execParams))
+					.concat(") ");
+		}
 }
 	
 	

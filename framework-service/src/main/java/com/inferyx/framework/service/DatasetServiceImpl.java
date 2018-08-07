@@ -508,4 +508,32 @@ public class DatasetServiceImpl {
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		return datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
 	}
+
+	public List<Map<String, Object>> getAttributeValues(String datasetUuid, int attributeID, RunMode runMode) throws Exception {
+		DataSet dataSet = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString());
+		List<AttributeSource> attributeSources = dataSet.getAttributeInfo();
+		List<AttributeSource> tempAttributeSources = new ArrayList<>();
+		for(AttributeSource attributeSource : attributeSources) {
+			if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeID)) {
+				tempAttributeSources.add(attributeSource);
+				break;
+			}
+		}
+		dataSet.setAttributeInfo(tempAttributeSources);
+		dataSet.setFilterInfo(null);
+		String selectQuery = datasetOperator.generateSelectDistinct(dataSet, null, null, null, runMode);
+		if(selectQuery.contains(" AS "+tempAttributeSources.get(0))){
+			selectQuery = selectQuery.replaceAll(" AS "+tempAttributeSources.get(0), "");
+		}
+		if(selectQuery.contains(" as "+tempAttributeSources.get(0).getAttrSourceName())){
+			selectQuery = selectQuery.replaceAll(" as "+tempAttributeSources.get(0).getAttrSourceName(), "");
+		}
+		StringBuilder builder = new StringBuilder(selectQuery);
+		builder.append(" AS value ");
+		builder.append(" FROM ");
+		builder.append(datasetOperator.generateFrom(dataSet, null, null, new HashSet<>(), runMode));
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
+	}
 }

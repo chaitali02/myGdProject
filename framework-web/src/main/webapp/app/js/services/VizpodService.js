@@ -128,6 +128,16 @@
           return response;
         })
       }
+      factory.findAttributesByRelation = function (uuid,type) {
+        var url = $location.absUrl().split("app")[0]
+        return $http({
+          method: 'GET',
+          url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
+        }).
+          then(function (response, status, headers) {
+            return response;
+          })
+      }
       return factory;
     });
 
@@ -162,25 +172,46 @@
       this.getAllAttributeBySource = function(uuid, type) {
         var deferred = $q.defer();
         if (type == "relation") {
-          VizpodFactory.findDatapodByRelation(uuid, type).then(function(response) {
-            onSuccess(response.data)
-          });
-          var onSuccess = function(response) {
+          // VizpodFactory.findDatapodByRelation(uuid, type).then(function(response) {
+          //   onSuccess(response.data)
+          // });
+          // var onSuccess = function(response) {
+          //   var attributes = [];
+          //   for (var j = 0; j < response.length; j++) {
+          //     for (var i = 0; i < response[j].attributes.length; i++) {
+          //       var attributedetail = {};
+          //       attributedetail.id = j
+          //       attributedetail.class = "tagit-choice-default-dd";
+          //       attributedetail.type = "datapod";
+          //       attributedetail.uuid = response[j].uuid;
+          //       attributedetail.name = response[j].name;
+          //       attributedetail.attributeName = response[j].attributes[i].name;
+          //       attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
+          //       attributedetail.attributeId = response[j].attributes[i].attributeId;
+          //       attributes.push(attributedetail)
+          //     }
+          //   }
+          //   deferred.resolve({
+          //     data: attributes
+          //   })
+          // }
+
+          VizpodFactory.findAttributesByRelation(uuid, type, "").then(function (response) { onSuccess(response.data) });
+          var onSuccess = function (response) {
             var attributes = [];
             for (var j = 0; j < response.length; j++) {
-              for (var i = 0; i < response[j].attributes.length; i++) {
-                var attributedetail = {};
-                attributedetail.id = j
-                attributedetail.class = "tagit-choice-default-dd";
-                attributedetail.type = "datapod";
-                attributedetail.uuid = response[j].uuid;
-                attributedetail.name = response[j].name;
-                attributedetail.attributeName = response[j].attributes[i].name;
-                attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
-                attributedetail.attributeId = response[j].attributes[i].attributeId;
-                attributes.push(attributedetail)
-              }
+              var attributedetail = {};
+              attributedetail.class = "tagit-choice-default-dd";
+              attributedetail.type = response[j].ref.type
+              attributedetail.uuid = response[j].ref.uuid;
+              attributedetail.name = response[j].ref.name;
+              attributedetail.attributeName = response[j].attrName;
+              attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
+              attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+              attributedetail.attributeId = response[j].attrId;
+              attributes.push(attributedetail)
             }
+    
             deferred.resolve({
               data: attributes
             })
@@ -195,11 +226,14 @@
             var attributes = [];
             for (var j = 0; j < response.length; j++) {
               var attributedetail = {};
+              attributedetail.class = "tagit-choice-default-dd";
+              attributedetail.type = response[j].ref.type
               attributedetail.uuid = response[j].ref.uuid;
-              attributedetail.datapodname = response[j].ref.name;
-              attributedetail.name = response[j].attrName;
-              attributedetail.attributeId = response[j].attrId;
+              attributedetail.name = response[j].ref.name;
+              attributedetail.attributeName = response[j].attrName;
+              attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
               attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+              attributedetail.attributeId = response[j].attrId;
               attributes.push(attributedetail)
             }
             deferred.resolve({
@@ -219,10 +253,11 @@
               var attributedetail = {};
               attributedetail.id = j
               attributedetail.class = "tagit-choice-default-dd";
-              attributedetail.type = "datapod";
+              attributedetail.type = response[j].ref.type
               attributedetail.uuid = response[j].ref.uuid;
               attributedetail.name = response[j].ref.name;
               attributedetail.attributeName = response[j].attrName;
+              attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
               attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
               attributedetail.attributeId = response[j].attrId;
               attributes.push(attributedetail)
@@ -242,9 +277,12 @@
             var attributes = [];
             for (var j = 0; j < response.length; j++) {
               var attributedetail = {};
+              attributedetail.class = "tagit-choice-default-dd";
+              attributedetail.type = response[j].ref.type
               attributedetail.uuid = response[j].ref.uuid;
-              attributedetail.datapodname = response[j].ref.name;
-              attributedetail.name = response[j].attrName;
+              attributedetail.name = response[j].ref.name;
+              attributedetail.attributeName = response[j].attrName;
+              attributedetail.id = response[j].ref.uuid+"_"+response[j].attrId;
               attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
               attributedetail.attributeId = response[j].attrId;
               attributes.push(attributedetail)
@@ -413,6 +451,7 @@
             for(var i=0;i<response.detailAttr.length;i++){
               var attrinfo={};
               attrinfo.uuid=response.detailAttr[i].ref.uuid;
+              attrinfo.type=response.detailAttr[i].ref.type;
               attrinfo.dname=response.detailAttr[i].ref.name+"."+response.detailAttr[i].attributeName;
               attrinfo.attributeId=response.detailAttr[i].attrId;
               attrinfo.id=response.detailAttr[i].ref.uuid+"_"+response.detailAttr[i].attributeId
@@ -452,7 +491,7 @@
             valuejson.name = response.values[i].ref.name;
             valuejson.type = response.values[i].ref.type;
             valuejson.uuid = response.values[i].ref.uuid;
-            if (response.values[i].ref.type == "datapod") {
+            if (response.values[i].ref.type == "datapod" || response.values[i].ref.type == "dataset") {
               valuejson.dname = response.values[i].ref.name + "." + response.values[i].attributeName;
               valuejson.attributeId = response.values[i].attributeId;
               valuejson.attributeName = response.values[i].attributeName;
