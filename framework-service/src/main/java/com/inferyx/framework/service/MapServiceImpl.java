@@ -500,6 +500,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		} else {
 			try {
+				dataStoreServiceImpl.setRunMode(runMode);
 				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} catch(Exception e) {
 				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), mapExec.getVersion());
@@ -745,9 +746,20 @@ public class MapServiceImpl implements IParsable, IExecutable {
 							.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
 					datapodKey.setVersion(targetDatapod.getVersion());
 				}
-				String mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
+				/*String mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
 				if(execParams != null)
 				execParams.getOtherParams().put("datapodUuid_" + datapodKey.getUUID() + "_tableName", mapTableName);
+				*/
+				String mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
+				if(execParams != null) {
+					String value = execParams.getOtherParams().get("datapodUuid_" + datapodKey.getUUID() + "_tableName");
+				if(value == null || value.isEmpty())
+					execParams.getOtherParams().put("datapodUuid_" + datapodKey.getUUID() + "_tableName", mapTableName);
+				else
+					mapTableName = value;
+				}
+				
+				
 				logger.info("Target table in map " + mapExec.getName() + " : " + mapTableName);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -906,7 +918,8 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		List<java.util.Map<String, Object>> data = new ArrayList<>();
 		limit = offset + limit;
 		offset = offset + 1;
-		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(mapExecUUID, mapExecVersion);
+		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecUUID, mapExecVersion, MetaType.mapExec.toString());
+		DataStore datastore = dataStoreServiceImpl.findDatastoreByExec(mapExec.getResult().getRef().getUuid(), mapExec.getResult().getRef().getVersion());
 		data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
 		return data;
 	}
