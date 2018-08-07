@@ -207,7 +207,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.dashboard = {};
 	$scope.dashboard.versions = [];
 	$scope.isshowmodel = false;
-	$scope.dependsOnTypes = ["datapod", "relation"]
+	$scope.dependsOnTypes = ["datapod","dataset","relation"]
 	$scope.sectiontable = null
 	$scope.logicalOperator = [" ", "OR", "AND"];
 	$scope.operator = ["=", "<", ">", "<=", ">=", "BETWEEN"];

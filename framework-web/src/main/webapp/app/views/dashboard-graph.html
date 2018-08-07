@@ -142,7 +142,7 @@
                         <div ng-show="datacol.isDataError">
                           <h3 style="font-size:14px;color:red;">{{datacol.errormsg}}</h3>
                         </div>
-                        <div ng-if="datacol.vizpodDetails.datapoints.length ==0" ng-show="!inprogressdata">
+                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length == 0 && !datacol.isDataError" ng-show="!inprogressdata">
                           <h3 style="font-size:14px;color:blue;">No data available</h3>
                         </div>
                         <div class="spinner centercontent" ng-show="inprogressdata">

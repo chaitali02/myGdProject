@@ -145,7 +145,7 @@
 										<span class="required" aria-required="true"> * </span>
 									</label>
 									<div class="col-md-3 col-sm-3 col-xs-12" style="width:26%;">
-										<select class="form-control" select2 name="" data-ng-change="onChangeSource()" data-ng-model="allSource.defaultoption" ng-options="r as r.name for r in allSource.options track by r.uuid" ng-disabled="{{mode}}" required="">
+										<select class="form-control" select2 name="" data-ng-change="onChangeSource()" data-ng-model="allSource.defaultoption" ng-options="r as r.name for r in allSource.options | orderBy: 'datapodname' track by r.uuid" ng-disabled="{{mode}}" required="">
                                         </select>
 									</div>
 								</div>
@@ -197,7 +197,7 @@
 									<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Attribute</label>
 									<div class="col-md-6">
 										<ul class="tagitdd" style="height:100px;" ng-class="({{mode}} ==true)?'disabled-ul':'default'">
-											<li class="btn-draggable tagit-choice-dd  tagit-choice-readonly-dd {{item.class}}" ng-repeat="item in allSourceAttribute" data-drag="true" jqyoui-draggable="{index:{{$index}}}" data-jqyoui-options="{helper:'clone',deepCopy:'true'}" ng-model="allSourceAttribute" >
+											<li class="btn-draggable tagit-choice-dd  tagit-choice-readonly-dd {{item.class}}" ng-repeat="item in allSourceAttribute | orderBy: 'name'" data-drag="true" jqyoui-draggable="{index:{{$index}}}" data-jqyoui-options="{helper:'clone',deepCopy:'true'}" ng-model="allSourceAttribute" >
 												<span class="tagit-label">{{item.dname}}</span>
 												<a class="tagit-close-dd">
 			   										<span class="ui-icon ui-icon-close"></span>

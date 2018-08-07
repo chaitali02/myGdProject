@@ -481,12 +481,13 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
   }
 
   $scope.getFilterValue=function(data){
+    
     $scope.filterAttribureIdValues=[]
     $scope.selectedAttributeValue=[]
     if(data.filterInfo && data.filterInfo.length >0){
       var filterAttribureIdValue=[];
       for(var n=0;n<data.filterInfo.length;n++){
-        var filterattributeidvalepromise=DahsboardSerivce.getAttributeValues(data.filterInfo[n].ref.uuid,data.filterInfo[n].attrId);
+        var filterattributeidvalepromise=DahsboardSerivce.getAttributeValues(data.filterInfo[n].ref.uuid,data.filterInfo[n].attrId,data.filterInfo[n].ref.type);
         filterAttribureIdValue.push(filterattributeidvalepromise);
       }//End For Loop
       $q.all(filterAttribureIdValue).then(function(result){
@@ -829,6 +830,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
     count=0;
     DahsboardSerivce.getLatestByUuidView($stateParams.id,"dashboardview").then(function(response){onSuccessLatestByUuid(response.data)});
     var onSuccessLatestByUuid=function(response){
+      
 		  $scope.dashboarddata=response;
       $scope.convertSectionInfo(response.sectionInfo)
       $scope.uuid = response.uuid;

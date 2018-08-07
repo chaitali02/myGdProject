@@ -26,6 +26,7 @@ import com.inferyx.framework.dao.IDashboardDao;
 import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Dashboard;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -148,7 +149,14 @@ public class DashboardViewServiceImpl {
 			// datapodServiceImpl.findLatestByUuid(dependsOn.getRef().getUuid());
 			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(dependsOn.getRef().getUuid(), MetaType.datapod.toString());
 			dependsOn.getRef().setName(datapod.getName());
-		} else {
+		} 
+		else if (dependsOn.getRef().getType().equals(MetaType.dataset)) {
+			// Datapod datapod =
+			// datapodServiceImpl.findLatestByUuid(dependsOn.getRef().getUuid());
+			DataSet dataSet = (DataSet) commonServiceImpl.getLatestByUuid(dependsOn.getRef().getUuid(), MetaType.dataset.toString());
+			dependsOn.getRef().setName(dataSet.getName());
+		} 
+		else {
 			// Relation
 			// relation=relationServiceImpl.findLatestByUuid(dependsOn.getRef().getUuid());
 			Relation relation = (Relation) commonServiceImpl.getLatestByUuid(dependsOn.getRef().getUuid(), MetaType.relation.toString());
