@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS framework;
-use framework;
+CREATE DATABASE IF NOT EXISTS ecocap;
+use ecocap;
 DROP TABLE IF EXISTS customer_idiosyncratic_transpose;
 CREATE EXTERNAL TABLE IF NOT EXISTS `customer_idiosyncratic_transpose`(
   `iterationid` int, 

@@ -1,9 +1,9 @@
-CREATE DATABASE IF NOT EXISTS framework;
-use framework;
+CREATE DATABASE IF NOT EXISTS ecocap;
+use ecocap;
 DROP TABLE IF EXISTS portfolio_loss_simulation;
 CREATE EXTERNAL TABLE IF NOT EXISTS `portfolio_loss_simulation`(
   `iterationid` int, 
-  `portfolio_loss` decimal, 
+  `portfolio_loss` bigint, 
   `reporting_date` string,
   `version` int);
 

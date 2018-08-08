@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS framework;
-use framework;
+CREATE DATABASE IF NOT EXISTS ecocap;
+use ecocap;
 DROP TABLE IF EXISTS industry_factor_transpose;
 CREATE EXTERNAL TABLE IF NOT EXISTS `industry_factor_transpose`(
   `iteration_id` int, 
