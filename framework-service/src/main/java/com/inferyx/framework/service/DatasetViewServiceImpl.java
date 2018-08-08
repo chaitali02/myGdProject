@@ -264,7 +264,9 @@ public class DatasetViewServiceImpl {
 				AttributeRefHolder sourceAttr = new AttributeRefHolder();
 				SourceAttr = datasetSourceAttribute.get(i).getSourceAttr().getRef();
 				sourceAttr.setRef(SourceAttr);
-				if (datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.datapod) || datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.dataset)) {
+				if (datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.datapod) 
+						|| datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.dataset)
+						|| datasetSourceAttribute.get(i).getSourceAttr().getRef().getType().equals(MetaType.paramlist)) {
 					int attrId = Integer.parseInt(datasetSourceAttribute.get(i).getSourceAttr().getAttrId());
 					ref.setAttrSourceId(datasetSourceAttribute.get(i).getAttrSourceId());
 					ref.setAttrSourceName(datasetSourceAttribute.get(i).getAttrSourceName());

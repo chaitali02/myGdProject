@@ -1,7 +1,7 @@
 
 DatavisualizationModule=angular.module('DatavisualizationModule')
 
-DatavisualizationModule.controller('DashboradMenuController2',function($filter,$rootScope,$scope,$sessionStorage,$state,DahsboardSerivce,CommonService,dagMetaDataService) {
+DatavisualizationModule.controller('DashboradMenuController2',function($filter,$rootScope,$scope,$sessionStorage,$state,DahsboardSerivce,CommonService,dagMetaDataService,FileSaver,Blob,privilegeSvc) {
   $scope.isListCard=false;
   $scope.IsVizpodDetailShow=false;
 	$scope.optionsort=[
@@ -25,7 +25,13 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 		timeout: 3000 //time in ms
 };
 
+$scope.privileges = [];
+$scope.privileges = privilegeSvc.privileges["dashboard"] || [];
 
+$scope.$on('privilegesUpdated', function (e, data) {
+$scope.privileges = privilegeSvc.privileges["dashboard"] || [];
+  
+});
 	$scope.pagination={
     currentPage:1,
     pageSize:10,
@@ -53,63 +59,68 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 		headerCellClass: 'text-center',
 		cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.active == "Y" ? "Active" : "In Active"}}</div>'
 	},{
+		displayName: 'Publish',
+		name: 'publish',
+		cellClass: 'text-center',
+		headerCellClass: 'text-center',
+		cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.published == "Y" ? "Yes" : "No"}}</div>'
+	},{
 		displayName: 'Action',
 		name: 'action',
 		cellClass: 'text-center',
 		headerCellClass: 'text-center',
-		maxWidth: 100,
+    maxWidth: 150,
+    // cellTemplate: [
+      
+    //   '<div class="ui-grid-cell-contents"><a class="btn btn-xs btn-primary" name="execbutton"  ng-click="grid.appScope.show_dashboard(row.entity)">View</a></div>',
+    
+    // ].join(''),
 		cellTemplate: [
-			'<div class="ui-grid-cell-contents"><a class="btn btn-xs btn-primary" name="execbutton"  ng-click="grid.appScope.show_dashboard(row.entity)">View</a></div>',
-		].join('')
+      
+      '<div class="ui-grid-cell-contents">',
+      '<div class="col-md-12" style="display:inline-flex;">',   
+      '  <div class="col-md-10 dropdown" uib-dropdown dropdown-append-to-body>',
+      '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
+      '    <i class="fa fa-angle-down"></i></button>',
+      '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'View\') == -1"><a ng-click="grid.appScope.show_dashboard(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Edit\') == -1" ><a ng-click="grid.appScope.editDashboard(row.entity)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Delete\') == -1" ng-if="row.entity.active == \'Y\'"><a ng-click="grid.appScope.deleteOrRestore(row.entity,\'Delete\')"><i class="fa fa-times" aria-hidden="true"></i>  Delete</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Restore\') == -1" ng-if="row.entity.active == \'N\'"><a ng-click="grid.appScope.deleteOrRestore(row.entity,\'Restore\')"><i class="fa fa-retweet" aria-hidden="true"></i>  Restore</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Publish\') == -1" ng-if="row.entity.published == \'N\'"><a ng-click="grid.appScope.publishOrUnpublish(row.entity,\'Publish\')"><i class="fa fa-share-alt" aria-hidden="true"></i>  Publish</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Unpublish\') == -1 || row.entity.createdBy.ref.name != grid.appScope.loginUser" ng-if="row.entity.published == \'Y\'"><a ng-click="grid.appScope.publishOrUnpublish(row.entity,\'Unpublish\')"><i class="fa fa-shield" aria-hidden="true"></i>  Unpublish</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Clone\') == -1"><a ng-click="grid.appScope.createCopy(row.entity)"><i class="fa fa-clone" aria-hidden="true"></i>  Clone</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Export\') == -1"><a ng-click="grid.appScope.export(row.entity)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Export</a></li>',
+      '    </ul>',
+      '  </div>',
+      '</div>'
+    
+    ].join('')
 	});
 	$scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.gridApi = gridApi;
     $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
   };
-
+ 
   $scope.refreshData = function(searchtext) {
-    //var data
     $scope.gridOptions.data = $filter('filter')($scope.originalData,searchtext, undefined);
-  //  $scope.getResults(data);
-  };
+  }
+
   $scope.$watchCollection('switchStatus', function() {
      $scope.isListCard=!$scope.isListCard;
   });
-  // $scope.listAndCardShow=function (data) {
-  // 	$scope.isListCard=!$scope.isListCard;
-  // }
-	$scope.selectdashboard = function(response) {
+
+  $scope.addMode=function(){
+    
+  }
+  $scope.selectdashboard = function(response) {
     $scope.selectedmodeldata = true;
-      $scope.gridOptions.data=null;
+    $scope.gridOptions.data=null;
     $scope.gridOptions.data = response.data;
     $scope.originalData = response.data;
-		// if($scope.originalData.length >0){
-		// 	$scope.getResults($scope.originalData);
-		// }
   }
 
-	// $scope.selectPage = function(pageNo) {
-	// 	$scope.pagination.currentPage = pageNo;
-	// };
-	// $scope.onPerPageChange = function() {
-	// 		$scope.pagination.currentPage = 1;
-	// 	$scope.getResults($scope.originalData)
-	// }
-	// $scope.pageChanged = function() {
-	// 	$scope.getResults($scope.originalData)
-	// };
-	// $scope.getResults = function(params) {
-	// 	$scope.pagination.totalItems=params.length;
-	// 	$scope.pagination.to = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize);
-	// 	if ($scope.pagination.totalItems < ($scope.pagination.pageSize*$scope.pagination.currentPage)) {
-	// 		$scope.pagination.from = $scope.pagination.totalItems;
-	// 	} else {
-	// 		$scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
-	// 	}
-	// 	var limit = ($scope.pagination.pageSize*$scope.pagination.currentPage);
-	// 	var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
-	// 	 $scope.gridOptions.data=params.slice(offset,limit);
-	// }
+	
   $scope.showIcon=function(index){
     $scope.alldashboard[index].isIconShow=true;
   }
@@ -128,14 +139,121 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
   		notify.title= 'Info',
 			$scope.$emit('notify', notify);
 		}
-	}
-  $scope.okDelete=function () {
+  }
+  $scope.editDashboard=function(data){
+    setTimeout(function(){  $state.go("metaListdashboard",{'id':data.uuid,'mode':'false'});},100);
+  }
+  
+  $scope.createCopy = function (data) {
+    var uuid = data.uuid;
+    var version = data.version;
+    $scope.obj = {};
+    $scope.obj.uuid = uuid;
+    $scope.obj.version = version;
+    $scope.msg="Clone"
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+  $scope.export = function (data) {
+    var uuid = data.uuid;
+    var version = data.version;
+    $scope.obj = {};
+    $scope.obj.uuid = uuid;
+    $scope.obj.version = version;
+    $scope.msg="Export"
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+  $scope.deleteOrRestore = function (data,action) {
+    var uuid = data.uuid;
+    var version = data.version;
+    $scope.obj =data;
+   
+    $scope.msg=action;
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
 
+  $scope.publishOrUnpublish = function (data,action){
+    var uuid = data.uuid;
+    var version = data.version;
+    $scope.obj =data;
+    $scope.msg=action;
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+
+  $scope.submitOk=function(action){
+    if(action =="Clone"){
+      $scope.okClone();
+    }
+   else if(action =="Export"){
+      $scope.okExport();
+    }
+    else if(action =="Delete"){
+      $scope.okDelete();
+    }
+    else if(action =="Restore"){
+      $scope.okDelete();
+    }else if(action =="Publish"){
+      $scope.okPublished();
+    }
+    else if(action =="Unpublish"){
+      $scope.okPublished();
+    }
+  }
+
+  $scope.okClone = function () {
+    $('#confModal').modal('hide');
+    CommonService.getSaveAS($scope.obj.uuid, $scope.obj.version,"dashboard").then(function (response) {onSuccessSaveAs(response.data)});
+    var onSuccessSaveAs = function (response) {
+      $scope.originalData.splice(0, 0, response);
+      $scope.message ="Dashboard Cloned Successfully"
+      notify.type = 'success',
+      notify.title = 'Success',
+      notify.content = $scope.message
+      $scope.$emit('notify', notify);
+    }
+  }
+
+
+  $scope.okExport = function () {
+    $('#confModal').modal('hide');
+    CommonService.getLatestByUuid($scope.obj.uuid,"dashboard").then(function (response) {
+      onSuccessGetUuid(response.data)
+    });
+    var onSuccessGetUuid = function (response) {
+      var jsonobj = angular.toJson(response, true);
+      var data = new Blob([jsonobj], {
+        type: 'application/json;charset=utf-8'
+      });
+      FileSaver.saveAs(data, response.name + '.json');
+      $scope.message ="Dashboard Downloaded Successfully";
+      notify.type = 'success',
+      notify.title = 'Success',
+      notify.content = $scope.message
+      $scope.$emit('notify', notify);
+    }
+  }
+
+  $scope.okDelete=function () {
     $('#DeleteConfModal').modal('hide');
-    if($scope.dashboarddatadelete.active=='Y'){
-			CommonService.delete($scope.dashboarddatadelete.id,'dashboard').then(function(response){OnSuccessDelete(response.data)});
+    $('#confModal').modal('hide');
+    if($scope.obj.active=='Y'){
+			CommonService.delete($scope.obj.id,'dashboard').then(function(response){OnSuccessDelete(response.data)});
 			var OnSuccessDelete=function(response){
-			 $scope.alldashboard[$scope.dashboarddatadelete.index].active=response.active;
+       $scope.alldashboard[$scope.obj.index].active=response.active;
+       if($scope.gridOptions.data && $scope.gridOptions.data.length >0)
+        $scope.gridOptions.data[$scope.obj.index].active=response.active;
        notify.type='success',
    		 notify.title= 'Success',
        notify.content="Dashboard Deleted Successfully"
@@ -143,9 +261,11 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 			}
 	  }
 		else{
-			CommonService.restore($scope.dashboarddatadelete.id,'dashboard').then(function(response){OnSuccessDelete(response.data)});
+			CommonService.restore($scope.obj.id,'dashboard').then(function(response){OnSuccessDelete(response.data)});
 			var OnSuccessDelete=function(response){
-			 $scope.alldashboard[$scope.dashboarddatadelete.index].active='Y'
+        $scope.alldashboard[$scope.obj.index].active='Y'
+        if($scope.gridOptions.data && $scope.gridOptions.data.length >0)
+          $scope.gridOptions.data[$scope.obj.index].active="Y"
         notify.type='success',
         notify.title= 'Success',
        notify.content="Dashboard Restored Successfully"
@@ -157,7 +277,7 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
   $scope.metadashboard = function($event,index,data){
     $event.stopPropagation();
     $scope.dashboarddatadelete=data;
-    //$scope.dashboarddatadelete.index=index
+    $scope.obj=data;
     if(data.active=='Y'){
       $scope.deletemsg="Delete Dashboard"
     }
@@ -169,9 +289,41 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
       keyboard: false
     });
 
-    //setTimeout(function(){  $state.go("metaListdashboard",{'id':uuid,'mode':'false'});},100);
-
   }
+
+  
+  
+
+  $scope.okPublished = function () {
+ 
+    $('#confModal').modal('hide');
+    if($scope.obj.published=='N'){
+			CommonService.publish($scope.obj.id,'dashboard').then(function(response){OnSuccessPublush(response.data)});
+			var OnSuccessPublush=function(response){
+       $scope.alldashboard[$scope.obj.index].published=response.published;
+       if($scope.gridOptions.data && $scope.gridOptions.data.length >0)
+        $scope.gridOptions.data[$scope.obj.index].published=response.published;
+       notify.type='success',
+   		 notify.title= 'Success',
+       notify.content="Dashboard Publish Successfully"
+       $scope.$emit('notify', notify);
+			}
+	  }
+		else{
+			CommonService.unpublish($scope.obj.id,'dashboard').then(function(response){OnSuccessUnpublush(response.data)});
+			var OnSuccessUnpublush=function(response){
+        $scope.alldashboard[$scope.obj.index].published='N'
+        if($scope.gridOptions.data && $scope.gridOptions.data.length >0)
+          $scope.gridOptions.data[$scope.obj.index].published="N"
+        notify.type='success',
+        notify.title= 'Success',
+        notify.content="Dashboard Unpublish Successfully"
+        $scope.$emit('notify', notify);
+			}
+		}
+  }
+   
+  
 
 	DahsboardSerivce.getAllLatestCompleteObjects("dashboard").then(function(response){onSuccessGetAllLatestCompleteObjects(response.data)});
 	var onSuccessGetAllLatestCompleteObjects=function(response){
@@ -212,11 +364,9 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 				dashbardjson.createdOn=new Date(response[i].createdOn.split("IST")[0]).toLocaleDateString('en-US')//response[i].createdOn
 				dashbardjson.sectionInfo=response[i].sectionInfo;
 				dashbardarray[i]=dashbardjson;
-
 			}//End For
 		}//End If
 		$scope.alldashboard=dashbardarray
-		//$scope.alldashboard=response;
 	}//End  onSuccessGetAllLatest
 
 });//End DashboradMenuController
@@ -465,7 +615,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       var filterList={};
       var ref={};
       if($scope.selectedAttributeValue[i].value !="-select-"){
-        ref.type=$scope.filterAttribureIdValues[i].type;
+        ref.type="datapod";
         ref.uuid=$scope.filterAttribureIdValues[i].datapoduuid
         filterList.ref=ref;
         filterList.attrId=$scope.filterAttribureIdValues[i].datapodattrId
@@ -484,7 +634,6 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
     
     $scope.filterAttribureIdValues=[]
     $scope.selectedAttributeValue=[]
-  
     if(data.filterInfo && data.filterInfo.length >0){
       var filterAttribureIdValue=[];
       for(var n=0;n<data.filterInfo.length;n++){
@@ -501,7 +650,6 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
           filterAttribureIdvalueJSON.vizpodversion=data.filterInfo[i].ref.uuid;
           filterAttribureIdvalueJSON.datapoduuid=data.filterInfo[i].ref.uuid;
           filterAttribureIdvalueJSON.datapodattrId=data.filterInfo[i].attrId;
-          filterAttribureIdvalueJSON.type=data.filterInfo[i].ref.type;
           filterAttribureIdvalueJSON.dname=data.filterInfo[i].ref.name+"."+data.filterInfo[i].attrName;
           filterAttribureIdvalueJSON.values=result[i].data
           filterAttribureIdvalueJSON.values.splice(0,0,defaultvalue)
@@ -536,9 +684,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       var datacolumnsarray=[];
       for(var k=0;k<$scope.sectionRows[i].columns[j].vizpodInfo.values.length;k++){
         var datacolumnsjson={};
-        if($scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.type =="datapod" 
-        || $scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.type =="dataset"){
-          
+        if($scope.sectionRows[i].columns[j].vizpodInfo.values[k].ref.type =="datapod"){
           datacolumnsjson.id=$scope.sectionRows[i].columns[j].vizpodInfo.values[k].attributeName;
           datacolumnsjson.name=$scope.sectionRows[i].columns[j].vizpodInfo.values[k].attributeName;
         }//End If Inside For
@@ -573,7 +719,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
           console.log(JSON.stringify(keyvalueData))
           for(var c=0;c<keyvalueData.length;c++){
             var attribute={};
-            if(keyvalueData[c].ref.type =="datapod" || keyvalueData[c].ref.type =="dataset"){
+            if(keyvalueData[c].ref.type =="datapod"){
               attribute.name=keyvalueData[c].attributeName;
               attribute.displayName=keyvalueData[c].attributeName;
             //attribute.width =$scope.keyvalueData[c].attributeName.split('').length + 2 + "%"
@@ -799,7 +945,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       for(var j=0;j<$scope.sectionRows[i].columns.length;j++){
         if($scope.sectionRows[i].columns[j].vizpodInfo.type =='pie-chart' ||$scope.sectionRows[i].columns[j].vizpodInfo.type =='donut-chart'){
           var columnname=$scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName
-          if($scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "datapod" || $scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "dataset"){
+          if($scope.sectionRows[i].columns[j].vizpodInfo.values[0].ref.type == "datapod"){
             columnnamevalue=$scope.sectionRows[i].columns[j].vizpodInfo.values[0].attributeName
           }
           else{

@@ -1,6 +1,6 @@
 {
   "uuid": "c058381b-5d83-48aa-8f3c-b5d209ffbd38",
-  "version": "1533600810",
+  "version": "1533610608",
   "name": "ppl_e2e_economic_capital_wo_simulation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Aug 06 20:13:30 EDT 2018",
+  "createdOn": "Mon Aug 06 22:56:48 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -198,8 +198,8 @@
               }
             }
           ],
-          "xPos": 510,
-          "yPos": 220,
+          "xPos": 450,
+          "yPos": 210,
           "active": "Y",
           "statusList": []
         },
@@ -1469,8 +1469,8 @@
               }
             }
           ],
-          "xPos": 510,
-          "yPos": 430,
+          "xPos": 450,
+          "yPos": 440,
           "active": "Y",
           "statusList": []
         },
@@ -1837,7 +1837,7 @@
         }
       ],
       "name": "new stage",
-      "xPos": 340,
+      "xPos": 200,
       "yPos": 330,
       "active": "Y",
       "statusList": []
