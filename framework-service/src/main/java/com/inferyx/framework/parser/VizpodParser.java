@@ -14,8 +14,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -211,10 +214,16 @@ public class VizpodParser {
 				whereBuilder.append(WHERE_1_1);
 				whereBuilder.append(blankSpace);
 				whereBuilder.append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet));
-
+				
+				Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
+				Matcher matcher = pattern.matcher(whereBuilder);
+				while(matcher.find()) {
+					if(!NumberUtils.isCreatable(matcher.group()))
+						whereBuilder = new StringBuilder(whereBuilder.toString().replace(matcher.group(), ""));
+				}
 			}
 			whereBuilder.append(blankSpace);
-			finalBuilder.append(whereBuilder.toString().replaceAll("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)", ""));
+			finalBuilder.append(whereBuilder.toString());
 
 			if ((!vizpod.getKeys().isEmpty() && hasFuncInVal) || !vizpod.getGroups().isEmpty()) {
 				finalBuilder.append("GROUP BY");
@@ -340,7 +349,13 @@ public class VizpodParser {
 				whereBuilder.append(WHERE_1_1);
 				whereBuilder.append(blankSpace);
 				whereBuilder.append(filterOperator.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet));
-
+				
+				Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
+				Matcher matcher = pattern.matcher(whereBuilder);
+				while(matcher.find()) {
+					if(!NumberUtils.isCreatable(matcher.group()))
+						whereBuilder = new StringBuilder(whereBuilder.toString().replace(matcher.group(), ""));
+				}
 			}
 			whereBuilder.append(blankSpace);
 
@@ -406,8 +421,7 @@ public class VizpodParser {
 			
 			result = selectBuilder.length() > 0 ? selectBuilder.substring(0, selectBuilder.length() - 1) : "";
 			result += fromBuilder.length() > 0 ? fromBuilder.substring(0, fromBuilder.length() - 1) : "";
-			result += (whereBuilder.length() > 0 ? whereBuilder.substring(0, whereBuilder.length() - 1) : "")
-					.replaceAll("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)", "");
+			result += (whereBuilder.length() > 0 ? whereBuilder.substring(0, whereBuilder.length() - 1) : "");
 			result += groupByBuilder.length() > 0 ? groupByBuilder.substring(0, groupByBuilder.length() - 1) : "";
 			result += limitBuilder.length() > 0 ? limitBuilder.substring(0, limitBuilder.length() - 1) : "";
 			logger.info(String.format("Final Vizpod filter %s", result));
@@ -448,8 +462,29 @@ public class VizpodParser {
 
 			dataSet.setAttributeInfo(attributeInfo);
 			dataSet.setFilterInfo(filterInfo);
+		
+		/******** following commented code also works but to remove table name from filter query the custom code is written *******/  	
+			//result = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
 			
-			result = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
+		/******** following custom code is written specifically to remove table name from filter query else above commented code can work *******/  	
+			StringBuilder queryBuilder = new StringBuilder();
+			selectBuilder = new StringBuilder(datasetOperator.generateSelect(dataSet, null, null, null, runMode));
+			fromBuilder.append(" FROM ").append(datasetOperator.generateFrom(dataSet, null, null, usedRefKeySet, runMode));
+			whereBuilder.append(datasetOperator.generateWhere());
+			whereBuilder.append(" ").append(datasetOperator.generateFilter(dataSet, null, null, usedRefKeySet));
+			Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
+			Matcher matcher = pattern.matcher(whereBuilder);
+			while(matcher.find()) {
+				if(!NumberUtils.isCreatable(matcher.group()))
+					whereBuilder = new StringBuilder(whereBuilder.toString().replace(matcher.group(), ""));
+			}			
+			groupByBuilder = new StringBuilder(datasetOperator.generateGroupBy(dataSet, null, null, null));
+			
+			queryBuilder.append(selectBuilder);
+			queryBuilder.append(fromBuilder);
+			queryBuilder.append(whereBuilder);
+			queryBuilder.append(groupByBuilder);			
+			result = queryBuilder.toString();
 		}
 		return result;
 	}

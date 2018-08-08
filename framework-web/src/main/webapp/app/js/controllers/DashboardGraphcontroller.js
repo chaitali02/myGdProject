@@ -636,7 +636,8 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       title: 'Show Detail',
       action:$scope.actionEvent,
       disabled: false // optional, defaults to false
-    }]
+    }];
+    console.log(data);
    $scope.contextMenu1(menu,data);
   }
   $scope.showClick = function(data){
@@ -645,10 +646,11 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       action:$scope.actionEvent,
       disabled: false // optional, defaults to false
     }]
+    console.log(data)
     $scope.contextMenu1(menu,data);
   }
   $scope.actionEvent=function(d,i,data){
-   
+   debugger
     var filterinfoArray=[]
     var vizpodbody={}
     var filterInfo={};
@@ -659,6 +661,13 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       ref.type=data.vizpod.vizpodInfo.values[0].ref.type
       filterInfo.ref=ref;
       filterInfo.attrId=data.vizpod.vizpodInfo.values[0].attributeId;
+      for(var i=0;i<data.vizpod.vizpodInfo.values.length;i++){
+        var atttrName=data.vizpod.vizpodInfo.values[i].attributeName;
+       if(atttrName.indexOf(data.dataobj.id) !=-1){
+        filterInfo.attrId=data.vizpod.vizpodInfo.values[i].attributeId;
+        break;
+       }  
+      }
       filterInfo.value=data.dataobj.value
       filterinfoArray.push(filterInfo);
       vizpodbody.filterInfo=filterinfoArray
