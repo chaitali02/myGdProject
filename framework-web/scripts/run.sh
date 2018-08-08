@@ -23,6 +23,7 @@
 rm -r /user/hive/warehouse/framework/*
 mkdir -p /user/hive/warehouse/framework/
 cp -r ../app/*/data/parquet/* /user/hive/warehouse/framework
+cp -r ../app/*/data/csv/* /user/hive/warehouse/framework/upload/
 
 mkdir /user/hive/warehouse/framework/train
 mkdir /user/hive/warehouse/framework/predict
