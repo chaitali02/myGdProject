@@ -1,7 +1,7 @@
 
 DatavisualizationModule=angular.module('DatavisualizationModule')
 
-DatavisualizationModule.controller('DashboradMenuController2',function($filter,$rootScope,$scope,$sessionStorage,$state,DahsboardSerivce,CommonService,dagMetaDataService,FileSaver, Blob) {
+DatavisualizationModule.controller('DashboradMenuController2',function($filter,$rootScope,$scope,$sessionStorage,$state,DahsboardSerivce,CommonService,dagMetaDataService,FileSaver,Blob,privilegeSvc) {
   $scope.isListCard=false;
   $scope.IsVizpodDetailShow=false;
 	$scope.optionsort=[
@@ -25,7 +25,13 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 		timeout: 3000 //time in ms
 };
 
+$scope.privileges = [];
+$scope.privileges = privilegeSvc.privileges["dashboard"] || [];
 
+$scope.$on('privilegesUpdated', function (e, data) {
+$scope.privileges = privilegeSvc.privileges["dashboard"] || [];
+  
+});
 	$scope.pagination={
     currentPage:1,
     pageSize:10,
@@ -53,6 +59,12 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 		headerCellClass: 'text-center',
 		cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.active == "Y" ? "Active" : "In Active"}}</div>'
 	},{
+		displayName: 'Publish',
+		name: 'publish',
+		cellClass: 'text-center',
+		headerCellClass: 'text-center',
+		cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.published == "Y" ? "Yes" : "No"}}</div>'
+	},{
 		displayName: 'Action',
 		name: 'action',
 		cellClass: 'text-center',
@@ -73,10 +85,10 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
       '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
       '    <li ng-disabled="grid.appScope.privileges.indexOf(\'View\') == -1"><a ng-click="grid.appScope.show_dashboard(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
       '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Edit\') == -1" ><a ng-click="grid.appScope.editDashboard(row.entity)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </a></li>',
-      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Delete\') == -1" ng-if="row.entity.active == \'Y\'"><a ng-click="grid.appScope.okDelete(row.entity)"><i class="fa fa-times" aria-hidden="true"></i>  Delete</a></li>',
-      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Restore\') == -1" ng-if="row.entity.active == \'N\'"><a ng-click="grid.appScope.okDelete(row.entity)"><i class="fa fa-retweet" aria-hidden="true"></i>  Restore</a></li>',
-      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Publish\') == -1" ng-if="row.entity.published == \'N\'"><a ng-click="grid.appScope.publish(row.entity)"><i class="fa fa-share-alt" aria-hidden="true"></i>  Publish</a></li>',
-      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Unpublish\') == -1 || row.entity.createdBy.ref.name != grid.appScope.loginUser" ng-if="row.entity.published == \'Y\'"><a ng-click="grid.appScope.publish(row.entity,true)"><i class="fa fa-shield" aria-hidden="true"></i>  Unpublish</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Delete\') == -1" ng-if="row.entity.active == \'Y\'"><a ng-click="grid.appScope.deleteOrRestore(row.entity,\'Delete\')"><i class="fa fa-times" aria-hidden="true"></i>  Delete</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Restore\') == -1" ng-if="row.entity.active == \'N\'"><a ng-click="grid.appScope.deleteOrRestore(row.entity,\'Restore\')"><i class="fa fa-retweet" aria-hidden="true"></i>  Restore</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Publish\') == -1" ng-if="row.entity.published == \'N\'"><a ng-click="grid.appScope.publishOrUnpublish(row.entity,\'Publish\')"><i class="fa fa-share-alt" aria-hidden="true"></i>  Publish</a></li>',
+      '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Unpublish\') == -1 || row.entity.createdBy.ref.name != grid.appScope.loginUser" ng-if="row.entity.published == \'Y\'"><a ng-click="grid.appScope.publishOrUnpublish(row.entity,\'Unpublish\')"><i class="fa fa-shield" aria-hidden="true"></i>  Unpublish</a></li>',
       '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Clone\') == -1"><a ng-click="grid.appScope.createCopy(row.entity)"><i class="fa fa-clone" aria-hidden="true"></i>  Clone</a></li>',
       '    <li ng-disabled="grid.appScope.privileges.indexOf(\'Export\') == -1"><a ng-click="grid.appScope.export(row.entity)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Export</a></li>',
       '    </ul>',
@@ -89,7 +101,7 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
     $scope.gridApi = gridApi;
     $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
   };
-
+ 
   $scope.refreshData = function(searchtext) {
     $scope.gridOptions.data = $filter('filter')($scope.originalData,searchtext, undefined);
   }
@@ -98,7 +110,10 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
      $scope.isListCard=!$scope.isListCard;
   });
 
- 	$scope.selectdashboard = function(response) {
+  $scope.addMode=function(){
+    
+  }
+  $scope.selectdashboard = function(response) {
     $scope.selectedmodeldata = true;
     $scope.gridOptions.data=null;
     $scope.gridOptions.data = response.data;
@@ -153,14 +168,47 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
       keyboard: false
     });
   }
+  $scope.deleteOrRestore = function (data,action) {
+    var uuid = data.uuid;
+    var version = data.version;
+    $scope.obj =data;
+   
+    $scope.msg=action;
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
 
-  
+  $scope.publishOrUnpublish = function (data,action){
+    var uuid = data.uuid;
+    var version = data.version;
+    $scope.obj =data;
+    $scope.msg=action;
+    $('#confModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+
   $scope.submitOk=function(action){
     if(action =="Clone"){
       $scope.okClone();
     }
    else if(action =="Export"){
       $scope.okExport();
+    }
+    else if(action =="Delete"){
+      $scope.okDelete();
+    }
+    else if(action =="Restore"){
+      $scope.okDelete();
+    }else if(action =="Publish"){
+      $scope.okPublished();
+    }
+    else if(action =="Unpublish"){
+      $scope.okPublished();
     }
   }
 
@@ -197,13 +245,15 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
     }
   }
 
-  $scope.okDelete=function (data) {
+  $scope.okDelete=function () {
     $('#DeleteConfModal').modal('hide');
-    if(data.active=='Y'){
-			CommonService.delete(data.id,'dashboard').then(function(response){OnSuccessDelete(response.data)});
+    $('#confModal').modal('hide');
+    if($scope.obj.active=='Y'){
+			CommonService.delete($scope.obj.id,'dashboard').then(function(response){OnSuccessDelete(response.data)});
 			var OnSuccessDelete=function(response){
-       $scope.alldashboard[data.index].active=response.active;
-       $scope.gridOptions.data[data.index].active=response.active;
+       $scope.alldashboard[$scope.obj.index].active=response.active;
+       if($scope.gridOptions.data && $scope.gridOptions.data.length >0)
+        $scope.gridOptions.data[$scope.obj.index].active=response.active;
        notify.type='success',
    		 notify.title= 'Success',
        notify.content="Dashboard Deleted Successfully"
@@ -211,10 +261,11 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
 			}
 	  }
 		else{
-			CommonService.restore(data.id,'dashboard').then(function(response){OnSuccessDelete(response.data)});
+			CommonService.restore($scope.obj.id,'dashboard').then(function(response){OnSuccessDelete(response.data)});
 			var OnSuccessDelete=function(response){
-        $scope.alldashboard[data.index].active='Y'
-        $scope.gridOptions.data[data.index].active="Y"
+        $scope.alldashboard[$scope.obj.index].active='Y'
+        if($scope.gridOptions.data && $scope.gridOptions.data.length >0)
+          $scope.gridOptions.data[$scope.obj.index].active="Y"
         notify.type='success',
         notify.title= 'Success',
        notify.content="Dashboard Restored Successfully"
@@ -226,6 +277,7 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
   $scope.metadashboard = function($event,index,data){
     $event.stopPropagation();
     $scope.dashboarddatadelete=data;
+    $scope.obj=data;
     if(data.active=='Y'){
       $scope.deletemsg="Delete Dashboard"
     }
@@ -238,6 +290,40 @@ DatavisualizationModule.controller('DashboradMenuController2',function($filter,$
     });
 
   }
+
+  
+  
+
+  $scope.okPublished = function () {
+ 
+    $('#confModal').modal('hide');
+    if($scope.obj.published=='N'){
+			CommonService.publish($scope.obj.id,'dashboard').then(function(response){OnSuccessPublush(response.data)});
+			var OnSuccessPublush=function(response){
+       $scope.alldashboard[$scope.obj.index].published=response.published;
+       if($scope.gridOptions.data && $scope.gridOptions.data.length >0)
+        $scope.gridOptions.data[$scope.obj.index].published=response.published;
+       notify.type='success',
+   		 notify.title= 'Success',
+       notify.content="Dashboard Publish Successfully"
+       $scope.$emit('notify', notify);
+			}
+	  }
+		else{
+			CommonService.unpublish($scope.obj.id,'dashboard').then(function(response){OnSuccessUnpublush(response.data)});
+			var OnSuccessUnpublush=function(response){
+        $scope.alldashboard[$scope.obj.index].published='N'
+        if($scope.gridOptions.data && $scope.gridOptions.data.length >0)
+          $scope.gridOptions.data[$scope.obj.index].published="N"
+        notify.type='success',
+        notify.title= 'Success',
+        notify.content="Dashboard Unpublish Successfully"
+        $scope.$emit('notify', notify);
+			}
+		}
+  }
+   
+  
 
 	DahsboardSerivce.getAllLatestCompleteObjects("dashboard").then(function(response){onSuccessGetAllLatestCompleteObjects(response.data)});
 	var onSuccessGetAllLatestCompleteObjects=function(response){

@@ -672,7 +672,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					attributeInfo.isSourceAtributeDatapod = false;
 					attributeInfo.isSourceAtributeFormula = false;
 					attributeInfo.isSourceAtributeExpression = false;
-					attributeInfo.isSourceAtributeFunction = false
+					attributeInfo.isSourceAtributeFunction = false;
+					attributeInfo.isSourceAtributeParamList = false;
 
 				}
 				if (response.attributeInfo[n].sourceAttr.ref.type == "datapod" || response.attributeInfo[n].sourceAttr.ref.type == "dataset") {
@@ -691,7 +692,27 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					attributeInfo.isSourceAtributeDatapod = true;
 					attributeInfo.isSourceAtributeFormula = false;
 					attributeInfo.isSourceAtributeExpression = false;
-					attributeInfo.isSourceAtributeFunction = false
+					attributeInfo.isSourceAtributeFunction = false;
+					attributeInfo.isSourceAtributeParamList = false;
+				}
+				if (response.attributeInfo[n].sourceAttr.ref.type == "paramlist") {
+					var sourceparamlist = {};
+					sourceparamlist.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
+					sourceparamlist.type = response.attributeInfo[n].sourceAttr.ref.type;
+					sourceparamlist.attributeId = response.attributeInfo[n].sourceAttr.attrId;
+					sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType
+					sourceparamlist.name = "";
+					var obj = {}
+					obj.text = "paramlist"
+					obj.caption = "paramlist"
+					attributeInfo.sourceAttributeType = obj;
+					attributeInfo.sourceparamlist = sourceparamlist;
+					attributeInfo.isSourceAtributeSimple = false;
+					attributeInfo.isSourceAtributeDatapod = false;
+					attributeInfo.isSourceAtributeFormula = false;
+					attributeInfo.isSourceAtributeExpression = false;
+					attributeInfo.isSourceAtributeFunction = false;
+					attributeInfo.isSourceAtributeParamList = true;
 				}
 				if (response.attributeInfo[n].sourceAttr.ref.type == "expression") {
 					var sourceexpression = {};
@@ -707,6 +728,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					attributeInfo.isSourceAtributeFormula = false;
 					attributeInfo.isSourceAtributeExpression = true;
 					attributeInfo.isSourceAtributeFunction = false
+					attributeInfo.isSourceAtributeParamList = false;
+
 				}
 				if (response.attributeInfo[n].sourceAttr.ref.type == "formula") {
 					var sourceformula = {};
@@ -722,6 +745,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					attributeInfo.isSourceAtributeFormula = true;
 					attributeInfo.isSourceAtributeExpression = false;
 					attributeInfo.isSourceAtributeFunction = false
+					attributeInfo.isSourceAtributeParamList = false;
+
 				}
 				if (response.attributeInfo[n].sourceAttr.ref.type == "function") {
 					var sourcefunction = {};
@@ -737,6 +762,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					attributeInfo.isSourceAtributeFormula = false;
 					attributeInfo.isSourceAtributeFunction = true
 					attributeInfo.isSourceAtributeExpression = false;
+					attributeInfo.isSourceAtributeParamList = false;
+
 				}
 				sourceAttributesArray[n] = attributeInfo
 			}

@@ -211,7 +211,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		{ "text": "datapod", "caption": "attribute" },
 		{ "text": "expression", "caption": "expression" },
 		{ "text": "formula", "caption": "formula" },
-		{ "text": "function", "caption": "function" }
+		{ "text": "function", "caption": "function" },
+		{ "text": "paramlist", "caption": "paramlist" }
 	];
 
 	$scope.defalutType = ["Simple", 'Formula', 'Expression'];
@@ -910,6 +911,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
 
 		}
 		else if (type == "datapod") {
@@ -919,6 +921,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
 		}
 		else if (type == "formula") {
 
@@ -927,6 +930,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = true;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
 			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
 			var onSuccessExpression = function (response) {
 				//alert(JSON.stringify(response))
@@ -941,6 +945,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = true;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
 			MetadataDatasetSerivce.getExpressionByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
 			var onSuccessExpression = function (response) {
 				$scope.datasetLodeExpression = response
@@ -954,13 +959,23 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = true;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
 			//MetadataDatasetSerivce.getAllLatestFunction("function", "N").then(function (response) { onSuccessExpression(response.data) });
 			CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccressGetFunction(response.data) });
 			var onSuccressGetFunction = function (response) {
 				$scope.ruleLodeFunction = response
 			}
-
 		}
+		else if (type == "paramlist") {
+			$scope.attributeTableArray[index].isSourceAtributeSimple = false;
+			$scope.attributeTableArray[index].isSourceAtributeDatapod = false;
+			$scope.attributeTableArray[index].isSourceAtributeFormula = false;
+			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
+			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
+			$scope.attributeTableArray[index].isSourceAtributeParamList = true;
+			$scope.getParamByApp();
+		}
+
 
 	}
 
@@ -999,7 +1014,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		//	console.log($filter('unique')($scope.attributeTableArray,"name"));
 		}
 		setTimeout(function(){
-			debugger
 			if($scope.attributeTableArray[index].name){
 				var res=$scope.isDublication($scope.attributeTableArray,"name",index,"sourceName"+index);
 				if(res != -1){
@@ -1013,12 +1027,46 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 	$scope.onChangeFormula = function (data, index) {
 		if (!$scope.attributeTableArray[index].isSourceName)
-			$scope.attributeTableArray[index].name = data.name
+			$scope.attributeTableArray[index].name = data.name;
+		setTimeout(function(){
+			if($scope.attributeTableArray[index].name){
+				var res=$scope.isDublication($scope.attributeTableArray,"name",index,"sourceName"+index);
+				if(res != -1){
+					$scope.isDuplication=true;
+				}else{
+					$scope.isDuplication=false;
+				}
+			}
+		},1)
 	}
 
 	$scope.onChangeExpression = function (data, index) {
 		if (!$scope.attributeTableArray[index].isSourceName)
-			$scope.attributeTableArray[index].name = data.name
+			$scope.attributeTableArray[index].name = data.name;
+		setTimeout(function(){
+			if($scope.attributeTableArray[index].name){
+				var res=$scope.isDublication($scope.attributeTableArray,"name",index,"sourceName"+index);
+				if(res != -1){
+					$scope.isDuplication=true;
+				}else{
+					$scope.isDuplication=false;
+				}
+			}
+		},1)
+	}
+	$scope.onChangeParamlist = function (data, index) {
+		if (!$scope.attributeTableArray[index].isSourceName)
+			$scope.attributeTableArray[index].name = data.paramName;
+		setTimeout(function(){
+			if($scope.attributeTableArray[index].name){
+				var res=$scope.isDublication($scope.attributeTableArray,"name",index,"sourceName"+index);
+				if(res != -1){
+					$scope.isDuplication=true;
+				}else{
+					$scope.isDuplication=false;
+				}
+			}
+		},1)
 	}
 
 	$scope.jsonCode = function () {
@@ -1265,8 +1313,14 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				sourceAttr.attrId = $scope.attributeTableArray[l].sourcedatapod.attributeId;
 				sourceAttr.attrType = $scope.attributeTableArray[l].sourcedatapod.attrType;
 				attributeinfo.sourceAttr = sourceAttr;
+			}
+			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "paramlist") {
 
-
+				ref.type = "paramlist";
+				ref.uuid = $scope.attributeTableArray[l].sourceparamlist.uuid;
+				sourceAttr.ref = ref;
+				sourceAttr.attrId = $scope.attributeTableArray[l].sourceparamlist.attributeId;
+				attributeinfo.sourceAttr = sourceAttr;
 			}
 			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "expression") {
 

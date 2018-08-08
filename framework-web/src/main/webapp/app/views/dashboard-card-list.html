@@ -57,11 +57,15 @@
                     <div class="caption">
                         <i class="fa fa-cogs"></i>Dashboard
                     </div>
-                    <div class="tools tool-custom">
+                    <!-- <div class="tools tool-custom">
                         <a title="Refresh" ng-click="refreshSearchResults()" data-toggle="tooltip" data-placement="top" tooltip>
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
                         <a href="javascript:;" class="collapse" data-original-title="" style="height: 14px;" title=""> </a>
+                    </div> -->
+                    <div class="actions">
+                        <a ng-disabled="privileges.indexOf('Add') == -1"  ui-sref="metaListdashboard"  class="btn btn-default btn-sm">
+                          <i class="fa fa-plus"></i> Add </a>
                     </div>
                 </div>
                 <div class="portlet-body">
