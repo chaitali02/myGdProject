@@ -25,7 +25,8 @@ public class Dag extends BaseEntity{
     private String templateFlg = "N";
     private MetaIdentifierHolder templateInfo;
     private List<Stage> stages = new ArrayList<Stage>();
-    private List<Status> statusList = new ArrayList<>();;
+    private List<Status> statusList = new ArrayList<>();
+    private MetaIdentifierHolder paramList;
     
     public Dag() {}
     
@@ -37,6 +38,7 @@ public class Dag extends BaseEntity{
     	templateInfo = dag.getTemplateInfo();
     	stages = dag.getStages();
     	statusList.addAll(dag.getStatusList());
+    	paramList=dag.getParamList();
     }
     
 	/**
@@ -115,5 +117,12 @@ public class Dag extends BaseEntity{
 	public void setStatusList(List<Status> statusList) {
 		this.statusList = statusList;
 	}
-
+    
+	public MetaIdentifierHolder getParamList() {
+		return paramList;
+	}
+	public void setParamList(MetaIdentifierHolder paramList) {
+		this.paramList = paramList;
+	}
+	
 }

@@ -38,3 +38,5 @@ mkdir /user/hive/warehouse/framework/script
 mkdir /user/hive/warehouse/framework/script/r
 mkdir /user/hive/warehouse/framework/script/py
 
+cp -r ../app/*/data/csv/* /user/hive/warehouse/framework/upload/
+
