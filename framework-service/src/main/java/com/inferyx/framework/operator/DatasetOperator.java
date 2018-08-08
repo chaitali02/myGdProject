@@ -102,7 +102,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			StringBuilder builder = new StringBuilder();
 			Relation relation = null;
 	
-			
+			logger.info("otherParams in datasetOperator : " + otherParams);
 			if (dataset.getDependsOn().getRef().getType() == MetaType.relation) {
 				usedRefKeySet.add(dataset.getDependsOn().getRef());
 				relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 

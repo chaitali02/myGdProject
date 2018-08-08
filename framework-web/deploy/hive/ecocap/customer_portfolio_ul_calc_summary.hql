@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS framework;
-use framework;
+CREATE DATABASE IF NOT EXISTS ecocap;
+use ecocap;
 DROP TABLE IF EXISTS customer_portfolio_ul_calc_summary;
 CREATE EXTERNAL TABLE IF NOT EXISTS `customer_portfolio_ul_calc_summary`(
   `cust_id` string,

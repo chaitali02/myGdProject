@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS framework;
-use framework;
+CREATE DATABASE IF NOT EXISTS ecocap;
+use ecocap;
 DROP TABLE IF EXISTS customer_portfolio;
 CREATE EXTERNAL TABLE IF NOT EXISTS `customer_portfolio`(
   `cust_id` string, 
@@ -15,7 +15,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `customer_portfolio`(
   `version` int)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_portfolio_1000.csv' OVERWRITE INTO TABLE framework.customer_portfolio;
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_portfolio_2018.csv' OVERWRITE INTO TABLE ecocap.customer_portfolio;
 
 
 
