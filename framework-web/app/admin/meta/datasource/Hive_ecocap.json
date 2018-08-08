@@ -1,5 +1,5 @@
 {
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73030",
     "version" : "1464977196",
     "name" : "Hive_ecocap",
     "desc" : "Hive_ecocap Data Source",
@@ -16,18 +16,6 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
             }
         }, 
         {
