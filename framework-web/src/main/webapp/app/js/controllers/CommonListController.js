@@ -17,7 +17,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     timeout: 3000 //time in ms
   };
   $rootScope.isCommentDisabled=true;
-  $scope.paramTypes=["paramlist","paramset"];
+  $scope.paramTypes=[{"text":"paramlist","caption":"paramlist","disabled": false  },{"text":"paramset","caption":"paramset" ,"disabled": false }];
   var cached = cacheService.getCache('searchCriteria', $scope.select);
   $scope.isJobExec = $stateParams.isJobExec;
   $scope.isExec = $stateParams.isExec;
@@ -745,15 +745,16 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     // if($scope.select == 'rule') {  //|| $scope.select == 'train'
     //   $scope.getExecParamsSet();
     // }
-    if($scope.select == 'train' || $scope.select == 'rule'){
+    if($scope.select == 'train' || $scope.select == 'rule' || $scope.select == 'dag' ){
       $scope.selectParamType=null;
       $scope.paramtable=null;
       $scope.isTabelShow=false;
       $scope.paramTypes=null;
       $scope.selectParamType=null;
       $scope.isParamLsitTable=false;
-      setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },100);
-      if($scope.select =='rule'){
+      setTimeout(function(){    $scope.paramTypes=[{"text":"paramlist","caption":"paramlist","disabled": false  },{"text":"paramset","caption":"paramset" ,"disabled": false }];
+      ; },100);
+      if($scope.select =='rule' || $scope.select =='dag'){
         $scope.isParamListRquired=false;
         CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
         var onSuccessGetOneByUuidAndVersion = function (response) {

@@ -222,7 +222,7 @@
                               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Type
                               </label>
                               <div class="col-md-6">
-                                <select class="form-control" name="ParamType" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r  for r in paramTypes">
+                                <select class="form-control" name="ParamType" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r.text  as r.caption disable when ['dag'].indexOf(select) !=-1  && r.text =='paramset' ?true:false for r in paramTypes">
                                     <option value="">-Select-</option>
                                 </select>
                                 <input type="hidden" name="ParamType" ng-model="selectParamType" required>
