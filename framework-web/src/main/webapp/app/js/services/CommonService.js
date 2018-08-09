@@ -896,6 +896,8 @@
     url ="metadata/getParamListByTrain?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
     else if(type=="rule")
     url ="metadata/getParamListByRule?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
+    else if(type=="dag")
+    url ="metadata/getParamListByDag?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
     CommonFactory.httpGet(url).then(function(response) {
       onSuccess(response.data)
     });

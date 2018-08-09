@@ -1000,5 +1000,14 @@ public class MetadataController {
 			@RequestParam(value = "collectionType", required = false,defaultValue="dag") String collectionType)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
-	}	
+	}
+	
+	@RequestMapping(value = "/getParamListByDag", method = RequestMethod.GET, params = {"uuid", "version"})
+	public @ResponseBody List<ParamListHolder> getParamListByDag(
+			@RequestParam(value = "uuid", required = false) String daguid,
+			@RequestParam(value = "version", required = false) String dagVersion,
+			@RequestParam(value = "paramListType", required = false) MetaType paramListType,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListByDag(daguid, dagVersion, null);
+	}
 }
