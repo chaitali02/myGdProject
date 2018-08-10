@@ -63,6 +63,10 @@ const routes: Routes = [
                 { path: 'dataQuality', loadChildren: 'app/data-quality/data-quality.module#DataQualityModule'},
                 { path: 'list/:type/dataQuality',redirectTo :'dataQuality'},
                 { path: 'dataQuality/dqgroupexec/:type/:id/:version/:mode/dataQuality',redirectTo :'dataQuality'},
+
+                { path: 'recon', loadChildren: 'app/data-recon/data-recon.module#DataReconModule'},
+                { path: 'list/:type/recon',redirectTo :'recon'},
+                // { path: 'dataQuality/dqgroupexec/:type/:id/:version/:mode/dataQuality',redirectTo :'dataQuality'},
   
             ]
        },

@@ -115,7 +115,21 @@
         </li>
       </ul>
     </li>
-
+    <li class="nav-item" (click)="check(DataReconMenu.id,true)" [ngClass]="{'open': selectedItemId === DataReconMenu.id}">
+      <a class="nav-link nav-toggle">
+        <i class="fa fa-rss"></i>
+        <span class="title">Data Reconciliation</span>
+        <span class="arrow"></span>
+      </a>
+      <ul class="sub-menu" [style.display]="selectedItemId === DataReconMenu.id && toggle ==true ? 'block' : none" >
+        <li *ngFor="let datareconsubmenu of DataReconMenu.subMenu" class="nav-item">
+          <a [routerLink]="['list', datareconsubmenu.type]" class="nav-link">
+            <span class="title">{{datareconsubmenu.name}}</span>
+            <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[dataqualitysubmenu.type].count"></span>    -->
+          </a>
+        </li>
+      </ul>
+    </li>
     <!--BusinessRule Menu-->
     <li class="nav-item" (click)="check(BusinessRuleMenu.id,true)" [ngClass]="{'open': selectedItemId === BusinessRuleMenu.id}">
       <a class="nav-link nav-toggle">
