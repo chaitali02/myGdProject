@@ -542,9 +542,9 @@ submitExpression(){
   expressionjson["active"]=this.expression.active == true ?'Y' :"N"
   expressionjson["published"]=this.expression.published == true ?'Y' :"N"
 	 var tagArray=[];
-	 if(this.tags !=null){
-	     for(var counttag=0;counttag<this.tags.length;counttag++){
-	     	tagArray[counttag]=this.tags[counttag].text;
+	 if(this.expression.tags !=null){
+	     for(var counttag=0;counttag<this.expression.tags.length;counttag++){
+	     	tagArray[counttag]=this.expression.tags[counttag].value;
 
 	     }
 	 }
