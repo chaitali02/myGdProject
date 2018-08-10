@@ -1,8 +1,9 @@
-CREATE DATABASE IF NOT EXISTS framework;
-use framework;
-DROP TABLE IF EXISTS portfolio_loss_aggr;
-CREATE TABLE IF NOT EXISTS `portfolio_loss_aggr`(
-  `expected_loss` decimal, 
-  `value_at_risk` decimal, 
-  `economic_capital` decimal);
-   
+DROP TABLE IF EXISTS `portfolio_loss_aggr`;
+
+CREATE TABLE `portfolio_loss_aggr` (
+  `expected_loss` decimal(10,0) DEFAULT NULL,
+  `value_at_risk` decimal(10,0) DEFAULT NULL,
+  `economic_capital` decimal(10,0) DEFAULT NULL,
+  `reporting_date` varchar(45) DEFAULT NULL,
+  `version` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

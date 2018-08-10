@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS ecocap;
 use ecocap;
 DROP TABLE IF EXISTS customer_portfolio_ul_y;
-CREATE EXTERNAL TABLE IF NOT EXISTS `customer_portfolio_ul_y`(
+CREATE  TABLE IF NOT EXISTS `customer_portfolio_ul_y`(
   `cust_id` string, 
   `industry` string, 
   `pd` double, 
