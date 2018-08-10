@@ -49,7 +49,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.showgraphdiv = false
 	$scope.graphDataStatus = false
 	$scope.vizpod = {};
-	$scope.vizpodTypes = ["bar-chart", "pie-chart", "line-chart", "donut-chart", "area-chart", "bubble-chart", "world-map", "usa-map", "data-grid", 'network-graph']
+	$scope.vizpodTypes = ["bar-chart", "pie-chart", "line-chart", "donut-chart", "area-chart", "bubble-chart", "world-map", "usa-map", "data-grid", 'network-graph','bar-line-chart']
 	$scope.VizpodSourceTypes = ['datapod','dataset','relation'];
 	$scope.vizpod.versions = [];
 	$scope.isshowmodel = false;
