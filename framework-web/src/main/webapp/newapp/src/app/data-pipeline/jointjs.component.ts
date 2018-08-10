@@ -23,6 +23,7 @@ import {AppMetadata} from '../app.metadata';
 })
 
 export class JointjsComponent{
+    
     params:any
     IsTableShow: boolean;
     IsGroupGraphShow: boolean;
@@ -43,10 +44,16 @@ export class JointjsComponent{
     execMode:any;
     items:any[];
     dataObject:any;
+    uuid : any;
+    version : any;
+    type: any;
+
     private d3: D3; // Define the private member which will hold the this.d3 reference
     IsGraphShow:any;
+    
     @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
     constructor(private appMetadata: AppMetadata,private _jointjsService:JointjsService,d3Service:D3Service, private _commonService: CommonService,private _sharedDataService:SharedDataService,private _dataPipelineService:DataPipelineService,private activatedRoute: ActivatedRoute, public router: Router) {
+        
         this.IsGraphShow=true;
         this.IsGroupGraphShow =false;
         this.IsTableShow = false;
@@ -797,7 +804,9 @@ export class JointjsComponent{
         let modeldata=data.cell.attributes["model-data"].operators[0].operatorInfo.ref;
         let type=this.appMetadata.getMetadataDefs(data.cell.attributes.elementType.toLowerCase())['metaType']
         let uuid=modeldata.uuid;
+        this.uuid=modeldata.uuid;
         let version=modeldata.version;
+        this.version=version;
         if(type.slice(-4) == 'Exec' || type.slice(-4) == 'exec'){
             if(type.slice(-9) == 'groupExec' || type.slice(-9) == 'groupexec' ){
                 this.IsGroupGraphShow = true;
@@ -806,11 +815,13 @@ export class JointjsComponent{
               this.IsTableShow = true;
             }
             type = type.slice(0,-4);
+            this.type = type;
         }
         else{
             this.IsTableShow = true;
 
         }
+        this.type = type;
         this.params={
            "ref":{} 
         };
@@ -859,8 +870,7 @@ export class JointjsComponent{
             // this.d_JointjsGroupComponent.createGraph();
             // this.d_JointjsGroupComponent.generateGroupGraph(this.params);
             // this._jointElementMouseOver();
-        }, 1000);
-          
+        }, 1000);          
         }
     }
 
@@ -873,5 +883,6 @@ export class JointjsComponent{
         this.IsGraphShow=true;   
        }
     }
+
 }
 

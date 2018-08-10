@@ -1,5 +1,3 @@
-
-
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, Input } from '@angular/core';
 import { Http,Response } from '@angular/http'
@@ -59,6 +57,7 @@ export class DataPipelineService{
     })
     .catch(this.handleError);
   }
+
   getMetaIdByExecId(uuid,version,type): Observable<any> {
     let url = "metadata/getMetaIdByExecId?action=view&execUuid="+uuid+"&execVersion="+version+"&type="+type;
     return this._sharedService.getCall(url)
@@ -76,9 +75,4 @@ export class DataPipelineService{
     })
     .catch(this.handleError);
   }
-
- 
-    
-  
-
 }

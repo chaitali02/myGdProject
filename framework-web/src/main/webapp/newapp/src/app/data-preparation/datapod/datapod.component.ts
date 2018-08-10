@@ -13,12 +13,17 @@ import{ Version } from '../../shared/version'
 import { CommonService } from '../../metadata/services/common.service';
 import { DatapodService } from '../../metadata/services/datapod.service';
 
+import { Http, Headers } from '@angular/http';
+import { ResponseContentType } from '@angular/http';
+import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'app-data-preparation',
   styleUrls: [],
   templateUrl: './datapod.template.html'
 })
 export class DatapodComponent {
+  runMode: any;
   IsError: boolean;
   columnOptions: any[];
   cols: any[];
@@ -64,7 +69,7 @@ export class DatapodComponent {
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   isSubmitEnable:any;
 
-  constructor(private _commonService:CommonService,private _datapodService:DatapodService,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService,private route: ActivatedRoute) {
+  constructor(private _config : AppConfig, private http : Http,private _commonService:CommonService,private _datapodService:DatapodService,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService,private route: ActivatedRoute) {
     this.baseUrl = config.getBaseUrl();
     this.selectVersion={"version":""};
     this.showdatapod = true;
@@ -137,6 +142,7 @@ export class DatapodComponent {
   onVersionChange(){
     this.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label);
   }
+
   getOneByUuidAndVersion(id,version){
     this._datapodService.getOneByUuidAndVersion(id,version,'datapod')
     .subscribe(
@@ -165,11 +171,9 @@ export class DatapodComponent {
     if(this.active === 'Y') { this.active = true; } else { this.active = false; }
     this.tags = response['tags'];
     this.selectdatasourceType = (response.datapoddata['datasource']['ref']['name']) .toUpperCase();
-    this.selectType(this.selectdatasourceType);
-   
+    this.selectType(this.selectdatasourceType);   
   }
  
-
   showDatapodSampleTable(data) {
     this.isDataError = false;
     this.isShowSimpleData = true;
@@ -206,8 +210,7 @@ export class DatapodComponent {
     this.columnOptions = [];
     for(let i = 0; i < this.cols.length; i++) {
       this.columnOptions.push({label: this.cols[i].header, value: this.cols[i]});
-    }
-   
+    }   
   }
 
   selectType(val) {
@@ -228,7 +231,6 @@ export class DatapodComponent {
     }
     this.datasource1 = datasource2;
   }
-
 
   submitDatapod() {
     let datapod={};
@@ -280,6 +282,7 @@ export class DatapodComponent {
       error => console.log('Error :: ' + error)
     )
   }
+  
   OnSuccessubmit(response){
     this.isSubmitEnable=true;
     this.msgs = [];
@@ -289,7 +292,6 @@ export class DatapodComponent {
        }, 1000);
   } 
   
-
   enableEdit(uuid, version) {
     this.showDatapodPage();
     this.router.navigate(['app/dataPreparation/datapod',uuid,version, 'false']);
@@ -315,8 +317,7 @@ export class DatapodComponent {
     this.graphDataStatus=true;
     this.showgraphdiv=true;
   }
-
-  
+ 
   addRow(){
     if(this.attributes == null){
       this.attributes=[];
@@ -354,4 +355,19 @@ export class DatapodComponent {
     });
   }
 
+  downloadDatapodResult(){
+    const headers = new Headers();
+    this.http.get(this.baseUrl+'datapod/download?action=view&datapodUUID=' + this.uuid + '&datapodVersion=' + this.version + '&row=100',
+    { headers: headers, responseType: ResponseContentType.Blob })
+    .toPromise()
+    .then(response => this.saveToFileSystem(response));
+  }
+
+  saveToFileSystem(response){
+    const contentDispositionHeader: string = response.headers.get('Content-Type');
+    const parts: string[] = contentDispositionHeader.split(';');
+    const filename = parts[1];
+    const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
+    saveAs(blob, filename);
+  }
 }

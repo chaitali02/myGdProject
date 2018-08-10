@@ -56,7 +56,8 @@ import { UiSwitchModule } from 'ngx-toggle-switch/src';
         DataPipelineService,
         JointjsService,
         D3Service,
-        SharedDataService
+        SharedDataService,
+        JointjsComponent
         
     ],
   entryComponents: [JointjsComponent],

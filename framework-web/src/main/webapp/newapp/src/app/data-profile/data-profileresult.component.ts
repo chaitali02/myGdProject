@@ -9,6 +9,10 @@ import {TableRenderComponent} from '../shared/components/resulttable/resulttable
 import {JointjsGroupComponent} from '../shared/components/jointjsgroup/jointjsgroup.component'
 import { CommonService } from '../metadata/services/common.service';
 
+import { Http, Headers } from '@angular/http';
+import { ResponseContentType } from '@angular/http';
+import { saveAs } from 'file-saver';
+import { AppConfig } from '../app.config';
 @Component({
   selector: 'app-profile',
   templateUrl: './data-profileresult.template.html',
@@ -16,6 +20,11 @@ import { CommonService } from '../metadata/services/common.service';
 })
     
   export class DataProfileresultComponent {
+  runMode: any;
+
+  downloadType: any;
+  downloadVersion: any;
+  downloadUuid: any;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
     _type: any;
     _uuid: any;
@@ -24,9 +33,12 @@ import { CommonService } from '../metadata/services/common.service';
     istableShow: boolean;
     isgraphShow: boolean;
     params:any
+    baseUrl : any;
+
     @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
     @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;   
-    constructor(private _location:Location,private _activatedRoute: ActivatedRoute,private router: Router,public appMetadata: AppMetadata,private _commonService:CommonService){
+    constructor(private http : Http, private _config : AppConfig, private _location:Location,private _activatedRoute: ActivatedRoute,private router: Router,public appMetadata: AppMetadata,private _commonService:CommonService){
+      this.baseUrl = _config.getBaseUrl();
       this.isgraphShow=false;
       this.istableShow=false;
       this.breadcrumbDataFrom=[{
@@ -113,7 +125,42 @@ import { CommonService } from '../metadata/services/common.service';
        }
     }
     
+    downloadProfileResult(){
+      this.downloadUuid = this.d_tableRenderComponent.uuid;
+      this.downloadVersion = this.d_tableRenderComponent.version;
+      this.downloadType = this.d_tableRenderComponent.type;
+
+      this._commonService.getNumRowsbyExec(this.downloadUuid, this.downloadVersion, 'profileexec')
+      .subscribe(
+      response => {
+          this.onSuccessgetNumRowsbyExec(response);
+      },
+      error => console.log("Error :: " + error)
+      );
   }
+
+  onSuccessgetNumRowsbyExec(response){
+    this.runMode = response.runMode;
+    this.downloadResult();
+  }
+
+  downloadResult(){
+    const headers = new Headers();
+    this.http.get(this.baseUrl+'/profile/download?action=view&profileExecUUID=' + this.downloadUuid + '&profileExecVersion=' + this.downloadVersion + '&mode='+this.runMode,
+    { headers: headers, responseType: ResponseContentType.Blob })
+    .toPromise()
+    .then(response => this.saveToFileSystem(response));
+  }
+
+  saveToFileSystem(response){
+      const contentDispositionHeader: string = response.headers.get('Content-Type');
+      const parts: string[] = contentDispositionHeader.split(';');
+      const filename = parts[1];
+      const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
+      saveAs(blob, filename);
+  }
+}
+ 
       
      
     

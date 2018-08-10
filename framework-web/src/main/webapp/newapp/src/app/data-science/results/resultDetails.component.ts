@@ -137,14 +137,14 @@ export class ResultDetailsComponent {
     saveAs(blob, filename);
   }
 
-  // showPMMLResult() {
-  //   this.ppml = true;
-  //   var headers = new Headers();
-  //   headers.append('Accept', 'text/plain');
-  //   this.http.get(this.baseUrl + "model/download?modelExecUUID=" + this.id + "&modelExecVersion=" + this.version,
-  //     { headers: headers })
-  //     .subscribe(response => this.getPmmlResults(response))
-  // }
+  showPMMLResult() {
+    this.ppml = true;
+    var headers = new Headers();
+    headers.append('Accept', 'text/plain');
+    this.http.get(this.baseUrl + "model/download?modelExecUUID=" + this.id + "&modelExecVersion=" + this.version,
+      { headers: headers })
+      .subscribe(response => this.getPmmlResults(response))
+  }
 
   getPmmlResults(response) {
     console.log(response["_body"])

@@ -9,24 +9,32 @@ import {TableRenderComponent} from '../shared/components/resulttable/resulttable
 import {JointjsGroupComponent} from '../shared/components/jointjsgroup/jointjsgroup.component'
 import { CommonService } from '../metadata/services/common.service';
 
+import { Http, Headers } from '@angular/http';
+import { ResponseContentType } from '@angular/http';
+import { saveAs } from 'file-saver';
+import { AppConfig } from '../app.config';
 @Component({
   selector: 'app-profile',
   templateUrl: './business-rulesresult.template.html',
   styleUrls: []
 })
-    
-  export class BusinessRulesResultComponent {
+export class BusinessRulesResultComponent {
+  typeJointJs: any;
+  versionJointJs: any;
+  uuidJointJs: any;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
     _type: any;
     _uuid: any;
     _version: any;
     _mode: any;
+    baseUrl:any;
     istableShow: boolean;
     isgraphShow: boolean;
     params:any
     @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
     @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;   
-    constructor(private _location:Location,private _activatedRoute: ActivatedRoute,private router: Router,public appMetadata: AppMetadata,private _commonService:CommonService){
+    constructor(private http : Http, private _config : AppConfig, private _location:Location,private _activatedRoute: ActivatedRoute,private router: Router,public appMetadata: AppMetadata,private _commonService:CommonService){      
+      this.baseUrl = _config.getBaseUrl();
       this.isgraphShow=false;
       this.istableShow=false;
       this.breadcrumbDataFrom=[{
@@ -57,8 +65,7 @@ import { CommonService } from '../metadata/services/common.service';
         this._mode = params['mode'];
         this._type = params['type'];
         this.getOneByUuidAndVersion(this._uuid, this._version,this._type)
-      });
-      
+      });      
     }
 
     getOneByUuidAndVersion(id,version,type){
@@ -111,8 +118,27 @@ import { CommonService } from '../metadata/services/common.service';
             this.d_JointjsGroupComponent.IsGraphShow=true;
         }
        }
-    }
+    }    
+
+  downloadRule() {
+    this.uuidJointJs = this.d_tableRenderComponent.uuid;
+    this.versionJointJs = this.d_tableRenderComponent.version;
+    this.typeJointJs = this.d_tableRenderComponent.type;
     
+    const headers = new Headers();
+    this.http.get(this.baseUrl+'/rule/download?action=view&ruleExecUUID=' + this.uuidJointJs + '&ruleExecVersion=' + this.versionJointJs + '&mode=BATCH',
+    { headers: headers, responseType: ResponseContentType.Blob })
+    .toPromise()
+    .then(response => this.saveToFileSystem(response));
+}
+
+  saveToFileSystem(response){
+      const contentDispositionHeader: string = response.headers.get('Content-Type');
+      const parts: string[] = contentDispositionHeader.split(';');
+      const filename = parts[1];
+      const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
+      saveAs(blob, filename);
+  }
   }
       
      

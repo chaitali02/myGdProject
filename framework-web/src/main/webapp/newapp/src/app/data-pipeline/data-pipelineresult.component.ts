@@ -1,27 +1,36 @@
 
-import {Component,Input,OnInit,ViewChild,AfterViewInit} from '@angular/core';
-import {Router,Event as RouterEvent,ActivatedRoute,Params,NavigationEnd} from '@angular/router';
-import { Location } from '@angular/common'; 
-import {Message} from 'primeng/components/common/api';
-import {MessageService} from 'primeng/components/common/messageservice';   
+import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Router, Event as RouterEvent, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
+import { Location } from '@angular/common';
+import { Message } from 'primeng/components/common/api';
+import { MessageService } from 'primeng/components/common/messageservice';
 
-import{ JointjsComponent} from './jointjs.component';
-import {JointjsGroupComponent} from '../shared/components/jointjsgroup/jointjsgroup.component'
+import { JointjsComponent } from './jointjs.component';
+import { JointjsGroupComponent } from '../shared/components/jointjsgroup/jointjsgroup.component'
 
 import { CommonService } from '../metadata/services/common.service';
 import { DataPipelineService } from '../metadata/services/dataPipeline.service';
-import {JointjsService} from './jointjsservice'
-import{SharedDataService} from './shareddata.service'
-   
+import { JointjsService } from './jointjsservice'
+import { SharedDataService } from './shareddata.service'
+
+import { Http, Headers } from '@angular/http';
+import { ResponseContentType } from '@angular/http';
+import { saveAs } from 'file-saver';
+import { AppConfig } from '../app.config';
 @Component({
-      selector: 'app-data-pipeli',
-      templateUrl: './data-pipelineresult.template.html',
-      
-      
- })
-    
-export class DataPiplineResultComponent{
-    intervalId:any;
+    selector: 'app-data-pipeli',
+    templateUrl: './data-pipelineresult.template.html',
+})
+
+export class DataPiplineResultComponent {
+   
+    runMode: any;
+    isTableShow1: any;
+    typeJointJs: any;
+    versionJointJs: any;
+    uuidJointJs: any;
+    baseUrl:any;
+    intervalId: any;
     dagexecdata: any;
     version: any;
     id: any;
@@ -30,93 +39,92 @@ export class DataPiplineResultComponent{
     mode: any;
     breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
     
-    
     @ViewChild(JointjsComponent) d_JointjsComponent: JointjsComponent;
     @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
-    constructor(private _location: Location,private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService:JointjsService,private _sharedDataService:SharedDataService, private _dataPipelineService : DataPipelineService){
-        this.dagdata={};
+    constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService: JointjsService, private _sharedDataService: SharedDataService, private _dataPipelineService: DataPipelineService,private http : Http, private _config : AppConfig) {       
+        this.baseUrl = _config.getBaseUrl();
+        this.dagdata = {};
         // setTimeout(() => {
         //     // this.d_JointjsComponent.params={};
         //     // this.d_JointjsComponent.IsGroupGraphShow=false
         // }, 1000);
-       
+
         this.router.events
-        .subscribe((event) => {
-          if (event instanceof NavigationEnd) {
-            this.stopStatusUpdate();
-           // console.log('NavigationEnd:', event);
-          }
-        });
+            .subscribe((event) => {
+                if (event instanceof NavigationEnd) {
+                    this.stopStatusUpdate();
+                    // console.log('NavigationEnd:', event);
+                }
+            });
         console.log(this.activatedRoute)
-        this.activatedRoute.params.subscribe((params : Params) => {
+        this.activatedRoute.params.subscribe((params: Params) => {
             this.id = params['id'];
             this.version = params['version'];
             this.mode = params['mode'];
-            if(this.mode !== undefined) {
-                this.getOneByUuidAndVersion(this.id,this.version);
+            if (this.mode !== undefined) {
+                this.getOneByUuidAndVersion(this.id, this.version);
             }
         });
-        this.breadcrumbDataFrom=[{
-            "caption":"Data Pipeline ",
-            "routeurl":"/app/list/dagexec"
-          },
-          {
-            "caption":"Result",
-            "routeurl":"/app/list/dagexec"
-          },
-          
-          {
-            "caption":"",
-            "routeurl":null
-          }
-          ]
-       
+        this.breadcrumbDataFrom = [{
+            "caption": "Data Pipeline ",
+            "routeurl": "/app/list/dagexec"
+        },
+        {
+            "caption": "Result",
+            "routeurl": "/app/list/dagexec"
+        },
+
+        {
+            "caption": "",
+            "routeurl": null
+        }
+        ]              
     }
-   
+
     public goBack() {
-        if(this.d_JointjsComponent.IsGraphShow==true){
+        if (this.d_JointjsComponent.IsGraphShow == true) {
             this._location.back();
         }
-        else if(this.d_JointjsComponent.IsGroupGraphShow ==true){
-              this.d_JointjsComponent.goBack();     
+        else if (this.d_JointjsComponent.IsGroupGraphShow == true) {
+            this.d_JointjsComponent.goBack();
         }
-        else if(this.d_JointjsComponent.IsTableShow ==true){
-            this.d_JointjsComponent.IsTableShow=false
-            this.d_JointjsComponent.IsGraphShow=true;
+        else if (this.d_JointjsComponent.IsTableShow == true) {
+            this.d_JointjsComponent.IsTableShow = false
+            this.d_JointjsComponent.IsGraphShow = true;
         }
-        else{
-            this.d_JointjsComponent.IsGraphShow=true;
+        else {
+            this.d_JointjsComponent.IsGraphShow = true;
         }
     }
-      
-    getOneByUuidAndVersion(id,version){
+
+    getOneByUuidAndVersion(id, version) {
         this.stopStatusUpdate();
-        this._commonService.getOneByUuidAndVersion(id,version,'dagexec')
-        .subscribe(
-            response =>{
+        this._commonService.getOneByUuidAndVersion(id, version, 'dagexec')
+            .subscribe(
+            response => {
                 this.onSuccessgetOneByUuidAndVersion(response)
             },
             error => console.log("Error :: " + error)
-        ); 
+            );
     }
-    
-    onSuccessgetOneByUuidAndVersion(response){
-        this.breadcrumbDataFrom[2].caption=response.name;
-        this.dagexecdata=response;
-       setTimeout(() => {
-            this.d_JointjsComponent.createGraph(this.dagexecdata);  
+
+    onSuccessgetOneByUuidAndVersion(response) {
+        this.breadcrumbDataFrom[2].caption = response.name;
+        this.dagexecdata = response;
+        setTimeout(() => {
+            this.d_JointjsComponent.createGraph(this.dagexecdata);
             this.startStatusUpdate(this.id);
-       }, 1000);
-       this.intervalId = setInterval(() => {
-        this.startStatusUpdate(this.id);
-      }, 5000); 
-      
+        }, 1000);
+        this.intervalId = setInterval(() => {
+            this.startStatusUpdate(this.id);
+        }, 5000);
     }
-    latestStatus(statuses){
+
+    latestStatus(statuses) {
         var latest;
         statuses.forEach(function (status) {
-            if(latest){
-                if(status.createdOn > latest.createdOn){
+            if (latest) {
+                if (status.createdOn > latest.createdOn) {
                     latest = status
                 }
             }
@@ -126,37 +134,70 @@ export class DataPiplineResultComponent{
         });
         return latest;
     }
-    
+
     startStatusUpdate(uuid) {
-       
+
         this._dataPipelineService.getStatusByDagExec(uuid)
-        .subscribe(
-            response =>{
+            .subscribe(
+            response => {
                 this.onSuccessGetStatusByDagExec(response)
             },
             error => console.log("Error :: " + error)
             );
-        
-            
     }
-    onSuccessGetStatusByDagExec=function(response){
+    onSuccessGetStatusByDagExec = function (response) {
         //     if(latestStatus(response.status).stage == 'Failed'){
         //         $scope.allowReExecution = true;
         //     }
-         if(['Completed','Failed','Killed'].indexOf(this.latestStatus(response["status"]).stage) > -1){
-                 this.stopStatusUpdate();
+        if (['Completed', 'Failed', 'Killed'].indexOf(this.latestStatus(response["status"]).stage) > -1) {
+            this.stopStatusUpdate();
         }
         //else{
         //     if(!angular.equals(statusCache, response)){
         setTimeout(() => {
             this.d_JointjsComponent.updateGraphStatus(response);
         }, 1000);
-        
+
         //statusCache = response;
     }
     stopStatusUpdate() {
         //statusCache = undefined;
-        if(this.intervalId)
+        if (this.intervalId)
             clearInterval(this.intervalId);
-      }
-  }
+    }
+
+    downloadPipeline() {
+        this.uuidJointJs = this.d_JointjsComponent.uuid;
+        this.versionJointJs = this.d_JointjsComponent.version;
+        this.typeJointJs = this.d_JointjsComponent.type;
+        
+        this._commonService.getNumRowsbyExec(this.uuidJointJs, this.versionJointJs, 'mapexec')
+        .subscribe(
+        response => {
+            this.onSuccessgetNumRowsbyExec(response);
+        },
+        error => console.log("Error :: " + error)
+        );
+    }
+
+    onSuccessgetNumRowsbyExec(response){
+        this.runMode = response.runMode;
+        this.downloadResult();
+    }
+
+    downloadResult(){
+        const headers = new Headers();
+        this.http.get(this.baseUrl+'/map/download?action=view&mapExecUUID=' + this.uuidJointJs + '&mapExecVersion=' + this.versionJointJs + '&mode='+this.runMode,
+        { headers: headers, responseType: ResponseContentType.Blob })
+        .toPromise()
+        .then(response => this.saveToFileSystem(response));
+    } 
+
+    saveToFileSystem(response){
+        const contentDispositionHeader: string = response.headers.get('Content-Type');
+        const parts: string[] = contentDispositionHeader.split(';');
+        const filename = parts[1];
+        const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
+        saveAs(blob, filename);
+    }
+}

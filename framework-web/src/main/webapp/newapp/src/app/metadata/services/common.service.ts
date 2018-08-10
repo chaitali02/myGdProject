@@ -189,6 +189,7 @@ modifyResponse(response){
   }
   return attributes;
 }
+
 getGraphResults(version:String,degree:String,uuid:Number): Observable<any[]> {
     let url ='/graph/getGraphResults?action=view&uuid='+uuid+'&version='+version+'&degree='+degree;
     return this._sharedService.getCall(url)
@@ -206,6 +207,7 @@ getFormulaByType(uuid:Number,type:String): Observable<any[]> {
 })
    .catch(this.handleError);
 }
+
 getExpressionByType(uuid:Number,type:String): Observable<any[]> {
   let url ='/metadata/getExpressionByType?action=view&uuid='+uuid+'&type='+type;
   return this._sharedService.getCall(url)
@@ -214,6 +216,7 @@ getExpressionByType(uuid:Number,type:String): Observable<any[]> {
 })
  .catch(this.handleError);
 }
+
 getAllLatestFunction(type:any,inputFlag:any): Observable<any[]> {
   let url ='/common/getAllLatest?action=view&type='+type+'&inputFlag='+inputFlag;
   return this._sharedService.getCall(url)
@@ -231,6 +234,7 @@ getRuleExecByRule(uuid:Number): Observable<any[]> {
 })
  .catch(this.handleError);
 }
+
 getAllLatestParamListByTemplate(templateFlg:any,type:String,paramListType:any):Observable<any[]>{
 
   let url ='common/getAllLatestParamListByTemplate?action=view&templateFlg=' + templateFlg + "&type=" + type  +"&paramListType="+paramListType;
@@ -240,7 +244,6 @@ getAllLatestParamListByTemplate(templateFlg:any,type:String,paramListType:any):O
 })
  .catch(this.handleError);
 }
-
 
 saveAs(uuid:Number,version:String,type:String): Observable<any[]> {
   let url ='/common/saveAs?action=clone&uuid='+uuid+'&version='+version+'&type='+type;
@@ -253,6 +256,7 @@ saveAs(uuid:Number,version:String,type:String): Observable<any[]> {
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
 }
+
 executeWithParams(type, uuid, version, action){ 
   let url
   if(type=='train'){
@@ -266,7 +270,14 @@ executeWithParams(type, uuid, version, action){
   }
 }
 
-
+getNumRowsbyExec(uuid, version, type): Observable<any>{
+  let url ='metadata/getNumRowsbyExec?action=view&execUuid=' + uuid + "&execVersion=" + version  +"&type="+type;
+  return this._sharedService.getCall(url)
+  .map((response: Response) => {
+    return <any[]>response.json();
+})
+ .catch(this.handleError);
+}
 
 execute(uuid,version,type,action): Observable<any> {
   let url;
