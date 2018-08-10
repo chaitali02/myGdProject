@@ -54,6 +54,7 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.CommentView;
+import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
@@ -1880,5 +1881,23 @@ public class MetadataServiceImpl {
 		
 		return datastoreList;
 
+	}
+
+	public List<ParamListHolder> getParamListByDag(String dagUuid, String dagVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Dag dag = (Dag) commonServiceImpl.getOneByUuidAndVersion(dagUuid, dagVersion, MetaType.dag.toString());
+
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		if(dag.getParamList() != null) {
+			MetaIdentifier plMI = dag.getParamList().getRef();
+			ParamListHolder plHolder = new ParamListHolder();
+			plHolder.setRef(plMI);
+			plHolderList.add(plHolder);
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+			if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), paramListType);
+				plHolderList.addAll(persistPLTemplateChilds(childs));
+			}
+		}
+		return plHolderList;
 	}
 }

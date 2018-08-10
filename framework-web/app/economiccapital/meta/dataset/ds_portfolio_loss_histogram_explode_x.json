@@ -1,0 +1,76 @@
+{
+  "uuid": "a56de010-cebc-4a30-95ee-8308ccb6716a",
+  "version": "1533772907",
+  "name": "ds_portfolio_loss_histogram_explode_x",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Aug 08 20:01:47 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "1f56290f-a769-4171-8711-acdd80773840",
+      "version": null,
+      "name": "ds_portfolio_loss_histogram_x"
+    },
+    "value": null
+  },
+  "filterInfo": [],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrSourceName": "x_no",
+      "sourceAttr": {
+        "ref": {
+          "type": "function",
+          "uuid": "e26970d6-999e-4ffa-9903-0f6e8ac39bb6",
+          "version": null,
+          "name": "row_number()"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrSourceName": "portfolio_loss_histogram_explode_x",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "cd04a17a-d987-4f3b-b001-4322477edf48",
+          "version": null,
+          "name": "fm_portfolio_loss_histogram_explode_x"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
+}

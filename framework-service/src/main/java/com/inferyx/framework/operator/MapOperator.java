@@ -62,12 +62,12 @@ public class MapOperator implements IParsable {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	
-	private final String INSERT = "INSERT ";
+//	private final String INSERT = "INSERT ";
 	private final String SELECT = "SELECT ";
 	private final String FROM = " FROM ";
 	private final String WHERE_1_1 = " WHERE (1=1) ";
 	
-	private final String $DAGEXEC_VERSION = "$DAGEXEC_VERSION";
+//	private final String $DAGEXEC_VERSION = "$DAGEXEC_VERSION";
 	
 	static final Logger logger = Logger.getLogger(MapOperator.class);
 

@@ -1,7 +1,7 @@
 {
-  "uuid": "fcd48f83-9a31-4991-adfe-0ca178b08348",
-  "version": "1533761700",
-  "name": "fm_portfolio_avg_pd",
+  "uuid": "98fb6abc-d27a-49c4-9565-f44d447c7e20",
+  "version": "1533852859",
+  "name": "fm_portfolio_loss_histogram_perc_y",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Aug 08 16:55:00 EDT 2018",
+  "createdOn": "Thu Aug 09 18:14:19 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,24 +29,36 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "datapod",
-      "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+      "type": "dataset",
+      "uuid": "2c114ff3-7cb3-4413-a690-69cac75c439c",
       "version": null,
-      "name": "customer_portfolio"
+      "name": "ds_portfolio_loss_percentage"
     },
     "value": null
   },
   "formulaInfo": [
     {
       "ref": {
-        "type": "function",
-        "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+        "type": "simple",
+        "uuid": null,
         "version": null,
-        "name": "avg(DISTINCT col)"
+        "name": null
       },
       "attributeId": null,
-      "value": null,
+      "value": "histogram_numeric (",
       "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "2c114ff3-7cb3-4413-a690-69cac75c439c",
+        "version": null,
+        "name": "ds_portfolio_loss_percentage"
+      },
+      "attributeId": 0,
+      "value": null,
+      "attributeName": "portfolio_loss_percentage",
       "attributeType": null
     },
     {
@@ -57,20 +69,8 @@
         "name": null
       },
       "attributeId": null,
-      "value": "(",
+      "value": ",10",
       "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-        "version": null,
-        "name": "customer_portfolio"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "pd",
       "attributeType": null
     },
     {
@@ -93,22 +93,10 @@
         "name": null
       },
       "attributeId": null,
-      "value": "*",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "100",
+      "value": ".y",
       "attributeName": null,
       "attributeType": null
     }
   ],
-  "formulaType": "aggr"
+  "formulaType": "simple"
 }

@@ -46,6 +46,7 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
@@ -60,6 +61,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SysVarType;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.IExecutable;
@@ -750,16 +752,19 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				if(execParams != null)
 				execParams.getOtherParams().put("datapodUuid_" + datapodKey.getUUID() + "_tableName", mapTableName);
 				*/
-				String mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
+				String mapTableName = null;
 				if(execParams != null) {
-					String value = execParams.getOtherParams().get("datapodUuid_" + datapodKey.getUUID() + "_tableName");
-				if(value == null || value.isEmpty())
+					//String mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
+					Datasource datasource = commonServiceImpl.getDatasourceByApp();
+					if (!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+							&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()) 
+							&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+						mapTableName = dataStoreServiceImpl.getTableNameByDatapod(datapodKey, runMode);
+					}  else {
+						mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
+					}
 					execParams.getOtherParams().put("datapodUuid_" + datapodKey.getUUID() + "_tableName", mapTableName);
-				else
-					mapTableName = value;
-				}
-				
-				
+				}				
 				logger.info("Target table in map " + mapExec.getName() + " : " + mapTableName);
 			} catch (Exception e) {
 				e.printStackTrace();
