@@ -360,6 +360,7 @@
 	
 	<bean id="transposeOldOperator" class="com.inferyx.framework.operator.TransposeOldOperator"/>
 	<bean id="loadOperator" class="com.inferyx.framework.operator.LoadOperator"/>
+	<bean id="histogramOperator" class="com.inferyx.framework.operator.HistogramOperator"/>
 		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>

@@ -35,32 +35,32 @@
     "functionInfo" : [ 
         {
             "type" : "file",
-            "name" : "unix_timestamp",
+            "name" : "unix_timestamp()",
             "paramInfoHolder" : []
         },
         {
             "type" : "mysql",
-            "name" : "unix_timestamp",
+            "name" : "unix_timestamp()",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "hive",
-            "name" : "unix_timestamp",
+            "name" : "unix_timestamp()",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "impala",
-            "name" : "unix_timestamp",
+            "name" : "unix_timestamp()",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "oracle",
-            "name" : "unix_timestamp",
+            "name" : "unix_timestamp()",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "postgres",
-            "name" : "unix_timestamp",
+            "name" : "unix_timestamp()",
             "paramInfoHolder" : []
         }
     ],

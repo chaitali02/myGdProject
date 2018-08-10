@@ -2,7 +2,7 @@
   "uuid": "e26970d6-999e-4ffa-9903-0f6e8ac39bb6",
   "version": "1488801521",
   "name": "row_number()",
-  "desc": "Generates row number for each row in sequence."
+  "desc": "Generates row number for each row in sequence.",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -67,7 +67,7 @@
       "paramInfoHolder": []
     },
     {
-      "name": "upper",
+      "name": "row_number() OVER (order by 1)",
       "type": "mysql",
       "paramInfoHolder": []
     },
@@ -82,12 +82,12 @@
       "paramInfoHolder": []
     },
     {
-      "name": "upper",
+      "name": "row_number() OVER (order by 1)",
       "type": "oracle",
       "paramInfoHolder": []
     },
     {
-      "name": "upper",
+      "name": "row_number() OVER (order by 1)",
       "type": "postgres",
       "paramInfoHolder": []
     }

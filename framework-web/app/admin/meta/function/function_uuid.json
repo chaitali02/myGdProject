@@ -91,7 +91,7 @@
         }, 
         {
             "type" : "mysql",
-            "name" : "uuid",
+            "name" : "uuid()",
             "paramInfoHolder" : []
         }, 
         {
@@ -136,12 +136,12 @@
         }, 
         {
             "type" : "oracle",
-            "name" : "SYS_GUID",
+            "name" : "SYS_GUID()",
             "paramInfoHolder" : []
         }, 
         {
             "type" : "postgres",
-            "name" : "uuid",
+            "name" : "uuid()",
             "paramInfoHolder" : []
         }
     ]
