@@ -172,7 +172,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())) {
-			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, datasource.getType());
+			resultSetHolder = exec.executeAndRegister(rangeSql, tableName, commonServiceImpl.getApp().getUuid());
 		} else {
 			String sql = helper.buildInsertQuery(datasource.getType(), tableName, locationDatapod, rangeSql);
 			resultSetHolder = exec.executeAndPersist(sql, null, locationDatapod, null, null);

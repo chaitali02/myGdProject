@@ -489,6 +489,7 @@ public class Helper {
 				case "gendataattr" : return OperatorType.genDataAttr;
 				case "gendatavallist" : return OperatorType.genDataValList;
 				case "matrix" : return OperatorType.matrix;
+				case "histogram" : return OperatorType.HISTOGRAM;
 				default : return null;
 			}
 		}
