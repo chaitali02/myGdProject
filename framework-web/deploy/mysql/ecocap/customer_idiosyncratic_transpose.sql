@@ -1,10 +1,11 @@
-CREATE DATABASE IF NOT EXISTS framework;
-use framework;
-DROP TABLE IF EXISTS customer_idiosyncratic_transpose;
-CREATE TABLE IF NOT EXISTS `customer_idiosyncratic_transpose`(
-  `iterationid` int(11) DEFAULT NULL, 
-  `customer` varchar(45) DEFAULT NULL, 
-  `pd` double, 
-  `version` varchar(45) DEFAULT NULL);
+DROP TABLE IF EXISTS `customer_idiosyncratic_transpose`;
+
+CREATE TABLE `customer_idiosyncratic_transpose` (
+  `iterationid` int(11) DEFAULT NULL,
+  `reporting_date` varchar(50) DEFAULT NULL,
+  `customer` varchar(45) DEFAULT NULL,
+  `pd` double DEFAULT NULL,
+  `version` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

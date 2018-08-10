@@ -1,16 +1,16 @@
-CREATE DATABASE IF NOT EXISTS framework;
-use framework;
-DROP TABLE IF EXISTS customer_portfolio_ul_y;
-CREATE TABLE IF NOT EXISTS `customer_portfolio_ul_y`(
-  `cust_id` varchar(45) DEFAULT NULL, 
-  `industry` varchar(45) DEFAULT NULL, 
-  `pd` double, 
+DROP TABLE IF EXISTS `customer_portfolio_ul_y`;
+
+CREATE TABLE `customer_portfolio_ul_y` (
+  `cust_id` varchar(45) DEFAULT NULL,
+  `industry` varchar(45) DEFAULT NULL,
+  `pd` double DEFAULT NULL,
   `exposure` int(11) DEFAULT NULL,
-  `lgd` double, 
-  `lgd_var` int(11) DEFAULT NULL, 
-  `correlation` double, 
-  `sqrt_correlation` double, 
-  `def_point` double, 
-  `unexpected_loss` double, 
-  `reporting_date` varchar(45) DEFAULT NULL, 
-  `version` int(11) DEFAULT NULL);
+  `lgd` double DEFAULT NULL,
+  `lgd_var` int(11) DEFAULT NULL,
+  `correlation` double DEFAULT NULL,
+  `sqrt_correlation` double DEFAULT NULL,
+  `def_point` double DEFAULT NULL,
+  `unexpected_loss` double DEFAULT NULL,
+  `reporting_date` varchar(45) DEFAULT NULL,
+  `version` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
