@@ -1,7 +1,7 @@
 {
-  "uuid": "fcd48f83-9a31-4991-adfe-0ca178b08348",
-  "version": "1533761700",
-  "name": "fm_portfolio_avg_pd",
+  "uuid": "f55869af-55f2-497a-a1eb-3d2a173df20b",
+  "version": "1533852717",
+  "name": "fm_portfolio_loss_percentage",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Aug 08 16:55:00 EDT 2018",
+  "createdOn": "Thu Aug 09 18:11:57 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,24 +29,24 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "datapod",
-      "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+      "type": "relation",
+      "uuid": "bcc30d2b-a387-450c-9ae1-ac90ac2613a2",
       "version": null,
-      "name": "customer_portfolio"
+      "name": "rel_portfolio_loss_percentage"
     },
     "value": null
   },
   "formulaInfo": [
     {
       "ref": {
-        "type": "function",
-        "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+        "type": "datapod",
+        "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
         "version": null,
-        "name": "avg(DISTINCT col)"
+        "name": "portfolio_loss_simulation"
       },
-      "attributeId": null,
+      "attributeId": 1,
       "value": null,
-      "attributeName": null,
+      "attributeName": "portfolio_loss",
       "attributeType": null
     },
     {
@@ -57,32 +57,20 @@
         "name": null
       },
       "attributeId": null,
-      "value": "(",
+      "value": "/",
       "attributeName": null,
       "attributeType": null
     },
     {
       "ref": {
         "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+        "uuid": "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
         "version": null,
-        "name": "customer_portfolio"
+        "name": "portfolio_loss_summary"
       },
       "attributeId": 2,
       "value": null,
-      "attributeName": "pd",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
+      "attributeName": "portfolio_total_ead",
       "attributeType": null
     },
     {
@@ -110,5 +98,5 @@
       "attributeType": null
     }
   ],
-  "formulaType": "aggr"
+  "formulaType": "simple"
 }

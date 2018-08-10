@@ -1,8 +1,7 @@
 {
-  "id": "5b68e2f8fb6411ef1723e321",
   "uuid": "333ca69a-6fb7-4d57-9412-cd72aedc7eee",
-  "version": "1533600504",
-  "name": "Portfolio Loss Summary %",
+  "version": "1533853450",
+  "name": "viz_portfolio_loss_summary_perc",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Aug 06 20:08:24 EDT 2018",
+  "createdOn": "Thu Aug 09 18:24:10 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",

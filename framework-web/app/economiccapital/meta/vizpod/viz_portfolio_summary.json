@@ -1,8 +1,7 @@
 {
-  "id": "5b68e30efb6411ef1723e36d",
   "uuid": "d9d5f031-9f02-4b98-88bd-3962dba4e5dd",
-  "version": "1533600526",
-  "name": "Portfolio Summary",
+  "version": "1533853414",
+  "name": "viz_portfolio_summary",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Aug 06 20:08:46 EDT 2018",
+  "createdOn": "Thu Aug 09 18:23:34 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",

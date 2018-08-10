@@ -1,7 +1,7 @@
 {
-  "uuid": "42aa994e-6bff-460a-8046-b88f5c0525ea",
-  "version": "1533869991",
-  "name": "viz_portfolio_loss_summary",
+  "uuid": "1769c7c1-5e70-427a-987c-c7a484117b2e",
+  "version": "1533853389",
+  "name": "viz_portfolio_loss_distribution_histogram_perc",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Aug 09 22:59:51 EDT 2018",
+  "createdOn": "Thu Aug 09 18:23:09 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -31,9 +31,9 @@
   "source": {
     "ref": {
       "type": "dataset",
-      "uuid": "f900f73f-cb73-4949-a8c4-67091b291635",
+      "uuid": "28017e32-1ca9-4537-8184-8a348142cf19",
       "version": null,
-      "name": "ds_portfolio_summary_by_industry"
+      "name": "ds_portfolio_loss_histogram_perc_final"
     },
     "value": null
   },
@@ -43,14 +43,14 @@
     {
       "ref": {
         "type": "dataset",
-        "uuid": "f900f73f-cb73-4949-a8c4-67091b291635",
+        "uuid": "28017e32-1ca9-4537-8184-8a348142cf19",
         "version": null,
-        "name": "ds_portfolio_summary_by_industry"
+        "name": "ds_portfolio_loss_histogram_perc_final"
       },
       "attributeId": 0,
       "function": null,
       "value": null,
-      "attributeName": "industry"
+      "attributeName": "portfolio_loss_histogram_explode_perc_x"
     }
   ],
   "dimension": [],
@@ -61,26 +61,14 @@
     {
       "ref": {
         "type": "dataset",
-        "uuid": "f900f73f-cb73-4949-a8c4-67091b291635",
+        "uuid": "28017e32-1ca9-4537-8184-8a348142cf19",
         "version": null,
-        "name": "ds_portfolio_summary_by_industry"
+        "name": "ds_portfolio_loss_histogram_perc_final"
       },
       "attributeId": 1,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_avg_pd"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "f900f73f-cb73-4949-a8c4-67091b291635",
-        "version": null,
-        "name": "ds_portfolio_summary_by_industry"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "portfolio_avg_lgd"
+      "attributeName": "portfolio_loss_histogram_explode_perc_y"
     }
   ]
 }

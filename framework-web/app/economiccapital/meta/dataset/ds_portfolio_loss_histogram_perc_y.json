@@ -1,0 +1,60 @@
+{
+  "uuid": "bd0d0e5c-b5dc-4f66-8d4e-12a222f95d6e",
+  "version": "1533853152",
+  "name": "ds_portfolio_loss_histogram_perc_y",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Aug 09 18:19:12 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "2c114ff3-7cb3-4413-a690-69cac75c439c",
+      "version": null,
+      "name": "ds_portfolio_loss_percentage"
+    },
+    "value": null
+  },
+  "filterInfo": [],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrSourceName": "portfolio_loss_histogram_perc_y",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "98fb6abc-d27a-49c4-9565-f44d447c7e20",
+          "version": null,
+          "name": "fm_portfolio_loss_histogram_perc_y"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
+}

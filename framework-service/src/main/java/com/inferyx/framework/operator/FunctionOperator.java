@@ -112,7 +112,7 @@ public class FunctionOperator {
 					}
 				} else {
 					if(function.getInputReq().equalsIgnoreCase("N")) {
-						functionName += "()";
+						functionName += "";
 					}
 				}
 				break;

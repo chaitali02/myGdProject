@@ -1,7 +1,7 @@
 {
-  "uuid": "fcd48f83-9a31-4991-adfe-0ca178b08348",
-  "version": "1533761700",
-  "name": "fm_portfolio_avg_pd",
+  "uuid": "8b592e69-07db-4cbe-8dd7-c005fd59ee8e",
+  "version": "1533773442",
+  "name": "fm_portfolio_loss_histogram_y",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Aug 08 16:55:00 EDT 2018",
+  "createdOn": "Wed Aug 08 20:10:42 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,23 +30,35 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+      "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
       "version": null,
-      "name": "customer_portfolio"
+      "name": "portfolio_loss_simulation"
     },
     "value": null
   },
   "formulaInfo": [
     {
       "ref": {
-        "type": "function",
-        "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+        "type": "simple",
+        "uuid": null,
         "version": null,
-        "name": "avg(DISTINCT col)"
+        "name": null
       },
       "attributeId": null,
-      "value": null,
+      "value": "histogram_numeric (",
       "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+        "version": null,
+        "name": "portfolio_loss_simulation"
+      },
+      "attributeId": 1,
+      "value": null,
+      "attributeName": "portfolio_loss",
       "attributeType": null
     },
     {
@@ -57,20 +69,8 @@
         "name": null
       },
       "attributeId": null,
-      "value": "(",
+      "value": ",10",
       "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-        "version": null,
-        "name": "customer_portfolio"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "pd",
       "attributeType": null
     },
     {
@@ -93,22 +93,10 @@
         "name": null
       },
       "attributeId": null,
-      "value": "*",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "100",
+      "value": ".y",
       "attributeName": null,
       "attributeType": null
     }
   ],
-  "formulaType": "aggr"
+  "formulaType": "simple"
 }
