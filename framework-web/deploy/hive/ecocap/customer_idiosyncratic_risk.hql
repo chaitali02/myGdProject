@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS ecocap;
 use ecocap;
 DROP TABLE IF EXISTS customer_idiosyncratic_risk;
-CREATE EXTERNAL TABLE IF NOT EXISTS `customer_idiosyncratic_risk`(
+CREATE  TABLE IF NOT EXISTS `customer_idiosyncratic_risk`(
 `iteration_id` int,
 `cust1` double,
 `cust2` double,
