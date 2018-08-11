@@ -1,6 +1,6 @@
 {
   "uuid": "f55869af-55f2-497a-a1eb-3d2a173df20b",
-  "version": "1533852717",
+  "version": "1533954362",
   "name": "fm_portfolio_loss_percentage",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Aug 09 18:11:57 EDT 2018",
+  "createdOn": "Fri Aug 10 22:26:02 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -37,6 +37,30 @@
     "value": null
   },
   "formulaInfo": [
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "e26970d6-999e-4ffa-9903-0f6e8ac39rtc",
+        "version": null,
+        "name": "round(double a)"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
     {
       "ref": {
         "type": "datapod",
@@ -93,7 +117,19 @@
         "name": null
       },
       "attributeId": null,
-      "value": "100",
+      "value": "100 , 2",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
       "attributeName": null,
       "attributeType": null
     }

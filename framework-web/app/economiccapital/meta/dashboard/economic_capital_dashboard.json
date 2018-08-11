@@ -1,6 +1,6 @@
 {
   "uuid": "e44b33be-8cef-468e-8faa-1d5e61c0173a",
-  "version": "1533853521",
+  "version": "1533938012",
   "name": "Economic Capital Dashboard",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Aug 09 18:25:21 EDT 2018",
+  "createdOn": "Fri Aug 10 17:53:32 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -45,13 +45,13 @@
     },
     {
       "sectionId": null,
-      "name": "Portfolio Loss Summary",
+      "name": "Portfolio Loss Statistics",
       "vizpodInfo": {
         "ref": {
           "type": "vizpod",
-          "uuid": "42aa994e-6bff-460a-8046-b88f5c0525ea",
+          "uuid": "7fc08ee5-c6d0-47dd-8d52-e26b3ba0e114",
           "version": null,
-          "name": "viz_portfolio_loss_summary"
+          "name": "viz_portfolio_loss_statistics"
         },
         "value": null
       },
@@ -60,26 +60,11 @@
     },
     {
       "sectionId": null,
-      "name": "Portfolio Loss Summary %",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "333ca69a-6fb7-4d57-9412-cd72aedc7eee",
-          "version": null,
-          "name": "viz_portfolio_loss_summary_perc"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 3
-    },
-    {
-      "sectionId": null,
       "name": "Portfolio Loss Distribution Histogram",
       "vizpodInfo": {
         "ref": {
           "type": "vizpod",
-          "uuid": "b4805c11-05ef-4955-bcfa-ac044295d1c5",
+          "uuid": "996ff741-fe09-4197-ba24-d1ac3b8b1312",
           "version": null,
           "name": "viz_portfolio_loss_distribution_histogram"
         },
@@ -94,7 +79,7 @@
       "vizpodInfo": {
         "ref": {
           "type": "vizpod",
-          "uuid": "1769c7c1-5e70-427a-987c-c7a484117b2e",
+          "uuid": "c647d7be-4cc0-41ab-856f-b30a04d8e9e9",
           "version": null,
           "name": "viz_portfolio_loss_distribution_histogram_perc"
         },

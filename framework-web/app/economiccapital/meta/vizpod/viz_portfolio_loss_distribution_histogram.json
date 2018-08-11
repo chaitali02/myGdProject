@@ -1,6 +1,6 @@
 {
-  "uuid": "b4805c11-05ef-4955-bcfa-ac044295d1c5",
-  "version": "1533853399",
+  "uuid": "996ff741-fe09-4197-ba24-d1ac3b8b1312",
+  "version": "1533935781",
   "name": "viz_portfolio_loss_distribution_histogram",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Aug 09 18:23:19 EDT 2018",
+  "createdOn": "Fri Aug 10 17:16:21 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,10 +30,10 @@
   "title": null,
   "source": {
     "ref": {
-      "type": "dataset",
-      "uuid": "8030b9f5-56db-405f-a883-67176280640f",
+      "type": "datapod",
+      "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
       "version": null,
-      "name": "ds_portfolio_loss_histogram_final"
+      "name": "portfolio_loss_histogram"
     },
     "value": null
   },
@@ -42,15 +42,15 @@
   "keys": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "8030b9f5-56db-405f-a883-67176280640f",
+        "type": "datapod",
+        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
         "version": null,
-        "name": "ds_portfolio_loss_histogram_final"
+        "name": "portfolio_loss_histogram"
       },
       "attributeId": 0,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_loss_histogram_explode_x"
+      "attributeName": "bucket"
     }
   ],
   "dimension": [],
@@ -60,15 +60,15 @@
   "values": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "8030b9f5-56db-405f-a883-67176280640f",
+        "type": "datapod",
+        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
         "version": null,
-        "name": "ds_portfolio_loss_histogram_final"
+        "name": "portfolio_loss_histogram"
       },
       "attributeId": 1,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_loss_histogram_explode_y"
+      "attributeName": "frequency"
     }
   ]
 }

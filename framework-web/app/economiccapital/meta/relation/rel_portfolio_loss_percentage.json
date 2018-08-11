@@ -1,6 +1,6 @@
 {
   "uuid": "bcc30d2b-a387-450c-9ae1-ac90ac2613a2",
-  "version": "1533852727",
+  "version": "1533964901",
   "name": "rel_portfolio_loss_percentage",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Aug 09 18:12:07 EDT 2018",
+  "createdOn": "Sat Aug 11 01:21:41 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -60,7 +60,7 @@
                 "version": null,
                 "name": "portfolio_loss_summary"
               },
-              "attributeId": 10,
+              "attributeId": 11,
               "value": null,
               "attributeName": "reporting_date",
               "attributeType": "string"

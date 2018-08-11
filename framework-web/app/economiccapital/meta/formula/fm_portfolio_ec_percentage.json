@@ -1,7 +1,7 @@
 {
-  "uuid": "98fb6abc-d27a-49c4-9565-f44d447c7e20",
-  "version": "1533852859",
-  "name": "fm_portfolio_loss_histogram_perc_y",
+  "uuid": "73b2a8ea-c00f-4016-9c22-0fc330582387",
+  "version": "1533964071",
+  "name": "fm_portfolio_ec_percentage",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Aug 09 18:14:19 EDT 2018",
+  "createdOn": "Sat Aug 11 01:07:51 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,35 +30,47 @@
   "dependsOn": {
     "ref": {
       "type": "dataset",
-      "uuid": "2c114ff3-7cb3-4413-a690-69cac75c439c",
+      "uuid": "78530d73-5c11-4a32-b90d-ea88822768b9",
       "version": null,
-      "name": "ds_portfolio_loss_percentage"
+      "name": "ds_portfolio_loss_summary"
     },
     "value": null
   },
   "formulaInfo": [
     {
       "ref": {
+        "type": "function",
+        "uuid": "e26970d6-999e-4ffa-9903-0f6e8ac39rtc",
+        "version": null,
+        "name": "round(double a)"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
         "type": "simple",
         "uuid": null,
         "version": null,
         "name": null
       },
       "attributeId": null,
-      "value": "histogram_numeric (",
+      "value": "(",
       "attributeName": null,
       "attributeType": null
     },
     {
       "ref": {
         "type": "dataset",
-        "uuid": "2c114ff3-7cb3-4413-a690-69cac75c439c",
+        "uuid": "78530d73-5c11-4a32-b90d-ea88822768b9",
         "version": null,
-        "name": "ds_portfolio_loss_percentage"
+        "name": "ds_portfolio_loss_summary"
       },
-      "attributeId": 0,
+      "attributeId": 5,
       "value": null,
-      "attributeName": "portfolio_loss_percentage",
+      "attributeName": "economic_capital",
       "attributeType": null
     },
     {
@@ -69,7 +81,43 @@
         "name": null
       },
       "attributeId": null,
-      "value": ",10",
+      "value": "/",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "78530d73-5c11-4a32-b90d-ea88822768b9",
+        "version": null,
+        "name": "ds_portfolio_loss_summary"
+      },
+      "attributeId": 2,
+      "value": null,
+      "attributeName": "total_ead",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "*",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "100 , 2",
       "attributeName": null,
       "attributeType": null
     },
@@ -82,18 +130,6 @@
       },
       "attributeId": null,
       "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ".y",
       "attributeName": null,
       "attributeType": null
     }

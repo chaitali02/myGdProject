@@ -1,6 +1,6 @@
 {
   "uuid": "d9d5f031-9f02-4b98-88bd-3962dba4e5dd",
-  "version": "1533853414",
+  "version": "1533962740",
   "name": "viz_portfolio_summary",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Aug 09 18:23:34 EDT 2018",
+  "createdOn": "Sat Aug 11 00:45:40 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -37,7 +37,7 @@
     },
     "value": null
   },
-  "type": "bar-chart",
+  "type": "bar-line-chart",
   "limit": null,
   "keys": [
     {
@@ -65,18 +65,6 @@
         "version": null,
         "name": "portfolio_loss_summary"
       },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "portfolio_avg_pd"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
-        "version": null,
-        "name": "portfolio_loss_summary"
-      },
       "attributeId": 1,
       "function": null,
       "value": null,
@@ -89,10 +77,10 @@
         "version": null,
         "name": "portfolio_loss_summary"
       },
-      "attributeId": 2,
+      "attributeId": 0,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_total_ead"
+      "attributeName": "portfolio_avg_pd"
     }
   ]
 }

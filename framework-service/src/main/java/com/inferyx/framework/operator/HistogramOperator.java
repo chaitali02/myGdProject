@@ -144,7 +144,7 @@ public class HistogramOperator implements IOperator {
 	public void execute(List<SourceAttr> sourceAttrs, BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {		
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		ParamListHolder numBucketsInfo = paramSetServiceImpl.getParamByName(execParams, "numBuckets");
-		ParamListHolder sourceInfo = paramSetServiceImpl.getParamByName(execParams, "sourceLocation");
+		ParamListHolder sourceInfo = paramSetServiceImpl.getParamByName(execParams, "sourceAttr");
 		HashMap<String, String> otherParams = execParams.getOtherParams();
 		
 		sourceAttrs = new ArrayList<>();
@@ -177,7 +177,7 @@ public class HistogramOperator implements IOperator {
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<ds.length; i++) {
 			if(i<ds.length-1) {
-				String bucket = "("+ds[i]+", "+ds[i+1]+")";
+				String bucket = "("+ds[i]+" - "+ds[i+1]+")";
 				long frequency = ls[i];
 				int version = Integer.parseInt(Helper.getVersion());
 				rowList.add(RowFactory.create(bucket, frequency, version));
@@ -220,8 +220,8 @@ public class HistogramOperator implements IOperator {
 			sqlBuilder.append("SELECT ");
 			
 			for(int i=0; i<sourceAttrs.size(); i++) {
-				String attrName = datapod.getAttributeName(sourceAttrs.get(i).getAttributeId());
-				sqlBuilder.append(attrName).append(" AS ").append(attrName);
+				String attrName = datapod.getAttributeName(sourceAttrs.get(i).getAttributeId());				
+				sqlBuilder.append("CAST(").append(attrName).append(" AS DOUBLE) AS ").append(attrName);
 				if(i<(sourceAttrs.size()-1))
 					sqlBuilder.append(",");				
 			}
