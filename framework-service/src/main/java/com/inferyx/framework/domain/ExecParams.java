@@ -13,7 +13,7 @@ package com.inferyx.framework.domain;
 import java.util.HashMap;
 import java.util.List;
 
-public class ExecParams {
+public class ExecParams implements Cloneable {
 
 	private List<MetaIdentifier> refKeyList;
 	private List<ParamSetHolder> paramInfo;
@@ -140,6 +140,10 @@ public class ExecParams {
 
 	public void setGraphFilter(GraphFilter graphFilter) {
 		this.graphFilter = graphFilter;
+	}
+	
+	public Object clone() throws CloneNotSupportedException {
+	    return super.clone();
 	}
 
 }
