@@ -37,7 +37,6 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IDagDao;
-import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
@@ -532,18 +531,12 @@ public class DagServiceImpl {
 			execParams = new ExecParams();
 			execParams.setRefKeyList(new ArrayList<>());
 		}
-		// Get ParamList Holder if available
-		List<ParamListHolder> paramListHolder = commonServiceImpl.getAppParamList();
-		if (paramListHolder != null && !paramListHolder.isEmpty()) { 
-				if (execParams.getParamListInfo() == null) { 
-					execParams.setParamListInfo(new ArrayList<>());
-				}
-			execParams.getParamListInfo().addAll(paramListHolder);
-		}
 
 		if (dagExec == null) {
 			// Create object
+			long startTime = System.currentTimeMillis();
 			dagExec = createDAGExec(dag, execParams);
+			logger.info("Time taken to create dag exec : " + ((System.currentTimeMillis() - startTime)/1000));
 			commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 			//dagExecServiceImpl.save(dagExec);
 		}
@@ -727,6 +720,7 @@ public class DagServiceImpl {
 
 	public DagExec createDAGExec(Dag dag, ExecParams execParams) throws JsonProcessingException {
 		DagExec dagExec = new DagExec(dag);
+		dagExec.setExecParams(execParams);
 		dagExec.setName(dag.getName());
 		dagExec.setBaseEntity();
 		MetaIdentifier dagRef = new MetaIdentifier(MetaType.dag, dag.getUuid(), dag.getVersion());
@@ -965,6 +959,24 @@ public class DagServiceImpl {
 			return null;
 		}
 		ExecParams execParams = dagExec.getExecParams();
+		
+		// Retrieve all params
+		if (execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
+			List<ParamListHolder> paramListHolders = new ArrayList<>();
+			for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(), MetaType.paramlist.toString());
+				for (Param param : paramList.getParams()) {
+					ParamListHolder newParamListHolder = new ParamListHolder();
+					newParamListHolder.setParamId(param.getParamId());
+					newParamListHolder.setParamName(param.getParamName());
+					newParamListHolder.setParamType(param.getParamType());
+					newParamListHolder.setParamValue(param.getParamValue());
+					newParamListHolder.setRef(param.getParamRef());
+					paramListHolders.add(newParamListHolder);
+				}
+			}
+			execParams.setParamListInfo(paramListHolders);
+		}
 		if (execParams == null) {
 			execParams = new ExecParams();
 			execParams.setRefKeyList(new ArrayList<>());
@@ -981,18 +993,22 @@ public class DagServiceImpl {
 		// Get the dag - START
 		MetaIdentifier dagRef = new MetaIdentifier(MetaType.dag, dagExec.getUuid(), dagExec.getVersion());
 		
+		// Get ParamList Holder if available
+		List<ParamListHolder> appParamListHolder = commonServiceImpl.getAppParamList();
 		if (dag.getParamList() != null) {
-			List<ParamListHolder> paramListHolderList = getDagParamList(dag);
+			List<ParamListHolder> paramListHolderList = null;//getDagParamList(dag);
 			List<ParamListHolder> paramListHolders = new ArrayList<>();
 			ObjectMapper mapper = new ObjectMapper();
-			for(Object obj : paramListHolderList) {
+			/*for(Object obj : paramListHolderList) {
 				paramListHolders.add(mapper.convertValue(obj, ParamListHolder.class));
+			}*/
+//			if (paramListHolderList != null && !paramListHolderList.isEmpty()) {
+			if (execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
+				execParams.setParamListInfo(replaceParams(appParamListHolder, execParams.getParamListInfo()));
+			} else {
+				execParams.setParamListInfo(appParamListHolder);
 			}
-			if (paramListHolderList != null && !paramListHolderList.isEmpty()) {
-				if (execParams.getParamListInfo() == null || execParams.getParamListInfo().isEmpty()) {
-					execParams.setParamListInfo(replaceParams(execParams.getParamListInfo(), paramListHolders));
-				} 
-			}
+//			}
 		}
 		// Dag dag = (Dag) daoRegister.getRefObject(dagRef);
 		// Get the dag - END
