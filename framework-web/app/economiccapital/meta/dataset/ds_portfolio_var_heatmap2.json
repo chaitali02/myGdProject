@@ -1,7 +1,7 @@
 {
-  "uuid": "feb19724-f34b-4819-a4da-fa5c66cdb39c",
-  "version": "1534082309",
-  "name": "ds_industry_factor_mean",
+  "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+  "version": "1534084196",
+  "name": "ds_portfolio_var_heatmap2",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 12 09:58:29 EDT 2018",
+  "createdOn": "Sun Aug 12 10:29:56 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,90 +29,93 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "datapod",
-      "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
+      "type": "relation",
+      "uuid": "c70d8be7-f10b-494d-b6c6-0590975a9a74",
       "version": null,
-      "name": "industry_factor_mean"
+      "name": "rel_portfolio_var_heatmap"
     },
     "value": null
   },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "filter",
-        "uuid": "92668c29-034f-40b2-9987-9073fdf6e821",
-        "version": null,
-        "name": "ds_industry_factor_mean"
-      },
-      "value": null,
-      "attrId": null,
-      "attrName": null,
-      "attrType": null
-    }
-  ],
+  "filterInfo": [],
   "attributeInfo": [
     {
       "attrSourceId": "0",
-      "attrSourceName": "id",
+      "attrSourceName": "portfolio_pd_bucket",
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
+          "uuid": "0d112ba8-be04-47a0-a5f4-c015904fd437",
           "version": null,
-          "name": "industry_factor_mean"
+          "name": "portfolio_var_heatmap_buckets"
         },
         "value": null,
         "attrId": "0",
-        "attrName": "id",
+        "attrName": "portfolio_pd_bucket",
         "attrType": "string"
       }
     },
     {
       "attrSourceId": "1",
-      "attrSourceName": "mean",
+      "attrSourceName": "portfolio_lgd_bucket",
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
+          "uuid": "0d112ba8-be04-47a0-a5f4-c015904fd437",
           "version": null,
-          "name": "industry_factor_mean"
+          "name": "portfolio_var_heatmap_buckets"
         },
         "value": null,
         "attrId": "1",
-        "attrName": "mean",
-        "attrType": "double"
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrSourceName": "reporting_date",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
-          "version": null,
-          "name": "industry_factor_mean"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "reporting_date",
+        "attrName": "portfolio_lgd_bucket",
         "attrType": "string"
       }
     },
     {
+      "attrSourceId": "2",
+      "attrSourceName": "fm_portfolio_var_heatmap",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "81e9307a-787f-47a9-b590-33dd2db0f013",
+          "version": null,
+          "name": "fm_portfolio_var_heatmap2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
       "attrSourceId": "3",
+      "attrSourceName": "reporting_date",
+      "sourceAttr": {
+        "ref": {
+          "type": "paramlist",
+          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
+          "version": null,
+          "name": "paramlist_ecocap_app"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "reporting_date",
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "4",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "ec1958cf-98ec-4269-b821-9fbb81a85835",
+          "uuid": "0d112ba8-be04-47a0-a5f4-c015904fd437",
           "version": null,
-          "name": "industry_factor_mean"
+          "name": "portfolio_var_heatmap_buckets"
         },
         "value": null,
-        "attrId": "3",
+        "attrId": "2",
         "attrName": "version",
-        "attrType": "Integer"
+        "attrType": "string"
       }
     }
   ],

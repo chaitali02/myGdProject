@@ -1,6 +1,6 @@
 {
   "uuid": "19507389-765b-4df3-a717-ab514337192a",
-  "version": "1533760836",
+  "version": "1534080503",
   "name": "ppl_e2e_economic_capital_wi_simulation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Aug 08 16:40:36 EDT 2018",
+  "createdOn": "Sun Aug 12 09:28:23 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -1063,7 +1063,7 @@
       "type": "paramlist",
       "uuid": "47e29bae-dfb3-450e-88d0-e8c462b32d3d",
       "version": null,
-      "name": "pl_e2e_economic_capital_wi_simulation"
+      "name": "paramlist_ecocap_pipelines"
     },
     "value": null
   }

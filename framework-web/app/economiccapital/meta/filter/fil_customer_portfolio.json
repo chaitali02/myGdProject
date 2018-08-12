@@ -1,6 +1,6 @@
 {
-  "uuid": "22570e02-e58f-4ac4-ba43-aacc5534e53d",
-  "version": "1533500110",
+  "uuid": "0119c5d4-5271-4c57-b442-e55cf547c714",
+  "version": "1534081173",
   "name": "fil_customer_portfolio",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 05 16:15:10 EDT 2018",
+  "createdOn": "Sun Aug 12 09:39:33 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -58,11 +58,11 @@
             "type": "paramlist",
             "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
             "version": null,
-            "name": "paramlist_app"
+            "name": "paramlist_ecocap_app"
           },
-          "attributeId": 0,
+          "attributeId": 1,
           "value": null,
-          "attributeName": "reporting_date",
+          "attributeName": "reporting_date_quotes",
           "attributeType": null
         }
       ]

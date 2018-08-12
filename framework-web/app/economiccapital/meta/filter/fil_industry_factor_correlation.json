@@ -1,6 +1,6 @@
 {
-  "uuid": "0ced647d-19cc-4190-b046-146e7bb4cb2e",
-  "version": "1533500528",
+  "uuid": "d8e426a3-2ef1-4894-bc64-c7be181c9190",
+  "version": "1534082262",
   "name": "fil_industry_factor_correlation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 05 16:22:08 EDT 2018",
+  "createdOn": "Sun Aug 12 09:57:42 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -58,11 +58,11 @@
             "type": "paramlist",
             "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
             "version": null,
-            "name": "paramlist_app"
+            "name": "paramlist_ecocap_app"
           },
-          "attributeId": 0,
+          "attributeId": 1,
           "value": null,
-          "attributeName": "reporting_date",
+          "attributeName": "reporting_date_quotes",
           "attributeType": null
         }
       ]

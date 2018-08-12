@@ -39,6 +39,21 @@
           "version": null,
           "name": null
         },
+        "value": "06/30/2018"
+      },
+      "paramRef": null
+    },
+    {
+      "paramId": "1",
+      "paramName": "reporting_date_quotes",
+      "paramType": "string",
+      "paramValue": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
         "value": "'06/30/2018'"
       },
       "paramRef": null
