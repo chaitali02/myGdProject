@@ -1,6 +1,6 @@
 {
   "uuid": "e44b33be-8cef-468e-8faa-1d5e61c0173a",
-  "version": "1533938012",
+  "version": "1534046805",
   "name": "Economic Capital Dashboard",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Aug 10 17:53:32 EDT 2018",
+  "createdOn": "Sun Aug 12 00:06:45 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -66,7 +66,7 @@
           "type": "vizpod",
           "uuid": "996ff741-fe09-4197-ba24-d1ac3b8b1312",
           "version": null,
-          "name": "viz_portfolio_loss_distribution_histogram2"
+          "name": "viz_portfolio_loss_distribution_histogram"
         },
         "value": null
       },
@@ -81,12 +81,57 @@
           "type": "vizpod",
           "uuid": "c647d7be-4cc0-41ab-856f-b30a04d8e9e9",
           "version": null,
-          "name": "viz_portfolio_loss_distribution_histogram_perc2"
+          "name": "viz_portfolio_loss_distribution_histogram_perc"
         },
         "value": null
       },
       "rowNo": 2,
       "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Customer-Wise VaR Contribution",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "d6863f63-bb9d-42ac-997e-4094abdc8fcf",
+          "version": null,
+          "name": "viz_customer_var_contribution"
+        },
+        "value": null
+      },
+      "rowNo": 3,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Sector-Wise VaR Contribution",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "56c3a7cc-c00f-41d7-8df3-2c03acf9ea9f",
+          "version": null,
+          "name": "viz_sector_var_contribution"
+        },
+        "value": null
+      },
+      "rowNo": 3,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Portfolio VaR Heatmap",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "95f1c6c7-118f-4cae-8eab-873a828def14",
+          "version": null,
+          "name": "viz_portfolio_var_heatmap"
+        },
+        "value": null
+      },
+      "rowNo": 4,
+      "colNo": 1
     }
   ],
   "dependsOn": {

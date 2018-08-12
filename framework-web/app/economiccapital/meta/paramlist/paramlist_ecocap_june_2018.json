@@ -1,6 +1,6 @@
 {
   "uuid": "33eba46e-37c8-44d3-abc3-b208e4bd4831",
-  "version": "1534035147",
+  "version": "1534047352",
   "name": "paramlist_ecocap_june_2018",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 11 20:52:27 EDT 2018",
+  "createdOn": "Sun Aug 12 00:15:52 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -39,7 +39,7 @@
           "version": null,
           "name": null
         },
-        "value": "06/30/2018"
+        "value": "'06/30/2018'"
       },
       "paramRef": null
     }
