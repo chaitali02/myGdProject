@@ -1,6 +1,6 @@
 {
   "uuid": "7fc08ee5-c6d0-47dd-8d52-e26b3ba0e114",
-  "version": "1533966586",
+  "version": "1534018964",
   "name": "viz_portfolio_loss_statistics",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 11 01:49:46 EDT 2018",
+  "createdOn": "Sat Aug 11 16:22:44 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -77,10 +77,10 @@
         "version": null,
         "name": "portfolio_loss_summary"
       },
-      "attributeId": 9,
+      "attributeId": 10,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_el_percentage"
+      "attributeName": "portfolio_ec_percentage"
     },
     {
       "ref": {
@@ -89,10 +89,10 @@
         "version": null,
         "name": "portfolio_loss_summary"
       },
-      "attributeId": 10,
+      "attributeId": 9,
       "function": null,
       "value": null,
-      "attributeName": "portfolio_ec_percentage"
+      "attributeName": "portfolio_el_percentage"
     }
   ]
 }

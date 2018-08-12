@@ -1,19 +1,23 @@
 {
-  "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
-  "version": "1533897886",
-  "name": "paramlist_histogram",
-  "desc": null,
+  "uuid": "e26970d6-999e-4ffa-9903-0f6e8ac39plm",
+  "version": "1488801521",
+  "name": "rank()",
+  "desc": "Return a ranking value for each row in a partition",
   "createdBy": {
     "ref": {
       "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+      "version": null,
+      "name": "admin"
     },
     "value": null
   },
-  "createdOn": "Wed Aug 08 16:40:14 EDT 2018",
-  "tags": [],
+  "createdOn": "Mon Aug 06 17:40:15 EDT 2018",
+  "tags": [
+    "DEV",
+    "1.0.1",
+    "DEMO"
+  ],
   "active": "Y",
   "published": "N",
   "appInfo": [
@@ -54,38 +58,39 @@
       "value": null
     }
   ],
-  "params": [
+  "inputReq": "N",
+  "funcType": "hive",
+  "functionInfo": [
     {
-      "paramId": "0",
-      "paramName": "sourceAttr",
-      "paramType": "attribute",
-      "paramValue": null,
-      "paramRef": null
+      "name": "rank()",
+      "type": "file",
+      "paramInfoHolder": []
     },
     {
-      "paramId": "1",
-      "paramName": "numBuckets",
-      "paramType": "integer",
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "10"
-      },
-      "paramRef": null
+      "name": "rank()",
+      "type": "mysql",
+      "paramInfoHolder": []
     },
     {
-      "paramId": "2",
-      "paramName": "saveLocation",
-      "paramType": "datapod",
-      "paramValue": null,
-      "paramRef": null
+      "name": "rank()",
+      "type": "hive",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "rank()",
+      "type": "impala",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "rank()",
+      "type": "oracle",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "rank()",
+      "type": "postgres",
+      "paramInfoHolder": []
     }
   ],
-  "paramListType": "model",
-  "templateFlg": "Y",
-  "templateInfo": null
+  "category": "string"
 }

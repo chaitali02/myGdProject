@@ -66,7 +66,7 @@
           "type": "vizpod",
           "uuid": "996ff741-fe09-4197-ba24-d1ac3b8b1312",
           "version": null,
-          "name": "viz_portfolio_loss_distribution_histogram"
+          "name": "viz_portfolio_loss_distribution_histogram2"
         },
         "value": null
       },
@@ -81,7 +81,7 @@
           "type": "vizpod",
           "uuid": "c647d7be-4cc0-41ab-856f-b30a04d8e9e9",
           "version": null,
-          "name": "viz_portfolio_loss_distribution_histogram_perc"
+          "name": "viz_portfolio_loss_distribution_histogram_perc2"
         },
         "value": null
       },

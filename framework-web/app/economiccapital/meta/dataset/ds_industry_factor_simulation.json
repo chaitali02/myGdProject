@@ -1,6 +1,6 @@
 {
   "uuid": "4f40e74d-414c-462f-a2ce-cc2721fb3bd7",
-  "version": "1533588373",
+  "version": "1534034610",
   "name": "ds_industry_factor_simulation",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Aug 06 16:46:13 EDT 2018",
+  "createdOn": "Sat Aug 11 20:43:30 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -32,7 +32,7 @@
       "type": "datapod",
       "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
       "version": null,
-      "name": "industry_factor_simulation_staging"
+      "name": "industry_factor_simulation_stage"
     },
     "value": null
   },
@@ -46,7 +46,7 @@
           "type": "datapod",
           "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
           "version": null,
-          "name": "industry_factor_simulation_staging"
+          "name": "industry_factor_simulation_stage"
         },
         "value": null,
         "attrId": "0",
@@ -62,7 +62,7 @@
           "type": "datapod",
           "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
           "version": null,
-          "name": "industry_factor_simulation_staging"
+          "name": "industry_factor_simulation_stage"
         },
         "value": null,
         "attrId": "1",
@@ -78,7 +78,7 @@
           "type": "datapod",
           "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
           "version": null,
-          "name": "industry_factor_simulation_staging"
+          "name": "industry_factor_simulation_stage"
         },
         "value": null,
         "attrId": "2",
@@ -94,7 +94,7 @@
           "type": "datapod",
           "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
           "version": null,
-          "name": "industry_factor_simulation_staging"
+          "name": "industry_factor_simulation_stage"
         },
         "value": null,
         "attrId": "3",
@@ -110,7 +110,7 @@
           "type": "datapod",
           "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
           "version": null,
-          "name": "industry_factor_simulation_staging"
+          "name": "industry_factor_simulation_stage"
         },
         "value": null,
         "attrId": "4",
@@ -123,14 +123,14 @@
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
-          "type": "simple",
-          "uuid": null,
+          "type": "paramlist",
+          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
           "version": null,
-          "name": null
+          "name": "paramlist_ecocap_app"
         },
-        "value": "03/31/2018",
-        "attrId": null,
-        "attrName": null,
+        "value": null,
+        "attrId": "0",
+        "attrName": "reporting_date",
         "attrType": null
       }
     },
@@ -142,7 +142,7 @@
           "type": "datapod",
           "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
           "version": null,
-          "name": "industry_factor_simulation_staging"
+          "name": "industry_factor_simulation_stage"
         },
         "value": null,
         "attrId": "5",

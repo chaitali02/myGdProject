@@ -1,7 +1,7 @@
 {
-  "uuid": "ca17a407-d34e-46ff-b285-7885ae4e989b",
-  "version": "1534034667",
-  "name": "ppl_industry_factor_simulation",
+  "uuid": "828d88ad-095f-4249-8cfd-3f809b9c0faa",
+  "version": "1534018881",
+  "name": "ppl_e2e_economic_capital_dashboard",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 11 20:44:27 EDT 2018",
+  "createdOn": "Sat Aug 11 16:21:21 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -28,7 +28,7 @@
     }
   ],
   "xPos": 30,
-  "yPos": 330,
+  "yPos": 250,
   "templateFlg": "N",
   "templateInfo": null,
   "stages": [
@@ -37,9 +37,9 @@
       "dependsOn": [],
       "tasks": [
         {
-          "taskId": "8a8808ae-3c54-4faa-bb87-375c43bcea40",
+          "taskId": "58567e70-9af7-4233-9708-d76f545514eb",
           "dependsOn": [],
-          "name": "Industry Factor SImulation",
+          "name": "Calculate Histogram",
           "operators": [
             {
               "operatorId": null,
@@ -49,9 +49,9 @@
                 {
                   "ref": {
                     "type": "operator",
-                    "uuid": "9f0063af-86b4-4610-bf6e-047d74fc197d",
+                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
                     "version": null,
-                    "name": "Generate Data"
+                    "name": "Histogram"
                   },
                   "value": null
                 }
@@ -68,35 +68,40 @@
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
-                        "version": "1525519035",
-                        "name": "paramlist_generate_data"
+                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                        "version": "1533897886",
+                        "name": "paramlist_histogram"
                       },
                       "value": null,
                       "paramId": "0",
-                      "paramName": "distribution",
-                      "paramType": "distribution",
-                      "paramValue": {
-                        "ref": {
-                          "type": "distribution",
-                          "uuid": "aea101dd-fb99-45c8-a4af-c753e457f050",
-                          "version": null,
-                          "name": null
-                        },
-                        "value": null
-                      },
-                      "attributeInfo": null
+                      "paramName": "sourceAttr",
+                      "paramType": "attribute",
+                      "paramValue": null,
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "datapod",
+                            "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+                            "version": null,
+                            "name": "portfolio_loss_simulation"
+                          },
+                          "value": null,
+                          "attrId": "1",
+                          "attrName": "portfolio_loss",
+                          "attrType": null
+                        }
+                      ]
                     },
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
-                        "version": "1525519035",
-                        "name": "paramlist_generate_data"
+                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                        "version": "1533897886",
+                        "name": "paramlist_histogram"
                       },
                       "value": null,
                       "paramId": "1",
-                      "paramName": "numIterations",
+                      "paramName": "numBuckets",
                       "paramType": "integer",
                       "paramValue": {
                         "ref": {
@@ -105,16 +110,16 @@
                           "version": null,
                           "name": null
                         },
-                        "value": "1000"
+                        "value": "5"
                       },
                       "attributeInfo": null
                     },
                     {
                       "ref": {
                         "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
-                        "version": "1525519035",
-                        "name": "paramlist_generate_data"
+                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                        "version": "1533897886",
+                        "name": "paramlist_histogram"
                       },
                       "value": null,
                       "paramId": "2",
@@ -123,103 +128,13 @@
                       "paramValue": {
                         "ref": {
                           "type": "datapod",
-                          "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
+                          "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
                           "version": null,
                           "name": null
                         },
                         "value": null
                       },
                       "attributeInfo": null
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                        "version": "1523604347",
-                        "name": "paramlist_multivariate_normal_distribution"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "factorMeans",
-                      "paramType": "attribute",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "feb19724-f34b-4819-a4da-fa5c66cdb39c",
-                            "version": null,
-                            "name": "ds_industry_factor_mean"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "mean",
-                          "attrType": null
-                        }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                        "version": "1523604347",
-                        "name": "paramlist_multivariate_normal_distribution"
-                      },
-                      "value": null,
-                      "paramId": "2",
-                      "paramName": "factorCovariance",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "factor1",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "2",
-                          "attrName": "factor2",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "3",
-                          "attrName": "factor3",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "4",
-                          "attrName": "factor4",
-                          "attrType": "double"
-                        }
-                      ]
                     }
                   ],
                   "internalVarMap": null,
@@ -230,17 +145,15 @@
               }
             }
           ],
-          "xPos": 330,
-          "yPos": 330,
+          "xPos": 340,
+          "yPos": 140,
           "active": "Y",
           "statusList": []
         },
         {
-          "taskId": "af6342de-5ac8-4a39-a6de-127116404c9b",
-          "dependsOn": [
-            "8a8808ae-3c54-4faa-bb87-375c43bcea40"
-          ],
-          "name": "map_industry_factor_simulation",
+          "taskId": "7dbefa02-8617-43f4-90b2-5011959f68fc",
+          "dependsOn": [],
+          "name": "Calculate Histogram %",
           "operators": [
             {
               "operatorId": null,
@@ -249,28 +162,112 @@
               "operatorInfo": [
                 {
                   "ref": {
-                    "type": "map",
-                    "uuid": "29799c2b-f7bf-4a6f-b97c-9d1842d8fa73",
+                    "type": "operator",
+                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
                     "version": null,
-                    "name": "map_industry_factor_simulation"
+                    "name": "Histogram"
                   },
                   "value": null
                 }
               ],
-              "operatorParams": {}
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "paramSetHolder": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                        "version": "1533897886",
+                        "name": "paramlist_histogram"
+                      },
+                      "value": null,
+                      "paramId": "0",
+                      "paramName": "sourceAttr",
+                      "paramType": "attribute",
+                      "paramValue": null,
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "dataset",
+                            "uuid": "2c114ff3-7cb3-4413-a690-69cac75c439c",
+                            "version": null,
+                            "name": "ds_portfolio_loss_percentage"
+                          },
+                          "value": null,
+                          "attrId": "0",
+                          "attrName": "portfolio_loss_percentage",
+                          "attrType": null
+                        }
+                      ]
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                        "version": "1533897886",
+                        "name": "paramlist_histogram"
+                      },
+                      "value": null,
+                      "paramId": "1",
+                      "paramName": "numBuckets",
+                      "paramType": "integer",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
+                        },
+                        "value": "10"
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+                        "version": "1533897886",
+                        "name": "paramlist_histogram"
+                      },
+                      "value": null,
+                      "paramId": "2",
+                      "paramName": "saveLocation",
+                      "paramType": "datapod",
+                      "paramValue": {
+                        "ref": {
+                          "type": "datapod",
+                          "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
+                          "version": null,
+                          "name": null
+                        },
+                        "value": null
+                      },
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
             }
           ],
-          "xPos": 530,
-          "yPos": 330,
+          "xPos": 340,
+          "yPos": 360,
           "active": "Y",
           "statusList": []
         },
         {
-          "taskId": "de9b32cd-1815-46c7-b332-a1746d011383",
-          "dependsOn": [
-            "af6342de-5ac8-4a39-a6de-127116404c9b"
-          ],
-          "name": "Transpose Industry Factors",
+          "taskId": "85c2eba4-b74b-4e9c-bb95-7d54e2674471",
+          "dependsOn": [],
+          "name": "Transpose VaR Contribution",
           "operators": [
             {
               "operatorId": null,
@@ -311,51 +308,51 @@
                       "attributeInfo": [
                         {
                           "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "type": "dataset",
+                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
                             "version": null,
-                            "name": "industry_factor_simulation"
+                            "name": "ds_customer_var_contribution_topn_perc"
+                          },
+                          "value": null,
+                          "attrId": "0",
+                          "attrName": "customer_var_contribution_top1_perc",
+                          "attrType": "string"
+                        },
+                        {
+                          "ref": {
+                            "type": "dataset",
+                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
+                            "version": null,
+                            "name": "ds_customer_var_contribution_topn_perc"
                           },
                           "value": null,
                           "attrId": "1",
-                          "attrName": "factor1",
-                          "attrType": "double"
+                          "attrName": "customer_var_contribution_top5_perc",
+                          "attrType": "string"
                         },
                         {
                           "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "type": "dataset",
+                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
                             "version": null,
-                            "name": "industry_factor_simulation"
+                            "name": "ds_customer_var_contribution_topn_perc"
                           },
                           "value": null,
                           "attrId": "2",
-                          "attrName": "factor2",
-                          "attrType": "double"
+                          "attrName": "customer_var_contribution_top10_perc",
+                          "attrType": "string"
                         },
                         {
                           "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "type": "dataset",
+                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
                             "version": null,
-                            "name": "industry_factor_simulation"
+                            "name": "ds_customer_var_contribution_topn_perc"
                           },
                           "value": null,
                           "attrId": "3",
-                          "attrName": "factor3",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "4",
-                          "attrName": "factor4",
-                          "attrType": "double"
+                          "attrName": "customer_var_contribution_top50_perc",
+                          "attrType": "string"
                         }
                       ]
                     },
@@ -374,25 +371,13 @@
                       "attributeInfo": [
                         {
                           "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+                            "type": "dataset",
+                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
                             "version": null,
-                            "name": "industry_factor_simulation"
+                            "name": "ds_customer_var_contribution_topn_perc"
                           },
                           "value": null,
-                          "attrId": "0",
-                          "attrName": "iteration_id",
-                          "attrType": "integer"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "5",
+                          "attrId": "4",
                           "attrName": "reporting_date",
                           "attrType": "string"
                         }
@@ -412,7 +397,7 @@
                       "paramValue": {
                         "ref": {
                           "type": "datapod",
-                          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+                          "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
                           "version": null,
                           "name": null
                         },
@@ -429,27 +414,19 @@
               }
             }
           ],
-          "xPos": 730,
-          "yPos": 330,
+          "xPos": 470,
+          "yPos": 250,
           "active": "Y",
           "statusList": []
         }
       ],
       "name": "new stage",
-      "xPos": 170,
-      "yPos": 330,
+      "xPos": 190,
+      "yPos": 250,
       "active": "Y",
       "statusList": []
     }
   ],
   "statusList": [],
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "47e29bae-dfb3-450e-88d0-e8c462b32d3d",
-      "version": null,
-      "name": "paramlist_ecocap_pipelines"
-    },
-    "value": null
-  }
+  "paramList": null
 }

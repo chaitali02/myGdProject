@@ -1,7 +1,7 @@
 {
-  "uuid": "47e29bae-dfb3-450e-88d0-e8c462b32d3d",
-  "version": "1533760814",
-  "name": "pl_e2e_economic_capital_wi_simulation",
+  "uuid": "74d1a932-177c-4594-a702-55e6e5328202",
+  "version": "1534035118",
+  "name": "paramlist_ecocap_march_2018",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Aug 08 16:40:14 EDT 2018",
+  "createdOn": "Sat Aug 11 20:51:58 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -39,12 +39,20 @@
           "version": null,
           "name": null
         },
-        "value": "'03/31/2018'"
+        "value": "03/31/2018"
       },
       "paramRef": null
     }
   ],
   "paramListType": "dag",
-  "templateFlg": "Y",
-  "templateInfo": null
+  "templateFlg": "N",
+  "templateInfo": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "47e29bae-dfb3-450e-88d0-e8c462b32d3d",
+      "version": null,
+      "name": "paramlist_ecocap_pipelines"
+    },
+    "value": null
+  }
 }
