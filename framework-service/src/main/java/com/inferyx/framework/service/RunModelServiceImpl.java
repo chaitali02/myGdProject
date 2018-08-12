@@ -688,7 +688,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				
 				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 						train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
-				String sql = modelServiceImpl.generateSQLBySource(source);
+				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
 				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 				
 				//Object va = exec.assembleDF(fieldArray, (tableName+"_train_data"), algorithm.getTrainName(), model.getLabel(), appUuid);

@@ -52,15 +52,15 @@ public class RandomDistribution {
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 
 		Class<?> distributorClass = Class.forName(distribution.getClassName());
-		Class<?>[] type = getParamTypeList(paramListInfo);
-		Object[] obj = getParamObjList(paramListInfo);
+		Class<?>[] type = getParamTypeList(paramListInfo, execParams);
+		Object[] obj = getParamObjList(paramListInfo, execParams);
 
 		Constructor<?> cons = distributorClass.getConstructor(type);
 		Object object = cons.newInstance(obj);
 		return object;
 	}
 
-	public Object[] getParamObjList(List<ParamListHolder> paramListInfo)
+	public Object[] getParamObjList(List<ParamListHolder> paramListInfo, ExecParams execParams)
 			throws InterruptedException, ExecutionException, Exception {
 		Object[] obj = new Object[paramListInfo.size()];
 
@@ -69,22 +69,22 @@ public class RandomDistribution {
 			ParamDataType paramDataType = Helper.resolveParamDataType(holder.getParamType());
 			switch (paramDataType) {
 			case TWODARRAY:
-				double[][] twoDarray = getTwoDArray(holder);
+				double[][] twoDarray = getTwoDArray(holder, execParams);
 				obj[j] = twoDarray;
 				j++;
 				break;
 			case ONEDARRAY:
-				double[] oneDArray = getOneDArray(holder);
+				double[] oneDArray = getOneDArray(holder, execParams);
 				obj[j] = oneDArray;
 				j++;
 				break;
 			case ATTRIBUTES:
-				double[][] attributesArray = getTwoDArray(holder);
+				double[][] attributesArray = getTwoDArray(holder, execParams);
 				obj[j] = attributesArray;
 				j++;
 				break;
 			case ATTRIBUTE:
-				double[] attributeArray = getOneDArray(holder);
+				double[] attributeArray = getOneDArray(holder, execParams);
 				obj[j] = attributeArray;
 				j++;
 				break;
@@ -115,7 +115,7 @@ public class RandomDistribution {
 		return obj;
 	}
 
-	public Class<?>[] getParamTypeList(List<ParamListHolder> paramListInfo)
+	public Class<?>[] getParamTypeList(List<ParamListHolder> paramListInfo, ExecParams execParams)
 			throws InterruptedException, ExecutionException, Exception {
 		Class<?>[] type = new Class[paramListInfo.size()];
 
@@ -124,22 +124,22 @@ public class RandomDistribution {
 			ParamDataType paramDataType = Helper.resolveParamDataType(holder.getParamType());
 			switch (paramDataType) {
 			case TWODARRAY:
-				double[][] twoDarray = getTwoDArray(holder);
+				double[][] twoDarray = getTwoDArray(holder, execParams);
 				type[j] = double[][].class;
 				j++;
 				break;
 			case ONEDARRAY:
-				double[] oneDArray = getOneDArray(holder);
+				double[] oneDArray = getOneDArray(holder, execParams);
 				type[j] = double[].class;
 				j++;
 				break;
 			case ATTRIBUTES:
-				double[][] attributesArray = getTwoDArray(holder);
+				double[][] attributesArray = getTwoDArray(holder, execParams);
 				type[j] = double[][].class;
 				j++;
 				break;
 			case ATTRIBUTE:
-				double[] attributeArray = getOneDArray(holder);
+				double[] attributeArray = getOneDArray(holder, execParams);
 				type[j] = double[].class;
 				j++;
 				break;
@@ -170,7 +170,7 @@ public class RandomDistribution {
 		return type;
 	}
 
-	private double[][] getTwoDArray(ParamListHolder paramListHolder)
+	private double[][] getTwoDArray(ParamListHolder paramListHolder, ExecParams execParams)
 			throws InterruptedException, ExecutionException, Exception {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
@@ -179,7 +179,7 @@ public class RandomDistribution {
 
 		Object source = commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(),
 				sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
-		String sql = modelServiceImpl.generateSQLBySource(source);
+		String sql = modelServiceImpl.generateSQLBySource(source, execParams);
 		// exec.executeAndRegister(sql, tableName,
 		// commonServiceImpl.getApp().getUuid());
 
@@ -203,7 +203,7 @@ public class RandomDistribution {
 		return twoDArray;
 	}
 
-	private double[] getOneDArray(ParamListHolder paramListHolder)
+	private double[] getOneDArray(ParamListHolder paramListHolder, ExecParams execParams)
 			throws InterruptedException, ExecutionException, Exception {
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
@@ -212,7 +212,7 @@ public class RandomDistribution {
 
 		Object source = commonServiceImpl.getOneByUuidAndVersion(sourceIdentifier.getUuid(),
 				sourceIdentifier.getVersion(), sourceIdentifier.getType().toString());
-		String sql = modelServiceImpl.generateSQLBySource(source);
+		String sql = modelServiceImpl.generateSQLBySource(source, execParams);
 		// exec.executeAndRegister(sql, tableName,
 		// commonServiceImpl.getApp().getUuid());
 

@@ -785,6 +785,7 @@ public class TaskServiceImpl implements Callable<String> {
 				OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.operatorExec.toString());
 //				HashMap<String, String> otherParams = execParams.getOtherParams();
 				ExecParams operatorExecParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
+				operatorExecParams.setParamListInfo(dagServiceImpl.replaceParams(execParams.getParamListInfo(), operatorExecParams.getParamListInfo()));
 				Helper.mergeMap(operatorExecParams.getOtherParams(), execParams.getOtherParams());
 				operatorServiceImpl.execute((BaseExec) operatorExec, operatorExecParams, runMode);
 				

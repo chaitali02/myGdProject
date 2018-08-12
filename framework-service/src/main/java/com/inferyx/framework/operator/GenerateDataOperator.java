@@ -130,11 +130,15 @@ public class GenerateDataOperator implements IOperator {
 		ExecParams distExecParam = new ExecParams();
 
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+		List<ParamListHolder> residualParamHolderList = new ArrayList<>();
 		for(ParamListHolder holder : paramListInfo) {
-			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+			if(holder.getRef()!= null && holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
 				distParamHolderList.add(holder);
+			} else {
+				residualParamHolderList.add(holder);
 			}
 		}
+		distParamHolderList.addAll(residualParamHolderList);
 		distExecParam.setParamListInfo(distParamHolderList);
 		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
 		Object distributionObject = randomDistribution.getDistribution(distribution, distExecParam);
@@ -268,14 +272,18 @@ public class GenerateDataOperator implements IOperator {
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		
 		List<ParamListHolder> distParamHolderList = new ArrayList<>();
+		List<ParamListHolder> residualParamHolderList = new ArrayList<>();
 		ExecParams distExecParam = new ExecParams();
 
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 		for(ParamListHolder holder : paramListInfo) {
-			if(holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
+			if(holder.getRef() != null && holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
 				distParamHolderList.add(holder);
+			} else {
+				residualParamHolderList.add(holder);
 			}
 		}
+		distParamHolderList.addAll(residualParamHolderList);
 		distExecParam.setParamListInfo(distParamHolderList);
 		
 		int numIterations = Integer.parseInt(numIterationsInfo.getParamValue().getValue());
@@ -296,8 +304,8 @@ public class GenerateDataOperator implements IOperator {
 			// Save result
 			save(exec, rowObjList, tableName, locationDatapod, baseExec.getRef(execType), runMode);
 		} else {
-			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo());
-			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo());
+			Object[] objList = randomDistribution.getParamObjList(distExecParam.getParamListInfo(), execParams);
+			Class<?>[] paramTypeList = randomDistribution.getParamTypeList(distExecParam.getParamListInfo(), execParams);
 			ResultSetHolder resultSetHolder = exec.generateData(distribution, distributionObject, getMethodName(execParams), objList, paramTypeList, locationDatapod.getAttributes(), numIterations, execVersion, tableName);
 			if(!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 					&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())

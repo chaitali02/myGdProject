@@ -1697,7 +1697,7 @@ public class ModelServiceImpl {
 		return factorCovariances;
 	}*/
 	
-	public String generateSQLBySource(Object source) throws Exception {  
+	public String generateSQLBySource(Object source, ExecParams execParams) throws Exception {  
 		if (source instanceof Datapod) {
 			Datapod datapod = (Datapod) source;
 			DataStore datastore = dataStoreServiceImpl.findLatestByMeta(datapod.getUuid(), datapod.getVersion());
@@ -1711,7 +1711,7 @@ public class ModelServiceImpl {
 			return sql;
 		} else if (source instanceof DataSet) {
 			DataSet dataset = (DataSet) source;
-			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), null, RunMode.BATCH);
+			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.BATCH);
 			return sql;
 		} else if (source instanceof Rule) {
 			Rule rule = (Rule) source;
@@ -1780,7 +1780,7 @@ public class ModelServiceImpl {
 
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
-			String sql = generateSQLBySource(source);
+			String sql = generateSQLBySource(source, execParams);
 			exec.executeAndRegister(sql, (tableName+"_pred_data"), appUuid);
 			
 			long count = 0;
@@ -1952,7 +1952,7 @@ public class ModelServiceImpl {
 					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 				MetaIdentifier tabNameMI = new MetaIdentifier(MetaType.model, model.getUuid(), model.getVersion());
 				tableName = genTableNameByMetaIdentifier(tabNameMI, null, predictExec.getVersion(), runMode);
-				String sql = generateSQLBySource(source);
+				String sql = generateSQLBySource(source, execParams);
 				exec.executeAndRegister(sql, tableName, appUuid);
 			} else {
 				tableName = getTableNameByMetaObject(source);

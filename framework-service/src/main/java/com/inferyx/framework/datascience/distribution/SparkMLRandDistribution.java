@@ -86,8 +86,8 @@ public class SparkMLRandDistribution extends RandomDistribution {
 		}
 		StructType schema = new StructType(fieldArray);	*/	
 		
-		Object[] args = getParamObjList(execParams.getParamListInfo());
-		Class<?>[] paramtypes = getParamTypeList(execParams.getParamListInfo());
+		Object[] args = getParamObjList(execParams.getParamListInfo(), execParams);
+		Class<?>[] paramtypes = getParamTypeList(execParams.getParamListInfo(), execParams);
 		IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString()); 
 		return exec.generateData(distribution, distributionObject, methodName, args, paramtypes, attributes, numIterations, execVersion, tableName);
 		

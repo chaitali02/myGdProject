@@ -1121,6 +1121,7 @@ public class DagServiceImpl {
 							baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.operator)) {
 							ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
+							operatorExecParams.setParamListInfo(replaceParams(execParams.getParamListInfo(), operatorExecParams.getParamListInfo()));
 							operatorExecParams.setOtherParams((HashMap<String, String>) Helper.mergeMap(otherParams, operatorExecParams.getOtherParams()));
 							baseExec = operatorServiceImpl.create((OperatorExec)baseExec, operatorExecParams, runMode);
 							logger.info("operatorExecParams.getOtherParams : " + operatorExecParams.getOtherParams());

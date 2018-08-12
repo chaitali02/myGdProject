@@ -62,7 +62,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 					.concat(getFrom())
 					.concat(generateFrom(dataset, refKeyMap, otherParams, usedRefKeySet, runMode))
 					.concat(generateWhere())
-					.concat(generateFilter(dataset, refKeyMap, otherParams, usedRefKeySet))
+					.concat(generateFilter(dataset, refKeyMap, otherParams, usedRefKeySet, execParams))
 					.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams))
 					.concat(generateLimit(dataset));
 		}
@@ -139,9 +139,9 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			return ConstantsUtil.WHERE_1_1;
 		}
 		
-		public String generateFilter (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		public String generateFilter (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			if (dataset.getFilterInfo() != null && !dataset.getFilterInfo().isEmpty()) {
-				return filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet);
+				return filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams);
 			}
 			return ConstantsUtil.BLANK;
 		} 

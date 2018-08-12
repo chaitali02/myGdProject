@@ -471,7 +471,7 @@ public class VizpodParser {
 			selectBuilder = new StringBuilder(datasetOperator.generateSelect(dataSet, null, null, null, runMode));
 			fromBuilder.append(" FROM ").append(datasetOperator.generateFrom(dataSet, null, null, usedRefKeySet, runMode));
 			whereBuilder.append(datasetOperator.generateWhere());
-			whereBuilder.append(" ").append(datasetOperator.generateFilter(dataSet, null, null, usedRefKeySet));
+			whereBuilder.append(" ").append(datasetOperator.generateFilter(dataSet, null, null, usedRefKeySet, null));
 			Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
 			Matcher matcher = pattern.matcher(whereBuilder);
 			while(matcher.find()) {

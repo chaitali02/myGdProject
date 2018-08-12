@@ -1751,13 +1751,32 @@ public class MetadataServiceImpl {
 				return paramSetServiceImpl.getParamValue(execParams, attributeId, ref);
 			} else if(execParams.getParamListHolder() != null) {
 				return paramListServiceImpl.getParamValue(execParams, attributeId, ref);
-			} else {
-					ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
-					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
-						if (param.getParamId().equals(attributeId+"")) {
-							return param.getParamValue().getValue();
-						}
+			} else if (execParams.getParamListInfo() != null){
+				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+				String paramName = null;
+				com.inferyx.framework.domain.Param param = null;
+				for (int i = 0; i < paramList.getParams().size(); i++) {
+					param = paramList.getParams().get(i);
+					if (param.getParamId().equals(attributeId+"")) {
+						paramName = param.getParamName();
+						break;
 					}
+				}
+				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+					if (paramListHolder.getParamName().equals(paramName)) {
+						return paramListHolder.getParamValue().getValue();
+					}
+				}
+				if (param != null && param.getParamValue() != null) {
+					return param.getParamValue().getValue();
+				}
+			} else {
+				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+				for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
+					if (param.getParamId().equals(attributeId+"")) {
+						return param.getParamValue().getValue();
+					}
+				}
 			}
 		} else {
 			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
