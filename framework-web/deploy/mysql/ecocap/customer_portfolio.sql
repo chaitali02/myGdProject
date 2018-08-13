@@ -1,5 +1,5 @@
-
-
+CREATE DATABASE  IF NOT EXISTS `ecocap`;
+USE `ecocap`;
 DROP TABLE IF EXISTS `customer_portfolio`;
 
 CREATE TABLE `customer_portfolio` (
@@ -14,7 +14,11 @@ CREATE TABLE `customer_portfolio` (
   `def_point` double DEFAULT NULL,
   `reporting_date` varchar(45) DEFAULT NULL,
   `version` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
+
+
+LOAD DATA LOCAL INFILE '/user/hive/warehouse/framework/upload/customer_portfolio_1000_2018.csv'  IGNORE INTO TABLE customer_portfolio FIELDS TERMINATED BY ',' ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+
 
 
 

@@ -1,18 +1,19 @@
+CREATE DATABASE  IF NOT EXISTS `ecocap`;
+USE `ecocap`;
+DROP TABLE IF EXISTS `customer_portfolio_clone`;
 
-DROP TABLE ecocap.customer_portfolio_clone;
-
-CREATE TABLE  ecocap.customer_portfolio_clone (
-cust_id text,
-industry text,
-pd double precision,
-exposure integer,
-lgd  double precision,
-lgd_var  integer,
-correlation  double precision,
-sqrt_correlation  double precision,
-def_point  double precision,
-reporting_date  text,
-version  integer
+CREATE TABLE `customer_portfolio_clone` (
+`cust_id` varchar(45) DEFAULT NULL,
+`industry` varchar(45) DEFAULT NULL,
+`pd` double DEFAULT NULL,
+`exposure` int(11) DEFAULT NULL,
+`lgd`  double DEFAULT NULL,
+`lgd_var`  int(11) DEFAULT NULL,
+`correlation`  double DEFAULT NULL,
+`sqrt_correlation`  double DEFAULT NULL,
+`def_point`  double DEFAULT NULL,
+`reporting_date`  varchar(45) DEFAULT NULL,
+`version`  int(11) DEFAULT NULL
 );
 
 

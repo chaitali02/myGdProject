@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `ecocap`;
+USE `ecocap`;
 DROP TABLE IF EXISTS `industry_factor_transpose`;
 
 CREATE TABLE `industry_factor_transpose` (
@@ -6,4 +8,5 @@ CREATE TABLE `industry_factor_transpose` (
   `factor` varchar(45) DEFAULT NULL,
   `factor_value` double DEFAULT NULL,
   `version` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
+

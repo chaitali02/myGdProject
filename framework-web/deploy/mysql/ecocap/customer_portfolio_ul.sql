@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `ecocap`;
+USE `ecocap`;
 DROP TABLE IF EXISTS `customer_portfolio_ul`;
 
 CREATE TABLE `customer_portfolio_ul` (
@@ -13,7 +15,7 @@ CREATE TABLE `customer_portfolio_ul` (
   `unexpected_loss` double DEFAULT NULL,
   `reporting_date` varchar(45) DEFAULT NULL,
   `version` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 
 
