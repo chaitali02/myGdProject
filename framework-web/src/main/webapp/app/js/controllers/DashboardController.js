@@ -12,9 +12,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
-	// $scope.sectionRows = [{
-	// 	columns : [{}]
-	// }];
 	$scope.sectionRows = [];
 	if ($stateParams.action == 'add' || !$stateParams.id) {
 		$scope.sectionRows = [{
@@ -35,16 +32,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		});
 
 	}
-	// $scope.sectionRows = {
-	// 	1:{
-	// 		rowNo : 1,
-	// 		columns : {
-	// 			1:{
-	// 				colNo:1
-	// 			}
-	// 		}
-	// 	}
-	// }
+	
 	var notify = {
 		type: 'success',
 		title: 'Success',
@@ -63,7 +51,12 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
+	
+	$scope.onChangeVizpod=function(vizpodInfo,parentIndex,index){
+		$scope.sectionRows[parentIndex].columns[index].name=vizpodInfo.name;
+	}
+	
 	$scope.addSectionRow = function (i) {
 		$scope.sectionRows.splice(i + 1, 0, {
 			columns: []
@@ -171,6 +164,8 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.dropCallback = function (index, item, external, type, row) {
 
 	}
+
+	
 
 	$scope.getColWidth = function (row) {
 		var count = 0;
