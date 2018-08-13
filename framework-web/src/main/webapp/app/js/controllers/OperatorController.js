@@ -36,7 +36,7 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		$scope.isAdd = true;
 	}
 
-	$scope.operatorType=['GenerateData','GenDataAttr','Transpose','CloneData','genDataValList','Matrix'];
+	$scope.operatorType=['GenerateData','GenDataAttr','Transpose','CloneData','genDataValList','Matrix','Histogram'];
 	$scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
 	$scope.userDetail.name= $rootScope.setUserName;
