@@ -610,7 +610,7 @@ public class MySqlExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
 			String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(" Inside method create.");
+		return sparkExecutor.create(rowObjList, attributes, tableName, clientContext);
 	}
 }
