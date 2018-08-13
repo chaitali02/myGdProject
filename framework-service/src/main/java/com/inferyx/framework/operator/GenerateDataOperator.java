@@ -130,18 +130,15 @@ public class GenerateDataOperator implements IOperator {
 		ExecParams distExecParam = new ExecParams();
 
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
-		List<ParamListHolder> residualParamHolderList = new ArrayList<>();
 		for(ParamListHolder holder : paramListInfo) {
 			if(holder.getRef()!= null && holder.getRef().getUuid().equalsIgnoreCase(distribution.getParamList().getRef().getUuid())) {
 				distParamHolderList.add(holder);
-			} else {
-				residualParamHolderList.add(holder);
-			}
+			} 
 		}
-		distParamHolderList.addAll(residualParamHolderList);
+//		distParamHolderList.addAll(residualParamHolderList);
 		distExecParam.setParamListInfo(distParamHolderList);
 		RandomDistribution randomDistribution = randomDistributionFactory.getRandomDistribution(distribution.getLibrary());
-		Object distributionObject = randomDistribution.getDistribution(distribution, distExecParam);
+		Object distributionObject = randomDistribution.getDistribution(distribution, distExecParam, execParams);
 		return distributionObject;
 	}
 	

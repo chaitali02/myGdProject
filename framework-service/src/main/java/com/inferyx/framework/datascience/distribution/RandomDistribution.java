@@ -47,9 +47,9 @@ public class RandomDistribution {
 
 	static final Logger LOGGER = Logger.getLogger(RandomDistribution.class);
 
-	public Object getDistribution(Distribution distribution, ExecParams execParams)
+	public Object getDistribution(Distribution distribution, ExecParams distExecParams, ExecParams execParams)
 			throws InterruptedException, ExecutionException, Exception {
-		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+		List<ParamListHolder> paramListInfo = distExecParams.getParamListInfo();
 
 		Class<?> distributorClass = Class.forName(distribution.getClassName());
 		Class<?>[] type = getParamTypeList(paramListInfo, execParams);
@@ -60,6 +60,16 @@ public class RandomDistribution {
 		return object;
 	}
 
+	/**
+	 * paramListInfo contains parameters that are suitable for the distribution call
+	 * execParams has all parameters required for further sql calls 
+	 * @param paramListInfo
+	 * @param execParams
+	 * @return
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws Exception
+	 */
 	public Object[] getParamObjList(List<ParamListHolder> paramListInfo, ExecParams execParams)
 			throws InterruptedException, ExecutionException, Exception {
 		Object[] obj = new Object[paramListInfo.size()];
