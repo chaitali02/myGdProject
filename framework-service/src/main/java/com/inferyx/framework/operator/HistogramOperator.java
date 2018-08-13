@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.DagExecUtil;
+import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -44,6 +45,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -77,6 +79,8 @@ public class HistogramOperator implements IOperator {
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private SparkSession sparkSession;
+	@Autowired
+	Engine engine;
 	
 	static final Logger logger = Logger.getLogger(HistogramOperator.class);
 	
@@ -106,7 +110,77 @@ public class HistogramOperator implements IOperator {
 	 */
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		execute(null, baseExec, execParams, runMode);
+		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
+		ParamListHolder numBucketsInfo = paramSetServiceImpl.getParamByName(execParams, "numBuckets");
+		ParamListHolder sourceInfo = paramSetServiceImpl.getParamByName(execParams, "sourceAttr");
+		HashMap<String, String> otherParams = execParams.getOtherParams();
+		
+		int numBuckets = Integer.parseInt(numBucketsInfo.getParamValue().getValue());
+		
+		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
+		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
+
+		StructField[] fieldArray = new StructField[3];
+		StructType schema = new StructType(fieldArray);	
+		if(locationDatapod.getAttributes().size() > 3) {
+			throw new RuntimeException("Datapod '" + locationDatapod.getName() + "' column size(" + locationDatapod.getAttributes().size() + ") must 3");
+		} else {
+//			StructField bucketField = new StructField("bucket", (DataType)sparkExecutor.getDataType("string"), true, Metadata.empty());
+//			fieldArray[0] = bucketField;
+//			StructField frequencyField = new StructField("frequency", (DataType)sparkExecutor.getDataType("long"), true, Metadata.empty());
+//			fieldArray[1] = frequencyField;
+//			StructField versionField = new StructField("version", (DataType)sparkExecutor.getDataType("integer"), true, Metadata.empty());
+//			fieldArray[2] = versionField;
+			int count = 0;
+			for(Attribute attribute : locationDatapod.getAttributes()) {
+				StructField field = new StructField(attribute.getName(), (DataType)sparkExecutor.getDataType(attribute.getType()), true, Metadata.empty());
+				fieldArray[count] = field;
+				count++;
+			}
+		}
+		
+		String locationTableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
+		if(locationTableName == null || locationTableName.isEmpty()) {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			if ((!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+					|| !engine.getExecEngine().equalsIgnoreCase(ExecContext.livy_spark.toString()))
+					&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()) 
+					&& !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				locationTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
+			}  else {
+				locationTableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
+			}			
+			execParams.getOtherParams().put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", locationTableName);
+		}
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		String sql = generateSql(sourceInfo.getAttributeInfo(), execParams, otherParams, runMode);
+		ResultSetHolder rsHolder = exec.executeAndRegister(sql, "tempHistogram", appUuid);
+		DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	
+		Tuple2<double[], long[]> histogramTuples = doubleRDDFunctions.histogram(numBuckets);
+		double[] ds = histogramTuples._1();
+		long[] ls = histogramTuples._2();
+		List<Row> rowList = new ArrayList<>();
+		for(int i=0; i<ds.length; i++) {
+			if(i<ds.length-1) {
+				String bucket = "("+ds[i]+" - "+ds[i+1]+")";
+				long frequency = ls[i];
+				int version = Integer.parseInt(Helper.getVersion());
+				rowList.add(RowFactory.create(bucket, frequency, version));
+			}
+		}
+		
+		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
+		df.printSchema();
+		df.show(false);
+		ResultSetHolder rsHolder2 = new ResultSetHolder();
+		rsHolder2.setCountRows(df.count());
+		rsHolder2.setDataFrame(df);
+		rsHolder2.setTableName(locationTableName);
+		rsHolder2.setType(ResultType.dataframe);
+		save(exec, rsHolder2, locationTableName, locationDatapod,  baseExec.getRef(MetaType.operatorExec), runMode);
 		return null;
 	}	
 	
@@ -141,19 +215,11 @@ public class HistogramOperator implements IOperator {
 		return null;
 	}
 	
-	public void execute(List<SourceAttr> sourceAttrs, BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {		
+/*	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode, String abc) throws Exception {		
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		ParamListHolder numBucketsInfo = paramSetServiceImpl.getParamByName(execParams, "numBuckets");
 		ParamListHolder sourceInfo = paramSetServiceImpl.getParamByName(execParams, "sourceAttr");
 		HashMap<String, String> otherParams = execParams.getOtherParams();
-		
-		sourceAttrs = new ArrayList<>();
-		for(AttributeRefHolder sourceInfoHolder : sourceInfo.getAttributeInfo()) {
-			SourceAttr sourceAttr = new SourceAttr();
-			sourceAttr.setAttributeId(Integer.parseInt(sourceInfoHolder.getAttrId()));
-			sourceAttr.setRef(sourceInfoHolder.getRef());
-			sourceAttrs.add(sourceAttr);
-		}
 		
 		int numBuckets = Integer.parseInt(numBucketsInfo.getParamValue().getValue());
 		
@@ -168,7 +234,7 @@ public class HistogramOperator implements IOperator {
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		
 		String appUuid = commonServiceImpl.getApp().getUuid();
-		String sql = generateSql(sourceAttrs, execParams, otherParams, runMode);
+		String sql = generateSql(sourceInfo.getAttributeInfo(), execParams, otherParams, runMode);
 		ResultSetHolder rsHolder = exec.executeAndRegister(sql, "tempHistogram", appUuid);
 		DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	
 		Tuple2<double[], long[]> histogramTuples = doubleRDDFunctions.histogram(numBuckets);
@@ -199,12 +265,12 @@ public class HistogramOperator implements IOperator {
 		rsHolder2.setDataFrame(df);
 		rsHolder2.setTableName(locationTableName);
 		rsHolder2.setType(ResultType.dataframe);
-		String filePath = String.format("/%s/%s/%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
+//		String filePath = String.format("/%s/%s/%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
 		//exec.registerAndPersist(rsHolder2, locationTableName, filePath, locationDatapod, SaveMode.Append.toString(), appUuid);
 		save(exec, rsHolder2, locationTableName, locationDatapod,  baseExec.getRef(MetaType.operatorExec), runMode);
 	}
-
-	public String generateSql(List<SourceAttr> sourceAttrs, ExecParams execParams, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+*/
+	public String generateSql(List<AttributeRefHolder> sourceAttrs, ExecParams execParams, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		String sql = null;
 		MetaIdentifier sourceMI = sourceAttrs.get(0).getRef();
 		
@@ -220,7 +286,7 @@ public class HistogramOperator implements IOperator {
 			sqlBuilder.append("SELECT ");
 			
 			for(int i=0; i<sourceAttrs.size(); i++) {
-				String attrName = datapod.getAttributeName(sourceAttrs.get(i).getAttributeId());				
+				String attrName = datapod.getAttributeName(Integer.parseInt(sourceAttrs.get(i).getAttrId()));				
 				sqlBuilder.append("CAST(").append(attrName).append(" AS DOUBLE) AS ").append(attrName);
 				if(i<(sourceAttrs.size()-1))
 					sqlBuilder.append(",");				
@@ -234,9 +300,9 @@ public class HistogramOperator implements IOperator {
 			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceMI.getUuid(), sourceMI.getVersion(), sourceMI.getType().toString());
 			
 			List<AttributeSource> attributeInfo = new ArrayList<>();
-			for(SourceAttr sourceAttr : sourceAttrs) {
+			for(AttributeRefHolder sourceAttr : sourceAttrs) {
 				for(AttributeSource attrSource : dataset.getAttributeInfo()) {
-						if(attrSource.getAttrSourceId().equalsIgnoreCase(sourceAttr.getAttributeId()+"")) {
+						if(attrSource.getAttrSourceId().equalsIgnoreCase(sourceAttr.getAttrId())) {
 							attributeInfo.add(attrSource);
 						}
 				}
