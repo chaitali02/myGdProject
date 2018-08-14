@@ -215,61 +215,6 @@ public class HistogramOperator implements IOperator {
 		return null;
 	}
 	
-/*	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode, String abc) throws Exception {		
-		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
-		ParamListHolder numBucketsInfo = paramSetServiceImpl.getParamByName(execParams, "numBuckets");
-		ParamListHolder sourceInfo = paramSetServiceImpl.getParamByName(execParams, "sourceAttr");
-		HashMap<String, String> otherParams = execParams.getOtherParams();
-		
-		int numBuckets = Integer.parseInt(numBucketsInfo.getParamValue().getValue());
-		
-		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
-		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
-		String locationTableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
-		if(locationTableName == null || locationTableName.isEmpty()) {
-			//locationTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
-			locationTableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
-		}
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		
-		String appUuid = commonServiceImpl.getApp().getUuid();
-		String sql = generateSql(sourceInfo.getAttributeInfo(), execParams, otherParams, runMode);
-		ResultSetHolder rsHolder = exec.executeAndRegister(sql, "tempHistogram", appUuid);
-		DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	
-		Tuple2<double[], long[]> histogramTuples = doubleRDDFunctions.histogram(numBuckets);
-		double[] ds = histogramTuples._1();
-		long[] ls = histogramTuples._2();
-		List<Row> rowList = new ArrayList<>();
-		for(int i=0; i<ds.length; i++) {
-			if(i<ds.length-1) {
-				String bucket = "("+ds[i]+" - "+ds[i+1]+")";
-				long frequency = ls[i];
-				int version = Integer.parseInt(Helper.getVersion());
-				rowList.add(RowFactory.create(bucket, frequency, version));
-			}
-		}
-		StructField[] fieldArray = new StructField[3];
-		StructField bucketField = new StructField("bucket", (DataType)sparkExecutor.getDataType("string"), true, Metadata.empty());
-		fieldArray[0] = bucketField;
-		StructField frequencyField = new StructField("frequency", (DataType)sparkExecutor.getDataType("long"), true, Metadata.empty());
-		fieldArray[1] = frequencyField;
-		StructField versionField = new StructField("version", (DataType)sparkExecutor.getDataType("integer"), true, Metadata.empty());
-		fieldArray[2] = versionField;
-		StructType schema = new StructType(fieldArray);	
-		Dataset<Row> df = sparkSession.sqlContext().createDataFrame(rowList, schema);
-		df.printSchema();
-		df.show(false);
-		ResultSetHolder rsHolder2 = new ResultSetHolder();
-		rsHolder2.setCountRows(df.count());
-		rsHolder2.setDataFrame(df);
-		rsHolder2.setTableName(locationTableName);
-		rsHolder2.setType(ResultType.dataframe);
-//		String filePath = String.format("/%s/%s/%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
-		//exec.registerAndPersist(rsHolder2, locationTableName, filePath, locationDatapod, SaveMode.Append.toString(), appUuid);
-		save(exec, rsHolder2, locationTableName, locationDatapod,  baseExec.getRef(MetaType.operatorExec), runMode);
-	}
-*/
 	public String generateSql(List<AttributeRefHolder> sourceAttrs, ExecParams execParams, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		String sql = null;
 		MetaIdentifier sourceMI = sourceAttrs.get(0).getRef();
@@ -294,7 +239,7 @@ public class HistogramOperator implements IOperator {
 			
 			sqlBuilder.append(" FROM ");
 			sqlBuilder.append(tableName);
-			sqlBuilder.append(" ").append(tableName);
+			sqlBuilder.append(" ").append(datapod.getName());
 			sql = sqlBuilder.toString();
 		}  else if(sourceMI.getType().equals(MetaType.dataset)) {
 			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceMI.getUuid(), sourceMI.getVersion(), sourceMI.getType().toString());
