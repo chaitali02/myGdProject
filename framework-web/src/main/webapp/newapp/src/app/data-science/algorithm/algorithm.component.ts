@@ -51,7 +51,7 @@ export class AlgorithmComponent implements OnInit {
   msgs: any;
   isSubmitEnable: any;
   text: any;
-  labelRequired :any
+  labelRequired: any
 
 
 
@@ -61,7 +61,7 @@ export class AlgorithmComponent implements OnInit {
     this.algorithm["active"] = true;
     this.algorithm["labelRequired"] = true;
     this.isSubmitEnable = true;
-   // this.algorithm['summaryMethods'] =null
+    // this.algorithm['summaryMethods'] =null
     //  this.selectParamlistWithoutHype = {};
     this.breadcrumbDataFrom = [{
       "caption": "Data Science",
@@ -97,7 +97,7 @@ export class AlgorithmComponent implements OnInit {
       this.id = params['id'];
       this.version = params['version'];
       this.mode = params['mode'];
-      this.summaryMethods =[]
+      this.summaryMethods = []
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion();
         this.getAllVersionByUuid();
@@ -124,9 +124,9 @@ export class AlgorithmComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
- 
+
   onSuccessgetOneByUuidAndVersion(response) {
-     
+
     this.algorithm = response;
     this.uuid = response.uuid;
     const version: Version = new Version();
@@ -138,8 +138,8 @@ export class AlgorithmComponent implements OnInit {
     this.algorithm.published = response["published"] == 'Y' ? true : false
     this.algorithm.active = response["active"] == 'Y' ? true : false
     this.libraryType = response.libraryType
-    this.trainClass=response.trainClass
-    this.modelClass=response.modelClass
+    this.trainClass = response.trainClass
+    this.modelClass = response.modelClass
     if (response.paramListWoH !== null) {
       let paramListWoH: DependsOn = new DependsOn();
       paramListWoH.uuid = response["paramListWoH"]["ref"]["uuid"];
@@ -156,18 +156,19 @@ export class AlgorithmComponent implements OnInit {
     }
 
     var summaryMethodsArray = [];
-    if (response.summaryMethods !== null) {{
-      for (var i = 0; i < response.summaryMethods.length; i++) {
-        var summaryMethods = {};
-        summaryMethods['text'] = response.summaryMethods[i];
-        summaryMethodsArray[i] = summaryMethods;
+    if (response.summaryMethods !== null) {
+      {
+        for (var i = 0; i < response.summaryMethods.length; i++) {
+          var summaryMethods = {};
+          summaryMethods['text'] = response.summaryMethods[i];
+          summaryMethodsArray[i] = summaryMethods;
 
+        }
       }
-    }
-    this.summaryMethods = summaryMethodsArray;
+      this.summaryMethods = summaryMethodsArray;
     }
 
-    
+
     this.breadcrumbDataFrom[2].caption = this.algorithm.name;
 
     console.log('Data is' + response);
@@ -237,7 +238,7 @@ export class AlgorithmComponent implements OnInit {
 
   }
   onSuccessGetAllLatestParamListByTemplate(response) {
-     
+
     this.allParamlist = [];
     for (const i in response) {
       let refParam = {};
@@ -250,22 +251,26 @@ export class AlgorithmComponent implements OnInit {
     }
   }
 
- 
- 
+
+
 
 
   submitAlgorithm() {
-     
+    
     var upd_tag = 'N'
     this.isSubmitEnable = true;
     let algoJson = {};
     algoJson["uuid"] = this.algorithm.uuid;
     algoJson["name"] = this.algorithm.name;
-    // const tagstemp = [];
-    // for (const t in this.tags) {
-    //  tagstemp.push(this.tags[t]["value"]);
-    // }
-    // algoJson["tags"] = tagstemp;
+    var tagArray=[];
+   if(this.algorithm.tags !=null){
+    for(var counttag=0;counttag<this.algorithm.tags.length;counttag++){
+     tagArray[counttag]=this.algorithm.tags[counttag].value;
+ 
+    }
+    }
+    algoJson['tags'] = tagArray;
+  algoJson["summaryMethods"] = summaryMethods;
     algoJson["desc"] = this.algorithm.desc;
     algoJson["savePmml"] = this.algorithm.savePmml == true ? 'Y' : "N"
 
@@ -277,9 +282,9 @@ export class AlgorithmComponent implements OnInit {
     algoJson["modelClass"] = this.modelClass;
     algoJson["labelRequired"] = this.labelRequired;
 
-  
 
- let paramListWHParam = {};
+
+    let paramListWHParam = {};
     let paramListWHParamRef = {};
     if (this.paramListWH != null) {
       paramListWHParamRef["uuid"] = this.paramListWH.uuid;
@@ -297,22 +302,15 @@ export class AlgorithmComponent implements OnInit {
     }
     algoJson["paramListWoH"] = paramListWOHParam;
 
+    var summaryMethods = [];
+    if (this.summaryMethods != null) {
+      for (var counttag = 0; counttag < this.summaryMethods.length; counttag++) {
+        summaryMethods[counttag] = this.summaryMethods[counttag].value;
 
-
-
-    let summaryMethods = [];
-    if (this.algorithm.summaryMethods != null) {
-        for (var counttag = 0; counttag < this.algorithm.summaryMethods.length; counttag++) {
-          summaryMethods[counttag] = this.algorithm.summaryMethods[counttag];
-        }
+      }
     }
-
-
-    
-
-    algoJson["summaryMethods"] = summaryMethods;
-
-    console.log(JSON.stringify(algoJson));
+  algoJson["summaryMethods"] = summaryMethods;
+  console.log(JSON.stringify(algoJson));
     this._algorithmService.submit(algoJson, 'algorithm', upd_tag).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)

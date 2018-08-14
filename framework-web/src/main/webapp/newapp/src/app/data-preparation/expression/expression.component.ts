@@ -532,6 +532,7 @@ removeRow(){
  this.expressionTableArray = newDataList;
 }
 submitExpression(){
+  
   this.isSubmitEnable=true;
 	var expressionjson={}
 	expressionjson["uuid"]=this.expression.uuid;
@@ -542,13 +543,13 @@ submitExpression(){
   expressionjson["active"]=this.expression.active == true ?'Y' :"N"
   expressionjson["published"]=this.expression.published == true ?'Y' :"N"
 	 var tagArray=[];
-	 if(this.expression.tags !=null){
-	     for(var counttag=0;counttag<this.expression.tags.length;counttag++){
-	     	tagArray[counttag]=this.expression.tags[counttag].value;
-
-	     }
-	 }
-	 expressionjson["tags"]=tagArray;
+   if(this.expression.tags !=null){
+    for(var counttag=0;counttag<this.expression.tags.length;counttag++){
+     tagArray[counttag]=this.expression.tags[counttag].value;
+ 
+    }
+    }
+    expressionjson['tags'] = tagArray;
 	 var dependsOn={};
 	 var ref={};
 	 ref["type"]=this.depends;
