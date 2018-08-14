@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
@@ -65,16 +66,13 @@ public class FilterOperator {
 				OrderKey filterKey = filterIdentifier.getRef().getKey();
 				Filter filter = null;
 				filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
-
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
 				usedRefKeySet.add(filterRef);
 				builder.append(" AND (").append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams)).append(")");
 				break;
 			case datapod:
 				OrderKey datapodKey = filterIdentifier.getRef().getKey();
-				Datapod datapod = null;
-				datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
-				
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
 				builder.append(" AND (").append(generateDatapodFilterSql(datapod, filterIdentifier.getAttrId(), filterIdentifier.getValue())).append(")");
 				MetaIdentifier datapodRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 				usedRefKeySet.add(datapodRef);
@@ -113,37 +111,23 @@ public class FilterOperator {
 		for (AttributeRefHolder filterIdentifier : filterIdentifierList) {
 			
 			switch (filterIdentifier.getRef().getType()) {
-			case expression :
-			break;
-			case filter : 
-				OrderKey filterKey = filterIdentifier.getRef().getKey();
-				com.inferyx.framework.domain.Filter filter = null;
-				if (null == filterKey.getVersion()) {
-					filter = daoRegister.getFilterDao().findLatestByUuid(filterKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				} else {
-					filter = daoRegister.getFilterDao().findOneByUuidAndVersion(filterKey.getUUID(),
-							filterKey.getVersion());
-				}
+				case expression :
+					break;
+				case filter : 
+					OrderKey filterKey = filterIdentifier.getRef().getKey();
+					com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),filter.getDependsOn(), null, null, usedRefKeySet, execParams)).append(")");
 					builder.append(" as ").append(filter.getName()).append(COMMA);
 					break;
-			case datapod:
-				OrderKey datapodKey = filterIdentifier.getRef().getKey();
-				Datapod datapod = null;
-				if (null == datapodKey.getVersion()) {
-					datapod = daoRegister.getDatapodDao().findLatestByUuid(datapodKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				}else {
-					datapod = daoRegister.getDatapodDao().findOneByUuidAndVersion(datapodKey.getUUID(),
-							datapodKey.getVersion());
-				}
-				builder.append(" (").append(generateDatapodFilterSql(datapod, filterIdentifier.getAttrId(), filterIdentifier.getValue())).append(")");
-				builder.append(" as ").append(datapod.getName()).append("_filter").append(COMMA);
-				break;
-			default:
-				builder.append("");
-				break;
+				case datapod:
+					OrderKey datapodKey = filterIdentifier.getRef().getKey();
+					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
+					builder.append(" (").append(generateDatapodFilterSql(datapod, filterIdentifier.getAttrId(), filterIdentifier.getValue())).append(")");
+					builder.append(" as ").append(datapod.getName()).append("_filter").append(COMMA);
+					break;
+				default:
+					builder.append("");
+					break;
 			}// End switch
 		}// End for
 		
@@ -228,10 +212,19 @@ public class FilterOperator {
 		if (!NumberUtils.isDigits(attributeId)) {
 			return "";
 		}
-		if (value != null && value.contains(",")) {
-			return String.format("%s IN (%s)", datapod.sql(Integer.parseInt(attributeId)),value);
+		if(value != null) {
+			boolean isNumber = Helper.isNumber(value);			
+			if(!isNumber) {
+				if (value.contains(",")) {
+					value = value.substring(0, value.length()-1);
+					value = "'"+value+"'"+",";
+					return String.format("%s IN (%s)", datapod.sql(Integer.parseInt(attributeId)), value);
+				} else {				
+					value = "'"+value+"'";
+				}
+			}
 		}
-		return String.format("%s = %s", datapod.sql(Integer.parseInt(attributeId)),value);
+		return String.format("%s = %s", datapod.sql(Integer.parseInt(attributeId)), value);
 	}
 
 }

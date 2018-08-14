@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -97,6 +98,8 @@ public class AttributeMapOperator {
 		String comma = "";
 		// add select attribute
 		for (AttributeMap attr : attrMapList) {
+			if(attr.getSourceAttr().getAttrName().equalsIgnoreCase("reporting_date"))
+				System.out.println();
 			builder.append(comma);
 			builder.append(mapSql(attr, mapSource, refKeyMap, otherParams, execParams));
 			comma = ",";
@@ -150,8 +153,11 @@ public class AttributeMapOperator {
 			if (attrMap.getSourceAttr().getRef().getType() == MetaType.simple) {
 				return builder.append("\"").append(attrMap.getSourceAttr().getValue()).append("\"").append(" as ").append(alias).append(" ").toString();
 			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.paramlist) {
-				String value = null;
-				value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
+				String value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
+//				boolean isNumber = Helper.isNumber(value);			
+//				if(!isNumber) {
+//					value = "'"+value+"'";
+//				}
 				return builder.append("\"").append(value).append("\"").append(" as ").append(alias).append(" ").toString();
 			} 
 			builder.append(sourceAttrSql(daoRegister, mapSource, attrMap.getSourceAttr(), refKeyMap, otherParams, execParams));
