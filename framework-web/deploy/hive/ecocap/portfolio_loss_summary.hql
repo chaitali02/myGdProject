@@ -15,6 +15,7 @@ CREATE  TABLE IF NOT EXISTS `portfolio_loss_summary`(
   `portfolio_es_percentage` double,
   `portfolio_val_percentage` double,
   `portfolio_el_percentage` double,
+  `portfolio_loss_summary` double;
   `reporting_date` string,
   `version` int);
 
