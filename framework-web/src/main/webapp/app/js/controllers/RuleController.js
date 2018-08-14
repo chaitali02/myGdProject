@@ -1419,7 +1419,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           ref.type = "paramlist";
           ref.uuid = $scope.attributeTableArray[l].sourceparamlist.uuid;
           sourceAttr.ref = ref;
-          sourceAttr.attrId = $scope.attributeTableArray[l].sourceparamlist.attrId;
+          sourceAttr.attrId = $scope.attributeTableArray[l].sourceparamlist.attributeId;
           sourceAttr.attrType = $scope.attributeTableArray[l].sourceparamlist.attrType
           attributeinfo.sourceAttr = sourceAttr;
         }

@@ -870,7 +870,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
         if (response.attributeInfo[n].sourceAttr.ref.type == "paramlist") {
           var sourceparamlist = {};
           sourceparamlist.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-          sourceparamlist.attrId = response.attributeInfo[n].sourceAttr.attrId;
+          sourceparamlist.attributeId = response.attributeInfo[n].sourceAttr.attrId;
           sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType
           sourceparamlist.name = "";
           var obj = {}
@@ -1113,7 +1113,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory) {
         if (response.attributeInfo[n].sourceAttr.ref.type == "paramlist") {
           var sourceparamlist = {};
           sourceparamlist.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-          sourceparamlist.attrId = response.attributeInfo[n].sourceAttr.attrId;
+          sourceparamlist.attributeId = response.attributeInfo[n].sourceAttr.attrId;
           sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType
           sourceparamlist.name = "";
           var obj = {}
