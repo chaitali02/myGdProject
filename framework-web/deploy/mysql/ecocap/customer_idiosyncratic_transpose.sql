@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `ecocap`;
+USE `ecocap`;
 DROP TABLE IF EXISTS `customer_idiosyncratic_transpose`;
 
 CREATE TABLE `customer_idiosyncratic_transpose` (
@@ -6,6 +8,6 @@ CREATE TABLE `customer_idiosyncratic_transpose` (
   `customer` varchar(45) DEFAULT NULL,
   `pd` double DEFAULT NULL,
   `version` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 

@@ -1,8 +1,12 @@
-DROP TABLE ecocap.portfolio_loss_simulaton_aggr;
+CREATE DATABASE  IF NOT EXISTS `ecocap`;
+USE `ecocap`;
+DROP TABLE `portfolio_loss_simulaton_aggr`;
 
-CREATE TABLE ecocap.portfolio_loss_simulaton_aggr (
-    expected_loss  numeric(30,2),
-    value_at_risk    numeric(30,2),
-    economic_capital   numeric(30,2),
-    reporting_date  text  , 
-    version integer );
+CREATE TABLE `portfolio_loss_simulaton_aggr` (
+    `expected_loss` int(11) DEFAULT NULL,
+    `value_at_risk` int(11) DEFAULT NULL,
+    `economic_capital` int(11) DEFAULT NULL,
+    `reporting_date` varchar(45) DEFAULT NULL  , 
+    `version` int(11) DEFAULT NULL 
+);
+
