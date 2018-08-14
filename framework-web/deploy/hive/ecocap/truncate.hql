@@ -20,7 +20,9 @@ truncate table portfolio_expected_sum;
 truncate table portfolio_loss_aggr_es;
 truncate table portfolio_loss_histogram;
 truncate table portfolio_loss_histogram_percentage;
-truncate table portfolio_loss_simulation_el;
 truncate table portfolio_loss_simulation;
 truncate table portfolio_loss_simulation_aggr;
+truncate table portfolio_loss_simulation_el;
 truncate table portfolio_loss_summary;
+
+

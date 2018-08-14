@@ -1,8 +1,9 @@
 CREATE DATABASE IF NOT EXISTS ecocap;
 use ecocap;
-alter table industry_factor_correlation set tblproperties('EXTERNAL'='FALSE');
 
+alter table industry_factor_correlation set tblproperties('EXTERNAL'='FALSE');
 DROP TABLE IF EXISTS industry_factor_correlation;
+
 CREATE TABLE IF NOT EXISTS `industry_factor_correlation`(
   `factor` string, 
   `factor1` double, 
