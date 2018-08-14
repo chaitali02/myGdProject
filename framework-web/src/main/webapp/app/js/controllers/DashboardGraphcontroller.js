@@ -745,7 +745,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
         }//End Else
     }
    }//End For I
-   console.log("data_grid"+JSON.stringify($scope.sectionRows));
+  // console.log("data_grid"+JSON.stringify($scope.sectionRows));
   }//End preparColumnData
 
   $scope.selectPage = function(pageNo) {
@@ -917,7 +917,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
         $scope.inprogressdata=false
       }
     }
-    console.log($scope.vizpodResutsArray);
+  //  console.log($scope.vizpodResutsArray);
    
     $q.all($scope.vizpodResutsArray).then(function(result){
 

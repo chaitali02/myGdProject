@@ -1438,7 +1438,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
 
         })
         .state('createparamlistdag', {
-            url: "/BusinessRules/CreateParamList?id&mode&returnBack&version",
+            url: "/BusinessRules/CreateParamListDag?id&mode&returnBack&version",
             templateUrl: "views/paramlist.html",
             data: { pageTitle: 'Data Pipeline' },
             params: { type: 'paramlist', parantType: 'dag' },
@@ -1457,7 +1457,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             }
         })
         .state('createparamlistrule', {
-            url: "/BusinessRules/CreateParamList?id&mode&returnBack&version",
+            url: "/BusinessRules/CreateParamListRule?id&mode&returnBack&version",
             templateUrl: "views/paramlist.html",
             data: { pageTitle: 'Business Rules' },
             params: { type: 'paramlist', parantType: 'rule' },
