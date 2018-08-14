@@ -905,10 +905,11 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
     for(var i=0;i<$scope.dashboarddata.sectionInfo.length;i++){
       var vizpodResuts={};
       if($scope.dashboarddata.sectionInfo[i].vizpodInfo.type !='network-graph'){
-      var vizpodresultpromise=DahsboardSerivce.getVizpodResults($scope.dashboarddata.sectionInfo[i].vizpodInfo.uuid,$scope.dashboarddata.sectionInfo[i].vizpodInfo.version,data);
-      vizpodResuts.rowNo=$scope.dashboarddata.sectionInfo[i].rowNo-1;
-      vizpodResuts.colNo=$scope.dashboarddata.sectionInfo[i].colNo-1;
-      vizpodResuts.type=$scope.dashboarddata.sectionInfo[i].vizpodInfo.type;
+        vizpodResuts.rowNo=$scope.dashboarddata.sectionInfo[i].rowNo-1;
+        vizpodResuts.colNo=$scope.dashboarddata.sectionInfo[i].colNo-1;
+        vizpodResuts.type=$scope.dashboarddata.sectionInfo[i].vizpodInfo.type;
+      var vizpodresultpromise=DahsboardSerivce.getVizpodResults($scope.dashboarddata.sectionInfo[i].vizpodInfo.uuid,$scope.dashboarddata.sectionInfo[i].vizpodInfo.version,data,vizpodResuts);
+      
       $scope.vizpodtrack.push(vizpodResuts);
       $scope.vizpodResutsArray.push(vizpodresultpromise);
       }
@@ -918,36 +919,65 @@ DatavisualizationModule.controller('ShowDashboradController2',function($location
       }
     }
   //  console.log($scope.vizpodResutsArray);
+  
    
-    $q.all($scope.vizpodResutsArray).then(function(result){
-
-      for(var k=0;k<$scope.vizpodtrack.length;k++){
-       
-        if($scope.vizpodtrack[k] !="network-graph"){
-        $scope.inprogressdata=false
-        $scope.isUserNotification=false;
-        $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].isDataError=false;
-        $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].errormsg="";
-        $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].vizpodDetails.datapoints=result[k].data;
-        if($scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].vizpodDetails.type =="data-grid"){
-          $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].gridOptions.data=result[k].data;
-        }
-      }
-      }
-      $scope.preparColumnDataFromResult();
-    },function(response){
+         
     
-        for(var k=0;k<$scope.vizpodtrack.length;k++){
-          $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].isDataError=true;
-          $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].vizpodDetails.datapoints=[];
-          $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].errormsg="Some Error Occurred";
-        }
-       $scope.inprogressdata=false;
-       //$scope.isDataError=true;
-       //$scope.datamessage="Some Error Occurred";
+    // $q.all($scope.vizpodResutsArray).then(function(result){
 
-    });
+    //   for(var k=0;k<$scope.vizpodtrack.length;k++){
+       
+    //     if($scope.vizpodtrack[k] !="network-graph"){
+    //     $scope.inprogressdata=false
+    //     $scope.isUserNotification=false;
+    //     $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].isDataError=false;
+    //     $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].errormsg="";
+    //     $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].vizpodDetails.datapoints=result[k].data;
+    //     if($scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].vizpodDetails.type =="data-grid"){
+    //       $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].gridOptions.data=result[k].data;
+    //     }
+    //   }
+    //   }
+    //   $scope.preparColumnDataFromResult();
+    // },function(response){
+    
+    //     for(var k=0;k<$scope.vizpodtrack.length;k++){
+    //       $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].isDataError=true;
+    //       $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].vizpodDetails.datapoints=[];
+    //       $scope.sectionRows[$scope.vizpodtrack[k].rowNo].columns[$scope.vizpodtrack[k].colNo].errormsg="Some Error Occurred";
+    //     }
+    //    $scope.inprogressdata=false;
+    //    //$scope.isDataError=true;
+    //    //$scope.datamessage="Some Error Occurred";
 
+    // });
+
+    $q.all($scope.vizpodResutsArray.map(function (value) {
+      return $q.resolve(value)
+          .then(function (result) {
+              if(result.vizpodResuts!="network-graph"){
+              $scope.inprogressdata=false
+              $scope.isUserNotification=false;
+              $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isDataError=false;
+              $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].errormsg="";
+              $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints=result.data;
+              if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.type =="data-grid"){
+                $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].gridOptions.data=result.data;
+              }
+            }
+            $scope.preparColumnDataFromResult();
+              //return { state: "fulfilled", value: result };
+          })
+          .catch(function (result) {
+            console.log(result)
+              $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].isDataError=true;
+              $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints=[];
+              $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].errormsg="Some Error Occurred";
+              $scope.inprogressdata=false;
+              // return { state: "rejected", reason: error };
+          });
+  }));
+   //console.log(JSON.stringify($scope.sectionRows))
   }
 
   $scope.preparColumnDataFromResult=function(){
