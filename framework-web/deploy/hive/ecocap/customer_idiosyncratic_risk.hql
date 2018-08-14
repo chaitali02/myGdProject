@@ -102,5 +102,8 @@ CREATE  TABLE IF NOT EXISTS `customer_idiosyncratic_risk`(
 `cust95` double,
 `cust96` double,
 `reporting_date` string, 
-`version` int);
+`version` int)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+TBLPROPERTIES ("skip.header.line.count"="1");
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_idiosyncratic_risk.csv' OVERWRITE INTO TABLE ecocap.customer_idiosyncratic_risk;
 
