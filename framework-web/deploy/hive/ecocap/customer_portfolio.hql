@@ -19,5 +19,3 @@ LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_portfolio
 
 
 
-
-

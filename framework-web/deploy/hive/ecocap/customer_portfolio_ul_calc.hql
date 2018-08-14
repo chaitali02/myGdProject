@@ -1,8 +1,6 @@
 CREATE DATABASE IF NOT EXISTS ecocap;
 use ecocap;
-alter table customer_portfolio_ul_calc set tblproperties('EXTERNAL'='FALSE');
 DROP TABLE IF EXISTS customer_portfolio_ul_calc;
-
 CREATE  TABLE IF NOT EXISTS `customer_portfolio_ul_calc`(
   `cust_id1` string, 
   `industry1` string, 
