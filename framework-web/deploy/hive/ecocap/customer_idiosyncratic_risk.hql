@@ -1,6 +1,8 @@
 CREATE DATABASE IF NOT EXISTS ecocap;
 use ecocap;
+alter table customer_idiosyncratic_risk set tblproperties('EXTERNAL'='FALSE');
 DROP TABLE IF EXISTS customer_idiosyncratic_risk;
+
 CREATE  TABLE IF NOT EXISTS `customer_idiosyncratic_risk`(
 `iteration_id` int,
 `cust1` double,
@@ -103,5 +105,5 @@ CREATE  TABLE IF NOT EXISTS `customer_idiosyncratic_risk`(
 `version` int)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 TBLPROPERTIES ("skip.header.line.count"="1");
-LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_idiosyncratic_risk_2018.csv' OVERWRITE INTO TABLE ecocap.customer_idiosyncratic_risk;
+LOAD DATA LOCAL INPATH '/user/hive/warehouse/framework/upload/customer_idiosyncratic_risk.csv' OVERWRITE INTO TABLE ecocap.customer_idiosyncratic_risk;
 

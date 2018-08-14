@@ -1,6 +1,9 @@
 CREATE DATABASE IF NOT EXISTS ecocap;
 use ecocap;
+
+alter table portfolio_loss_summary set tblproperties('EXTERNAL'='FALSE');
 DROP TABLE IF EXISTS portfolio_loss_summary;
+
 CREATE  TABLE IF NOT EXISTS `portfolio_loss_summary`(
   `portfolio_avg_pd` int, 
   `portfolio_avg_lgd` bigint, 

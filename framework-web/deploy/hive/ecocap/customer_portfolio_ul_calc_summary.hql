@@ -2,6 +2,7 @@ CREATE DATABASE IF NOT EXISTS ecocap;
 use ecocap;
 alter table customer_portfolio_ul_calc_summary set tblproperties('EXTERNAL'='FALSE');
 DROP TABLE IF EXISTS customer_portfolio_ul_calc_summary;
+
 CREATE  TABLE IF NOT EXISTS `customer_portfolio_ul_calc_summary`(
   `cust_id` string,
   `portfolio_ul_cust_sum` double, 
