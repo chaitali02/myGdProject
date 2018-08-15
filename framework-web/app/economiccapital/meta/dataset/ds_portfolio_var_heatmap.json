@@ -1,6 +1,6 @@
 {
-  "uuid": "321d358e-e9aa-4fc2-89ee-ce7404549c5e",
-  "version": "1534046337",
+  "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+  "version": "1534299711",
   "name": "ds_portfolio_var_heatmap",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 11 23:58:57 EDT 2018",
+  "createdOn": "Tue Aug 14 22:21:51 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -29,10 +29,10 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "dataset",
-      "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
+      "type": "relation",
+      "uuid": "c70d8be7-f10b-494d-b6c6-0590975a9a74",
       "version": null,
-      "name": "ds_portfolio_var_heatmap_stage"
+      "name": "rel_portfolio_var_heatmap"
     },
     "value": null
   },
@@ -43,13 +43,13 @@
       "attrSourceName": "portfolio_pd_bucket",
       "sourceAttr": {
         "ref": {
-          "type": "dataset",
-          "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
+          "type": "datapod",
+          "uuid": "0d112ba8-be04-47a0-a5f4-c015904fd437",
           "version": null,
-          "name": "ds_portfolio_var_heatmap_stage"
+          "name": "portfolio_var_heatmap_buckets"
         },
         "value": null,
-        "attrId": "3",
+        "attrId": "0",
         "attrName": "portfolio_pd_bucket",
         "attrType": "string"
       }
@@ -59,24 +59,24 @@
       "attrSourceName": "portfolio_lgd_bucket",
       "sourceAttr": {
         "ref": {
-          "type": "dataset",
-          "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
+          "type": "datapod",
+          "uuid": "0d112ba8-be04-47a0-a5f4-c015904fd437",
           "version": null,
-          "name": "ds_portfolio_var_heatmap_stage"
+          "name": "portfolio_var_heatmap_buckets"
         },
         "value": null,
-        "attrId": "4",
+        "attrId": "1",
         "attrName": "portfolio_lgd_bucket",
         "attrType": "string"
       }
     },
     {
       "attrSourceId": "2",
-      "attrSourceName": "portfolio_var_heatmap",
+      "attrSourceName": "fm_portfolio_var_heatmap",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "2d60806b-9dce-45d3-81bc-0e43da7602a0",
+          "uuid": "81e9307a-787f-47a9-b590-33dd2db0f013",
           "version": null,
           "name": "fm_portfolio_var_heatmap"
         },
@@ -91,15 +91,15 @@
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
-          "type": "dataset",
-          "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
+          "type": "paramlist",
+          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
           "version": null,
-          "name": "ds_portfolio_var_heatmap_stage"
+          "name": "paramlist_ecocap_app"
         },
         "value": null,
-        "attrId": "5",
+        "attrId": "0",
         "attrName": "reporting_date",
-        "attrType": "string"
+        "attrType": null
       }
     },
     {
@@ -107,15 +107,15 @@
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {
-          "type": "dataset",
-          "uuid": "e11dd063-0f2f-4afe-9c1c-3d1366459f86",
+          "type": "datapod",
+          "uuid": "0d112ba8-be04-47a0-a5f4-c015904fd437",
           "version": null,
-          "name": "ds_portfolio_var_heatmap_stage"
+          "name": "portfolio_var_heatmap_buckets"
         },
         "value": null,
-        "attrId": "6",
+        "attrId": "2",
         "attrName": "version",
-        "attrType": "integer"
+        "attrType": "string"
       }
     }
   ],

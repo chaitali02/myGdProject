@@ -1,8 +1,8 @@
 {
-  "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
-  "version": "1534084196",
-  "name": "ds_portfolio_var_heatmap2",
-  "desc": null,
+  "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+  "version": "1534304405",
+  "name": "ds_sector_var_contribution_perc",
+  "desc": "",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Aug 12 10:29:56 EDT 2018",
+  "createdOn": "Tue Aug 14 23:40:05 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -30,9 +30,9 @@
   "dependsOn": {
     "ref": {
       "type": "relation",
-      "uuid": "c70d8be7-f10b-494d-b6c6-0590975a9a74",
+      "uuid": "a4f167b0-6b90-40cb-9ba6-4a5a1f594363",
       "version": null,
-      "name": "rel_portfolio_var_heatmap"
+      "name": "rel_sector_var_contribution"
     },
     "value": null
   },
@@ -40,45 +40,29 @@
   "attributeInfo": [
     {
       "attrSourceId": "0",
-      "attrSourceName": "portfolio_pd_bucket",
+      "attrSourceName": "industry",
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "0d112ba8-be04-47a0-a5f4-c015904fd437",
+          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
           "version": null,
-          "name": "portfolio_var_heatmap_buckets"
+          "name": "customer_portfolio"
         },
         "value": null,
-        "attrId": "0",
-        "attrName": "portfolio_pd_bucket",
+        "attrId": "1",
+        "attrName": "industry",
         "attrType": "string"
       }
     },
     {
       "attrSourceId": "1",
-      "attrSourceName": "portfolio_lgd_bucket",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "0d112ba8-be04-47a0-a5f4-c015904fd437",
-          "version": null,
-          "name": "portfolio_var_heatmap_buckets"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "portfolio_lgd_bucket",
-        "attrType": "string"
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrSourceName": "fm_portfolio_var_heatmap",
+      "attrSourceName": "sector_var_contribution_perc",
       "sourceAttr": {
         "ref": {
           "type": "formula",
-          "uuid": "81e9307a-787f-47a9-b590-33dd2db0f013",
+          "uuid": "bd2f37d9-46dd-4bb1-892f-acd1718f8127",
           "version": null,
-          "name": "fm_portfolio_var_heatmap2"
+          "name": "fm_sector_var_contribution_perc"
         },
         "value": null,
         "attrId": null,
@@ -87,35 +71,35 @@
       }
     },
     {
-      "attrSourceId": "3",
+      "attrSourceId": "2",
       "attrSourceName": "reporting_date",
       "sourceAttr": {
         "ref": {
-          "type": "paramlist",
-          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
+          "type": "datapod",
+          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
           "version": null,
-          "name": "paramlist_ecocap_app"
+          "name": "customer_es_allocation"
         },
         "value": null,
-        "attrId": "0",
+        "attrId": "3",
         "attrName": "reporting_date",
-        "attrType": null
+        "attrType": "string"
       }
     },
     {
-      "attrSourceId": "4",
+      "attrSourceId": "3",
       "attrSourceName": "version",
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "0d112ba8-be04-47a0-a5f4-c015904fd437",
+          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
           "version": null,
-          "name": "portfolio_var_heatmap_buckets"
+          "name": "customer_es_allocation"
         },
         "value": null,
-        "attrId": "2",
+        "attrId": "4",
         "attrName": "version",
-        "attrType": "string"
+        "attrType": "integer"
       }
     }
   ],

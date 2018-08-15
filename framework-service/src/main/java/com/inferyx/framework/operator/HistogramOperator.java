@@ -165,8 +165,8 @@ public class HistogramOperator implements IOperator {
 		List<Row> rowList = new ArrayList<>();
 		for(int i=0; i<ds.length; i++) {
 			if(i<ds.length-1) {
-				String bucket = "("+ds[i]+" - "+ds[i+1]+")";
-				long frequency = ls[i];
+				String bucket = ds[i]+" - "+ds[i+1];
+				int frequency = (int) ls[i];
 				int version = Integer.parseInt(Helper.getVersion());
 				rowList.add(RowFactory.create(bucket, frequency, version));
 			}

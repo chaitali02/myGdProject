@@ -6,7 +6,7 @@ CREATE  TABLE IF NOT EXISTS `customer_portfolio_ul_calc`(
   `industry1` string, 
   `correlation1` double, 
   `unexpected_loss1` double,
-  `cust_id2` double, 
+  `cust_id2` string, 
   `industry2` string, 
   `correlation2` double, 
   `unexpected_loss2` double, 
