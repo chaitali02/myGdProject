@@ -24,4 +24,3 @@ truncate table portfolio_loss_simulation_aggr;
 truncate table portfolio_loss_simulation_el;
 truncate table portfolio_loss_simulation;
 truncate table portfolio_loss_summary;
-
