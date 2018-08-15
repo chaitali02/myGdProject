@@ -60,9 +60,9 @@
             "version": null,
             "name": "paramlist_ecocap_app"
           },
-          "attributeId": 1,
+          "attributeId": 0,
           "value": null,
-          "attributeName": "reporting_date_quotes",
+          "attributeName": "reporting_date",
           "attributeType": null
         }
       ]

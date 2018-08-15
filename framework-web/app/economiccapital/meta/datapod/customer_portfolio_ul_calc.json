@@ -1,6 +1,6 @@
 {
   "uuid": "83306551-d38d-4d56-aafd-7e65c2a9a01e",
-  "version": "1532554812",
+  "version": "1534348475",
   "name": "customer_portfolio_ul_calc",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Jul 25 17:40:12 EDT 2018",
+  "createdOn": "Wed Aug 15 11:54:35 EDT 2018",
   "tags": [],
   "active": "Y",
   "published": "N",
@@ -85,7 +85,7 @@
     {
       "attributeId": 4,
       "name": "cust_id2",
-      "type": "double",
+      "type": "string",
       "desc": "cust_id2",
       "key": "2",
       "partition": "N",
